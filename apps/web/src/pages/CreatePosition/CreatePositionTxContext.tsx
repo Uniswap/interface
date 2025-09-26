@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { TradingApi } from '@universe/api'
 import { useDepositInfo } from 'components/Liquidity/Create/hooks/useDepositInfo'
 import { DYNAMIC_FEE_DATA, PositionState } from 'components/Liquidity/Create/types'
 import { useCreatePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
@@ -25,13 +26,6 @@ import { PositionField } from 'types/position'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
-import {
-  CheckApprovalLPRequest,
-  CheckApprovalLPResponse,
-  CreateLPPositionRequest,
-  CreateLPPositionResponse,
-  IndependentToken,
-} from 'uniswap/src/data/tradingApi/__generated__'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
@@ -62,7 +56,7 @@ export function generateAddLiquidityApprovalParams({
   displayCurrencies: { [field in PositionField]: Maybe<Currency> }
   currencyAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   generatePermitAsTransaction?: boolean
-}): CheckApprovalLPRequest | undefined {
+}): TradingApi.CheckApprovalLPRequest | undefined {
   const apiProtocolItems = getProtocolItems(protocolVersion)
 
   if (
@@ -85,7 +79,7 @@ export function generateAddLiquidityApprovalParams({
     amount0: currencyAmounts.TOKEN0.quotient.toString(),
     amount1: currencyAmounts.TOKEN1.quotient.toString(),
     generatePermitAsTransaction: protocolVersion === ProtocolVersion.V4 ? generatePermitAsTransaction : undefined,
-  } satisfies CheckApprovalLPRequest
+  } satisfies TradingApi.CheckApprovalLPRequest
 }
 
 /**
@@ -107,7 +101,7 @@ export function generateCreateCalldataQueryParams({
   protocolVersion: ProtocolVersion
   creatingPoolOrPair: boolean | undefined
   account?: AccountDetails
-  approvalCalldata?: CheckApprovalLPResponse
+  approvalCalldata?: TradingApi.CheckApprovalLPResponse
   positionState: PositionState
   ticks: [Maybe<number>, Maybe<number>]
   poolOrPair: V3Pool | V4Pool | Pair | undefined
@@ -115,7 +109,7 @@ export function generateCreateCalldataQueryParams({
   currencyAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   independentField: PositionField
   slippageTolerance?: number
-}): CreateLPPositionRequest | undefined {
+}): TradingApi.CreateLPPositionRequest | undefined {
   const apiProtocolItems = getProtocolItems(protocolVersion)
 
   if (
@@ -149,7 +143,9 @@ export function generateCreateCalldataQueryParams({
     }
 
     const independentToken =
-      independentField === PositionField.TOKEN0 ? IndependentToken.TOKEN_0 : IndependentToken.TOKEN_1
+      independentField === PositionField.TOKEN0
+        ? TradingApi.IndependentToken.TOKEN_0
+        : TradingApi.IndependentToken.TOKEN_1
     const dependentField = independentField === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0
     const independentAmount = currencyAmounts[independentField]
     const dependentAmount = currencyAmounts[dependentField]
@@ -176,7 +172,7 @@ export function generateCreateCalldataQueryParams({
           token1: getTokenOrZeroAddress(displayCurrencies.TOKEN1),
         },
       },
-    } satisfies CreateLPPositionRequest
+    } satisfies TradingApi.CreateLPPositionRequest
   }
 
   if (protocolVersion !== positionState.protocolVersion) {
@@ -199,7 +195,9 @@ export function generateCreateCalldataQueryParams({
   const tickSpacing = pool.tickSpacing
 
   const independentToken =
-    independentField === PositionField.TOKEN0 ? IndependentToken.TOKEN_0 : IndependentToken.TOKEN_1
+    independentField === PositionField.TOKEN0
+      ? TradingApi.IndependentToken.TOKEN_0
+      : TradingApi.IndependentToken.TOKEN_1
   const dependentField = independentField === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0
   const independentAmount = currencyAmounts[independentField]
   const dependentAmount = currencyAmounts[dependentField]
@@ -232,7 +230,7 @@ export function generateCreateCalldataQueryParams({
         hooks: positionState.hook,
       },
     },
-  } satisfies CreateLPPositionRequest
+  } satisfies TradingApi.CreateLPPositionRequest
 }
 
 /**
@@ -247,9 +245,9 @@ export function generateCreatePositionTxRequest({
   poolOrPair,
 }: {
   protocolVersion: ProtocolVersion
-  approvalCalldata?: CheckApprovalLPResponse
-  createCalldata?: CreateLPPositionResponse
-  createCalldataQueryParams?: CreateLPPositionRequest
+  approvalCalldata?: TradingApi.CheckApprovalLPResponse
+  createCalldata?: TradingApi.CreateLPPositionResponse
+  createCalldataQueryParams?: TradingApi.CreateLPPositionRequest
   currencyAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   poolOrPair: Pair | undefined
 }): CreatePositionTxAndGasInfo | undefined {
@@ -291,7 +289,7 @@ export function generateCreatePositionTxRequest({
     return undefined
   }
 
-  const queryParams: CreateLPPositionRequest | undefined =
+  const queryParams: TradingApi.CreateLPPositionRequest | undefined =
     protocolVersion === ProtocolVersion.V4
       ? { ...createCalldataQueryParams, batchPermitData: validatedPermitRequest }
       : createCalldataQueryParams

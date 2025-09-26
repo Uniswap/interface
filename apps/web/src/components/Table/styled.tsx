@@ -43,21 +43,32 @@ export const TableHead = (props: PropsWithChildren<{ $isSticky: boolean; $top: n
   </Flex>
 )
 
-export const TableBodyContainer = styled(View, {
+export const TableBodyContainer = styled(Flex, {
   width: '100%',
   position: 'relative',
   className: 'scrollbar-hidden',
   justifyContent: 'flex-start',
-  borderColor: '$surface3',
   borderStyle: 'solid',
-  borderWidth: 1,
-  borderTopWidth: 0,
-  borderBottomRightRadius: '$rounded20',
-  borderBottomLeftRadius: '$rounded20',
   '$platform-web': {
     overscrollBehaviorX: 'none',
     overflowX: 'auto',
     overflowY: 'scroll',
+  },
+  variants: {
+    v2: {
+      true: {
+        borderBottomRightRadius: '$rounded12',
+        borderBottomLeftRadius: '$rounded12',
+        borderWidth: 0,
+      },
+      false: {
+        borderBottomRightRadius: '$rounded20',
+        borderBottomLeftRadius: '$rounded20',
+        borderColor: '$surface3',
+        borderWidth: 1,
+        borderTopWidth: '$none',
+      },
+    },
   },
 })
 
@@ -88,11 +99,29 @@ const TableRow = styled(Flex, {
   width: 'fit-content',
   minWidth: '100%',
   height: '100%',
+  transition: 'background-color 0.1s ease-in-out',
+  variants: {
+    v2: {
+      true: {
+        borderRadius: '$rounded12',
+      },
+      false: {
+        borderRadius: '$rounded20',
+      },
+    },
+  },
 })
 
 export const DataRow = styled(TableRow, {
-  hoverStyle: {
-    backgroundColor: '$surface1Hovered',
+  variants: {
+    v2: {
+      true: {
+        hoverStyle: { backgroundColor: '$surface2Hovered' },
+      },
+      false: {
+        hoverStyle: { backgroundColor: '$surface1Hovered' },
+      },
+    },
   },
 })
 
@@ -112,13 +141,7 @@ export const TableScrollMask = styled(View, {
 })
 
 export const HeaderRow = styled(TableRow, {
-  borderWidth: 1,
-  borderStyle: 'solid',
-  borderColor: '$surface3',
-  borderTopRightRadius: '$rounded20',
-  borderTopLeftRadius: '$rounded20',
   width: 'unset',
-  backgroundColor: '$surface1Hovered',
   scrollbarWidth: 'none',
   className: 'scrollbar-hidden',
 
@@ -130,6 +153,22 @@ export const HeaderRow = styled(TableRow, {
     dimmed: {
       true: {
         opacity: 0.4,
+      },
+    },
+    v2: {
+      true: {
+        backgroundColor: '$surface2',
+        borderRadius: '$rounded12',
+      },
+      false: {
+        backgroundColor: '$surface1Hovered',
+        borderWidth: 1,
+        borderStyle: 'solid',
+        borderColor: '$surface3',
+        borderTopRightRadius: '$rounded20',
+        borderTopLeftRadius: '$rounded20',
+        borderBottomRightRadius: 'unset',
+        borderBottomLeftRadius: 'unset',
       },
     },
   } as const,

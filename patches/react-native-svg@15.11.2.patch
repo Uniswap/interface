@@ -1,0 +1,15 @@
+diff --git a/lib/module/lib/extract/transform.js b/lib/module/lib/extract/transform.js
+index 06c724b760232c93e5ed9d72266a054d5fe65512..18247ae8c68b174eec008ffa0f00d7c3bd2174dd 100644
+--- a/lib/module/lib/extract/transform.js
++++ b/lib/module/lib/extract/transform.js
+@@ -1482,4 +1482,9 @@ module.exports = {
+   SyntaxError: peg$SyntaxError,
+   parse: peg$parse
+ };
++
++// ESM exports for Vite 7.1.3 compatibility
++export const SyntaxError = peg$SyntaxError;
++export const parse = peg$parse;
++
+ //# sourceMappingURL=transform.js.map
+\ No newline at end of file

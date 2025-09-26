@@ -12,8 +12,8 @@ import { LimitedSupportBanner } from 'components/Banner/LimitedSupportBanner'
 import DelegationMismatchModal from 'components/delegation/DelegationMismatchModal'
 import { Power } from 'components/Icons/Power'
 import { Settings } from 'components/Icons/Settings'
-import StatusIcon from 'components/Identicon/StatusIcon'
 import { ReceiveModalState, receiveCryptoModalStateAtom } from 'components/ReceiveCryptoModal/state'
+import StatusIcon from 'components/StatusIcon'
 import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
 import { useIsUniswapExtensionConnected } from 'hooks/useIsUniswapExtensionConnected'
@@ -164,8 +164,8 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
         <Flex gap="$spacing4">
           <MultiBlockchainAddressDisplay enableCopyAddress={!showAddress} wallet={wallet} />
           {showAddress && (
-            <CopyHelper iconSize={14} iconPosition="right" toCopy={account}>
-              <Text variant="body3" color="neutral3" data-testid={TestID.AddressDisplayCopyHelper}>
+            <CopyHelper iconSize={14} iconPosition="right" toCopy={account} alwaysShowIcon gap={2}>
+              <Text variant="body3" color="neutral2" data-testid={TestID.AddressDisplayCopyHelper}>
                 {shortenAddress(account)}
               </Text>
             </CopyHelper>

@@ -3,7 +3,8 @@ import {
   UniswapXTransaction,
   UniswapXTransactionStatus,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TradingApi } from '@universe/api'
+
 import {
   TransactionDetails,
   TransactionOriginType,
@@ -62,7 +63,7 @@ export default function extractRestUniswapXOrderDetails(transaction: UniswapXTra
 
     return {
       id: orderHash,
-      routing: Routing.DUTCH_V2,
+      routing: TradingApi.Routing.DUTCH_V2,
       chainId,
       orderHash,
       addedTime: Number(timestampMillis),

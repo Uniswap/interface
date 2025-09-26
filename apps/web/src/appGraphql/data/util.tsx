@@ -8,11 +8,14 @@ import { TokenStat } from 'state/explore/types'
 import { ColorTokens } from 'ui/src'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import {
+  ActivityWebQuery,
   Chain,
   ContractInput,
   Token as GqlToken,
   HistoryDuration,
   PriceSource,
+  SwapOrderStatus,
+  SwapOrderType,
   TokenStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -224,4 +227,18 @@ export function apolloQueryOptions<
     ...options,
     staleTime: 0,
   })
+}
+
+// Type for a single asset activity item - using the inline type from the GraphQL query result
+export type AssetActivityItem = NonNullable<
+  NonNullable<NonNullable<ActivityWebQuery['portfolios']>[number]>['assetActivities']
+>[number]
+
+export function isOpenLimitOrder(activity: AssetActivityItem | undefined): boolean {
+  return (
+    activity !== undefined &&
+    activity.details.__typename === 'SwapOrderDetails' &&
+    activity.details.swapOrderType === SwapOrderType.Limit &&
+    activity.details.orderStatus === SwapOrderStatus.Open
+  )
 }

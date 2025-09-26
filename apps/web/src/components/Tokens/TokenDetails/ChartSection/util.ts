@@ -8,6 +8,7 @@ export type ChartQueryResult<TDataType, TChartType extends ChartType> = {
   entries: TDataType[]
   loading: boolean
   dataQuality: DataQuality
+  dataHash?: string
 }
 
 export enum DataQuality {

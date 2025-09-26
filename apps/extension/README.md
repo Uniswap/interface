@@ -15,12 +15,42 @@ bun install
 bun extension start
 ```
 
-Then, load the extension into Chrome:
+Then, load the extension into Chrome (if using Webpack):
 
 1. Go to **chrome://extensions**
 2. At the top right, turn on **Developer mode**
 3. Click **Load unpacked**
 4. Find and select the extension folder (apps/extension/dev)
+
+## Configuring WXT Browser-opening behavior
+
+To customize the default WXT behavior, create a file `web-ext.config.ts` in this directory.
+
+``` web-ext.config.ts
+import { defineWebExtConfig } from 'wxt';
+
+export default defineWebExtConfig({
+  // ...
+
+  // Option 1: Connect to already running Chrome (requires Chrome to be started with --remote-debugging-port=9222)
+  // chromiumPort: 9222,
+
+  // Option 2: Use your existing Chrome profile (but Chrome must be closed first)
+  // chromiumArgs: [
+  //   '--user-data-dir=/Users/<username>/Library/Application Support/Google/Chrome',
+  //   '--profile-directory=Default'
+  // ],
+
+  // Option 3: Create a persistent profile that matches your existing setup (recommended)
+  chromiumArgs: [
+    '--user-data-dir=./.wxt/chrome-data',
+    // Sync with your Google account to get bookmarks, extensions, etc.
+    // '--enable-sync',
+  ],
+
+  // ...
+});
+```
 
 ## Running the extension locally with an absolute path (for testing scantastic)
 
@@ -41,6 +71,8 @@ Windows:
 bun
 bun extension start:absolute:windows
 ```
+
+Then, load the extension into Chrome (if using Webpack):
 
 1. Go to **chrome://extensions**
 2. At the top right, turn on **Developer mode**

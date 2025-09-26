@@ -546,7 +546,7 @@ function PositionDropdownMoreMenu({ menuOptions }: { menuOptions: MenuOptionItem
   const [isOpen, setIsOpen] = useState(false)
 
   const dropdownTrigger = (
-    <TouchableArea
+    <Flex
       zIndex={zIndexes.mask}
       onPress={(event) => {
         event.preventDefault()
@@ -557,7 +557,7 @@ function PositionDropdownMoreMenu({ menuOptions }: { menuOptions: MenuOptionItem
       <PositionDetailsMenuButton $group-hover={activeStyle} open={isOpen} onPress={() => {}}>
         <MoreHorizontal size="$icon.16" color="white" />
       </PositionDetailsMenuButton>
-    </TouchableArea>
+    </Flex>
   )
 
   return (

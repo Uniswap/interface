@@ -3,10 +3,9 @@ import type { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { TradingApi } from '@universe/api'
 import { useEffect } from 'react'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
-import type { Address } from 'uniswap/src/data/tradingApi/__generated__'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
@@ -31,6 +30,8 @@ import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+
+// Use TradingApi namespace for enums
 
 type ProtocolVersion = 'V2' | 'V3' | 'V4' | 'unknown'
 
@@ -95,7 +96,7 @@ export function getRouteAnalyticsData({
   routing,
   routes,
 }: {
-  routing?: Routing
+  routing?: TradingApi.Routing
   routes?: ClassicTrade['routes']
 }): SwapRoutesAnalyticsData | undefined {
   if (!routing) {
@@ -374,7 +375,7 @@ export function tradeRoutingToFillType({
   routing,
   indicative,
 }: {
-  routing: Routing
+  routing: TradingApi.Routing
   indicative: boolean
 }): SwapRouting {
   if (indicative) {
@@ -382,19 +383,19 @@ export function tradeRoutingToFillType({
   }
 
   switch (routing) {
-    case Routing.DUTCH_V3:
+    case TradingApi.Routing.DUTCH_V3:
       return 'uniswap_x_v3'
-    case Routing.DUTCH_V2:
+    case TradingApi.Routing.DUTCH_V2:
       return 'uniswap_x_v2'
-    case Routing.DUTCH_LIMIT:
+    case TradingApi.Routing.DUTCH_LIMIT:
       return 'uniswap_x'
-    case Routing.PRIORITY:
+    case TradingApi.Routing.PRIORITY:
       return 'priority_order'
-    case Routing.LIMIT_ORDER:
+    case TradingApi.Routing.LIMIT_ORDER:
       return 'limit_order'
-    case Routing.CLASSIC:
+    case TradingApi.Routing.CLASSIC:
       return 'classic'
-    case Routing.BRIDGE:
+    case TradingApi.Routing.BRIDGE:
       return 'bridge'
     default:
       return 'none'

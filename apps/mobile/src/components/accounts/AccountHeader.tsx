@@ -10,8 +10,10 @@ import { Flex, Text, TouchableArea } from 'ui/src'
 import { CopyAlt, ScanHome, SettingsHome } from 'ui/src/components/icons'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { AccountType, DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
@@ -124,8 +126,17 @@ export function AccountHeader(): JSX.Element {
   const walletHasName = displayName && displayName.type !== DisplayNameType.Address
   const iconSize = 52
 
+  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
+
   return (
-    <Flex gap="$spacing12" overflow="scroll" pt="$spacing8" px="$spacing12" testID="account-header" width="100%">
+    <Flex
+      gap="$spacing12"
+      overflow="scroll"
+      pt="$spacing8"
+      px={isBottomTabsEnabled ? '$spacing24' : '$spacing12'}
+      testID="account-header"
+      width="100%"
+    >
       {activeAddress && (
         <Flex alignItems="flex-start" gap="$spacing12" width="100%">
           <Flex row justifyContent="space-between" width="100%">

@@ -1,8 +1,8 @@
 import { getAddress } from '@ethersproject/address'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { is32ByteBase58String } from 'uniswap/src/features/platforms/svm/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
+import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
 import { tryCatch } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -122,7 +122,7 @@ function getValidEVMAddress({ address, withEVMChecksum }: { address: string; wit
  * @throws {Error} If the address is invalid
  */
 function getValidSVMAddress({ address }: { address: string }): string {
-  if (!is32ByteBase58String(address)) {
+  if (!isSVMAddress(address)) {
     throw new Error('Address has an invalid format')
   }
 

@@ -2,6 +2,7 @@ import 'test-utils/tokens/mocks'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { WETH9 } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { Pending } from 'components/ConfirmSwapModal/Pending'
 import { SwapResult, useSwapTransactionStatus } from 'hooks/useSwapCallback'
 import { TradeFillType } from 'state/routing/types'
@@ -10,7 +11,6 @@ import { LIMIT_ORDER_TRADE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
 import { DAI } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   TransactionOriginType,
@@ -65,7 +65,7 @@ const uniswapXSwapResult: SwapResult = {
 }
 
 const filledOrderDetails: UniswapXOrderDetails = {
-  routing: Routing.DUTCH_LIMIT,
+  routing: TradingApi.Routing.DUTCH_LIMIT,
   orderHash: '0x1234',
   status: TransactionStatus.Success,
   typeInfo: {

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
+import { SharedQueryClient } from '@universe/api'
 import { useEffect, useState } from 'react'
 import { makeStatsigUser } from 'src/app/core/initStatSigForBrowserScripts'
-import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import { StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'

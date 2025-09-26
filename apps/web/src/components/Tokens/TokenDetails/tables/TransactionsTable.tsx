@@ -295,6 +295,7 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
         data={data}
         loading={allDataStillLoading}
         error={combinedError}
+        v2={false}
         loadMore={loadMore}
         maxHeight={600}
         defaultPinnedColumns={['timestamp', 'swap-type']}

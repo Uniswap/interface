@@ -1,0 +1,96 @@
+{
+  "root": "apps/web",
+  "sourceRoot": "apps/web/src",
+  "projectType": "application",
+  "targets": {
+    "lint": {
+      "dependsOn": [
+        "check:circular",
+        "check:deps:usage",
+        "format",
+        "typecheck",
+        "typecheck:cloud"
+      ]
+    },
+    "build": {
+      "dependsOn": [
+        "prepare",
+        "^build",
+        "build:production"
+      ]
+    },
+    "build:production": {
+      "inputs": [
+        "default",
+        "^production",
+        "!{projectRoot}/build"
+      ]
+    },
+    "sitemap:generate": {
+      "cache": true,
+      "inputs": [
+        "sourceFiles"
+      ],
+      "outputs": [
+        "{projectRoot}/public/sitemap.xml",
+        "{projectRoot}/public/app-sitemap.xml",
+        "{projectRoot}/public/tokens-sitemap.xml",
+        "{projectRoot}/public/pools-sitemap.xml",
+        "{projectRoot}/public/nfts-sitemap.xml"
+      ]
+    },
+    "start": {
+      "continuous": true
+    },
+    "preview": {
+      "continuous": true,
+      "dependsOn": [
+        "build:production"
+      ]
+    },
+    "anvil:base": {
+      "continuous": true
+    },
+    "wait-for-webserver": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "wait-on http://localhost:3000 --timeout 60000"
+      }
+    },
+    "e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright test",
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": [
+        "anvil:base",
+        "preview",
+        "wait-for-webserver"
+      ]
+    },
+    "e2e:anvil": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright test --grep '\\.anvil\\.'",
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": [
+        "anvil:base",
+        "preview",
+        "wait-for-webserver"
+      ]
+    },
+    "e2e:no-anvil": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "playwright test --grep-invert '\\.anvil\\.'",
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": [
+        "preview",
+        "wait-for-webserver"
+      ]
+    }
+  }
+}

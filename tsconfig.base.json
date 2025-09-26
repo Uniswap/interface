@@ -48,6 +48,9 @@
       "@universe/api/*": [
         "packages/api/*"
       ],
+      "@universe/sessions/*": [
+        "packages/sessions/*"
+      ],
       "utilities/*": [
         "packages/utilities/*"
       ],

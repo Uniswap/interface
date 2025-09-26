@@ -49,11 +49,11 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly 1`] 
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
   border-radius: 999px 0px 0px 999px;
-  border-top: 1px solid rgba(34,34,34,0.05);
-  border-bottom: 1px solid rgba(34,34,34,0.05);
-  border-left: 1px solid rgba(34,34,34,0.05);
+  border-top: 1px solid rgba(19,19,19,0.08);
+  border-bottom: 1px solid rgba(19,19,19,0.08);
+  border-left: 1px solid rgba(19,19,19,0.08);
   border-right: 0px;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -76,7 +76,7 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly 1`] 
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
   color: rgba(19,19,19,0.63);
   display: -webkit-box;
   display: -webkit-flex;
@@ -94,9 +94,9 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly 1`] 
   padding: 6px 6px 6px 4px;
   height: 28px;
   border-radius: 0px 999px 999px 0px;
-  border-top: 1px solid rgba(34,34,34,0.05);
-  border-bottom: 1px solid rgba(34,34,34,0.05);
-  border-right: 1px solid rgba(34,34,34,0.05);
+  border-top: 1px solid rgba(19,19,19,0.08);
+  border-bottom: 1px solid rgba(19,19,19,0.08);
+  border-right: 1px solid rgba(19,19,19,0.08);
   border-left: 1px solid transparent;
 }
 
@@ -210,11 +210,11 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly, neg
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
   border-radius: 999px 0px 0px 999px;
-  border-top: 1px solid rgba(34,34,34,0.05);
-  border-bottom: 1px solid rgba(34,34,34,0.05);
-  border-left: 1px solid rgba(34,34,34,0.05);
+  border-top: 1px solid rgba(19,19,19,0.08);
+  border-bottom: 1px solid rgba(19,19,19,0.08);
+  border-left: 1px solid rgba(19,19,19,0.08);
   border-right: 0px;
   -webkit-text-decoration: none;
   text-decoration: none;
@@ -237,7 +237,7 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly, neg
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
   color: rgba(19,19,19,0.63);
   display: -webkit-box;
   display: -webkit-flex;
@@ -255,9 +255,9 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly, neg
   padding: 6px 6px 6px 4px;
   height: 28px;
   border-radius: 0px 999px 999px 0px;
-  border-top: 1px solid rgba(34,34,34,0.05);
-  border-bottom: 1px solid rgba(34,34,34,0.05);
-  border-right: 1px solid rgba(34,34,34,0.05);
+  border-top: 1px solid rgba(19,19,19,0.08);
+  border-bottom: 1px solid rgba(19,19,19,0.08);
+  border-right: 1px solid rgba(19,19,19,0.08);
   border-left: 1px solid transparent;
 }
 
@@ -347,7 +347,7 @@ exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected
   align-items: center;
   background-color: unset;
   border-radius: 999px;
-  border: 1px solid rgba(34,34,34,0.05);
+  border: 1px solid rgba(19,19,19,0.08);
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -406,9 +406,9 @@ exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
   border-radius: 999px;
-  border: 1px solid rgba(34,34,34,0.05);
+  border: 1px solid rgba(19,19,19,0.08);
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -469,7 +469,7 @@ exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected
   align-items: center;
   background-color: unset;
   border-radius: 999px;
-  border: 1px solid rgba(34,34,34,0.05);
+  border: 1px solid rgba(19,19,19,0.08);
 }
 
 <span
@@ -515,9 +515,9 @@ exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
   border-radius: 999px;
-  border: 1px solid rgba(34,34,34,0.05);
+  border: 1px solid rgba(19,19,19,0.08);
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -579,7 +579,7 @@ exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected
   align-items: center;
   background-color: unset;
   border-radius: 999px;
-  border: 1px solid rgba(34,34,34,0.05);
+  border: 1px solid rgba(19,19,19,0.08);
 }
 
 <span
@@ -626,9 +626,9 @@ exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
   border-radius: 999px;
-  border: 1px solid rgba(34,34,34,0.05);
+  border: 1px solid rgba(19,19,19,0.08);
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;

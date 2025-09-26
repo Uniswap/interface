@@ -1,3 +1,4 @@
+import { GqlResult, isError, isNonPollingRequestInFlight } from '@universe/api'
 import maxBy from 'lodash/maxBy'
 import { Dispatch, SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
 import { SharedValue, useDerivedValue } from 'react-native-reanimated'
@@ -8,8 +9,6 @@ import {
   TimestampedAmount,
   useTokenPriceHistoryQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GqlResult } from 'uniswap/src/data/types'
-import { isError, isNonPollingRequestInFlight } from 'uniswap/src/data/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 

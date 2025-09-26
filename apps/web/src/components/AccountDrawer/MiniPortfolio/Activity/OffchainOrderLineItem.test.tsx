@@ -1,11 +1,11 @@
 import { CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import {
   OffchainOrderLineItem,
   OffchainOrderLineItemType,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainOrderLineItem'
 import { render, screen } from 'test-utils/render'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   TransactionOriginType,
@@ -39,7 +39,7 @@ describe('OffchainOrderLineItem', () => {
           from: '0xSenderAddress',
           id: 'tx123',
           chainId: 1,
-          routing: Routing.DUTCH_V2,
+          routing: TradingApi.Routing.DUTCH_V2,
           status: TransactionStatus.Success,
           typeInfo: {
             isUniswapXOrder: true,
@@ -78,7 +78,7 @@ describe('OffchainOrderLineItem', () => {
           from: '0xSenderAddress',
           id: 'tx123',
           chainId: 1,
-          routing: Routing.DUTCH_V2,
+          routing: TradingApi.Routing.DUTCH_V2,
           status: TransactionStatus.Success,
           typeInfo: {
             isUniswapXOrder: true,

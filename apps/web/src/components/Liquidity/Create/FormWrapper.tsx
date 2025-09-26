@@ -175,6 +175,9 @@ export function FormWrapper({
         maxWidth: '100%',
         mx: 'auto',
       }}
+      $sm={{
+        px: '$spacing8',
+      }}
     >
       <BreadcrumbNavContainer aria-label="breadcrumb-nav">
         <BreadcrumbNavLink to="/positions">

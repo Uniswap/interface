@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, IconButton } from 'ui/src'
 import { HelpCenter } from 'ui/src/components/icons/HelpCenter'
@@ -5,7 +6,6 @@ import { X } from 'ui/src/components/icons/X'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModalContent } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
   useTransactionSettingsActions,
@@ -51,7 +51,7 @@ export function SwapErrorScreen({
     } else if (isUniswapXBackendError) {
       // TODO(WEB-7668): move this into onPressRetry logic.
       // Update swap preferences for this session to exclude UniswapX if Uniswap x failed
-      const updatedProtocols = selectedProtocols.filter((protocol) => protocol !== ProtocolItems.UNISWAPX_V2)
+      const updatedProtocols = selectedProtocols.filter((protocol) => protocol !== TradingApi.ProtocolItems.UNISWAPX_V2)
       setSelectedProtocols(updatedProtocols)
     } else {
       resubmitSwap()

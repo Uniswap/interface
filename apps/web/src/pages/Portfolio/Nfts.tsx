@@ -8,7 +8,7 @@ export default function PortfolioNfts() {
 
   return (
     <Trace logImpression page={InterfacePageName.PortfolioNftsPage}>
-      <Flex padding="$spacing24" gap="$spacing16">
+      <Flex gap="$spacing16">
         <Text variant="heading2">{t('portfolio.nfts.title')}</Text>
         <Flex
           padding="$spacing24"

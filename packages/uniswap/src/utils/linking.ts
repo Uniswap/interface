@@ -220,9 +220,10 @@ export function getTokenDetailsURL({
   const chainInfo = toGraphQLChain(chain)
 
   const adjustedAddress = isNativeCurrencyAddress(chain, address) ? NATIVE_TOKEN_PLACEHOLDER : address
+  const adjustedInputAddress = isNativeCurrencyAddress(chain, inputAddress) ? NATIVE_TOKEN_PLACEHOLDER : inputAddress
 
   const chainName = chainUrlParam || String(chainInfo).toLowerCase() || Chain.Ethereum.toLowerCase()
-  const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
+  const inputAddressSuffix = adjustedInputAddress ? `?inputCurrency=${adjustedInputAddress}` : ''
   return `/explore/tokens/${chainName}/${adjustedAddress}${inputAddressSuffix}`
 }
 

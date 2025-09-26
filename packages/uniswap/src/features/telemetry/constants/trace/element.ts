@@ -100,6 +100,7 @@ export enum ElementName {
   LearnMoreLink = 'learn-more-link',
   LegacyLandingPageLink = 'legacy-landing-page-link',
   LimitOrderButton = 'limit-order-button',
+  LiquidityDefaultPriceStrategy = 'liquidity-default-price-strategy',
   MaxTokenAmountButton = 'max-token-amount-button',
   MaybeLaterButton = 'maybe-later-button',
   MiniPortfolioActivityRow = 'mini-portfolio-activity-row',

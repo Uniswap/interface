@@ -8,7 +8,7 @@ export default function PortfolioDefi() {
 
   return (
     <Trace logImpression page={InterfacePageName.PortfolioDefiPage}>
-      <Flex padding="$spacing24" gap="$spacing16">
+      <Flex gap="$spacing16">
         <Text variant="heading2">{t('portfolio.defi.title')}</Text>
         <Flex
           padding="$spacing24"

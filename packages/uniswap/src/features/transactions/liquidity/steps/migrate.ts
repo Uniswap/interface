@@ -1,5 +1,5 @@
-import { migrateLpPosition } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import type { MigrateLPPositionRequest } from 'uniswap/src/data/tradingApi/__generated__'
+import { TradingApi } from '@universe/api'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
@@ -27,7 +27,7 @@ export function createMigratePositionStep(txRequest: ValidatedTransactionRequest
 }
 
 export function createMigratePositionAsyncStep(
-  migratePositionRequestArgs: MigrateLPPositionRequest | undefined,
+  migratePositionRequestArgs: TradingApi.MigrateLPPositionRequest | undefined,
   signatureDeadline: number | undefined,
 ): MigratePositionTransactionStepAsync {
   return {
@@ -38,7 +38,7 @@ export function createMigratePositionAsyncStep(
       }
 
       try {
-        const { migrate } = await migrateLpPosition({
+        const { migrate } = await TradingApiClient.migrateLpPosition({
           ...migratePositionRequestArgs,
           signature,
           signatureDeadline,

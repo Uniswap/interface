@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`NewAddressSpeedBumpModal > should not render identicon if account has no ENS avatar/unitag pp 1`] = `
+exports[`NewAddressSpeedBumpModal > should not render AccountIcon if account has no ENS avatar/unitag pp 1`] = `
 <body
   style="pointer-events: none;"
 >

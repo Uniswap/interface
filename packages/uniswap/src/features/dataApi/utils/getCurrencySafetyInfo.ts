@@ -6,13 +6,13 @@ import {
   SpamCode as RestSpamCode,
   TokenMetadata,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { SpamCode } from '@universe/api'
 import {
   ProtectionAttackType,
   ProtectionResult,
   SafetyLevel,
   TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { SpamCode } from 'uniswap/src/data/types'
 import { AttackType, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 
 function getTokenListFromSafetyLevel(safetyInfo?: SafetyLevel): TokenList {

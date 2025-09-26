@@ -1,13 +1,12 @@
 import { VersionedTransaction } from '@solana/web3.js'
+import { JupiterExecuteResponse, TradingApi } from '@universe/api'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { signSolanaTransactionWithCurrentWallet } from 'components/Web3Provider/signSolanaTransaction'
 import store from 'state'
 import { getSwapTransactionInfo } from 'state/sagas/transactions/utils'
 import { call } from 'typed-redux-saga'
-import { execute } from 'uniswap/src/data/apiClients/jupiterApi/execute/request'
-import { JupiterExecuteResponse } from 'uniswap/src/data/apiClients/jupiterApi/execute/types'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { JupiterApiClient } from 'uniswap/src/data/apiClients/jupiterApi/JupiterFetchClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { JupiterExecuteError } from 'uniswap/src/features/transactions/errors'
@@ -35,7 +34,7 @@ async function signAndSendJupiterSwap({
 }): Promise<JupiterExecuteResponse> {
   const signedTransactionObj = await signSolanaTransaction(transaction)
   const signedTransaction = Buffer.from(signedTransactionObj.serialize()).toString('base64')
-  const result = await execute({ signedTransaction, requestId })
+  const result = await JupiterApiClient.execute({ signedTransaction, requestId })
 
   return result
 }
@@ -49,7 +48,7 @@ function updateAppState({ hash, trade, from }: { hash: string; trade: SolanaTrad
       typeInfo,
       hash,
       chainId: UniverseChainId.Solana,
-      routing: Routing.JUPITER,
+      routing: TradingApi.Routing.JUPITER,
       status: TransactionStatus.Success,
       addedTime: Date.now(),
       id: hash,

@@ -1,9 +1,9 @@
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { createApiClient } from 'uniswap/src/data/apiClients/createApiClient'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { createUniswapFetchClient } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
+import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { logger } from 'utilities/src/logger/logger'
 
-const dataApiClient = createApiClient({
+const DataFetchClient = createUniswapFetchClient({
   baseUrl: uniswapUrls.dataApiServiceUrl,
 })
 
@@ -51,7 +51,7 @@ export async function submitTokenReport({ chainId, address, event }: SubmitToken
   try {
     logger.debug('DataApiClient', 'submitTokenReport', `Submitting report: ${JSON.stringify(requestBody)}`)
 
-    const responseData = await dataApiClient.post<SubmitReportResponse>(uniswapUrls.dataApiServicePaths.report, {
+    const responseData = await DataFetchClient.post<SubmitReportResponse>(uniswapUrls.dataApiServicePaths.report, {
       body: JSON.stringify(requestBody),
     })
 

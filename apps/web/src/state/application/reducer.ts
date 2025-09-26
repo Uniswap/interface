@@ -20,11 +20,17 @@ type ClaimFeeModalParams = {
   initialState: LiquidityModalInitialState
 }
 
+type BlockedAccountModalParams = {
+  name: typeof ModalName.BlockedAccount
+  initialState: { blockedAddress?: string }
+}
+
 export type OpenModalParams =
   | { name: ModalNameType; initialState?: undefined }
   | AddLiquidityModalParams
   | RemoveLiquidityModalParams
   | ClaimFeeModalParams
+  | BlockedAccountModalParams
 
 type CloseModalParams = ModalNameType
 

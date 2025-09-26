@@ -1,11 +1,11 @@
 import { WETH9 } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import {
   CancellationState,
   CancelOrdersDialog,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
 import { render, screen } from 'test-utils/render'
 import { DAI } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   TransactionOriginType,
@@ -16,7 +16,7 @@ import {
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 const mockOrderDetails: UniswapXOrderDetails = {
-  routing: Routing.DUTCH_V2,
+  routing: TradingApi.Routing.DUTCH_V2,
   orderHash: '0x1234',
   status: TransactionStatus.Pending,
   typeInfo: {
@@ -96,7 +96,7 @@ describe('CancelOrdersDialog', () => {
         onCancel={mockOnCancel}
         onConfirm={mockOnConfirm}
         isVisible={true}
-        orders={[{ ...mockOrderDetails, routing: Routing.DUTCH_LIMIT }]}
+        orders={[{ ...mockOrderDetails, routing: TradingApi.Routing.DUTCH_LIMIT }]}
         cancelState={CancellationState.REVIEWING_CANCELLATION}
       />,
     )

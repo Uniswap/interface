@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import {
   useCreatePositionDependentAmountFallback,
   useIncreasePositionDependentAmountFallback,
@@ -11,13 +12,6 @@ import { PositionField } from 'types/position'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
 import { useIncreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useIncreaseLpPositionCalldataQuery'
-import {
-  ChainId,
-  CreateLPPositionRequest,
-  IncreaseLPPositionRequest,
-  IndependentToken,
-  ProtocolItems,
-} from 'uniswap/src/data/tradingApi/__generated__'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { vi } from 'vitest'
 
@@ -41,13 +35,13 @@ vi.mock('uniswap/src/features/transactions/hooks/useUSDCPrice', () => ({
 }))
 
 const refetchInterval = 5 * ONE_SECOND_MS
-const BASE_PARAMS: CreateLPPositionRequest | IncreaseLPPositionRequest = {
+const BASE_PARAMS: TradingApi.CreateLPPositionRequest | TradingApi.IncreaseLPPositionRequest = {
   simulateTransaction: true,
-  protocol: ProtocolItems.V3,
+  protocol: TradingApi.ProtocolItems.V3,
   walletAddress: '0x123',
-  chainId: ChainId._1,
+  chainId: TradingApi.ChainId._1,
   independentAmount: '1000',
-  independentToken: IndependentToken.TOKEN_0,
+  independentToken: TradingApi.IndependentToken.TOKEN_0,
   position: {
     pool: {
       token0: TEST_TOKEN_1.address,

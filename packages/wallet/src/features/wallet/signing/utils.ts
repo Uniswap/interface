@@ -1,4 +1,4 @@
-import { SignMessageFunc } from 'uniswap/src/data/utils'
+import { SignMessageFunc } from '@universe/api'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { signMessage } from 'wallet/src/features/wallet/signing/signing'

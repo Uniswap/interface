@@ -141,6 +141,7 @@ function OtherChainBalance({
                 chainId={balance.currencyInfo.currency.chainId}
                 showBackgroundColor={false}
                 textVariant="buttonLabel2"
+                testID={`TokenDetailsChainPill_${balance.currencyInfo.currency.chainId}`}
               />
             </Flex>
           </Flex>

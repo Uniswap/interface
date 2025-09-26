@@ -1,8 +1,6 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { TradeType } from 'uniswap/src/data/tradingApi/__generated__'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
-import { QuoteCurrencyData } from 'uniswap/src/features/transactions/swap/hooks/useTrade/parseQuoteCurrencies'
+import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
+import { type DiscriminatedQuoteResponse, type GasEstimate, TradingApi } from '@universe/api'
+import { type QuoteCurrencyData } from 'uniswap/src/features/transactions/swap/hooks/useTrade/parseQuoteCurrencies'
 import { getGasEstimate } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/estimateGas'
 import {
   transformTradingApiResponseToTrade,
@@ -31,7 +29,8 @@ export function transformQuoteToTrade(input: {
 
   const quoteCurrencyData = input.quoteCurrencyData
   const { currencyIn, currencyOut, requestTradeType } = quoteCurrencyData
-  const exactCurrencyField = requestTradeType === TradeType.EXACT_INPUT ? CurrencyField.INPUT : CurrencyField.OUTPUT
+  const exactCurrencyField =
+    requestTradeType === TradingApi.TradeType.EXACT_INPUT ? CurrencyField.INPUT : CurrencyField.OUTPUT
   const gasEstimate = getGasEstimate(input.quote)
 
   const formattedTrade =

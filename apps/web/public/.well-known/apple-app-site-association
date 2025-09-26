@@ -4,6 +4,7 @@
       {
         "appIDs": [
           "JH3UHGZD75.com.uniswap.mobile",
+          "JH3UHGZD75.com.uniswap.mobile.beta",
           "JH3UHGZD75.com.uniswap.mobile.dev"
         ],
         "components": [
@@ -38,6 +39,18 @@
           {
             "/": "/address/*",
             "comment": "Wallet address"
+          },
+          {
+            "/": "/explore/*",
+            "comment": "Explore"
+          },
+          {
+            "/": "/swap/*",
+            "comment": "Swap"
+          },
+          {
+            "/": "/buy/*",
+            "comment": "Buy"
           }
         ]
       }

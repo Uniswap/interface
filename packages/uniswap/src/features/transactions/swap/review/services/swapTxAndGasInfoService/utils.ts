@@ -1,21 +1,18 @@
 /* eslint-disable max-lines */
-import type { providers } from 'ethers/lib/ethers'
-import { useMemo } from 'react'
+
 import type {
   BridgeQuoteResponse,
   ClassicQuoteResponse,
   DiscriminatedQuoteResponse,
+  GasEstimate,
+  GasStrategy,
+  UnwrapQuoteResponse,
   WrapQuoteResponse,
-} from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+} from '@universe/api'
+import { TradingApi } from '@universe/api'
+import type { providers } from 'ethers/lib/ethers'
+import { useMemo } from 'react'
 import { getTradeSettingsDeadline } from 'uniswap/src/data/apiClients/tradingApi/utils/getTradeSettingsDeadline'
-import type {
-  BridgeQuote,
-  ClassicQuote,
-  CreateSwapRequest,
-  NullablePermit,
-} from 'uniswap/src/data/tradingApi/__generated__/index'
-import { Routing, TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__/index'
-import type { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { convertGasFeeToDisplayValue, useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import type { GasFeeResult } from 'uniswap/src/features/gas/types'
@@ -30,15 +27,15 @@ import {
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import type { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
-import {
+import type { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
+import type {
   BaseSwapTxAndGasInfo,
   BridgeSwapTxAndGasInfo,
   ClassicSwapTxAndGasInfo,
-  PermitMethod,
   SwapGasFeeEstimation,
   WrapSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type {
   BridgeTrade,
   ClassicTrade,
@@ -63,10 +60,10 @@ import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 export interface TransactionRequestInfo {
   txRequests: providers.TransactionRequest[] | undefined
-  permitData?: NullablePermit
+  permitData?: TradingApi.NullablePermit
   gasFeeResult: GasFeeResult
   gasEstimate: SwapGasFeeEstimation
-  swapRequestArgs: CreateSwapRequest | undefined
+  swapRequestArgs: TradingApi.CreateSwapRequest | undefined
   includesDelegation?: boolean
 }
 
@@ -103,17 +100,13 @@ export function createPrepareSwapRequestParams({ gasStrategy }: { gasStrategy: G
     alreadyApproved,
     overrideSimulation,
   }: {
-    swapQuoteResponse:
-      | ClassicQuoteResponse
-      | BridgeQuoteResponse
-      | WrapQuoteResponse<Routing.WRAP>
-      | WrapQuoteResponse<Routing.UNWRAP>
+    swapQuoteResponse: ClassicQuoteResponse | BridgeQuoteResponse | WrapQuoteResponse | UnwrapQuoteResponse
     signature: string | undefined
     transactionSettings: TransactionSettings
     alreadyApproved: boolean
     overrideSimulation?: boolean
-  }): CreateSwapRequest {
-    const isBridgeTrade = swapQuoteResponse.routing === Routing.BRIDGE
+  }): TradingApi.CreateSwapRequest {
+    const isBridgeTrade = swapQuoteResponse.routing === TradingApi.Routing.BRIDGE
     const permitData = swapQuoteResponse.permitData
 
     /**
@@ -173,7 +166,7 @@ export function getSimulationError({
   swapQuote,
   isRevokeNeeded,
 }: {
-  swapQuote: ClassicQuote | BridgeQuote | undefined
+  swapQuote: TradingApi.ClassicQuote | TradingApi.BridgeQuote | undefined
   isRevokeNeeded: boolean
 }): Error | null {
   if (!swapQuote || !('txFailureReasons' in swapQuote)) {
@@ -181,17 +174,17 @@ export function getSimulationError({
   }
 
   const validSimulationErrors = swapQuote.txFailureReasons?.filter((reason) => {
-    const isExpectedErrorFromRevoke = isRevokeNeeded && reason === TransactionFailureReason.SIMULATION_ERROR
+    const isExpectedErrorFromRevoke = isRevokeNeeded && reason === TradingApi.TransactionFailureReason.SIMULATION_ERROR
     return !isExpectedErrorFromRevoke
   })
 
   // TODO(SWAP-415): review why we're only returning some errors and ignoring the rest.
 
-  if (validSimulationErrors?.includes(TransactionFailureReason.SLIPPAGE_TOO_LOW)) {
+  if (validSimulationErrors?.includes(TradingApi.TransactionFailureReason.SLIPPAGE_TOO_LOW)) {
     return new SlippageTooLowError()
   }
 
-  if (validSimulationErrors?.includes(TransactionFailureReason.SIMULATION_ERROR)) {
+  if (validSimulationErrors?.includes(TradingApi.TransactionFailureReason.SIMULATION_ERROR)) {
     return new UnknownSimulationError()
   }
 
@@ -211,10 +204,10 @@ export function createProcessSwapResponse({ gasStrategy }: { gasStrategy: GasStr
   }: {
     response: SwapData | undefined
     error: Error | null
-    swapQuote: ClassicQuote | BridgeQuote | undefined
+    swapQuote: TradingApi.ClassicQuote | TradingApi.BridgeQuote | undefined
     isSwapLoading: boolean
-    permitData: NullablePermit | undefined
-    swapRequestParams: CreateSwapRequest | undefined
+    permitData: TradingApi.NullablePermit | undefined
+    swapRequestParams: TradingApi.CreateSwapRequest | undefined
     isRevokeNeeded: boolean
     permitsDontNeedSignature?: boolean
   }): TransactionRequestInfo {
@@ -506,7 +499,7 @@ export function getFallbackSwapTxAndGasInfo({
   const txRequests = validateTransactionRequests(swapTxInfo.txRequests)
 
   return {
-    routing: Routing.CLASSIC,
+    routing: TradingApi.Routing.CLASSIC,
     ...createGasFields({ swapTxInfo, approvalTxInfo }),
     ...createApprovalFields({ approvalTxInfo }),
     txRequests,

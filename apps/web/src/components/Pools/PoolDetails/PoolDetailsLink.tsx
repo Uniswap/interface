@@ -22,7 +22,8 @@ import { Token, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { isAddress, shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { getChainUrlParam } from 'utils/chainParams'
 
 const TokenName = styled(ThemedText.BodyPrimary)`
@@ -95,7 +96,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
   const currency = tokens[0] && gqlToCurrency(tokens[0])
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
-    const checksummedAddress = isAddress(address)
+    const checksummedAddress = isEVMAddress(address)
     checksummedAddress && setCopied(checksummedAddress)
   }, [address, setCopied])
   const isPool = tokens.length === 2

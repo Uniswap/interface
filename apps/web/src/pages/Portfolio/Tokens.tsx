@@ -8,7 +8,7 @@ export default function PortfolioTokens() {
 
   return (
     <Trace logImpression page={InterfacePageName.PortfolioTokensPage}>
-      <Flex padding="$spacing24" gap="$spacing16">
+      <Flex gap="$spacing16">
         <Text variant="heading2">{t('portfolio.tokens.title')}</Text>
         <Flex
           padding="$spacing24"

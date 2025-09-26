@@ -1,6 +1,7 @@
 import { TransactionRequest } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TradingApi } from '@universe/api'
+
 import { AssetType } from 'uniswap/src/entities/assets'
 import { ALL_EVM_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
@@ -140,7 +141,7 @@ export const transactionOptions = createFixture<TransactionOptions>()(() => ({
 
 export const transactionDetails = createFixture<ClassicTransactionDetails>()(() => ({
   ...transactionId(),
-  routing: Routing.CLASSIC,
+  routing: TradingApi.Routing.CLASSIC,
   from: faker.finance.ethereumAddress(),
   typeInfo: approveTransactionInfo(),
   status: randomEnumValue(TransactionStatus),

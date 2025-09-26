@@ -343,7 +343,7 @@ function PredefinedAmount({
   const { addFiatSymbolToNumber } = useLocalizationContext()
   const { t } = useTranslation()
   const currencyBalance =
-    currency?.currencyInfo?.currency && portfolioBalance?.quantity
+    currency?.currencyInfo?.currency && portfolioBalance?.quantity && isOffRamp
       ? getCurrencyAmount({
           value: portfolioBalance.quantity.toString(),
           valueType: ValueType.Exact,

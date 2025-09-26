@@ -104,7 +104,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
   return (
     <Trace section={SectionName.MiniPortfolio}>
       <Flex mt="$spacing28" gap="$spacing12" height="100%">
-        <Flex row gap="$spacing20" data-testid="mini-portfolio-navbar" $md={{ mb: '$spacing48' }}>
+        <Flex row gap="$spacing20" data-testid="mini-portfolio-navbar">
           {pages.map(({ title, loggingElementName, key }, index) => {
             const isUnselectedActivity = key === 'activity' && currentKey !== 'activity'
             const showActivityIndicator = isUnselectedActivity && (hasPendingActivity || activityUnread)

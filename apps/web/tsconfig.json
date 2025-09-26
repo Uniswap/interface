@@ -53,6 +53,9 @@
     },
     {
       "path": "../../packages/uniswap"
+    },
+    {
+      "path": "../../packages/api"
     }
   ]
 }

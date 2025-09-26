@@ -1,0 +1,11 @@
+ignores: [
+    # Dependencies that depcheck thinks are unused but are actually used
+    "openapi-typescript-codegen",
+    "typescript",
+    "depcheck",
+    # Dependencies that depcheck thinks are missing but are actually present
+    ## Internal packages / workspaces
+    "@universe/sessions",
+    "tsconfig",
+    "utilities",
+  ]

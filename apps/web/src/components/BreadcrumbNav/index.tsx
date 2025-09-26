@@ -1,11 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import useCopyClipboard from 'hooks/useCopyClipboard'
-import { useCallback, useState } from 'react'
-import { CheckCircle, Copy } from 'react-feather'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import { Flex, styled, Text, TextProps, useMedia, useSporeColors } from 'ui/src'
+import { CopyHelper } from 'theme/components/CopyHelper'
+import { Flex, styled, Text, TextProps, useMedia } from 'ui/src'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 
 export const BreadcrumbNavContainer = styled(Flex, {
@@ -52,25 +51,6 @@ const PageTitleText = styled(Text, {
   margin: 0,
 })
 
-const TokenAddressHoverContainer = styled(Flex, {
-  row: true,
-  gap: 10,
-  '$platform-web': {
-    color: '$neutral2',
-    whiteSpace: 'nowrap',
-  },
-  variants: {
-    isDisabled: {
-      true: {
-        cursor: 'default',
-      },
-      false: {
-        cursor: 'pointer',
-      },
-    },
-  } as const,
-})
-
 // Used in both TDP & PDP.
 // On TDP, currency is defined & poolName is undefined. On PDP, currency is undefined & poolName is defined.
 export const CurrentPageBreadcrumb = ({
@@ -83,51 +63,34 @@ export const CurrentPageBreadcrumb = ({
   poolName?: string
 }) => {
   const { t } = useTranslation()
-  const { neutral2, statusSuccess } = useSporeColors()
-  const [hover, setHover] = useState(false)
-
-  const [isCopied, setCopied] = useCopyClipboard()
-  const copy = useCallback(() => {
-    setCopied(address)
-  }, [address, setCopied])
-
   const isNative = currency?.isNative
   const tokenSymbolName = currency?.symbol ?? t('tdp.symbolNotFound')
 
   const media = useMedia()
   const shouldEnableCopy = !media.md
-  const shouldShowActions = shouldEnableCopy && hover
+  const [isBreadcrumbHover, setIsBreadcrumbHover] = useState(false)
 
   return (
     <CurrentPageBreadcrumbContainer
       aria-current="page"
       data-testid="current-breadcrumb"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      onMouseEnter={() => setIsBreadcrumbHover(true)}
+      onMouseLeave={() => setIsBreadcrumbHover(false)}
     >
       <PageTitleText>{currency ? tokenSymbolName : poolName}</PageTitleText>
       {(!currency || !isNative) && (
-        <TokenAddressHoverContainer
-          data-testid="breadcrumb-token-address"
-          isDisabled={!shouldEnableCopy}
-          onPress={shouldEnableCopy ? copy : undefined}
+        <CopyHelper
+          toCopy={address}
+          iconPosition="right"
+          iconSize={16}
+          iconColor="$neutral2"
+          color="$neutral2"
+          disabled={!shouldEnableCopy}
+          externalHover={isBreadcrumbHover}
+          dataTestId={TestID.BreadcrumbHoverCopy}
         >
-          <MouseoverTooltip
-            placement="bottom"
-            size={TooltipSize.Max}
-            forceShow={isCopied}
-            text={t('common.copied')}
-            disabled
-          >
-            {shortenAddress(address)}
-          </MouseoverTooltip>
-          {shouldShowActions &&
-            (isCopied ? (
-              <CheckCircle size={16} color={statusSuccess.val} />
-            ) : (
-              <Copy data-testid="breadcrumb-hover-copy" width={16} height={16} color={neutral2.val} />
-            ))}
-        </TokenAddressHoverContainer>
+          {shortenAddress(address)}
+        </CopyHelper>
       )}
     </CurrentPageBreadcrumbContainer>
   )

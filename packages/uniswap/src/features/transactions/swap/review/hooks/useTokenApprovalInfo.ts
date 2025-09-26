@@ -1,8 +1,8 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckApprovalQuery'
-import { ApprovalRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { convertGasFeeToDisplayValue, useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
@@ -22,7 +22,7 @@ export interface TokenApprovalInfoParams {
   wrapType: WrapType
   currencyInAmount: Maybe<CurrencyAmount<Currency>>
   currencyOutAmount?: Maybe<CurrencyAmount<Currency>>
-  routing: Routing | undefined
+  routing: TradingApi.Routing | undefined
   account?: AccountDetails
 }
 
@@ -32,7 +32,7 @@ export type ApprovalTxInfo = {
   revokeGasFeeResult: GasFeeResult
 }
 
-function useApprovalWillBeBatchedWithSwap(chainId: UniverseChainId, routing: Routing | undefined): boolean {
+function useApprovalWillBeBatchedWithSwap(chainId: UniverseChainId, routing: TradingApi.Routing | undefined): boolean {
   const canBatchTransactions = useUniswapContextSelector((ctx) => ctx.getCanBatchTransactions?.(chainId))
   const swapDelegationInfo = useUniswapContextSelector((ctx) => ctx.getSwapDelegationInfo?.(chainId))
 
@@ -55,13 +55,13 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
   const tokenInAddress = getTokenAddressForApi(currencyIn)
 
   // Only used for bridging
-  const isBridge = routing === Routing.BRIDGE
+  const isBridge = routing === TradingApi.Routing.BRIDGE
   const currencyOut = currencyOutAmount?.currency
   const tokenOutAddress = getTokenAddressForApi(currencyOut)
 
   const gasStrategy = useActiveGasStrategy(chainId, 'general')
 
-  const approvalRequestArgs: ApprovalRequest | undefined = useMemo(() => {
+  const approvalRequestArgs: TradingApi.ApprovalRequest | undefined = useMemo(() => {
     const tokenInChainId = toTradingApiSupportedChainId(chainId)
     const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
 

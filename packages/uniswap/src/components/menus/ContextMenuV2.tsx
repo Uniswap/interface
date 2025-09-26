@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react'
-import { GeneratedIcon, IconProps, TextProps } from 'ui/src'
+import { DropdownMenuSheetItemProps, GeneratedIcon, IconProps, TextProps } from 'ui/src'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
@@ -10,6 +10,7 @@ export type MenuOptionItemWithId = MenuOptionItem & {
 export type MenuOptionItem = {
   label: string
   onPress: () => void
+  actionType?: DropdownMenuSheetItemProps['actionType']
   Icon?: GeneratedIcon | ((props: IconProps) => JSX.Element)
   showDivider?: boolean
   disabled?: boolean
@@ -18,7 +19,6 @@ export type MenuOptionItem = {
   textColor?: TextProps['color']
   closeDelay?: number
   subheader?: string
-  rightIcon?: React.ReactNode
   height?: number
 }
 

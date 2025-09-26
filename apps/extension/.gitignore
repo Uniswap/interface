@@ -25,3 +25,10 @@ dist-ssr
 *.sw?
 
 .tamagui
+.output
+.wxt
+
+# Personal web-ext configuration
+web-ext.config.ts
+
+tsconfig.tsbuildinfo

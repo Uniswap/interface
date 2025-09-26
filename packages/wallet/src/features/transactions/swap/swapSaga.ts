@@ -1,11 +1,11 @@
 import { permit2Address } from '@uniswap/permit2-sdk'
+import { TradingApi } from '@universe/api'
 import { call, put, select } from 'typed-redux-saga'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { FLASHBLOCKS_UI_SKIP_ROUTES } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
 import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
@@ -54,7 +54,7 @@ export function* approveAndSwap(params: SwapParams) {
     const { swapTxContext, account, txId, analytics, onSuccess, onFailure, onPending } = params
     const { approveTxRequest } = swapTxContext
     const isUniswapXRouting = isUniswapX(swapTxContext)
-    const isBridge = swapTxContext.routing === Routing.BRIDGE
+    const isBridge = swapTxContext.routing === TradingApi.Routing.BRIDGE
     const chainId = swapTxContext.trade.inputAmount.currency.chainId
 
     // MEV protection is not needed for UniswapX approval and/or wrap transactions.
@@ -113,7 +113,10 @@ export function* approveAndSwap(params: SwapParams) {
     }
 
     // Permit transaction logic (smart account mismatch case)
-    if (swapTxContext.routing === Routing.CLASSIC && swapTxContext.permit?.method === PermitMethod.Transaction) {
+    if (
+      swapTxContext.routing === TradingApi.Routing.CLASSIC &&
+      swapTxContext.permit?.method === PermitMethod.Transaction
+    ) {
       const permitTxRequest = swapTxContext.permit.txRequest
 
       // Spender should be routing contract, called in the swap tx
@@ -171,7 +174,7 @@ export function* approveAndSwap(params: SwapParams) {
         onFailure,
       }
       yield* call(submitUniswapXOrder, submitOrderParams)
-    } else if (swapTxContext.routing === Routing.BRIDGE) {
+    } else if (swapTxContext.routing === TradingApi.Routing.BRIDGE) {
       const options: TransactionOptions = {
         request: { ...swapTxContext.txRequests[0], nonce },
         submitViaPrivateRpc,
@@ -195,7 +198,7 @@ export function* approveAndSwap(params: SwapParams) {
       if (swapTxHasDelayedSubmission) {
         yield* call(onSuccess)
       }
-    } else if (swapTxContext.routing === Routing.CLASSIC) {
+    } else if (swapTxContext.routing === TradingApi.Routing.CLASSIC) {
       const options: TransactionOptions = {
         request: { ...swapTxContext.txRequests?.[0], nonce },
         submitViaPrivateRpc,

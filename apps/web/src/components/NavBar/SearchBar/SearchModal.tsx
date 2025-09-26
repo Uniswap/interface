@@ -138,7 +138,12 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
               onSelect={onSelect}
             />
           ) : (
-            <SearchModalNoQueryList chainFilter={chainFilter} activeTab={activeTab} onSelect={onSelect} />
+            <SearchModalNoQueryList
+              chainFilter={chainFilter}
+              activeTab={activeTab}
+              onSelect={onSelect}
+              renderedInModal
+            />
           )}
         </Flex>
       </Flex>

@@ -1,0 +1,45 @@
+{
+  "name": "@universe/sessions",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/sessions/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "typecheck": {
+      "command": "tsc -b",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint": {
+      "command": "eslint . --ext ts,tsx --max-warnings=0",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint:fix": {
+      "command": "eslint . --ext ts,tsx --fix",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "format": {
+      "command": "biome check . --linter-enabled=false",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test": {
+      "command": "vitest",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:coverage": {
+      "command": "vitest --coverage",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

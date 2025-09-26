@@ -10,7 +10,8 @@ import { DocumentList } from 'ui/src/components/icons/DocumentList'
 import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import { ProtocolVersion as GraphQLProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { isAddress, shortenAddress } from 'utilities/src/addresses'
+import { shortenAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 
 const PositionInfoBadge = styled(Text, {
   display: 'flex',
@@ -115,7 +116,7 @@ export function LiquidityPositionInfoBadges({
     <>
       {badges.map((badge, index) => {
         const { label, copyable, icon, iconAfter, tooltipContent } = badge
-        const displayLabel = isAddress(label) ? shortenAddress(label) : label
+        const displayLabel = isEVMAddress(label) ? shortenAddress(label) : label
         const key = label + index
         const content = (
           <PositionInfoBadge

@@ -139,17 +139,17 @@
   "bridgedAsset.modal.feature.securelyBacked.description": "1:1 مدعومة بواسطة {{currencySymbol}}الأصلية.",
   "bridgedAsset.modal.feature.tradeSeamlessly": "التجارة بسلاسة",
   "bridgedAsset.modal.feature.tradeSeamlessly.description": "قم بالشراء والبيع {{currencySymbol}} دون مغادرة Uniswap.",
-  "bridgedAsset.modal.feature.withdrawToHyperEVM": "سحب إلى HyperEVM",
-  "bridgedAsset.modal.feature.withdrawToHyperEVM.description": "العودة إلى الشبكة الأصلية في أي وقت.",
+  "bridgedAsset.modal.feature.withdrawToNativeChain": "سحب إلى {{nativeChainName}}",
+  "bridgedAsset.modal.feature.withdrawToNativeChain.description": "العودة إلى الشبكة الأصلية في أي وقت.",
   "bridgedAsset.modal.title": "تداول {{currencySymbol}} على {{chainName}}",
   "bridgedAsset.send.warning.description": "أنت تُرسل نسخةً مُغلّفةً من {{currencySymbol}} إلى {{chainName}}. إرسالها إلى بورصة مركزية سيؤدي إلى خسارة دائمة للأموال.",
   "bridgedAsset.send.warning.title": "تأكد من أنك ترسل إلى عنوان متوافق",
   "bridgedAsset.tdp.description": "هذه نسخة جسرية من {{currencySymbol}} مدعومة بنسبة 1:1 بواسطة {{currencySymbol}}الأصلية.",
   "bridgedAsset.wormhole.button": "استمر إلى الثقب الدودي",
-  "bridgedAsset.wormhole.description": "استمر إلى بوابة Wormhole لربط {{currencySymbol}} من {{chainName}} إلى HyperEVM.",
-  "bridgedAsset.wormhole.title": "سحب {{currencySymbol}} إلى HyperEVM",
-  "bridgedAsset.wormhole.toHyperEVM": "إلى HyperEVM",
-  "bridgedAsset.wormhole.withdrawToHyperEVM": "سحب إلى HyperEVM",
+  "bridgedAsset.wormhole.description": "استمر إلى بوابة Wormhole لربط {{currencySymbol}} من {{chainName}} إلى {{nativeChainName}}.",
+  "bridgedAsset.wormhole.title": "سحب {{currencySymbol}} إلى {{nativeChainName}}",
+  "bridgedAsset.wormhole.toNativeChain": "إلى {{nativeChainName}}",
+  "bridgedAsset.wormhole.withdrawToNativeChain": "سحب إلى {{nativeChainName}}",
   "bridging.estimatedTime.minutesAndSeconds": "~{{minutes}}دقيقة {{seconds}}ثانية",
   "bridging.estimatedTime.minutesOnly": "~{{minutes}}دقيقة",
   "bridging.estimatedTime.secondsOnly": "~{{seconds}}س",
@@ -165,6 +165,7 @@
   "chart.settings.unavailable.label": "هذا الإعداد غير متوفر للمخطط الحالي",
   "claim.thanks": "شكرًا لكونك جزءًا من مجتمع Uniswap <heart />",
   "claim.uni.arrived": "وصلت UNI",
+  "common.about": "عن",
   "common.accept": "يقبل",
   "common.active": "نشيط",
   "common.activeNetworks": "الشبكات النشطة",
@@ -288,6 +289,7 @@
   "common.confirmWallet": "تأكيد في المحفظة",
   "common.connect.button": "يتصل",
   "common.connectAWallet.button": "قم بتوصيل المحفظة",
+  "common.connectTo": "الاتصال بـ {{platform}}",
   "common.connectWallet.button": "ربط المحفظة",
   "common.contactUs.button": "اتصل بنا",
   "common.contractInteraction": "تفاعل العقد",
@@ -297,6 +299,7 @@
   "common.copyLink.button": "نسخ الوصلة",
   "common.created.date": "تم الإنشاء {{date}}",
   "common.currency": "عملة",
+  "common.currentPrice": "السعر الحالي",
   "common.custom": "مخصص",
   "common.customRange": "مجموعة مخصصة",
   "common.dataOutdated": "قد تكون البيانات قديمة",
@@ -437,6 +440,7 @@
   "common.noActivity": "لا يوجد نشاط بعد",
   "common.noAmount.error": "أدخل المبلغ",
   "common.noData": "لايوجد بيانات",
+  "common.none": "لا أحد",
   "common.noResults": "لم يتم العثور على نتائج.",
   "common.notAvailableInRegion.error": "غير متوفر في منطقتك",
   "common.notCreated.label": "لم يتم إنشاؤه",
@@ -1488,9 +1492,13 @@
   "position.create.invalidPrice": "سعر غير صالح",
   "position.create.invalidRange": "نطاق غير صالح",
   "position.create.modal.header": "إنشاء موقف",
+  "position.create.unsupportedSolana": "لا يتم دعم مجموعات Solana.",
+  "position.create.unsupportedSolana.description": "لإنشاء مجموعة، قم بالتبديل إلى سلسلة EVM المدعومة.",
   "position.create.unsupportedToken.description": "حاول إنشاء إصدار بروتوكول مختلف.",
   "position.create.v2unsupportedChain": "هذه السلسلة غير مدعومة لمجموعات v2.",
   "position.currentValue": "قيمة الموضع الحالي",
+  "position.default_price_strategies": "استراتيجيات الأسعار",
+  "position.default_price_strategies.error": "غير قادر على تحديد استراتيجية السعر",
   "position.deposit.confirm.create.description.less": "السعر الأولي المُدخل أقل بنسبة {{value}}% من سعر السوق، وقد يُؤدي إلى خسارة أموالك. هل ترغب في المُتابعة؟",
   "position.deposit.confirm.create.description.more": "السعر الأولي المُدخل أعلى بنسبة {{value}}% من سعر السوق، وقد يُؤدي إلى خسارة أموالك. هل ترغب في المُتابعة؟",
   "position.deposit.confirm.create.title": "فرق كبير في السعر مع السوق",
@@ -1518,6 +1526,10 @@
   "position.new.protocol": "موضع جديد {{protocol}}",
   "position.notFound": "لم يتم العثور على الموضع",
   "position.notFound.description": "التفاصيل المتعلقة بهذا الموضع غير متوفرة. يرجى التأكد من اتصالك بالمحفظة الصحيحة.",
+  "position.one_sided_lower": "سفلي من جانب واحد",
+  "position.one_sided_lower.description": "توفير السيولة إذا انخفض السعر",
+  "position.one_sided_upper": "الجزء العلوي من جانب واحد",
+  "position.one_sided_upper.description": "توفير السيولة إذا ارتفع السعر",
   "position.protocol": "{{protocol}} الموضع",
   "position.provide.liquidity": "اختر الرموز التي تريد توفير السيولة لها. يمكنك تحديد الرموز على جميع الشبكات المدعومة.",
   "position.provide.liquidityDescription": "إن توفير السيولة الكاملة يضمن المشاركة المستمرة في السوق عبر جميع الأسعار الممكنة، مما يوفر البساطة ولكن مع إمكانية حدوث خسارة غير دائمة أكبر.",
@@ -1530,12 +1542,16 @@
   "position.resetDescription": "سيتم إعادة تعيين اختيارات الرموز والسعر والنطاق الخاصة بك.",
   "position.setRange": "تحديد النطاق السعري",
   "position.setRange.inputsBelow": "استخدم المدخلات أدناه لتعيين النطاق الخاص بك.",
+  "position.stable": "مستقر",
+  "position.stable.description": "مناسب للعملات المستقرة أو أزواج التقلبات المنخفضة",
   "position.step.deposit": "أدخل مبالغ الإيداع",
   "position.step.price": "تحديد السعر الأولي ومبالغ الإيداع",
   "position.step.range": "تحديد نطاق السعر ومبالغ الإيداع",
   "position.step.select": "حدد زوج الرمز والرسوم",
   "position.value": "قيمة الموضع",
   "position.valueUnavailable": "القيمة بالدولار الأمريكي غير متاحة حاليًا لهذا المركز. راجع تفاصيل المركز لمعرفة مبالغ الرموز المودعة.",
+  "position.wide": "واسع",
+  "position.wide.description": "جيد للأزواج المتقلبة",
   "position.wrapped.unwrap": "افتح {{wrappedToken}}",
   "position.wrapped.warning": "{{nativeToken}} مطلوب لمجموعات v4",
   "position.wrapped.warning.info": "قم بفك {{wrappedToken}} وقم بإيداع {{nativeToken}} لتوفير سيولة أكثر فعالية من حيث التكلفة والكفاءة.",
@@ -1684,11 +1700,12 @@
   "settings.action.lock": "قفل المحفظة",
   "settings.action.privacy": "سياسة الخصوصية",
   "settings.action.terms": "شروط الخدمة",
+  "settings.connectWalletPlatform.warning": "لاستخدام Uniswap على {{platform}}، قم بالاتصال بمحفظة تدعم {{platform}}.",
   "settings.footer": "صُنع بكل حب، \nفريق Uniswap 🦄",
   "settings.hideSmallBalances": "إخفاء الأرصدة الصغيرة",
   "settings.hideSmallBalances.subtitle": "سيتم إخفاء الأرصدة التي تقل عن 1 دولار أمريكي من محفظتك.",
   "settings.maxSlippage": "الأعلى. انزلاق",
-  "settings.maxSlippage.percent": "{{percent}} أقصى انزلاق",
+  "settings.maxSlippage.amount": "{{amount}} أقصى انزلاق",
   "settings.section.about": "عن",
   "settings.section.preferences": "التفضيلات",
   "settings.section.privacyAndSecurity": "الخصوصية والأمان",
@@ -2147,6 +2164,7 @@
   "token.safety.warning.copyContractAddress.message": "هذا عنوان عقد يعمل كمعرف فريد للرموز على blockchain. سيتم فقد أي عملة مشفرة ترسلها إلى هذا العنوان.",
   "token.safety.warning.copyContractAddress.title": "لا ترسل العملات المشفرة إلى هذا العنوان",
   "token.safety.warning.dontShowWarningAgain": "لا تظهر لي هذا التحذير مرة أخرى",
+  "token.safety.warning.dontShowWarningAgainShort": "لا تظهر مرة أخرى",
   "token.safety.warning.doYourOwnResearch": "قم دائمًا بإجراء البحث بنفسك قبل المتابعة.",
   "token.safety.warning.feeDescription": "يتم شحن <fee /> عند {{action}}",
   "token.safety.warning.flaggedAsMalicious": "تم وضع علامة عليه على أنه ضار",

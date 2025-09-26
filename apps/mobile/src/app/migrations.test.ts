@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { BigNumber } from '@ethersproject/bignumber'
 import { toIncludeSameMembers } from 'jest-extended'
 import mockdate from 'mockdate'
@@ -110,7 +109,7 @@ import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behavio
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
-import { initialNotificationsState } from 'uniswap/src/features/notifications/slice'
+import { initialNotificationsState } from 'uniswap/src/features/notifications/slice/slice'
 import { initialSearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
 import { initialUserSettingsState } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'

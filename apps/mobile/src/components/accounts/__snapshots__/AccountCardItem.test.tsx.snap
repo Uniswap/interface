@@ -144,77 +144,99 @@ exports[`AccountCardItem renders correctly 1`] = `
                   "borderTopRightRadius": 999999,
                   "borderTopWidth": 0,
                   "flexDirection": "column",
+                  "height": 32,
                   "position": "relative",
+                  "width": 32,
                 }
               }
               testID="account-icon"
             >
               <View
+                collapsable={false}
+                forwardedRef={[Function]}
+                jestAnimatedStyle={
+                  {
+                    "value": {
+                      "opacity": 0,
+                    },
+                  }
+                }
                 onBlur={[Function]}
                 onFocus={[Function]}
                 style={
                   {
                     "flexDirection": "column",
-                    "height": 32,
-                    "width": 32,
+                    "opacity": 0,
                   }
                 }
               >
                 <View
+                  onBlur={[Function]}
+                  onFocus={[Function]}
                   style={
                     {
+                      "flexDirection": "column",
                       "height": 32,
                       "width": 32,
                     }
                   }
                 >
-                  <skCircle
-                    color="#00C3A01F"
-                    cx={16}
-                    cy={16}
-                    r={16}
-                  />
-                  <skGroup
-                    transform={
-                      [
-                        {
-                          "translateX": 5.333333333333334,
-                        },
-                        {
-                          "translateY": 5.333333333333334,
-                        },
-                      ]
+                  <View
+                    style={
+                      {
+                        "height": 32,
+                        "width": 32,
+                      }
                     }
                   >
+                    <skCircle
+                      color="#00C3A01F"
+                      cx={16}
+                      cy={16}
+                      r={16}
+                    />
                     <skGroup
                       transform={
                         [
                           {
-                            "scale": 0.4444444444444444,
+                            "translateX": 5.333333333333334,
+                          },
+                          {
+                            "translateY": 5.333333333333334,
                           },
                         ]
                       }
                     >
-                      <skPath
-                        clip-rule="evenodd"
-                        color="#00C3A0"
-                        end={1}
-                        fillType="evenOdd"
-                        path="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
-                        start={0}
-                        strokeWidth={1}
-                      />
-                      <skPath
-                        clip-rule="evenodd"
-                        color="#00C3A0"
-                        end={1}
-                        fillType="evenOdd"
-                        path="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
-                        start={0}
-                        strokeWidth={1}
-                      />
+                      <skGroup
+                        transform={
+                          [
+                            {
+                              "scale": 0.4444444444444444,
+                            },
+                          ]
+                        }
+                      >
+                        <skPath
+                          clip-rule="evenodd"
+                          color="#00C3A0"
+                          end={1}
+                          fillType="evenOdd"
+                          path="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
+                          start={0}
+                          strokeWidth={1}
+                        />
+                        <skPath
+                          clip-rule="evenodd"
+                          color="#00C3A0"
+                          end={1}
+                          fillType="evenOdd"
+                          path="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
+                          start={0}
+                          strokeWidth={1}
+                        />
+                      </skGroup>
                     </skGroup>
-                  </skGroup>
+                  </View>
                 </View>
               </View>
             </View>
@@ -225,7 +247,7 @@ exports[`AccountCardItem renders correctly 1`] = `
             style={
               {
                 "flexDirection": "column",
-                "flexShrink": 1,
+                "flexGrow": 1,
                 "gap": 2,
               }
             }
@@ -281,54 +303,85 @@ exports[`AccountCardItem renders correctly 1`] = `
               </View>
             </View>
             <View
+              collapsable={false}
+              forwardedRef={[Function]}
+              jestAnimatedStyle={
+                {
+                  "value": {},
+                }
+              }
               onBlur={[Function]}
               onFocus={[Function]}
               style={
                 {
-                  "alignItems": "center",
-                  "backgroundColor": {
-                    "dynamic": {
-                      "dark": "transparent",
-                      "light": "transparent",
-                    },
-                  },
-                  "borderBottomLeftRadius": 999999,
-                  "borderBottomRightRadius": 999999,
-                  "borderTopLeftRadius": 999999,
-                  "borderTopRightRadius": 999999,
-                  "flexDirection": "row",
-                  "gap": 4,
-                  "marginTop": 0,
-                  "paddingBottom": 0,
-                  "paddingLeft": 0,
-                  "paddingRight": 0,
-                  "paddingTop": 0,
+                  "opacity": 0,
+                  "overflow": "hidden",
+                  "width": "100%",
                 }
               }
             >
-              <Text
-                allowFontScaling={true}
-                maxFontSizeMultiplier={1.4}
+              <View
                 onBlur={[Function]}
                 onFocus={[Function]}
+                onLayout={[Function]}
                 style={
                   {
-                    "color": {
-                      "dynamic": {
-                        "dark": "rgba(255, 255, 255, 0.65)",
-                        "light": "rgba(19, 19, 19, 0.63)",
-                      },
-                    },
-                    "fontFamily": "Basel Grotesk",
-                    "fontSize": 15,
-                    "fontWeight": "400",
-                    "lineHeight": 19.5,
+                    "position": "absolute",
+                    "width": "100%",
                   }
                 }
-                suppressHighlighting={true}
               >
-                0x​82D56A...373Fa6
-              </Text>
+                <View
+                  onBlur={[Function]}
+                  onFocus={[Function]}
+                  style={
+                    {
+                      "alignItems": "center",
+                      "backgroundColor": {
+                        "dynamic": {
+                          "dark": "transparent",
+                          "light": "transparent",
+                        },
+                      },
+                      "borderBottomLeftRadius": 999999,
+                      "borderBottomRightRadius": 999999,
+                      "borderTopLeftRadius": 999999,
+                      "borderTopRightRadius": 999999,
+                      "flexDirection": "row",
+                      "gap": 4,
+                      "marginTop": 0,
+                      "paddingBottom": 0,
+                      "paddingLeft": 0,
+                      "paddingRight": 0,
+                      "paddingTop": 0,
+                    }
+                  }
+                >
+                  <Text
+                    allowFontScaling={true}
+                    maxFontSizeMultiplier={1.4}
+                    onBlur={[Function]}
+                    onFocus={[Function]}
+                    style={
+                      {
+                        "color": {
+                          "dynamic": {
+                            "dark": "rgba(255, 255, 255, 0.65)",
+                            "light": "rgba(19, 19, 19, 0.63)",
+                          },
+                        },
+                        "fontFamily": "Basel Grotesk",
+                        "fontSize": 15,
+                        "fontWeight": "400",
+                        "lineHeight": 19.5,
+                      }
+                    }
+                    suppressHighlighting={true}
+                  >
+                    0x​82D56A...373Fa6
+                  </Text>
+                </View>
+              </View>
             </View>
           </View>
         </View>

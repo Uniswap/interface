@@ -11,6 +11,7 @@ import { useMultiChainPositionsReturnValue, validBEPoolToken0, validBEPoolToken1
 import { act, render, screen } from 'test-utils/render'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { Currency, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { AccountsStore } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 import * as useSwapFormStoreModule from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
@@ -63,6 +64,7 @@ describe('PoolDetailsStatsButton', () => {
     signer: undefined,
     useProviderHook: () => undefined,
     useWalletDisplayName: () => undefined,
+    useAccountsStoreContextHook: () => ({}) as AccountsStore,
   }
 
   beforeEach(() => {

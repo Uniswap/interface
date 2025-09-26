@@ -1,5 +1,5 @@
+import { TradingApi } from '@universe/api'
 import { call, delay, fork, select, take } from 'typed-redux-saga'
-import { UniswapXOrder } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { makeSelectUniswapXOrder } from 'uniswap/src/features/transactions/selectors'
 import { updateTransaction } from 'uniswap/src/features/transactions/slice'
 import { getOrders } from 'uniswap/src/features/transactions/swap/orders'
@@ -50,7 +50,7 @@ export class OrderWatcher {
 
     try {
       const data = yield* call(getOrders, orderHashes)
-      const remoteOrderMap = new Map(data.orders.map((order: UniswapXOrder) => [order.orderId, order]))
+      const remoteOrderMap = new Map(data.orders.map((order: TradingApi.UniswapXOrder) => [order.orderId, order]))
 
       for (const localOrderHash of orderHashes) {
         const remoteOrder = remoteOrderMap.get(localOrderHash)

@@ -1,6 +1,7 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Protocols } from '@uniswap/client-trading/dist/trading/v1/api_pb'
+import { TradingApi } from '@universe/api'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 
 export function getProtocolVersionLabel(version: ProtocolVersion): string | undefined {
   switch (version) {
@@ -15,14 +16,27 @@ export function getProtocolVersionLabel(version: ProtocolVersion): string | unde
   }
 }
 
-export function getProtocolItems(version: ProtocolVersion | undefined): ProtocolItems | undefined {
+export function getProtocols(version: ProtocolVersion): Protocols | undefined {
   switch (version) {
     case ProtocolVersion.V2:
-      return ProtocolItems.V2
+      return Protocols.V2
     case ProtocolVersion.V3:
-      return ProtocolItems.V3
+      return Protocols.V3
     case ProtocolVersion.V4:
-      return ProtocolItems.V4
+      return Protocols.V4
+    default:
+      return undefined
+  }
+}
+
+export function getProtocolItems(version: ProtocolVersion | undefined): TradingApi.ProtocolItems | undefined {
+  switch (version) {
+    case ProtocolVersion.V2:
+      return TradingApi.ProtocolItems.V2
+    case ProtocolVersion.V3:
+      return TradingApi.ProtocolItems.V3
+    case ProtocolVersion.V4:
+      return TradingApi.ProtocolItems.V4
   }
   return undefined
 }

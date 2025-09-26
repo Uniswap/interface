@@ -3,6 +3,7 @@ import type { Percent } from '@uniswap/sdk-core'
 import { TradeType } from '@uniswap/sdk-core'
 import type { FlatFeeOptions } from '@uniswap/universal-router-sdk'
 import type { FeeOptions } from '@uniswap/v3-sdk'
+import { TradingApi } from '@universe/api'
 import { useAccount } from 'hooks/useAccount'
 import type { PermitSignature } from 'hooks/usePermitAllowance'
 import useSelectChain from 'hooks/useSelectChain'
@@ -16,7 +17,6 @@ import { TradeFillType } from 'state/routing/types'
 import { isClassicTrade, isLimitTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useTransaction, useTransactionAdder } from 'state/transactions/hooks'
 import type { TransactionInfo } from 'state/transactions/types'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
@@ -137,7 +137,7 @@ export function useSwapCallback({
         addedTime: Date.now(),
         transactionOriginType: TransactionOriginType.Internal,
         typeInfo: swapInfo,
-        routing: Routing.DUTCH_LIMIT,
+        routing: TradingApi.Routing.DUTCH_LIMIT,
         orderHash: result.response.orderHash,
         queueStatus: QueuedOrderStatus.Submitted,
         encodedOrder: result.response.encodedOrder,

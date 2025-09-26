@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react'
+import { TradingApi } from '@universe/api'
 import {
   MockExpiredUniswapXOrder,
   MockFilledUniswapXOrder,
@@ -31,7 +32,6 @@ import {
 } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
 import ms from 'ms'
 import { DAI } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   TransactionOriginType,
@@ -225,7 +225,7 @@ describe('parseRemote', () => {
         hash: '0xHashValue',
         orderHash: '0xHashValue',
         addedTime: 10000,
-        routing: Routing.DUTCH_V2,
+        routing: TradingApi.Routing.DUTCH_V2,
         transactionOriginType: TransactionOriginType.External,
         typeInfo: {
           expectedOutputCurrencyAmountRaw: '100000000000000000000',

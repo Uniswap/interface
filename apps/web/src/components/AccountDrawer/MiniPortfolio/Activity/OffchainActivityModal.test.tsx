@@ -1,12 +1,12 @@
 import 'test-utils/tokens/mocks'
 
 import { WETH9 } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
 import { DAI } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   TransactionOriginType,
@@ -34,7 +34,7 @@ describe('OrderContent', () => {
       from: '0xSenderAddress',
       id: 'tx123',
       chainId: UniverseChainId.Mainnet,
-      routing: Routing.DUTCH_V2,
+      routing: TradingApi.Routing.DUTCH_V2,
       status: TransactionStatus.Success,
       addedTime: 1701715079,
       transactionOriginType: TransactionOriginType.Internal,
@@ -58,7 +58,7 @@ describe('OrderContent', () => {
   it('should render without error, open order', () => {
     const order: UniswapXOrderDetails = {
       chainId: 1,
-      routing: Routing.DUTCH_V2,
+      routing: TradingApi.Routing.DUTCH_V2,
       status: TransactionStatus.Pending,
       encodedOrder: '0xencodedOrder',
       expiry: 1701715179,
@@ -89,7 +89,7 @@ describe('OrderContent', () => {
   it('should render without error, limit order', () => {
     const order: UniswapXOrderDetails = {
       chainId: UniverseChainId.Mainnet,
-      routing: Routing.DUTCH_LIMIT,
+      routing: TradingApi.Routing.DUTCH_LIMIT,
       status: TransactionStatus.Pending,
       encodedOrder: '0xencodedOrder',
       expiry: 1701715179,

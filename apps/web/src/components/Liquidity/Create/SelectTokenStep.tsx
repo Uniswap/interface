@@ -5,6 +5,7 @@ import CreatingPoolInfo from 'components/CreatingPoolInfo/CreatingPoolInfo'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { AddHook } from 'components/Liquidity/Create/AddHook'
 import { AdvancedButton } from 'components/Liquidity/Create/AdvancedButton'
+import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
 import type { FeeData } from 'components/Liquidity/Create/types'
 import { DEFAULT_POSITION_STATE } from 'components/Liquidity/Create/types'
 import { HookModal } from 'components/Liquidity/HookModal'
@@ -27,7 +28,7 @@ import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import type { FlexProps } from 'ui/src'
-import { Button, DropdownButton, Flex, HeightAnimator, styled, Text } from 'ui/src'
+import { Button, DropdownButton, Flex, HeightAnimator, Shine, styled, Text } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -44,6 +45,8 @@ import { AllowedV4WethHookAddressesConfigKey, DynamicConfigs } from 'uniswap/src
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { FeePoolSelectAction } from 'uniswap/src/features/telemetry/types'
@@ -60,16 +63,22 @@ interface WrappedNativeWarning {
 }
 
 export const CurrencySelector = ({
+  loading,
   currencyInfo,
   onPress,
 }: {
+  loading?: boolean
   currencyInfo: Maybe<CurrencyInfo>
   onPress: () => void
 }) => {
   const { t } = useTranslation()
   const currency = currencyInfo?.currency
 
-  return (
+  return loading ? (
+    <Shine width="100%">
+      <Flex backgroundColor="$surface3" borderRadius="$rounded16" height={50} />
+    </Shine>
+  ) : (
     <DropdownButton
       emphasis={currencyInfo ? undefined : 'primary'}
       onPress={onPress}
@@ -114,7 +123,11 @@ const FeeTierContainer = styled(Flex, {
   ...ClickableTamaguiStyle,
 })
 
-function isUnsupportedChain(chainId: UniverseChainId | undefined, protocolVersion: ProtocolVersion): boolean {
+function isUnsupportedLPChain(chainId: UniverseChainId | undefined, protocolVersion: ProtocolVersion): boolean {
+  if (chainId && isSVMChain(chainId)) {
+    return true
+  }
+
   if (protocolVersion === ProtocolVersion.V2) {
     return Boolean(chainId && !SUPPORTED_V2POOL_CHAIN_IDS.includes(chainId))
   }
@@ -195,6 +208,7 @@ export function SelectTokensStep({
   currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
 } & FlexProps) {
+  const { loadingA, loadingB } = useLiquidityUrlState()
   const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
   const { formatPercent } = useLocalizationContext()
@@ -224,8 +238,12 @@ export function SelectTokensStep({
   const token1 = currencyInputs.tokenB
   const [currencySearchInputState, setCurrencySearchInputState] = useState<'tokenA' | 'tokenB' | undefined>(undefined)
   const [isShowMoreFeeTiersEnabled, toggleShowMoreFeeTiersEnabled] = useReducer((state) => !state, false)
-  const isUnsupportedTokenSelected =
-    isUnsupportedChain(token0?.chainId, protocolVersion) || isUnsupportedChain(token1?.chainId, protocolVersion)
+
+  const isToken0Unsupported = isUnsupportedLPChain(token0?.chainId, protocolVersion)
+  const isToken1Unsupported = isUnsupportedLPChain(token1?.chainId, protocolVersion)
+  const unsupportedChainId = isToken0Unsupported ? token0?.chainId : isToken1Unsupported ? token1?.chainId : undefined
+  const isUnsupportedTokenSelected = isToken0Unsupported || isToken1Unsupported
+
   const continueButtonEnabled = creatingPoolOrPair || poolOrPair
 
   const handleCurrencySelect = useCallback(
@@ -333,7 +351,7 @@ export function SelectTokensStep({
     }
   }, [mostUsedFeeTier, defaultFeeTierSelected, parsedQs, setPositionState, trace])
 
-  const { chains } = useEnabledChains()
+  const { chains } = useEnabledChains({ platform: Platform.EVM })
   const supportedChains = useMemo(() => {
     return protocolVersion === ProtocolVersion.V4
       ? chains.filter((chain) => !isV4UnsupportedChain(chain))
@@ -457,14 +475,16 @@ export function SelectTokensStep({
                 </Flex>
               ) : (
                 <Flex row gap="$gap16" $md={{ flexDirection: 'column' }}>
-                  <Flex row grow>
+                  <Flex row flex={1} flexBasis={0} $md={{ flexBasis: 'auto' }}>
                     <CurrencySelector
+                      loading={loadingA}
                       currencyInfo={token0CurrencyInfo}
                       onPress={() => setCurrencySearchInputState('tokenA')}
                     />
                   </Flex>
-                  <Flex row grow>
+                  <Flex row flex={1} flexBasis={0} $md={{ flexBasis: 'auto' }}>
                     <CurrencySelector
+                      loading={loadingB}
                       currencyInfo={token1CurrencyInfo}
                       onPress={() => setCurrencySearchInputState('tokenB')}
                     />
@@ -473,6 +493,7 @@ export function SelectTokensStep({
               )}
               <SelectStepError
                 isUnsupportedTokenSelected={isUnsupportedTokenSelected}
+                unsupportedChainId={unsupportedChainId}
                 protocolVersion={protocolVersion}
                 wrappedNativeWarning={undefined}
                 fotToken={fotErrorToken}
@@ -686,11 +707,13 @@ export function SelectTokensStep({
 
 function SelectStepError({
   isUnsupportedTokenSelected,
+  unsupportedChainId,
   protocolVersion,
   wrappedNativeWarning,
   fotToken,
 }: {
   isUnsupportedTokenSelected: boolean
+  unsupportedChainId?: UniverseChainId
   protocolVersion: ProtocolVersion
   wrappedNativeWarning?: WrappedNativeWarning
   fotToken?: CurrencyInfo
@@ -704,11 +727,17 @@ function SelectStepError({
       <ErrorCallout
         errorMessage={true}
         title={
-          protocolVersion === ProtocolVersion.V2
-            ? t('position.create.v2unsupportedChain')
-            : t('position.migrate.v4unsupportedChain')
+          unsupportedChainId === UniverseChainId.Solana
+            ? t('position.create.unsupportedSolana')
+            : protocolVersion === ProtocolVersion.V2
+              ? t('position.create.v2unsupportedChain')
+              : t('position.migrate.v4unsupportedChain')
         }
-        description={t('position.create.unsupportedToken.description')}
+        description={
+          unsupportedChainId === UniverseChainId.Solana
+            ? t('position.create.unsupportedSolana.description')
+            : t('position.create.unsupportedToken.description')
+        }
       />
     )
   }

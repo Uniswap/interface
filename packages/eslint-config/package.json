@@ -26,7 +26,7 @@
     "@typescript-eslint/eslint-plugin": "6.20.0",
     "@typescript-eslint/parser": "6.20.0",
     "@typescript-eslint/utils": "6.20.0",
-    "eslint-config-turbo": "latest",
+    "eslint-config-turbo": "2.5.6",
     "eslint-import-resolver-typescript": "3.6.3",
     "eslint-plugin-check-file": "2.8.0",
     "eslint-plugin-detox": "1.0.0",

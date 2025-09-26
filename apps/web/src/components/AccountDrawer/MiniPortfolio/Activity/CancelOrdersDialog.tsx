@@ -1,4 +1,5 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { useCancelOrdersGasEstimate } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { ConfirmedIcon, LogoContainer, SubmittedIcon } from 'components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { Dialog } from 'components/Dialog/Dialog'
@@ -15,7 +16,6 @@ import { ExternalLink } from 'theme/components/Links'
 import { Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -61,7 +61,7 @@ function useCancelOrdersDialogContent(
     case CancellationState.REVIEWING_CANCELLATION:
       return {
         title:
-          orders.length === 1 && orders[0].routing === Routing.DUTCH_LIMIT ? (
+          orders.length === 1 && orders[0].routing === TradingApi.Routing.DUTCH_LIMIT ? (
             <Trans i18nKey="common.limit.cancel_one" />
           ) : (
             <Trans i18nKey="common.cancelOrder" />

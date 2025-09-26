@@ -1,8 +1,8 @@
+import { TradingApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, HeightAnimator, Text } from 'ui/src'
 import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
-import type { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/components/AcrossRoutingInfo'
@@ -43,7 +43,7 @@ interface SwapDetailsProps {
   onAcceptTrade: () => void
   onShowWarning?: () => void
   setTokenWarningChecked?: (checked: boolean) => void
-  txSimulationErrors?: TransactionFailureReason[]
+  txSimulationErrors?: TradingApi.TransactionFailureReason[]
   includesDelegation?: boolean
 }
 

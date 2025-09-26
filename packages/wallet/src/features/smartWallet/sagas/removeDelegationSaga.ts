@@ -10,7 +10,6 @@ import {
   ExecuteTransactionParams,
   executeTransaction,
 } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
-import { shouldSubmitViaPrivateRpc } from 'wallet/src/features/transactions/swap/swapSaga'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export const getRemoveDelegationTransaction = (
@@ -62,14 +61,11 @@ type RemoveDelegationForChainParams = {
 function* removeDelegationForChain(params: RemoveDelegationForChainParams) {
   const { chainId, account, walletAddress } = params
 
-  const submitViaPrivateRpc = yield* call(shouldSubmitViaPrivateRpc, chainId)
-
   const executeTransactionParams: ExecuteTransactionParams = {
     chainId,
     account,
     options: {
       request: yield* call(getRemoveDelegationTransactionWithGasLimit, chainId, walletAddress),
-      submitViaPrivateRpc,
     },
     typeInfo: {
       type: TransactionType.RemoveDelegation,

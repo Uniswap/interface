@@ -1,30 +1,27 @@
 import { Dialog } from 'components/Dialog/Dialog'
 import { UserIcon } from 'components/Icons/UserIcon'
-import Identicon, { IdenticonType, useIdenticonType } from 'components/Identicon'
 import { SendModalProps } from 'pages/Swap/Send/SendReviewModal'
 import { useTranslation } from 'react-i18next'
 import type { RecipientData } from 'state/send/hooks'
 import { useSendContext } from 'state/send/SendContext'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-const RecipientDisplay = ({
-  recipientData,
-  identiconType,
-}: {
-  recipientData?: RecipientData
-  identiconType?: IdenticonType
-}) => {
-  const ensOrUnitag = recipientData?.ensName ?? recipientData?.unitag
+const RecipientDisplay = ({ recipientData }: { recipientData?: RecipientData }) => {
+  const ensOrUnitag = recipientData?.unitag ?? recipientData?.ensName
 
   if (ensOrUnitag) {
     return (
       <Flex centered gap="$gap4">
         <Flex row centered gap="$gap4">
-          {(identiconType === IdenticonType.ENS_AVATAR || identiconType === IdenticonType.UNITAG_PROFILE_PICTURE) && (
-            <Identicon data-testid="speedbump-identicon" size={16} account={recipientData?.address ?? ''} />
-          )}
+          <AccountIcon
+            data-testid="speedbump-account-icon"
+            size={16}
+            address={recipientData?.address}
+            marginRight="$spacing2"
+          />
           <Text variant="body2">{ensOrUnitag}</Text>
           {recipientData?.unitag && <Unitag size={18} />}
         </Flex>
@@ -47,7 +44,6 @@ export const NewAddressSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendM
   const {
     derivedSendInfo: { recipientData },
   } = useSendContext()
-  const identiconType = useIdenticonType(recipientData?.address)
 
   return (
     <Dialog
@@ -78,7 +74,7 @@ export const NewAddressSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendM
         py="$padding20"
         width="100%"
       >
-        <RecipientDisplay recipientData={recipientData} identiconType={identiconType} />
+        <RecipientDisplay recipientData={recipientData} />
       </Flex>
     </Dialog>
   )

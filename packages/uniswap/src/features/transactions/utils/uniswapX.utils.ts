@@ -1,5 +1,5 @@
+import { TradingApi } from '@universe/api'
 import { SwapOrderStatus, SwapOrderType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { OrderStatus, OrderType, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 
@@ -8,19 +8,23 @@ import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/tran
  * Used when creating transactions from external UniswapX orders.
  */
 export function convertOrderTypeToRouting(
-  orderType: OrderType,
-): Routing.DUTCH_LIMIT | Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY {
+  orderType: TradingApi.OrderType,
+):
+  | TradingApi.Routing.DUTCH_LIMIT
+  | TradingApi.Routing.DUTCH_V2
+  | TradingApi.Routing.DUTCH_V3
+  | TradingApi.Routing.PRIORITY {
   switch (orderType) {
-    case OrderType.PRIORITY:
-      return Routing.PRIORITY
-    case OrderType.DUTCH_V2:
-      return Routing.DUTCH_V2
-    case OrderType.DUTCH_V3:
-      return Routing.DUTCH_V3
-    case OrderType.DUTCH:
-    case OrderType.DUTCH_LIMIT:
+    case TradingApi.OrderType.PRIORITY:
+      return TradingApi.Routing.PRIORITY
+    case TradingApi.OrderType.DUTCH_V2:
+      return TradingApi.Routing.DUTCH_V2
+    case TradingApi.OrderType.DUTCH_V3:
+      return TradingApi.Routing.DUTCH_V3
+    case TradingApi.OrderType.DUTCH:
+    case TradingApi.OrderType.DUTCH_LIMIT:
     default:
-      return Routing.DUTCH_LIMIT
+      return TradingApi.Routing.DUTCH_LIMIT
   }
 }
 
@@ -30,17 +34,17 @@ export function convertOrderTypeToRouting(
  */
 export function convertSwapOrderTypeToRouting(
   orderType: SwapOrderType,
-): Routing.DUTCH_LIMIT | Routing.DUTCH_V2 | Routing.PRIORITY {
+): TradingApi.Routing.DUTCH_LIMIT | TradingApi.Routing.DUTCH_V2 | TradingApi.Routing.PRIORITY {
   switch (orderType) {
     case SwapOrderType.Priority:
-      return Routing.PRIORITY
+      return TradingApi.Routing.PRIORITY
     case SwapOrderType.Dutch:
     case SwapOrderType.DutchV2:
-      return Routing.DUTCH_V2
+      return TradingApi.Routing.DUTCH_V2
     case SwapOrderType.Limit:
-      return Routing.DUTCH_LIMIT
+      return TradingApi.Routing.DUTCH_LIMIT
     default:
-      return Routing.DUTCH_V2
+      return TradingApi.Routing.DUTCH_V2
   }
 }
 
@@ -48,21 +52,21 @@ export function convertSwapOrderTypeToRouting(
  * Converts a trading API OrderStatus to internal TransactionStatus.
  * Used for syncing order status from backend to local transaction state.
  */
-export function convertOrderStatusToTransactionStatus(status: OrderStatus): TransactionStatus {
+export function convertOrderStatusToTransactionStatus(status: TradingApi.OrderStatus): TransactionStatus {
   switch (status) {
-    case OrderStatus.FILLED:
+    case TradingApi.OrderStatus.FILLED:
       return TransactionStatus.Success
-    case OrderStatus.OPEN:
+    case TradingApi.OrderStatus.OPEN:
       return TransactionStatus.Pending
-    case OrderStatus.EXPIRED:
+    case TradingApi.OrderStatus.EXPIRED:
       return TransactionStatus.Expired
-    case OrderStatus.ERROR:
+    case TradingApi.OrderStatus.ERROR:
       return TransactionStatus.Failed
-    case OrderStatus.CANCELLED:
+    case TradingApi.OrderStatus.CANCELLED:
       return TransactionStatus.Canceled
-    case OrderStatus.INSUFFICIENT_FUNDS:
+    case TradingApi.OrderStatus.INSUFFICIENT_FUNDS:
       return TransactionStatus.InsufficientFunds
-    case OrderStatus.UNVERIFIED:
+    case TradingApi.OrderStatus.UNVERIFIED:
     default:
       return TransactionStatus.Unknown
   }
@@ -96,5 +100,5 @@ export function remoteOrderStatusToLocalTxStatus(orderStatus: SwapOrderStatus): 
  * Limit orders are UniswapX orders with DUTCH_LIMIT routing.
  */
 export function isLimitOrder(tx: TransactionDetails): boolean {
-  return isUniswapX(tx) && tx.routing === Routing.DUTCH_LIMIT
+  return isUniswapX(tx) && tx.routing === TradingApi.Routing.DUTCH_LIMIT
 }

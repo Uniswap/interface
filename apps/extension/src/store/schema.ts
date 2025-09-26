@@ -1,4 +1,4 @@
-import { RankingType } from 'uniswap/src/data/types'
+import { RankingType } from '@universe/api'
 
 // only add fields that are persisted
 export const initialSchema = {

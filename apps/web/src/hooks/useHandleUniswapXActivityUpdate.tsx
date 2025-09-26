@@ -1,11 +1,11 @@
 import { useTrace } from '@uniswap/analytics'
+import { TradingApi } from '@universe/api'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { useCallback } from 'react'
 import type { UniswapXOrderUpdate } from 'state/activity/types'
 import { useAppDispatch } from 'state/hooks'
 import { logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { finalizeTransaction, updateTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
@@ -55,7 +55,7 @@ export function useHandleUniswapXActivityUpdate(): (params: HandleUniswapXActivi
       // Log status to analytics
       if (
         original.orderHash &&
-        ((update.status === TransactionStatus.Success && original.routing !== Routing.DUTCH_LIMIT) ||
+        ((update.status === TransactionStatus.Success && original.routing !== TradingApi.Routing.DUTCH_LIMIT) ||
           update.status === TransactionStatus.Canceled ||
           update.status === TransactionStatus.Expired)
       ) {

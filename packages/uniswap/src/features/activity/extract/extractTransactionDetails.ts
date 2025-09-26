@@ -1,6 +1,5 @@
+import { SpamCode, TradingApi } from '@universe/api'
 import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { SpamCode } from 'uniswap/src/data/types'
 import parseApproveTransaction from 'uniswap/src/features/activity/parse/parseApproveTransaction'
 import parseBridgingTransaction from 'uniswap/src/features/activity/parse/parseBridgingTransaction'
 import parseNFTMintTransaction from 'uniswap/src/features/activity/parse/parseMintTransaction'
@@ -105,7 +104,10 @@ export default function extractTransactionDetails(
       : undefined
 
   return {
-    routing: transaction.details.type === RemoteTransactionType.SwapOrder ? Routing.DUTCH_V2 : Routing.CLASSIC,
+    routing:
+      transaction.details.type === RemoteTransactionType.SwapOrder
+        ? TradingApi.Routing.DUTCH_V2
+        : TradingApi.Routing.CLASSIC,
     id: transaction.details.hash,
     // TODO: WALL-4919: Remove hardcoded Mainnet
     // fallback to mainnet, although this should never happen

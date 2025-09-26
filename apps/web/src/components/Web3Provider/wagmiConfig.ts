@@ -5,16 +5,44 @@ import { embeddedWallet } from 'connection/EmbeddedWalletConnector'
 import { porto } from 'porto/wagmi'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
-import { getChainInfo, ORDERED_EVM_CHAINS } from 'uniswap/src/features/chains/chainInfo'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+import type { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { ORDERED_EVM_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { isPlaywrightEnv, isTestEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { getNonEmptyArrayOrThrow } from 'utilities/src/primitives/array'
-import { Chain, createClient } from 'viem'
-import { Config, createConfig, fallback, http } from 'wagmi'
-import { coinbaseWallet, mock, safe, walletConnect } from 'wagmi/connectors'
+import type { Chain } from 'viem'
+import { createClient } from 'viem'
+import type { Config } from 'wagmi'
+import { createConfig, fallback, http } from 'wagmi'
+import { coinbaseWallet, injected, mock, safe, walletConnect } from 'wagmi/connectors'
 
-const BinanceConnector = getWagmiConnectorV2()
+// Get the appropriate Binance connector based on the environment
+const getBinanceConnector = () => {
+  // Check if Binance extension is installed
+  const isBinanceExtensionInstalled =
+    typeof window !== 'undefined' && (window.BinanceChain || (window.binancew3w && window.binancew3w.ethereum))
+
+  // If extension is installed, use the injected connector directly
+  // This avoids issues with the Binance connector's detection logic
+  if (isBinanceExtensionInstalled) {
+    return injected({
+      target: {
+        id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID,
+        name: 'Binance Wallet',
+        // @ts-expect-error - window.BinanceChain and window.binancew3w.ethereum are typed to the best of our ability
+        provider: () => window.BinanceChain || window.binancew3w?.ethereum,
+      },
+    })
+  }
+
+  // Otherwise, use the Binance connector with QR modal for mobile connection
+  const BinanceConnector = getWagmiConnectorV2()
+  return BinanceConnector({
+    showQrCodeModal: true,
+  })
+}
 
 export const orderedTransportUrls = (chain: ReturnType<typeof getChainInfo>): string[] => {
   const orderedRpcUrls = [
@@ -37,11 +65,10 @@ function createWagmiConnectors(params: {
 
   const baseConnectors = [
     porto(),
+    // Binance connector - uses injected for extension, QR code for mobile
+    getBinanceConnector(),
     // There are no unit tests that expect WalletConnect to be included here,
     // so we can disable it to reduce log noise.
-    BinanceConnector({
-      showQrCodeModal: true,
-    }),
     ...(isTestEnv() && !isPlaywrightEnv() ? [] : [walletConnect(WC_PARAMS)]),
     embeddedWallet(),
     coinbaseWallet({

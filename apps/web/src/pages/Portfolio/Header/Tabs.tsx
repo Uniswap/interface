@@ -11,12 +11,13 @@ export function PortfolioTabs() {
   const portfolioTabs = usePortfolioTabs()
 
   return (
-    <Flex paddingHorizontal="$spacing24">
+    <Flex>
       <Flex row gap="$spacing24">
         {portfolioTabs.map((tab: PortfolioTabInfo) => {
           const tabPath = chainName ? `${tab.path}?chain=${chainName}` : tab.path
           const currentPage = getCurrentPageFromLocation(pathname)
           const isActive = currentPage === tab.pageName
+
           return (
             <TouchableArea
               key={tab.path}

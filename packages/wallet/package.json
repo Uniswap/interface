@@ -30,6 +30,7 @@
     "@uniswap/router-sdk": "2.0.2",
     "@uniswap/sdk-core": "7.7.2",
     "@uniswap/universal-router-sdk": "4.19.5",
+    "@universe/api": "workspace:^",
     "apollo3-cache-persist": "0.14.1",
     "dayjs": "1.11.7",
     "ethers": "5.7.2",

@@ -215,6 +215,10 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.D3LiquidityRangeChart} label="Enable new D3 liquidity range chart" />
             <FeatureFlagOption flag={FeatureFlags.LpIncentives} label="Enable LP Incentives" />
             <FeatureFlagOption flag={FeatureFlags.MigrateV2} label="Enable new Migrate V2 flow" />
+            <FeatureFlagOption
+              flag={FeatureFlags.PoolInfoEndpoint}
+              label="Enable create flow with new PoolInfo endpoint"
+            />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="FOR">
             <FeatureFlagOption flag={FeatureFlags.FiatOffRamp} label="Enable Fiat OffRamp" />

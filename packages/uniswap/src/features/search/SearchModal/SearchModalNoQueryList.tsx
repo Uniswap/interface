@@ -1,4 +1,6 @@
+import { ContentStyle } from '@shopify/flash-list'
 import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { GqlResult } from '@universe/api'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNftSearchResultsToNftCollectionOptions } from 'uniswap/src/components/lists/items/nfts/useNftSearchResultsToNftCollectionOptions'
@@ -12,7 +14,6 @@ import { useTrendingTokensCurrencyInfos } from 'uniswap/src/components/TokenSele
 import { useSearchPopularNftCollectionsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
-import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRecentSearchesButton'
 import {
@@ -182,12 +183,16 @@ interface SearchModalNoQueryListProps {
   chainFilter: UniverseChainId | null
   activeTab: SearchTab
   onSelect?: SearchModalListProps['onSelect']
+  renderedInModal?: boolean
+  contentContainerStyle?: ContentStyle
 }
 
 export const SearchModalNoQueryList = memo(function _SearchModalNoQueryList({
   chainFilter,
   activeTab,
   onSelect,
+  renderedInModal,
+  contentContainerStyle,
 }: SearchModalNoQueryListProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -204,6 +209,8 @@ export const SearchModalNoQueryList = memo(function _SearchModalNoQueryList({
         searchChainFilter: chainFilter,
         searchTabFilter: activeTab,
       }}
+      renderedInModal={renderedInModal}
+      contentContainerStyle={contentContainerStyle}
       onSelect={onSelect}
     />
   )

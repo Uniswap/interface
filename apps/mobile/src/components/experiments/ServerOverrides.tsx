@@ -6,8 +6,8 @@ import { Accordion, Flex, Text } from 'ui/src'
 import { GatingButton } from 'uniswap/src/components/gating/GatingButton'
 import { AccordionHeader } from 'uniswap/src/components/gating/GatingOverrides'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 
 export function ServerOverrides(): JSX.Element {
   const dispatch = useDispatch()

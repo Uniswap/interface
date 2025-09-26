@@ -9,6 +9,7 @@ import {
   DutchOrder,
   getCancelMultipleParams,
 } from '@uniswap/uniswapx-sdk'
+import { TradingApi } from '@universe/api'
 import { hasEncodedOrder } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import { ContractTransaction } from 'ethers/lib/ethers'
 import { useAccount } from 'hooks/useAccount'
@@ -20,7 +21,6 @@ import store from 'state'
 import { useAppDispatch } from 'state/hooks'
 import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
 import { Permit2 } from 'uniswap/src/abis/types'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -73,7 +73,7 @@ function trackOrderCancellation(orders: UniswapXOrderDetails[]): void {
 function hasValidCancellationData(order: UniswapXOrderDetails): order is UniswapXOrderDetails & {
   orderHash: string
   encodedOrder: string
-  routing: Routing
+  routing: TradingApi.Routing
 } {
   return hasEncodedOrder(order) && order.orderHash !== undefined
 }
@@ -85,7 +85,7 @@ function hasValidCancellationData(order: UniswapXOrderDetails): order is Uniswap
  */
 function extractCancellationData(
   orders: UniswapXOrderDetails[],
-): Array<{ orderHash: string; encodedOrder: string; routing: Routing }> {
+): Array<{ orderHash: string; encodedOrder: string; routing: TradingApi.Routing }> {
   return orders.filter(hasValidCancellationData).map((order) => ({
     orderHash: order.orderHash,
     encodedOrder: order.encodedOrder,
@@ -143,17 +143,17 @@ function revertOrdersStatuses({
 }
 
 function getCancelMultipleUniswapXOrdersParams(
-  orders: Array<{ encodedOrder: string; routing: Routing }>,
+  orders: Array<{ encodedOrder: string; routing: TradingApi.Routing }>,
   chainId: UniverseChainId,
 ) {
   const nonces = orders
     .map(({ encodedOrder, routing }) => {
       switch (routing) {
-        case Routing.DUTCH_V2:
+        case TradingApi.Routing.DUTCH_V2:
           return CosignedV2DutchOrder.parse(encodedOrder, chainId)
-        case Routing.DUTCH_V3:
+        case TradingApi.Routing.DUTCH_V3:
           return CosignedV3DutchOrder.parse(encodedOrder, chainId)
-        case Routing.PRIORITY:
+        case TradingApi.Routing.PRIORITY:
           return CosignedPriorityOrder.parse(encodedOrder, chainId)
         default:
           return DutchOrder.parse(encodedOrder, chainId)
@@ -170,7 +170,7 @@ async function cancelMultipleUniswapXOrders({
   provider,
   selectChain,
 }: {
-  orders: Array<{ encodedOrder: string; routing: Routing }>
+  orders: Array<{ encodedOrder: string; routing: TradingApi.Routing }>
   chainId: UniverseChainId
   signer?: string
   provider?: Web3Provider
@@ -206,7 +206,7 @@ async function getCancelMultipleUniswapXOrdersTransaction({
   chainId,
   permit2,
 }: {
-  orders: Array<{ encodedOrder: string; routing: Routing }>
+  orders: Array<{ encodedOrder: string; routing: TradingApi.Routing }>
   chainId: UniverseChainId
   permit2: Permit2
 }): Promise<TransactionRequest | undefined> {
@@ -233,7 +233,7 @@ async function getCancelMultipleUniswapXOrdersTransaction({
 export function useCreateCancelTransactionRequest(
   params:
     | {
-        orders: Array<{ encodedOrder: string; routing: Routing }>
+        orders: Array<{ encodedOrder: string; routing: TradingApi.Routing }>
         chainId: UniverseChainId
       }
     | undefined,

@@ -1,9 +1,6 @@
 import { Percent } from '@uniswap/sdk-core'
-import {
-  ClassicQuoteResponse,
-  DiscriminatedQuoteResponse,
-} from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { Routing, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
+import { ClassicQuoteResponse, DiscriminatedQuoteResponse, TradingApi } from '@universe/api'
+
 import { getSwapFee } from 'uniswap/src/features/transactions/swap/types/getSwapFee'
 
 const PORTION_RECIPIENT_AGGREGATED_OUTPUTS = '0xPORTION_RECIPIENT_AGGREGATED_OUTPUTS'
@@ -15,7 +12,7 @@ const PORTION_BIPS_PORTION_FIELDS = 35
 
 const CLASSIC_QUOTE_RESPONSE: ClassicQuoteResponse = {
   requestId: '5ae59692-7598-4aa8-a7d2-5e8f3d0c68e6',
-  routing: Routing.CLASSIC,
+  routing: TradingApi.Routing.CLASSIC,
   quote: {
     chainId: 8453,
     input: {
@@ -29,7 +26,7 @@ const CLASSIC_QUOTE_RESPONSE: ClassicQuoteResponse = {
     },
     swapper: '0xAAAA44272dc658575Ba38f43C438447dDED45358',
     slippage: 2.5,
-    tradeType: TradeType.EXACT_OUTPUT,
+    tradeType: TradingApi.TradeType.EXACT_OUTPUT,
     quoteId: 'b9cb77f5-eee9-4ef9-9016-74710d18419b',
     gasFeeUSD: '0.00499',
     gasFeeQuote: '1508616120023',

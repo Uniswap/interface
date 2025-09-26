@@ -7,10 +7,10 @@ import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isInterface } from 'utilities/src/platform'
 
-function NetworkFeeWarningContent({ gasInfo }: { gasInfo: GasInfo }): JSX.Element | null {
+function NetworkFeeWarningContent({ gasInfo }: { gasInfo?: GasInfo }): JSX.Element | null {
   const priceUXEnabled = usePriceUXEnabled()
 
-  if (!gasInfo.fiatPriceFormatted) {
+  if (!gasInfo?.fiatPriceFormatted) {
     return null
   }
 
@@ -54,7 +54,7 @@ export function GasInfoRow({ gasInfo, hidden }: { gasInfo: GasInfo; hidden?: boo
         placement={isInterface ? 'top' : 'bottom'}
         tooltipTrigger={
           <Flex centered row gap="$spacing4" testID={TestID.GasInfoRow}>
-            <NetworkFeeWarningContent gasInfo={gasInfo} />
+            <NetworkFeeWarningContent gasInfo={hidden ? undefined : gasInfo} />
           </Flex>
         }
         uniswapXGasFeeInfo={gasInfo.uniswapXGasFeeInfo}

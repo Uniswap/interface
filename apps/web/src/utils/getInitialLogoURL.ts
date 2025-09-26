@@ -3,7 +3,7 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 
 export function getInitialLogoUrl({
   address,
@@ -17,7 +17,7 @@ export function getInitialLogoUrl({
   const networkName = isUniverseChainId(chainId)
     ? (getChainInfo(chainId).assetRepoNetworkName ?? 'ethereum')
     : 'ethereum'
-  const checksummedAddress = isAddress(address)
+  const checksummedAddress = isEVMAddress(address)
 
   if (chainId === UniverseChainId.Celo && address === nativeOnChain(chainId).wrapped.address) {
     return CELO_LOGO

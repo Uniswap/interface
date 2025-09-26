@@ -46,6 +46,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { arraysAreEqual } from 'utilities/src/primitives/array'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
+import { defineContentScript } from 'wxt/utils/define-content-script'
 import { ZodError } from 'zod'
 
 function makeInjected(): void {
@@ -298,4 +299,11 @@ function makeInjected(): void {
   })
 }
 
-makeInjected()
+// eslint-disable-next-line import/no-unused-modules
+export default defineContentScript({
+  matches: ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*'],
+  runAt: 'document_start',
+  main() {
+    makeInjected()
+  },
+})

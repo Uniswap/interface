@@ -1,9 +1,9 @@
-import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { TextProps, TouchableAreaProps, TouchableTextLinkProps } from 'ui/src'
 import { Button, TouchableTextLink } from 'ui/src'
 import { openUri } from 'uniswap/src/utils/linking'
 import { isWeb } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 
 const onPressLearnMore = (uri: string): Promise<void> => openUri({ uri })
 
@@ -24,7 +24,7 @@ export const LearnMoreLink = ({
 }): JSX.Element => {
   const { t } = useTranslation()
 
-  const handleOnPress = useCallback(() => onPressLearnMore(url), [url])
+  const handleOnPress = useEvent(() => onPressLearnMore(url))
 
   if (componentType === 'Button') {
     return (
@@ -41,7 +41,6 @@ export const LearnMoreLink = ({
       textAlign={centered ? 'center' : undefined}
       variant={textVariant as TouchableTextLinkProps['variant']}
       display={display}
-      onPress={handleOnPress}
     >
       {t('common.button.learn')}
     </TouchableTextLink>

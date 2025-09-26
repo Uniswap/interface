@@ -18,33 +18,31 @@ import { handleOffRampReturnLink } from 'src/features/deepLinking/handleOffRampR
 import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
+import { handleUniswapAppDeepLink } from 'src/features/deepLinking/handleUniswapAppDeepLink'
+import { parseSwapLinkMobileFormatOrThrow } from 'src/features/deepLinking/parseSwapLink'
+import { LinkSource } from 'src/features/deepLinking/types'
 import { closeAllModals, openModal } from 'src/features/modals/modalSlice'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/walletConnectClient'
 import { addRequest, setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { fromUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs, UwuLinkConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { isUwULinkAllowlistType } from 'uniswap/src/features/gating/typeGuards'
-import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search/utils'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { UwULinkRequest } from 'uniswap/src/types/walletConnect'
-import { WidgetType } from 'uniswap/src/types/widgets'
-import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
 import { ScantasticParams } from 'wallet/src/features/scantastic/types'
 import { getContractManager, getProviderManager } from 'wallet/src/features/wallet/context'
-import { selectAccounts, selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
+import { selectAccounts, selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 
 interface DeepLink {
@@ -52,129 +50,12 @@ interface DeepLink {
   coldStart: boolean
 }
 
-export enum LinkSource {
-  Widget = 'Widget',
-  Share = 'Share',
-}
-
-const NFT_ITEM_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/asset\/(0x[a-fA-F0-9]{40})\/(\d+)$/
-const NFT_COLLECTION_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/collection\/(0x[a-fA-F0-9]{40})$/
-const TOKEN_SHARE_LINK_HASH_REGEX = RegExp(
-  // eslint-disable-next-line no-useless-escape
-  `^(#\/)?tokens\/([\\w\\d]*)\/(0x[a-fA-F0-9]{40}|${BACKEND_NATIVE_CHAIN_ADDRESS_STRING})$`,
-)
-const ADDRESS_SHARE_LINK_HASH_REGEX = /^(#\/)?address\/(0x[a-fA-F0-9]{40})$/
-
 export const ONRAMP_DEEPLINK_DELAY = 1500
 
 export const openDeepLink = createAction<DeepLink>('deeplink/open')
 
 export function* deepLinkWatcher() {
   yield* takeLatest(openDeepLink.type, handleDeepLink)
-}
-
-export function* handleUniswapAppDeepLink({
-  path,
-  url,
-  linkSource,
-}: {
-  path: string
-  url: string
-  linkSource: LinkSource
-}) {
-  // Navigate to the home page to ensure that a page isn't already open as a screen,
-  // which causes the bottom sheet to break
-  navigate(MobileScreens.Home)
-
-  // Handle NFT Item share (ex. https://app.uniswap.org/nfts/asset/0x.../123)
-  if (NFT_ITEM_SHARE_LINK_HASH_REGEX.test(path)) {
-    const [, , contractAddress, tokenId] = path.match(NFT_ITEM_SHARE_LINK_HASH_REGEX) || []
-    if (!contractAddress || !tokenId) {
-      return
-    }
-    yield* call(navigate, MobileScreens.NFTItem, {
-      address: contractAddress,
-      tokenId,
-      isSpam: false,
-    })
-    yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
-      entity: ShareableEntity.NftItem,
-      url,
-    })
-    return
-  }
-
-  // Handle NFT collection share (ex. https://app.uniswap.org/nfts/collection/0x...)
-  if (NFT_COLLECTION_SHARE_LINK_HASH_REGEX.test(path)) {
-    const [, , contractAddress] = path.match(NFT_COLLECTION_SHARE_LINK_HASH_REGEX) || []
-    if (!contractAddress) {
-      return
-    }
-    yield* call(navigate, MobileScreens.NFTCollection, {
-      collectionAddress: contractAddress,
-    })
-    yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
-      entity: ShareableEntity.NftCollection,
-      url,
-    })
-    return
-  }
-
-  // Handle Token share (ex. https://app.uniswap.org/tokens/ethereum/0x...)
-  if (TOKEN_SHARE_LINK_HASH_REGEX.test(path)) {
-    const [, , network, contractAddress] = path.match(TOKEN_SHARE_LINK_HASH_REGEX) || []
-    const chainId = network && fromUniswapWebAppLink(network)
-
-    if (!chainId || !contractAddress) {
-      return
-    }
-    const currencyId =
-      contractAddress === BACKEND_NATIVE_CHAIN_ADDRESS_STRING
-        ? buildNativeCurrencyId(chainId)
-        : buildCurrencyId(chainId, contractAddress)
-    yield* call(navigate, MobileScreens.TokenDetails, {
-      currencyId,
-    })
-    if (linkSource === LinkSource.Share) {
-      yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
-        entity: ShareableEntity.Token,
-        url,
-      })
-    } else {
-      yield* call(sendAnalyticsEvent, MobileEventName.WidgetClicked, {
-        widget_type: WidgetType.TokenPrice,
-        url,
-      })
-    }
-    return
-  }
-
-  // Handle Address share (ex. https://app.uniswap.org/address/0x...)
-  if (ADDRESS_SHARE_LINK_HASH_REGEX.test(path)) {
-    const [, , accountAddress] = path.match(ADDRESS_SHARE_LINK_HASH_REGEX) || []
-    if (!accountAddress) {
-      return
-    }
-    const accounts = yield* select(selectAccounts)
-    const activeAccountAddress = yield* select(selectActiveAccountAddress)
-    if (accountAddress === activeAccountAddress) {
-      return
-    }
-
-    const isInternal = Boolean(accounts[accountAddress])
-    if (isInternal) {
-      yield* put(setAccountAsActive(accountAddress))
-    } else {
-      yield* call(navigate, MobileScreens.ExternalProfile, {
-        address: accountAddress,
-      })
-    }
-    yield* call(sendAnalyticsEvent, MobileEventName.ShareLinkOpened, {
-      entity: ShareableEntity.Wallet,
-      url,
-    })
-    return
-  }
 }
 
 // eslint-disable-next-line complexity
@@ -242,7 +123,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
             break
           }
           case DeepLinkAction.SwapScreen: {
-            yield* call(handleSwapLink, deepLinkAction.data.url)
+            yield* call(handleSwapLink, deepLinkAction.data.url, parseSwapLinkMobileFormatOrThrow)
             break
           }
         }
@@ -312,9 +193,9 @@ function* handleGoToFiatOnRampDeepLink(data: PayloadWithFiatOnRampParams) {
       openModal({
         name: ModalName.FiatOnRampAggregator,
         initialState: {
-          moonpayOnly,
+          providers: moonpayOnly ? ['MOONPAY'] : undefined,
           prefilledAmount: amount,
-          moonpayCurrencyCode,
+          currencyCode: moonpayCurrencyCode,
         },
       }),
     )

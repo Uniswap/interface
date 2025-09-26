@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { RankingType } from 'uniswap/src/data/types'
+import { RankingType } from '@universe/api'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'

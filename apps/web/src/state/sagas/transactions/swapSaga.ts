@@ -1,4 +1,5 @@
 import { useTotalBalancesUsdForAnalytics } from 'appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
+import { TradingApi } from '@universe/api'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS, ZERO_PERCENT } from 'constants/misc'
@@ -24,7 +25,6 @@ import {
 import { VitalTxFields } from 'state/transactions/types'
 import invariant from 'tiny-invariant'
 import { call } from 'typed-redux-saga'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
@@ -206,7 +206,7 @@ type SwapParams = {
 }
 
 /** Asserts that a given object fits a given routing variant. */
-function requireRouting<T extends Routing, V extends { routing: Routing }>(
+function requireRouting<T extends TradingApi.Routing, V extends { routing: TradingApi.Routing }>(
   val: V,
   routing: readonly T[],
 ): asserts val is V & { routing: T } {
@@ -281,7 +281,7 @@ function* swap(params: SwapParams) {
         }
         case TransactionStepType.SwapTransaction:
         case TransactionStepType.SwapTransactionAsync: {
-          requireRouting(trade, [Routing.CLASSIC, Routing.BRIDGE])
+          requireRouting(trade, [TradingApi.Routing.CLASSIC, TradingApi.Routing.BRIDGE])
           yield* call(handleSwapTransactionStep, {
             account,
             signature,
@@ -294,7 +294,7 @@ function* swap(params: SwapParams) {
           break
         }
         case TransactionStepType.SwapTransactionBatched: {
-          requireRouting(trade, [Routing.CLASSIC, Routing.BRIDGE])
+          requireRouting(trade, [TradingApi.Routing.CLASSIC, TradingApi.Routing.BRIDGE])
           yield* call(handleSwapTransactionBatchedStep, {
             account,
             step,

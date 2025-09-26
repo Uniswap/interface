@@ -3,9 +3,9 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import { Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { TokenDocument, TokenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
@@ -166,7 +166,7 @@ async function getDenominatedValueRest({
   const stablecoinCurrency = getPrimaryStablecoin(universeChainId)
 
   const indicativeQuote = await fetchIndicativeQuote({
-    type: TradeType.EXACT_INPUT,
+    type: TradingApi.TradeType.EXACT_INPUT,
     amount: onchainQuantityCurrencyAmount.quotient.toString(),
     tokenInChainId: chainId,
     tokenOutChainId: chainId,

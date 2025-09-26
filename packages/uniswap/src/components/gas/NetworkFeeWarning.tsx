@@ -103,6 +103,7 @@ export function NetworkFeeWarning({
         placement,
         icon: null,
         maxWidth: priceUxEnabled ? 300 : undefined,
+        enabled: !!tooltipTrigger,
       }}
       trigger={tooltipTrigger}
       analyticsTitle="Network cost"

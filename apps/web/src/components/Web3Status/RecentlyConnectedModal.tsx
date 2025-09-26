@@ -1,4 +1,4 @@
-import StatusIcon from 'components/Identicon/StatusIcon'
+import StatusIcon from 'components/StatusIcon'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { useAccount } from 'hooks/useAccount'

@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { GasEstimate, GasStrategy } from '@universe/api'
 import JSBI from 'jsbi'
-import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import {
   DynamicConfigs,

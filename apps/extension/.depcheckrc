@@ -3,6 +3,8 @@ ignores: [
     'react-native-web',
     'jest-environment-jsdom',
     'webpack-cli',
+    '@wxt-dev/module-react',
+    'serve',
     # Dependencies that depcheck thinks are missing but are actually present or never used
     ## Internal packages / workspaces
     'src',

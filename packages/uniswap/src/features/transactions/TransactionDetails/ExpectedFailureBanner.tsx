@@ -1,19 +1,19 @@
+import { TradingApi } from '@universe/api'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__'
 import { SlippageEdit } from 'uniswap/src/features/transactions/TransactionDetails/SlippageEdit'
 
 export function ExpectedFailureBanner({
   txFailureReasons,
   onSlippageEditPress,
 }: {
-  txFailureReasons?: TransactionFailureReason[]
+  txFailureReasons?: TradingApi.TransactionFailureReason[]
   onSlippageEditPress?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const showSlippageWarning = txFailureReasons?.includes(TransactionFailureReason.SLIPPAGE_TOO_LOW)
+  const showSlippageWarning = txFailureReasons?.includes(TradingApi.TransactionFailureReason.SLIPPAGE_TOO_LOW)
 
   return (
     <Flex

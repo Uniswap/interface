@@ -94,7 +94,7 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
   font-size: 14px;
   font-weight: 535;
   line-height: 16px;
@@ -131,7 +131,7 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
 .c11 {
   padding: 8px;
   border-radius: 20px;
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -443,7 +443,7 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
   font-size: 14px;
   font-weight: 535;
   line-height: 16px;
@@ -480,7 +480,7 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
 .c12 {
   padding: 8px;
   border-radius: 20px;
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;

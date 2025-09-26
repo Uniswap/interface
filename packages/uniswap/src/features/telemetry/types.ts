@@ -6,13 +6,9 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, TradeType } from '@uniswap/sdk-core'
+import { TradingApi, UnitagClaimContext } from '@universe/api'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
-import {
-  CreateLPPositionRequest,
-  IncreaseLPPositionRequest,
-  TransactionFailureReason,
-} from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
@@ -32,7 +28,6 @@ import {
 } from 'uniswap/src/features/telemetry/constants'
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/safetyUtils'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { UnitagClaimContext } from 'uniswap/src/features/unitags/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { ImportType } from 'uniswap/src/types/onboarding'
@@ -180,7 +175,7 @@ export type SwapTradeBaseProperties = {
   // Legacy props only used on web. We might be able to delete these after we delete the old swap flow.
   method?: 'ROUTING_API' | 'QUICK_ROUTE' | 'CLIENT_SIDE_FALLBACK'
   offchain_order_type?: 'Dutch' | 'Dutch_V2' | 'Limit' | 'Dutch_V1_V2' | 'Priority' | 'Dutch_V3'
-  simulation_failure_reasons?: TransactionFailureReason[]
+  simulation_failure_reasons?: TradingApi.TransactionFailureReason[]
   tokenWarnings?: {
     input: TokenProtectionWarning
     output: TokenProtectionWarning
@@ -218,7 +213,7 @@ type BaseSwapTransactionResultProperties = {
   submitViaPrivateRpc?: boolean
   protocol?: Protocol
   transactedUSDValue?: number
-  simulation_failure_reasons?: TransactionFailureReason[]
+  simulation_failure_reasons?: TradingApi.TransactionFailureReason[]
   includes_delegation?: SwapTradeBaseProperties['includes_delegation']
   is_smart_wallet_transaction?: SwapTradeBaseProperties['is_smart_wallet_transaction']
 }
@@ -609,10 +604,10 @@ export type UniverseEventProperties = {
   [InterfaceEventName.UniswapXOrderSubmitted]: Record<string, unknown> // TODO specific type
   [InterfaceEventName.CreatePositionFailed]: {
     message: string
-  } & CreateLPPositionRequest
+  } & TradingApi.CreateLPPositionRequest
   [InterfaceEventName.IncreaseLiquidityFailed]: {
     message: string
-  } & IncreaseLPPositionRequest
+  } & TradingApi.IncreaseLPPositionRequest
   [InterfaceEventName.DecreaseLiquidityFailed]: {
     message: string
   }
@@ -624,7 +619,7 @@ export type UniverseEventProperties = {
   }
   [InterfaceEventName.OnChainAddLiquidityFailed]: {
     message: string
-  } & (CreateLPPositionRequest | IncreaseLPPositionRequest)
+  } & (TradingApi.CreateLPPositionRequest | TradingApi.IncreaseLPPositionRequest)
   [InterfaceEventName.EmbeddedWalletCreated]: undefined
   [InterfaceEventName.ExtensionUninstallFeedback]: {
     reason: ExtensionUninstallFeedbackOptions
@@ -759,6 +754,9 @@ export type UniverseEventProperties = {
     entity: ShareableEntity
     url: string
   }
+  [MobileEventName.SwapLongPress]: {
+    element: 'buy' | 'sell' | 'send' | 'receive'
+  }
   [MobileEventName.TokenDetailsOtherChainButtonPressed]: ITraceContext
   [MobileEventName.TokenDetailsContextMenuAction]: ITraceContext & { action: string }
   [MobileEventName.WalletConnectSheetCompleted]: {
@@ -848,7 +846,7 @@ export type UniverseEventProperties = {
     txRequest?: EthersTransactionRequest
     client_block_number?: number
     isAutoSlippage?: boolean
-    simulationFailureReasons?: TransactionFailureReason[]
+    simulationFailureReasons?: TradingApi.TransactionFailureReason[]
   } & SwapTradeBaseProperties
   [SwapEventName.SwapFirstAction]: {
     time_to_first_swap_action?: number

@@ -11,6 +11,7 @@ import type { WarningWithStyle } from 'uniswap/src/components/modals/WarningModa
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/useSlippageSettings'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { AcrossRoutingInfoTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/AcrossRoutingTooltip'
@@ -201,15 +202,18 @@ function PriceDifferenceDisplay({
 function MaxSlippageDisplay({
   formattedPostFeesAmount,
   formattedMinimumAmount,
-  formattedCurrentSlippageTolerance,
+  currentSlippageTolerance,
   autoSlippageEnabled,
 }: {
   formattedPostFeesAmount?: string
   formattedMinimumAmount: string
-  formattedCurrentSlippageTolerance: string
+  currentSlippageTolerance: number
   autoSlippageEnabled: boolean
 }): JSX.Element {
   const { t } = useTranslation()
+
+  const formatter = useLocalizationContext()
+  const { formatPercent } = formatter
 
   return (
     <SwapDetailsRow.Outer>
@@ -221,13 +225,15 @@ function MaxSlippageDisplay({
             receivedAmount={formattedPostFeesAmount ?? '-'}
             minimumAmount={formattedMinimumAmount}
             autoSlippageEnabled={autoSlippageEnabled}
-            currentSlippageTolerance={formattedCurrentSlippageTolerance}
+            currentSlippageTolerance={formatPercent(currentSlippageTolerance)}
           />
         }
       />
       <Flex row gap="$spacing6" alignItems="center">
         {!autoSlippageEnabled && <AutoSlippageBadge />}
-        <SwapDetailsRow.ValueLabel value={formattedCurrentSlippageTolerance} />
+        <SwapDetailsRow.ValueLabel
+          value={currentSlippageTolerance === 0 ? t('common.none') : formatPercent(currentSlippageTolerance)}
+        />
       </Flex>
     </SwapDetailsRow.Outer>
   )
@@ -306,9 +312,7 @@ export function YouReceiveDetails({
   isLoadingIndicative,
   isBridge,
 }: YouReceiveDetailsProps): JSX.Element | null {
-  const account = useWallet().evmAccount
   const { value: isOpen, toggle } = useBooleanState(false)
-  const { formatPercent } = useLocalizationContext()
 
   const { currentSlippageTolerance } = useSlippageSettings()
   const { customSlippageTolerance } = useTransactionSettingsStore((s) => ({
@@ -316,7 +320,11 @@ export function YouReceiveDetails({
   }))
   const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
   const priceDifference = usePriceDifference(derivedSwapInfo)
-  const { isBlocked } = useIsBlocked(account?.address)
+
+  const wallet = useWallet()
+  const account = isSVMChain(derivedSwapInfo.chainId) ? wallet.svmAccount?.address : wallet.evmAccount?.address
+  const { isBlocked } = useIsBlocked(account)
+
   const { formScreenWarning } = useParsedSwapWarnings()
   const inlineWarning =
     formScreenWarning && formScreenWarning.displayedInline && !isBlocked ? formScreenWarning : undefined
@@ -345,8 +353,6 @@ export function YouReceiveDetails({
     type: NumberType.TokenTx,
     placeholder: '-',
   })} ${outputCurrency?.currency.symbol}`
-
-  const formattedCurrentSlippageTolerance = formatPercent(currentSlippageTolerance)
 
   const showDropdown =
     derivedSwapInfo.wrapType === WrapType.NotApplicable &&
@@ -396,7 +402,7 @@ export function YouReceiveDetails({
               <MaxSlippageDisplay
                 formattedPostFeesAmount={formattedPostFeesAmount}
                 formattedMinimumAmount={formattedMinimumAmount}
-                formattedCurrentSlippageTolerance={formattedCurrentSlippageTolerance}
+                currentSlippageTolerance={currentSlippageTolerance}
                 autoSlippageEnabled={!customSlippageTolerance}
               />
             )}

@@ -1,5 +1,3 @@
-/* eslint-disable max-lines */
-
 import { call, delay } from 'redux-saga/effects'
 import { expectSaga } from 'redux-saga-test-plan'
 import { navigationRef } from 'src/app/navigation/navigationRef'
@@ -8,14 +6,14 @@ import { DeepLinkAction } from 'src/features/deepLinking/deepLinkUtils'
 import {
   handleDeepLink,
   handleGoToTokenDetailsDeepLink,
-  handleUniswapAppDeepLink,
   handleWalletConnectDeepLink,
-  LinkSource,
   ONRAMP_DEEPLINK_DELAY,
   parseAndValidateUserAddress,
 } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
+import { handleUniswapAppDeepLink } from 'src/features/deepLinking/handleUniswapAppDeepLink'
+import { LinkSource } from 'src/features/deepLinking/types'
 import { openModal } from 'src/features/modals/modalSlice'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/walletConnectClient'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
@@ -38,6 +36,11 @@ jest.mock('@walletconnect/utils', () => ({
 }))
 jest.mock('expo-web-browser', () => ({
   dismissBrowser: jest.fn(),
+}))
+jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
+  getStatsigClient: jest.fn(() => ({
+    checkGate: jest.fn(() => false), // Always return false to avoid Korea gate redirects
+  })),
 }))
 
 const account = signerMnemonicAccount()
@@ -71,6 +74,16 @@ describe(handleDeepLink, () => {
   beforeAll(() => {
     jest.spyOn(navigationRef, 'isReady').mockReturnValue(true)
     jest.spyOn(navigationRef, 'navigate').mockReturnValue(undefined)
+    jest.spyOn(navigationRef, 'getState').mockReturnValue({
+      key: 'root',
+      index: 0,
+      routes: [{ name: MobileScreens.Home, key: 'home' }],
+      routeNames: [MobileScreens.Home],
+      history: [],
+      type: 'stack',
+      stale: false,
+    })
+    jest.spyOn(navigationRef, 'canGoBack').mockReturnValue(false)
   })
 
   it('Routes to the swap deep link handler if screen=swap and userAddress is valid', () => {
@@ -572,9 +585,9 @@ describe(handleDeepLink, () => {
         openModal({
           name: ModalName.FiatOnRampAggregator,
           initialState: {
-            moonpayOnly: true,
+            providers: ['MOONPAY'],
             prefilledAmount: undefined,
-            moonpayCurrencyCode: undefined,
+            currencyCode: undefined,
           },
         }),
       )
@@ -604,9 +617,9 @@ describe(handleDeepLink, () => {
         openModal({
           name: ModalName.FiatOnRampAggregator,
           initialState: {
-            moonpayOnly: true,
+            providers: ['MOONPAY'],
             prefilledAmount: '100',
-            moonpayCurrencyCode: 'eth',
+            currencyCode: 'eth',
           },
         }),
       )

@@ -257,6 +257,7 @@ const RecentTransactions = memo(function RecentTransactions() {
       data={filteredTransactions}
       loading={allDataStillLoading}
       error={combinedError}
+      v2={false}
       loadMore={loadMore}
       maxWidth={1200}
       defaultPinnedColumns={['timestamp', 'swap-type']}

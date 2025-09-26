@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Uniswap Extension",
   "description": "The Uniswap Extension is a self-custody crypto wallet that's built for swapping.",
-  "version": "1.29.0",
+  "version": "1.30.0",
   "minimum_chrome_version": "116",
   "icons": {
     "16": "assets/icon16.png",
@@ -19,7 +19,7 @@
     }
   },
   "side_panel": {
-    "default_path": "sidebar.html"
+    "default_path": "sidepanel.html"
   },
   "background": {
     "service_worker": "background.js",
@@ -32,32 +32,8 @@
     "storage",
     "tabs"
   ],
-  "content_scripts": [
-    {
-      "id": "injected",
-      "run_at": "document_start",
-      "matches": [
-        "http://127.0.0.1/*",
-        "http://localhost/*",
-        "https://*/*"
-      ],
-      "js": [
-        "injected.js"
-      ]
-    },
-    {
-      "id": "ethereum",
-      "run_at": "document_start",
-      "matches": [
-        "http://127.0.0.1/*",
-        "http://localhost/*",
-        "https://*/*"
-      ],
-      "js": [
-        "ethereum.js"
-      ],
-      "world": "MAIN"
-    }
+  "host_permissions": [
+    "https://*.uniswap.org/*"
   ],
   "externally_connectable": {
     "ids": [],

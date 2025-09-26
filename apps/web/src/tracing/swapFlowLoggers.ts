@@ -1,5 +1,5 @@
+import { TradingApi } from '@universe/api'
 import type { ConfirmedTransactionDetails } from 'state/transactions/types'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -71,13 +71,13 @@ export function logSwapFinalized({
   }
 }
 
-const ROUTING_TO_SWAP_ROUTING: Partial<Record<Routing, SwapRouting>> = {
-  [Routing.CLASSIC]: 'classic',
-  [Routing.DUTCH_LIMIT]: 'limit_order',
-  [Routing.PRIORITY]: 'priority_order',
-  [Routing.DUTCH_V2]: 'uniswap_x_v2',
-  [Routing.DUTCH_V3]: 'uniswap_x_v3',
-  [Routing.BRIDGE]: 'bridge',
+const ROUTING_TO_SWAP_ROUTING: Partial<Record<TradingApi.Routing, SwapRouting>> = {
+  [TradingApi.Routing.CLASSIC]: 'classic',
+  [TradingApi.Routing.DUTCH_LIMIT]: 'limit_order',
+  [TradingApi.Routing.PRIORITY]: 'priority_order',
+  [TradingApi.Routing.DUTCH_V2]: 'uniswap_x_v2',
+  [TradingApi.Routing.DUTCH_V3]: 'uniswap_x_v3',
+  [TradingApi.Routing.BRIDGE]: 'bridge',
 }
 
 export function logUniswapXSwapFinalized({
@@ -94,7 +94,7 @@ export function logUniswapXSwapFinalized({
   orderHash: string
   chainId: number
   analyticsContext: ITraceContext
-  routing: Routing
+  routing: TradingApi.Routing
   status: TransactionStatus
 }) {
   const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FirstSwapSuccess)

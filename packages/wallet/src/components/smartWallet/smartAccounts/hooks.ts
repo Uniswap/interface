@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { DEFAULT_TOAST_HIDE_DELAY } from 'uniswap/src/features/notifications/constants'
 import { useSuccessfulSwapCompleted } from 'uniswap/src/features/transactions/hooks/useSuccessfulSwapCompleted'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -10,7 +11,6 @@ import {
   selectHasDismissedSmartWalletHomeScreenNudge,
   selectShouldShowPostSwapNudge,
 } from 'wallet/src/features/behaviorHistory/selectors'
-import { DEFAULT_HIDE_DELAY } from 'wallet/src/features/notifications/components/NotificationToast'
 import { useSmartWalletChains } from 'wallet/src/features/smartWallet/hooks/useSmartWalletChains'
 import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import { useActiveAccount, useHasSmartWalletConsent, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -141,7 +141,7 @@ export function useOpenSmartWalletNudgeOnCompletedSwap(
 
       setTimeout(() => {
         onSuccessfulSwapCompleted(transaction)
-      }, DEFAULT_HIDE_DELAY + ONE_SECOND_MS)
+      }, DEFAULT_TOAST_HIDE_DELAY + ONE_SECOND_MS)
     },
     [
       address,

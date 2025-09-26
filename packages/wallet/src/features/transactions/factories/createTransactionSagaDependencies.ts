@@ -2,7 +2,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { makeSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import { logger } from 'utilities/src/logger/logger'
-import { getAccountDelegationDetails } from 'wallet/src/features/smartWallet/delegation/utils'
+import { getDelegationInfoForTransaction } from 'wallet/src/features/smartWallet/delegation/utils'
 import { createAnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsServiceImpl'
 import { createFeatureFlagService } from 'wallet/src/features/transactions/executeTransaction/services/featureFlagServiceImpl'
 import { createProviderService } from 'wallet/src/features/transactions/executeTransaction/services/providerServiceImpl'
@@ -15,9 +15,9 @@ import {
 import { createTransactionConfigService } from 'wallet/src/features/transactions/executeTransaction/services/transactionConfigServiceImpl'
 import { createTransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
 import { createTransactionParamsFactory } from 'wallet/src/features/transactions/swap/services/transactionParamsFactory'
-import { TransactionSagaDependencies } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
+import type { TransactionSagaDependencies } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
-import { RunSagaEffect } from 'wallet/src/state/createSagaEffectRunner'
+import type { RunSagaEffect } from 'wallet/src/state/createSagaEffectRunner'
 /**
  * Creates the default dependencies for transaction sagas
  * This factory provides all the services needed for executing transactions
@@ -39,7 +39,7 @@ export function createTransactionSagaDependencies(): TransactionSagaDependencies
 
     // External dependencies
     getViemClients: () => walletContextValue.viemClients,
-    getDelegationDetails: getAccountDelegationDetails,
+    getDelegationInfoForTransaction,
     logger,
     sendAnalyticsEvent,
     transactionActions,
@@ -48,7 +48,9 @@ export function createTransactionSagaDependencies(): TransactionSagaDependencies
     get runSagaEffect(): RunSagaEffect {
       // Import runSagaEffect only when actually accessed, not during module initialization
       // This prevents the "Cannot access 'runSagaEffect' before initialization" error
-      const { runSagaEffect } = require('wallet/src/state') as { runSagaEffect: RunSagaEffect }
+      const { runSagaEffect } = require('wallet/src/state') as {
+        runSagaEffect: RunSagaEffect
+      }
       return runSagaEffect
     },
   }

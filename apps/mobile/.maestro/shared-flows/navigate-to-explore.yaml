@@ -1,0 +1,20 @@
+appId: com.uniswap.mobile.dev
+---
+# This flow handles the common action of navigating to the Explore tab
+# from the main wallet screen.
+
+# Wait for the home screen to be visible
+- extendedWaitUntil:
+    visible: 'noop'
+    timeout: 2000
+    optional: true
+
+# Tap on the Explore/Search button in the navigation bar
+- tapOn:
+    id: ${output.testIds.SearchTokensAndWallets}
+
+- waitForAnimationToEnd
+
+# Verify we're in the Explore screen by checking for the search input
+- assertVisible:
+    id: ${output.testIds.ExploreSearchInput}

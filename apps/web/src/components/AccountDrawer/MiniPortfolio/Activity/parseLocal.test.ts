@@ -3,6 +3,7 @@ import 'test-utils/tokens/mocks'
 import { permit2Address } from '@uniswap/permit2-sdk'
 import type { Token } from '@uniswap/sdk-core'
 import { TradeType as MockTradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { getCurrencyFromCurrencyId } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import { transactionToActivity, useLocalActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import type { TransactionInfo } from 'state/transactions/types'
@@ -14,7 +15,6 @@ import {
   USDT as MockUSDT,
   nativeOnChain,
 } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import type {
@@ -98,7 +98,7 @@ function mockCommonFields({
     from: account,
     txHash: hash,
     addedTime: 0,
-    routing: Routing.CLASSIC,
+    routing: TradingApi.Routing.CLASSIC,
     options: {},
   }
 }
@@ -563,7 +563,7 @@ describe('parseLocalActivity', () => {
           outputCurrency: MockDAI,
           outputCurrencyAmountRaw: mockCurrencyAmountRaw,
         }),
-        routing: Routing.DUTCH_V2,
+        routing: TradingApi.Routing.DUTCH_V2,
         orderHash: '0xorder123',
         hash: '0xuniswapx_v2',
         status: TransactionStatus.Success,
@@ -583,7 +583,7 @@ describe('parseLocalActivity', () => {
         title: 'Swapped',
         prefixIconSrc: UniswapXBoltIcon,
         offchainOrderDetails: expect.objectContaining({
-          routing: Routing.DUTCH_V2,
+          routing: TradingApi.Routing.DUTCH_V2,
           orderHash: '0xorder123',
         }),
       })
@@ -600,7 +600,7 @@ describe('parseLocalActivity', () => {
           outputCurrency: MockDAI,
           outputCurrencyAmountRaw: mockCurrencyAmountRaw,
         }),
-        routing: Routing.DUTCH_LIMIT,
+        routing: TradingApi.Routing.DUTCH_LIMIT,
         orderHash: '0xlimit123',
         hash: '0xlimit_order',
         status: TransactionStatus.Pending,
@@ -620,7 +620,7 @@ describe('parseLocalActivity', () => {
         title: 'Limit opened',
         prefixIconSrc: UniswapXBoltIcon,
         offchainOrderDetails: expect.objectContaining({
-          routing: Routing.DUTCH_LIMIT,
+          routing: TradingApi.Routing.DUTCH_LIMIT,
           orderHash: '0xlimit123',
         }),
       })
@@ -637,7 +637,7 @@ describe('parseLocalActivity', () => {
           outputCurrency: MockDAI,
           outputCurrencyAmountRaw: mockCurrencyAmountRaw,
         }),
-        routing: Routing.DUTCH_LIMIT,
+        routing: TradingApi.Routing.DUTCH_LIMIT,
         orderHash: '0xlimit_success',
         hash: '0xlimit_executed',
         status: TransactionStatus.Success,
@@ -667,7 +667,7 @@ describe('parseLocalActivity', () => {
           }),
           isUniswapXOrder: true,
         },
-        routing: Routing.DUTCH_V2,
+        routing: TradingApi.Routing.DUTCH_V2,
         orderHash: '0xexpired_order',
         hash: '0xexpired',
         status: TransactionStatus.Expired,
@@ -699,7 +699,7 @@ describe('parseLocalActivity', () => {
           }),
           isUniswapXOrder: true,
         },
-        routing: Routing.DUTCH_V3,
+        routing: TradingApi.Routing.DUTCH_V3,
         orderHash: '0xcanceled_order',
         hash: '0xcanceled',
         status: TransactionStatus.Canceled,
@@ -730,7 +730,7 @@ describe('parseLocalActivity', () => {
           }),
           isUniswapXOrder: true,
         },
-        routing: Routing.PRIORITY,
+        routing: TradingApi.Routing.PRIORITY,
         orderHash: '0xinsufficient_funds',
         hash: '0xinsufficient',
         status: TransactionStatus.InsufficientFunds,
@@ -762,7 +762,7 @@ describe('parseLocalActivity', () => {
           }),
           isUniswapXOrder: true,
         },
-        routing: Routing.DUTCH_V2,
+        routing: TradingApi.Routing.DUTCH_V2,
         orderHash: '0xcancelling_order',
         hash: '0xcancelling',
         status: TransactionStatus.Cancelling,
@@ -793,7 +793,7 @@ describe('parseLocalActivity', () => {
           }),
           isUniswapXOrder: true,
         },
-        routing: Routing.DUTCH_LIMIT,
+        routing: TradingApi.Routing.DUTCH_LIMIT,
         orderHash: '0xlimit_insufficient',
         hash: '0xlimit_insufficient_funds',
         status: TransactionStatus.InsufficientFunds,
@@ -825,7 +825,7 @@ describe('parseLocalActivity', () => {
           outputCurrencyId: '1-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
           // Missing tradeType - so it won't be handled as UniswapX
         },
-        routing: Routing.DUTCH_V2,
+        routing: TradingApi.Routing.DUTCH_V2,
         orderHash: '0xno_trade_type',
         hash: '0xno_trade',
         status: TransactionStatus.Pending,
@@ -857,7 +857,7 @@ describe('parseLocalActivity', () => {
           outputCurrency: MockDAI,
           outputCurrencyAmountRaw: mockCurrencyAmountRaw,
         }),
-        routing: Routing.CLASSIC,
+        routing: TradingApi.Routing.CLASSIC,
         hash: '0xclassic_swap',
         status: TransactionStatus.Success,
         chainId: 1,
@@ -890,7 +890,7 @@ describe('parseLocalActivity', () => {
           outputCurrency: MockDAI,
           outputCurrencyAmountRaw: mockCurrencyAmountRaw,
         }),
-        routing: Routing.DUTCH_V2,
+        routing: TradingApi.Routing.DUTCH_V2,
         // No orderHash provided
         hash: '0xfallback_hash',
         status: TransactionStatus.Pending,
@@ -901,7 +901,7 @@ describe('parseLocalActivity', () => {
       const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
 
       expect(result?.offchainOrderDetails).toMatchObject({
-        routing: Routing.DUTCH_V2,
+        routing: TradingApi.Routing.DUTCH_V2,
         orderHash: '0xfallback_hash', // Should use hash as fallback
       })
     })

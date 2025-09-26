@@ -15,7 +15,7 @@ import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSuppor
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { getParsedChainId } from 'utils/chainParams'
 
 export function useSwapActionHandlers(): {
@@ -67,7 +67,7 @@ function parseFromURLParameter(urlParam: ParsedQs[string]): string | undefined {
 
 export function parseCurrencyFromURLParameter(urlParam: ParsedQs[string]): string | undefined {
   if (typeof urlParam === 'string') {
-    const valid = isAddress(urlParam)
+    const valid = isEVMAddress(urlParam)
     if (valid) {
       return valid
     }

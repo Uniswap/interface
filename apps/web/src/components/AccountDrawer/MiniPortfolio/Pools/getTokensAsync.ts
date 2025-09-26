@@ -6,7 +6,7 @@ import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
 import { Erc20Bytes32Interface } from 'uniswap/src/abis/types/Erc20Bytes32'
 import { UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { logger } from 'utilities/src/logger/logger'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { arrayToSlices } from 'utils/arrays'
@@ -123,7 +123,7 @@ export async function getTokensAsync({
     if (previousCall !== undefined) {
       previouslyCalledTokens.push(previousCall)
     } else {
-      const formattedAddress = isAddress(tokenAddress)
+      const formattedAddress = isEVMAddress(tokenAddress)
       if (!formattedAddress) {
         return
       }

@@ -30,7 +30,7 @@ vi.mock('uniswap/src/features/gating/hooks', () => {
 })
 
 describe('NewAddressSpeedBumpModal', () => {
-  it('should not render identicon if account has no ENS avatar/unitag pp', () => {
+  it('should not render AccountIcon if account has no ENS avatar/unitag pp', () => {
     const mockOnCancel = vi.fn()
     const mockOnConfirm = vi.fn()
     render(
@@ -41,6 +41,6 @@ describe('NewAddressSpeedBumpModal', () => {
 
     expect(document.body).toMatchSnapshot()
     expect(screen.getByText('New address')).toBeInTheDocument()
-    expect(screen.queryByTestId('speedbump-identicon')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('speedbump-account-icon')).not.toBeInTheDocument()
   })
 })

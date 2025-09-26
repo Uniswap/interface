@@ -3,6 +3,7 @@
  * Please order alphabetically to reduce merge conflicts.
  */
 export enum ReactQueryCacheKey {
+  ActivityScreenRefresh = 'ActivityScreenRefresh',
   BalanceAndUnitags = 'BalanceAndUnitags',
   CameraPermission = 'CameraPermission',
   CancelTransactionRequest = 'CancelTransactionRequest',

@@ -1,7 +1,7 @@
 import { datadogRum } from '@datadog/browser-rum'
+import { FetchError } from '@universe/api'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'

@@ -184,7 +184,7 @@ exports[`OrderContent > should render without error, filled order 1`] = `
   height: 1px;
   border-width: 0;
   margin: 0;
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
 }
 
 .c6 {
@@ -656,7 +656,7 @@ exports[`OrderContent > should render without error, limit order 1`] = `
   height: 1px;
   border-width: 0;
   margin: 0;
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
 }
 
 .c6 {
@@ -1189,7 +1189,7 @@ exports[`OrderContent > should render without error, open order 1`] = `
   height: 1px;
   border-width: 0;
   margin: 0;
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
 }
 
 .c6 {

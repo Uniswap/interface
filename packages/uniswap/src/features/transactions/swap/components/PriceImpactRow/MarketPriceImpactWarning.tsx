@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import { TFunction } from 'i18next'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -7,13 +8,12 @@ import { zIndexes } from 'ui/src/theme'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { openUri } from 'uniswap/src/utils/linking'
 import { isWeb } from 'utilities/src/platform'
 
-function getPriceImpactInfo({ t, routing, missing }: { t: TFunction; routing: Routing; missing: boolean }): {
+function getPriceImpactInfo({ t, routing, missing }: { t: TFunction; routing: TradingApi.Routing; missing: boolean }): {
   caption: string
   link: string
 } {
@@ -41,7 +41,7 @@ export function MarketPriceImpactWarningModal({
   children,
   routing,
   missing,
-}: PropsWithChildren<{ routing: Routing; missing: boolean }>): JSX.Element {
+}: PropsWithChildren<{ routing: TradingApi.Routing; missing: boolean }>): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
 

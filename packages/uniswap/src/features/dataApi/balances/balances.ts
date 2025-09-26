@@ -1,5 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { QueryHookOptions } from '@apollo/client/react/types/types'
+import { GqlResult, SpamCode } from '@universe/api'
 import isEqual from 'lodash/isEqual'
 import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
@@ -10,7 +11,6 @@ import {
   PortfolioBalancesQueryVariables,
   PortfolioValueModifier,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GqlResult, SpamCode } from 'uniswap/src/data/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioData } from 'uniswap/src/features/dataApi/balances/balancesRest'

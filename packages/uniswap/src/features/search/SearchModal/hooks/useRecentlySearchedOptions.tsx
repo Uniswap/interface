@@ -68,7 +68,7 @@ export function useRecentlySearchedOptions({
     .slice(0, numberOfRecentSearchResults)
 
   // Fetch updated currencyInfos for each recent token search result
-  // Token info may change since last stored in redux (protectionInfo/feeData/logoUrl/etc), so we should refetch currencyInfos from saved chain+address. See WEB-6283
+  // Token info may change since last stored in redux (protectionInfo/feeData/logoUrl/etc), so we should refetch currencyInfos from saved chain+address. See PORT-419
   const currencyIds = recentHistory.filter(isTokenSearchHistoryResult).map((searchResult) => {
     const id = searchResult.address
       ? buildCurrencyId(searchResult.chainId, searchResult.address)

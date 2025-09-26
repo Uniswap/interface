@@ -45,8 +45,8 @@ import {
   isSupportedFORCurrency,
   organizeQuotesIntoSections,
 } from 'uniswap/src/features/fiatOnRamp/utils'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { FiatOffRampEventName, FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { FORAmountEnteredProperties } from 'uniswap/src/features/telemetry/types'
@@ -109,8 +109,8 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     isTokenInputMode,
     setIsTokenInputMode,
     externalTransactionIdSuffix,
-    moonpayOnly,
-    moonpayCurrencyCode,
+    providers,
+    currencyCode,
   } = useFiatOnRampContext()
 
   const [showTokenSelector, setShowTokenSelector] = useState(false)
@@ -120,11 +120,15 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const decimalPadRef = useRef<DecimalPadInputRef>(null)
   const selectionRef = useRef<TextInputProps['selection']>()
   const amountUpdatedTimeRef = useRef<number>(0)
+  const [value, setValue] = useState('')
+  const valueRef = useRef<string>('')
 
   // Initialize value state with prefilled amount if available
-  const initialValue = isTokenInputMode ? (tokenAmount?.toString() ?? '') : (fiatAmount?.toString() ?? '')
-  const [value, setValue] = useState(initialValue)
-  const valueRef = useRef<string>(initialValue)
+  useEffect(() => {
+    const initialValue = isTokenInputMode ? (tokenAmount?.toString() ?? '') : (fiatAmount?.toString() ?? '')
+    setValue(initialValue)
+    valueRef.current = initialValue
+  }, [isTokenInputMode, tokenAmount, fiatAmount])
 
   const isShortMobileDevice = useIsShortMobileDevice()
   const { isSheetReady } = useBottomSheetContext()
@@ -249,14 +253,16 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
       return undefined
     }
 
-    // In MoonPay exclusive mode, only show MoonPay quotes if one exists
-    if (moonpayOnly) {
-      const moonpayQuotes = quotes.filter((quote) => quote.serviceProviderDetails.serviceProvider === 'MOONPAY')
-      return moonpayQuotes.length > 0 ? moonpayQuotes : quotes
+    // If specific providers are provided, only show quotes from the specified providers
+    if (providers.length > 0) {
+      const providerFilteredQuotes = quotes.filter((quote) =>
+        providers.includes(quote.serviceProviderDetails.serviceProvider.toUpperCase()),
+      )
+      return providerFilteredQuotes.length > 0 ? providerFilteredQuotes : quotes
     }
 
     return quotes
-  }, [quotes, moonpayOnly])
+  }, [quotes, providers])
 
   const prevQuotes = usePrevious(filteredQuotes)
   useEffect(() => {
@@ -383,16 +389,16 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   })
 
   useEffect(() => {
-    if (!moonpayCurrencyCode || !supportedTokensList) {
+    if (!currencyCode || !supportedTokensList) {
       return
     }
 
     const matchingCurrency = supportedTokensList.find(
-      (token) => token.meldCurrencyCode?.toLowerCase() === moonpayCurrencyCode.toLowerCase(),
+      (token) => token.meldCurrencyCode?.toLowerCase() === currencyCode.toLowerCase(),
     )
 
     matchingCurrency && setQuoteCurrency(matchingCurrency)
-  }, [moonpayCurrencyCode, supportedTokensList, setQuoteCurrency])
+  }, [currencyCode, supportedTokensList, setQuoteCurrency])
 
   const onSelectCurrency = (currency: FORCurrencyOrBalance): void => {
     if (isTokenInputMode) {

@@ -8,7 +8,7 @@ export default function PortfolioActivity() {
 
   return (
     <Trace logImpression page={InterfacePageName.PortfolioActivityPage}>
-      <Flex padding="$spacing24" gap="$spacing16">
+      <Flex gap="$spacing16">
         <Text variant="heading2">{t('portfolio.activity.title')}</Text>
         <Flex
           padding="$spacing24"

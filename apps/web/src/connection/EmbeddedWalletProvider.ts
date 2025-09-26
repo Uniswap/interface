@@ -7,7 +7,7 @@ import {
   signTypedDataWithPasskey,
 } from 'uniswap/src/features/passkey/embeddedWallet'
 import { HexString, isValidHexString } from 'uniswap/src/utils/hex'
-import { isAddress } from 'utilities/src/addresses/index'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { logger } from 'utilities/src/logger/logger'
 import { Account, createPublicClient, fallback, Hash, http, SignableMessage } from 'viem'
 
@@ -141,7 +141,7 @@ export class EmbeddedWalletProvider {
 
   getAccount() {
     const { walletAddress } = getEmbeddedWalletState()
-    const address = isAddress(walletAddress) || undefined
+    const address = isEVMAddress(walletAddress) || undefined
 
     if (!address) {
       logger.debug('EmbeddedWalletProvider.ts', 'getAccount', 'No embedded wallet connected')

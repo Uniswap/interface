@@ -1,9 +1,9 @@
-import { CreateSwapRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
+import { GasEstimate, TradingApi } from '@universe/api'
 import { GasFeeResult, ValidatedGasFeeResult, validateGasFeeResult } from 'uniswap/src/features/gas/types'
 import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 import {
   BridgeTrade,
+  ChainedActionTrade,
   ClassicTrade,
   UniswapXTrade,
   UnwrapTrade,
@@ -30,12 +30,14 @@ export type SwapTxAndGasInfo =
   | BridgeSwapTxAndGasInfo
   | WrapSwapTxAndGasInfo
   | SolanaSwapTxAndGasInfo
+  | ChainedSwapTxAndGasInfo
 export type ValidatedSwapTxContext =
   | ValidatedClassicSwapTxAndGasInfo
   | ValidatedUniswapXSwapTxAndGasInfo
   | ValidatedBridgeSwapTxAndGasInfo
   | ValidatedWrapSwapTxAndGasInfo
   | ValidatedSolanaSwapTxAndGasInfo
+  | ValidatedChainedSwapTxAndGasInfo
 
 export function isValidSwapTxContext(swapTxContext: SwapTxAndGasInfo): swapTxContext is ValidatedSwapTxContext {
   // Validation fn prevents/future-proofs typeguard against illicit casts
@@ -55,8 +57,8 @@ export type UniswapXGasBreakdown = {
 }
 
 export interface BaseSwapTxAndGasInfo {
-  routing: Routing
-  trade?: ClassicTrade | UniswapXTrade | BridgeTrade | WrapTrade | UnwrapTrade | SolanaTrade
+  routing: TradingApi.Routing
+  trade?: ClassicTrade | UniswapXTrade | BridgeTrade | WrapTrade | UnwrapTrade | SolanaTrade | ChainedActionTrade
   approveTxRequest: ValidatedTransactionRequest | undefined
   revocationTxRequest: ValidatedTransactionRequest | undefined
   gasFee: GasFeeResult
@@ -80,10 +82,10 @@ export type PermitTypedData = {
 }
 
 export interface ClassicSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
-  routing: Routing.CLASSIC
+  routing: TradingApi.Routing.CLASSIC
   trade?: ClassicTrade
   permit: PermitTransaction | PermitTypedData | undefined
-  swapRequestArgs: CreateSwapRequest | undefined
+  swapRequestArgs: TradingApi.CreateSwapRequest | undefined
   /**
    * `unsigned` is true if `txRequest` is undefined due to a permit signature needing to be signed first.
    * This occurs on interface where the user must be prompted to sign a permit before txRequest can be fetched.
@@ -93,26 +95,26 @@ export interface ClassicSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
 }
 
 export interface WrapSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
-  routing: Routing.WRAP | Routing.UNWRAP
+  routing: TradingApi.Routing.WRAP | TradingApi.Routing.UNWRAP
   trade: WrapTrade | UnwrapTrade
   txRequests: PopulatedTransactionRequestArray | undefined
 }
 
 export interface UniswapXSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
-  routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY
+  routing: TradingApi.Routing.DUTCH_V2 | TradingApi.Routing.DUTCH_V3 | TradingApi.Routing.PRIORITY
   trade: UniswapXTrade
   permit: PermitTypedData | undefined
   gasFeeBreakdown: UniswapXGasBreakdown
 }
 
 export interface BridgeSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
-  routing: Routing.BRIDGE
+  routing: TradingApi.Routing.BRIDGE
   trade: BridgeTrade
   txRequests: PopulatedTransactionRequestArray | undefined
 }
 
 export interface SolanaSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
-  routing: Routing.JUPITER
+  routing: TradingApi.Routing.JUPITER
   trade: SolanaTrade
   transactionBase64?: string
   approveTxRequest: undefined
@@ -120,6 +122,17 @@ export interface SolanaSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   gasFee: GasFeeResult
   gasFeeEstimation: SwapGasFeeEstimation
   includesDelegation: false
+}
+
+// TODO: SWAP-458 - Subject to change.
+export interface ChainedSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
+  routing: TradingApi.Routing.CHAINED
+  trade: ChainedActionTrade
+  txRequests: PopulatedTransactionRequestArray | undefined
+  /** Not needed for Chained Actions since it's already included in the steps/txRequests */
+  approveTxRequest: undefined
+  /** Not needed for Chained Actions since it's already included in the steps/txRequests */
+  revocationTxRequest: undefined
 }
 
 interface BaseRequiredSwapTxContextFields {
@@ -168,6 +181,10 @@ export type ValidatedUniswapXSwapTxAndGasInfo = Prettify<
 
 export type ValidatedSolanaSwapTxAndGasInfo = Prettify<
   Required<SolanaSwapTxAndGasInfo> & BaseRequiredSwapTxContextFields
+>
+
+export type ValidatedChainedSwapTxAndGasInfo = Prettify<
+  Required<ChainedSwapTxAndGasInfo> & BaseRequiredSwapTxContextFields
 >
 
 /**

@@ -15,7 +15,7 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { useAddressFromEns, useENSName } from 'uniswap/src/features/ens/api'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { useCreateTransferTransaction } from 'utils/transfer'
 
 export interface RecipientData {
@@ -50,7 +50,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   // Otherwise, use raw `recipient` input from the user.
   const userInput = validatedRecipientData ? undefined : recipient
 
-  const isRecipientAnAddress = isAddress(userInput ?? '')
+  const isRecipientAnAddress = isEVMAddress(userInput ?? '')
 
   // If userInput is an address, do a reverse ENS lookup
   // (address → ENS). Otherwise skip.
@@ -72,7 +72,10 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   const validatedRecipientAddress = useMemo(() => {
     return (
       validatedRecipientData?.address ??
-      (isAddress(userInput) || isAddress(forwardLookupAddress) || isAddress(recipientInputUnitagAddress) || undefined)
+      (isEVMAddress(userInput) ||
+        isEVMAddress(forwardLookupAddress) ||
+        isEVMAddress(recipientInputUnitagAddress) ||
+        undefined)
     )
   }, [validatedRecipientData?.address, userInput, forwardLookupAddress, recipientInputUnitagAddress])
 
@@ -85,7 +88,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
 
   // If forward lookup succeeded, use the original user input as ENS name.
   const finalEnsName = useMemo(() => {
-    if (isAddress(forwardLookupAddress)) {
+    if (isEVMAddress(forwardLookupAddress)) {
       return userInput
     }
     return validatedRecipientData?.ensName ?? reverseLookupName ?? undefined

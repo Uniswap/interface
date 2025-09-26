@@ -1,6 +1,5 @@
 import { WalletProvider as SolanaWalletProvider } from '@solana/wallet-adapter-react'
 import { SolanaSignerUpdater } from 'components/Web3Provider/signSolanaTransaction'
-import { ConnectionProvider } from 'hooks/useConnect'
 import React, { PropsWithChildren, ReactNode, useMemo } from 'react'
 import { useWalletCapabilitiesStateEffect } from 'state/walletCapabilities/hooks/useWalletCapabilitiesStateEffect'
 import { type Register, WagmiProvider } from 'wagmi'
@@ -20,10 +19,8 @@ export function createWeb3Provider(params: {
   const Provider = ({ children }: { children: ReactNode }) => (
     <SolanaProvider>
       <WagmiProvider config={wagmiConfig} reconnectOnMount={reconnectOnMount}>
-        <ConnectionProvider>
-          {includeCapabilitiesEffects && <WalletCapabilitiesEffects />}
-          {children}
-        </ConnectionProvider>
+        {includeCapabilitiesEffects && <WalletCapabilitiesEffects />}
+        {children}
       </WagmiProvider>
     </SolanaProvider>
   )

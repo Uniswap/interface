@@ -1,14 +1,20 @@
+import { FetchError } from '@universe/api'
+import type { JupiterOrderUrlParams } from '@universe/api/src/clients/jupiter/types'
 import { useMemo } from 'react'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
-import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
-import { getTradeRepository } from 'uniswap/src/features/repositories'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { getEVMTradeRepository } from 'uniswap/src/features/repositories'
+import { GetQuoteRequestResult } from 'uniswap/src/features/transactions/swap/hooks/useTrade/createGetQuoteRequestArgs'
+import { createEVMTradeService } from 'uniswap/src/features/transactions/swap/services/tradeService/evmTradeService'
+import { createSolanaTradeService } from 'uniswap/src/features/transactions/swap/services/tradeService/svmTradeService'
 import {
   createTradeService,
   TradeService,
 } from 'uniswap/src/features/transactions/swap/services/tradeService/tradeService'
+import { UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getMinAutoSlippageToleranceL2 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { getLogger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
@@ -29,6 +35,23 @@ interface TradeServiceContext {
   getEnabledChains: () => UniverseChainId[]
 }
 
+function onTradeError(
+  error: Error,
+  ctx: {
+    input: UseTradeArgs
+    quoteRequestArgs?: GetQuoteRequestResult | JupiterOrderUrlParams // TODO(SWAP-383): Remove JupiterOrderUrlParams from union once Solana trade repo is implemented
+  },
+): void {
+  // Error logging
+  // We use DataDog to catch network errors on Mobile
+  if ((!isMobileApp || !(error instanceof FetchError)) && !ctx.input.isUSDQuote) {
+    getLogger().error(error, {
+      tags: { file: 'packages/uniswap/src/features/services.ts', function: 'onTradeError' },
+      extra: { ...ctx.quoteRequestArgs },
+    })
+  }
+}
+
 /**
  * Trade Service
  *
@@ -41,22 +64,25 @@ interface TradeServiceContext {
 export function getTradeService(ctx: TradeServiceContext): TradeService {
   const { getIsUniswapXSupported, getEnabledChains } = ctx
 
-  return createTradeService({
-    tradeRepository: getTradeRepository(),
+  const evmTradeService = createEVMTradeService({
+    tradeRepository: getEVMTradeRepository(),
     getIsUniswapXSupported,
     getEnabledChains,
     getIsL2ChainId: (chainId?: UniverseChainId) => (chainId ? isL2ChainId(chainId) : false),
     getMinAutoSlippageToleranceL2,
     logger: getLogger(),
-    onTradeError: (error, errorCtx) => {
-      // Error logging
-      // We use DataDog to catch network errors on Mobile
-      if ((!isMobileApp || !(error instanceof FetchError)) && !errorCtx.input.isUSDQuote) {
-        getLogger().error(error, {
-          tags: { file: 'useTrade', function: 'quote' },
-          extra: { ...errorCtx.quoteRequestArgs },
-        })
-      }
+    onTradeError,
+  })
+
+  const svmTradeService = createSolanaTradeService({
+    // tradeRepository: getSolanaTradeRepository(), // TODO(SWAP-383): build Solana Trade Repository
+    onTradeError,
+  })
+
+  return createTradeService({
+    serviceByPlatform: {
+      [Platform.EVM]: evmTradeService,
+      [Platform.SVM]: svmTradeService,
     },
   })
 }

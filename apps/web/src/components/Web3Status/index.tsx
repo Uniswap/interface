@@ -2,7 +2,7 @@ import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBal
 import PortfolioDrawer from 'components/AccountDrawer'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import StatusIcon from 'components/Identicon/StatusIcon'
+import StatusIcon from 'components/StatusIcon'
 import { RecentlyConnectedModal } from 'components/Web3Status/RecentlyConnectedModal'
 import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier'
 import { useShowPendingAfterDelay } from 'components/Web3Status/useShowPendingAfterDelay'

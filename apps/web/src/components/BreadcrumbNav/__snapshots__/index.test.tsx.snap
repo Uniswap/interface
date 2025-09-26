@@ -43,10 +43,20 @@ exports[`BreadcrumbNav > renders hover components correctly 1`] = `
         WBTC
       </h1>
       <div
-        class="_color-_platformweb_neutral2 _whiteSpace-_platformweb_nowrap _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-10px _cursor-pointer"
-        data-testid="breadcrumb-token-address"
+        class="_color-_platformweb_neutral2 _opacity-0hover-0--8 _opacity-0active-0--6 _display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-4px _cursor-pointer _position-relative _alignItems-center"
+        style="transition: 100ms;"
       >
-        0x2260...C599
+        <div
+          class="_whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _maxWidth-calc100-0px38074892"
+        >
+          0x2260...C599
+        </div>
+        <div
+          class="_clear-_platformweb_both _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+        />
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative _width-16px _height-16px"
+        />
       </div>
     </div>
     <div

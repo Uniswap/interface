@@ -1,3 +1,4 @@
+import { ProfileMetadata, UnitagsApiClient } from '@universe/api'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -17,17 +18,15 @@ import { Pen } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { updateUnitagMetadata } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { useENS } from 'uniswap/src/features/ens/useENS'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { tryUploadAvatar } from 'uniswap/src/features/unitags/avatars'
-import { ProfileMetadata } from 'uniswap/src/features/unitags/types'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
@@ -231,7 +230,7 @@ export function EditUnitagProfileContent({
       : updatedMetadata
 
     setUpdateResponseLoading(true)
-    const updateResponse = await updateUnitagMetadata({
+    const updateResponse = await UnitagsApiClient.updateUnitagMetadata({
       username: unitag,
       data: {
         metadata,

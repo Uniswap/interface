@@ -2,6 +2,7 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import type { Currency } from '@uniswap/sdk-core'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import StaticRouteIcon from 'assets/svg/static_route.svg'
 import { getCurrencyFromCurrencyId } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
@@ -22,7 +23,6 @@ import {
 import { useMultichainTransactions } from 'state/transactions/hooks'
 import { isConfirmedTx } from 'state/transactions/utils'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
@@ -50,7 +50,7 @@ import { TransactionStatus, TransactionType } from 'uniswap/src/features/transac
 import { isConfirmedSwapTypeInfo } from 'uniswap/src/features/transactions/types/utils'
 import i18n from 'uniswap/src/i18n'
 import { buildCurrencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -384,7 +384,7 @@ async function parseSend({
           type: NumberType.TokenNonTx,
         })
       : i18n.t('common.unknown')
-  const otherAccount = isAddress(recipient) || undefined
+  const otherAccount = isEVMAddress(recipient) || undefined
 
   return {
     descriptor: i18n.t('activity.transaction.send.descriptor', {
@@ -420,7 +420,7 @@ async function parseUniswapXOrderLocal({
 }): Promise<Partial<Activity>> {
   const { typeInfo } = details
   const uniswapXOrderDetails = isUniswapXDetails(details) ? details : undefined
-  const isLimitOrder = uniswapXOrderDetails?.routing === Routing.DUTCH_LIMIT
+  const isLimitOrder = uniswapXOrderDetails?.routing === TradingApi.Routing.DUTCH_LIMIT
 
   // Get the appropriate order text table
   const orderTextTable = getOrderTextTable()

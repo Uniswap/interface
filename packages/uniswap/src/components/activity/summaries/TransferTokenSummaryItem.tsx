@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ElementAfterText } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
@@ -21,7 +21,7 @@ import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/ut
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 
-export function TransferTokenSummaryItem({
+function _TransferTokenSummaryItem({
   transactionType,
   otherAddress,
   transaction,
@@ -44,14 +44,17 @@ export function TransferTokenSummaryItem({
 
   const isCurrency = transaction.typeInfo.assetType === AssetType.Currency
 
-  const currencyAmount =
-    currencyInfo &&
-    transaction.typeInfo.currencyAmountRaw &&
-    getFormattedCurrencyAmount({
-      currency: currencyInfo.currency,
-      amount: transaction.typeInfo.currencyAmountRaw,
-      formatter,
-    })
+  const currencyAmount = useMemo(
+    () =>
+      currencyInfo &&
+      transaction.typeInfo.currencyAmountRaw &&
+      getFormattedCurrencyAmount({
+        currency: currencyInfo.currency,
+        amount: transaction.typeInfo.currencyAmountRaw,
+        formatter,
+      }),
+    [currencyInfo, formatter, transaction.typeInfo.currencyAmountRaw],
+  )
 
   const icon = useMemo(() => {
     if (isCurrency) {
@@ -136,3 +139,5 @@ export function TransferTokenSummaryItem({
 
   return <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} />
 }
+
+export const TransferTokenSummaryItem = memo(_TransferTokenSummaryItem)

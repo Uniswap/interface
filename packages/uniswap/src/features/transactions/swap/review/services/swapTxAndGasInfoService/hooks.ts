@@ -1,9 +1,8 @@
 import type { UseQueryResult } from '@tanstack/react-query'
 import { queryOptions, useQuery } from '@tanstack/react-query'
+import { GasStrategy, TradingApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
-import type { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
@@ -14,6 +13,7 @@ import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/u
 import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import { useTokenApprovalInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import { createBridgeSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/bridge/bridgeSwapTxAndGasInfoService'
+import { createChainedActionSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/chained/chainedActionTxSwapAndGasInfoService'
 import { createClassicSwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/classic/classicSwapTxAndGasInfoService'
 import { FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import { createEVMSwapInstructionsService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapInstructionsService'
@@ -45,7 +45,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 type SwapQueryParams = Optional<SwapTxAndGasInfoParameters, 'trade'>
 
 const EMPTY_SWAP_TX_AND_GAS_INFO: SwapTxAndGasInfo = {
-  routing: Routing.CLASSIC,
+  routing: TradingApi.Routing.CLASSIC,
   txRequests: undefined,
   approveTxRequest: undefined,
   revocationTxRequest: undefined,
@@ -116,6 +116,11 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
     return createUniswapXSwapTxAndGasInfoService()
   }, [])
 
+  const chainedSwapTxInfoService = useMemo(() => {
+    const chainedService = createChainedActionSwapTxAndGasInfoService()
+    return chainedService
+  }, [])
+
   const wrapTxInfoService = useMemo(() => {
     const wrapService = createWrapTxAndGasInfoService({ ...swapConfig, transactionSettings, instructionService })
     return decorateWithEVMLogging(wrapService)
@@ -127,21 +132,23 @@ export function useSwapTxAndGasInfoService(): SwapTxAndGasInfoService {
 
   const services = useMemo(() => {
     return {
-      [Routing.CLASSIC]: classicSwapTxInfoService,
-      [Routing.BRIDGE]: bridgeSwapTxInfoService,
-      [Routing.PRIORITY]: uniswapXSwapTxInfoService,
-      [Routing.DUTCH_V2]: uniswapXSwapTxInfoService,
-      [Routing.DUTCH_V3]: uniswapXSwapTxInfoService,
-      [Routing.WRAP]: wrapTxInfoService,
-      [Routing.UNWRAP]: wrapTxInfoService,
-      [Routing.LIMIT_ORDER]: createNoopService(),
-      [Routing.DUTCH_LIMIT]: createNoopService(),
-      [Routing.JUPITER]: solanaSwapTxInfoService,
+      [TradingApi.Routing.CLASSIC]: classicSwapTxInfoService,
+      [TradingApi.Routing.BRIDGE]: bridgeSwapTxInfoService,
+      [TradingApi.Routing.PRIORITY]: uniswapXSwapTxInfoService,
+      [TradingApi.Routing.DUTCH_V2]: uniswapXSwapTxInfoService,
+      [TradingApi.Routing.DUTCH_V3]: uniswapXSwapTxInfoService,
+      [TradingApi.Routing.WRAP]: wrapTxInfoService,
+      [TradingApi.Routing.UNWRAP]: wrapTxInfoService,
+      [TradingApi.Routing.CHAINED]: chainedSwapTxInfoService,
+      [TradingApi.Routing.LIMIT_ORDER]: createNoopService(),
+      [TradingApi.Routing.DUTCH_LIMIT]: createNoopService(),
+      [TradingApi.Routing.JUPITER]: solanaSwapTxInfoService,
     } satisfies RoutingServicesMap
   }, [
     classicSwapTxInfoService,
     bridgeSwapTxInfoService,
     uniswapXSwapTxInfoService,
+    chainedSwapTxInfoService,
     wrapTxInfoService,
     solanaSwapTxInfoService,
   ])

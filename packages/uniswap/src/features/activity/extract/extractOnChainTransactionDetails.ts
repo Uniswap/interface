@@ -3,7 +3,8 @@ import {
   OnChainTransactionLabel,
   OnChainTransactionStatus,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TradingApi } from '@universe/api'
+
 import { parseRestApproveTransaction } from 'uniswap/src/features/activity/parse/parseApproveTransaction'
 import { parseRestBridgeTransaction } from 'uniswap/src/features/activity/parse/parseBridgingTransaction'
 import { parseRestLiquidityTransaction } from 'uniswap/src/features/activity/parse/parseLiquidityTransaction'
@@ -97,7 +98,7 @@ export default function extractRestOnChainTransactionDetails(
       }
     : undefined
 
-  const routing = label === OnChainTransactionLabel.UNISWAP_X ? Routing.DUTCH_V2 : Routing.CLASSIC
+  const routing = label === OnChainTransactionLabel.UNISWAP_X ? TradingApi.Routing.DUTCH_V2 : TradingApi.Routing.CLASSIC
 
   return {
     routing,

@@ -12,7 +12,8 @@
     "plugins": [
       "expo-localization",
       "expo-camera",
-      "expo-local-authentication"
+      "expo-local-authentication",
+      "expo-secure-store"
     ]
   }
 }

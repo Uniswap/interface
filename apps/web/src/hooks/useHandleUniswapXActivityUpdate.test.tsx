@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { useHandleUniswapXActivityUpdate } from 'hooks/useHandleUniswapXActivityUpdate'
@@ -5,7 +6,6 @@ import { ActivityUpdateTransactionType, type UniswapXOrderUpdate } from 'state/a
 import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
 import { logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { finalizeTransaction, updateTransaction } from 'uniswap/src/features/transactions/slice'
 import {
@@ -66,7 +66,7 @@ describe('useHandleUniswapXActivityUpdate', () => {
       expectedOutputCurrencyAmountRaw: '2000000000000000000',
       settledOutputCurrencyAmountRaw: '2000000000000000000',
     },
-    routing: Routing.DUTCH_V2,
+    routing: TradingApi.Routing.DUTCH_V2,
     orderHash: '0xOrderHash',
     hash: undefined,
     ...overrides,
@@ -246,7 +246,7 @@ describe('useHandleUniswapXActivityUpdate', () => {
       const handleUpdate = result.current
 
       const activity = createMockActivity(
-        { routing: Routing.DUTCH_V2, orderHash: '0xOrderHash' },
+        { routing: TradingApi.Routing.DUTCH_V2, orderHash: '0xOrderHash' },
         { status: TransactionStatus.Success, hash: '0xSuccessHash' },
       )
 
@@ -261,7 +261,7 @@ describe('useHandleUniswapXActivityUpdate', () => {
         orderHash: '0xOrderHash',
         chainId: UniverseChainId.Mainnet,
         analyticsContext: { trace: 'mock-trace' },
-        routing: Routing.DUTCH_V2,
+        routing: TradingApi.Routing.DUTCH_V2,
         status: TransactionStatus.Success,
       })
     })
@@ -273,7 +273,7 @@ describe('useHandleUniswapXActivityUpdate', () => {
       const handleUpdate = result.current
 
       const activity = createMockActivity(
-        { routing: Routing.DUTCH_LIMIT, orderHash: '0xOrderHash' },
+        { routing: TradingApi.Routing.DUTCH_LIMIT, orderHash: '0xOrderHash' },
         { status: TransactionStatus.Success },
       )
 
@@ -292,7 +292,7 @@ describe('useHandleUniswapXActivityUpdate', () => {
       const handleUpdate = result.current
 
       const activity = createMockActivity(
-        { routing: Routing.DUTCH_V2, orderHash: '0xOrderHash' },
+        { routing: TradingApi.Routing.DUTCH_V2, orderHash: '0xOrderHash' },
         { status: TransactionStatus.Canceled, hash: '0xCancelHash' },
       )
 
@@ -307,7 +307,7 @@ describe('useHandleUniswapXActivityUpdate', () => {
         orderHash: '0xOrderHash',
         chainId: UniverseChainId.Mainnet,
         analyticsContext: { trace: 'mock-trace' },
-        routing: Routing.DUTCH_V2,
+        routing: TradingApi.Routing.DUTCH_V2,
         status: TransactionStatus.Canceled,
       })
     })
@@ -319,7 +319,7 @@ describe('useHandleUniswapXActivityUpdate', () => {
       const handleUpdate = result.current
 
       const activity = createMockActivity(
-        { routing: Routing.DUTCH_V2, orderHash: '0xOrderHash' },
+        { routing: TradingApi.Routing.DUTCH_V2, orderHash: '0xOrderHash' },
         { status: TransactionStatus.Expired },
       )
 
@@ -334,7 +334,7 @@ describe('useHandleUniswapXActivityUpdate', () => {
         orderHash: '0xOrderHash',
         chainId: UniverseChainId.Mainnet,
         analyticsContext: { trace: 'mock-trace' },
-        routing: Routing.DUTCH_V2,
+        routing: TradingApi.Routing.DUTCH_V2,
         status: TransactionStatus.Expired,
       })
     })
