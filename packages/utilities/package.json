@@ -24,7 +24,7 @@
     "@uniswap/sdk-core": "7.7.2",
     "dayjs": "1.11.7",
     "expo-localization": "16.0.1",
-    "graphql": "16.6.0",
+    "graphql": "16.8.1",
     "jsbi": "3.2.5",
     "promise": "8.3.0",
     "react": "18.3.1",

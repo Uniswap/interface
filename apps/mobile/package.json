@@ -152,7 +152,7 @@
     "react-native-keyboard-controller": "1.17.5",
     "react-native-localize": "2.2.6",
     "react-native-markdown-display": "7.0.0-alpha.2",
-    "react-native-mmkv": "2.10.1",
+    "react-native-mmkv": "2.11.0",
     "react-native-onesignal": "5.2.9",
     "react-native-pager-view": "6.5.1",
     "react-native-passkey": "3.1.0",
