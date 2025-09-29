@@ -53,7 +53,7 @@ test.describe('Landing Page', () => {
       await page.unrouteAll({ behavior: 'ignoreErrors' })
     })
     test('renders UK compliance banner in UK', async ({ page }) => {
-      await page.route(/(?:interface|beta).gateway.uniswap.org\/v1\/amplitude-proxy/, async (route) => {
+      await page.route(/(?:interface|beta)\.gateway\.uniswap\.org\/v1\/amplitude-proxy/, async (route) => {
         const requestBody = JSON.stringify(await route.request().postDataJSON())
         const originalResponse = await route.fetch()
         const byteSize = new Blob([requestBody]).size
