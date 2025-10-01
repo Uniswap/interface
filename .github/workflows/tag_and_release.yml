@@ -34,7 +34,7 @@ jobs:
           tag_prefix: ""
 
       - name: 🪽 Release
-        uses: actions/create-release@c9ba6969f07ed90fae07e2e66100dd03f9b1a50e
+        uses: actions/create-release@8e3b4a5e184b498423d5b25ca5ceb5a9258c92c2
         env:
            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Or use your PAT
         with:
