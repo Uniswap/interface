@@ -15,7 +15,7 @@ import { useDebouncedTrade } from 'uniswap/src/features/transactions/swap/form/S
 import type { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import { isInterface, isMobileApp } from 'utilities/src/platform'
+import { isMobileApp, isWebApp } from 'utilities/src/platform'
 
 // TradeInfoRow take `gasInfo` as a prop (rather than directly using useDebouncedGasInfo) because on mobile,
 // the parent needs to check whether to render an empty row based on `gasInfo` fields first.
@@ -41,8 +41,7 @@ export function TradeInfoRow({ gasInfo, warning }: { gasInfo: GasInfo; warning?:
 
   const inputChainId = currencies.input?.currency.chainId
   const outputChainId = currencies.output?.currency.chainId
-  const showCanonicalBridge =
-    isInterface && warning?.type === WarningLabel.NoQuotesFound && inputChainId !== outputChainId
+  const showCanonicalBridge = isWebApp && warning?.type === WarningLabel.NoQuotesFound && inputChainId !== outputChainId
 
   return (
     <Flex centered row>

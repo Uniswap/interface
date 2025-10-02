@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Wallet package needs direct access for internal usage
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 
 export interface TelemetryState {

@@ -56,6 +56,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
+import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -70,7 +71,6 @@ import {
   setHasSeenSmartWalletCreatedWalletModal,
   setIncrementNumPostSwapNudge,
 } from 'wallet/src/features/behaviorHistory/slice'
-import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { useAccountCountChanged, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
 
@@ -239,6 +239,7 @@ function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element
   }, [dispatch, activeAccount.address, tabIndex, hasNotifications, isBottomTabsEnabled])
 
   // If accounts are switched, we want to scroll to top and show full header
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to trigger this effect also when activeAccount changes
   useEffect(() => {
     resetScrollState()
   }, [activeAccount, resetScrollState])

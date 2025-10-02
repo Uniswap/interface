@@ -25,6 +25,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
+import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
@@ -36,7 +37,6 @@ import { SmartWalletUpgradeModals } from 'wallet/src/components/smartWallet/moda
 import { useOpenSmartWalletNudgeOnCompletedSwap } from 'wallet/src/components/smartWallet/smartAccounts/hooks'
 import { setIncrementNumPostSwapNudge } from 'wallet/src/features/behaviorHistory/slice'
 import { PendingNotificationBadge } from 'wallet/src/features/notifications/components/PendingNotificationBadge'
-import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { useActiveAccountAddressWithThrow, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { setSmartWalletConsent } from 'wallet/src/features/wallet/slice'
 
@@ -91,7 +91,7 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
       onComplete?.()
       setIsSmartWalletEnabledModalOpen(true)
     },
-    [dispatch, activeAccount.address, setIsSmartWalletEnabledModalOpen],
+    [dispatch, activeAccount.address],
   )
 
   // Handle the smart wallet nudge when a swap transaction is completed

@@ -1,6 +1,6 @@
+import { GraphQLApi } from '@universe/api'
 import { POLYGON_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
-import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
@@ -30,7 +30,7 @@ export const POLYGON_CHAIN_INFO = {
   assetRepoNetworkName: 'polygon',
   blockPerMainnetEpochForChainId: 5,
   backendChain: {
-    chain: BackendChainId.Polygon as GqlChainId,
+    chain: GraphQLApi.Chain.Polygon as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: '0x0000000000000000000000000000000000001010',
   },

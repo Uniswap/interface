@@ -56,7 +56,7 @@ export function useLpIncentives(): UseLpIncentivesResult {
           // If refetch shows 0 rewards, clear the temporary storage
           setLastClaimed(null)
         }
-      } catch (error) {
+      } catch (_error) {
         setLastClaimed(null)
       }
     }

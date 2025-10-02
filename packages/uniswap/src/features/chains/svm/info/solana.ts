@@ -1,6 +1,7 @@
+import { GraphQLApi } from '@universe/api'
 import { SOLANA_LOGO } from 'ui/src/assets'
-import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
+import { DEFAULT_NATIVE_ADDRESS_SOLANA, WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { NetworkLayer, RPCType, UniverseChainId, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -47,21 +48,15 @@ export const SOLANA_CHAIN_INFO = {
     name: 'Solana',
     symbol: 'SOL',
     decimals: 9,
-    address: 'So11111111111111111111111111111111111111112',
+    address: DEFAULT_NATIVE_ADDRESS_SOLANA,
     explorerLink: 'https://explorer.solana.com',
     logo: SOLANA_LOGO,
   },
-  /**
-   * Currently in our apps, we do not need to differentiate between SOL and wSOL,
-   * as a user will typically only have wSol during the lifetime of a transaction.
-   *
-   * Reference: https://spl.solana.com/token#example-wrapping-sol-in-a-token
-   */
   wrappedNativeCurrency: {
     name: 'Wrapped SOL',
     symbol: 'wSOL',
     decimals: 9,
-    address: 'So11111111111111111111111111111111111111112',
+    address: WRAPPED_SOL_ADDRESS_SOLANA,
   },
   networkLayer: NetworkLayer.L1,
   pendingTransactionsRetryOptions: undefined,
@@ -74,7 +69,7 @@ export const SOLANA_CHAIN_INFO = {
     },
   },
   backendChain: {
-    chain: BackendChainId.Solana,
+    chain: GraphQLApi.Chain.Solana,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },

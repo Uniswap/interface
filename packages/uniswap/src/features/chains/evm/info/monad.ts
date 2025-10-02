@@ -1,5 +1,5 @@
+import { GraphQLApi } from '@universe/api'
 import { MONAD_LOGO } from 'ui/src/assets'
-import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
@@ -25,7 +25,7 @@ export const MONAD_CHAIN_INFO = {
   testnet: true,
   assetRepoNetworkName: undefined,
   backendChain: {
-    chain: BackendChainId.MonadTestnet as GqlChainId,
+    chain: GraphQLApi.Chain.MonadTestnet as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },

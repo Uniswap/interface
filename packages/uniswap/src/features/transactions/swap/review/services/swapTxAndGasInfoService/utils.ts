@@ -55,7 +55,7 @@ import { SWAP_GAS_URGENCY_OVERRIDE } from 'uniswap/src/features/transactions/swa
 import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
+import { isExtensionApp, isMobileApp, isWebApp } from 'utilities/src/platform'
 import type { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 export interface TransactionRequestInfo {
@@ -299,7 +299,7 @@ export function createLogSwapRequestErrors({ trace }: { trace: ITraceContext }) 
         })
       }
 
-      if (!(isMobileApp || isExtension)) {
+      if (!(isMobileApp || isExtensionApp)) {
         sendAnalyticsEvent(SwapEventName.SwapEstimateGasCallFailed, {
           ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, transactionSettings, trace }),
           error: gasFeeResult.error,
@@ -371,7 +371,7 @@ export function getClassicSwapTxAndGasInfo({
   includesDelegation?: boolean
 }): ClassicSwapTxAndGasInfo {
   const txRequests = validateTransactionRequests(swapTxInfo.txRequests)
-  const unsigned = Boolean(isInterface && swapTxInfo.permitData)
+  const unsigned = Boolean(isWebApp && swapTxInfo.permitData)
   const typedData = validatePermit(swapTxInfo.permitData)
 
   const permit = typedData

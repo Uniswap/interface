@@ -1,3 +1,4 @@
+import { GraphQLApi } from '@universe/api'
 import { CHART_BEHAVIOR } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
 import { createDragActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/dragActions'
 import { createPriceActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/priceActions'
@@ -5,7 +6,6 @@ import { createRenderActions } from 'components/Charts/D3LiquidityRangeInput/D3L
 import { createViewActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/viewActions'
 import { ChartState, ChartStoreState } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create } from 'zustand'
 import { devtools, subscribeWithSelector } from 'zustand/middleware'
@@ -27,7 +27,7 @@ const INITIAL_PRICE_STATE = {
   maxPrice: undefined,
   minPrice: undefined,
   panY: 0,
-  selectedHistoryDuration: HistoryDuration.Month,
+  selectedHistoryDuration: GraphQLApi.HistoryDuration.Month,
   selectedPriceStrategy: undefined,
   zoomLevel: 1,
 }
@@ -60,10 +60,10 @@ export const createLiquidityChartStore = ({
   minPrice?: number
   maxPrice?: number
   isFullRange?: boolean
-  selectedHistoryDuration?: HistoryDuration
+  selectedHistoryDuration?: GraphQLApi.HistoryDuration
   onMinPriceChange: (price?: number) => void
   onMaxPriceChange: (price?: number) => void
-  onTimePeriodChange?: (timePeriod: HistoryDuration) => void
+  onTimePeriodChange?: (timePeriod: GraphQLApi.HistoryDuration) => void
   setIsFullRange: (isFullRange: boolean) => void
 }) => {
   // Group callbacks for action creators
@@ -119,7 +119,7 @@ export const createLiquidityChartStore = ({
             },
 
             // Core actions that stay in main file
-            setTimePeriod: (timePeriod: HistoryDuration) => {
+            setTimePeriod: (timePeriod: GraphQLApi.HistoryDuration) => {
               set((state) => ({ ...state, selectedHistoryDuration: timePeriod }))
               if (callbacks.onTimePeriodChange) {
                 callbacks.onTimePeriodChange(timePeriod)

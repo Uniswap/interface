@@ -112,11 +112,13 @@ const D3LiquidityRangeChart = ({
   }, [priceData, liquidityData, colors, dimensions, tickScale, initializeRenderers, drawAll])
 
   // Update renderers when state changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: minPrice and maxPrice should also trigger re-renders
   useEffect(() => {
     drawAll()
   }, [minPrice, maxPrice, drawAll])
 
   // Reset the chart when the price data changes (currentPrice omitted)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +priceData.dataHash
   useEffect(() => {
     reset()
   }, [priceData.dataHash, reset])

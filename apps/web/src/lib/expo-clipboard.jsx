@@ -32,7 +32,7 @@ const Clipboard = {
     try {
       const text = await Clipboard.getStringAsync()
       return text.length > 0
-    } catch (e) {
+    } catch (_e) {
       return false
     }
   },

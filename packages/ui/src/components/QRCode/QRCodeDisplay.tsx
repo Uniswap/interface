@@ -56,12 +56,11 @@ const _QRCodeDisplay = ({
       />
       <Flex
         alignItems="center"
+        justifyContent="center"
         backgroundColor="$transparent"
         borderRadius="$roundedFull"
         overflow="visible"
-        pl="$spacing2"
         position="absolute"
-        pt="$spacing2"
       >
         {children}
       </Flex>

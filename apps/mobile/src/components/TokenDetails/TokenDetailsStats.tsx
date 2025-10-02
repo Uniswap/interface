@@ -1,3 +1,4 @@
+import { GraphQLApi } from '@universe/api'
 import React, { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
@@ -6,7 +7,6 @@ import { LongText } from 'src/components/text/LongText'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ChartBar, ChartPie, ChartPyramid, Language as LanguageIcon, TrendDown, TrendUp } from 'ui/src/components/icons'
 import { DEP_accentColors, validColor } from 'ui/src/theme'
-import { useTokenProjectDescriptionQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
@@ -133,7 +133,7 @@ export const TokenDetailsStats = memo(function _TokenDetailsStats(): JSX.Element
 
   const language = useCurrentLanguage()
 
-  const descriptions = useTokenProjectDescriptionQuery({
+  const descriptions = GraphQLApi.useTokenProjectDescriptionQuery({
     variables: {
       ...currencyIdToContractInput(currencyId),
       includeSpanish:

@@ -6,6 +6,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { NUMBER_OF_RESULTS_LONG } from 'uniswap/src/features/search/SearchModal/constants'
+import { isWSOL } from 'uniswap/src/utils/isWSOL'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function useSearchTokens({
@@ -33,7 +34,18 @@ export function useSearchTokens({
   )
 
   const tokenSelect = useEvent((data: SearchTokensResponse): CurrencyInfo[] => {
-    return data.tokens.map((token) => searchTokenToCurrencyInfo(token)).filter((c): c is CurrencyInfo => Boolean(c))
+    return data.tokens
+      .map((token) => searchTokenToCurrencyInfo(token))
+      .filter((c): c is CurrencyInfo => {
+        if (!c) {
+          return false
+        }
+        // Filter out WSOL from Solana search results
+        if (isWSOL(c.currency)) {
+          return false
+        }
+        return true
+      })
   })
 
   const {

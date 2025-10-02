@@ -21,7 +21,7 @@ import {
   PopulatedTransactionRequestArray,
   ValidatedTransactionRequest,
 } from 'uniswap/src/features/transactions/types/transactionRequests'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 import { Prettify } from 'viem'
 
 export type SwapTxAndGasInfo =
@@ -204,7 +204,7 @@ function validateSwapTxContext(swapTxContext: SwapTxAndGasInfo): ValidatedSwapTx
 
       if (unsigned) {
         // SwapTxContext should only ever be unsigned / still require a signature on interface.
-        if (!isInterface || !permit || permit.method !== PermitMethod.TypedData) {
+        if (!isWebApp || !permit || permit.method !== PermitMethod.TypedData) {
           return undefined
         }
         return { ...swapTxContext, trade, gasFee, unsigned, txRequests: undefined, permit, includesDelegation }

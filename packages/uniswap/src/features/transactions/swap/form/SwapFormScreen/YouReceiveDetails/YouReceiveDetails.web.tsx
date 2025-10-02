@@ -40,10 +40,10 @@ import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { useRoutingProvider } from 'uniswap/src/utils/routingDiagram/routingRegistry'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
-import { isInterfaceDesktop, isWeb } from 'utilities/src/platform'
+import { isInterfaceDesktop, isWebPlatform } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 const ZERO_PERCENT = new Percent(0, 100)
@@ -230,7 +230,7 @@ function MaxSlippageDisplay({
         }
       />
       <Flex row gap="$spacing6" alignItems="center">
-        {!autoSlippageEnabled && <AutoSlippageBadge />}
+        {autoSlippageEnabled && <AutoSlippageBadge />}
         <SwapDetailsRow.ValueLabel
           value={currentSlippageTolerance === 0 ? t('common.none') : formatPercent(currentSlippageTolerance)}
         />
@@ -290,7 +290,7 @@ function InlineWarningDisplay({ warning }: { warning: WarningWithStyle }): JSX.E
   return (
     <SwapDetailsRow.Outer>
       <Flex row gap="$spacing6" alignItems="center">
-        {isWeb && (
+        {isWebPlatform && (
           <InfoTooltip
             text={warning.warning.message}
             placement="top"

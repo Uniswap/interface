@@ -4,7 +4,7 @@ import { Button, ButtonEmphasis, ButtonVariant, Flex, FlexProps, Text, TextProps
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 
 interface DialogProps {
   isOpen: boolean
@@ -53,7 +53,7 @@ export function Dialog({
   secondaryButtonVariant = 'default',
   secondaryButtonEmphasis = 'secondary',
   buttonContainerProps,
-  alignment = isExtension ? 'top' : undefined,
+  alignment = isExtensionApp ? 'top' : undefined,
   children,
   displayHelpCTA = false,
   textAlign = 'center',

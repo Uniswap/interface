@@ -152,7 +152,10 @@ function makeEthereum(): void {
 
 // eslint-disable-next-line import/no-unused-modules
 export default defineContentScript({
-  matches: ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*'],
+  matches:
+    __DEV__ || process.env.BUILD_ENV === 'dev'
+      ? ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*']
+      : ['https://*/*'],
   runAt: 'document_start',
   // TODO(INFRA-1010): not supported by firefox
   world: 'MAIN',

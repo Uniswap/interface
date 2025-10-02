@@ -1,8 +1,3 @@
-import {
-  ConnectionStatus,
-  updateConnectionState,
-  useConnectionState,
-} from 'features/wallet/connection/connectors/state'
 import { useConnectWallet } from 'features/wallet/connection/hooks/useConnectWallet'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
@@ -32,28 +27,19 @@ const AlertTriangleIcon = styled(AlertTriangle, {
 })
 
 export default function ConnectionErrorView() {
-  const { status, error, lastConnectedWalletMeta } = useConnectionState()
-
-  const resetConnection = useEvent(() => {
-    updateConnectionState({
-      status: ConnectionStatus.Idle,
-      error: undefined,
-      lastConnectedWalletMeta: undefined,
-    })
-  })
-
-  const connectWallet = useConnectWallet()
+  const { connectWallet, isConnecting, variables, reset, error } = useConnectWallet()
 
   const retry = useEvent(() => {
-    resetConnection()
+    const lastWallet = variables?.wallet
+    reset()
 
-    if (lastConnectedWalletMeta) {
-      connectWallet(lastConnectedWalletMeta)
+    if (lastWallet) {
+      connectWallet({ wallet: lastWallet })
     }
   })
 
-  return status === ConnectionStatus.Idle && error ? (
-    <Modal name={ModalName.ConnectionError} isModalOpen={Boolean(error)} onClose={resetConnection} padding={0}>
+  return !isConnecting && error ? (
+    <Modal name={ModalName.ConnectionError} isModalOpen={Boolean(error)} onClose={reset} padding={0}>
       <Wrapper>
         <AlertTriangleIcon />
         <ThemedText.HeadlineSmall marginBottom="8px">
@@ -73,7 +59,7 @@ export default function ConnectionErrorView() {
             p="$none"
             mt="$spacing20"
             // Reset connection to prevent being stuck in an error state
-            onPress={resetConnection}
+            onPress={reset}
           >
             <Trans i18nKey="common.close" />
           </Button>

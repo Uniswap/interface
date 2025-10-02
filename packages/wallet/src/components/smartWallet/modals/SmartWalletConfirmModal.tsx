@@ -4,7 +4,7 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import { SmartWallet } from 'ui/src/components/icons'
 import { ExcludedNetworkBanner } from 'uniswap/src/components/banners/ExcludedNetworkBanner'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 import { SmartWalletModal } from 'wallet/src/components/smartWallet/modals/SmartWalletModal'
 import { NetworkInfo } from 'wallet/src/features/smartWallet/InsufficientFundsNetworkRow'
 import { RemoveDelegationTotalFee } from 'wallet/src/features/smartWallet/RemoveDelegationTotalFee'
@@ -56,7 +56,7 @@ export function SmartWalletConfirmModal({
   return (
     <SmartWalletModal
       horizontalButtons
-      horizontalAlignment={isExtension ? 'left' : 'center'}
+      horizontalAlignment={isExtensionApp ? 'left' : 'center'}
       isOpen={isOpen}
       icon={<SmartWallet color={colors.neutral1.val} size="$icon.24" />}
       iconBackgroundColor="$surface3"
@@ -84,9 +84,9 @@ export function SmartWalletConfirmModal({
         <AddressFooter activeAccountAddress={walletAddress} />
         {hasError && (
           <Text
-            variant={isExtension ? 'body4' : 'body3'}
+            variant={isExtensionApp ? 'body4' : 'body3'}
             color="$statusCritical"
-            textAlign={isExtension ? 'left' : 'center'}
+            textAlign={isExtensionApp ? 'left' : 'center'}
           >
             {t('smartWallets.disable.failed')}
           </Text>

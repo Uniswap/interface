@@ -138,7 +138,7 @@ const AutocompleteRow = ({
   })
   const { data: ENSName } = useENSName(address)
   const cachedEnsName = ENSName || validatedEnsName
-  const formattedAddress = shortenAddress(address, 8)
+  const formattedAddress = shortenAddress({ address, chars: 8 })
   const shouldShowAddress = !unitag?.username && !cachedEnsName
 
   const boundSelectRecipient = useCallback(
@@ -362,13 +362,15 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
                 <Column>
                   <Row gap="xs">
                     <ThemedText.BodyPrimary lineHeight="24px">
-                      {recipientData.unitag ?? recipientData.ensName ?? shortenAddress(recipientData.address)}
+                      {recipientData.unitag ??
+                        recipientData.ensName ??
+                        shortenAddress({ address: recipientData.address })}
                     </ThemedText.BodyPrimary>
                     {recipientData.unitag && <Unitag size={18} />}
                   </Row>
                   {Boolean(recipientData.ensName) && (
                     <ThemedText.LabelMicro lineHeight="16px">
-                      {shortenAddress(recipientData.address)}
+                      {shortenAddress({ address: recipientData.address })}
                     </ThemedText.LabelMicro>
                   )}
                 </Column>

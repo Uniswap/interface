@@ -330,6 +330,7 @@ export function SelectTokensStep({
   }, [hasExistingFeeTiers, feeTierData])
 
   // If the userApprovedHook changes, we want to reset the default fee tier in the useEffect below.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +userApprovedHook
   useEffect(() => {
     setDefaultFeeTierSelected(false)
   }, [userApprovedHook])

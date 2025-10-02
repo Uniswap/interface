@@ -1,9 +1,4 @@
 {
-  "defaultSrc": [
-    "https://vercel.live/",
-    "https://vercel.com"
-  ],
-  "scriptSrc": [
-    "'sha256-jhb+qiJiVBxruYChJWIrsskRE2fAoV/F/B10cAoiSB0='"
-  ]
+  "defaultSrc": ["https://vercel.live/", "https://vercel.com"],
+  "scriptSrc": ["'sha256-jhb+qiJiVBxruYChJWIrsskRE2fAoV/F/B10cAoiSB0='"]
 }

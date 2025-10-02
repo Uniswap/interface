@@ -155,7 +155,7 @@ describe('hooks', () => {
       })
 
       expect(result).toBe(
-        `?chain=mainnet&inputCurrency=${UNI_ADDRESSES[UniverseChainId.Mainnet]}&outputCurrency=${ETH_MAINNET.isNative ? NATIVE_CHAIN_ID : ETH_MAINNET.address}&value=100&field=${CurrencyField.OUTPUT}`,
+        `?chain=mainnet&inputCurrency=${UNI_ADDRESSES[UniverseChainId.Mainnet]}&outputCurrency=${NATIVE_CHAIN_ID}&value=100&field=${CurrencyField.OUTPUT}`,
       )
     })
 
@@ -187,11 +187,11 @@ describe('hooks', () => {
       const result = serializeSwapAddressesToURLParameters({
         chainId: UniverseChainId.Mainnet,
         inputTokenAddress: UNI_ADDRESSES[UniverseChainId.Mainnet],
-        outputTokenAddress: ETH_MAINNET.isNative ? NATIVE_CHAIN_ID : ETH_MAINNET.address,
+        outputTokenAddress: NATIVE_CHAIN_ID,
       })
 
       expect(result).toBe(
-        `?chain=mainnet&inputCurrency=${UNI_ADDRESSES[UniverseChainId.Mainnet]}&outputCurrency=${ETH_MAINNET.isNative ? NATIVE_CHAIN_ID : ETH_MAINNET.address}`,
+        `?chain=mainnet&inputCurrency=${UNI_ADDRESSES[UniverseChainId.Mainnet]}&outputCurrency=${NATIVE_CHAIN_ID}`,
       )
     })
 

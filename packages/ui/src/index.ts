@@ -40,6 +40,7 @@ export {
   Paragraph,
   Popover,
   Portal,
+  Progress,
   RadioGroup,
   ScrollView,
   Select,
@@ -101,6 +102,7 @@ export { type DynamicColor, useSporeColors } from './hooks/useSporeColors'
 export * from './loading/FlexLoader'
 export * from './loading/Loader'
 export * from './loading/NftCardLoader'
+export * from './loading/RefreshIcon'
 export * from './loading/Shine'
 export * from './loading/Skeleton'
 export * from './loading/SpinningLoader'
@@ -109,4 +111,5 @@ export * from './loading/TransactionLoader'
 export * from './styles/ScrollbarStyles'
 export * from './theme/shadows'
 export * from './utils/colors'
+export { EM_DASH } from './utils/constants'
 export * from './utils/tamagui'

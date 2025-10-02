@@ -42,7 +42,7 @@ export function useCheckLowStorage({ isOnboarding }: { isOnboarding: boolean }):
     return () => {
       globalEventEmitter.removeListener(GlobalErrorEvent.ReduxStorageExceeded, listener)
     }
-  }, [hasShownWarning, triggerStorageWarning])
+  }, [triggerStorageWarning])
 
   return { showStorageWarning, onStorageWarningClose }
 }

@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { BLAST_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
-import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
   DEFAULT_RETRY_OPTIONS,
@@ -31,7 +31,7 @@ export const BLAST_CHAIN_INFO = {
   platform: Platform.EVM,
   assetRepoNetworkName: 'blast',
   backendChain: {
-    chain: BackendChainId.Blast as GqlChainId,
+    chain: GraphQLApi.Chain.Blast as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },

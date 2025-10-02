@@ -1,5 +1,11 @@
+const biomeSupportedRules = require('./biome-supported')
+
 module.exports = {
   extends: [require.resolve('./native.js')],
+  rules: {
+    // Disable all ESLint rules that have been migrated to Biome
+    ...biomeSupportedRules,
+  },
   overrides: [
     {
       files: ['*.ts', '*.tsx'],

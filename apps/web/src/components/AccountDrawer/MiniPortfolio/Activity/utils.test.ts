@@ -1,4 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { GraphQLApi } from '@universe/api'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import {
   createActivityMapByHash,
@@ -8,7 +9,6 @@ import {
   haveSameNonce,
   parseTokenAmount,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
-import { Chain, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
@@ -459,10 +459,10 @@ describe('getCurrencyAddress', () => {
     const token = {
       id: 'token-id',
       address: '0x1234567890123456789012345678901234567890',
-      chain: Chain.Ethereum,
+      chain: GraphQLApi.Chain.Ethereum,
       symbol: 'TEST',
       decimals: 18,
-      standard: TokenStandard.Erc20,
+      standard: GraphQLApi.TokenStandard.Erc20,
     } as any
 
     const result = getCurrencyAddress(token, UniverseChainId.Mainnet)
@@ -473,10 +473,10 @@ describe('getCurrencyAddress', () => {
     const token = {
       id: 'token-id',
       address: null,
-      chain: Chain.Ethereum,
+      chain: GraphQLApi.Chain.Ethereum,
       symbol: 'ETH',
       decimals: 18,
-      standard: TokenStandard.Native,
+      standard: GraphQLApi.TokenStandard.Native,
     } as any
 
     const result = getCurrencyAddress(token, UniverseChainId.Mainnet)
@@ -489,10 +489,10 @@ describe('getCurrencyAddress', () => {
     const token = {
       id: 'token-id',
       address: undefined,
-      chain: Chain.Ethereum,
+      chain: GraphQLApi.Chain.Ethereum,
       symbol: 'ETH',
       decimals: 18,
-      standard: TokenStandard.Native,
+      standard: GraphQLApi.TokenStandard.Native,
     } as any
 
     const result = getCurrencyAddress(token, UniverseChainId.Mainnet)

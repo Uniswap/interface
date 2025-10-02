@@ -40,7 +40,6 @@ describe('UnitagsApiClient', () => {
         test: 'data',
         'x-uni-address': '0x123',
         'x-uni-timestamp': 1234567890,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
       signature: 'mock-signature',
     })
@@ -50,7 +49,6 @@ describe('UnitagsApiClient', () => {
         test: 'data',
         'x-uni-address': '0x123',
         'x-uni-timestamp': 1234567890,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } as any,
       signature: 'mock-signature',
     })
@@ -327,12 +325,10 @@ describe('UnitagsApiClient', () => {
 
     beforeEach(() => {
       mockFetchers = {}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mockCreateFetcher.mockImplementation((config: any) => {
         const key = `${config.method}-${config.url}`
         const fetcher = vi.fn()
         mockFetchers[key] = fetcher
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return fetcher as any
       })
     })
@@ -358,12 +354,10 @@ describe('UnitagsApiClient', () => {
       mockFetchers = {}
 
       // Mock implementation that stores fetchers
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       mockCreateFetcher.mockImplementation((config: any) => {
         const key = `${config.method}-${config.url}`
         const fetcher = vi.fn()
         mockFetchers[key] = fetcher
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         return fetcher as any
       })
 

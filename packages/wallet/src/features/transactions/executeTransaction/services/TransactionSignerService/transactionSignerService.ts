@@ -1,5 +1,5 @@
 import type { providers, TypedDataDomain, TypedDataField } from 'ethers'
-import { HexString } from 'uniswap/src/utils/hex'
+import { HexString } from 'utilities/src/addresses/hex'
 
 // these are tied to the ethers.js types,
 // but we should eventually move to our own types

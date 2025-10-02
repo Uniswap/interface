@@ -8,7 +8,6 @@ import {
 } from 'features/accounts/store/hooks'
 import type { ExternalConnector, ExternalWallet } from 'features/accounts/store/types'
 import { PropsWithChildren, useEffect, useState } from 'react'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 
 // Typing 'logAccountsStore' into the console will enable AccountsStore logging
@@ -72,9 +71,9 @@ function UniswapAccountsStoreDevToolLogger() {
       fontWeightStrings.push('font-weight: bold;', '')
     }
 
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: console logging required for devtools functionality
     console.clear()
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: console logging required for devtools functionality
     console.log(
       `
       %cAccountsStore 🦄%c

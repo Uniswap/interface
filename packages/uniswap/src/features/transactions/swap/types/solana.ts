@@ -40,16 +40,27 @@ function getQuoteCurrencyAmounts({
   maxAmountIn: CurrencyAmount<Currency>
 } {
   const inputAmount = CurrencyAmount.fromRawAmount(inputToken, quote.inAmount)
-  const outputAmount = CurrencyAmount.fromRawAmount(outputToken, quote.outAmount)
+  let outputAmount = CurrencyAmount.fromRawAmount(outputToken, quote.outAmount)
+
+  // Adjust output amount if fee is taken from output token
+  if (quote.platformFee && quote.feeMint === quote.outputMint) {
+    const feeAmount = CurrencyAmount.fromRawAmount(outputToken, quote.platformFee.amount)
+    outputAmount = outputAmount.subtract(feeAmount)
+  }
 
   if (quote.swapMode === 'ExactIn') {
     const maxAmountIn = inputAmount
-    const minAmountOut = CurrencyAmount.fromRawAmount(outputToken, quote.otherAmountThreshold)
+    // Also adjust minAmountOut if fee is on output
+    let minAmountOut = CurrencyAmount.fromRawAmount(outputToken, quote.otherAmountThreshold)
+    if (quote.platformFee && quote.feeMint === quote.outputMint) {
+      const feeAmount = CurrencyAmount.fromRawAmount(outputToken, quote.platformFee.amount)
+      minAmountOut = minAmountOut.subtract(feeAmount)
+    }
 
     return { inputAmount, outputAmount, minAmountOut, maxAmountIn }
   } else {
     const maxAmountIn = CurrencyAmount.fromRawAmount(inputToken, quote.otherAmountThreshold)
-    const minAmountOut = outputAmount
+    const minAmountOut = outputAmount // In ExactOut, minAmountOut is the outputAmount
 
     return { inputAmount, outputAmount, minAmountOut, maxAmountIn }
   }

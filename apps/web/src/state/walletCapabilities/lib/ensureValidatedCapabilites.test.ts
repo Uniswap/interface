@@ -134,7 +134,7 @@ const testsByValidator = validationTestCases.reduce(
 
 describe('Wallet Capabilities Validation', () => {
   describe('isValidCapabilitiesObject', () => {
-    const tests = testsByValidator['isValidCapabilitiesObject'] || []
+    const tests = testsByValidator.isValidCapabilitiesObject || []
 
     test.each(tests)('$name - $description', (testCase) => {
       const result = isValidCapabilitiesObject(testCase.input)
@@ -143,7 +143,7 @@ describe('Wallet Capabilities Validation', () => {
   })
 
   describe('isValidCapabilitiesEntry', () => {
-    const tests = testsByValidator['isValidCapabilitiesEntry'] || []
+    const tests = testsByValidator.isValidCapabilitiesEntry || []
 
     test.each(tests)('$name - $description', (testCase) => {
       const result = isValidCapabilitiesEntry(testCase.input)
@@ -152,7 +152,7 @@ describe('Wallet Capabilities Validation', () => {
   })
 
   describe('ensureValidatedCapabilities', () => {
-    const tests = testsByValidator['ensureValidatedCapabilities'] || []
+    const tests = testsByValidator.ensureValidatedCapabilities || []
 
     test.each(tests)('$name - $description', (testCase) => {
       const result = ensureValidatedCapabilities(testCase.input)

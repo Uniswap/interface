@@ -188,7 +188,6 @@ export const ModalName = {
   UnitagsDelete: 'unitags-delete-modal',
   UnitagsIntro: 'unitags-intro-modal',
   UniWalletConnect: 'uniwallet-connect-modal',
-  UnsupportedCurrency: 'unsupported-currency-modal',
   UwULinkErc20SendModal: 'uwulink-erc20-send-modal',
   VerifyPasskey: 'verify-passkey-modal',
   V4HooksInfo: 'v4-hooks-info-modal',

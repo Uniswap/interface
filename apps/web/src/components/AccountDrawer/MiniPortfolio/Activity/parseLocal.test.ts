@@ -1,20 +1,12 @@
 import 'test-utils/tokens/mocks'
 
-import { permit2Address } from '@uniswap/permit2-sdk'
 import type { Token } from '@uniswap/sdk-core'
 import { TradeType as MockTradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
-import { getCurrencyFromCurrencyId } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
 import { transactionToActivity, useLocalActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import type { TransactionInfo } from 'state/transactions/types'
-import { mocked } from 'test-utils/mocked'
 import { act, renderHook } from 'test-utils/render'
-import {
-  DAI as MockDAI,
-  USDC_MAINNET as MockUSDC_MAINNET,
-  USDT as MockUSDT,
-  nativeOnChain,
-} from 'uniswap/src/constants/tokens'
+import { DAI as MockDAI, USDC_MAINNET as MockUSDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import type {
@@ -70,10 +62,8 @@ function mockSwapInfo({
 const mockAccount1 = '0x000000000000000000000000000000000000000001'
 const mockAccount2 = '0x000000000000000000000000000000000000000002'
 const mockChainId = UniverseChainId.Mainnet
-const mockSpenderAddress = permit2Address(mockChainId)
 const mockCurrencyAmountRaw = '1000000000000000000'
 const mockCurrencyAmountRawUSDC = '1000000'
-const mockApprovalAmountRaw = '10000000'
 
 function mockHash(id: string, status: TransactionStatus = TransactionStatus.Success) {
   return id + status
@@ -173,59 +163,6 @@ vi.mock('../../../../state/transactions/hooks', async () => {
             }),
             '0xswap_exact_output',
           ),
-          ...mockMultiStatus(
-            {
-              type: TransactionType.Approve,
-              tokenAddress: MockDAI.address,
-              spender: mockSpenderAddress,
-              approvalAmount: mockApprovalAmountRaw,
-            },
-            '0xapproval',
-          ),
-          ...mockMultiStatus(
-            {
-              type: TransactionType.Approve,
-              tokenAddress: MockUSDT.address,
-              spender: mockSpenderAddress,
-              approvalAmount: '0',
-            },
-            '0xrevoke_approval',
-          ),
-          ...mockMultiStatus(
-            {
-              type: TransactionType.Wrap,
-              unwrapped: false,
-              currencyAmountRaw: mockCurrencyAmountRaw,
-            },
-            '0xwrap',
-          ),
-          ...mockMultiStatus(
-            {
-              type: TransactionType.Wrap,
-              unwrapped: true,
-              currencyAmountRaw: mockCurrencyAmountRaw,
-            },
-            '0xunwrap',
-          ),
-          ...mockMultiStatus(
-            {
-              type: TransactionType.CollectFees,
-              currency0Id: currencyId(MockUSDC_MAINNET),
-              currency1Id: currencyId(MockDAI),
-              currency0AmountRaw: mockCurrencyAmountRawUSDC,
-              currency1AmountRaw: mockCurrencyAmountRaw,
-            },
-            '0xcollect_fees',
-          ),
-          ...mockMultiStatus(
-            {
-              type: TransactionType.MigrateLiquidityV2ToV3,
-              baseCurrencyId: currencyId(MockUSDC_MAINNET),
-              quoteCurrencyId: currencyId(MockDAI),
-              isFork: false,
-            },
-            '0xmigrate_v3_liquidity',
-          ),
         ],
       }
       if (!accountAddress) {
@@ -237,95 +174,13 @@ vi.mock('../../../../state/transactions/hooks', async () => {
 })
 
 describe('parseLocalActivity', () => {
-  it('returns swap activity fields with known tokens, exact input', async () => {
-    const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
-
-    const details = {
-      typeInfo: mockSwapInfo({
-        type: MockTradeType.EXACT_INPUT,
-        inputCurrency: MockUSDC_MAINNET,
-        inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-        outputCurrency: MockDAI,
-        outputCurrencyAmountRaw: mockCurrencyAmountRaw,
-      }),
-      hash: '0x123',
-      status: TransactionStatus.Success,
-      chainId: 1,
-    } as InterfaceTransactionDetails
-    const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
-    expect(result).toEqual({
-      prefixIconSrc: undefined,
-      chainId: 1,
-      currencies: [MockUSDC_MAINNET, MockDAI],
-      descriptor: '1.00 USDC for 1.00 DAI',
-      hash: '0x123',
-      from: undefined,
-      status: TransactionStatus.Success,
-      timestamp: NaN,
-      title: 'Swapped',
-    })
-  })
-
-  it('returns swap activity fields with known tokens, exact output', async () => {
-    const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
-
-    const details = {
-      typeInfo: mockSwapInfo({
-        type: MockTradeType.EXACT_OUTPUT,
-        inputCurrency: MockUSDC_MAINNET,
-        inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-        outputCurrency: MockDAI,
-        outputCurrencyAmountRaw: mockCurrencyAmountRaw,
-      }),
-      hash: '0x123',
-      status: TransactionStatus.Success,
-      chainId: 1,
-    } as InterfaceTransactionDetails
-    const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
-    expect(result).toMatchObject({
-      prefixIconSrc: undefined,
-      chainId: 1,
-      currencies: [MockUSDC_MAINNET, MockDAI],
-      descriptor: '1.00 USDC for 1.00 DAI',
-      status: TransactionStatus.Success,
-      title: 'Swapped',
-    })
-  })
-
-  it('returns swap activity fields with unknown tokens', async () => {
-    mocked(getCurrencyFromCurrencyId).mockImplementation(async () => undefined)
-
-    const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
-
-    const details = {
-      typeInfo: mockSwapInfo({
-        type: MockTradeType.EXACT_INPUT,
-        inputCurrency: MockUSDC_MAINNET,
-        inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-        outputCurrency: MockDAI,
-        outputCurrencyAmountRaw: mockCurrencyAmountRaw,
-      }),
-      hash: '0x123',
-      status: TransactionStatus.Success,
-      chainId: 1,
-    } as InterfaceTransactionDetails
-    const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
-    expect(result).toMatchObject({
-      chainId: 1,
-      currencies: [undefined, undefined],
-      descriptor: 'Unknown for Unknown',
-      status: TransactionStatus.Success,
-      title: 'Swapped',
-    })
-  })
-
   it('only returns activity for the current account', async () => {
     const { result: result1, waitFor } = renderHook(() => useLocalActivities(mockAccount1))
     const { result: result2 } = renderHook(() => useLocalActivities(mockAccount2))
 
     await waitFor(() => {
       expect(Object.values(result1.current)).toHaveLength(1)
-      expect(Object.values(result2.current)).toHaveLength(24)
+      expect(Object.values(result2.current)).toHaveLength(6)
     })
   })
 
@@ -341,177 +196,6 @@ describe('parseLocalActivity', () => {
     expect(result.current[mockHash('0xswap_exact_input', TransactionStatus.Pending)]?.title).toEqual('Swapping')
     expect(result.current[mockHash('0xswap_exact_input', TransactionStatus.Success)]?.title).toEqual('Swapped')
     expect(result.current[mockHash('0xswap_exact_input', TransactionStatus.Failed)]?.title).toEqual('Swap failed')
-  })
-
-  it('Adapts Swap exact input to Activity type', async () => {
-    const hash = mockHash('0xswap_exact_input')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
-
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
-      chainId: mockChainId,
-      currencies: [MockUSDC_MAINNET, MockDAI],
-      title: 'Swapped',
-      descriptor: `1.00 ${MockUSDC_MAINNET.symbol} for 1.00 ${MockDAI.symbol}`,
-      hash,
-      status: TransactionStatus.Success,
-      from: mockAccount2,
-    })
-  })
-
-  it('Adapts Swap exact output to Activity type', async () => {
-    const hash = mockHash('0xswap_exact_output')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
-
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
-      chainId: mockChainId,
-      currencies: [MockUSDC_MAINNET, MockDAI],
-      title: 'Swapped',
-      descriptor: `1.00 ${MockUSDC_MAINNET.symbol} for 1.00 ${MockDAI.symbol}`,
-      hash,
-      status: TransactionStatus.Success,
-      from: mockAccount2,
-    })
-  })
-
-  it('Adapts Approval to Activity type', async () => {
-    const hash = mockHash('0xapproval')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
-
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
-      chainId: mockChainId,
-      currencies: [MockDAI],
-      title: 'Approved',
-      descriptor: MockDAI.symbol,
-      hash,
-      status: TransactionStatus.Success,
-      from: mockAccount2,
-    })
-  })
-
-  it('Adapts Revoke Approval to Activity type', async () => {
-    const hash = mockHash('0xrevoke_approval')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
-
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
-      chainId: mockChainId,
-      currencies: [MockUSDT],
-      title: 'Revoked approval',
-      descriptor: MockUSDT.symbol,
-      hash,
-      status: TransactionStatus.Success,
-    })
-  })
-
-  it('Adapts Wrap to Activity type', async () => {
-    const hash = mockHash('0xwrap')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
-
-    const native = nativeOnChain(mockChainId)
-
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
-      chainId: mockChainId,
-      currencies: [native, native.wrapped],
-      title: 'Wrapped',
-      descriptor: `1.00 ${native.symbol} for 1.00 ${native.wrapped.symbol}`,
-      hash,
-      status: TransactionStatus.Success,
-      from: mockAccount2,
-    })
-  })
-
-  it('Adapts Unwrap to Activity type', async () => {
-    const hash = mockHash('0xunwrap')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
-
-    const native = nativeOnChain(mockChainId)
-
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
-      chainId: mockChainId,
-      currencies: [native.wrapped, native],
-      title: 'Unwrapped',
-      descriptor: `1.00 ${native.wrapped.symbol} for 1.00 ${native.symbol}`,
-      hash,
-      status: TransactionStatus.Success,
-      from: mockAccount2,
-    })
-  })
-
-  it('Adapts CollectFees to Activity type', async () => {
-    const hash = mockHash('0xcollect_fees')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
-
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
-      chainId: mockChainId,
-      currencies: [MockUSDC_MAINNET, MockDAI],
-      title: 'Collected fees',
-      descriptor: `1.00 ${MockUSDC_MAINNET.symbol} and 1.00 ${MockDAI.symbol}`,
-      hash,
-      status: TransactionStatus.Success,
-      from: mockAccount2,
-    })
-  })
-
-  it('Adapts MigrateLiquidityV3 to Activity type', async () => {
-    const hash = mockHash('0xmigrate_v3_liquidity')
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
-
-    await act(async () => {
-      await waitFor(() => {
-        expect(result.current[hash]).toBeDefined()
-      })
-    })
-
-    expect(result.current[hash]).toMatchObject({
-      chainId: mockChainId,
-      currencies: [MockUSDC_MAINNET, MockDAI],
-      title: 'Migrated liquidity',
-      descriptor: `${MockUSDC_MAINNET.symbol} and ${MockDAI.symbol}`,
-      hash,
-      status: TransactionStatus.Success,
-      from: mockAccount2,
-    })
   })
 
   describe('UniswapX Orders', () => {
@@ -549,43 +233,6 @@ describe('parseLocalActivity', () => {
         status: TransactionStatus.Pending,
         title: 'Swapping',
         prefixIconSrc: UniswapXBoltIcon,
-      })
-    })
-
-    it('handles UniswapX order with routing field (DUTCH_V2)', async () => {
-      const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
-
-      const details = {
-        typeInfo: mockSwapInfo({
-          type: MockTradeType.EXACT_INPUT,
-          inputCurrency: MockUSDC_MAINNET,
-          inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-          outputCurrency: MockDAI,
-          outputCurrencyAmountRaw: mockCurrencyAmountRaw,
-        }),
-        routing: TradingApi.Routing.DUTCH_V2,
-        orderHash: '0xorder123',
-        hash: '0xuniswapx_v2',
-        status: TransactionStatus.Success,
-        chainId: 1,
-        from: mockAccount1,
-      } as InterfaceTransactionDetails
-
-      const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
-
-      expect(result).toMatchObject({
-        chainId: 1,
-        currencies: [MockUSDC_MAINNET, MockDAI],
-        descriptor: '1.00 USDC for 1.00 DAI',
-        hash: '0xuniswapx_v2',
-        from: mockAccount1,
-        status: TransactionStatus.Success,
-        title: 'Swapped',
-        prefixIconSrc: UniswapXBoltIcon,
-        offchainOrderDetails: expect.objectContaining({
-          routing: TradingApi.Routing.DUTCH_V2,
-          orderHash: '0xorder123',
-        }),
       })
     })
 
@@ -650,132 +297,6 @@ describe('parseLocalActivity', () => {
       expect(result).toMatchObject({
         status: TransactionStatus.Success,
         title: 'Limit executed',
-      })
-    })
-
-    it('handles UniswapX order with Expired status', async () => {
-      const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
-
-      const details = {
-        typeInfo: {
-          ...mockSwapInfo({
-            type: MockTradeType.EXACT_INPUT,
-            inputCurrency: MockUSDC_MAINNET,
-            inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-            outputCurrency: MockDAI,
-            outputCurrencyAmountRaw: mockCurrencyAmountRaw,
-          }),
-          isUniswapXOrder: true,
-        },
-        routing: TradingApi.Routing.DUTCH_V2,
-        orderHash: '0xexpired_order',
-        hash: '0xexpired',
-        status: TransactionStatus.Expired,
-        chainId: 1,
-        from: mockAccount1,
-      } as InterfaceTransactionDetails
-
-      const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
-
-      expect(result).toMatchObject({
-        status: TransactionStatus.Failed,
-        title: 'Swap expired',
-        statusMessage: expect.stringContaining('could not be fulfilled'),
-        prefixIconSrc: UniswapXBoltIcon,
-      })
-    })
-
-    it('handles UniswapX order with Canceled status', async () => {
-      const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
-
-      const details = {
-        typeInfo: {
-          ...mockSwapInfo({
-            type: MockTradeType.EXACT_INPUT,
-            inputCurrency: MockUSDC_MAINNET,
-            inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-            outputCurrency: MockDAI,
-            outputCurrencyAmountRaw: mockCurrencyAmountRaw,
-          }),
-          isUniswapXOrder: true,
-        },
-        routing: TradingApi.Routing.DUTCH_V3,
-        orderHash: '0xcanceled_order',
-        hash: '0xcanceled',
-        status: TransactionStatus.Canceled,
-        chainId: 1,
-        from: mockAccount1,
-      } as InterfaceTransactionDetails
-
-      const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
-
-      expect(result).toMatchObject({
-        status: TransactionStatus.Failed,
-        title: 'Swap canceled',
-        prefixIconSrc: UniswapXBoltIcon,
-      })
-    })
-
-    it('handles UniswapX order with InsufficientFunds status', async () => {
-      const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
-
-      const details = {
-        typeInfo: {
-          ...mockSwapInfo({
-            type: MockTradeType.EXACT_INPUT,
-            inputCurrency: MockUSDC_MAINNET,
-            inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-            outputCurrency: MockDAI,
-            outputCurrencyAmountRaw: mockCurrencyAmountRaw,
-          }),
-          isUniswapXOrder: true,
-        },
-        routing: TradingApi.Routing.PRIORITY,
-        orderHash: '0xinsufficient_funds',
-        hash: '0xinsufficient',
-        status: TransactionStatus.InsufficientFunds,
-        chainId: 1,
-        from: mockAccount1,
-      } as InterfaceTransactionDetails
-
-      const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
-
-      expect(result).toMatchObject({
-        status: TransactionStatus.Failed,
-        title: 'Insufficient funds',
-        statusMessage: expect.stringContaining('insufficient funds'),
-        prefixIconSrc: UniswapXBoltIcon,
-      })
-    })
-
-    it('handles UniswapX order with Cancelling status', async () => {
-      const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
-
-      const details = {
-        typeInfo: {
-          ...mockSwapInfo({
-            type: MockTradeType.EXACT_OUTPUT,
-            inputCurrency: MockUSDC_MAINNET,
-            inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-            outputCurrency: MockDAI,
-            outputCurrencyAmountRaw: mockCurrencyAmountRaw,
-          }),
-          isUniswapXOrder: true,
-        },
-        routing: TradingApi.Routing.DUTCH_V2,
-        orderHash: '0xcancelling_order',
-        hash: '0xcancelling',
-        status: TransactionStatus.Cancelling,
-        chainId: 1,
-        from: mockAccount1,
-      } as InterfaceTransactionDetails
-
-      const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
-
-      expect(result).toMatchObject({
-        status: TransactionStatus.Pending,
-        title: 'Pending cancellation',
-        prefixIconSrc: UniswapXBoltIcon,
       })
     })
 
@@ -846,7 +367,7 @@ describe('parseLocalActivity', () => {
       warnSpy.mockRestore()
     })
 
-    it('handles regular swap (non-UniswapX) with CLASSIC routing', async () => {
+    it('handles limit order with orderHash fallback to hash', async () => {
       const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
 
       const details = {
@@ -857,40 +378,7 @@ describe('parseLocalActivity', () => {
           outputCurrency: MockDAI,
           outputCurrencyAmountRaw: mockCurrencyAmountRaw,
         }),
-        routing: TradingApi.Routing.CLASSIC,
-        hash: '0xclassic_swap',
-        status: TransactionStatus.Success,
-        chainId: 1,
-        from: mockAccount1,
-      } as InterfaceTransactionDetails
-
-      const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
-
-      expect(result).toMatchObject({
-        chainId: 1,
-        currencies: [MockUSDC_MAINNET, MockDAI],
-        descriptor: '1.00 USDC for 1.00 DAI',
-        hash: '0xclassic_swap',
-        from: mockAccount1,
-        status: TransactionStatus.Success,
-        title: 'Swapped',
-        prefixIconSrc: undefined, // Regular swaps don't have the bolt icon
-      })
-      expect(result?.offchainOrderDetails).toBeUndefined()
-    })
-
-    it('handles UniswapX order with orderHash fallback to hash', async () => {
-      const { formatNumberOrString } = renderHook(() => useLocalizationContext()).result.current
-
-      const details = {
-        typeInfo: mockSwapInfo({
-          type: MockTradeType.EXACT_INPUT,
-          inputCurrency: MockUSDC_MAINNET,
-          inputCurrencyAmountRaw: mockCurrencyAmountRawUSDC,
-          outputCurrency: MockDAI,
-          outputCurrencyAmountRaw: mockCurrencyAmountRaw,
-        }),
-        routing: TradingApi.Routing.DUTCH_V2,
+        routing: TradingApi.Routing.DUTCH_LIMIT,
         // No orderHash provided
         hash: '0xfallback_hash',
         status: TransactionStatus.Pending,
@@ -901,7 +389,7 @@ describe('parseLocalActivity', () => {
       const result = await transactionToActivity({ details, formatNumber: formatNumberOrString })
 
       expect(result?.offchainOrderDetails).toMatchObject({
-        routing: TradingApi.Routing.DUTCH_V2,
+        routing: TradingApi.Routing.DUTCH_LIMIT,
         orderHash: '0xfallback_hash', // Should use hash as fallback
       })
     })

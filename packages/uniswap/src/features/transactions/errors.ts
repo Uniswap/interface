@@ -5,7 +5,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 /** Superclass used to differentiate categorized/known transaction errors from generic/unknown errors. */
 export abstract class TransactionError extends Error {}
@@ -72,7 +72,7 @@ export class TransactionStepFailedError extends TransactionError {
         fingerprint.push(String(this.originalError.data.detail))
       }
     } catch (e) {
-      if (isInterface) {
+      if (isWebApp) {
         datadogRum.addAction('Transaction Action', {
           message: `problem determining fingerprint for ${this.step.type}`,
           level: 'info',

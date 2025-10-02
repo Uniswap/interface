@@ -14,7 +14,8 @@ import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isExtension } from 'utilities/src/platform'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { isExtensionApp } from 'utilities/src/platform'
 
 const AssetsContainer = ({ children, useGrid }: { children: React.ReactNode; useGrid: boolean }): JSX.Element => {
   return (
@@ -40,7 +41,14 @@ const LOADING_ITEM = 'loading'
 const keyExtractor = (item: NFTItem | string): string =>
   typeof item === 'string' ? item : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
 
-export function NftsList({ owner, errorStateStyle, emptyStateStyle, renderNFTItem, skip }: NftsListProps): JSX.Element {
+export function NftsList({
+  owner,
+  errorStateStyle,
+  emptyStateStyle,
+  renderNFTItem,
+  skip,
+  customEmptyState,
+}: NftsListProps): JSX.Element {
   const { t } = useTranslation()
 
   const {
@@ -91,6 +99,7 @@ export function NftsList({ owner, errorStateStyle, emptyStateStyle, renderNFTIte
             <Flex key={keyExtractor(item)} grow gridColumn="span 2">
               <ExpandoRow
                 isExpanded={hiddenNftsExpanded}
+                data-testid={TestID.HiddenNftsRow}
                 label={t('hidden.nfts.info.text.button', { numHidden })}
                 mx="$spacing4"
                 onPress={onHiddenRowPressed}
@@ -132,17 +141,18 @@ export function NftsList({ owner, errorStateStyle, emptyStateStyle, renderNFTIte
   )
 
   const emptyState = useMemo(
-    () => (
-      <Flex centered pt="$spacing48" px="$spacing36" style={emptyStateStyle}>
-        <BaseCard.EmptyState
-          buttonLabel={isExtension ? t('tokens.nfts.list.none.button') : undefined}
-          description={t('tokens.nfts.list.none.description.default')}
-          icon={<NoNfts color="$neutral3" size="$icon.100" />}
-          title={t('tokens.nfts.list.none.title')}
-        />
-      </Flex>
-    ),
-    [emptyStateStyle, t],
+    () =>
+      customEmptyState ?? (
+        <Flex centered pt="$spacing48" px="$spacing36" style={emptyStateStyle}>
+          <BaseCard.EmptyState
+            buttonLabel={isExtensionApp ? t('tokens.nfts.list.none.button') : undefined}
+            description={t('tokens.nfts.list.none.description.default')}
+            icon={<NoNfts color="$neutral3" size="$icon.100" />}
+            title={t('tokens.nfts.list.none.title')}
+          />
+        </Flex>
+      ),
+    [customEmptyState, emptyStateStyle, t],
   )
 
   const errorState = useMemo(

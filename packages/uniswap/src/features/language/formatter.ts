@@ -1,14 +1,14 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import {
   addFiatSymbolToNumber,
   formatCurrencyAmount,
   formatNumberOrString,
   formatPercent,
+  /** biome-ignore lint/style/noRestrictedImports: this the implementation of the wrapper we recommend to use */
 } from 'utilities/src/format/localeBased'
-import { NumberType } from 'utilities/src/format/types'
+import { NumberType, PercentNumberDecimals } from 'utilities/src/format/types'
 
 export type FormatNumberOrStringInput = {
   value: Maybe<number | string>
@@ -29,7 +29,7 @@ type AddFiatSymbolToNumberInput = {
 export interface LocalizedFormatter {
   formatNumberOrString: (input: FormatNumberOrStringInput) => string
   formatCurrencyAmount: (input: FormatCurrencyAmountInput) => string
-  formatPercent: (value: Maybe<number | string>, maxDecimals?: 2 | 3 | 4) => string
+  formatPercent: (value: Maybe<number | string>, maxDecimals?: PercentNumberDecimals) => string
   addFiatSymbolToNumber: (input: AddFiatSymbolToNumberInput) => string
 }
 
@@ -53,7 +53,7 @@ export function useLocalizedFormatter(): LocalizedFormatter {
     [locale],
   )
   const formatPercentInner = useCallback(
-    (value: Maybe<number | string>, maxDecimals?: 2 | 3 | 4): string =>
+    (value: Maybe<number | string>, maxDecimals?: PercentNumberDecimals): string =>
       formatPercent({ rawPercentage: value, locale, maxDecimals }),
     [locale],
   )

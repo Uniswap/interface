@@ -19,7 +19,7 @@ import { isLimitTrade, isPreviewTrade, isUniswapXTradeType } from 'state/routing
 import { useUniswapXOrderByOrderHash } from 'state/transactions/hooks'
 import { ThemeProvider } from 'theme'
 import { FadePresence } from 'theme/components/FadePresence'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: ui constant needed for modal animation timing
 import { ADAPTIVE_MODAL_ANIMATION_DURATION } from 'ui/src/components/modal/AdaptiveWebModal'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

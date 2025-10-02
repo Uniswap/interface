@@ -44,7 +44,7 @@ import {
   WalletSwitchEthereumChainRequestSchema,
 } from 'src/contentScript/WindowEthereumRequestTypes'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
+import { chainIdToHexadecimalString, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType, EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { isSelfCallWithData } from 'uniswap/src/features/dappRequests/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -463,6 +463,7 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
         from: request.transaction.from,
         to: request.transaction.to,
         data: request.transaction.data,
+        chainId: toSupportedChainId(request.transaction.chainId) ?? undefined,
       })
     ) {
       rejectSelfCallWithData(request.requestId, source)
@@ -621,7 +622,12 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
   async handleWalletSendCalls(request: WalletSendCallsRequest, source: MessageEventSource | null): Promise<void> {
     // Reject if any calls have from === to and data !== undefined
     const hasSelfCallWithData = request.calls.some((call) =>
-      isSelfCallWithData({ from: request.from, to: call.to, data: call.data }),
+      isSelfCallWithData({
+        from: request.from,
+        to: call.to,
+        data: call.data,
+        chainId: toSupportedChainId(request.chainId) ?? undefined,
+      }),
     )
 
     if (hasSelfCallWithData) {
@@ -661,7 +667,7 @@ export class ExtensionEthMethodHandler extends BaseMethodHandler<WindowEthereumR
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: Transaction object from dapp can have various shapes requiring flexible typing
 function adaptTransactionForEthers(transaction: any): any {
   if (typeof transaction.chainId === 'string') {
     transaction.chainId = parseInt(transaction.chainId, 16)

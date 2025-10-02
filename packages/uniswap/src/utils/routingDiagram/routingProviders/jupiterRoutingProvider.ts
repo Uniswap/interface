@@ -7,7 +7,7 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import type { RoutingDiagramEntry, RoutingHop, RoutingProvider } from 'uniswap/src/utils/routingDiagram/types'
 
 export const jupiterRoutingProvider: RoutingProvider = {
-  name: 'Jupiter API',
+  name: 'Jupiter Ultra',
   icon: JupiterLogoMonotone,
   iconColor: '$neutral1',
 

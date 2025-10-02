@@ -1,6 +1,7 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { uniqueAddressesOnly } from 'uniswap/src/features/address/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -37,57 +38,79 @@ export const selectSwapTransactionsCount = createSelector(selectTransactions, (t
   return swapTransactionCount
 })
 
-export type AddressTransactionsSelector = Selector<UniswapState, TransactionDetails[] | undefined, [Address | null]>
-export const makeSelectAddressTransactions = (): AddressTransactionsSelector =>
-  createSelector(
-    selectTransactions,
-    (_: UniswapState, address: Address | null) => address,
-    (transactions, address) => {
-      if (!address) {
-        return undefined
+type PlatformAddresses = {
+  evmAddress: Address | null
+  svmAddress: Address | null
+}
+
+export type AddressTransactionsSelector = Selector<UniswapState, TransactionDetails[] | undefined, [PlatformAddresses]>
+export function makeSelectAddressTransactions(): AddressTransactionsSelector {
+  const extractAddresses = (_: UniswapState, addresses: PlatformAddresses): PlatformAddresses => addresses
+
+  return createSelector(selectTransactions, extractAddresses, (transactions, { evmAddress, svmAddress }) => {
+    if (!evmAddress && !svmAddress) {
+      return undefined
+    }
+
+    const evmAddressTransactions = evmAddress ? transactions[evmAddress] : undefined
+    const svmAddressTransactions = svmAddress ? transactions[svmAddress] : undefined
+
+    if (!evmAddressTransactions && !svmAddressTransactions) {
+      return undefined
+    }
+
+    // Combine transactions from both addresses
+    const combinedTransactions = {
+      ...(evmAddressTransactions || {}),
+      ...(svmAddressTransactions || {}),
+    }
+
+    // eslint-disable-next-line max-params
+    return unique(flattenObjectOfObjects(combinedTransactions), (tx, _, self) => {
+      // Remove dummy local FOR transactions from TransactionList, notification badge, etc.
+      // this is what prevents the local transactions from actually appearing in the activity tab.
+      if (tx.typeInfo.type === TransactionType.LocalOnRamp || tx.typeInfo.type === TransactionType.LocalOffRamp) {
+        return false
       }
-
-      const addressTransactions = transactions[address]
-      if (!addressTransactions) {
-        return undefined
+      // Remove limit orders from the main activity list (they appear in their own menu)
+      if (isLimitOrder(tx)) {
+        return false
       }
+      /*
+       * Remove duplicate transactions with the same chain and nonce, keep the one with the higher addedTime,
+       * this represents a txn that is replacing or cancelling the older txn.
+       */
+      const duplicate = self.find(
+        (tx2) =>
+          tx2.id !== tx.id &&
+          (isClassic(tx) || isBridge(tx)) &&
+          (isClassic(tx2) || isBridge(tx2)) &&
+          tx2.options.request.chainId &&
+          tx2.options.request.chainId === tx.options.request.chainId &&
+          tx.options.request.nonce &&
+          tx2.options.request.nonce === tx.options.request.nonce,
+      )
+      if (duplicate) {
+        return tx.addedTime > duplicate.addedTime
+      }
+      return true
+    })
+  })
+}
 
-      // eslint-disable-next-line max-params
-      return unique(flattenObjectOfObjects(addressTransactions), (tx, _, self) => {
-        // Remove dummy local FOR transactions from TransactionList, notification badge, etc.
-        // this is what prevents the local transactions from actually appearing in the activity tab.
-        if (tx.typeInfo.type === TransactionType.LocalOnRamp || tx.typeInfo.type === TransactionType.LocalOffRamp) {
-          return false
-        }
-        // Remove limit orders from the main activity list (they appear in their own menu)
-        if (isLimitOrder(tx)) {
-          return false
-        }
-        /*
-         * Remove duplicate transactions with the same chain and nonce, keep the one with the higher addedTime,
-         * this represents a txn that is replacing or cancelling the older txn.
-         */
-        const duplicate = self.find(
-          (tx2) =>
-            tx2.id !== tx.id &&
-            (isClassic(tx) || isBridge(tx)) &&
-            (isClassic(tx2) || isBridge(tx2)) &&
-            tx2.options.request.chainId &&
-            tx2.options.request.chainId === tx.options.request.chainId &&
-            tx.options.request.nonce &&
-            tx2.options.request.nonce === tx.options.request.nonce,
-        )
-        if (duplicate) {
-          return tx.addedTime > duplicate.addedTime
-        }
-        return true
-      })
-    },
-  )
-
-export function useSelectAddressTransactions(address: Address | null): TransactionDetails[] | undefined {
+export function useSelectAddressTransactions({
+  evmAddress,
+  svmAddress,
+}: {
+  evmAddress?: Address | null
+  svmAddress?: Address | null
+}): TransactionDetails[] | undefined {
   const selectAddressTransactions = useMemo(makeSelectAddressTransactions, [])
-  return useSelector((state: UniswapState) => selectAddressTransactions(state, address))
+  const addressParams = useMemo(
+    () => ({ evmAddress: evmAddress ?? null, svmAddress: svmAddress ?? null }),
+    [evmAddress, svmAddress],
+  )
+  return useSelector((state: UniswapState) => selectAddressTransactions(state, addressParams))
 }
 
 export function useCurrencyIdToVisibility(addresses: Address[]): CurrencyIdToVisibility {
@@ -122,12 +145,12 @@ const makeSelectTokenVisibilityFromLocalTxs = (): Selector<UniswapState, Currenc
 
         Object.values(flattenObjectOfObjects(addressTransactions)).forEach((tx) => {
           if (tx.typeInfo.type === TransactionType.Send) {
-            acc[buildCurrencyId(tx.chainId, tx.typeInfo.tokenAddress.toLowerCase())] = {
+            acc[normalizeCurrencyIdForMapLookup(buildCurrencyId(tx.chainId, tx.typeInfo.tokenAddress))] = {
               isVisible: true,
             }
           } else if (tx.typeInfo.type === TransactionType.Swap) {
-            acc[tx.typeInfo.inputCurrencyId.toLowerCase()] = { isVisible: true }
-            acc[tx.typeInfo.outputCurrencyId.toLowerCase()] = { isVisible: true }
+            acc[normalizeCurrencyIdForMapLookup(tx.typeInfo.inputCurrencyId)] = { isVisible: true }
+            acc[normalizeCurrencyIdForMapLookup(tx.typeInfo.outputCurrencyId)] = { isVisible: true }
           }
         })
 

@@ -124,7 +124,7 @@ export function Pending({
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
 
   const swapPending = swapResult !== undefined && !swapConfirmed
-  const wrapPending = wrapTxHash != undefined && !wrapConfirmed
+  const wrapPending = wrapTxHash !== undefined && !wrapConfirmed
   const transactionPending = revocationPending || tokenApprovalPending || wrapPending || swapPending
 
   const showSubmitted = swapPending && chainId === UniverseChainId.Mainnet

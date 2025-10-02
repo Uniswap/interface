@@ -1,12 +1,7 @@
 {
   "extends": "../../config/tsconfig/app.json",
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json"],
-  "exclude": [
-    "src/**/*.spec.ts",
-    "src/**/*.spec.tsx",
-    "src/**/*.test.ts",
-    "src/**/*.test.tsx"
-  ],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.spec.tsx", "src/**/*.test.ts", "src/**/*.test.tsx"],
   "compilerOptions": {
     "noEmit": false,
     "emitDeclarationOnly": true,
@@ -17,6 +12,12 @@
   "references": [
     {
       "path": "../utilities"
+    },
+    {
+      "path": "../sessions"
+    },
+    {
+      "path": "../config"
     }
   ]
 }

@@ -61,6 +61,7 @@ function _SelectorBaseList<T extends OnchainItemListOption>({
   const { t } = useTranslation()
   const sectionListRef = useRef<OnchainItemListRef>()
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +chainFilter
   useEffect(() => {
     if (sections?.length) {
       sectionListRef.current?.scrollToLocation({

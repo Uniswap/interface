@@ -8,7 +8,7 @@ import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
 import { FiatCurrencyComponents, getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 
 /**

@@ -15,10 +15,11 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useFormattedTransactionDataForActivity } from 'uniswap/src/features/activity/hooks/useFormattedTransactionDataForActivity'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 export type UseActivityDataProps = {
-  owner: Address
+  evmOwner?: Address
+  svmOwner?: Address
   ownerAddresses: Address[]
   swapCallbacks: SwapSummaryCallbacks
   fiatOnRampParams: PartialMessage<FiatOnRampParams> | undefined
@@ -38,7 +39,8 @@ export type ActivityRenderData = {
 }
 
 export function useActivityData({
-  owner,
+  evmOwner,
+  svmOwner,
   ownerAddresses,
   authTrigger,
   isExternalProfile,
@@ -63,7 +65,8 @@ export function useActivityData({
   }, [swapCallbacks, authTrigger])
 
   const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity({
-    address: owner,
+    evmAddress: evmOwner,
+    svmAddress: svmOwner,
     ownerAddresses,
     fiatOnRampParams,
     hideSpamTokens,
@@ -122,7 +125,7 @@ export function useActivityData({
 }
 
 const SectionTitle = ({ title, index }: { title: string; index?: number }): JSX.Element => (
-  <Flex px={isWeb ? '$spacing8' : '$none'} py="$spacing8">
+  <Flex px={isWebPlatform ? '$spacing8' : '$none'} py="$spacing8">
     <Text color="$neutral2" testID={`activity-list-item-${index}`} variant="subheading2">
       {title}
     </Text>

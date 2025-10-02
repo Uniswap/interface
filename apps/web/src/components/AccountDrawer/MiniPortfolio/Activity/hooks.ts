@@ -1,142 +1,52 @@
-import { useAssetActivity } from 'appGraphql/data/apollo/AssetActivityProvider'
 import { TradingApi } from '@universe/api'
-import { useLocalActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
-import { parseRemoteActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseRemote'
-import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
-import { getActivityNonce, hasEncodedOrder, haveSameNonce } from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
-import { useCreateCancelTransactionRequest } from 'components/AccountDrawer/MiniPortfolio/Activity/utils/cancel'
-import { GasFeeResult, GasSpeed, useTransactionGasFee } from 'hooks/useTransactionGasFee'
 import { useEffect, useMemo } from 'react'
-import { usePendingTransactions, usePendingUniswapXOrders, useTransactionCanceller } from 'state/transactions/hooks'
+import { useDispatch } from 'react-redux'
+import { usePendingTransactions, usePendingUniswapXOrders } from 'state/transactions/hooks'
+import { isExistingTransaction } from 'state/transactions/utils'
+import { useMergeLocalAndRemoteTransactions } from 'uniswap/src/features/activity/hooks/useMergeLocalAndRemoteTransactions'
+import { useOpenLimitOrders as useOpenLimitOrdersREST } from 'uniswap/src/features/activity/hooks/useOpenLimitOrders'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { CancellationGasFeeDetails } from 'uniswap/src/features/gas/hooks'
+import { useCancellationGasFeeInfo } from 'uniswap/src/features/gas/hooks/useCancellationGasFeeInfo'
+import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { TransactionStatus, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isLimitOrder } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 
-/** Detects transactions from same account with the same nonce and different hash */
-function findCancelTx({
-  localActivity,
-  remoteMap,
-  account,
-}: {
-  localActivity: Activity
-  remoteMap: ActivityMap
-  account: string
-}): string | undefined {
-  // Skip activities without nonce or non-pending status
-  if (!getActivityNonce(localActivity) || localActivity.status !== TransactionStatus.Pending) {
-    return undefined
-  }
+export function useOpenLimitOrders(account: string): { openLimitOrders: UniswapXOrderDetails[]; loading: boolean } {
+  const dispatch = useDispatch()
+  const { data: limitOrders, loading } = useOpenLimitOrdersREST({ evmAddress: account })
 
-  for (const remoteTx of Object.values(remoteMap)) {
-    if (!remoteTx) {
-      continue
-    }
-
-    // A pending tx is 'cancelled' when another tx with the same account & nonce but different hash makes it on chain
-    if (
-      haveSameNonce(localActivity, remoteTx) &&
-      remoteTx.from.toLowerCase() === account.toLowerCase() &&
-      remoteTx.hash &&
-      localActivity.hash &&
-      remoteTx.hash.toLowerCase() !== localActivity.hash.toLowerCase() &&
-      remoteTx.chainId === localActivity.chainId
-    ) {
-      return remoteTx.hash
-    }
-  }
-
-  return undefined
-}
-
-/** Deduplicates local and remote activities */
-export function combineActivities(localMap: ActivityMap = {}, remoteMap: ActivityMap = {}): Array<Activity> {
-  const activityIds = [...new Set([...Object.keys(localMap), ...Object.keys(remoteMap)])]
-
-  return activityIds.reduce((acc: Array<Activity>, id) => {
-    const localActivity = localMap[id]
-    const remoteActivity = remoteMap[id]
-
-    // Skip if both activities are undefined
-    if (!localActivity && !remoteActivity) {
-      return acc
-    }
-
-    // If only one exists, use that one
-    if (!localActivity) {
-      acc.push(remoteActivity as Activity)
-      return acc
-    }
-    if (!remoteActivity) {
-      acc.push(localActivity)
-      return acc
-    }
-
-    // Both exist - apply merging logic
-    if (localActivity.status === TransactionStatus.Canceled) {
-      // Hides misleading activities caused by cross-chain nonce collisions previously being incorrectly labelled as cancelled txs in redux
-      // If there is no remote activity fallback to local activity
-      if (localActivity.chainId !== remoteActivity.chainId) {
-        acc.push(remoteActivity)
-        return acc
-      }
-      // Remote data only contains data of the cancel tx, rather than the original tx, so we prefer local data here
-      acc.push(localActivity)
-    } else {
-      // Generally prefer remote values to local value because i.e. remote swap amounts are on-chain rather than client-estimated
-      acc.push({ ...localActivity, ...remoteActivity } as Activity)
-    }
-
-    return acc
-  }, [])
-}
-
-export function useAllActivities(account: string) {
-  const { formatNumberOrString } = useLocalizationContext()
-  const { activities, loading } = useAssetActivity()
-
-  const localMap = useLocalActivities(account)
-  const remoteMap = useMemo(() => {
-    return parseRemoteActivities(activities, account, formatNumberOrString)
-  }, [account, activities, formatNumberOrString])
-  const updateCancelledTx = useTransactionCanceller()
-
-  /* Updates locally stored pendings tx's when remote data contains a conflicting cancellation tx */
+  // Sync remote limit orders to local state if they don't exist in state yet
   useEffect(() => {
-    if (!remoteMap) {
+    if (!limitOrders || limitOrders.length === 0) {
       return
     }
 
-    Object.values(localMap).forEach((localActivity) => {
-      if (!localActivity) {
-        return
-      }
-
-      const cancelHash = findCancelTx({ localActivity, remoteMap, account })
-
-      if (cancelHash) {
-        updateCancelledTx({ id: localActivity.id, chainId: localActivity.chainId, cancelHash })
+    limitOrders.forEach((order) => {
+      if (
+        order.status === TransactionStatus.Pending &&
+        !isExistingTransaction({ from: order.from, chainId: order.chainId, id: order.id })
+      ) {
+        dispatch(addTransaction(order))
       }
     })
-  }, [account, localMap, remoteMap, updateCancelledTx])
+  }, [dispatch, limitOrders])
 
-  const combinedActivities = useMemo(() => combineActivities(localMap, remoteMap ?? {}), [localMap, remoteMap])
-
-  return { loading, activities: combinedActivities }
-}
-
-export function useOpenLimitOrders(account: string) {
-  const { activities, loading } = useAllActivities(account)
-  const openLimitOrders = activities.filter(
-    (activity) =>
-      activity.offchainOrderDetails?.routing === TradingApi.Routing.DUTCH_LIMIT &&
-      activity.status === TransactionStatus.Pending,
+  const merged = useMergeLocalAndRemoteTransactions({ evmAddress: account, remoteTransactions: limitOrders })
+  const openLimitOrders = useMemo(
+    () =>
+      (merged ?? []).filter(
+        (tx): tx is UniswapXOrderDetails => isLimitOrder(tx) && tx.status === TransactionStatus.Pending,
+      ),
+    [merged],
   )
-
-  return {
-    openLimitOrders,
-    loading,
-  }
+  return { openLimitOrders, loading }
 }
 
 export function usePendingActivity() {
@@ -160,23 +70,39 @@ export function usePendingActivity() {
   return { hasPendingActivity, pendingActivityCount, isOnlyUnichainPendingActivity }
 }
 
-export function useCancelOrdersGasEstimate(orders?: UniswapXOrderDetails[]): GasFeeResult {
-  // Single order cancellation uses the same gas estimation as multi-order
-  // The multi-order path handles both cases appropriately
-  const cancelTransactionParams = useMemo(
-    () =>
-      orders && orders.length >= 1
-        ? {
-            orders: orders.filter(hasEncodedOrder).map((order) => ({
-              encodedOrder: order.encodedOrder,
-              routing: order.routing,
-            })),
-            chainId: orders[0].chainId,
-          }
-        : undefined,
-    [orders],
-  )
+export function useCancelOrdersGasEstimate(orders?: UniswapXOrderDetails[]): CancellationGasFeeDetails | undefined {
+  // Create a representative transaction for gas estimation when orders are available
+  const representativeTransaction = useMemo<TransactionDetails | undefined>(() => {
+    if (!orders || orders.length === 0) {
+      return undefined
+    }
+    // Use the first order as a representative transaction for gas estimation
+    return orders[0]
+  }, [orders])
 
-  const cancelTransaction = useCreateCancelTransactionRequest(cancelTransactionParams) ?? undefined
-  return useTransactionGasFee(cancelTransaction, GasSpeed.Fast)
+  // Create a placeholder transaction to maintain hook order when no orders are selected
+  const placeholderTransaction = useMemo<TransactionDetails>(() => {
+    return {
+      id: 'placeholder',
+      chainId: UniverseChainId.Mainnet,
+      from: '0x0000000000000000000000000000000000000000',
+      typeInfo: {
+        type: TransactionType.Unknown,
+      },
+      status: TransactionStatus.Pending,
+      addedTime: Date.now(),
+      hash: undefined,
+    } as TransactionDetails
+  }, [])
+
+  // Always call the hook to maintain consistent hook order
+  // Use the appropriate transaction and optionally pass orders for batch cancellation
+  const transactionForHook = representativeTransaction || placeholderTransaction
+
+  // Call the hook unconditionally with the transaction and orders
+  // The hook will handle undefined/empty orders internally
+  const cancellationGasFeeInfo = useCancellationGasFeeInfo(transactionForHook, orders ?? [])
+
+  // Return undefined when no orders are selected, otherwise return the gas fee info
+  return representativeTransaction ? cancellationGasFeeInfo : undefined
 }

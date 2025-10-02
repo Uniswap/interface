@@ -2,12 +2,12 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { useFeatureFlaggedChainIds } from 'uniswap/src/features/chains/hooks/useFeatureFlaggedChainIds'
 // This is the only file that should be importing `useOrderedChainIds` directly.
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
 import { useOrderedChainIds } from 'uniswap/src/features/chains/hooks/useOrderedChainIds'
 import { EnabledChainsInfo, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getEnabledChains, isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 
 export function useIsModeMismatch(chainId?: UniverseChainId): boolean {

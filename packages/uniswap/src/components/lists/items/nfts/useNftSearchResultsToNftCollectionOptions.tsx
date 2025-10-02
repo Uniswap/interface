@@ -1,19 +1,17 @@
+import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { NFTCollectionOption, OnchainItemListOptionType } from 'uniswap/src/components/lists/items/types'
-import {
-  Chain,
-  CollectionSearchQuery,
-  SearchPopularNftCollectionsQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 
 function gqlNFTToNFTCollectionOption(
-  node: NonNullable<NonNullable<NonNullable<NonNullable<CollectionSearchQuery>['nftCollections']>['edges']>[0]>['node'],
+  node: NonNullable<
+    NonNullable<NonNullable<NonNullable<GraphQLApi.CollectionSearchQuery>['nftCollections']>['edges']>[0]
+  >['node'],
 ): NFTCollectionOption | null {
   const contract = node.nftContracts?.[0]
   // Only show NFT results that have fully populated results
-  const chainId = fromGraphQLChain(contract?.chain ?? Chain.Ethereum)
+  const chainId = fromGraphQLChain(contract?.chain ?? GraphQLApi.Chain.Ethereum)
   if (node.name && contract?.address && chainId) {
     return {
       type: OnchainItemListOptionType.NFTCollection,
@@ -28,18 +26,18 @@ function gqlNFTToNFTCollectionOption(
 }
 
 export function useNftSearchResultsToNftCollectionOptions(
-  nftSearchResultsData: CollectionSearchQuery | undefined,
+  nftSearchResultsData: GraphQLApi.CollectionSearchQuery | undefined,
   chainFilter: UniverseChainId | null,
 ): NFTCollectionOption[]
 export function useNftSearchResultsToNftCollectionOptions(
-  nftSearchResultsData: SearchPopularNftCollectionsQuery | undefined,
+  nftSearchResultsData: GraphQLApi.SearchPopularNftCollectionsQuery | undefined,
   chainFilter: UniverseChainId | null,
 ): NFTCollectionOption[] {
   return useMemo(() => {
     const collections = nftSearchResultsData
       ? 'nftCollections' in nftSearchResultsData
-        ? (nftSearchResultsData.nftCollections as NonNullable<CollectionSearchQuery>['nftCollections'])
-        : (nftSearchResultsData.topCollections as NonNullable<SearchPopularNftCollectionsQuery>['topCollections'])
+        ? (nftSearchResultsData.nftCollections as NonNullable<GraphQLApi.CollectionSearchQuery>['nftCollections'])
+        : (nftSearchResultsData.topCollections as NonNullable<GraphQLApi.SearchPopularNftCollectionsQuery>['topCollections'])
       : undefined
     if (!collections) {
       return []

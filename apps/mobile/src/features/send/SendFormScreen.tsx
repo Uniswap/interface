@@ -73,15 +73,15 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
 
   const hideLowNetworkTokenWarning = useCallback(() => {
     setShowMaxTransferModal(false)
-  }, [setShowMaxTransferModal])
+  }, [])
 
   const hideViewOnlyModal = useCallback(() => {
     setShowViewOnlyModal(false)
-  }, [setShowViewOnlyModal])
+  }, [])
 
   const hideCompatibleAddressModal = useCallback(() => {
     setShowCompatibleAddressModal(false)
-  }, [setShowCompatibleAddressModal])
+  }, [])
 
   const goToReviewScreen = useGoToReviewScreen()
 

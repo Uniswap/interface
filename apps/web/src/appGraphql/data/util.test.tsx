@@ -1,13 +1,13 @@
 import { supportedChainIdFromGQLChain } from 'appGraphql/data/util'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isBackendSupportedChain } from 'uniswap/src/features/chains/utils'
 
 describe('fromGraphQLChain', () => {
   it('should return the corresponding chain ID for supported chains', () => {
-    expect(supportedChainIdFromGQLChain(Chain.Ethereum)).toBe(UniverseChainId.Mainnet)
+    expect(supportedChainIdFromGQLChain(GraphQLApi.Chain.Ethereum)).toBe(UniverseChainId.Mainnet)
 
-    for (const chain of Object.values(Chain)) {
+    for (const chain of Object.values(GraphQLApi.Chain)) {
       if (!isBackendSupportedChain(chain)) {
         continue
       }
@@ -16,9 +16,9 @@ describe('fromGraphQLChain', () => {
   })
 
   it('should return undefined for unsupported chains', () => {
-    expect(supportedChainIdFromGQLChain(Chain.UnknownChain)).toBe(undefined)
+    expect(supportedChainIdFromGQLChain(GraphQLApi.Chain.UnknownChain)).toBe(undefined)
 
-    Object.values(Chain)
+    Object.values(GraphQLApi.Chain)
       .filter((c) => !isBackendSupportedChain(c))
       .forEach((chain) => {
         expect(supportedChainIdFromGQLChain(chain)).toBe(undefined)
@@ -29,7 +29,7 @@ describe('fromGraphQLChain', () => {
     enum NewChain {
       NewChain = 'NEW_CHAIN',
     }
-    const ExpandedChainList = [...Object.values(Chain), NewChain.NewChain as unknown as Chain]
+    const ExpandedChainList = [...Object.values(GraphQLApi.Chain), NewChain.NewChain as unknown as GraphQLApi.Chain]
 
     for (const chain of ExpandedChainList) {
       if (isBackendSupportedChain(chain)) {

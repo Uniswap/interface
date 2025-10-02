@@ -37,6 +37,15 @@ export {
   RankingType,
   SpamCode,
 } from '@universe/api/src/clients/content/types'
+export * as GraphQLApi from '@universe/api/src/clients/graphql/__generated__/types-and-hooks'
+export {
+  useTokenBasicInfoPartsFragment,
+  useTokenBasicProjectPartsFragment,
+  useTokenMarketPartsFragment,
+  useTokenProjectMarketsPartsFragment,
+  useTokenProjectUrlsPartsFragment,
+} from '@universe/api/src/clients/graphql/fragments'
+export { GQLQueries } from '@universe/api/src/clients/graphql/queries'
 export type { GqlResult } from '@universe/api/src/clients/graphql/types'
 export { isError, isNonPollingRequestInFlight, isWarmLoadingStatus } from '@universe/api/src/clients/graphql/utils'
 export {
@@ -99,7 +108,7 @@ export {
   type UnitagUsernameRequest,
   type UnitagUsernameResponse,
 } from '@universe/api/src/clients/unitags/types'
-export { createUnitagsApiClient, UnitagsApiClient } from '@universe/api/src/clients/unitags/UnitagsApiClient'
+export { createUnitagsApiClient } from '@universe/api/src/clients/unitags/UnitagsApiClient'
 export type {
   UseQueryApiHelperHookArgs,
   UseQueryWithImmediateGarbageCollectionApiHelperHookArgs,

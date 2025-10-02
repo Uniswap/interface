@@ -3,8 +3,8 @@ import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { getCurrentLanguageFromNavigator } from 'uniswap/src/features/language/utils'
 import { WALLET_TESTNET_CONFIG } from 'uniswap/src/features/telemetry/constants'
-import { isInterface } from 'utilities/src/platform'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { isWebApp } from 'utilities/src/platform'
+// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 
 export interface UserSettingsState {
@@ -17,7 +17,7 @@ export interface UserSettingsState {
 }
 
 export const initialUserSettingsState: UserSettingsState = {
-  currentLanguage: isInterface ? getCurrentLanguageFromNavigator() : Language.English,
+  currentLanguage: isWebApp ? getCurrentLanguageFromNavigator() : Language.English,
   currentCurrency: FiatCurrency.UnitedStatesDollar,
   hideSmallBalances: true,
   hideSpamTokens: true,

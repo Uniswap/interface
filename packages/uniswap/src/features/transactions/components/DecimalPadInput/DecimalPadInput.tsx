@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import {
   forwardRef,
   memo,
@@ -48,6 +47,10 @@ export enum DecimalPadCalculatedSpaceId {
 
 const precalculatedSpace: Partial<Record<DecimalPadCalculatedSpaceId, number | undefined>> = {}
 
+function hasDecimalSeparator(v: string): boolean {
+  return v.includes('.')
+}
+
 /*
 This component is used to calculate the space that the `DecimalPad` can use.
 We position the `DecimalPad` with `position: absolute` at the bottom of the screen instead of
@@ -57,11 +60,11 @@ is automatically resizing to find the right size for the screen.
 export function DecimalPadCalculateSpace({
   id,
   decimalPadRef,
-  additionalElementsHeight,
+  additionalElementsHeight = 0,
 }: {
   id: DecimalPadCalculatedSpaceId
   decimalPadRef: RefObject<DecimalPadInputRef>
-  additionalElementsHeight: null | number
+  additionalElementsHeight?: number
 }): JSX.Element {
   const isShortMobileDevice = useIsShortMobileDevice()
   const [bottomScreenHeight, setBottomScreenHeight] = useState<number | null>(null)
@@ -71,12 +74,13 @@ export function DecimalPadCalculateSpace({
     setBottomScreenHeight(height)
     // We call `setMaxHeight` even if `additionalElementsHeight` is not set yet,
     // because sometimes it won't be set at all if there are no additional elements.
-    decimalPadRef.current?.setMaxHeight(height - (additionalElementsHeight ?? 0))
+    decimalPadRef.current?.setMaxHeight(height - additionalElementsHeight)
     precalculatedSpace[id] = height
   })
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to run it when additionalElementsHeight is changed
   useEffect(() => {
-    if (!bottomScreenHeight || additionalElementsHeight === null) {
+    if (!bottomScreenHeight) {
       // There can be a race condition where either `bottomScreenHeight` or `additionalElementsHeight`
       // could be ready first. If `bottomScreenHeight` is not ready yet, we skip this and
       // then `setMaxHeight` will be called from within `onBottomScreenLayout`.
@@ -118,10 +122,7 @@ export const DecimalPadInput = memo(
     const [disabledKeys, setDisabledKeys] = useState<Partial<Record<KeyLabel, boolean>>>({})
     const [maxHeight, setMaxHeight] = useState<number | null>(null)
 
-    const hasDecimalSeparator = (v: string): boolean => {
-      return v.includes('.')
-    }
-
+    // biome-ignore lint/correctness/useExhaustiveDependencies: -updateDisabledKeys, +selectionRef,maxDecimals
     useEffect(() => {
       updateDisabledKeys(valueRef.current)
     }, [valueRef, selectionRef, maxDecimals])
@@ -235,11 +236,11 @@ export const DecimalPadInput = memo(
       [updateValue, resetSelection, valueRef, getCurrentSelection],
     )
 
-    // eslint-disable-next-line max-params
-    const isEntireTextSelected = (start: number, end: number, value: string): boolean =>
-      start === 0 && end === value.length
-
     const handleDelete = useCallback((): void => {
+      // eslint-disable-next-line max-params
+      const isEntireTextSelected = (start: number, end: number, value: string): boolean =>
+        start === 0 && end === value.length
+
       const { start, end } = getCurrentSelection()
       const currentValue = valueRef.current
 

@@ -1,10 +1,6 @@
 import MobileAppLogo from 'assets/svg/uniswap_app_logo.svg'
-import {
-  ConnectionStatus,
-  updateConnectionState,
-  useConnectionState,
-} from 'features/wallet/connection/connectors/state'
-import { useCallback, useEffect, useState } from 'react'
+import { useConnectWallet } from 'features/wallet/connection/hooks/useConnectWallet'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Image, QRCodeDisplay, Separator, Text, useSporeColors } from 'ui/src'
 import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
@@ -12,16 +8,18 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ElementName, InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 import { openDownloadApp } from 'utils/openDownloadApp'
 
 export default function UniwalletModal() {
   const { t } = useTranslation()
   const [uri, setUri] = useState<string>()
-  const connection = useConnectionState()
+
+  const { isConnecting, reset } = useConnectWallet()
 
   // Displays the modal if not on iOS/Android, a Uniswap Wallet Connection is pending, & qrcode URI is available
   const onLaunchedMobilePlatform = isWebIOS || isWebAndroid
-  const open = !onLaunchedMobilePlatform && !!uri && connection.status === ConnectionStatus.Pending
+  const open = !onLaunchedMobilePlatform && !!uri && isConnecting
 
   useEffect(() => {
     function listener({ type, data }: { type: string; data?: unknown }) {
@@ -37,10 +35,10 @@ export default function UniwalletModal() {
     }
   }, [])
 
-  const close = useCallback(() => {
-    updateConnectionState({ status: ConnectionStatus.Idle })
+  const close = useEvent(() => {
+    reset()
     setUri(undefined)
-  }, [])
+  })
 
   useEffect(() => {
     if (open) {

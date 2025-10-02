@@ -27,7 +27,7 @@ import {
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
-import { isMobileApp, isWeb } from 'utilities/src/platform'
+import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useDebounce } from 'utilities/src/time/timing'
@@ -38,7 +38,7 @@ const MAX_UNITAG_CHAR_LENGTH = 20
 const MAX_INPUT_FONT_SIZE = 36
 const MIN_INPUT_FONT_SIZE = 22
 const MAX_CHAR_PIXEL_WIDTH = 20
-const SLIDE_IN_AMOUNT = isWeb ? 0 : 40
+const SLIDE_IN_AMOUNT = isWebPlatform ? 0 : 40
 
 // Used in dynamic font size width calculation to ignore `.` characters
 const UNITAG_SUFFIX_CHARS_ONLY = UNITAG_SUFFIX.replaceAll('.', '')
@@ -100,7 +100,7 @@ export function ClaimUnitagContent({
 
   const focusUnitagTextInput = useCallback((): void | null => {
     textInputRef.current?.focus()
-  }, [textInputRef])
+  }, [])
 
   const handleHideInfoModal = useCallback(() => {
     setShowInfoModal(false)
@@ -134,7 +134,6 @@ export function ClaimUnitagContent({
   }, [
     navigationEventConsumer,
     showTextInputView,
-    setShowTextInputView,
     addressViewOpacity,
     unitagInputContainerTranslateY,
     focusUnitagTextInput,
@@ -244,7 +243,7 @@ export function ClaimUnitagContent({
     }
   })
 
-  const webStyling: FlexProps = isWeb
+  const webStyling: FlexProps = isWebPlatform
     ? {
         backgroundColor: '$surface1',
         borderRadius: '$rounded20',
@@ -305,13 +304,13 @@ export function ClaimUnitagContent({
                 <TextInput
                   ref={textInputRef}
                   autoFocus={!isMobileApp}
-                  blurOnSubmit={!isWeb}
+                  blurOnSubmit={!isWebPlatform}
                   autoCapitalize="none"
                   autoCorrect={false}
                   borderWidth="$none"
-                  borderRadius={isWeb ? 0 : undefined}
+                  borderRadius={isWebPlatform ? 0 : undefined}
                   fontFamily="$heading"
-                  fontSize={isWeb ? fonts.subheading1.fontSize : fontSize}
+                  fontSize={isWebPlatform ? fonts.subheading1.fontSize : fontSize}
                   fontWeight="$book"
                   numberOfLines={1}
                   p="$none"
@@ -321,7 +320,7 @@ export function ClaimUnitagContent({
                   testID={TestID.WalletNameInput}
                   textAlign="left"
                   value={unitagInputValue}
-                  width={isWeb ? '100%' : undefined}
+                  width={isWebPlatform ? '100%' : undefined}
                   minWidth={unitagNameinputMinWidth}
                   allowFontScaling={false}
                   maxFontSizeMultiplier={1}
@@ -339,9 +338,9 @@ export function ClaimUnitagContent({
                   <TextInput
                     editable={false}
                     borderWidth="$none"
-                    borderRadius={isWeb ? 0 : undefined}
+                    borderRadius={isWebPlatform ? 0 : undefined}
                     fontFamily="$heading"
-                    fontSize={isWeb ? fonts.subheading1.fontSize : fontSize}
+                    fontSize={isWebPlatform ? fonts.subheading1.fontSize : fontSize}
                     fontWeight="$book"
                     numberOfLines={1}
                     p="$none"
@@ -365,7 +364,7 @@ export function ClaimUnitagContent({
             onPress={onPressAddressTooltip}
           >
             <Text color="$neutral2" variant="subheading2">
-              {shortenAddress(unitagAddress)}
+              {shortenAddress({ address: unitagAddress })}
             </Text>
             <TouchableArea onPress={onPressAddressTooltip}>
               <InfoCircleFilled color="$neutral3" size="$icon.20" />

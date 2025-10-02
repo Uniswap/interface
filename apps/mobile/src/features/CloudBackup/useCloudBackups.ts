@@ -32,7 +32,7 @@ export const useCloudBackups = (options?: UseCloudBackupOptions): UseCloudBackup
         }
         setBackups(await getCloudBackupList())
         setIsLoading(false)
-      } catch (e) {
+      } catch (_e) {
         setIsError(true)
         setIsLoading(false)
       }

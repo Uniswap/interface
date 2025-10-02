@@ -55,6 +55,6 @@ export function usePerformanceLogger(eventName: string, dependencyList: Dependen
     }
     // eventName is required and should never change so it's safe to ignore it
     // dependencyList is a DependencyList which is the object a useEffect hook takes
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // biome-ignore lint/correctness/useExhaustiveDependencies: dependencyList is externally provided
   }, dependencyList)
 }

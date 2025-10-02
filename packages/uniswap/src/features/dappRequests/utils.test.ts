@@ -1,3 +1,4 @@
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isSelfCallWithData } from 'uniswap/src/features/dappRequests/utils'
 
 describe('isSelfCallWithData', () => {
@@ -68,7 +69,12 @@ describe('isSelfCallWithData', () => {
 
   testCases.forEach((testCase) => {
     it(`${testCase.name}`, () => {
-      const result = isSelfCallWithData({ from: testCase.from, to: testCase.to, data: testCase.data })
+      const result = isSelfCallWithData({
+        from: testCase.from,
+        to: testCase.to,
+        data: testCase.data,
+        chainId: UniverseChainId.Mainnet,
+      })
       expect(result).toBe(testCase.expected)
     })
   })

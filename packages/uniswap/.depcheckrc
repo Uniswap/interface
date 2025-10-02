@@ -1,18 +1,17 @@
 ignores: [
     # Dependencies that depcheck thinks are unused but are actually used
-    'ethers',
-    '@typechain/ethers-v5',
-    'jest-presets',
+    "ethers",
+    "@typechain/ethers-v5",
+    "jest-presets",
     # Dependencies that depcheck thinks are missing but are actually present or never used
     ## Internal packages / workspaces
-    'uniswap',
-    'utilities',
-    'src',
-    'tsconfig',
-    ## GraphQL
-    '@graphql-codegen/*',
+    "uniswap",
+    "utilities",
+    "src",
+    "tsconfig",
+    "@uniswap/biome-config",
     # i18n
-    'i18next-resources-for-ts',
+    "i18next-resources-for-ts",
     # zustand store dev tooling
-    '@redux-devtools/extension',
+    "@redux-devtools/extension",
   ]

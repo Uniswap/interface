@@ -8,7 +8,7 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { isInterface, isMobileWeb, isWeb } from 'utilities/src/platform'
+import { isMobileWeb, isWebApp, isWebPlatform } from 'utilities/src/platform'
 
 interface SelectTokenButtonProps {
   onPress?: () => void
@@ -34,11 +34,11 @@ export const SelectTokenButton = memo(function _SelectTokenButton({
     [selectedCurrencyInfo, validTokenColor, isDarkMode],
   )
 
-  const isCompact = !isInterface || isMobileWeb
+  const isCompact = !isWebApp || isMobileWeb
 
   if (!onPress && selectedCurrencyInfo) {
     return (
-      <Flex centered row gap="$spacing4" p="$spacing4" pr={isWeb ? undefined : '$spacing12'}>
+      <Flex centered row gap="$spacing4" p="$spacing4" pr={isWebPlatform ? undefined : '$spacing12'}>
         <CurrencyLogo currencyInfo={selectedCurrencyInfo} size={iconSizes.icon28} />
         <Text color="$neutral1" pl="$spacing4" testID={`${testID}-label`} variant="buttonLabel1">
           {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}

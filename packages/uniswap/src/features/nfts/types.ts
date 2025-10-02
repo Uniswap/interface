@@ -1,7 +1,7 @@
-import { Chain, IAmount, NftsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 
 export type GQLNftAsset = NonNullable<
-  NonNullable<NonNullable<NonNullable<NftsQuery['portfolios']>[0]>['nftBalances']>[0]
+  NonNullable<NonNullable<NonNullable<GraphQLApi.NftsQuery['portfolios']>[0]>['nftBalances']>[0]
 >['ownedAsset']
 
 export type NFTItem = {
@@ -16,7 +16,7 @@ export type NFTItem = {
   isVerifiedCollection?: boolean
   floorPrice?: number
   ownerAddress?: string
-  listPrice?: IAmount
+  listPrice?: GraphQLApi.IAmount
   isSpam?: boolean
-  chain?: Chain
+  chain?: GraphQLApi.Chain
 }

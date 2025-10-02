@@ -43,9 +43,10 @@
     "ios:beta": "rnef run:ios --configuration Beta",
     "ios:bundle": "rnef bundle --entry-file='index.js' --dev false --bundle-output='./ios/main.jsbundle' --sourcemap-output ./ios/main.jsbundle.map --dev=false --platform='ios' --assets-dest='./ios'",
     "ios:release": "rnef run:ios --configuration Release",
-    "format": "biome check . --linter-enabled=false",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+    "lint:biome": "biome check --error-on-warnings .",
+    "lint:biome:fix": "biome check . --write --unsafe",
+    "lint": "bun run lint:biome && eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0",
+    "lint:fix": "bun run lint:biome:fix && eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "start": "NODE_ENV=development rnef start --client-logs",
     "start:e2e": "NODE_ENV=development IS_E2E_TEST=true rnef start --client-logs",
     "start:production": "NODE_ENV=production rnef start --reset-cache",
@@ -203,6 +204,7 @@
     "@types/node": "22.13.1",
     "@types/react": "18.3.18",
     "@types/redux-mock-store": "1.0.6",
+    "@uniswap/biome-config": "workspace:^",
     "@uniswap/eslint-config": "workspace:^",
     "@welldone-software/why-did-you-render": "8.0.1",
     "babel-loader": "8.2.3",
@@ -245,9 +247,7 @@
       ]
     },
     "autolinking": {
-      "exclude": [
-        "expo-constants"
-      ]
+      "exclude": ["expo-constants"]
     }
   }
 }

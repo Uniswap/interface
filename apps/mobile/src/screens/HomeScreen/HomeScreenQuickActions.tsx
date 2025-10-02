@@ -143,6 +143,7 @@ export function HomeScreenQuickActions(): JSX.Element {
     [isBottomTabsEnabled, onPressSwap, forLabel, onPressBuy, sendLabel, onPressSend, receiveLabel, onPressReceive],
   )
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +activeScale
   const renderItem = useCallback(
     ({ item: { eventName, name, label, Icon, onPress } }: ListRenderItemInfo<ActionItem>) => (
       <Trace key={name} logPress element={name} eventOnTrigger={eventName}>

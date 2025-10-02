@@ -15,7 +15,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
 import { logger } from 'utilities/src/logger/logger'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 
@@ -83,7 +83,7 @@ function SignTypedDataRequestContentInner({ dappRequest }: SignTypedDataRequestP
         </Text>
       )
     }
-    if (typeof message === 'string' && isEVMAddress(message) && chainId) {
+    if (typeof message === 'string' && isEVMAddressWithChecksum(message) && chainId) {
       const href = getExplorerLink({ chainId, data: message, type: ExplorerDataType.ADDRESS })
       return <MaybeExplorerLinkedAddress address={message} link={href} />
     }

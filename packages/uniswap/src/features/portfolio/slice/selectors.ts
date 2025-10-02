@@ -1,4 +1,5 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { PortfolioState, TokenBalanceOverride } from 'uniswap/src/features/portfolio/slice/slice'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
 
@@ -13,5 +14,5 @@ export const makeSelectTokenBalanceOverridesForWalletAddress = (): Selector<
   createSelector(
     selectTokenBalanceOverrides,
     (_: UniswapState, walletAddress: Address) => walletAddress,
-    (tokenBalanceOverrides, walletAddress) => tokenBalanceOverrides[walletAddress.toLowerCase()],
+    (tokenBalanceOverrides, walletAddress) => tokenBalanceOverrides[normalizeTokenAddressForCache(walletAddress)],
   )

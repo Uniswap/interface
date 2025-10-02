@@ -17,7 +17,7 @@ export function buildChainTokens<TStables extends Record<string, Token>>({
 
   try {
     return { ...stables, stablecoins: getNonEmptyArrayOrThrow(stablecoins) }
-  } catch (error) {
+  } catch (_error) {
     throw new Error(`Must provide at least one stablecoin for each chain`)
   }
 }

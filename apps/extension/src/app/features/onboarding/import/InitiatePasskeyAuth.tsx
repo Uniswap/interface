@@ -114,6 +114,7 @@ function InitiatePasskeyAuthContent(): JSX.Element {
 
   const popupWindow = useRef<chrome.windows.Window | undefined>(undefined)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Only run once on mount to initiate auth flow, all handlers are created fresh each render
   useEffect(() => {
     let handleMessagePasskeySignInFlowOpened: Parameters<typeof chrome.runtime.onMessageExternal.addListener>[0]
     let handleMessagePasskeyCredentialRetrieved: Parameters<typeof chrome.runtime.onMessageExternal.addListener>[0]
@@ -217,7 +218,6 @@ function InitiatePasskeyAuthContent(): JSX.Element {
       chrome.runtime.onMessageExternal.removeListener(handleMessagePasskeySignInFlowOpened)
       chrome.runtime.onMessageExternal.removeListener(handleMessagePasskeyCredentialRetrieved)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const [showBringWindowToFrontButton, setShowBringWindowToFrontButton] = useState(false)
@@ -235,7 +235,7 @@ function InitiatePasskeyAuthContent(): JSX.Element {
       // Will throw if window does not exist anymore.
       await chrome.windows.get(windowId)
       setShowBringWindowToFrontButton(true)
-    } catch (e) {
+    } catch (_e) {
       // Window does not exist anymore.
       navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.SelectImportMethod}`, {
         replace: true,

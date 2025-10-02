@@ -23,7 +23,7 @@ export function useActivityDataWallet(
   const accounts = useAccounts()
   const ownerAddresses = useMemo(() => Object.keys(accounts), [accounts])
 
-  const fiatOnRampParams = useRestOnRampAuth(props.owner)
+  const fiatOnRampParams = useRestOnRampAuth(props.evmOwner ?? '')
 
   const onRetryGenerator = useCallback(
     (swapFormState: TransactionState | undefined): (() => void) => {

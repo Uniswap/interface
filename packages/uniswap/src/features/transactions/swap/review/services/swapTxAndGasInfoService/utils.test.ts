@@ -64,7 +64,7 @@ describe('processWrapResponse (smart contract unwrap fallback)', () => {
       jest.doMock('utilities/src/platform', () => ({
         __esModule: true,
         ...jest.requireActual('utilities/src/platform'),
-        isInterface: true,
+        isWebApp: true,
       }))
 
       const {

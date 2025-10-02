@@ -16,7 +16,7 @@ import { useTransactionModalContext } from 'uniswap/src/features/transactions/co
 import { getErrorContent, TransactionStepFailedError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 export function SwapErrorScreen({
   submissionError,
@@ -66,7 +66,7 @@ export function SwapErrorScreen({
   return (
     <TransactionModalInnerContainer bottomSheetViewStyles={bottomSheetViewStyles} fullscreen={false}>
       <Flex gap="$spacing16">
-        {isWeb && (
+        {isWebPlatform && (
           <Flex row justifyContent="flex-end" m="$spacing12" gap="$spacing8">
             <Button fill={false} emphasis="tertiary" size="xxsmall" icon={<HelpCenter />} onPress={onPressGetHelp}>
               {t('common.getHelp.button')}

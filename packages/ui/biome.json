@@ -1,21 +1,3 @@
 {
-  "extends": "//",
-  "formatter": {
-    "includes": [
-      "**"
-    ]
-  },
-  "linter": {
-    "enabled": true,
-    "includes": [
-      "src/components/icons/**",
-      "src/components/logos/**"
-    ],
-    "rules": {
-      "recommended": false,
-      "correctness": {
-        "noUnusedImports": "error"
-      }
-    }
-  }
+  "extends": ["@uniswap/biome-config/ui"]
 }

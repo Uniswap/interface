@@ -78,7 +78,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Required for Apollo client initialization at app root
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { AccountsStoreContextProvider } from 'wallet/src/features/accounts/store/provider'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'

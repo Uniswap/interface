@@ -26,7 +26,7 @@ import {
   useSwapFormStoreDerivedSwapInfo,
 } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isExtension, isInterface } from 'utilities/src/platform'
+import { isExtensionApp, isWebApp } from 'utilities/src/platform'
 
 interface SwapFormScreenProps {
   hideContent: boolean
@@ -63,7 +63,7 @@ export function SwapFormScreen({
 
   return (
     <TransactionModalInnerContainer fullscreen bottomSheetViewStyles={bottomSheetViewStyles}>
-      {!isInterface && <SwapFormHeader /> /* Interface renders its own header with multiple tabs */}
+      {!isWebApp && <SwapFormHeader /> /* Interface renders its own header with multiple tabs */}
       {!hideSettings && <SwapFormSettings settings={filteredSettings} isBridgeTrade={isBridgeTrade} />}
 
       {!hideContent && (
@@ -87,7 +87,7 @@ function SwapFormContent(): JSX.Element {
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
-      <Flex gap="$spacing4" animation="quick" exitStyle={EXIT_STYLE} grow={isExtension}>
+      <Flex gap="$spacing4" animation="quick" exitStyle={EXIT_STYLE} grow={isExtensionApp}>
         <Flex gap="$spacing2">
           <SwapFormCurrencyInputPanel />
           <SwitchCurrenciesButton />

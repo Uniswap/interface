@@ -1,6 +1,5 @@
-import { GqlResult } from '@universe/api'
+import { GqlResult, GraphQLApi } from '@universe/api'
 import { useCallback, useMemo } from 'react'
-import { useTokenProjectsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/tokenProjects/utils/tokenProjectToCurrencyInfos'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
@@ -13,7 +12,7 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 export function useTokenProjects(currencyIds: CurrencyId[]): GqlResult<CurrencyInfo[]> {
   const contracts = useMemo(() => currencyIds.map((id) => currencyIdToContractInput(id)), [currencyIds])
 
-  const { data, loading, error, refetch } = useTokenProjectsQuery({
+  const { data, loading, error, refetch } = GraphQLApi.useTokenProjectsQuery({
     variables: { contracts },
     skip: currencyIds.length === 0,
   })

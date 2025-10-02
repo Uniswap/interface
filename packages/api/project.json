@@ -11,17 +11,43 @@
         "cwd": "{projectRoot}"
       }
     },
-    "lint": {
+    "lint:biome": {
+      "command": "biome check --error-on-warnings .",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint:biome:fix": {
+      "command": "biome check . --write --unsafe",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint:eslint": {
       "command": "eslint . --ext ts,tsx --max-warnings=0",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
-    "lint:fix": {
+    "lint:eslint:fix": {
       "command": "eslint . --ext ts,tsx --fix",
       "options": {
         "cwd": "{projectRoot}"
       }
+    },
+    "lint": {
+      "executor": "nx:noop",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["lint:biome", "lint:eslint"]
+    },
+    "lint:fix": {
+      "executor": "nx:noop",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["lint:biome:fix", "lint:eslint:fix"]
     },
     "format": {
       "command": "biome check . --linter-enabled=false",
@@ -34,9 +60,15 @@
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": [
-        "tradingapi:generate"
-      ],
+      "dependsOn": ["tradingapi:generate", "graphql:generate"],
+      "cache": true
+    },
+    "check:deps:usage": {
+      "command": "depcheck",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "inputs": ["{projectRoot}/package.json", "{projectRoot}/.depcheckrc"],
       "cache": true
     },
     "test": {
@@ -58,17 +90,13 @@
       }
     },
     "tradingapi:generate:openapi": {
-      "command": "openapi --input ./src/clients/trading/api.json --output ./src/clients/trading/__generated__ --client axios --useOptions --exportServices true --exportModels true",
+      "command": "openapi --input ./src/clients/trading/api.json --output ./src/clients/trading/__generated__ --useOptions --exportServices true --exportModels true",
       "options": {
         "cwd": "{projectRoot}"
       },
       "cache": true,
-      "inputs": [
-        "{projectRoot}/src/clients/trading/api.json"
-      ],
-      "outputs": [
-        "{projectRoot}/src/clients/trading/__generated__"
-      ]
+      "inputs": ["{projectRoot}/src/clients/trading/api.json"],
+      "outputs": ["{projectRoot}/src/clients/trading/__generated__"]
     },
     "tradingapi:generate": {
       "command": "node --no-warnings=ExperimentalWarning --loader ts-node/esm ./scripts/modifyTradingApiTypes.mts",
@@ -84,12 +112,27 @@
           "runtime": "node -v"
         }
       ],
-      "outputs": [
-        "{projectRoot}/src/clients/trading/__generated__/models"
+      "outputs": ["{projectRoot}/src/clients/trading/__generated__/models"],
+      "dependsOn": ["tradingapi:generate:openapi"]
+    },
+    "graphql:schema": {
+      "command": "get-graphql-schema https://api.uniswap.org/v1/graphql -h Origin=https://app.uniswap.org > ./src/clients/graphql/schema.graphql",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "graphql:generate": {
+      "command": "graphql-codegen --config ./src/clients/graphql/codegen.config.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/src/clients/graphql/codegen.config.ts",
+        "{projectRoot}/src/**/*.graphql",
+        "{projectRoot}/src/**/*.gql"
       ],
-      "dependsOn": [
-        "tradingapi:generate:openapi"
-      ]
+      "outputs": ["{projectRoot}/src/clients/graphql/__generated__"]
     }
   }
 }

@@ -4,11 +4,11 @@ import { DefaultPriceStrategy } from 'components/Charts/D3LiquidityRangeInput/D3
 import { useLiquidityChartStoreActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
-import { t } from 'i18next'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Shine, Switch, styled, Text } from 'ui/src'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import i18n from 'uniswap/src/i18n'
 import { useEvent } from 'utilities/src/react/hooks'
 
 const Container = styled(Flex, {
@@ -37,27 +37,27 @@ type PriceStrategy = {
 const priceStrategies: PriceStrategy[] = [
   {
     key: DefaultPriceStrategy.STABLE,
-    title: t('position.stable'),
+    title: i18n.t('position.stable'),
     display: '± 1%',
-    description: t('position.stable.description'),
+    description: i18n.t('position.stable.description'),
   },
   {
     key: DefaultPriceStrategy.WIDE,
-    title: t('position.wide'),
+    title: i18n.t('position.wide'),
     display: '± 10%',
-    description: t('position.wide.description'),
+    description: i18n.t('position.wide.description'),
   },
   {
     key: DefaultPriceStrategy.ONE_SIDED_LOWER,
-    title: t('position.one_sided_lower'),
+    title: i18n.t('position.one_sided_lower'),
     display: '- 10%',
-    description: t('position.one_sided_lower.description'),
+    description: i18n.t('position.one_sided_lower.description'),
   },
   {
     key: DefaultPriceStrategy.ONE_SIDED_UPPER,
-    title: t('position.one_sided_upper'),
+    title: i18n.t('position.one_sided_upper'),
     display: '+ 10%',
-    description: t('position.one_sided_upper.description'),
+    description: i18n.t('position.one_sided_upper.description'),
   },
 ]
 
@@ -104,9 +104,9 @@ export function DefaultPriceStrategies({ isLoading }: { isLoading: boolean }) {
     try {
       actions.setChartState({ isFullRange: false })
       actions.setPriceStrategy(key)
-    } catch (error) {
+    } catch (_e) {
       popupRegistry.addPopup(
-        { type: PopupType.Error, error: t('position.default_price_strategies.error') },
+        { type: PopupType.Error, error: i18n.t('position.default_price_strategies.error') },
         'default-price-strategy-error',
         3000,
       )
@@ -128,11 +128,11 @@ export function DefaultPriceStrategies({ isLoading }: { isLoading: boolean }) {
     >
       <Flex justifyContent="space-between" row alignItems="center">
         <Text variant="body3" color="$neutral2">
-          {t('position.default_price_strategies')}
+          {i18n.t('position.default_price_strategies')}
         </Text>
         <Flex row alignItems="center" gap="$spacing8">
           <Text variant="body3" color="$neutral2">
-            {t('common.fullRange')}
+            {i18n.t('common.fullRange')}
           </Text>
           <Switch
             size="$spacing12"

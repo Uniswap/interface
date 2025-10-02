@@ -3,38 +3,43 @@ import {
   useOpenOffchainActivityModal,
   useOrderAmounts,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
-import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { FormatType, formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { parseUnits } from 'ethers/lib/utils'
-import { useCurrencyInfo } from 'hooks/Tokens'
 import { useMemo, useState } from 'react'
 import { ArrowRight } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Checkbox, Flex, Image, Text, useMedia, useSporeColors } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { TransactionStatus, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 
 interface LimitDetailActivityRowProps {
-  order: Activity
-  onToggleSelect: (order: Activity) => void
+  order: UniswapXOrderDetails
+  onToggleSelect: (order: UniswapXOrderDetails) => void
   selected: boolean
 }
 
 export function LimitDetailActivityRow({ order, onToggleSelect, selected }: LimitDetailActivityRowProps) {
   const colors = useSporeColors()
   const media = useMedia()
-  const { logos, currencies, offchainOrderDetails } = order
-  const inputCurrencyInfo = useCurrencyInfo(currencies?.[0])
-  const outputCurrencyInfo = useCurrencyInfo(currencies?.[1])
   const openOffchainActivityModal = useOpenOffchainActivityModal()
   const { formatCurrencyAmount } = useLocalizationContext()
   const [hovered, setHovered] = useState(false)
 
-  const amounts = useOrderAmounts(order.offchainOrderDetails)
+  const amounts = useOrderAmounts(order)
   const amountsDefined = !!amounts?.inputAmount.currency && !!amounts.outputAmount.currency
+
+  // Get currency info for logo URLs
+  const inputCurrencyInfo = useCurrencyInfo(
+    amounts?.inputAmount.currency ? currencyId(amounts.inputAmount.currency) : undefined,
+  )
+  const outputCurrencyInfo = useCurrencyInfo(
+    amounts?.outputAmount.currency ? currencyId(amounts.outputAmount.currency) : undefined,
+  )
 
   const displayPrice = useMemo(() => {
     if (!amountsDefined) {
@@ -49,15 +54,15 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
     )
   }, [amounts?.inputAmount, amounts?.outputAmount, amountsDefined])
 
-  if (!offchainOrderDetails || !amountsDefined) {
+  if (!amountsDefined) {
     return null
   }
 
-  const inputLogo = logos?.[0] ?? inputCurrencyInfo?.logoUrl
-  const outputLogo = logos?.[1] ?? outputCurrencyInfo?.logoUrl
+  const inputLogo = inputCurrencyInfo?.logoUrl
+  const outputLogo = outputCurrencyInfo?.logoUrl
 
-  const cancelling = offchainOrderDetails.status === TransactionStatus.Cancelling
-  const expiry = offchainOrderDetails.expiry
+  const cancelling = order.status === TransactionStatus.Cancelling
+  const expiry = order.expiry
 
   return (
     <Flex row alignItems="center" onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}>
@@ -127,10 +132,7 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
         }
         right={undefined}
         onClick={() => {
-          openOffchainActivityModal(offchainOrderDetails, {
-            inputLogo: inputLogo ?? undefined,
-            outputLogo: outputLogo ?? undefined,
-          })
+          openOffchainActivityModal(order)
         }}
       />
       {!cancelling && (

@@ -6,6 +6,7 @@ import { ApolloError } from '@apollo/client'
 import { createColumnHelper, Row } from '@tanstack/react-table'
 import { TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { Percent, Token } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { FeeData } from 'components/Liquidity/Create/types'
 import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
@@ -39,7 +40,6 @@ import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { UNI } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -256,16 +256,16 @@ export function PoolsTable({
       pools?.map((pool, index) => {
         const poolSortRank = index + 1
         const isGqlPool = 'hash' in pool
-        const chainId = supportedChainIdFromGQLChain(pool.token0?.chain as Chain) ?? defaultChainId
+        const chainId = supportedChainIdFromGQLChain(pool.token0?.chain as GraphQLApi.Chain) ?? defaultChainId
 
         const token0Address = pool.token0?.address || getNativeAddress(chainId)
         const token1Address = pool.token1?.address || getNativeAddress(chainId)
         const currency0Id =
-          pool.protocolVersion === ProtocolVersion.V4 && token0Address
+          pool.protocolVersion === GraphQLApi.ProtocolVersion.V4 && token0Address
             ? buildCurrencyId(chainId, token0Address)
             : undefined
         const currency1Id =
-          pool.protocolVersion === ProtocolVersion.V4 && token1Address
+          pool.protocolVersion === GraphQLApi.ProtocolVersion.V4 && token1Address
             ? buildCurrencyId(chainId, token1Address)
             : undefined
 

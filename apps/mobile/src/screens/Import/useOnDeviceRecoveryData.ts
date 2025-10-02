@@ -1,8 +1,8 @@
+import { GraphQLApi } from '@universe/api'
 import { useEffect, useMemo, useState } from 'react'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
-import { useMultiplePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Direct access needed for custom portfolio query with multiple addresses
 import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances/balances'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
@@ -39,7 +39,7 @@ function useStoredAddressesForMnemonic(mnemonicId: string | undefined): {
         derivationIndices.map((index) => {
           try {
             return Keyring.generateAndStorePrivateKey(mnemonicId, index)
-          } catch (error) {
+          } catch (_error) {
             logger.error(`Failed to generate address for mnemonicId: ${mnemonicId}`, {
               tags: { file: 'useOnDeviceRecoveryData', function: 'getAddresses' },
             })
@@ -97,7 +97,7 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
   const { gqlChains } = useEnabledChains()
 
   const valueModifiers = usePortfolioValueModifiers(addresses)
-  const { data: balancesData, loading: balancesLoading } = useMultiplePortfolioBalancesQuery({
+  const { data: balancesData, loading: balancesLoading } = GraphQLApi.useMultiplePortfolioBalancesQuery({
     variables: {
       ownerAddresses: addresses,
       valueModifiers,
@@ -128,6 +128,7 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
   const unitagsCombined = unitagStates.map((unitagState) => unitagState.data?.username).join('')
   const unitagLoading = unitagStates.some((unitagState) => unitagState.isLoading)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to recalculate this when unitagsCombined or balancesLoading changes
   const recoveryWalletInfos = useMemo((): RecoveryWalletInfo[] => {
     return addressesWithIndex.map((addressWithIndex, index): RecoveryWalletInfo => {
       const { address, derivationIndex } = addressWithIndex
@@ -139,7 +140,6 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
         unitag: unitagStates[derivationIndex]?.data?.username,
       }
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addressesWithIndex, balances, balancesLoading, ensMap, unitagsCombined])
 
   const significantRecoveryWalletInfos = useMemo(

@@ -62,6 +62,7 @@ ignores: [
     ## Internal packages / workspaces
     'utilities',
     'ui',
+    '@uniswap/biome-config',
     ## Top level local file paths
     'abis',
     'analytics',

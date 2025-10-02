@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useMemo } from 'react'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 type BottomSheetContextState = {
   // `isSheetReady` is `true` as soon as the sheet has just begun animating from the bottom.
@@ -36,7 +36,7 @@ export const useBottomSheetContext = ({
 } = {}): BottomSheetContextState => {
   const bottomSheetContext = useContext(BottomSheetContext)
 
-  if (isWeb) {
+  if (isWebPlatform) {
     return { isSheetReady: true }
   }
 

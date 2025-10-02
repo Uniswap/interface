@@ -54,7 +54,7 @@
           },
           "volume24H": {
             "id": "QW1vdW50OjMyMTY1NTc1Mi4zMzAzMjIyN19VU0Q=",
-            "value": 3.2165575233032227E8,
+            "value": 3.2165575233032227e8,
             "currency": "USD",
             "__typename": "Amount"
           },

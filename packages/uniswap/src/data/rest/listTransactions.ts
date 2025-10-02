@@ -47,11 +47,13 @@ export const getListTransactionsQuery = <TSelectData = ListTransactionsResponse>
 }: GetListTransactionsInput<TSelectData>): GetListTransactionsQuery<TSelectData> => {
   const transformedInput = transformInput(input)
 
-  const { walletAccount, ...inputWithoutAddress } = transformedInput ?? {}
-  const address = walletAccount?.platformAddresses[0]?.address
+  const { walletAccount, ...inputWithoutWalletAccount } = transformedInput ?? {}
+  const walletAccountsKey = walletAccount?.platformAddresses
+    .map((platformAddress) => `${platformAddress.address}-${platformAddress.platform}`)
+    .join(',')
 
   return queryOptions({
-    queryKey: [ReactQueryCacheKey.ListTransactions, address, inputWithoutAddress],
+    queryKey: [ReactQueryCacheKey.ListTransactions, walletAccountsKey, inputWithoutWalletAccount],
     queryFn: () =>
       transformedInput ? transactionsClient.listTransactions(transformedInput) : Promise.resolve(undefined),
     placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when refetching

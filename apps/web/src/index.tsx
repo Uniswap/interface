@@ -12,6 +12,7 @@ import Web3Provider from 'components/Web3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
 import { AccountsStoreDevTool } from 'features/accounts/store/devtools'
 import { WebAccountsStoreProvider } from 'features/accounts/store/provider'
+import { ConnectWalletMutationProvider } from 'features/wallet/connection/hooks/useConnectWalletMutation'
 import { ExternalWalletProvider } from 'features/wallet/providers/ExternalWalletProvider'
 import { useAccount } from 'hooks/useAccount'
 import { useDeferredComponent } from 'hooks/useDeferredComponent'
@@ -156,25 +157,27 @@ createRoot(container).render(
                     <Web3Provider>
                       <StatsigProvider>
                         <ExternalWalletProvider>
-                          <WebUniswapProvider>
+                          <ConnectWalletMutationProvider>
                             <WebAccountsStoreProvider>
-                              <GraphqlProviders>
-                                <LocalizationContextProvider>
-                                  <BlockNumberProvider>
-                                    <Updaters />
-                                    <ThemeProvider>
-                                      <TamaguiProvider>
-                                        <PortalProvider>
-                                          <ThemedGlobalStyle />
-                                          <App />
-                                        </PortalProvider>
-                                      </TamaguiProvider>
-                                    </ThemeProvider>
-                                  </BlockNumberProvider>
-                                </LocalizationContextProvider>
-                              </GraphqlProviders>
+                              <WebUniswapProvider>
+                                <GraphqlProviders>
+                                  <LocalizationContextProvider>
+                                    <BlockNumberProvider>
+                                      <Updaters />
+                                      <ThemeProvider>
+                                        <TamaguiProvider>
+                                          <PortalProvider>
+                                            <ThemedGlobalStyle />
+                                            <App />
+                                          </PortalProvider>
+                                        </TamaguiProvider>
+                                      </ThemeProvider>
+                                    </BlockNumberProvider>
+                                  </LocalizationContextProvider>
+                                </GraphqlProviders>
+                              </WebUniswapProvider>
                             </WebAccountsStoreProvider>
-                          </WebUniswapProvider>
+                          </ConnectWalletMutationProvider>
                         </ExternalWalletProvider>
                       </StatsigProvider>
                     </Web3Provider>

@@ -90,12 +90,12 @@ const sharedRules = {
       message: 'Use `useEnabledChains` instead.',
     },
     {
-      name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
+      name: 'api/src/clients/graphql/__generated__/types-and-hooks',
       importNames: ['useAccountListQuery'],
       message: 'Use `useAccountListData` instead.',
     },
     {
-      name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
+      name: 'api/src/clients/graphql/__generated__/types-and-hooks',
       importNames: ['usePortfolioBalancesQuery'],
       message: 'Use `usePortfolioBalances` instead.',
     },
@@ -173,6 +173,25 @@ const nativeRules = {
 
 const reactNativeRuleMessage = "React Native modules should not be imported outside of .native.ts files unless they are only types (import type { ... }). If the file isn't used outside of native usage, add it to the excluded files in webPlatform.js."
 
+const reactNative = {
+  patterns: [
+    {
+      group: [
+        '*react-native*',
+        // The following are allowed to be imported in cross-platform code.
+        '!react-native-reanimated',
+        '!react-native-image-colors',
+        '!@testing-library/react-native',
+        '!@react-native-community/netinfo',
+        '!react-native-localize',
+      ],
+      allowTypeImports: true,
+      message: reactNativeRuleMessage,
+    }
+  ],
+}
+
+
 // Rules that should apply to any code that's run on the web (interface) platform
 const webPlatformRules = {
   // paths: [],
@@ -194,19 +213,7 @@ const webPlatformRules = {
   ],
   patterns: [
     ...sharedRules.patterns,
-    {
-      group: [
-        '*react-native*',
-        // The following are allowed to be imported in cross-platform code.
-        '!react-native-reanimated',
-        '!react-native-image-colors',
-        '!@testing-library/react-native',
-        '!@react-native-community/netinfo',
-        '!react-native-localize',
-      ],
-      allowTypeImports: true,
-      message: reactNativeRuleMessage,
-    }
+    ...reactNative.patterns,
   ],
 }
 
@@ -240,7 +247,7 @@ const interfaceRules = {
       message: 'Styled components is deprecated, please use Flex or styled from "ui/src" instead.',
     },
     {
-      name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
+      name: 'api/src/clients/graphql/__generated__/types-and-hooks',
       importNames: ['useActivityWebQuery'],
       message: 'Import cached/subscription-based activity hooks from `AssetActivityProvider` instead.',
     },
@@ -257,7 +264,7 @@ const interfaceRules = {
     {
       name: 'react-helmet-async',
       // default package's esm export is broken, but the explicit cjs export works.
-      message: `Import from 'react-helment-async/lib/index' instead.`,
+      message: `Import from 'react-helmet-async/lib/index' instead.`,
     },
     {
       name: 'zustand',
@@ -285,6 +292,7 @@ exports.shared = sharedRules
 // Platform
 exports.native = nativeRules
 exports.webPlatform = webPlatformRules
+exports.reactNative = reactNative
 
 // App Specific
 exports.interface = interfaceRules

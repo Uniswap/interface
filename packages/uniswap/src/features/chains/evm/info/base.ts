@@ -1,6 +1,6 @@
+import { GraphQLApi } from '@universe/api'
 import { BASE_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
-import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
   DEFAULT_RETRY_OPTIONS,
@@ -19,7 +19,7 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildUSDC } from 'uniswap/src/features/tokens/stablecoin'
 import { isPlaywrightEnv } from 'utilities/src/environment/env'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 import { base } from 'wagmi/chains'
 
 const tokens = buildChainTokens({
@@ -35,12 +35,12 @@ export const BASE_CHAIN_INFO = {
   id: UniverseChainId.Base,
   platform: Platform.EVM,
   backendChain: {
-    chain: BackendChainId.Base as GqlChainId,
+    chain: GraphQLApi.Chain.Base as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 6,
-  blockWaitMsBeforeWarning: isInterface ? 1500000 : 600000,
+  blockWaitMsBeforeWarning: isWebApp ? 1500000 : 600000,
   bridge: 'https://bridge.base.org/deposit',
   docs: 'https://docs.base.org/docs/',
   elementName: ElementName.ChainBase,

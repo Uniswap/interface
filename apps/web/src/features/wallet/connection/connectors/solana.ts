@@ -1,9 +1,14 @@
 import { WalletReadyState } from '@solana/wallet-adapter-base'
 import { useWallet as useSolanaWalletContext } from '@solana/wallet-adapter-react'
-import { SolanaWalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
+import type { ExternalConnector } from 'features/accounts/store/types'
+import type { GetConnectorFn } from 'features/wallet/connection/services/createConnectionService'
+import { createConnectionService } from 'features/wallet/connection/services/createConnectionService'
+import type { ConnectionService } from 'features/wallet/connection/services/IConnectionService'
+import type { SolanaWalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
 import { useMemo } from 'react'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { sleep } from 'utilities/src/time/timing'
 
@@ -30,22 +35,32 @@ export function useSVMWalletConnectors(): SolanaWalletConnectorMeta[] {
   }, [solanaEnabled, solanaWalletContext.wallets])
 }
 
-export function useConnectSolanaWallet(): (connector: SolanaWalletConnectorMeta) => Promise<void> {
+export function useSolanaConnectionService(getConnector: GetConnectorFn): ConnectionService {
   const solanaWalletContext = useSolanaWalletContext()
 
-  return useEvent(async (connector: SolanaWalletConnectorMeta) => {
+  const activateConnector = useEvent(async (connector: ExternalConnector<Platform.SVM>) => {
     const adapter = solanaWalletContext.wallets
       .map((wallet) => wallet.adapter)
-      .find(({ name }) => name === connector.solana.walletName)
+      .find(({ name }) => name === connector.externalLibraryId)
 
     if (!adapter) {
-      throw new Error(`Solana Wallet Adapter not found for wallet ${connector.solana.walletName}`)
+      throw new Error(`Solana Wallet Adapter not found for wallet ${connector.externalLibraryId}`)
     }
 
-    solanaWalletContext.select(connector.solana.walletName)
+    solanaWalletContext.select(connector.externalLibraryId)
     // TODO(WEB-8126): Investigate why this is needed
     // adapter.connect() can throw an error if called too soon after solanaWalletContext.select()
     await sleep(10)
     await adapter.connect()
   })
+
+  return useMemo(
+    () =>
+      createConnectionService({
+        platform: Platform.SVM,
+        getConnector,
+        activateConnector,
+      }),
+    [activateConnector, getConnector],
+  )
 }

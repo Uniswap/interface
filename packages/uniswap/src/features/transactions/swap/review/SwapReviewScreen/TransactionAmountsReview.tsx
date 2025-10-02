@@ -21,7 +21,7 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 const SHORT_GAP: FlexProps['$short'] = { gap: '$spacing8' }
 
@@ -121,7 +121,7 @@ export function TransactionAmountsReview({
             {t('swap.review.summary')}
           </Text>
         </Flex>
-        {isWeb && (
+        {isWebPlatform && (
           <Flex row centered gap="$spacing12">
             <ModalCloseIcon size="$icon.20" onClose={onClose} />
           </Flex>

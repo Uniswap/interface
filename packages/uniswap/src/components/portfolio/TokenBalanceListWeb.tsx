@@ -21,7 +21,8 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 
 type TokenBalanceListProps = {
-  owner: Address
+  evmOwner?: Address
+  svmOwner?: Address
   onPressReceive: () => void
   onPressBuy: () => void
   onPressToken?: (currencyId: CurrencyId) => void
@@ -29,7 +30,8 @@ type TokenBalanceListProps = {
 }
 
 export const TokenBalanceListWeb = memo(function _TokenBalanceList({
-  owner,
+  evmOwner,
+  svmOwner,
   onPressReceive,
   onPressBuy,
   onPressToken,
@@ -37,7 +39,12 @@ export const TokenBalanceListWeb = memo(function _TokenBalanceList({
 }: TokenBalanceListProps): JSX.Element {
   return (
     <Flex grow>
-      <TokenBalanceListContextProvider isExternalProfile={false} owner={owner} onPressToken={onPressToken}>
+      <TokenBalanceListContextProvider
+        isExternalProfile={false}
+        evmOwner={evmOwner}
+        svmOwner={svmOwner}
+        onPressToken={onPressToken}
+      >
         <TokenBalanceListInner
           backgroundImageWrapperCallback={backgroundImageWrapperCallback}
           onPressReceive={onPressReceive}
@@ -142,11 +149,11 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
 
   const openModal = useCallback((): void => {
     setModalVisible(true)
-  }, [setModalVisible])
+  }, [])
 
   const closeModal = useCallback((): void => {
     setModalVisible(false)
-  }, [setModalVisible])
+  }, [])
 
   const portfolioBalance = useMemo(() => balancesById?.[item], [balancesById, item])
 

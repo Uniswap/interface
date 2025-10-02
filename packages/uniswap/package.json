@@ -2,17 +2,16 @@
   "name": "uniswap",
   "version": "0.0.0",
   "scripts": {
-    "prepare": "bun contracts && bun graphql:generate",
+    "prepare": "bun contracts",
     "build": "tsc -b",
     "contracts:compile:abi": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
     "contracts:compile:v3": "typechain --target ethers-v5 --out-dir src/abis/types/v3 \"../../node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json\"",
     "contracts": "bun run contracts:compile:abi && bun run contracts:compile:v3",
     "check:deps:usage": "depcheck",
-    "graphql:generate": "graphql-codegen --config codegen.ts",
-    "graphql:schema": "get-graphql-schema https://api.uniswap.org/v1/graphql -h Origin=https://app.uniswap.org > ./src/data/graphql/uniswap-data-api/schema.graphql",
-    "format": "biome check . --linter-enabled=false",
-    "lint": "eslint . --ext ts,tsx --max-warnings=0",
-    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "lint:biome": "biome check --error-on-warnings .",
+    "lint:biome:fix": "biome check . --write --unsafe",
+    "lint": "bun run lint:biome && eslint . --ext ts,tsx --max-warnings=0",
+    "lint:fix": "bun run lint:biome:fix && eslint . --ext ts,tsx --fix",
     "test": "jest --passWithNoTests",
     "snapshots": "jest -u",
     "typecheck": "tsc -b"
@@ -120,12 +119,6 @@
   },
   "devDependencies": {
     "@faker-js/faker": "7.6.0",
-    "@graphql-codegen/cli": "3.3.1",
-    "@graphql-codegen/client-preset": "3.0.1",
-    "@graphql-codegen/typescript": "3.0.4",
-    "@graphql-codegen/typescript-operations": "3.0.4",
-    "@graphql-codegen/typescript-react-apollo": "3.3.7",
-    "@graphql-codegen/typescript-resolvers": "3.2.1",
     "@graphql-tools/graphql-file-loader": "8.0.0",
     "@graphql-tools/load": "8.0.1",
     "@graphql-tools/merge": "9.0.1",
@@ -142,12 +135,12 @@
     "@types/react-test-renderer": "19.0.0",
     "@types/react-window": "1.8.2",
     "@typescript-eslint/utils": "6.20.0",
+    "@uniswap/biome-config": "workspace:^",
     "@uniswap/eslint-config": "workspace:^",
     "@walletconnect/types": "2.21.4",
     "depcheck": "1.4.7",
     "eslint": "8.44.0",
     "eslint-plugin-rulesdir": "0.2.2",
-    "get-graphql-schema": "2.1.2",
     "graphql-scalars": "1.22.4",
     "i18next-resources-for-ts": "1.5.0",
     "jest": "29.7.0",
@@ -161,7 +154,5 @@
   },
   "main": "src/index.ts",
   "private": true,
-  "sideEffects": [
-    "*.css"
-  ]
+  "sideEffects": ["*.css"]
 }

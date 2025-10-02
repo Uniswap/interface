@@ -1,7 +1,10 @@
-import { TradingApi } from '@universe/api'
-import { SwapOrderStatus, SwapOrderType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi, TradingApi } from '@universe/api'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionDetails,
+  TransactionStatus,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 
 /**
  * Converts a trading API OrderType to internal Routing type.
@@ -29,19 +32,19 @@ export function convertOrderTypeToRouting(
 }
 
 /**
- * Converts a GraphQL SwapOrderType to internal Routing type.
+ * Converts a GraphQL GraphQLApi.SwapOrderType to internal Routing type.
  * Used when creating transactions from external UniswapX orders.
  */
 export function convertSwapOrderTypeToRouting(
-  orderType: SwapOrderType,
+  orderType: GraphQLApi.SwapOrderType,
 ): TradingApi.Routing.DUTCH_LIMIT | TradingApi.Routing.DUTCH_V2 | TradingApi.Routing.PRIORITY {
   switch (orderType) {
-    case SwapOrderType.Priority:
+    case GraphQLApi.SwapOrderType.Priority:
       return TradingApi.Routing.PRIORITY
-    case SwapOrderType.Dutch:
-    case SwapOrderType.DutchV2:
+    case GraphQLApi.SwapOrderType.Dutch:
+    case GraphQLApi.SwapOrderType.DutchV2:
       return TradingApi.Routing.DUTCH_V2
-    case SwapOrderType.Limit:
+    case GraphQLApi.SwapOrderType.Limit:
       return TradingApi.Routing.DUTCH_LIMIT
     default:
       return TradingApi.Routing.DUTCH_V2
@@ -76,19 +79,19 @@ export function convertOrderStatusToTransactionStatus(status: TradingApi.OrderSt
  * Converts a GraphQL OrderStatus to internal TransactionStatus.
  * Used for syncing order status from backend to local transaction state.
  */
-export function remoteOrderStatusToLocalTxStatus(orderStatus: SwapOrderStatus): TransactionStatus {
+export function remoteOrderStatusToLocalTxStatus(orderStatus: GraphQLApi.SwapOrderStatus): TransactionStatus {
   switch (orderStatus) {
-    case SwapOrderStatus.Open:
+    case GraphQLApi.SwapOrderStatus.Open:
       return TransactionStatus.Pending
-    case SwapOrderStatus.Expired:
+    case GraphQLApi.SwapOrderStatus.Expired:
       return TransactionStatus.Expired
-    case SwapOrderStatus.Error:
+    case GraphQLApi.SwapOrderStatus.Error:
       return TransactionStatus.Failed
-    case SwapOrderStatus.InsufficientFunds:
+    case GraphQLApi.SwapOrderStatus.InsufficientFunds:
       return TransactionStatus.InsufficientFunds
-    case SwapOrderStatus.Filled:
+    case GraphQLApi.SwapOrderStatus.Filled:
       return TransactionStatus.Success
-    case SwapOrderStatus.Cancelled:
+    case GraphQLApi.SwapOrderStatus.Cancelled:
       return TransactionStatus.Canceled
     default:
       return TransactionStatus.Unknown
@@ -101,4 +104,20 @@ export function remoteOrderStatusToLocalTxStatus(orderStatus: SwapOrderStatus): 
  */
 export function isLimitOrder(tx: TransactionDetails): boolean {
   return isUniswapX(tx) && tx.routing === TradingApi.Routing.DUTCH_LIMIT
+}
+
+/**
+ * Type guard to check if a UniswapX order has the encoded order data needed for cancellation.
+ * Orders that have been filled won't have encodedOrder, and it's only present for orders
+ * that haven't been submitted yet or are still pending.
+ */
+export function hasEncodedOrder(order: UniswapXOrderDetails): order is UniswapXOrderDetails & { encodedOrder: string } {
+  return 'encodedOrder' in order && typeof order.encodedOrder === 'string'
+}
+
+/**
+ * Check if a limit order can be cancelled
+ */
+export function isLimitCancellable(order: UniswapXOrderDetails): boolean {
+  return order.status === TransactionStatus.Pending || order.status === TransactionStatus.InsufficientFunds
 }

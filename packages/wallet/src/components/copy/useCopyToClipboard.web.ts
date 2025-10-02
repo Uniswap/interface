@@ -22,7 +22,7 @@ export function useCopyToClipboard(): CopyToClipboardFunction {
             copyType,
           }),
         )
-      } catch (e) {
+      } catch (_e) {
         dispatch(
           pushNotification({
             type: AppNotificationType.CopyFailed,

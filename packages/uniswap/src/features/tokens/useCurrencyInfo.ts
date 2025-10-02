@@ -1,6 +1,6 @@
+import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { getCommonBase } from 'uniswap/src/constants/routing'
-import { useTokenQuery, useTokensQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
@@ -16,7 +16,7 @@ function useCurrencyInfoQuery(
   _currencyId?: string,
   options?: { refetch?: boolean; skip?: boolean },
 ): { currencyInfo: Maybe<CurrencyInfo>; loading: boolean; error?: Error } {
-  const queryResult = useTokenQuery({
+  const queryResult = GraphQLApi.useTokenQuery({
     variables: currencyIdToContractInput(_currencyId ?? ''),
     skip: !_currencyId || options?.skip,
     fetchPolicy: options?.refetch ? 'cache-and-network' : 'cache-first',
@@ -31,7 +31,7 @@ function useCurrencyInfoQuery(
     let address: Address | undefined
     try {
       address = currencyIdToAddress(_currencyId)
-    } catch (error) {
+    } catch (_error) {
       return undefined
     }
     if (chainId && address) {
@@ -82,7 +82,7 @@ export function useCurrencyInfos(
   _currencyIds: string[],
   options?: { refetch?: boolean; skip?: boolean },
 ): Maybe<CurrencyInfo>[] {
-  const { data } = useTokensQuery({
+  const { data } = GraphQLApi.useTokensQuery({
     variables: {
       contracts: _currencyIds.map(currencyIdToContractInput),
     },

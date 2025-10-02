@@ -116,7 +116,7 @@ function SwapFormDecimalPadContent({
     ? MAX_FIAT_INPUT_DECIMALS
     : (currencies[decimalPadControlledField]?.currency.decimals ?? 0)
 
-  const [additionalElementsHeight, setAdditionalElementsHeight] = useState<number | null>(null)
+  const [additionalElementsHeight, setAdditionalElementsHeight] = useState<number | undefined>(undefined)
 
   const onAmountInputPresetsLayout = useEvent((event: LayoutChangeEvent): void => {
     setAdditionalElementsHeight(event.nativeEvent.layout.height)

@@ -44,15 +44,17 @@ import Badge from 'uniswap/src/components/badge/Badge'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { InterfacePageName, LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { LiquiditySource } from 'uniswap/src/features/telemetry/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { HexString } from 'utilities/src/addresses/hex'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -823,13 +825,17 @@ export default function MigrateV2Pair() {
   const account = useAccount()
 
   // get pair contract
-  const validatedAddress = isEVMAddress(address)
+  const validatedAddress = getValidAddress({
+    address,
+    platform: Platform.EVM,
+    withEVMChecksum: true,
+  }) as Nullable<HexString>
   const pair = usePairContract(validatedAddress ? validatedAddress : undefined)
 
   const { data: pairAddresses, isLoading: pairAddressesLoading } = useReadContracts({
     contracts: [
-      { address: validatedAddress || undefined, functionName: 'token0', abi: MIGRATE_V2_ABI },
-      { address: validatedAddress || undefined, functionName: 'token1', abi: MIGRATE_V2_ABI },
+      { address: validatedAddress ?? undefined, functionName: 'token0', abi: MIGRATE_V2_ABI },
+      { address: validatedAddress ?? undefined, functionName: 'token1', abi: MIGRATE_V2_ABI },
     ],
   })
 

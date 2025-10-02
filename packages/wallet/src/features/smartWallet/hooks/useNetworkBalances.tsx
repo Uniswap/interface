@@ -50,7 +50,7 @@ export const useNetworkBalances = (account?: Address): NetworkInfo[] => {
               hasSufficientFunds: hasEnoughNativeFunds(nativeBalance, gasAmount),
               gasFee: gasAmount,
             }
-          } catch (error) {
+          } catch (_error) {
             return undefined
           }
         }

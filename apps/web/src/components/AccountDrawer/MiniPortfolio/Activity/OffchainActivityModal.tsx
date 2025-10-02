@@ -9,10 +9,7 @@ import {
   OffchainOrderLineItemProps,
   OffchainOrderLineItemType,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainOrderLineItem'
-import {
-  isLimitCancellable,
-  useCancelMultipleOrdersCallback,
-} from 'components/AccountDrawer/MiniPortfolio/Activity/utils/cancel'
+import { useCancelMultipleOrdersCallback } from 'components/AccountDrawer/MiniPortfolio/Activity/utils/cancel'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import Column, { AutoColumn } from 'components/deprecated/Column'
@@ -39,20 +36,15 @@ import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/co
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { hasTradeType } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { TransactionStatus, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isLimitCancellable } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 
-type Logos = {
-  inputLogo?: string
-  outputLogo?: string
-}
-
 type SelectedOrderInfo = {
   modalOpen?: boolean
   order?: UniswapXOrderDetails
-  logos?: Logos
 }
 
 const selectedOrderAtom = atom<SelectedOrderInfo | undefined>(undefined)
@@ -61,11 +53,11 @@ export function useOpenOffchainActivityModal() {
   const setSelectedOrder = useUpdateAtom(selectedOrderAtom)
 
   return useCallback(
-    (order: UniswapXOrderDetails, logos?: Logos) => {
+    (order: UniswapXOrderDetails) => {
       sendAnalyticsEvent(InterfaceEventName.UniswapXOrderDetailsSheetOpened, {
         order: order.orderHash ?? order.id,
       })
-      setSelectedOrder({ order, logos, modalOpen: true })
+      setSelectedOrder({ order, modalOpen: true })
     },
     [setSelectedOrder],
   )

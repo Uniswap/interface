@@ -3,9 +3,10 @@
   "version": "0.0.0",
   "scripts": {
     "check:deps:usage": "depcheck",
-    "format": "biome check . --linter-enabled=false",
-    "lint": "eslint . --ext ts,tsx --max-warnings=0",
-    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "lint:biome": "biome check --error-on-warnings .",
+    "lint:biome:fix": "biome check . --write --unsafe",
+    "lint": "bun run lint:biome && eslint . --ext ts,tsx --max-warnings=0",
+    "lint:fix": "bun run lint:biome:fix && eslint . --ext ts,tsx --fix",
     "test": "jest",
     "snapshots": "jest -u",
     "typecheck": "tsc -b"
@@ -71,6 +72,7 @@
     "@testing-library/react-native": "13.0.0",
     "@types/react": "18.3.18",
     "@types/zxcvbn": "4.4.2",
+    "@uniswap/biome-config": "workspace:^",
     "@uniswap/eslint-config": "workspace:^",
     "depcheck": "1.4.7",
     "eslint": "8.44.0",
@@ -83,7 +85,5 @@
   },
   "main": "src/index.ts",
   "private": true,
-  "sideEffects": [
-    "*.css"
-  ]
+  "sideEffects": ["*.css"]
 }

@@ -1,9 +1,8 @@
-import { ApolloClient, NormalizedCacheObject, useApolloClient } from '@apollo/client'
-import { createSignedRequestParams, objectToQueryString } from '@universe/api'
+import { type ApolloClient, type NormalizedCacheObject, useApolloClient } from '@apollo/client'
+import { createSignedRequestParams, type GraphQLApi, objectToQueryString } from '@universe/api'
 import { useCallback } from 'react'
-import { OnRampTransactionsAuth } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
+import { type Account } from 'wallet/src/features/wallet/accounts/types'
+import { type SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 
 export const ON_RAMP_AUTH_MAX_LIMIT = 100
@@ -30,7 +29,7 @@ export async function createOnRampTransactionsAuth({
   limit: number
   account: Account
   signerManager: SignerManager
-}): Promise<OnRampTransactionsAuth> {
+}): Promise<GraphQLApi.OnRampTransactionsAuth> {
   const { requestParams, signature } = await createSignedRequestParams({
     data: { limit }, // Parameter needed by graphql server when fetching onramp transactions
     address: account.address,

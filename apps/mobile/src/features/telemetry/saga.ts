@@ -7,7 +7,7 @@ import { MobileUserPropertyName } from 'uniswap/src/features/telemetry/user'
 import { getUniqueId } from 'utilities/src/device/uniqueId'
 import { isAndroid } from 'utilities/src/platform'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Required for analytics initialization
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 import { watchTransactionEvents } from 'wallet/src/features/transactions/watcher/transactionFinalizationSaga'

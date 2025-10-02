@@ -1,6 +1,6 @@
 import { ParsedQs } from 'qs'
 import { useParams } from 'react-router'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Need direct chain info access for network parameters
 import { getChainInfo, UNIVERSE_CHAIN_INFO } from 'uniswap/src/features/chains/chainInfo'
 import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'

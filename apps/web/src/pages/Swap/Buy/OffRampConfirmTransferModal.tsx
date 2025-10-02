@@ -53,7 +53,7 @@ const ProviderDetails = ({ details }: { details: OffRampTransferDetailsResponse 
           {details.provider}
         </Text>
         <Text variant="body3" color="$neutral2">
-          {shortenAddress(details.depositWalletAddress)}
+          {shortenAddress({ address: details.depositWalletAddress })}
         </Text>
       </Flex>
       <Flex justifyContent="center">

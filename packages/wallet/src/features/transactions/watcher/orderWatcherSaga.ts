@@ -135,7 +135,7 @@ export class OrderWatcher {
     const promise = new Promise<UniswapXOrderDetails>((resolve) => {
       resolvePromise = resolve
     })
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Must appease typechecker since resolvePromise is assigned inside promise scope
+    // biome-ignore lint/style/noNonNullAssertion: Safe assertion in test or migration context -- Must appease typechecker since resolvePromise is assigned inside promise scope
     OrderWatcher.listeners[orderHash] = { updateOrderStatus: resolvePromise!, promise }
 
     return yield* call(() => promise)

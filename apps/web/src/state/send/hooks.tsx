@@ -14,10 +14,12 @@ import { SendState } from 'state/send/SendContext'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAddressFromEns, useENSName } from 'uniswap/src/features/ens/api'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
 import { useCreateTransferTransaction } from 'utils/transfer'
-
 export interface RecipientData {
   address: string
   ensName?: string
@@ -50,7 +52,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   // Otherwise, use raw `recipient` input from the user.
   const userInput = validatedRecipientData ? undefined : recipient
 
-  const isRecipientAnAddress = isEVMAddress(userInput ?? '')
+  const isRecipientAnAddress = isEVMAddressWithChecksum(userInput ?? '')
 
   // If userInput is an address, do a reverse ENS lookup
   // (address → ENS). Otherwise skip.
@@ -70,14 +72,15 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
   const recipientInputUnitagUsername = validatedRecipientData?.unitag ?? recipientInputUnitag?.username
 
   const validatedRecipientAddress = useMemo(() => {
+    const platform = chainIdToPlatform(chainId ?? UniverseChainId.Mainnet)
     return (
       validatedRecipientData?.address ??
-      (isEVMAddress(userInput) ||
-        isEVMAddress(forwardLookupAddress) ||
-        isEVMAddress(recipientInputUnitagAddress) ||
+      (getValidAddress({ address: userInput, platform, withEVMChecksum: true }) ||
+        getValidAddress({ address: forwardLookupAddress, platform, withEVMChecksum: true }) ||
+        getValidAddress({ address: recipientInputUnitagAddress, platform, withEVMChecksum: true }) ||
         undefined)
     )
-  }, [validatedRecipientData?.address, userInput, forwardLookupAddress, recipientInputUnitagAddress])
+  }, [chainId, validatedRecipientData?.address, userInput, forwardLookupAddress, recipientInputUnitagAddress])
 
   // Unitag fallback: If there's no known username from input or validated data,
   // try to look up a unitag by the final address.
@@ -88,7 +91,7 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
 
   // If forward lookup succeeded, use the original user input as ENS name.
   const finalEnsName = useMemo(() => {
-    if (isEVMAddress(forwardLookupAddress)) {
+    if (isEVMAddressWithChecksum(forwardLookupAddress)) {
       return userInput
     }
     return validatedRecipientData?.ensName ?? reverseLookupName ?? undefined

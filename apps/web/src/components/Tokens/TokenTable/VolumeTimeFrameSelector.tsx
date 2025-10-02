@@ -1,5 +1,5 @@
 import { TimePeriod } from 'appGraphql/data/util'
-import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
+import { Dropdown, InternalMenuItem } from 'components/Dropdowns/Dropdown'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { useAtom } from 'jotai'
 import { useTheme } from 'lib/styled-components'
@@ -61,7 +61,7 @@ export default function VolumeTimeFrameSelector() {
 
   return (
     <Flex>
-      <DropdownSelector
+      <Dropdown
         isOpen={isMenuOpen}
         toggleOpen={toggleMenu}
         menuLabel={`${DISPLAYS[activeTime]} ${isLargeScreen ? t('common.volume').toLowerCase() : ''}`}
@@ -87,7 +87,7 @@ export default function VolumeTimeFrameSelector() {
             {time === activeTime && <Check color={theme.accent1} size={16} />}
           </InternalMenuItem>
         ))}
-      </DropdownSelector>
+      </Dropdown>
     </Flex>
   )
 }

@@ -27,6 +27,7 @@ export function useSagaStatus({
 
   const { status, error } = sagaState
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: error is tracked for saga state changes even if not directly used in effect body
   useEffect(() => {
     if (status === SagaStatus.Success) {
       if (resetSagaOnSuccess) {

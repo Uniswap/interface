@@ -6,7 +6,7 @@ import { iconSizes } from 'ui/src/theme'
 import { TransactionSettingRow } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModalContent/TransactionSettingsRow'
 import type { TransactionSettingsModalProps } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/types'
 import { type TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
-import { isExtension, isInterfaceDesktop, isMobileApp, isMobileWeb, isWeb } from 'utilities/src/platform'
+import { isExtensionApp, isInterfaceDesktop, isMobileApp, isMobileWeb, isWebPlatform } from 'utilities/src/platform'
 
 const TopLevelSettings = ({
   settings,
@@ -16,7 +16,7 @@ const TopLevelSettings = ({
   setSelectedSetting: React.Dispatch<React.SetStateAction<TransactionSettingConfig | undefined>>
 }): JSX.Element => {
   return (
-    <Flex gap={isWeb ? '$spacing4' : '$spacing8'} py={isWeb ? '$spacing8' : '$spacing12'}>
+    <Flex gap={isWebPlatform ? '$spacing4' : '$spacing8'} py={isWebPlatform ? '$spacing8' : '$spacing12'}>
       {settings.map((setting, index) => {
         return (
           <TransactionSettingRow
@@ -53,17 +53,17 @@ const SettingsPageLayout = ({
 
   // For selected settings, show title on all platforms unless it is explicitly hidden via hideTitle.
   // For top level settings (not selected), show title on mobile + small screen web only.
-  const isWebSmallScreen = media.sm && isWeb
+  const isWebSmallScreen = media.sm && isWebPlatform
   const shouldShowTitle = SelectedSetting
     ? !SelectedSetting.hideTitle
-    : isMobileApp || (isWebSmallScreen && !isExtension)
+    : isMobileApp || (isWebSmallScreen && !isExtensionApp)
 
   // Hide close button on desktop web
   const shouldShowCloseButton = !isInterfaceDesktop && onClose
   return (
     <Flex gap="$spacing16">
       {shouldShowTitle && (
-        <Flex row justifyContent="space-between" pt={isWeb ? '$spacing8' : 0}>
+        <Flex row justifyContent="space-between" pt={isWebPlatform ? '$spacing8' : 0}>
           <TouchableArea onPress={(): void => setSelectedSetting(undefined)}>
             <RotatableChevron
               color={
@@ -109,7 +109,7 @@ export const TransactionSettingsModalContent = ({
       initialSelectedSetting,
       onClose,
     }),
-    [defaultTitle, SelectedSetting, setSelectedSetting, initialSelectedSetting, onClose],
+    [defaultTitle, SelectedSetting, initialSelectedSetting, onClose],
   )
 
   const renderContent = useCallback((): JSX.Element => {
@@ -117,10 +117,15 @@ export const TransactionSettingsModalContent = ({
       return <SelectedSetting.Screen />
     }
     return <TopLevelSettings settings={settings} setSelectedSetting={setSelectedSetting} />
-  }, [SelectedSetting, settings, setSelectedSetting])
+  }, [SelectedSetting, settings])
 
   return (
-    <Flex gap="$spacing16" px={isWeb ? '$spacing4' : '$spacing24'} py={isWeb ? '$spacing4' : '$spacing12'} width="100%">
+    <Flex
+      gap="$spacing16"
+      px={isWebPlatform ? '$spacing4' : '$spacing24'}
+      py={isWebPlatform ? '$spacing4' : '$spacing12'}
+      width="100%"
+    >
       {isMobileApp || isMobileWeb ? (
         // Mobile: Single page with conditional content
         <SettingsPageLayout {...layoutProps}>{renderContent()}</SettingsPageLayout>

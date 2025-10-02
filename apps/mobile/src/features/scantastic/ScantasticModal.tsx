@@ -92,7 +92,7 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
     }, ONE_SECOND_MS)
 
     return () => clearInterval(interval)
-  }, [expirationTimestamp, t])
+  }, [expirationTimestamp])
 
   const onEncryptSeedphrase = async (): Promise<void> => {
     setError('')

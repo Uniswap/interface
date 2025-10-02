@@ -16,7 +16,7 @@ import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactio
 import type { TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
 import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 function SlippageMessage({
   inputWarning,
@@ -172,7 +172,7 @@ export function SlippageScreenNative(): JSX.Element {
                   fontSize: fonts.subheading1.fontSize,
                   width: fonts.subheading1.fontSize * 4,
                   padding: spacing.none,
-                  ...(!isWeb && {
+                  ...(!isWebPlatform && {
                     fontFamily: fonts.subheading1.family,
                   }),
                 }}

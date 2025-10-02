@@ -11,7 +11,7 @@ export function useAllTransactionsBetweenAddresses(
   sender: Address,
   recipient: Maybe<Address>,
 ): TransactionDetails[] | undefined {
-  const txnsToSearch = useSelectAddressTransactions(sender)
+  const txnsToSearch = useSelectAddressTransactions({ evmAddress: sender })
   return useMemo(() => {
     if (!sender || !recipient || !txnsToSearch) {
       return undefined

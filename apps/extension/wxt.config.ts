@@ -76,13 +76,19 @@ export default defineConfig({
         {
           id: 'injected',
           run_at: 'document_start',
-          matches: ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*'],
+          matches:
+            isDevelopment || BUILD_ENV === 'dev'
+              ? ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*']
+              : ['https://*/*'],
           js: ['content-scripts/injected.js'],
         },
         {
           id: 'ethereum',
           run_at: 'document_start',
-          matches: ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*'],
+          matches:
+            isDevelopment || BUILD_ENV === 'dev'
+              ? ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*']
+              : ['https://*/*'],
           js: ['content-scripts/ethereum.js'],
           world: 'MAIN',
         },

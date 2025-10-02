@@ -6,8 +6,8 @@ const previousStateWithLocalTransactions = {
     rehydrated: true,
   },
   localWebTransactions: {
-    [1]: {
-      ['0x0']: {
+    1: {
+      '0x0': {
         status: 'these value dont matter as they are not checked',
         hash: '0x0',
         addedTime: 0,

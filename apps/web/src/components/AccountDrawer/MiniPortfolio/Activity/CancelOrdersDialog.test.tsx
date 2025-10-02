@@ -14,6 +14,7 @@ import {
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { vi } from 'vitest'
 
 const mockOrderDetails: UniswapXOrderDetails = {
   routing: TradingApi.Routing.DUTCH_V2,
@@ -39,6 +40,18 @@ const mockOrderDetails: UniswapXOrderDetails = {
   transactionOriginType: TransactionOriginType.Internal,
 }
 
+vi.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', async () => {
+  const actual = await vi.importActual('components/AccountDrawer/MiniPortfolio/Activity/hooks')
+  return {
+    ...actual,
+    useCancelOrdersGasEstimate: vi.fn(),
+    usePendingActivity: vi.fn(() => ({
+      pendingActivityCount: 0,
+      hasPendingActivity: false,
+    })),
+  }
+})
+
 vi.mock('hooks/useTransactionGasFee', async () => {
   const actual = await vi.importActual('hooks/useTransactionGasFee')
   return {
@@ -46,11 +59,6 @@ vi.mock('hooks/useTransactionGasFee', async () => {
     useTransactionGasFee: vi.fn(),
   }
 })
-
-vi.mock('components/AccountDrawer/MiniPortfolio/Activity/cancel.utils', () => ({
-  useCreateCancelTransactionRequest: vi.fn(),
-  hasEncodedOrder: vi.fn((order) => 'encodedOrder' in order && typeof order.encodedOrder === 'string'),
-}))
 
 vi.mock('utilities/src/logger/logger', async () => {
   const actual = await vi.importActual('utilities/src/logger/logger')

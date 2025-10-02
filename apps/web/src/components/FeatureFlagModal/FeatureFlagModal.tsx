@@ -220,6 +220,9 @@ export default function FeatureFlagModal() {
               label="Enable create flow with new PoolInfo endpoint"
             />
           </FeatureFlagGroup>
+          <FeatureFlagGroup name="Toucan">
+            <FeatureFlagOption flag={FeatureFlags.Toucan} label="Enable Toucan" />
+          </FeatureFlagGroup>
           <FeatureFlagGroup name="FOR">
             <FeatureFlagOption flag={FeatureFlags.FiatOffRamp} label="Enable Fiat OffRamp" />
           </FeatureFlagGroup>
@@ -236,10 +239,6 @@ export default function FeatureFlagModal() {
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Mini Portfolio">
-            <FeatureFlagOption
-              flag={FeatureFlags.SharedPortfolioUI}
-              label="Enable new mini portfolio UI shared across platforms"
-            />
             <FeatureFlagOption flag={FeatureFlags.SelfReportSpamNFTs} label="Report spam NFTs" />
             <FeatureFlagOption
               flag={FeatureFlags.DisableExtensionDeeplinks}

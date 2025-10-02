@@ -19,11 +19,12 @@ import {
   WalletSigninResponse,
 } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { getVersionHeader, REQUEST_SOURCE } from 'uniswap/src/data/constants'
+import { getVersionHeader } from 'uniswap/src/data/constants'
 import { isBetaEnv, isProdEnv } from 'utilities/src/environment/env'
-import { isExtension, isMobileApp } from 'utilities/src/platform'
+import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
+import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 
-const isWalletBeta = (isExtension || isMobileApp) && isBetaEnv()
+const isWalletBeta = (isExtensionApp || isMobileApp) && isBetaEnv()
 
 const enclaveTransport = createConnectTransport({
   baseUrl: isProdEnv() || isWalletBeta ? uniswapUrls.evervaultProductionUrl : uniswapUrls.evervaultStagingUrl,

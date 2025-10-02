@@ -89,8 +89,9 @@ export function createAccountsStoreGetters(getState: () => WebAccountsData) {
   function getAggregateConnectionStatus() {
     const connectorStatuses = Object.values(getState().activeConnectors).map((connector) => connector.status)
 
-    // If any connector is connecting, treat as a connecting status
-    if (connectorStatuses.includes(ConnectorStatus.Connecting)) {
+    // If any connector is connecting, treat as a connecting status.
+    // If the connection query is pending, also treat as a connecting status; this fixes gaps where one platforms connector has finished but another hasn't started yet.
+    if (connectorStatuses.includes(ConnectorStatus.Connecting) || getState().connectionQueryIsPending) {
       return ConnectorStatus.Connecting
     }
 

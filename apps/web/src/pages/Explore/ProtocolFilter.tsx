@@ -1,5 +1,5 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
+import { Dropdown, InternalMenuItem } from 'components/Dropdowns/Dropdown'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { atom, useAtom } from 'jotai'
 import { useCallback, useMemo, useState } from 'react'
@@ -39,7 +39,7 @@ function ProtocolFilter() {
   return (
     <Flex>
       <Trace modal={ModalName.ExploreProtocolFilter}>
-        <DropdownSelector
+        <Dropdown
           isOpen={open}
           toggleOpen={() => setOpen((prev) => !prev)}
           menuLabel={
@@ -55,7 +55,7 @@ function ProtocolFilter() {
           alignRight={!media.lg}
         >
           {versionFilterOptions}
-        </DropdownSelector>
+        </Dropdown>
       </Trace>
     </Flex>
   )

@@ -3,7 +3,7 @@ import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 interface Props {
   isVisible: boolean
@@ -24,9 +24,9 @@ export default function UnsupportedTokenModal({ isVisible, onBack, onClose, onAc
       <Flex
         centered
         gap="$spacing16"
-        pb={isWeb ? '$none' : '$spacing12'}
+        pb={isWebPlatform ? '$none' : '$spacing12'}
         pt="$spacing12"
-        px={isWeb ? '$none' : '$spacing24'}
+        px={isWebPlatform ? '$none' : '$spacing24'}
       >
         <Flex centered gap="$spacing16">
           <Flex

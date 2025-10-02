@@ -1,4 +1,4 @@
-import { ProfileMetadata, UnitagsApiClient } from '@universe/api'
+import { ProfileMetadata } from '@universe/api'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -18,6 +18,7 @@ import { Pen } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
+import { UnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
@@ -31,7 +32,7 @@ import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtension, isMobileApp } from 'utilities/src/platform'
+import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
 import { normalizeTwitterUsername } from 'utilities/src/primitives/string'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { usePreviousWithLayoutEffect } from 'utilities/src/react/usePreviousWithLayoutEffect'
@@ -45,7 +46,7 @@ import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { generateSignerFunc } from 'wallet/src/features/wallet/signing/utils'
 
-const PADDING_WIDTH = isExtension ? '$none' : '$spacing16'
+const PADDING_WIDTH = isExtensionApp ? '$none' : '$spacing16'
 
 function isProfileMetadataEdited({
   loading,
@@ -292,7 +293,7 @@ export function EditUnitagProfileContent({
     placeholderTextColor: '$neutral3',
     returnKeyType: 'done',
     textAlign: 'left',
-    borderRadius: isExtension ? 0 : undefined,
+    borderRadius: isExtensionApp ? 0 : undefined,
   }
 
   return (
@@ -300,12 +301,12 @@ export function EditUnitagProfileContent({
       <ScrollView
         contentContainerStyle={{ pb: '$spacing24' }}
         keyboardShouldPersistTaps="handled"
-        px={isExtension ? undefined : '$spacing24'}
+        px={isExtensionApp ? undefined : '$spacing24'}
         showsVerticalScrollIndicator={false}
       >
         <Flex grow gap="$spacing36">
           <Flex fill justifyContent="space-between">
-            <Flex pt={isExtension ? '$spacing48' : undefined} pb="$spacing48">
+            <Flex pt={isExtensionApp ? '$spacing48' : undefined} pb="$spacing48">
               {isMobileApp && (
                 <Flex height={imageSizes.image100}>
                   <Flex
@@ -363,7 +364,7 @@ export function EditUnitagProfileContent({
                 textProps={{ variant: 'heading3' }}
               />
               <Text color="$neutral2" variant="subheading2">
-                {shortenAddress(address)}
+                {shortenAddress({ address })}
               </Text>
             </Flex>
 
@@ -424,7 +425,7 @@ export function EditUnitagProfileContent({
         loading={isSaving}
         isDisabled={!profileMetadataEdited}
         mt="$spacing12"
-        mx={isExtension ? undefined : '$spacing24'}
+        mx={isExtensionApp ? undefined : '$spacing24'}
         size="large"
         variant="branded"
         fill={false}
@@ -438,7 +439,7 @@ export function EditUnitagProfileContent({
           hasNFTs={hasNFTs}
           setPhotoUri={setAvatarImageUri}
           showRemoveOption={!!avatarImageUri}
-          nftModalProps={isExtension ? extensionNftModalProps : undefined}
+          nftModalProps={isExtensionApp ? extensionNftModalProps : undefined}
           onClose={onCloseAvatarModal}
         />
       )}

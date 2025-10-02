@@ -15,18 +15,20 @@ import { ContextMenu, ContextMenuProps, MenuOptionItem } from 'uniswap/src/compo
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSelectHasTokenFavorited } from 'uniswap/src/features/favorites/useSelectHasTokenFavorited'
 import { useToggleFavoriteCallback } from 'uniswap/src/features/favorites/useToggleFavoriteCallback'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { currencyAddress, currencyId, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const COPY_CLOSE_DELAY = 400
@@ -63,7 +65,7 @@ function _TokenOptionItemContextMenu({
   actions,
 }: TokenOptionItemContextMenuProps): JSX.Element {
   const { t } = useTranslation()
-  const account = useWallet().evmAccount
+  const evmAddress = useActiveAddress(Platform.EVM)
   const { navigateToTokenDetails, navigateToSwapFlow, navigateToSendFlow, navigateToReceive, handleShareToken } =
     useUniswapContext()
   const dispatch = useDispatch()
@@ -88,7 +90,7 @@ function _TokenOptionItemContextMenu({
 
   const onCopyAddress = useCallback(async (): Promise<void> => {
     await setClipboard(currencyAddress(currency))
-    if (!isWeb) {
+    if (!isWebPlatform) {
       dispatch(
         pushNotification({
           type: AppNotificationType.Copied,
@@ -130,7 +132,7 @@ function _TokenOptionItemContextMenu({
   }, [closeMenu, navigateToReceive])
 
   const onShare = useCallback(async () => {
-    if (isWeb) {
+    if (isWebPlatform) {
       const url =
         UNISWAP_WEB_URL +
         getTokenDetailsURL({
@@ -152,8 +154,10 @@ function _TokenOptionItemContextMenu({
   const dropdownOptions: MenuOptionItem[] = useMemo(() => {
     const options: MenuOptionItem[] = []
 
+    const isSolanaToken = currencyIdToChain(id) === UniverseChainId.Solana
+
     if (actions.includes(TokenContextMenuAction.CopyAddress)) {
-      if (isWeb) {
+      if (isWebPlatform) {
         // onCopyAddress does not trigger a toast on web, so we display success in-line instead
         options.push({
           onPress: onCopyAddress,
@@ -195,7 +199,8 @@ function _TokenOptionItemContextMenu({
       })
     }
 
-    if (actions.includes(TokenContextMenuAction.Send)) {
+    // Only add Send action for non-Solana tokens
+    if (actions.includes(TokenContextMenuAction.Send) && !isSolanaToken) {
       options.push({
         onPress: onNavigateToSend,
         label: t('common.button.send'),
@@ -204,7 +209,7 @@ function _TokenOptionItemContextMenu({
       })
     }
 
-    if (account && actions.includes(TokenContextMenuAction.Receive)) {
+    if (evmAddress && actions.includes(TokenContextMenuAction.Receive)) {
       options.push({
         onPress: onNavigateToReceive,
         label: t('common.button.receive'),
@@ -234,8 +239,9 @@ function _TokenOptionItemContextMenu({
 
     return options
   }, [
+    id,
     actions,
-    account,
+    evmAddress,
     onCopyAddress,
     currency.isNative,
     copiedAddress,

@@ -1,4 +1,5 @@
-let { interface: restrictedImports } = require('@uniswap/eslint-config/restrictedImports')
+const biomeSupportedRules = require('./biome-supported')
+const { reactNative: reactNativeImports } = require('@uniswap/eslint-config/restrictedImports')
 
 module.exports = {
   extends: [require.resolve('./base.js')],
@@ -14,6 +15,8 @@ module.exports = {
     },
   },
   rules: {
+    // Disable all ESLint rules that have been migrated to Biome
+    ...biomeSupportedRules,
     'react/react-in-jsx-scope': 'off',
   },
   settings: {
@@ -30,10 +33,10 @@ module.exports = {
       },
     },
     {
-      files: ['*.ts', '*.tsx'],
-      excludedFiles: ['*.native.*', '*.ios.*', '*.android.*'],
+      files: ['**/*.{ts,tsx}'],
+      excludedFiles: ['**/*.native.*', '**/*.ios.*', '**/*.android.*'],
       rules: {
-        '@typescript-eslint/no-restricted-imports': ['error', restrictedImports],
+        '@typescript-eslint/no-restricted-imports': ['error', reactNativeImports],
       },
     },
   ],

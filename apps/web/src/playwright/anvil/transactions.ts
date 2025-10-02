@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Anvil transactions need direct ethers imports
 import { expect } from '@playwright/test'
 import type { AnvilClient } from 'playwright/fixtures/anvil'
 import { Address } from 'viem'

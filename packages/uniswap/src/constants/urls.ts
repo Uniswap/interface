@@ -167,6 +167,9 @@ export const uniswapUrls = {
 
   wormholeUrl: 'https://portalbridge.com/',
 
+  // Limit orders paths
+  limitOrderStatusesPath: '/limit-orders',
+
   // App and Redirect URL's
   appBaseUrl: UNISWAP_APP_URL,
   redirectUrlBase: UNISWAP_MOBILE_REDIRECT_URL,

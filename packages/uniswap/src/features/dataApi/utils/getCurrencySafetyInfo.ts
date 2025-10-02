@@ -6,20 +6,14 @@ import {
   SpamCode as RestSpamCode,
   TokenMetadata,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { SpamCode } from '@universe/api'
-import {
-  ProtectionAttackType,
-  ProtectionResult,
-  SafetyLevel,
-  TokenQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi, SpamCode } from '@universe/api'
 import { AttackType, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 
-function getTokenListFromSafetyLevel(safetyInfo?: SafetyLevel): TokenList {
+function getTokenListFromSafetyLevel(safetyInfo?: GraphQLApi.SafetyLevel): TokenList {
   switch (safetyInfo) {
-    case SafetyLevel.Blocked:
+    case GraphQLApi.SafetyLevel.Blocked:
       return TokenList.Blocked
-    case SafetyLevel.Verified:
+    case GraphQLApi.SafetyLevel.Verified:
       return TokenList.Default
     default:
       return TokenList.NonDefault
@@ -27,18 +21,20 @@ function getTokenListFromSafetyLevel(safetyInfo?: SafetyLevel): TokenList {
 }
 
 // Priority based on Token Protection PRD spec
-function getHighestPriorityAttackType(attackTypes?: (ProtectionAttackType | undefined)[]): AttackType | undefined {
+function getHighestPriorityAttackType(
+  attackTypes?: (GraphQLApi.ProtectionAttackType | undefined)[],
+): AttackType | undefined {
   if (!attackTypes || attackTypes.length === 0) {
     return undefined
   }
   const attackTypeSet = new Set(attackTypes)
-  if (attackTypeSet.has(ProtectionAttackType.Honeypot)) {
+  if (attackTypeSet.has(GraphQLApi.ProtectionAttackType.Honeypot)) {
     return AttackType.Honeypot
-  } else if (attackTypeSet.has(ProtectionAttackType.Impersonator)) {
+  } else if (attackTypeSet.has(GraphQLApi.ProtectionAttackType.Impersonator)) {
     return AttackType.Impersonator
-  } else if (attackTypeSet.has(ProtectionAttackType.AirdropPattern)) {
+  } else if (attackTypeSet.has(GraphQLApi.ProtectionAttackType.AirdropPattern)) {
     return AttackType.Airdrop
-  } else if (attackTypeSet.has(ProtectionAttackType.HighFees)) {
+  } else if (attackTypeSet.has(GraphQLApi.ProtectionAttackType.HighFees)) {
     return AttackType.HighFees
   } else {
     return AttackType.Other
@@ -64,13 +60,13 @@ function getHighestPriorityRestAttackType(attackTypes?: RestAttackType[]): Attac
 }
 
 export function getCurrencySafetyInfo(
-  safetyLevel?: SafetyLevel,
-  protectionInfo?: NonNullable<TokenQuery['token']>['protectionInfo'],
+  safetyLevel?: GraphQLApi.SafetyLevel,
+  protectionInfo?: NonNullable<GraphQLApi.TokenQuery['token']>['protectionInfo'],
 ): SafetyInfo {
   return {
     tokenList: getTokenListFromSafetyLevel(safetyLevel),
     attackType: getHighestPriorityAttackType(protectionInfo?.attackTypes),
-    protectionResult: protectionInfo?.result ?? ProtectionResult.Unknown,
+    protectionResult: protectionInfo?.result ?? GraphQLApi.ProtectionResult.Unknown,
     blockaidFees: protectionInfo?.blockaidFees
       ? {
           buyFeePercent: protectionInfo.blockaidFees.buy ? protectionInfo.blockaidFees.buy * 100 : undefined,
@@ -80,20 +76,23 @@ export function getCurrencySafetyInfo(
   }
 }
 
-export function mapRestProtectionResultToProtectionResult(result?: RestProtectionResult): ProtectionResult {
+export function mapRestProtectionResultToProtectionResult(result?: RestProtectionResult): GraphQLApi.ProtectionResult {
   switch (result) {
     case RestProtectionResult.MALICIOUS:
-      return ProtectionResult.Malicious
+      return GraphQLApi.ProtectionResult.Malicious
     case RestProtectionResult.SPAM:
-      return ProtectionResult.Spam
+      return GraphQLApi.ProtectionResult.Spam
     case RestProtectionResult.BENIGN:
-      return ProtectionResult.Benign
+      return GraphQLApi.ProtectionResult.Benign
     default:
-      return ProtectionResult.Unknown
+      return GraphQLApi.ProtectionResult.Unknown
   }
 }
 
-export function getRestCurrencySafetyInfo(safetyLevel?: SafetyLevel, protectionInfo?: ProtectionInfo): SafetyInfo {
+export function getRestCurrencySafetyInfo(
+  safetyLevel?: GraphQLApi.SafetyLevel,
+  protectionInfo?: ProtectionInfo,
+): SafetyInfo {
   return {
     tokenList: getTokenListFromSafetyLevel(safetyLevel),
     attackType: getHighestPriorityRestAttackType(protectionInfo?.attackTypes),
@@ -105,11 +104,11 @@ export function getRestCurrencySafetyInfo(safetyLevel?: SafetyLevel, protectionI
 export function getRestTokenSafetyInfo(metadata?: TokenMetadata): {
   isSpam: boolean
   spamCodeValue: SpamCode
-  mappedSafetyLevel: SafetyLevel | undefined
+  mappedSafetyLevel: GraphQLApi.SafetyLevel | undefined
 } {
   let isSpam = false
   let spamCodeValue = SpamCode.LOW
-  let mappedSafetyLevel: SafetyLevel | undefined
+  let mappedSafetyLevel: GraphQLApi.SafetyLevel | undefined
 
   switch (metadata?.spamCode) {
     case RestSpamCode.SPAM:
@@ -127,16 +126,16 @@ export function getRestTokenSafetyInfo(metadata?: TokenMetadata): {
 
   switch (metadata?.safetyLevel) {
     case RestSafetyLevel.VERIFIED:
-      mappedSafetyLevel = SafetyLevel.Verified
+      mappedSafetyLevel = GraphQLApi.SafetyLevel.Verified
       break
     case RestSafetyLevel.MEDIUM_WARNING:
-      mappedSafetyLevel = SafetyLevel.MediumWarning
+      mappedSafetyLevel = GraphQLApi.SafetyLevel.MediumWarning
       break
     case RestSafetyLevel.STRONG_WARNING:
-      mappedSafetyLevel = SafetyLevel.StrongWarning
+      mappedSafetyLevel = GraphQLApi.SafetyLevel.StrongWarning
       break
     case RestSafetyLevel.BLOCKED:
-      mappedSafetyLevel = SafetyLevel.Blocked
+      mappedSafetyLevel = GraphQLApi.SafetyLevel.Blocked
       break
     default:
       break

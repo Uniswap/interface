@@ -1,9 +1,9 @@
 export class FetchError extends Error {
   response: Response
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: Error data can be any shape from API responses
   data?: any
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: Error data can be any shape from API responses
   constructor({ response, data, cause }: { response: Response; data?: any; cause?: unknown }) {
     super(`Response status: ${response.status}`)
     this.name = 'FetchError'

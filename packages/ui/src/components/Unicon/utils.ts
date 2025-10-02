@@ -1,10 +1,10 @@
 import { keccak256, toUtf8Bytes } from 'ethers/lib/utils'
 import { UNICON_COLORS } from 'ui/src/components/Unicon/Colors'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
 import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
 
 export const getUniconsDeterministicHash = (address: string): bigint => {
-  if (!isEVMAddress(address) && !isSVMAddress(address)) {
+  if (!isEVMAddressWithChecksum(address) && !isSVMAddress(address)) {
     throw new Error('Invalid address')
   }
   const hash = keccak256(toUtf8Bytes(address))

@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { OnchainItemListOptionType, PoolOption } from 'uniswap/src/components/lists/items/types'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { parseRestProtocolVersion } from 'uniswap/src/data/rest/utils'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -50,7 +51,7 @@ export function usePoolStatsToPoolOptions(poolStats: PoolStats[] | undefined): P
 
   return useMemo((): PoolOption[] => {
     const currencyIdToCurrencyInfo = new Map(
-      currencyInfos.map((currencyInfo) => [currencyInfo?.currencyId.toLowerCase(), currencyInfo]),
+      currencyInfos.map((currencyInfo) => [normalizeCurrencyIdForMapLookup(currencyInfo?.currencyId), currencyInfo]),
     )
 
     // Build PoolOptions for the top pools
@@ -82,8 +83,8 @@ export function usePoolStatsToPoolOptions(poolStats: PoolStats[] | undefined): P
             : pool.token1.address,
         )
 
-        const token0CurrencyInfo = currencyIdToCurrencyInfo.get(token0CurrencyId.toLowerCase())
-        const token1CurrencyInfo = currencyIdToCurrencyInfo.get(token1CurrencyId.toLowerCase())
+        const token0CurrencyInfo = currencyIdToCurrencyInfo.get(normalizeCurrencyIdForMapLookup(token0CurrencyId))
+        const token1CurrencyInfo = currencyIdToCurrencyInfo.get(normalizeCurrencyIdForMapLookup(token1CurrencyId))
 
         if (!token0CurrencyInfo || !token1CurrencyInfo) {
           return undefined

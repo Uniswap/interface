@@ -15,7 +15,7 @@ import {
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 export function NetworkFee({
   chainId,
@@ -46,7 +46,7 @@ export function NetworkFee({
   const uniswapXGasFeeInfo = useFormattedUniswapXGasFeeInfo(uniswapXGasBreakdown, chainId)
 
   const gasFeeHighRelativeToValue = useGasFeeHighRelativeToValue(gasFeeUSD, transactionUSDValue)
-  const showHighGasFeeUI = gasFeeHighRelativeToValue && !isInterface // Avoid high gas UI on interface
+  const showHighGasFeeUI = gasFeeHighRelativeToValue && !isWebApp // Avoid high gas UI on interface
 
   return (
     <Flex gap="$spacing4">

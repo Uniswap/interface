@@ -27,6 +27,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { hasTradeType } from 'uniswap/src/features/transactions/swap/utils/trade'
 import type {
@@ -49,8 +50,8 @@ import type {
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isConfirmedSwapTypeInfo } from 'uniswap/src/features/transactions/types/utils'
 import i18n from 'uniswap/src/i18n'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -58,6 +59,13 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 type FormatNumberFunctionType = ReturnType<typeof useLocalizationContext>['formatNumberOrString']
 type FormatFiatPriceFunctionType = ReturnType<typeof useLocalizationContext>['convertFiatAmountFormatted']
+
+// Narrowing helper for when we actually need UniswapX-specific fields
+function isUniswapXDetails(
+  details: InterfaceTransactionDetails,
+): details is UniswapXOrderDetails<InterfaceBaseTransactionDetails> {
+  return 'routing' in details && isUniswapX(details)
+}
 
 /**
  * Checks if a transaction is a UniswapX order by examining both the routing field (new approach)
@@ -79,13 +87,6 @@ function isUniswapXActivity(details: InterfaceTransactionDetails): boolean {
   // Fall back to legacy flag for backward compatibility with existing transactions
   // stored before migration to routing-based structure (see WALL-7143)
   return 'isUniswapXOrder' in typeInfo && typeInfo.isUniswapXOrder === true
-}
-
-// Narrowing helper for when we actually need UniswapX-specific fields
-function isUniswapXDetails(
-  details: InterfaceTransactionDetails,
-): details is UniswapXOrderDetails<InterfaceBaseTransactionDetails> {
-  return 'routing' in details && isUniswapX(details)
 }
 
 function buildCurrencyDescriptor({
@@ -384,7 +385,9 @@ async function parseSend({
           type: NumberType.TokenNonTx,
         })
       : i18n.t('common.unknown')
-  const otherAccount = isEVMAddress(recipient) || undefined
+  // TODO(SWAP-119): edit to allow SVM platform if Solana send is supported
+  const otherAccount =
+    getValidAddress({ address: recipient, platform: Platform.EVM, withEVMChecksum: true }) || undefined
 
   return {
     descriptor: i18n.t('activity.transaction.send.descriptor', {

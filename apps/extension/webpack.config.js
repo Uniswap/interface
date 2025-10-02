@@ -355,6 +355,24 @@ module.exports = (env) => {
                       ? ['https://app.uniswap.org/*']
                       : ['https://app.uniswap.org/*', 'https://ew.unihq.org/*', 'https://*.ew.unihq.org/*'],
                 },
+                // Ensure content scripts are registered in the webpack build (WXT handles this automatically).
+                // These mirror the matches/runAt used in the TS entrypoints.
+                content_scripts: [
+                  {
+                    id: 'injected',
+                    matches: ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*'],
+                    js: ['injected.js'],
+                    run_at: 'document_start',
+                  },
+                  {
+                    id: 'ethereum',
+                    matches: ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*'],
+                    js: ['ethereum.js'],
+                    run_at: 'document_start',
+                    // Ethereum provider must run in the MAIN world to attach to window.ethereum
+                    world: 'MAIN',
+                  },
+                ],
               }
 
               return Buffer.from(JSON.stringify(transformedManifest, null, 2))

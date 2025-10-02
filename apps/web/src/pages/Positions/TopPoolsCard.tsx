@@ -1,4 +1,5 @@
 import { gqlToCurrency, supportedChainIdFromGQLChain, unwrapToken } from 'appGraphql/data/util'
+import { GraphQLApi } from '@universe/api'
 import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { LPIncentiveRewardsBadge } from 'components/Liquidity/LPIncentives/LPIncentiveRewardsBadge'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
@@ -6,7 +7,6 @@ import { Trans } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { PoolStat } from 'state/explore/types'
 import { Flex, Text } from 'ui/src'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -16,7 +16,7 @@ export function TopPoolsCard({ pool }: { pool: PoolStat }) {
   const { defaultChainId } = useEnabledChains()
   const { formatPercent } = useLocalizationContext()
 
-  const chainId = supportedChainIdFromGQLChain(pool.chain as Chain) ?? defaultChainId
+  const chainId = supportedChainIdFromGQLChain(pool.chain as GraphQLApi.Chain) ?? defaultChainId
   const token0 = pool.token0 ? gqlToCurrency(unwrapToken(chainId, pool.token0)) : undefined
   const token1 = pool.token1 ? gqlToCurrency(unwrapToken(chainId, pool.token1)) : undefined
 

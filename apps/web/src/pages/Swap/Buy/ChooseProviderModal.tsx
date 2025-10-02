@@ -1,5 +1,4 @@
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import { useAccount } from 'hooks/useAccount'
 import ms from 'ms'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
@@ -13,6 +12,8 @@ import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EdgeFade } from 'uniswap/src/features/fiatOnRamp/EdgeFade/EdgeFade'
 import { PaymentMethodFilter } from 'uniswap/src/features/fiatOnRamp/PaymentMethodFilter/PaymentMethodFilter'
 import { FORFilters, FORQuote, FORServiceProvider, RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
@@ -61,7 +62,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
     return getOnRampInputAmount({ rampDirection: 0, inputAmount, amountOut: amountOut ?? '0', inputInFiat })
   }, [inputAmount, amountOut, inputInFiat])
 
-  const account = useAccount()
+  const recipientAddress = useActiveAddress(quoteCurrency?.currencyInfo?.currency.chainId ?? UniverseChainId.Mainnet)
 
   const sortedQuotes = useMemo(() => {
     if (!quotes?.quotes) {
@@ -112,7 +113,6 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
   }, ms('5m'))
 
   const quoteCurrencyCode = quoteCurrency?.meldCurrencyCode
-  const recipientAddress = account.address
   if (!selectedCountry || !quoteCurrencyCode || !meldSupportedFiatCurrency || !recipientAddress) {
     logger.debug('ChooseProviderModal', 'ChooseProviderModalContent', 'Modal opened with invalid state. Closing modal.')
     onClose()

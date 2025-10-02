@@ -5,14 +5,16 @@ import { getSessionService } from '@universe/api/src/getSessionService'
 export function createFetchClient({
   baseUrl,
   headers: additionalHeaders = {},
+  getSessionServiceBaseUrl,
 }: {
   baseUrl: string
   headers?: HeadersInit
+  getSessionServiceBaseUrl: () => string
 }): FetchClient {
   return {
     get fetch() {
       return async <T = Response>(path: string, options: StandardFetchOptions): Promise<T> => {
-        const sessionService = getSessionService()
+        const sessionService = getSessionService({ getBaseUrl: getSessionServiceBaseUrl })
         const sessionState = await sessionService.getSessionState()
 
         const headers = new Headers({

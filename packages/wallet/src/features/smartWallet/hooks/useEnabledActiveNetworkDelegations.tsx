@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useIsSupportedChainIdCallback } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
 import { ActiveDelegation, WalletData } from 'wallet/src/features/smartWallet/types'
 
 export function useEnabledActiveNetworkDelegations(
@@ -16,7 +16,7 @@ export function useEnabledActiveNetworkDelegations(
             return null
           }
 
-          if (!isEVMAddress(delegationAddress)) {
+          if (!isEVMAddressWithChecksum(delegationAddress)) {
             return null
           }
 

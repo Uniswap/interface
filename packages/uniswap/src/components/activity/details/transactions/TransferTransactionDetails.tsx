@@ -18,7 +18,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 export function TransferTransactionDetails({
   transactionDetails,
@@ -80,7 +80,7 @@ export function CurrencyTransferContent({
       })
 
       navigateToTokenDetails(currencyInfo.currencyId)
-      if (!isWeb) {
+      if (!isWebPlatform) {
         onClose()
       }
     }

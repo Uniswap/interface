@@ -1,9 +1,8 @@
 import StatusIcon from 'components/StatusIcon'
+import { useActiveAddresses, useActiveWallet } from 'features/accounts/store/hooks'
+import { ExternalWallet } from 'features/accounts/store/types'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
-import { AccountType } from 'uniswap/src/features/accounts/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 
 const ACCOUNT = '0x0'
 
@@ -15,13 +14,20 @@ vi.mock('../../hooks/useSocksBalance', () => ({
   useHasSocks: () => true,
 }))
 
-vi.mock('uniswap/src/features/wallet/hooks/useWallet')
+vi.mock('features/accounts/store/hooks')
+
+vi.mock('uniswap/src/features/gating/hooks', () => ({
+  useFeatureFlag: () => false,
+  getFeatureFlag: () => false,
+}))
 
 describe('StatusIcon', () => {
   describe('with no account', () => {
     it('renders children in correct order', () => {
-      mocked(useWallet).mockReturnValue({
-        evmAccount: undefined,
+      mocked(useActiveWallet).mockReturnValue(undefined)
+      mocked(useActiveAddresses).mockReturnValue({
+        evmAddress: undefined,
+        svmAddress: undefined,
       })
       const component = render(<StatusIcon />)
       expect(component.getByTestId('StatusIconRoot')).toMatchSnapshot()
@@ -31,17 +37,15 @@ describe('StatusIcon', () => {
 
   describe('with account', () => {
     beforeEach(() => {
-      mocked(useWallet).mockReturnValue({
-        evmAccount: {
-          address: ACCOUNT,
-          platform: Platform.EVM,
-          accountType: AccountType.SignerMnemonic,
-          walletMeta: {
-            id: 'io.metamask',
-            name: 'MetaMask',
-            icon: 'metamask-icon.svg',
-          },
-        },
+      mocked(useActiveWallet).mockReturnValue({
+        id: 'io.metamask',
+        name: 'MetaMask',
+        icon: '/src/assets/wallets/metamask-icon.svg',
+      } as ExternalWallet)
+
+      mocked(useActiveAddresses).mockReturnValue({
+        evmAddress: ACCOUNT,
+        svmAddress: undefined,
       })
     })
 

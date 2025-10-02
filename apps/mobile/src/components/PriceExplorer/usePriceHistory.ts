@@ -1,14 +1,9 @@
-import { GqlResult, isError, isNonPollingRequestInFlight } from '@universe/api'
+import { type GqlResult, GraphQLApi, isError, isNonPollingRequestInFlight } from '@universe/api'
 import maxBy from 'lodash/maxBy'
-import { Dispatch, SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
-import { SharedValue, useDerivedValue } from 'react-native-reanimated'
-import { TLineChartData } from 'react-native-wagmi-charts'
+import { type Dispatch, type SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
+import { type SharedValue, useDerivedValue } from 'react-native-reanimated'
+import { type TLineChartData } from 'react-native-wagmi-charts'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import {
-  HistoryDuration,
-  TimestampedAmount,
-  useTokenPriceHistoryQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 
@@ -27,11 +22,11 @@ export type PriceNumberOfDigits = {
  */
 export function useTokenPriceHistory({
   currencyId,
-  initialDuration = HistoryDuration.Day,
+  initialDuration = GraphQLApi.HistoryDuration.Day,
   skip = false,
 }: {
   currencyId: string
-  initialDuration?: HistoryDuration
+  initialDuration?: GraphQLApi.HistoryDuration
   skip?: boolean
 }): Omit<
   GqlResult<{
@@ -40,8 +35,8 @@ export function useTokenPriceHistory({
   }>,
   'error'
 > & {
-  setDuration: Dispatch<SetStateAction<HistoryDuration>>
-  selectedDuration: HistoryDuration
+  setDuration: Dispatch<SetStateAction<GraphQLApi.HistoryDuration>>
+  selectedDuration: GraphQLApi.HistoryDuration
   error: boolean
   numberOfDigits: PriceNumberOfDigits
 } {
@@ -57,7 +52,7 @@ export function useTokenPriceHistory({
     data: priceData,
     refetch,
     networkStatus,
-  } = useTokenPriceHistoryQuery({
+  } = GraphQLApi.useTokenPriceHistoryQuery({
     variables: {
       contract: currencyIdToContractInput(currencyId),
       duration,
@@ -93,7 +88,7 @@ export function useTokenPriceHistory({
 
   const formattedPriceHistory = useMemo(() => {
     const formatted = priceHistory
-      ?.filter((x): x is TimestampedAmount => Boolean(x))
+      ?.filter((x): x is GraphQLApi.TimestampedAmount => Boolean(x))
       .map((x) => ({ timestamp: x.timestamp * 1000, value: x.value }))
 
     return formatted

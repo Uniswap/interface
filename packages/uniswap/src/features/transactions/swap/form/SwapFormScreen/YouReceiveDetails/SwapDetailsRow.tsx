@@ -12,7 +12,7 @@ import { SwapFeeOnTransferTooltip } from 'uniswap/src/features/transactions/swap
 import { LargePriceDifferenceTooltip } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/LargePriceDifferenceTooltip'
 import { UsePriceDifferenceReturnType } from 'uniswap/src/features/transactions/swap/hooks/usePriceDifference'
 import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 const Outer = ({ children }: { children: ReactNode }): JSX.Element => {
   return (
@@ -36,7 +36,7 @@ const Label = ({
       <Text variant="body3" color="$neutral2">
         {label}
       </Text>
-      {isWeb && (
+      {isWebPlatform && (
         <WarningInfo
           tooltipProps={{
             text: tooltip,

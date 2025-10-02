@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { ETH_LOGO, SONEIUM_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
-import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, DEFAULT_RETRY_OPTIONS } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
@@ -13,7 +13,7 @@ import {
 } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 import { soneium } from 'wagmi/chains'
 
 const tokens = buildChainTokens({
@@ -35,12 +35,12 @@ export const SONEIUM_CHAIN_INFO = {
   platform: Platform.EVM,
   assetRepoNetworkName: 'soneium',
   backendChain: {
-    chain: BackendChainId.Soneium as GqlChainId,
+    chain: GraphQLApi.Chain.Soneium as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 6,
-  blockWaitMsBeforeWarning: isInterface ? 1500000 : 1200000,
+  blockWaitMsBeforeWarning: isWebApp ? 1500000 : 1200000,
   bridge: 'https://superbridge.app/soneium',
   docs: 'https://docs.soneium.org/',
   elementName: ElementName.ChainSoneium,

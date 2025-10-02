@@ -1,0 +1,25 @@
+{
+  "name": "@uniswap/biome-config",
+  "version": "1.0.0",
+  "description": "Shared Biome configuration for Uniswap Universe",
+  "exports": {
+    "api": "./compiled/api.json",
+    "biome-config": "./compiled/biome-config.json",
+    "extension": "./compiled/extension.json",
+    "mobile": "./compiled/mobile.json",
+    "ui": "./compiled/ui.json",
+    "wallet": "./compiled/wallet.json",
+    "web": "./compiled/web.json",
+    "uniswap": "./compiled/uniswap.json",
+    "utilities": "./compiled/utilities.json"
+  },
+  "scripts": {
+    "prepare": "bun ./scripts/generate.js && biome check --write --unsafe",
+    "test": "bun test src/"
+  },
+  "dependencies": {
+    "utilities": "workspace:*"
+  },
+  "keywords": ["biome", "config", "linting", "formatting"],
+  "license": "MIT"
+}

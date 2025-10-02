@@ -28,6 +28,7 @@ import { Flex, styled, Text } from 'ui/src'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
@@ -138,6 +139,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
   )
 
   const { data: countryResult } = useFiatOnRampAggregatorGetCountryQuery()
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +buyFormState.selectedCountry, +selectedCountry
   useEffect(() => {
     if (!selectedCountry && countryResult) {
       setBuyFormState((state) => ({ ...state, selectedCountry: countryResult }))
@@ -227,7 +229,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
 
   const balance = useMemo(() => {
     const currentCurrencyId = currencyId(quoteCurrency?.currencyInfo?.currency)
-    return currentCurrencyId ? balancesById?.[currentCurrencyId.toLowerCase()] : undefined
+    return currentCurrencyId ? balancesById?.[normalizeCurrencyIdForMapLookup(currentCurrencyId)] : undefined
   }, [balancesById, quoteCurrency?.currencyInfo?.currency])
 
   const maxContainerWidth = PAGE_WRAPPER_MAX_WIDTH * 0.8

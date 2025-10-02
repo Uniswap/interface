@@ -125,21 +125,21 @@ function TokenTableHeader({
   const handleSortCategory = useSetSortMethod(category)
 
   return (
-    <Flex width="100%">
+    <ClickableHeaderRow onPress={handleSortCategory} group>
       <MouseoverTooltip
         disabled={!HEADER_DESCRIPTIONS[category]}
         size={TooltipSize.Small}
         text={HEADER_DESCRIPTIONS[category]}
         placement="top"
       >
-        <ClickableHeaderRow justifyContent="flex-end" onPress={handleSortCategory} group>
+        <Flex row gap="$gap4" alignItems="center">
           <HeaderArrow orderDirection={direction} size={14} opacity={isCurrentSortMethod ? 1 : 0} />
           <HeaderSortText active={isCurrentSortMethod} variant="body3">
             {HEADER_TEXT[category]}
           </HeaderSortText>
-        </ClickableHeaderRow>
+        </Flex>
       </MouseoverTooltip>
-    </Flex>
+    </ClickableHeaderRow>
   )
 }
 

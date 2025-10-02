@@ -17,17 +17,17 @@ import { TopAndBottomGradient } from 'uniswap/src/components/AnimatedNumber/TopA
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 // This ensures the color changes quicker after animating on web platforms. This could be
 // safe for mobile to be the same but was kept the same as this animation is fragile
-export const BALANCE_CHANGE_INDICATION_DURATION = isWeb ? ONE_SECOND_MS / 2 : ONE_SECOND_MS * 2
+export const BALANCE_CHANGE_INDICATION_DURATION = isWebPlatform ? ONE_SECOND_MS / 2 : ONE_SECOND_MS * 2
 
 export const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 export const NUMBER_WIDTH_ARRAY = [29, 20, 29, 29, 29, 29, 29, 29, 29, 29] // width of digits in a font
-const SPACE_SIZE = isWeb ? 0 : 2
+const SPACE_SIZE = isWebPlatform ? 0 : 2
 export const DIGIT_HEIGHT = 40 // matches heading2 lineHeight
 export const DIGIT_MAX_WIDTH = 29
 export const ADDITIONAL_WIDTH_FOR_ANIMATIONS = 8
@@ -73,6 +73,7 @@ const RollNumber = ({
     marginLeft: isRightToLeft ? -ADDITIONAL_WIDTH_FOR_ANIMATIONS : 0,
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +digit, currency
   useEffect(() => {
     const finishColor = shouldFadeDecimals && index > decimalSeparatorIndex ? colors.neutral3.val : colors.neutral1.val
     if (nextColor && index > commonPrefixLength - 1 && chars !== lastChars.current) {
@@ -106,7 +107,7 @@ const RollNumber = ({
 
   const numbers = NUMBER_ARRAY.map((char, idx) => {
     // Web doesn't like standard Animated.Text custom fonts but Text from Tamagui doesn't like color animations
-    return isWeb ? (
+    return isWebPlatform ? (
       <Text
         key={idx}
         allowFontScaling={false}
@@ -159,7 +160,7 @@ const RollNumber = ({
       </Animated.View>
     )
   } else {
-    return isWeb ? (
+    return isWebPlatform ? (
       <Text
         allowFontScaling={false}
         fontFamily="$heading"
@@ -248,7 +249,7 @@ function longestCommonPrefix(a: string, b: string): string {
 const SCREEN_WIDTH_BUFFER = 50
 
 // Used for initial layout larger than all screen sizes
-const MAX_DEVICE_WIDTH = isWeb ? undefined : 1000
+const MAX_DEVICE_WIDTH = isWebPlatform ? undefined : 1000
 
 type AnimatedNumberProps = {
   loadingPlaceholderText: string

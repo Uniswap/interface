@@ -2,17 +2,8 @@
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Web App",
   "extends": ["../../tsconfig.base.json"],
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.json",
-    "declarations.d.ts"
-  ],
-  "exclude": [
-    "node_modules",
-    ".output",
-    "wxt.config.ts"
-  ],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.json", "declarations.d.ts"],
+  "exclude": ["node_modules", ".output", "wxt.config.ts"],
   "references": [
     {
       "path": "../../packages/wallet"
@@ -33,17 +24,9 @@
   "compilerOptions": {
     "baseUrl": "./",
     "moduleResolution": "Bundler",
-    "lib": [
-      "dom",
-      "dom.iterable", 
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "jsx": "preserve",
     "resolveJsonModule": true,
-    "types": [
-      "chrome",
-      "jest",
-      "node"
-    ]
+    "types": ["chrome", "jest", "node"]
   }
 }

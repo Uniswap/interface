@@ -1,14 +1,16 @@
-import { AddressQRCode } from 'components/AddressQRCode'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { ChooseProvider } from 'components/ReceiveCryptoModal/ChooseProvider'
-import { ReceiveModalState, receiveCryptoModalStateAtom } from 'components/ReceiveCryptoModal/state'
-import { useAccount } from 'hooks/useAccount'
-import { useAtom } from 'jotai'
+import { ReceiveModalState } from 'components/ReceiveCryptoModal/types'
+import { useOpenReceiveCryptoModal } from 'components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { useConnectionStatus } from 'features/accounts/store/hooks'
+import { useModalInitialState } from 'hooks/useModalInitialState'
+import { useModalState } from 'hooks/useModalState'
 import ms from 'ms'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { useEffect, useState } from 'react'
 import { AnimateTransition } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ReceiveQRCode } from 'uniswap/src/components/ReceiveQRCode/ReceiveQRCode'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -16,14 +18,17 @@ import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function ReceiveCryptoModal() {
-  const account = useAccount()
-  const [modalState, setModalState] = useAtom(receiveCryptoModalStateAtom)
+  const modalState = useModalInitialState(ModalName.ReceiveCryptoModal)
+  const { isOpen, closeModal } = useModalState(ModalName.ReceiveCryptoModal)
+
+  const accountAddress = modalState?.modalState === ReceiveModalState.QR_CODE ? modalState.qrCodeAddress : undefined
+  const currentModalState = modalState?.modalState
 
   const [errorProvider, setErrorProvider] = useState<FORServiceProvider>()
   const [connectedProvider, setConnectedProvider] = useState<FORServiceProvider>()
 
   const onClose = useEvent(() => {
-    setModalState(undefined)
+    closeModal()
 
     // Delay the state reset until the modal finishes animating away:
     setTimeout(() => {
@@ -32,6 +37,9 @@ export function ReceiveCryptoModal() {
     }, ms('500ms'))
   })
 
+  const navigateToDefault = useOpenReceiveCryptoModal({
+    modalState: ReceiveModalState.DEFAULT,
+  })
   const goBack = useEvent(() => {
     // If we have a connected or error provider, clear those first
     if (connectedProvider || errorProvider) {
@@ -39,41 +47,45 @@ export function ReceiveCryptoModal() {
       setErrorProvider(undefined)
     } else {
       // Otherwise, navigate back to DEFAULT state (for QR_CODE -> DEFAULT)
-      setModalState(ReceiveModalState.DEFAULT)
+      navigateToDefault()
     }
   })
 
   // Close modal if account becomes disconnected - use useEffect to avoid infinite re-renders
+  const isDisconnected = useConnectionStatus('aggregate').isDisconnected
   useEffect(() => {
-    if (!account.address && modalState !== undefined) {
+    if (isDisconnected && isOpen) {
       logger.debug('ReceiveCryptoModal', 'ReceiveCryptoModal', 'Modal opened with invalid state. Closing modal.')
       onClose()
     }
-  }, [account.address, modalState, onClose])
+  }, [isDisconnected, isOpen, onClose])
 
-  if (!account.address) {
+  if (isDisconnected) {
     return null
   }
 
-  const currentIndex = modalState === ReceiveModalState.CEX_TRANSFER || modalState === ReceiveModalState.DEFAULT ? 0 : 1
+  const currentIndex =
+    currentModalState === ReceiveModalState.CEX_TRANSFER || currentModalState === ReceiveModalState.DEFAULT ? 0 : 1
 
   return (
-    <Modal name={ModalName.ReceiveCryptoModal} isModalOpen={modalState !== undefined} onClose={onClose} maxWidth={420}>
+    <Modal name={ModalName.ReceiveCryptoModal} isModalOpen={isOpen} onClose={onClose} maxWidth={420}>
       <ContentWrapper>
         <GetHelpHeader
-          goBack={modalState === ReceiveModalState.QR_CODE || connectedProvider || errorProvider ? goBack : undefined}
+          goBack={
+            currentModalState === ReceiveModalState.QR_CODE || connectedProvider || errorProvider ? goBack : undefined
+          }
           link={uniswapUrls.helpArticleUrls.transferCryptoHelp}
           closeModal={onClose}
         />
         <AnimateTransition currentIndex={currentIndex} animationType="forward">
           <ChooseProvider
-            providersOnly={modalState === ReceiveModalState.CEX_TRANSFER}
+            providersOnly={currentModalState === ReceiveModalState.CEX_TRANSFER}
             errorProvider={errorProvider}
             connectedProvider={connectedProvider}
             setErrorProvider={setErrorProvider}
             setConnectedProvider={setConnectedProvider}
           />
-          <AddressQRCode accountAddress={account.address} />
+          {accountAddress && <ReceiveQRCode address={accountAddress} />}
         </AnimateTransition>
       </ContentWrapper>
     </Modal>

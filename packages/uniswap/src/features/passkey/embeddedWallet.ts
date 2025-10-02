@@ -21,8 +21,9 @@ import {
   fetchWalletSigninRequest,
 } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { authenticatePasskey, registerPasskey } from 'uniswap/src/features/passkey/passkey'
-import { HexString } from 'uniswap/src/utils/hex'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 
 export {
@@ -74,7 +75,12 @@ export async function createNewEmbeddedWallet(unitag: string): Promise<HexString
         'createNewEmbeddedWallet',
         `New wallet created: ${createWalletResp.walletAddress}`,
       )
-      if (!isEVMAddress(createWalletResp.walletAddress)) {
+      const address = getValidAddress({
+        address: createWalletResp.walletAddress,
+        platform: Platform.EVM,
+        withEVMChecksum: true,
+      })
+      if (!address) {
         logger.error(new Error('Invalid address returned from create wallet response'), {
           tags: {
             file: 'embeddedWallet.ts',
@@ -83,11 +89,7 @@ export async function createNewEmbeddedWallet(unitag: string): Promise<HexString
         })
         return undefined
       }
-      const address = isEVMAddress(createWalletResp.walletAddress)
-      if (!address) {
-        throw new Error(`Invalid wallet address returned: ${createWalletResp.walletAddress}`)
-      }
-      return address
+      return address as HexString
     }
     return undefined
   } catch (error) {
@@ -113,7 +115,7 @@ export async function isSessionAuthenticatedForAction(action: Action): Promise<b
       action,
     })
     return challenge.challengeOptions.length === 0
-  } catch (error) {
+  } catch (_error) {
     return false
   }
 }

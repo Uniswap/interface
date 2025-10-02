@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { setHasShownMismatchToast } from 'uniswap/src/features/behaviorHistory/slice'
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useAccountEffect } from 'wagmi'
 
@@ -23,4 +23,4 @@ export function useOnDisconnectEffectWeb(): void {
 }
 
 // the extension doesn't have access to wagmi, so we need to use a noop effect
-export const useOnDisconnectEffect = !isExtension ? useOnDisconnectEffectWeb : (): void => {}
+export const useOnDisconnectEffect = !isExtensionApp ? useOnDisconnectEffectWeb : (): void => {}

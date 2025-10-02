@@ -4,7 +4,7 @@
 export function addMediaQueryListener(mediaQuery: MediaQueryList, listener: (event: MediaQueryListEvent) => void) {
   try {
     mediaQuery.addEventListener('change', listener)
-  } catch (e) {
+  } catch (_e) {
     mediaQuery.addListener(listener)
   }
 }
@@ -12,7 +12,7 @@ export function addMediaQueryListener(mediaQuery: MediaQueryList, listener: (eve
 export function removeMediaQueryListener(mediaQuery: MediaQueryList, listener: (event: MediaQueryListEvent) => void) {
   try {
     mediaQuery.removeEventListener('change', listener)
-  } catch (e) {
+  } catch (_e) {
     mediaQuery.removeListener(listener)
   }
 }

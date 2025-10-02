@@ -3,6 +3,7 @@ import {
   UniswapXTransaction,
   UniswapXTransactionStatus,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { TradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 
 import {
@@ -53,29 +54,37 @@ export default function extractRestUniswapXOrderDetails(transaction: UniswapXTra
       return null
     }
 
-    // using same logic as gql endpoint
-    if (orderType === UniswapXOrderType.LIMIT) {
-      return null
-    }
-
     const inputCurrencyId = buildCurrencyId(chainId, inputToken.address)
     const outputCurrencyId = buildCurrencyId(chainId, outputToken.address)
 
     return {
       id: orderHash,
-      routing: TradingApi.Routing.DUTCH_V2,
+      // TODO(PORT-429): update to only TradingApi.Routing.DUTCH_V2 once limit orders can be excluded from REST query
+      routing: orderType === UniswapXOrderType.LIMIT ? TradingApi.Routing.DUTCH_LIMIT : TradingApi.Routing.DUTCH_V2,
       chainId,
       orderHash,
       addedTime: Number(timestampMillis),
       status: mapUniswapXStatusToLocalTxStatus(status),
       from: offerer, // This transaction is not on-chain, so use the offerer address as the from address
-      typeInfo: {
-        type: TransactionType.Swap,
-        inputCurrencyId,
-        outputCurrencyId,
-        inputCurrencyAmountRaw: inputTokenAmount?.raw ?? '0',
-        outputCurrencyAmountRaw: outputTokenAmount?.raw ?? '0',
-      },
+      // TODO(PORT-429): remove special limit typeInfo once limit orders can be excluded from REST query
+      typeInfo:
+        orderType === UniswapXOrderType.LIMIT
+          ? {
+              type: TransactionType.Swap,
+              tradeType: TradeType.EXACT_INPUT, // Limit orders are always exact input
+              inputCurrencyId,
+              outputCurrencyId,
+              inputCurrencyAmountRaw: inputTokenAmount?.raw ?? '0',
+              expectedOutputCurrencyAmountRaw: outputTokenAmount?.raw ?? '0',
+              minimumOutputCurrencyAmountRaw: outputTokenAmount?.raw ?? '0', // For limit orders, expected and minimum are the same
+            }
+          : {
+              type: TransactionType.Swap,
+              inputCurrencyId,
+              outputCurrencyId,
+              inputCurrencyAmountRaw: inputTokenAmount?.raw ?? '0',
+              outputCurrencyAmountRaw: outputTokenAmount?.raw ?? '0',
+            },
       transactionOriginType: TransactionOriginType.Internal,
     }
   } catch (error) {

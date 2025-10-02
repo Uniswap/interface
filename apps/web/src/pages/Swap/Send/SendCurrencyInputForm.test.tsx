@@ -11,13 +11,6 @@ import { act, render, screen } from 'test-utils/render'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
-// mock lazy loaded icon
-vi.mock('nft/components/iconExports', () => ({
-  ReversedArrowsIcon: () => (
-    <svg width="20" height="20" viewBox="0 3 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" />
-  ),
-}))
-
 const mockMultichainContextValue = {
   reset: vi.fn(),
   setSelectedChainId: vi.fn(),

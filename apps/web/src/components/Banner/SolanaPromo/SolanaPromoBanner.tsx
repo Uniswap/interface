@@ -18,14 +18,13 @@ const BannerContainer = styled(TouchableArea, {
   borderRadius: '$rounded16',
   width: 260,
   height: SOLANA_PROMO_BANNER_HEIGHT,
-  borderWidth: 1,
-  borderColor: '$surface3',
   shadowColor: '$shadowColor',
   shadowOffset: { width: 0, height: 4 },
   shadowOpacity: 0.4,
   shadowRadius: 10,
   overflow: 'hidden',
   padding: '$spacing16',
+  backgroundColor: '$surface1',
 
   '$platform-web': {
     position: 'fixed',

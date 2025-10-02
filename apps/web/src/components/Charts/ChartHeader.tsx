@@ -1,15 +1,15 @@
 import { getProtocolColor, getProtocolName } from 'appGraphql/data/util'
+import { GraphQLApi } from '@universe/api'
 import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import { PROTOCOL_LEGEND_ELEMENT_ID } from 'components/Charts/types'
 import { UTCTimestamp } from 'lightweight-charts'
 import { ReactElement, ReactNode } from 'react'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, styled, Text } from 'ui/src'
-import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 
-type ChartHeaderProtocolInfo = { protocol: PriceSource; value?: number }
+type ChartHeaderProtocolInfo = { protocol: GraphQLApi.PriceSource; value?: number }
 
 const ProtocolLegendWrapper = styled(Flex, {
   position: 'absolute',

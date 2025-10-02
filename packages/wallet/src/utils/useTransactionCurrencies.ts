@@ -4,7 +4,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
 
 export function useTransactionCurrencies(args: {
   chainId?: UniverseChainId
@@ -31,7 +31,7 @@ function parseAddressesFromArgData(args?: Result): string[] {
       parseAddressesFromArgData(arg)
     }
 
-    if (typeof arg === 'string' && isEVMAddress(arg)) {
+    if (typeof arg === 'string' && isEVMAddressWithChecksum(arg)) {
       if (!addresses.includes(arg)) {
         addresses.push(arg)
       }

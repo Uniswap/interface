@@ -133,8 +133,7 @@ describe('useFreezeWhileSubmitting', () => {
   })
 
   it('should handle undefined values', () => {
-    // eslint-disable-next-line no-undef-init
-    let latestValue: string | undefined = undefined
+    let latestValue: string | undefined
     let isSubmitting = false
 
     const { result, rerender } = renderHook(() => useFreezeWhileSubmitting(latestValue, isSubmitting))

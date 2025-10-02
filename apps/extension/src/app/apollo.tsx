@@ -2,7 +2,7 @@ import { ApolloProvider } from '@apollo/client/react/context'
 import { PropsWithChildren } from 'react'
 import { localStorage } from 'redux-persist-webextension-storage'
 import { getReduxStore } from 'src/store/store'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Direct wallet import needed for Apollo client setup in extension context
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 
 // Extension local storage has 10 MB limit, so we want to be very careful to leave enough space for the redux store + any other data that we might want to store in local storage

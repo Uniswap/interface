@@ -25,21 +25,11 @@
     "service_worker": "background.js",
     "type": "module"
   },
-  "permissions": [
-    "alarms",
-    "notifications",
-    "sidePanel",
-    "storage",
-    "tabs"
-  ],
-  "host_permissions": [
-    "https://*.uniswap.org/*"
-  ],
+  "permissions": ["alarms", "notifications", "sidePanel", "storage", "tabs"],
+  "host_permissions": ["https://*.uniswap.org/*"],
   "externally_connectable": {
     "ids": [],
-    "matches": [
-      "THIS WILL BE OVERWRITTEN DURING THE BUILD PROCESS - See webpack.config.js"
-    ]
+    "matches": ["THIS WILL BE OVERWRITTEN DURING THE BUILD PROCESS - See webpack.config.js"]
   },
   "commands": {
     "_execute_action": {

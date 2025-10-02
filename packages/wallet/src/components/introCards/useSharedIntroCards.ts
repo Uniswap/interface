@@ -5,7 +5,7 @@ import { Person, ShieldCheck } from 'ui/src/components/icons'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'uniswap/src/features/unitags/constants'
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 import { CardType, IntroCardGraphicType, IntroCardProps } from 'wallet/src/components/introCards/IntroCard'
 import { selectHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/selectors'
 import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanActiveAddressClaimUnitag'
@@ -58,7 +58,7 @@ export function useSharedIntroCards({
           Icon: ShieldCheck,
         },
         title: t('onboarding.home.intro.backup.title'),
-        description: isExtension
+        description: isExtensionApp
           ? t('onboarding.home.intro.backup.description.extension')
           : t('onboarding.home.intro.backup.description.mobile'),
         cardType: CardType.Required,

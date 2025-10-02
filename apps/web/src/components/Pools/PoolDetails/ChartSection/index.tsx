@@ -3,6 +3,7 @@ import { gqlToCurrency, TimePeriod, toHistoryDuration } from 'appGraphql/data/ut
 import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { GraphQLApi } from '@universe/api'
 import { TickTooltipContent } from 'components/Charts/ActiveLiquidityChart/TickTooltip'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, refitChartContentAtom } from 'components/Charts/ChartModel'
@@ -35,7 +36,6 @@ import { ThemedText } from 'theme/components'
 import { EllipsisStyle } from 'theme/components/styles'
 import { Flex, SegmentedControl, Text, useMedia } from 'ui/src'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { parseRestProtocolVersion } from 'uniswap/src/data/rest/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -81,7 +81,7 @@ interface ChartSectionProps {
   poolData?: PoolData
   loading: boolean
   isReversed: boolean
-  chain?: Chain
+  chain?: GraphQLApi.Chain
 }
 
 /** Represents a variety of query result shapes, discriminated via additional `chartType` field. */
@@ -106,15 +106,15 @@ function usePDPChartState({
 }: {
   poolData: PoolData | undefined
   isReversed: boolean
-  chain: Chain
-  protocolVersion: ProtocolVersion
+  chain: GraphQLApi.Chain
+  protocolVersion: GraphQLApi.ProtocolVersion
 }): TDPChartState {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const [chartType, setChartType] = useState<PoolsDetailsChartType>(ChartType.VOLUME)
 
-  const isV2 = protocolVersion === ProtocolVersion.V2
-  const isV3 = protocolVersion === ProtocolVersion.V3
-  const isV4 = protocolVersion === ProtocolVersion.V4
+  const isV2 = protocolVersion === GraphQLApi.ProtocolVersion.V2
+  const isV3 = protocolVersion === GraphQLApi.ProtocolVersion.V3
+  const isV4 = protocolVersion === GraphQLApi.ProtocolVersion.V4
   const variables = {
     addressOrId: poolData?.idOrAddress ?? '',
     chain,
@@ -166,8 +166,8 @@ export default function ChartSection(props: ChartSectionProps) {
   const { setChartType, timePeriod, setTimePeriod, activeQuery } = usePDPChartState({
     poolData: props.poolData,
     isReversed: props.isReversed,
-    chain: props.chain ?? Chain.Ethereum,
-    protocolVersion: props.poolData?.protocolVersion ?? ProtocolVersion.V3,
+    chain: props.chain ?? GraphQLApi.Chain.Ethereum,
+    protocolVersion: props.poolData?.protocolVersion ?? GraphQLApi.ProtocolVersion.V3,
   })
 
   const refitChartContent = useAtomValue(refitChartContentAtom)
@@ -238,7 +238,8 @@ export default function ChartSection(props: ChartSectionProps) {
     }
   }, [activeQuery.chartType, timePeriod, setTimePeriod])
 
-  const disabledChartOption = props.poolData?.protocolVersion === ProtocolVersion.V2 ? ChartType.LIQUIDITY : undefined
+  const disabledChartOption =
+    props.poolData?.protocolVersion === GraphQLApi.ProtocolVersion.V2 ? ChartType.LIQUIDITY : undefined
 
   return (
     <Flex data-testid="pdp-chart-container">

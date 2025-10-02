@@ -11,7 +11,7 @@ import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapT
 import { type UniswapXTrade, UnwrapTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { ETH, WETH } from 'uniswap/src/test/fixtures'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
-import { ensure0xHex } from 'uniswap/src/utils/hex'
+import { ensure0xHex } from 'utilities/src/addresses/hex'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
 import {

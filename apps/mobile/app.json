@@ -9,11 +9,6 @@
         "CFBundleAllowMixedLocalizations": true
       }
     },
-    "plugins": [
-      "expo-localization",
-      "expo-camera",
-      "expo-local-authentication",
-      "expo-secure-store"
-    ]
+    "plugins": ["expo-localization", "expo-camera", "expo-local-authentication", "expo-secure-store"]
   }
 }

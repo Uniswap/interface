@@ -24,7 +24,6 @@ export function DisplayCurrentPrice({ price, isLoading }: { price?: Price<Curren
             <BaseQuoteFiatAmount
               variant="subheading1"
               condenseConversion
-              showFiatAmount={false}
               price={price}
               base={price.baseCurrency}
               quote={price.quoteCurrency}

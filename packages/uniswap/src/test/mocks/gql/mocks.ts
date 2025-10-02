@@ -1,11 +1,5 @@
+import { GraphQLApi } from '@universe/api'
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import {
-  Currency,
-  ProtectionResult,
-  SafetyLevel,
-  SwapOrderStatus,
-  TransactionStatus,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQL_CHAINS } from 'uniswap/src/test/fixtures'
 import { faker, MAX_FIXTURE_TIMESTAMP } from 'uniswap/src/test/shared'
 import { randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
@@ -16,12 +10,12 @@ export const mocks = {
     description: () => faker.lorem.sentence(),
     logoUrl: () => faker.image.imageUrl(),
     name: () => faker.lorem.word(),
-    safetyLevel: () => SafetyLevel.Verified,
+    safetyLevel: () => GraphQLApi.SafetyLevel.Verified,
     tokens: () => new Array(4),
     markets: () => null,
   },
   TokenProjectMarket: {
-    currency: () => Currency.Eth,
+    currency: () => GraphQLApi.Currency.Eth,
     id: () => faker.datatype.uuid(),
     tokenProject: () => ({ id: faker.datatype.uuid(), tokens: [] }),
     priceHistory: () => new Array(2),
@@ -32,7 +26,7 @@ export const mocks = {
     chain: () => randomChoice(GQL_CHAINS),
     decimals: () => 6,
     symbol: () => faker.lorem.word(),
-    protectionInfo: () => ({ result: randomEnumValue(ProtectionResult), attackTypes: [] }),
+    protectionInfo: () => ({ result: randomEnumValue(GraphQLApi.ProtectionResult), attackTypes: [] }),
     feeData: () => ({ buyFeeBps: '', sellFeeBps: '' }),
   },
   Amount: {
@@ -57,7 +51,7 @@ export const mocks = {
   },
   TransactionDetails: {
     id: () => faker.datatype.uuid(),
-    status: () => randomEnumValue(TransactionStatus),
+    status: () => randomEnumValue(GraphQLApi.TransactionStatus),
     to: () => faker.finance.ethereumAddress(),
     from: () => faker.finance.ethereumAddress(),
     nonce: () => faker.datatype.number(),
@@ -68,7 +62,7 @@ export const mocks = {
     id: () => faker.datatype.uuid(),
     offerer: () => faker.finance.ethereumAddress(),
     hash: () => faker.datatype.uuid(),
-    status: () => randomEnumValue(SwapOrderStatus),
+    status: () => randomEnumValue(GraphQLApi.SwapOrderStatus),
   },
   ApplicationContract: {
     id: () => faker.datatype.uuid(),

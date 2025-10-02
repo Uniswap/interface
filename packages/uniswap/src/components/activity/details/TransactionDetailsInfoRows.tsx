@@ -197,7 +197,7 @@ function useTransactionDetailsInfoRows({
         if (address) {
           specificRows.push(
             <InfoRow key="contract" label={t('common.text.contract')}>
-              <Text variant="body3">{shortenAddress(address)}</Text>
+              <Text variant="body3">{shortenAddress({ address })}</Text>
               <TouchableArea
                 onPress={async (): Promise<void> => {
                   await openUri({
@@ -293,7 +293,7 @@ function TransactionOfframpRow({ transactionId }: { transactionId?: string }): J
           )
         }}
       >
-        <Text variant="body3">{shortenAddress(transactionId)}</Text>
+        <Text variant="body3">{shortenAddress({ address: transactionId })}</Text>
         <CopyAlt color="$neutral3" size="$icon.16" />
       </TouchableArea>
     </InfoRow>

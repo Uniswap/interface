@@ -9,7 +9,7 @@ import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/f
 import { usePriceDifference } from 'uniswap/src/features/transactions/swap/hooks/usePriceDifference'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 export function SwapFormCurrencyOutputPanel(): JSX.Element {
   const { t } = useTranslation()
@@ -41,7 +41,7 @@ export function SwapFormCurrencyOutputPanel(): JSX.Element {
     onOutputSelectionChange,
     onSetExactAmountOutput,
     onShowTokenSelectorOutput,
-    showTemporaryFoTWarning,
+    showTemporaryExactOutputUnavailableWarning,
   } = useSwapFormScreenStore((s) => ({
     outputRef: s.outputRef,
     focusOnCurrencyField: s.focusOnCurrencyField,
@@ -66,7 +66,7 @@ export function SwapFormCurrencyOutputPanel(): JSX.Element {
     onOutputSelectionChange: s.onOutputSelectionChange,
     onSetExactAmountOutput: s.onSetExactAmountOutput,
     onShowTokenSelectorOutput: s.onShowTokenSelectorOutput,
-    showTemporaryFoTWarning: s.showTemporaryFoTWarning,
+    showTemporaryExactOutputUnavailableWarning: s.showTemporaryExactOutputUnavailableWarning,
   }))
 
   const focusedStyles = useCurrencyInputFocusedStyle(focusOnCurrencyField === CurrencyField.OUTPUT)
@@ -76,7 +76,7 @@ export function SwapFormCurrencyOutputPanel(): JSX.Element {
       <Flex borderRadius="$rounded20" borderWidth="$spacing1" {...focusedStyles}>
         <CurrencyInputPanel
           ref={outputRef}
-          headerLabel={isWeb ? t('common.button.buy') : undefined}
+          headerLabel={isWebPlatform ? t('common.button.buy') : undefined}
           currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
           currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
           currencyField={CurrencyField.OUTPUT}
@@ -93,7 +93,7 @@ export function SwapFormCurrencyOutputPanel(): JSX.Element {
           value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
           valueIsIndicative={!exactFieldIsOutput && trade.indicativeTrade && !trade.trade}
           tokenColor={tokenColor}
-          onPressDisabled={isBridge ? undefined : showTemporaryFoTWarning}
+          onPressDisabled={isBridge ? undefined : showTemporaryExactOutputUnavailableWarning}
           onPressIn={onFocusOutput}
           onSelectionChange={onOutputSelectionChange}
           onSetExactAmount={onSetExactAmountOutput}

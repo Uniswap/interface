@@ -340,8 +340,8 @@ export function useLiquidityBarData({
         return
       }
 
-      let activeRangePercentage: number | undefined = undefined
-      let activeRangeIndex: number | undefined = undefined
+      let activeRangePercentage: number | undefined
+      let activeRangeIndex: number | undefined
 
       const barData: LiquidityBarData[] = []
       for (let index = 0; index < ticksProcessed.length; index++) {

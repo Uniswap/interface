@@ -17,7 +17,7 @@ import { ViewOnlyModal } from 'uniswap/src/features/transactions/modals/ViewOnly
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isInterface, isMobileApp } from 'utilities/src/platform'
+import { isMobileApp, isWebApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export interface TransactionSettingsProps {
@@ -73,7 +73,7 @@ export function TransactionSettings({
   const onPopoverOpenChange = useEvent((open: boolean): void => {
     // Only close on interface because SwapSettings are rendered in a modal on mobile/extension
     // and when click is triggered inside extension Modal it causes onOpenChange to trigger
-    if (!open && isInterface) {
+    if (!open && isWebApp) {
       onCloseSettingsModal()
     }
   })
@@ -90,9 +90,9 @@ export function TransactionSettings({
 
   const isViewOnlyWallet = account?.accountType === AccountType.Readonly
 
-  const topAlignment = adjustTopAlignment ? (isInterface ? -38 : 6) : 0
+  const topAlignment = adjustTopAlignment ? (isWebApp ? -38 : 6) : 0
   const rightAlignment = adjustRightAlignment ? (isMobileApp ? 24 : 4) : 0
-  const popoverOffset = isInterface
+  const popoverOffset = isWebApp
     ? { crossAxis: adjustRightAlignment ? 0 : 8, mainAxis: adjustTopAlignment ? 0 : 8 }
     : undefined
 

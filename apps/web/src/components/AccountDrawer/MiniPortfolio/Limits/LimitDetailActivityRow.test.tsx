@@ -2,7 +2,6 @@ import 'test-utils/tokens/mocks'
 
 import { WETH9 } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
-import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { LimitDetailActivityRow } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitDetailActivityRow'
 import { render, screen } from 'test-utils/render'
 import { DAI } from 'uniswap/src/constants/tokens'
@@ -47,26 +46,11 @@ const mockOrderDetails: UniswapXOrderDetails = {
   transactionOriginType: TransactionOriginType.Internal,
 }
 
-const mockOrder: Activity = {
-  id: '0x123',
-  hash: '0x123',
-  chainId: UniverseChainId.Mainnet,
-  status: TransactionStatus.Pending,
-  timestamp: 1,
-  title: 'Limit pending',
-  from: '0x456',
-  offchainOrderDetails: mockOrderDetails,
-  currencies: [DAI, WETH9[UniverseChainId.Mainnet]],
-}
-
 describe('LimitDetailActivityRow', () => {
-  it('should not render with no offchain order details', () => {
+  it('should not render with invalid order details', () => {
+    const invalidOrder = { ...mockOrderDetails, typeInfo: undefined } as any
     const { container } = render(
-      <LimitDetailActivityRow
-        order={{ ...mockOrder, offchainOrderDetails: undefined }}
-        onToggleSelect={vi.fn()}
-        selected={false}
-      />,
+      <LimitDetailActivityRow order={invalidOrder} onToggleSelect={vi.fn()} selected={false} />,
     )
     expect(container.firstChild?.firstChild?.firstChild).toBeNull()
   })
@@ -76,7 +60,9 @@ describe('LimitDetailActivityRow', () => {
     // This is from tamagui's Checkbox component`
     vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    const { container } = render(<LimitDetailActivityRow onToggleSelect={vi.fn()} selected={false} order={mockOrder} />)
+    const { container } = render(
+      <LimitDetailActivityRow onToggleSelect={vi.fn()} selected={false} order={mockOrderDetails} />,
+    )
     expect(container.firstChild).toMatchSnapshot()
     expect(screen.getByText('when 0.00042 WETH/DAI')).toBeInTheDocument()
   })

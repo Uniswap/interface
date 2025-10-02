@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { ActivityUpdateTransactionType, OnActivityUpdate } from 'state/activity/types'
 import { usePendingUniswapXOrders } from 'state/transactions/hooks'
 import { OrderQueryResponse, UniswapXBackendOrder } from 'types/uniswapx'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import {
   ExactInputSwapTransactionInfo,
@@ -60,8 +61,27 @@ async function fetchStatuses({
   return statuses.orders
 }
 
-export async function fetchOpenLimitOrders(account: string): Promise<UniswapXBackendOrder[]> {
-  const result = await global.fetch(`${UNISWAP_GATEWAY_DNS_URL}/limit-orders?swapper=${account}&orderStatus=open`)
+export async function fetchOpenLimitOrders(params: {
+  account?: string
+  orderHashes?: string[]
+}): Promise<UniswapXBackendOrder[]> {
+  let url = `${UNISWAP_GATEWAY_DNS_URL}${uniswapUrls.limitOrderStatusesPath}`
+  const queryParams: string[] = []
+
+  if (params.account) {
+    queryParams.push(`swapper=${params.account}`)
+    queryParams.push('orderStatus=open')
+  }
+
+  if (params.orderHashes && params.orderHashes.length > 0) {
+    queryParams.push(`orderHashes=${params.orderHashes.join(',')}`)
+  }
+
+  if (queryParams.length > 0) {
+    url += `?${queryParams.join('&')}`
+  }
+
+  const result = await global.fetch(url)
   const statuses = (await result.json()) as OrderQueryResponse
   return statuses.orders
 }

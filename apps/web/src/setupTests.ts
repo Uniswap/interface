@@ -1,9 +1,15 @@
-/* eslint-disable no-console */
+// biome-ignore-all lint/suspicious/noConsole: test file
 import '@testing-library/jest-dom' // jest custom assertions
 import 'jest-styled-components' // adds style diffs to snapshot tests
 import 'polyfills' // add polyfills
 
 import { createPopper } from '@popperjs/core'
+import {
+  BaseWalletAdapter,
+  SupportedTransactionVersions,
+  WalletName,
+  WalletReadyState,
+} from '@solana/wallet-adapter-base'
 import { useWeb3React } from '@web3-react/core'
 import { config as loadEnv } from 'dotenv'
 import failOnConsole from 'jest-fail-on-console'
@@ -19,6 +25,60 @@ import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { TextDecoder, TextEncoder } from 'util'
 
 loadEnv()
+
+// Mock @solana/wallet-adapter-coinbase to prevent window access errors
+vi.mock('@solana/wallet-adapter-coinbase', () => ({
+  CoinbaseWalletName: 'Coinbase Wallet',
+  CoinbaseWalletAdapter: class MockCoinbaseWalletAdapter extends BaseWalletAdapter {
+    name = 'Coinbase Wallet' as WalletName
+    url = 'https://www.coinbase.com/wallet'
+    icon = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAyNCIgaGVpZ2h0PSIxMDI0Ij48L3N2Zz4='
+    supportedTransactionVersions = new Set(['legacy', 0]) as SupportedTransactionVersions
+
+    private _connecting = false
+    private _publicKey = null
+    private _readyState = WalletReadyState.NotDetected // Use string instead of enum to avoid async import
+
+    constructor(_config = {}) {
+      super()
+      // Mock constructor - no actual initialization needed
+    }
+
+    get publicKey() {
+      return this._publicKey
+    }
+    get connecting() {
+      return this._connecting
+    }
+    get readyState() {
+      return this._readyState
+    }
+    get connected() {
+      return !!this._publicKey
+    }
+
+    async connect() {
+      this._connecting = true
+      // Mock connection logic without actual browser APIs
+      this._connecting = false
+    }
+    async disconnect() {
+      this._publicKey = null
+    }
+    async sendTransaction(): Promise<string> {
+      throw new Error('Mock adapter cannot send transactions')
+    }
+    async signTransaction() {
+      throw new Error('Mock adapter cannot sign transactions')
+    }
+    async signAllTransactions() {
+      throw new Error('Mock adapter cannot sign transactions')
+    }
+    async signMessage() {
+      throw new Error('Mock adapter cannot sign messages')
+    }
+  },
+}))
 
 vi.mock('react-native-reanimated', async () => {
   const mock = await vi.importActual<any>('react-native-reanimated/src/mock')
@@ -44,6 +104,7 @@ setupi18n()
 globalThis.origin = 'https://app.uniswap.org'
 
 // Polyfill browser APIs (jest is a node.js environment):
+// biome-ignore lint/complexity/noUselessLoneBlockStatements: block used to scope polyfill assignments
 {
   window.open = vi.fn()
   window.getComputedStyle = vi.fn()
@@ -155,10 +216,10 @@ vi.mock('utilities/src/platform', async () => {
   const actual = await vi.importActual('utilities/src/platform')
   return {
     ...actual,
-    isWeb: true,
-    isInterface: true,
+    isWebPlatform: true,
+    isWebApp: true,
     isMobileWeb: false,
-    isExtension: false,
+    isExtensionApp: false,
   }
 })
 

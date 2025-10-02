@@ -1,15 +1,10 @@
 import { useApolloClient } from '@apollo/client'
+import { GraphQLApi } from '@universe/api'
 import dayjs from 'dayjs'
 import { useEffect, useMemo } from 'react'
 import { View } from 'react-native'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import {
-  TransactionHistoryUpdaterQueryResult,
-  TransactionListQuery,
-  useTransactionHistoryUpdaterQuery,
-  useTransactionListLazyQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { parseDataResponseToTransactionDetails } from 'uniswap/src/features/activity/parseRestResponse'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { selectLastTxNotificationUpdate } from 'uniswap/src/features/notifications/slice/selectors'
@@ -45,14 +40,14 @@ export function TransactionHistoryUpdater(): JSX.Element | null {
   // Poll at different intervals to reduce requests made for non active accounts.
 
   const activeAddresses = activeAccountAddress ?? []
-  const { data: activeAccountData } = useTransactionHistoryUpdaterQuery({
+  const { data: activeAccountData } = GraphQLApi.useTransactionHistoryUpdaterQuery({
     variables: { addresses: activeAddresses, chains: gqlChains },
     pollInterval: PollingInterval.KindaFast,
     fetchPolicy: 'network-only', // Ensure latest data.
     skip: activeAddresses.length === 0,
   })
 
-  const { data: nonActiveAccountData } = useTransactionHistoryUpdaterQuery({
+  const { data: nonActiveAccountData } = GraphQLApi.useTransactionHistoryUpdaterQuery({
     variables: { addresses: nonActiveAccountAddresses, chains: gqlChains },
     pollInterval: PollingInterval.Normal,
     fetchPolicy: 'network-only', // Ensure latest data.
@@ -89,7 +84,7 @@ function AddressTransactionHistoryUpdater({
   address: string
   activities: NonNullable<
     NonNullable<
-      NonNullable<NonNullable<TransactionHistoryUpdaterQueryResult['data']>['portfolios']>[0]
+      NonNullable<NonNullable<GraphQLApi.TransactionHistoryUpdaterQueryResult['data']>['portfolios']>[0]
     >['assetActivities']
   >
 }): JSX.Element | null {
@@ -106,7 +101,7 @@ function AddressTransactionHistoryUpdater({
   // don't show notifications on spam tokens if setting enabled
   const hideSpamTokens = useHideSpamTokensSetting()
 
-  const localTransactions = useSelectAddressTransactions(address)
+  const localTransactions = useSelectAddressTransactions({ evmAddress: address })
 
   useEffect(() => {
     batch(async () => {
@@ -178,7 +173,7 @@ export function useFetchAndDispatchReceiveNotification(): (
   lastTxNotificationUpdateTimestamp: number | undefined,
   hideSpamTokens: boolean,
 ) => Promise<void> {
-  const [fetchFullTransactionData] = useTransactionListLazyQuery()
+  const [fetchFullTransactionData] = GraphQLApi.useTransactionListLazyQuery()
   const dispatch = useDispatch()
   const { gqlChains } = useEnabledChains()
 
@@ -213,7 +208,7 @@ export function getReceiveNotificationFromData({
   lastTxNotificationUpdateTimestamp,
   hideSpamTokens = false,
 }: {
-  data?: TransactionListQuery
+  data?: GraphQLApi.TransactionListQuery
   address: Address
   lastTxNotificationUpdateTimestamp?: number
   hideSpamTokens?: boolean

@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
 function getTokenMetadataDisplayTypeSafe(orderBy: ExploreOrderBy): TokenMetadataDisplayType | null {
   try {
     return getTokenMetadataDisplayType(orderBy)
-  } catch (e) {
+  } catch (_e) {
     return null
   }
 }

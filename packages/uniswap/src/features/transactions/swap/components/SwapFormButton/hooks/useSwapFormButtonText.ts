@@ -3,7 +3,7 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useInterfaceWrap'
@@ -29,7 +29,7 @@ export const useSwapFormButtonText = (): string => {
   const isAmountSelectionInvalid = useIsAmountSelectionInvalid()
 
   const { isDisconnected } = useConnectionStatus()
-  const { isMissingPlatformWallet, expectedPlatform } = useIsMissingPlatformWallet()
+  const isMissingPlatformWallet = useIsMissingPlatformWallet(currencies[CurrencyField.INPUT]?.currency.chainId)
 
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const { insufficientBalanceWarning, blockingWarning, insufficientGasFundsWarning } = useParsedSwapWarnings()
@@ -58,7 +58,7 @@ export const useSwapFormButtonText = (): string => {
   }
 
   if (isMissingPlatformWallet) {
-    return t('common.connectTo', { platform: expectedPlatform === Platform.SVM ? 'Solana' : 'Ethereum' })
+    return t('common.connectTo', { platform: isSVMChain(chainId) ? 'Solana' : 'Ethereum' })
   }
 
   if (blockingWarning?.buttonText) {

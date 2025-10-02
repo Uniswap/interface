@@ -5,7 +5,7 @@ import {
   LiquidityPositionRangeChartLoader,
   WrappedLiquidityPositionRangeChart,
 } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
-import { AdaptiveDropdown } from 'components/DropdownSelector/AdaptiveDropdown'
+import { AdaptiveDropdown } from 'components/Dropdowns/AdaptiveDropdown'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
 import {
   LiquidityPositionFeeStats,
@@ -38,8 +38,7 @@ import { Plus } from 'ui/src/components/icons/Plus'
 import { RightArrow } from 'ui/src/components/icons/RightArrow'
 import { zIndexes } from 'ui/src/theme/zIndexes'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
-import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
-import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
+import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -52,7 +51,6 @@ import { togglePositionVisibility } from 'uniswap/src/features/visibility/slice'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
-import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
 
 export function LiquidityPositionCardLoader() {
@@ -231,6 +229,8 @@ export function LiquidityPositionCard({
   showMigrateButton = false,
   isVisible = true,
   disabled = false,
+  isLast = false,
+  onMenuOpenChange,
 }: {
   liquidityPosition: PositionInfo
   isMiniVersion?: boolean
@@ -238,9 +238,9 @@ export function LiquidityPositionCard({
   showMigrateButton?: boolean
   isVisible?: boolean
   disabled?: boolean
+  isLast?: boolean
+  onMenuOpenChange?: (isOpen: boolean) => void
 }) {
-  const { value: isOpenContextMenu, setTrue: openContextMenu, setFalse: closeContextMenu } = useBooleanState(false)
-
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const isTouchDevice = useIsTouchDevice()
   const [priceInverted, setPriceInverted] = useState(false)
@@ -331,15 +331,7 @@ export function LiquidityPositionCard({
   }, [liquidityPosition, baseCurrency, priceInverted])
 
   return (
-    <ContextMenu
-      menuItems={dropdownOptions}
-      isPlacementRight={!isMiniVersion}
-      disabled={disabled}
-      triggerMode={ContextMenuTriggerMode.Secondary}
-      isOpen={isOpenContextMenu}
-      openMenu={openContextMenu}
-      closeMenu={closeContextMenu}
-    >
+    <>
       {isMiniVersion ? (
         <MiniPositionCard
           menuOptions={dropdownOptions}
@@ -351,6 +343,8 @@ export function LiquidityPositionCard({
           tickSpacing={liquidityPosition.tickSpacing}
           tickLower={liquidityPosition.tickLower}
           tickUpper={liquidityPosition.tickUpper}
+          isLast={isLast}
+          onMenuOpenChange={onMenuOpenChange}
         />
       ) : (
         <Flex
@@ -430,10 +424,10 @@ export function LiquidityPositionCard({
                 : undefined
             }
           />
-          {!isTouchDevice && !disabled && <PositionDropdownMoreMenu menuOptions={dropdownOptions} />}
+          {!isTouchDevice && !disabled && <PositionDropdownMoreMenu menuOptions={dropdownOptions} isLast={isLast} />}
         </Flex>
       )}
-    </ContextMenu>
+    </>
   )
 }
 
@@ -447,6 +441,8 @@ function MiniPositionCard({
   tickLower,
   tickUpper,
   disabled,
+  isLast = false,
+  onMenuOpenChange,
 }: {
   positionInfo: PositionInfo
   menuOptions: MenuOptionItem[]
@@ -457,6 +453,8 @@ function MiniPositionCard({
   tickLower?: number
   tickUpper?: number
   disabled?: boolean
+  isLast?: boolean
+  onMenuOpenChange?: (isOpen: boolean) => void
 }) {
   const { t } = useTranslation()
   const [pricesInverted, setPricesInverted] = useState(false)
@@ -524,7 +522,7 @@ function MiniPositionCard({
       ) : (
         <Text variant="body4">{t('common.fullRange')}</Text>
       )}
-      <PositionDropdownMoreMenu menuOptions={menuOptions} />
+      <PositionDropdownMoreMenu menuOptions={menuOptions} isLast={isLast} onOpenChange={onMenuOpenChange} />
     </Flex>
   )
 }
@@ -542,8 +540,21 @@ const PositionDetailsMenuButton = styled(Flex, {
   },
 })
 
-function PositionDropdownMoreMenu({ menuOptions }: { menuOptions: MenuOptionItem[] }) {
+function PositionDropdownMoreMenu({
+  menuOptions,
+  isLast,
+  onOpenChange,
+}: {
+  menuOptions: MenuOptionItem[]
+  isLast: boolean
+  onOpenChange?: (isOpen: boolean) => void
+}) {
   const [isOpen, setIsOpen] = useState(false)
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open)
+    onOpenChange?.(open)
+  }
 
   const dropdownTrigger = (
     <Flex
@@ -551,7 +562,7 @@ function PositionDropdownMoreMenu({ menuOptions }: { menuOptions: MenuOptionItem
       onPress={(event) => {
         event.preventDefault()
         event.stopPropagation()
-        setIsOpen(!isOpen)
+        handleOpenChange(!isOpen)
       }}
     >
       <PositionDetailsMenuButton $group-hover={activeStyle} open={isOpen} onPress={() => {}}>
@@ -566,8 +577,9 @@ function PositionDropdownMoreMenu({ menuOptions }: { menuOptions: MenuOptionItem
         alignRight
         allowFlip
         positionFixed
+        forceFlipUp={isLast}
         isOpen={isOpen}
-        toggleOpen={setIsOpen}
+        toggleOpen={handleOpenChange}
         trigger={dropdownTrigger}
         dropdownStyle={{
           p: 0,
@@ -577,7 +589,7 @@ function PositionDropdownMoreMenu({ menuOptions }: { menuOptions: MenuOptionItem
           borderWidth: 0,
         }}
       >
-        <MenuContent items={menuOptions} handleCloseMenu={() => setIsOpen(false)} />
+        <MenuContent items={menuOptions} handleCloseMenu={() => handleOpenChange(false)} />
       </AdaptiveDropdown>
     </Flex>
   )

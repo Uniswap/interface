@@ -1,5 +1,5 @@
+import { GraphQLApi } from '@universe/api'
 import { ETH_LOGO, ZKSYNC_LOGO } from 'ui/src/assets'
-import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
@@ -26,7 +26,7 @@ export const ZKSYNC_CHAIN_INFO = {
   platform: Platform.EVM,
   assetRepoNetworkName: 'zksync',
   backendChain: {
-    chain: BackendChainId.Zksync as GqlChainId,
+    chain: GraphQLApi.Chain.Zksync as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },

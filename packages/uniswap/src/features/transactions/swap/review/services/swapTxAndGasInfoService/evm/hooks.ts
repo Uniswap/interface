@@ -3,7 +3,7 @@ import { Signer } from 'ethers/lib/ethers'
 import { useCallback } from 'react'
 import { useSigner } from 'uniswap/src/contexts/UniswapContext'
 import { signTypedData } from 'uniswap/src/features/transactions/signing'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 async function getSignature(permitData: TradingApi.NullablePermit, signer: Signer): Promise<string | undefined> {
   const { domain, types, values } = permitData || {}
@@ -36,5 +36,5 @@ export function usePresignPermit(): PresignPermitFn | undefined {
   // we can sign permits when preparing SwapTxAndGasInfo, which allows earlier access to
   // calldata / simulation results. In dapp environments (interface), if a permit is required,
   // signing and calldata fetching are deferred until the swap execution phase.
-  return isInterface ? undefined : presignPermit
+  return isWebApp ? undefined : presignPermit
 }

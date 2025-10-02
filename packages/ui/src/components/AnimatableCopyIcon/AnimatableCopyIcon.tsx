@@ -3,7 +3,7 @@ import { TransitionItem } from 'ui/src/animations/components/AnimatePresencePage
 import { CheckmarkCircle } from 'ui/src/components/icons/CheckmarkCircle'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { Flex } from 'ui/src/components/layout'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 export interface CopyIconProps {
   isAnimated?: boolean
@@ -27,7 +27,7 @@ export interface CopyIconProps {
  * @returns Animatable Copy Icon component
  */
 export function AnimatableCopyIcon({
-  isAnimated = isInterface,
+  isAnimated = isWebApp,
   isCopied,
   size,
   textColor = '$neutral2',

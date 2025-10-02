@@ -1,21 +1,16 @@
+import { GraphQLApi } from '@universe/api'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { ChartType } from 'components/Charts/utils'
 import { ChartQueryResult, DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo } from 'react'
-import {
-  Chain,
-  HistoryDuration,
-  TimestampedPoolPrice,
-  usePoolPriceHistoryQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { hashKey } from 'utilities/src/reactQuery/hashKey'
 import { removeOutliers } from 'utils/prices'
 
 export type PDPChartQueryVars = {
   addressOrId?: string
-  chain: Chain
-  duration: HistoryDuration
+  chain: GraphQLApi.Chain
+  duration: GraphQLApi.HistoryDuration
   isV2: boolean
   isV3: boolean
   isV4: boolean
@@ -30,7 +25,7 @@ export function usePoolPriceChartData({
   variables?: PDPChartQueryVars
   priceInverted: boolean
 }): ChartQueryResult<PriceChartData, ChartType.PRICE> {
-  const { data, loading } = usePoolPriceHistoryQuery({
+  const { data, loading } = GraphQLApi.usePoolPriceHistoryQuery({
     variables: variables as PDPChartQueryVarsWithAddressOrId,
     skip: !variables?.addressOrId,
   })
@@ -39,7 +34,7 @@ export function usePoolPriceChartData({
 
     const entries =
       priceHistory
-        ?.filter((price): price is TimestampedPoolPrice => price !== undefined)
+        ?.filter((price): price is GraphQLApi.TimestampedPoolPrice => price !== undefined)
         .map((price) => {
           const value = priceInverted ? price.token0Price : price.token1Price
 

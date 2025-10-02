@@ -14,24 +14,24 @@ function mapDataByTimestamp({
   const dataByTime: Record<number, Record<string, number>> = {}
   v2Data?.forEach((v2Point) => {
     const timestamp = Number(v2Point.timestamp)
-    dataByTime[timestamp] = { ['v2']: Number(v2Point.value), ['v3']: 0, ['v4']: 0 }
+    dataByTime[timestamp] = { v2: Number(v2Point.value), v3: 0, v4: 0 }
   })
   v3Data?.forEach((v3Point) => {
     const timestamp = Number(v3Point.timestamp)
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!dataByTime[timestamp]) {
-      dataByTime[timestamp] = { ['v2']: 0, ['v3']: Number(v3Point.value), ['v4']: 0 }
+      dataByTime[timestamp] = { v2: 0, v3: Number(v3Point.value), v4: 0 }
     } else {
-      dataByTime[timestamp]['v3'] = Number(v3Point.value)
+      dataByTime[timestamp].v3 = Number(v3Point.value)
     }
   })
   v4Data?.forEach((v4Point) => {
     const timestamp = Number(v4Point.timestamp)
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (!dataByTime[timestamp]) {
-      dataByTime[timestamp] = { ['v2']: 0, ['v3']: 0, ['v4']: Number(v4Point.value) }
+      dataByTime[timestamp] = { v2: 0, v3: 0, v4: Number(v4Point.value) }
     } else {
-      dataByTime[timestamp]['v4'] = Number(v4Point.value)
+      dataByTime[timestamp].v4 = Number(v4Point.value)
     }
   })
   return dataByTime

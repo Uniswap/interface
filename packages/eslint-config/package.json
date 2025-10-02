@@ -7,8 +7,10 @@
   "bugs": "https://github.com/Uniswap/eslint-config/issues",
   "license": "MIT",
   "scripts": {
-    "format": "biome check . --linter-enabled=false",
-    "lint": "eslint .",
+    "lint:biome": "biome check --error-on-warnings .",
+    "lint:biome:fix": "biome check . --write --unsafe",
+    "lint": "bun run lint:biome && eslint .",
+    "lint:fix": "bun run lint:biome:fix && eslint . --fix",
     "test": "jest"
   },
   "main": "base.js",

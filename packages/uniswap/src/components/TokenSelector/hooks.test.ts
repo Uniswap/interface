@@ -3,6 +3,7 @@ import { ApolloError } from '@apollo/client'
 import { ConnectError } from '@connectrpc/connect'
 import { UseQueryResult } from '@tanstack/react-query'
 import { TokenRankingsResponse, TokenRankingsStat } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { GraphQLApi } from '@universe/api'
 import { toIncludeSameMembers } from 'jest-extended'
 import { PreloadedState } from 'redux'
 import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
@@ -18,7 +19,6 @@ import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/Token
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
 import { useTrendingTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensOptions'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
-import { Chain, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/tokenProjects/utils/tokenProjectToCurrencyInfos'
@@ -101,7 +101,6 @@ const queryResolver =
   }
 
 // Helper functions for mocking portfolio hook responses
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mockPortfolioBalancesHook(result: ReturnType<typeof tokenBalance>[] | Error | undefined | null): any {
   if (result instanceof Error) {
     return {
@@ -137,7 +136,7 @@ describe(useAllCommonBaseCurrencies, () => {
   const projects = createArray(3, tokenProject)
 
   const nonBridgedTokens = [ethToken(), daiToken(), usdcToken(), usdcBaseToken(), usdcArbitrumToken()]
-  const bridgedTokens = BRIDGED_BASE_ADDRESSES.map((address) => token({ address, chain: Chain.Ethereum }))
+  const bridgedTokens = BRIDGED_BASE_ADDRESSES.map((address) => token({ address, chain: GraphQLApi.Chain.Ethereum }))
   const projectWithBridged = tokenProject({ tokens: [...nonBridgedTokens, ...bridgedTokens] })
   const tokenProjectWithoutBridged = {
     ...projectWithBridged, // Copy all props except tokens (leave only non-bridged tokens)
@@ -195,11 +194,11 @@ describe(useFavoriteCurrencies, () => {
   const project = tokenProject({
     // Add some more tokens to check if favorite tokens are filtered properly
     tokens: [usdcArbitrumToken(), usdcToken(), ...favoriteTokens],
-    safetyLevel: SafetyLevel.Verified,
+    safetyLevel: GraphQLApi.SafetyLevel.Verified,
   })
   const projectWithFavoritesOnly = tokenProject({
     tokens: favoriteTokens,
-    safetyLevel: SafetyLevel.Verified,
+    safetyLevel: GraphQLApi.SafetyLevel.Verified,
   })
 
   const cases = [
@@ -490,11 +489,11 @@ describe(useCurrencyInfosToTokenOptions, () => {
       input: { currencyInfos, sortAlphabetically: true, portfolioBalancesById: balancesById },
       output: [
         // Arbitrum DAI does not exist in the portfolioBalancesById so we will create empty balance options
-        createEmptyBalanceOption(arbitrumDaiInfo), // Chain name: Arbitrum ETH
+        createEmptyBalanceOption(arbitrumDaiInfo), // GraphQLApi.Chain name: Arbitrum ETH
         // USDC does not exist in the portfolioBalancesById so we will create empty balance options
-        createEmptyBalanceOption(usdcBaseInfo), // Chain name: Base ETH
+        createEmptyBalanceOption(usdcBaseInfo), // GraphQLApi.Chain name: Base ETH
         // ETH exists in the portfolioBalancesById so we will get its balance
-        { ...balancesById[ethInfo.currencyId], type: OnchainItemListOptionType.Token }, // Chain name: ETH
+        { ...balancesById[ethInfo.currencyId], type: OnchainItemListOptionType.Token }, // GraphQLApi.Chain name: ETH
       ],
     },
   ]
@@ -701,7 +700,7 @@ describe(useTrendingTokensOptions, () => {
         decimals: tokenRankingsStat.decimals,
       },
       logoUrl: tokenRankingsStat.logo,
-      safetyLevel: SafetyLevel.Verified,
+      safetyLevel: GraphQLApi.SafetyLevel.Verified,
     }))
   })
 

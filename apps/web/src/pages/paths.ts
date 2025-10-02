@@ -11,6 +11,7 @@ export const paths = [
   '/tokens/:chainName',
   '/tokens/:chainName/:tokenAddress',
   '/explore/pools/:chainName/:poolAddress',
+  '/explore/toucan/:id',
   '/vote/*',
   '/create-proposal',
   '/sell',

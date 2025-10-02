@@ -3,7 +3,7 @@ import {
   BottomSheetModal as BaseModal,
   BottomSheetBackdrop,
   BottomSheetView,
-  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
+  // biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
   BottomSheetTextInput as GorhomBottomSheetTextInput,
 } from '@gorhom/bottom-sheet'
 import { BlurView } from 'expo-blur'
@@ -153,7 +153,7 @@ function BottomSheetModalContents({
     modalRef.current?.present?.()
     // Close modal when it is unmounted
     return modalRef.current?.close
-  }, [modalRef])
+  }, [])
 
   useEffect(() => {
     if (extendOnKeyboardVisible && keyboard.isVisible) {
@@ -370,7 +370,7 @@ export function BottomSheetDetachedModal({
     modalRef.current?.present?.()
     // Close modal when it is unmounted
     return modalRef.current?.close
-  }, [modalRef])
+  }, [])
 
   const renderHandleBar = useCallback(
     (props: BottomSheetHandleProps) => {

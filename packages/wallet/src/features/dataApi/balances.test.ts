@@ -3,7 +3,6 @@ import { Token } from '@uniswap/sdk-core'
 import {
   sortPortfolioBalances,
   usePortfolioBalances,
-  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   usePortfolioValueModifiers,
   useSortedPortfolioBalances,
   useTokenBalancesGroupedByVisibility,

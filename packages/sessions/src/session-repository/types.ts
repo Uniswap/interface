@@ -8,13 +8,6 @@ enum BotDetectionType {
 }
 
 /**
- * Request to initialize a session
- */
-interface InitSessionRequest {
-  deviceId: string
-}
-
-/**
  * Response from session initialization
  */
 interface InitSessionResponse {
@@ -134,7 +127,7 @@ interface SessionRepository {
    * so then it implicitly returns a session ID via the Set-Cookie header
    *
    */
-  initSession(request: InitSessionRequest): Promise<InitSessionResponse>
+  initSession(): Promise<InitSessionResponse>
 
   /**
    * Request a bot detection challenge

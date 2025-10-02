@@ -3,9 +3,15 @@ ignores: [
     "openapi-typescript-codegen",
     "typescript",
     "depcheck",
+    "graphql",
+    "@graphql-codegen/*",
+    "get-graphql-schema",
+    "@vitest/coverage-v8",
     # Dependencies that depcheck thinks are missing but are actually present
     ## Internal packages / workspaces
     "@universe/api",
+    "@universe/config",
     "tsconfig",
     "utilities",
+    "@uniswap/biome-config",
   ]

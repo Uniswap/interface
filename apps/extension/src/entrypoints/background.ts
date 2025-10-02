@@ -115,7 +115,7 @@ function makeBackground(): void {
       await backgroundToSidePanelMessageChannel.sendMessage({
         type: BackgroundToSidePanelRequestType.TabActivated,
       })
-    } catch (e) {
+    } catch (_e) {
       // an error will be thrown if the sidebar is not open. This is expected and in this case there is no action to be taken anyways so ignore.
     }
   }

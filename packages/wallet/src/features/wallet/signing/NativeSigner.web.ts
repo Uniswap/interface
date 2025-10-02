@@ -7,7 +7,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { SignsTypedData } from 'uniswap/src/features/transactions/signing'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { HexString, isValidHexString } from 'uniswap/src/utils/hex'
+import { HexString, isValidHexString } from 'utilities/src/addresses/hex'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 /**

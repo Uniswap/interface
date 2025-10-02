@@ -161,7 +161,7 @@ export default function AddressClaimModal({ isOpen, closeModal }: ModalState) {
               )}
               {parsedAddress && (
                 <Text variant="subheading1" color="$black">
-                  for {shortenAddress(parsedAddress)}
+                  for {shortenAddress({ address: parsedAddress })}
                 </Text>
               )}
             </Flex>

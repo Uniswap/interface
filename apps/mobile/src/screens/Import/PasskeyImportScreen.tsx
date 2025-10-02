@@ -30,6 +30,7 @@ export function PasskeyImportScreen({ navigation, route: { params } }: Props): J
     })
   })
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: We want to import the mnemonic only once
   useEffect(() => {
     const importAndGenerateAccount = async (): Promise<void> => {
       const mnemonic = await fetchSeedPhrase(params.passkeyCredential)
@@ -53,8 +54,7 @@ export function PasskeyImportScreen({ navigation, route: { params } }: Props): J
       navigation.goBack()
       navigate(ModalName.PasskeysHelp)
     })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) // We want to import the mnemonic only once
+  }, [])
 
   return (
     <OnboardingScreen disableGoBack={false}>

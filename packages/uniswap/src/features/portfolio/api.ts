@@ -210,7 +210,7 @@ export function useOnChainCurrencyBalance(
     [shouldSkip, accountAddress, currency],
   )
 
-  const { data, error } = useQuery<OnchainBalanceReactQueryResponse>({
+  const { data, error, isLoading } = useQuery<OnchainBalanceReactQueryResponse>({
     queryKey,
     queryFn: shouldSkip
       ? skipToken
@@ -231,10 +231,10 @@ export function useOnChainCurrencyBalance(
   return useMemo(
     () => ({
       balance: getCurrencyAmount({ value: data?.balance, valueType: ValueType.Raw, currency }) ?? undefined,
-      isLoading: !data?.balance,
+      isLoading,
       error,
     }),
-    [data?.balance, currency, error],
+    [data?.balance, currency, isLoading, error],
   )
 }
 

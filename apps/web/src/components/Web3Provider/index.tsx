@@ -25,7 +25,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { getWalletMeta, WalletType } from 'utils/walletMeta'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Web3Provider needs direct ethers imports for provider setup
 import { useAccount as useAccountWagmi } from 'wagmi'
 
 // Production Web3Provider – always reconnects on mount and runs capability effects.
@@ -55,6 +55,7 @@ export function Web3ProviderUpdater() {
 
   // Trace RPC calls (for debugging).
   const shouldTrace = useFeatureFlag(FeatureFlags.TraceJsonRpc)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +analyticsContext
   useEffect(() => {
     if (shouldTrace) {
       provider?.on('debug', trace)

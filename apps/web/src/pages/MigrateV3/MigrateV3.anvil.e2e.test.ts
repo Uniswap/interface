@@ -57,7 +57,7 @@ test.describe('Migrate V3', () => {
         try {
           data.migrate.gasLimit = DEFAULT_TEST_GAS_LIMIT
           return data
-        } catch (error) {
+        } catch (_error) {
           return data
         }
       },

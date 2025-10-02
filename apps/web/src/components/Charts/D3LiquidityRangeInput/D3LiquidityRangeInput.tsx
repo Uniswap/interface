@@ -1,5 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { D3LiquidityChartHeader } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/D3LiquidityChartHeader'
 import { D3LiquidityMinMaxInput } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/D3LiquidityMinMaxInput'
 import { DefaultPriceStrategies } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/DefaultPriceStrategies'
@@ -18,7 +19,6 @@ import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, SegmentedControlOption, Shine, Text } from 'ui/src'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 
 const MIN_DATA_POINTS = 5
@@ -78,7 +78,9 @@ export function D3LiquidityRangeInput({
   const chainInfo = getChainInfo(quoteCurrency.chainId)
 
   // TODO: consider moving this to the store - requires rearranging loading and error states
-  const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<HistoryDuration>(HistoryDuration.Month)
+  const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<GraphQLApi.HistoryDuration>(
+    GraphQLApi.HistoryDuration.Month,
+  )
 
   // Fetch price data for the chart
   const priceData = usePoolPriceChartData({

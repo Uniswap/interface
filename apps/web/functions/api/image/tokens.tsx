@@ -1,4 +1,4 @@
-/* eslint-disable react/forbid-elements */
+// biome-ignore-all lint/correctness/noRestrictedElements: ignoring for the whole file
 
 import { ImageResponse } from '@vercel/og'
 import { WATERMARK_URL } from 'functions/constants'
@@ -65,7 +65,7 @@ export async function tokenImageHandler(c: Context) {
           >
             {ogImage ? (
               <img src={ogImage} width="144px" height="144px" style={{ borderRadius: '100%' }}>
-                {networkLogo != '' && (
+                {networkLogo !== '' && (
                   <img
                     src={networkLogo}
                     width="48px"
@@ -100,7 +100,7 @@ export async function tokenImageHandler(c: Context) {
                 >
                   {data.name?.slice(0, 3).toUpperCase()}
                 </div>
-                {networkLogo != '' && (
+                {networkLogo !== '' && (
                   <img
                     src={networkLogo}
                     width="48px"

@@ -5,7 +5,7 @@ import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { TokenBalanceItemContextMenuProps } from 'uniswap/src/components/portfolio/TokenBalanceItemContextMenu'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { useTokenContextMenuOptions } from 'uniswap/src/features/portfolio/balances/hooks/useTokenContextMenuOptions'
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export function TokenBalanceItemContextMenu({
@@ -14,9 +14,11 @@ export function TokenBalanceItemContextMenu({
   excludedActions,
   openContractAddressExplainerModal,
   copyAddressToClipboard,
+  triggerMode,
   onPressToken: onPressToken,
 }: PropsWithChildren<TokenBalanceItemContextMenuProps>): JSX.Element {
   const { value: isOpen, setTrue: openMenu, setFalse: closeMenu } = useBooleanState(false)
+  const isPrimaryTriggerMode = isExtensionApp || triggerMode === ContextMenuTriggerMode.Primary
 
   const menuActions = useTokenContextMenuOptions({
     excludedActions,
@@ -36,17 +38,17 @@ export function TokenBalanceItemContextMenu({
 
   const actionableItem = useMemo(() => {
     return (
-      // eslint-disable-next-line react/forbid-elements
-      <div style={{ cursor: 'pointer' }} onContextMenu={isExtension ? ignoreDefault : openMenu}>
-        <TouchableArea onPress={isExtension ? openMenu : onPressToken}>{children}</TouchableArea>
+      // biome-ignore  lint/correctness/noRestrictedElements: needed here
+      <div style={{ cursor: 'pointer' }} onContextMenu={isExtensionApp ? ignoreDefault : openMenu}>
+        <TouchableArea onPress={isPrimaryTriggerMode ? openMenu : onPressToken}>{children}</TouchableArea>
       </div>
     )
-  }, [children, ignoreDefault, onPressToken, openMenu])
+  }, [children, ignoreDefault, onPressToken, openMenu, isPrimaryTriggerMode])
 
   return (
     <ContextMenu
       menuItems={menuActions}
-      triggerMode={isExtension ? ContextMenuTriggerMode.Primary : ContextMenuTriggerMode.Secondary}
+      triggerMode={isPrimaryTriggerMode ? ContextMenuTriggerMode.Primary : ContextMenuTriggerMode.Secondary}
       isOpen={isOpen}
       closeMenu={closeMenu}
     >

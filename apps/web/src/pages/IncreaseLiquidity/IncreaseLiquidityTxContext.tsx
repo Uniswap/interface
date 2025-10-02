@@ -284,8 +284,9 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
         calldataError,
       }),
     )
-  }, [approvalError, calldataError, setTransactionError])
+  }, [approvalError, calldataError])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +token0Amount, +token1Amount
   useEffect(() => {
     setTransactionError(false)
   }, [token0Amount, token1Amount])

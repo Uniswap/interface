@@ -77,7 +77,7 @@ describe(AccountList, () => {
       })
 
       signerAccounts.forEach((account) => {
-        const address = sanitizeAddressText(shortenAddress(account.address, 6))
+        const address = sanitizeAddressText(shortenAddress({ address: account.address, chars: 6 }))
         if (address) {
           expect(screen.queryByText(address)).toBeTruthy()
         }
@@ -105,7 +105,7 @@ describe(AccountList, () => {
       expect(screen.queryByText('View-only wallets')).toBeTruthy()
 
       viewOnlyAccounts.forEach((account) => {
-        const address = sanitizeAddressText(shortenAddress(account.address, 6))
+        const address = sanitizeAddressText(shortenAddress({ address: account.address, chars: 6 }))
         if (address) {
           expect(screen.queryByText(address)).toBeTruthy()
         }

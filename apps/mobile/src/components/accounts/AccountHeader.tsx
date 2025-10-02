@@ -8,6 +8,7 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { CopyAlt, ScanHome, SettingsHome } from 'ui/src/components/icons'
+import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { AccountType, DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -24,7 +25,6 @@ import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { useActiveAccount, useActiveAccountAddress, useDisplayName } from 'wallet/src/features/wallet/hooks'
 
@@ -181,7 +181,7 @@ export function AccountHeader(): JSX.Element {
                 <TouchableArea hitSlop={20} testID={TestID.AccountHeaderCopyAddress} onPress={onPressCopyAddress}>
                   <Flex centered row shrink gap="$spacing4">
                     <Text adjustsFontSizeToFit color="$neutral1" numberOfLines={1} variant="subheading2">
-                      {sanitizeAddressText(shortenAddress(activeAddress))}
+                      {sanitizeAddressText(shortenAddress({ address: activeAddress }))}
                     </Text>
                     <CopyAlt color="$neutral2" size="$icon.16" />
                   </Flex>

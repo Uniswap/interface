@@ -1,8 +1,8 @@
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
+import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
 import {
@@ -14,11 +14,11 @@ import DelegationMismatchModal from 'components/delegation/DelegationMismatchMod
 import Column from 'components/deprecated/Column'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
 import { ZERO_PERCENT } from 'constants/misc'
+import { useConnectionStatus } from 'features/accounts/store/hooks'
 import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
-import { useAtom } from 'jotai'
 import { useTheme } from 'lib/styled-components'
 import { LimitExpirySection } from 'pages/Swap/Limit/LimitExpirySection'
 import LimitOrdersNotSupportedBanner from 'pages/Swap/Limit/LimitOrdersNotSupportedBanner'
@@ -37,23 +37,21 @@ import { Anchor, Button, Flex, styled as TamaguiStyled, Text, useIsShortMobileDe
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { LIMIT_SUPPORTED_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { useIsSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { useIsMismatchAccountQuery } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { ElementName, InterfacePageName, SectionName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
-// We need to import this directly so we can format with `en-US` locale.
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: We need to import this directly so we can format with `en-US` locale
 import { formatCurrencyAmount as formatCurrencyAmountRaw } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
-
-const LIMIT_SUPPORTED_CHAINS = [UniverseChainId.Mainnet]
 
 const CustomHeightSwapSection = TamaguiStyled(SwapSection, {
   height: 'unset',
@@ -87,7 +85,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
     currencyState: { inputCurrency, outputCurrency },
     setCurrencyState,
   } = useSwapAndLimitContext()
-  const isSupportedChain = useIsSupportedChainId(chainId)
+  const isSupportedChain = useIsSupportedChainId(chainId) && isEVMChain(chainId)
   const isLimitSupportedChain = chainId && LIMIT_SUPPORTED_CHAINS.includes(chainId)
 
   const { limitState, setLimitState, derivedLimitInfo } = useLimitContext()
@@ -100,7 +98,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   const { onSwitchTokens } = useSwapActionHandlers()
   const { formatCurrencyAmount } = useLocalizationContext()
   const accountDrawer = useAccountDrawer()
-  const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
+  const setMenu = useSetMenu()
 
   const isPermitMismatchUxEnabled = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
   const { data: isDelegationMismatch } = useIsMismatchAccountQuery({ chainId: LIMIT_SUPPORTED_CHAINS[0] })
@@ -209,8 +207,8 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
             ...prev,
             limitPriceEdited: false,
             limitPriceInverted: getDefaultPriceInverted(
-              newCurrencyState['inputCurrency'],
-              newCurrencyState['outputCurrency'],
+              newCurrencyState.inputCurrency,
+              newCurrencyState.outputCurrency,
             ),
           }
         })
@@ -232,6 +230,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
     }
   }, [onSelectCurrency, outputCurrency, isSupportedChain, chainId, inputCurrency])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Currency state reset only on currency change
   useEffect(() => {
     // If the initial pair is eth <> weth, replace the output currency with a stablecoin
     if (isSupportedChain && inputCurrency && outputCurrency && (inputCurrency.isNative || outputCurrency.isNative)) {
@@ -242,7 +241,6 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         onSelectCurrency('outputCurrency', getPrimaryStablecoin(chainId))
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
@@ -443,7 +441,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         <OpenLimitOrdersButton
           account={account.address}
           openLimitsMenu={() => {
-            setMenu(MenuState.LIMITS)
+            setMenu({ variant: MenuStateVariant.LIMITS })
             accountDrawer.open()
           }}
         />
@@ -498,21 +496,21 @@ function SubmitOrderButton({
   limitPriceError?: LimitPriceErrorType
 }) {
   const accountDrawer = useAccountDrawer()
-  const account = useAccount()
+
+  const { isConnected } = useConnectionStatus()
   const { chainId } = useMultichainContext()
   const isLimitSupportedChain = chainId && LIMIT_SUPPORTED_CHAINS.includes(chainId)
   const { t } = useTranslation()
   const isShortMobileDevice = useIsShortMobileDevice()
 
-  const isDisabled =
-    (!isLimitSupportedChain || hasInsufficientFunds || !!limitPriceError || !trade) && account.isConnected
+  const isDisabled = (!isLimitSupportedChain || hasInsufficientFunds || !!limitPriceError || !trade) && isConnected
 
   const buttonText = useMemo(() => {
     if (!isLimitSupportedChain) {
       return t('limits.selectSupportedTokens')
     }
 
-    if (!account.isConnected) {
+    if (!isConnected) {
       return t('common.connectWallet.button')
     }
 
@@ -522,17 +520,17 @@ function SubmitOrderButton({
         : t('common.insufficientBalance.error')
     }
     return t('common.confirm')
-  }, [isLimitSupportedChain, account.isConnected, hasInsufficientFunds, inputCurrency, t])
+  }, [isLimitSupportedChain, isConnected, hasInsufficientFunds, inputCurrency, t])
 
   return (
     <Trace logPress element={ElementName.LimitOrderButton}>
       <Flex row>
         <Button
           variant="branded"
-          emphasis={account.isConnected ? 'primary' : 'secondary'}
+          emphasis={isConnected ? 'primary' : 'secondary'}
           size={isShortMobileDevice ? 'small' : 'large'}
           isDisabled={isDisabled}
-          onPress={!account.isConnected ? accountDrawer.open : handleContinueToReview}
+          onPress={!isConnected ? accountDrawer.open : handleContinueToReview}
           id={trade ? 'submit-order-button' : undefined}
           data-testid={trade ? 'submit-order-button' : undefined}
         >

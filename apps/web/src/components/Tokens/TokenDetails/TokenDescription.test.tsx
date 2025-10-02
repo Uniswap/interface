@@ -1,4 +1,5 @@
 import userEvent from '@testing-library/user-event'
+import { GraphQLApi } from '@universe/api'
 import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescription'
 import { useCurrency } from 'hooks/Tokens'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
@@ -7,7 +8,6 @@ import { validUSDCCurrency } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
 import { validTokenProjectResponse } from 'test-utils/tokens/fixtures'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 vi.mock('hooks/Tokens')
 
@@ -24,7 +24,7 @@ describe('TokenDescription', () => {
     mocked(useTDPContext).mockReturnValue({
       address: USDC_MAINNET.address,
       currency: USDC_MAINNET,
-      currencyChainName: Chain.Ethereum,
+      currencyChainName: GraphQLApi.Chain.Ethereum,
       tokenQuery: validTokenProjectResponse,
     } as any)
     const { asFragment } = render(<TokenDescription />)
@@ -41,7 +41,7 @@ describe('TokenDescription', () => {
     mocked(useTDPContext).mockReturnValue({
       address: USDC_MAINNET.address,
       currency: USDC_MAINNET,
-      currencyChainName: Chain.Ethereum,
+      currencyChainName: GraphQLApi.Chain.Ethereum,
       tokenQuery: validTokenProjectResponse,
     } as any)
     const { asFragment } = render(<TokenDescription />)
@@ -63,7 +63,7 @@ describe('TokenDescription', () => {
     mocked(useTDPContext).mockReturnValue({
       address: USDC_MAINNET.address,
       currency: USDC_MAINNET,
-      currencyChainName: Chain.Ethereum,
+      currencyChainName: GraphQLApi.Chain.Ethereum,
       tokenQuery: { data: undefined, loading: false, error: undefined },
     } as any)
     const { asFragment } = render(<TokenDescription />)

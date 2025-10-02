@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { AVALANCHE_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
-import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
@@ -31,7 +31,7 @@ export const AVALANCHE_CHAIN_INFO = {
   platform: Platform.EVM,
   assetRepoNetworkName: 'avalanchec',
   backendChain: {
-    chain: BackendChainId.Avalanche as GqlChainId,
+    chain: GraphQLApi.Chain.Avalanche as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },

@@ -17,6 +17,7 @@ export enum ReactQueryCacheKey {
   GetPortfolio = 'GetPortfolio',
   IsErc20ContractAddress = 'IsErc20ContractAddress',
   IsSmartContractAddress = 'IsSmartContractAddress',
+  LimitOrdersByHash = 'LimitOrdersByHash',
   ListTransactions = 'ListTransactions',
   LocalActivities = 'localActivities',
   MismatchAccountBulk = 'MismatchAccountBulk',

@@ -46,17 +46,6 @@ module.exports = {
             rootDir: 'src',
           },
         ],
-        'import/no-restricted-paths': [
-          'error',
-          {
-            zones: [
-              {
-                target: ['src/**/*[!.test].ts', 'src/**/*[!.test].tsx'],
-                from: 'src/test-utils',
-              },
-            ],
-          },
-        ],
       },
     },
     {
@@ -159,17 +148,6 @@ module.exports = {
             selector: 'MemberExpression[object.name="anvil"]',
             message:
               'Anvil fixture usage must be in *.anvil.e2e.test.ts files. Move this test to a file with .anvil.e2e.test.ts extension.',
-          },
-        ],
-        'no-restricted-imports': [
-          'error',
-          {
-            patterns: [
-              {
-                group: ['**/playwright/anvil/**', '**/playwright/fixtures/anvil'],
-                message: 'Anvil imports must only be used in *.anvil.e2e.test.ts files.',
-              },
-            ],
           },
         ],
       },

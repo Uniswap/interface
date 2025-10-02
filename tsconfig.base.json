@@ -18,7 +18,7 @@
     "downlevelIteration": true,
     "inlineSources": false,
     "strict": true,
-    "preserveSymlinks": true,
+    "preserveSymlinks": false,
     "preserveConstEnums": true,
     "removeComments": false,
     "strictNullChecks": true,
@@ -50,6 +50,9 @@
       ],
       "@universe/sessions/*": [
         "packages/sessions/*"
+      ],
+      "@universe/config/*": [
+        "packages/config/*"
       ],
       "utilities/*": [
         "packages/utilities/*"

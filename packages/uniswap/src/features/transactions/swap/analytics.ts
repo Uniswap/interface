@@ -162,6 +162,7 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
     fetchPolicy: 'cache-first',
   })
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we only want to re-run this when we get a new `quoteId`
   useEffect(() => {
     if (!trade) {
       return
@@ -178,8 +179,6 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
         trace,
       }),
     )
-    // We only want to re-run this when we get a new `quoteId`.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quoteId])
 
   return

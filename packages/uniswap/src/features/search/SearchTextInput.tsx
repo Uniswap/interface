@@ -74,7 +74,11 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
       hideIcon,
       minHeight = DEFAULT_MIN_HEIGHT,
       cancelBehaviorType = CancelBehaviorType.CancelButton,
+      keyboardType = 'default',
+      inputMode: inputModeProp,
     } = props
+
+    const inputMode = inputModeProp ?? 'text'
 
     const inputRef = useRef<Input>(null)
     const combinedRef = useComposedRefs<Input>(inputRef, ref)
@@ -187,6 +191,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 returnKeyType="done"
                 testID={TestID.ExploreSearchInput}
                 textContentType="none"
+                keyboardType={keyboardType}
+                inputMode={inputMode}
                 top={0}
                 // avoid turning into a controlled input if not wanting to
                 {...(typeof value !== 'undefined' && {

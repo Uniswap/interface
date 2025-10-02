@@ -1,10 +1,8 @@
+import { getAddress } from '@ethersproject/address'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { HexString } from 'utilities/src/addresses/hex'
 import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
 import { logger } from 'utilities/src/logger/logger'
-
-export function isSameAddress(a?: string, b?: string): boolean {
-  return a === b || a?.toLowerCase() === b?.toLowerCase() // Lazy-lowercases the addresses
-}
 
 function getShortenParams(chars: number, charsEnd?: number): { start: number; end: number } {
   if (charsEnd === undefined) {
@@ -26,20 +24,40 @@ function getShortenParams(chars: number, charsEnd?: number): { start: number; en
  * @param address - The address to shorten
  * @param chars - The number of characters to show at the beginning after the 0x and end.
  * @param charsEnd - (Optional) The number of characters to show at the end if different from chars.
+ * @param withEVMChecksum - (Optional) Whether to checksum the address.
  */
-// eslint-disable-next-line max-params
-export function shortenAddress(address = '', chars = 4, charsEnd?: number): string {
-  const evmAddress = isEVMAddress(address)
-  const isValidSvmAddress = isSVMAddress(address)
+export function shortenAddress({
+  address: _address = '',
+  chars = 4,
+  charsEnd,
+  withEVMChecksum = true,
+}: {
+  address: string | undefined
+  chars?: number
+  charsEnd?: number
+  withEVMChecksum?: boolean
+}): string {
+  const isValidEvmAddress = isEVMAddress(_address)
+  const isValidSvmAddress = isSVMAddress(_address)
 
-  if (!address || (!evmAddress && !isValidSvmAddress)) {
+  if (!_address || (!isValidEvmAddress && !isValidSvmAddress)) {
     return ''
+  }
+
+  let address = _address
+
+  if (isValidEvmAddress && withEVMChecksum) {
+    try {
+      address = getAddress(_address) as HexString
+    } catch (_error) {
+      return ''
+    }
   }
 
   const { start, end } = getShortenParams(chars, charsEnd)
 
-  if (evmAddress) {
-    return ellipseAddressAdd0x(evmAddress, start, end)
+  if (isValidEvmAddress) {
+    return ellipseAddressAdd0x(address, start, end)
   }
   return ellipseMiddle({ str: address, charsStart: start, charsEnd: end })
 }

@@ -21,6 +21,8 @@ import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { QrCode, Scan } from 'ui/src/components/icons'
 import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
+import { ReceiveQRCode } from 'uniswap/src/components/ReceiveQRCode/ReceiveQRCode'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -30,8 +32,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UwULinkRequest } from 'uniswap/src/types/walletConnect'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
 import { useContractManager, useProviderManager } from 'wallet/src/features/wallet/context'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
@@ -72,7 +72,7 @@ export function WalletConnectModal({
       // Cancels the pending connection state in QRCodeScanner
       setShouldFreezeCamera(false)
     }
-  }, [hasPendingSessionError, setShouldFreezeCamera])
+  }, [hasPendingSessionError])
 
   const onScanCode = useCallback(
     async (uri: string) => {
@@ -280,7 +280,7 @@ export function WalletConnectModal({
         )}
         {currentScreenState === ScannerModalState.WalletQr && (
           <Trace logImpression element={ElementName.WalletQRCode}>
-            <WalletQRCode address={activeAccount.address} />
+            <ReceiveQRCode address={activeAccount.address} />
           </Trace>
         )}
         <Flex centered mb="$spacing12" mt="$spacing16" mx="$spacing16">

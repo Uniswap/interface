@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from 'react-native-svg'
 import { BaseQRProps } from 'ui/src/components/QRCode/QRCodeDisplay'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 // size of the SVG element of the eye for the SVG we use in particular.
 const SVG_SIZE = 40
@@ -16,7 +16,7 @@ const EYE_SIZE_UNITS = 7
  * Unsure why this is need but the scaling on the web is 2x. This
  * offset multiplier ensures that we the eyes align correctly on web.
  */
-const EYE_OFFSET_MULTIPLIER = isWeb ? 2 : 1
+const EYE_OFFSET_MULTIPLIER = isWebPlatform ? 2 : 1
 
 export interface QRCodeProps extends BaseQRProps {
   /* what the qr code stands for */

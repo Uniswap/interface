@@ -22,7 +22,7 @@ export default function TopLevelModals() {
   const evmAccountName = unitag?.username
     ? unitag.username + '.uni.eth'
     : evmAddress
-      ? shortenAddress(evmAddress)
+      ? shortenAddress({ address: evmAddress })
       : undefined
   const blockedAddress = useAccountRiskCheck({ evmAddress, svmAddress })
   const passkeysHelpModalType = useAtomValue(PasskeysHelpModalTypeAtom)

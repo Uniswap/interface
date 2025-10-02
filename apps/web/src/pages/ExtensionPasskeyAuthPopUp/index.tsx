@@ -46,6 +46,7 @@ export default function ExtensionPasskeyAuthPopUp() {
 
   const [searchParams] = useSearchParams()
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Intentionally only runs once on mount
   useEffect(() => {
     const chromeRuntime = getChromeRuntime()
 
@@ -97,7 +98,6 @@ export default function ExtensionPasskeyAuthPopUp() {
       } satisfies PasskeySignInFlowOpened,
       handleMessageRequestPasskey,
     )
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const onPressSignIn = async () => {

@@ -6,7 +6,7 @@ import {
   useTransactionSettingsAutoSlippageToleranceStore,
   useTransactionSettingsStore,
 } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { isMobileWeb, isWeb } from 'utilities/src/platform'
+import { isMobileWeb, isWebPlatform } from 'utilities/src/platform'
 
 export function SlippageWarning(): JSX.Element | null {
   const { t } = useTranslation()
@@ -24,7 +24,7 @@ export function SlippageWarning(): JSX.Element | null {
   return (
     <WarningMessage
       warningMessage={isCriticalSlippage ? t('swap.settings.slippage.warning') : t('swap.settings.slippage.alert')}
-      tooltipText={isWeb && !isMobileWeb ? t('swap.settings.slippage.warning.hover') : undefined}
+      tooltipText={isWebPlatform && !isMobileWeb ? t('swap.settings.slippage.warning.hover') : undefined}
       color={isCriticalSlippage ? '$statusCritical' : '$statusWarning'}
     />
   )

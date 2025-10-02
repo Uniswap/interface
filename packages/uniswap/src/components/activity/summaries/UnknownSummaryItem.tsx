@@ -23,7 +23,7 @@ export function UnknownSummaryItem({
     }
 
     if (getValidAddress({ address: transaction.typeInfo.tokenAddress, chainId: transaction.chainId })) {
-      return shortenAddress(transaction.typeInfo.tokenAddress)
+      return shortenAddress({ address: transaction.typeInfo.tokenAddress })
     }
 
     return ''

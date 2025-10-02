@@ -42,7 +42,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { getFormattedCurrencyAmount } from 'uniswap/src/utils/currency'
-import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { areCurrencyIdsEqual, buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useDebounce } from 'utilities/src/time/timing'
 
@@ -207,7 +207,7 @@ export function useFiatOnRampSupportedTokens({
     () =>
       Object.entries(supportedTokensById)
         .map(([currencyId, fiatOnRampToken]) => ({
-          currencyInfo: currencies?.find((currency) => currency.currencyId.toLowerCase() === currencyId.toLowerCase()),
+          currencyInfo: currencies?.find((currency) => areCurrencyIdsEqual(currency.currencyId, currencyId)),
           meldCurrencyCode: fiatOnRampToken.cryptoCurrencyCode,
         }))
         .filter((item) => !!item.currencyInfo),
@@ -373,7 +373,7 @@ export function useIsSupportedFiatOnRampCurrency(
     return { currency: undefined, isLoading }
   }
   const currency = supportedTokensList?.find(
-    (token) => token.currencyInfo?.currencyId.toLowerCase() === currencyId.toLowerCase(),
+    (token) => token.currencyInfo?.currencyId && areCurrencyIdsEqual(token.currencyInfo.currencyId, currencyId),
   )
 
   return { currency, isLoading }

@@ -1,11 +1,11 @@
 import { logger } from 'utilities/src/logger/logger'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 // only disable for this enum
-/* eslint-disable @typescript-eslint/prefer-enum-initializers */
 /**
  * Feature flag names
  */
+/* biome-ignore-start lint/style/useEnumInitializers: preserve the order */
 export enum FeatureFlags {
   // Shared
   ArbitrumDutchV3,
@@ -68,15 +68,15 @@ export enum FeatureFlags {
   PoolSearch,
   PortfolioPage,
   PriceRangeInputV2,
-  SharedPortfolioUI,
   SolanaPromo,
+  Toucan,
   TraceJsonRpc,
   TwitterConversionTracking,
   UniversalSwap,
   BatchedSwaps,
   PortoWalletConnector,
 }
-/* eslint-enable @typescript-eslint/prefer-enum-initializers */
+/* biome-ignore-end lint/style/useEnumInitializers: preserve the order */
 
 // These names must match the gate name on statsig
 export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
@@ -128,8 +128,8 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.PortfolioPage, 'portfolio_page'],
   [FeatureFlags.PortoWalletConnector, 'porto_wallet_connector'],
   [FeatureFlags.PriceRangeInputV2, 'price_range_input_v2'],
-  [FeatureFlags.SharedPortfolioUI, 'shared_portfolio_ui'],
   [FeatureFlags.SolanaPromo, 'solana_promo'],
+  [FeatureFlags.Toucan, 'toucan'],
   [FeatureFlags.TraceJsonRpc, 'traceJsonRpc'],
   [FeatureFlags.TwitterConversionTracking, 'twitter_conversion_tracking'],
   [FeatureFlags.UnichainFlashblocks, 'unichain_flashblocks'],
@@ -169,7 +169,7 @@ export function getFeatureFlagName(flag: FeatureFlags, client?: FeatureFlagClien
   const names =
     client !== undefined
       ? FEATURE_FLAG_NAMES[client]
-      : isInterface
+      : isWebApp
         ? FEATURE_FLAG_NAMES[FeatureFlagClient.Web]
         : FEATURE_FLAG_NAMES[FeatureFlagClient.Wallet]
   const name = names.get(flag)

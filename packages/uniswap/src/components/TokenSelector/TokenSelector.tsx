@@ -39,7 +39,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { getClipboard } from 'uniswap/src/utils/clipboard'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isExtension, isInterface, isMobileApp, isMobileWeb, isWeb } from 'utilities/src/platform'
+import { isExtensionApp, isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useDebounce } from 'utilities/src/time/timing'
 
@@ -108,7 +108,7 @@ export function TokenSelectorContent({
   const { navigateToBuyOrReceiveWithEmptyWallet } = useUniswapContext()
 
   const media = useMedia()
-  const isSmallScreen = (media.sm && isInterface) || isMobileApp || isMobileWeb
+  const isSmallScreen = (media.sm && isWebApp) || isMobileApp || isMobileWeb
 
   const [hasClipboardString, setHasClipboardString] = useState(false)
 
@@ -124,7 +124,7 @@ export function TokenSelectorContent({
     // Browser doesn't have permissions to access clipboard by default
     // so it will prompt the user to allow clipboard access which is
     // quite jarring and unnecessary.
-    if (isInterface) {
+    if (isWebApp) {
       return
     }
     checkClipboard().catch(() => undefined)
@@ -200,12 +200,12 @@ export function TokenSelectorContent({
     setSearchInFocus(false)
   }
   function onFocus(): void {
-    if (!isWeb) {
+    if (!isWebPlatform) {
       setSearchInFocus(true)
     }
   }
 
-  const shouldAutoFocusSearch = isWeb && !media.sm
+  const shouldAutoFocusSearch = isWebPlatform && !media.sm
 
   const tokenSelector = useMemo(() => {
     if (searchInFocus && !searchFilter && !isTestnetModeEnabled) {
@@ -289,7 +289,7 @@ export function TokenSelectorContent({
 
   return (
     <Trace
-      logImpression={isInterface} // TODO(WEB-5161): Deduplicate shared vs interface-only trace event
+      logImpression={isWebApp} // TODO(WEB-5161): Deduplicate shared vs interface-only trace event
       eventOnTrigger={InterfaceEventName.TokenSelectorOpened}
       modal={ModalName.TokenSelectorWeb}
     >
@@ -311,7 +311,7 @@ export function TokenSelectorContent({
                   includeAllNetworks={!isTestnetModeEnabled}
                   chainIds={chainIds || enabledChains}
                   selectedChain={chainFilter}
-                  styles={isExtension || isMobileWeb ? { dropdownZIndex: zIndexes.overlay } : undefined}
+                  styles={isExtensionApp || isMobileWeb ? { dropdownZIndex: zIndexes.overlay } : undefined}
                   onPressChain={(newChainId) => {
                     onChangeChainFilter(newChainId)
                     onSelectChain?.(newChainId)
@@ -325,7 +325,7 @@ export function TokenSelectorContent({
             mx={spacing.spacing16}
             my="$spacing4"
             value={searchFilter ?? ''}
-            onCancel={isWeb ? undefined : onCancel}
+            onCancel={isWebPlatform ? undefined : onCancel}
             onChangeText={onChangeText}
             onFocus={onFocus}
           />
@@ -376,12 +376,12 @@ function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
       renderBehindBottomInset
       backgroundColor={colors.surface1.val}
       isModalOpen={isModalOpen}
-      maxWidth={isWeb ? TOKEN_SELECTOR_WEB_MAX_WIDTH : undefined}
-      maxHeight={isInterface ? TOKEN_SELECTOR_WEB_MAX_HEIGHT : undefined}
+      maxWidth={isWebPlatform ? TOKEN_SELECTOR_WEB_MAX_WIDTH : undefined}
+      maxHeight={isWebApp ? TOKEN_SELECTOR_WEB_MAX_HEIGHT : undefined}
       name={ModalName.TokenSelector}
       padding="$none"
       snapPoints={['65%', '100%']}
-      height={isInterface ? '100vh' : undefined}
+      height={isWebApp ? '100vh' : undefined}
       focusHook={focusHook}
       onClose={onClose}
     >

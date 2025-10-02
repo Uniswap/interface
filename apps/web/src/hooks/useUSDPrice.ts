@@ -1,12 +1,12 @@
 import { PollingInterval } from 'appGraphql/data/util'
 import { NetworkStatus } from '@apollo/client'
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useMemo, useRef } from 'react'
 import { ClassicTrade, INTERNAL_ROUTER_PREFERENCE_PRICE, TradeState } from 'state/routing/types'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { useTokenSpotPriceQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
@@ -139,7 +139,7 @@ export function useUSDPrice(
   // Use ETH-based pricing if available.
   const { data: tokenEthPrice, isLoading: isTokenEthPriceLoading } = useETHPrice(currency)
   const isTokenEthPriced = Boolean(tokenEthPrice || isTokenEthPriceLoading)
-  const { data, networkStatus } = useTokenSpotPriceQuery({
+  const { data, networkStatus } = GraphQLApi.useTokenSpotPriceQuery({
     variables: { chain, address: getNativeTokenDBAddress(chain) },
     skip: !isTokenEthPriced || !isWindowVisible,
     pollInterval: PollingInterval.Normal,

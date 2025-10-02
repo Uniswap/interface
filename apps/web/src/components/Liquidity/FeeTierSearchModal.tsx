@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks/useAllFeeTierPoolData'
 import {
   calculateTickSpacingFromFeeAmount,
@@ -15,7 +14,7 @@ import { NumericalInputMimic, NumericalInputSymbolContainer } from 'pages/Swap/c
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: styled-components needed for custom component styling
 import styled from 'styled-components'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Button, Flex, ModalCloseIcon, Text } from 'ui/src'

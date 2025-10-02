@@ -19,7 +19,7 @@ interface Props {
 
 export function PendingNotificationBadge({ size = LOADING_SPINNER_SIZE }: Props): JSX.Element | null {
   const activeAccountAddress = useActiveAccountAddress()
-  const sortedPendingTransactions = useSortedPendingTransactions(activeAccountAddress)
+  const sortedPendingTransactions = useSortedPendingTransactions({ evmAddress: activeAccountAddress, svmAddress: null })
   const hasNotifications = useSelectAddressHasNotifications(activeAccountAddress)
   const notifications = useSelectAddressNotifications(activeAccountAddress)
 

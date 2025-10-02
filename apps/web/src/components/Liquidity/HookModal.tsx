@@ -175,7 +175,7 @@ export function HookModal({
               </Flex>
               <CopyHelper toCopy={address} iconSize={16} iconPosition="right" color="$neutral2">
                 <Text variant="body3" color="$neutral2">
-                  {shortenAddress(address)}
+                  {shortenAddress({ address })}
                 </Text>
               </CopyHelper>
             </Flex>

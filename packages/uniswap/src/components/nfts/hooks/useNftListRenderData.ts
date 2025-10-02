@@ -1,11 +1,10 @@
 import { NetworkStatus } from '@apollo/client'
-import { isError } from '@universe/api'
+import { GraphQLApi, isError } from '@universe/api'
 import { useCallback, useState } from 'react'
 import { NUM_FIRST_NFTS } from 'uniswap/src/components/nfts/constants'
-import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useGroupNftsByVisibility } from 'uniswap/src/features/nfts/hooks/useGroupNftsByVisibility'
-import { NFTItem } from 'uniswap/src/features/nfts/types'
+import { type NFTItem } from 'uniswap/src/features/nfts/types'
 import { formatNftItems } from 'uniswap/src/features/nfts/utils'
 
 export function useNftListRenderData({ owner, skip }: { owner: Address; skip?: boolean }): {
@@ -25,7 +24,7 @@ export function useNftListRenderData({ owner, skip }: { owner: Address; skip?: b
 
   const [hiddenNftsExpanded, setHiddenNftsExpanded] = useState(false)
 
-  const { data, fetchMore, refetch, networkStatus } = useNftsTabQuery({
+  const { data, fetchMore, refetch, networkStatus } = GraphQLApi.useNftsTabQuery({
     variables: {
       ownerAddress: owner,
       first: NUM_FIRST_NFTS,

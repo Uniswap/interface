@@ -16,6 +16,7 @@ import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, useSporeColors } from 'ui/src'
+import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -24,7 +25,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { isAndroid } from 'utilities/src/platform'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useActivityDataWallet } from 'wallet/src/features/activity/useActivityDataWallet'
 
 const ESTIMATED_ITEM_SIZE = 92
@@ -62,7 +62,7 @@ export const ActivityContent = memo(
     }
 
     const { maybeEmptyComponent, renderActivityItem, sectionData, keyExtractor } = useActivityDataWallet({
-      owner,
+      evmOwner: owner,
       authTrigger: requiresBiometrics ? biometricsTrigger : undefined,
       isExternalProfile,
       emptyComponentStyle: containerProps?.emptyComponentStyle,
@@ -108,7 +108,7 @@ export const ActivityContent = memo(
           />
         ) : (
           <List
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // biome-ignore lint/suspicious/noExplicitAny: FlatList ref type is complex with animated wrapper
             ref={ref as ForwardedRef<Animated.FlatList<any>>}
             initialNumToRender={10}
             keyExtractor={keyExtractor}

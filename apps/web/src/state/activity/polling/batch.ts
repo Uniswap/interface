@@ -6,7 +6,7 @@ import { ActivityUpdateTransactionType, OnActivityUpdate } from 'state/activity/
 import { usePendingTransactions } from 'state/transactions/hooks'
 import { PendingTransactionDetails } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { HexString } from 'uniswap/src/utils/hex'
+import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 

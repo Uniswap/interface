@@ -40,6 +40,7 @@ import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { InterfacePageName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
@@ -49,8 +50,8 @@ import { getErrorMessageToDisplay } from 'uniswap/src/features/transactions/liqu
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { isSignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
-import { isSameAddress } from 'utilities/src/addresses'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
@@ -94,14 +95,19 @@ function MigrateV3Inner({
   const onClose = useCallback(() => {
     setIsReviewModalOpen(false)
     setTransactionError(false)
-  }, [setIsReviewModalOpen, setTransactionError])
+  }, [setTransactionError])
 
   const { currency0Amount, currency1Amount, owner } = positionInfo
 
   const currency0FiatAmount = useUSDCValue(currency0Amount)
   const currency1FiatAmount = useUSDCValue(currency1Amount)
 
-  if (!isSameAddress(account?.address, owner)) {
+  if (
+    !areAddressesEqual({
+      addressInput1: { address: account?.address, platform: Platform.EVM },
+      addressInput2: { address: owner, platform: Platform.EVM },
+    })
+  ) {
     navigate('/positions')
   }
 
@@ -167,12 +173,12 @@ function MigrateV3Inner({
     onClose,
     navigate,
     setCurrentTransactionStep,
-    setTransactionSteps,
     setTransactionError,
     currency0Amount.currency,
     currency1Amount.currency,
   ])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +setIsReviewModalOpen
   const priceRangeProps = useMemo(() => {
     return {
       positionInfo,

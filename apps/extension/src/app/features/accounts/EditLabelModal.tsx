@@ -93,7 +93,7 @@ export function EditLabelModal({ isOpen, address, onClose }: EditLabelModalProps
             />
           </Flex>
           <Text color="$neutral3" variant="body2">
-            {shortenAddress(address)}
+            {shortenAddress({ address })}
           </Text>
         </Flex>
         <Flex centered fill row gap="$spacing12" justifyContent="space-between" width="100%">

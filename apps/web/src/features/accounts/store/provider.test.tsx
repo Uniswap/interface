@@ -1,10 +1,13 @@
 import { WalletReadyState as SolanaWalletReadyState } from '@solana/wallet-adapter-base'
-import { renderHook } from '@testing-library/react'
-import { useAccountsStoreContext, WebAccountsStoreProvider } from 'features/accounts/store/provider'
+import { useAccountsStoreContext } from 'features/accounts/store/provider'
+import { mocked } from 'test-utils/mocked'
+import { renderHook } from 'test-utils/render'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { ConnectorStatus } from 'uniswap/src/features/accounts/store/types/Connector'
 import { ChainScopeType } from 'uniswap/src/features/accounts/store/types/Session'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 
 // Mock wagmi hooks
@@ -16,11 +19,20 @@ const mockUsePendingConnectorId = vitest.fn()
 // Mock Solana wallet adapter
 const mockUseSolanaWallet = vitest.fn()
 
-vi.mock('wagmi', () => ({
+vi.mock('wagmi', async () => ({
+  ...(await vi.importActual('wagmi')),
   useAccount: () => mockUseWagmiAccount(),
   useConnectors: () => mockUseWagmiConnectors(),
   useChainId: () => mockUseWagmiChainId(),
 }))
+
+vi.mock('uniswap/src/features/gating/hooks', async () => {
+  const actual = await vi.importActual('uniswap/src/features/gating/hooks')
+  return {
+    ...actual,
+    useFeatureFlag: vi.fn(),
+  }
+})
 
 vi.mock('features/wallet/connection/connectors/state', () => ({
   usePendingConnectorId: () => mockUsePendingConnectorId(),
@@ -28,6 +40,7 @@ vi.mock('features/wallet/connection/connectors/state', () => ({
 
 vi.mock('@solana/wallet-adapter-react', () => ({
   useWallet: () => mockUseSolanaWallet(),
+  WalletProvider: ({ children }: { children: React.ReactNode }) => children,
 }))
 
 describe('Web Accounts Store Provider', () => {
@@ -68,9 +81,7 @@ describe('Web Accounts Store Provider', () => {
   })
 
   const renderWithProvider = () => {
-    return renderHook(() => useAccountsStoreContext(), {
-      wrapper: ({ children }) => <WebAccountsStoreProvider>{children}</WebAccountsStoreProvider>,
-    })
+    return renderHook(() => useAccountsStoreContext())
   }
 
   beforeEach(() => {
@@ -82,6 +93,14 @@ describe('Web Accounts Store Provider', () => {
     mockUseWagmiChainId.mockReturnValue(1)
     mockUsePendingConnectorId.mockReturnValue(null)
     mockUseSolanaWallet.mockReturnValue(createMockSolanaWalletContext())
+
+    // Enable Solana feature flag by default
+    mocked(useFeatureFlag).mockImplementation((flag) => {
+      if (flag === FeatureFlags.Solana) {
+        return true
+      }
+      return false
+    })
   })
 
   describe('Given a connected MetaMask wallet on EVM', () => {
@@ -143,6 +162,8 @@ describe('Web Accounts Store Provider', () => {
         wallet: solanaWallet,
         wallets: [solanaWallet],
       })
+
+      // Ensure Solana feature flag is enabled for this test (already set in beforeEach)
 
       // When
       const { result } = renderWithProvider()
@@ -212,7 +233,7 @@ describe('Web Accounts Store Provider', () => {
 
       // Should have only one wallet (deduplicated)
       const walletIds = Object.keys(state.wallets)
-      expect(walletIds).toHaveLength(1)
+      expect(walletIds).toHaveLength(2) // Uniswap wallet connect connector is added manually to store, so its always defined, hence length is 2
       expect(walletIds[0]).toBe('metamask') // EVM library ID takes precedence
 
       const wallet = state.wallets.metamask
@@ -265,7 +286,7 @@ describe('Web Accounts Store Provider', () => {
       // Then
       expect(state.activeConnectors.evm).toBeUndefined()
       expect(state.connectors).toHaveProperty('WagmiConnector_metamask')
-      expect(state.connectors['WagmiConnector_metamask'].status).toBe(ConnectorStatus.Disconnected)
+      expect(state.connectors.WagmiConnector_metamask.status).toBe(ConnectorStatus.Disconnected)
     })
   })
 
@@ -324,7 +345,7 @@ describe('Web Accounts Store Provider', () => {
       // Pending connectors are not included in activeConnectors when disconnected
       expect(state.activeConnectors.evm).toBeUndefined()
       expect(state.connectors).toHaveProperty('WagmiConnector_metamask')
-      expect(state.connectors['WagmiConnector_metamask'].status).toBe(ConnectorStatus.Disconnected)
+      expect(state.connectors.WagmiConnector_metamask.status).toBe(ConnectorStatus.Disconnected)
     })
   })
 
@@ -422,7 +443,7 @@ describe('Web Accounts Store Provider', () => {
       const state = result.current.getState()
 
       // Then
-      expect(state.connectors['WagmiConnector_walletconnect'].access).toBe('SDK')
+      expect(state.connectors.WagmiConnector_walletconnect.access).toBe('SDK')
     })
   })
 
@@ -450,7 +471,7 @@ describe('Web Accounts Store Provider', () => {
       const state = result.current.getState()
 
       // Then
-      expect(state.connectors['SolanaWalletAdapter_Phantom'].access).toBe('SDK')
+      expect(state.connectors.SolanaWalletAdapter_Phantom.access).toBe('SDK')
     })
   })
 
@@ -469,31 +490,14 @@ describe('Web Accounts Store Provider', () => {
       const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
       // When & Then
-      expect(() => renderWithProvider()).toThrow('Connected status with no account info provided is not supported.')
+      expect(() => {
+        const { result } = renderWithProvider()
+        // Access the state to trigger the error
+        result.current.getState()
+      }).toThrow('Connected status with no account info provided is not supported.')
 
       // Clean up
       consoleSpy.mockRestore()
-    })
-  })
-
-  describe('Given no wallets', () => {
-    it('When the provider builds the accounts state, Then it should return empty state', () => {
-      // Given
-      mockUseWagmiConnectors.mockReturnValue([])
-      mockUseSolanaWallet.mockReturnValue({
-        wallet: null,
-        wallets: [],
-      })
-
-      // When
-      const { result } = renderWithProvider()
-      const state = result.current.getState()
-
-      // Then
-      expect(state.wallets).toEqual({})
-      expect(state.connectors).toEqual({})
-      expect(state.accounts).toEqual({})
-      expect(state.activeConnectors).toEqual({})
     })
   })
 

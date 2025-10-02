@@ -26,7 +26,7 @@ import { useAddToSearchHistory } from 'uniswap/src/components/TokenSelector/hook
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { sendSearchOptionItemClickedAnalytics } from 'uniswap/src/features/search/SearchModal/analytics/analytics'
 import { SearchFilterContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
-import { isHoverable, isWeb } from 'utilities/src/platform'
+import { isHoverable, isWebPlatform } from 'utilities/src/platform'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { noop } from 'utilities/src/react/noop'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
@@ -75,7 +75,7 @@ export const SearchModalList = memo(function _SearchModalList({
   // to handle closing the left-click '...' context menu when the focused row changes
   const previousFocusedRowIndex = usePrevious(focusedRowIndex)
   useEffect(() => {
-    if (isWeb && previousFocusedRowIndex !== focusedRowIndex) {
+    if (isWebPlatform && previousFocusedRowIndex !== focusedRowIndex) {
       closeContextMenu()
     }
   }, [previousFocusedRowIndex, focusedRowIndex, closeContextMenu])
@@ -164,7 +164,7 @@ export const SearchModalList = memo(function _SearchModalList({
                   <TokenOptionItemContextMenu
                     actions={[
                       TokenContextMenuAction.CopyAddress,
-                      ...(isWeb ? [] : [TokenContextMenuAction.Favorite]),
+                      ...(isWebPlatform ? [] : [TokenContextMenuAction.Favorite]),
                       TokenContextMenuAction.Swap,
                       TokenContextMenuAction.Send,
                       TokenContextMenuAction.Receive,

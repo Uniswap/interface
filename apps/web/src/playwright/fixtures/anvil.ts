@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Anvil test fixtures need direct ethers imports
 import { test as base } from '@playwright/test'
 import { MaxUint160, MaxUint256, permit2Address } from '@uniswap/permit2-sdk'
 import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
@@ -206,7 +206,7 @@ const createAnvilClient = () => {
 }
 
 export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: void }>({
-  // eslint-disable-next-line no-empty-pattern
+  // biome-ignore lint/correctness/noEmptyPattern: it's ok here
   async anvil({}, use) {
     // Ensure Anvil is running and healthy
     if (!(await getAnvilManager().ensureHealthy())) {
@@ -223,7 +223,6 @@ export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: vo
     } catch (error) {
       if (isTimeoutError(error)) {
         // Anvil timed out during snapshot, restart and retry
-        // eslint-disable-next-line no-console
         console.error('Snapshot timeout, restarting Anvil...')
         if (await getAnvilManager().restart()) {
           await new Promise((resolve) => setTimeout(resolve, 2000))
@@ -249,17 +248,14 @@ export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: vo
       }
     } catch (error) {
       if (isTimeoutError(error)) {
-        // eslint-disable-next-line no-console
         console.error('Cleanup timeout, marking Anvil for restart...')
         // Don't restart here - let the next test handle it
         // This avoids race conditions between parallel tests
       } else {
-        // eslint-disable-next-line no-console
         console.error('Cleanup failed:', error)
         try {
           await testAnvil.reset()
         } catch (resetError) {
-          // eslint-disable-next-line no-console
           console.error('Reset also failed:', resetError)
         }
       }
@@ -285,7 +281,7 @@ export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: vo
         // Reset the wallet to the original balance because tests might rely on that
         await anvil.setBalance({ address: TEST_WALLET_ADDRESS, value: originalBalance })
         await use(undefined)
-      } catch (e) {
+      } catch (_e) {
         await use(undefined)
       }
     },

@@ -16,7 +16,7 @@ export const isAndroid: boolean = false
 export const isIOS: boolean = false
 // see: https://stackoverflow.com/a/14301832
 
-export const isWeb: boolean = true
+export const isWebPlatform: boolean = true
 export const isMobileWeb: boolean =
   // https://stackoverflow.com/a/29509267
   typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android|Mobi/i.test(navigator.userAgent)
@@ -51,7 +51,7 @@ export const isMobileWebAndroid: boolean = isTouchable && isWebAndroid
 export const isBrowser: boolean = typeof window !== 'undefined'
 
 // App
-export const isExtension: boolean = process.env.IS_UNISWAP_EXTENSION === 'true'
+export const isExtensionApp: boolean = process.env.IS_UNISWAP_EXTENSION === 'true'
 export const isMobileApp: boolean = false
-export const isInterface: boolean = process.env.REACT_APP_IS_UNISWAP_INTERFACE === 'true'
-export const isInterfaceDesktop: boolean = isInterface && !isMobileWeb
+export const isWebApp: boolean = process.env.REACT_APP_IS_UNISWAP_INTERFACE === 'true'
+export const isInterfaceDesktop: boolean = isWebApp && !isMobileWeb

@@ -114,7 +114,7 @@ function WalletItem({ wallet, onPress }: { wallet: WalletData; onPress: (wallet:
           />
 
           <Text variant="body3" color="$neutral2">
-            {shortenAddress(wallet.walletAddress)}
+            {shortenAddress({ address: wallet.walletAddress })}
           </Text>
         </Flex>
       </Flex>

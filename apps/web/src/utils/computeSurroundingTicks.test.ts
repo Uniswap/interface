@@ -1,5 +1,3 @@
-// eslint-disable-next-line no-restricted-imports
-
 import { TickData } from 'appGraphql/data/AllV3TicksQuery'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Price, Token } from '@uniswap/sdk-core'

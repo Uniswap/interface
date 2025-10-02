@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/suspicious/noConsole: misc script, so it's okay */
 import { promises as fs } from 'fs'
 import path from 'path'
 
@@ -15,7 +16,6 @@ async function removeDtsFiles(dir: string): Promise<void> {
       }
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error(`Error processing directory ${dir}:`, error)
   }
 }
@@ -24,10 +24,8 @@ const targetDir = path.join(__dirname, '../', '../', '../', 'utilities/src')
 
 removeDtsFiles(targetDir)
   .then(() => {
-    // eslint-disable-next-line no-console
     console.log('All .d.ts and .d.ts.map files have been removed from `utilities` after building `ui`')
   })
   .catch((error) => {
-    // eslint-disable-next-line no-console
     console.error('Error removing .d.ts and .d.ts.map files from `utilities`:', error)
   })

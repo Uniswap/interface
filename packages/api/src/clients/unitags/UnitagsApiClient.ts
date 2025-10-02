@@ -3,9 +3,7 @@ import {
   createSignedRequestParams,
   SignedRequestParams,
 } from '@universe/api/src/clients/base/auth'
-import { createFetchClient } from '@universe/api/src/clients/base/createFetchClient'
 import { FetchClient } from '@universe/api/src/clients/base/types'
-import { getCloudflareApiBaseUrl, TrafficFlows } from '@universe/api/src/clients/base/urls'
 import { createFetcher } from '@universe/api/src/clients/base/utils'
 import {
   UnitagAddressesRequest,
@@ -24,12 +22,11 @@ import {
   UnitagUsernameRequest,
   UnitagUsernameResponse,
 } from '@universe/api/src/clients/unitags/types'
-import { getConfig } from '@universe/config'
 
 const UNI_SIG_HEADER_KEY = 'x-uni-sig'
 
 type UnitagsApiClientFetchersContext = {
-  fetchClient?: FetchClient
+  fetchClient: FetchClient
 }
 
 export type UnitagsApiClientType = {
@@ -48,12 +45,8 @@ export type UnitagsApiClientType = {
   ) => Promise<UnitagGetAvatarUploadUrlResponse>
 }
 
-export function createUnitagsApiClient(ctx?: UnitagsApiClientFetchersContext): UnitagsApiClientType {
-  const client =
-    ctx?.fetchClient ??
-    createFetchClient({
-      baseUrl: getConfig().unitagsApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
-    })
+export function createUnitagsApiClient(ctx: UnitagsApiClientFetchersContext): UnitagsApiClientType {
+  const client = ctx.fetchClient
   const fetchUsername = createFetcher<UnitagUsernameRequest, UnitagUsernameResponse>({
     client,
     method: 'get',
@@ -191,5 +184,3 @@ export function createUnitagsApiClient(ctx?: UnitagsApiClientFetchersContext): U
     getUnitagAvatarUploadUrl,
   }
 }
-
-export const UnitagsApiClient = createUnitagsApiClient({})

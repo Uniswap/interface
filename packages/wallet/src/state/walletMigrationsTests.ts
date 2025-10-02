@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* biome-ignore-all lint/suspicious/noExplicitAny: Migration test utilities require flexible typing */
 /* eslint-disable max-lines */
 
 import { RankingType } from '@universe/api'

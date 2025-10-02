@@ -175,7 +175,7 @@ function V2PositionPage() {
               <BreadcrumbNavLink to="/positions">
                 <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
               </BreadcrumbNavLink>
-              {positionInfo && <Text variant="subheading2">{shortenAddress(positionInfo.poolId)}</Text>}
+              {positionInfo && <Text variant="subheading2">{shortenAddress({ address: positionInfo.poolId })}</Text>}
             </BreadcrumbNavContainer>
           </Flex>
 

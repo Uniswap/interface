@@ -1,14 +1,8 @@
+import { GraphQLApi } from '@universe/api'
 import { FeeData } from 'components/Liquidity/Create/types'
 import ms from 'ms'
 import { useMemo } from 'react'
 import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
-import {
-  ProtocolVersion,
-  Token,
-  useV2PairQuery,
-  useV3PoolQuery,
-  useV4PoolQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -28,15 +22,15 @@ export interface PoolData {
   idOrAddress: string
   feeTier?: FeeData
   txCount?: number
-  protocolVersion?: ProtocolVersion
+  protocolVersion?: GraphQLApi.ProtocolVersion
   hookAddress?: string
 
   // token info
-  token0: Token
+  token0: GraphQLApi.Token
   tvlToken0?: number
   token0Price?: number
 
-  token1: Token
+  token1: GraphQLApi.Token
   tvlToken1?: number
   token1Price?: number
 
@@ -105,7 +99,7 @@ export function usePoolData({
     loading: loadingV4,
     error: errorV4,
     data: dataV4,
-  } = useV4PoolQuery({
+  } = GraphQLApi.useV4PoolQuery({
     variables: { chain, poolId: poolIdOrAddress },
     errorPolicy: 'all',
     skip: isPoolAddress || isSolanaChain,
@@ -114,7 +108,7 @@ export function usePoolData({
     loading: loadingV3,
     error: errorV3,
     data: dataV3,
-  } = useV3PoolQuery({
+  } = GraphQLApi.useV3PoolQuery({
     variables: { chain, address: poolIdOrAddress },
     errorPolicy: 'all',
     skip: !isPoolAddress || isSolanaChain,
@@ -123,7 +117,7 @@ export function usePoolData({
     loading: loadingV2,
     error: errorV2,
     data: dataV2,
-  } = useV2PairQuery({
+  } = GraphQLApi.useV2PairQuery({
     variables: { chain, address: poolIdOrAddress },
     skip: !chainId || !isPoolAddress || isSolanaChain,
     errorPolicy: 'all',
@@ -147,10 +141,10 @@ export function usePoolData({
             idOrAddress: poolId,
             txCount: pool.txCount,
             protocolVersion: pool.protocolVersion,
-            token0: pool.token0 as Token,
+            token0: pool.token0 as GraphQLApi.Token,
             tvlToken0: pool.token0Supply,
             token0Price: pool.token0?.project?.markets?.[0]?.price?.value ?? pool.token0?.market?.price?.value,
-            token1: pool.token1 as Token,
+            token1: pool.token1 as GraphQLApi.Token,
             tvlToken1: pool.token1Supply,
             token1Price: pool.token1?.project?.markets?.[0]?.price?.value ?? pool.token1?.market?.price?.value,
             feeTier,

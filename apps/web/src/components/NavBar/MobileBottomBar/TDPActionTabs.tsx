@@ -1,6 +1,6 @@
 import { Send } from 'components/Icons/Send'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { useAccount } from 'hooks/useAccount'
+import { useActiveAccount, useConnectionStatus } from 'features/accounts/store/hooks'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useCallback, useMemo } from 'react'
@@ -22,7 +22,10 @@ export function TDPActionTabs() {
   const { currencyChain, currencyChainId, address, tokenColor } = useTDPContext()
   const switchChain = useSwitchChain()
   const navigate = useNavigate()
-  const account = useAccount()
+
+  const currentConnectedChainId = useActiveAccount(currencyChainId)?.chainId
+  const isConnected = useConnectionStatus(currencyChainId).isConnected
+
   const chainUrlParam = currencyChain.toLowerCase()
   const addressUrlParam = address === NATIVE_CHAIN_ID ? 'ETH' : address
   const media = useMedia()
@@ -30,12 +33,12 @@ export function TDPActionTabs() {
 
   const toActionLink = useCallback(
     async (href: string) => {
-      if (account.chainId && account.chainId !== currencyChainId && isEVMChain(currencyChainId)) {
+      if (currentConnectedChainId && currentConnectedChainId !== currencyChainId && isEVMChain(currencyChainId)) {
         await switchChain(currencyChainId)
       }
       navigate(href)
     },
-    [account, currencyChainId, switchChain, navigate],
+    [currentConnectedChainId, currencyChainId, switchChain, navigate],
   )
 
   const tabs: TabItem[] = useMemo(
@@ -50,7 +53,7 @@ export function TDPActionTabs() {
         href: `/swap?chain=${chainUrlParam}&inputCurrency=${addressUrlParam}`,
         icon: <ArrowUpCircle />,
       },
-      ...(account.isConnected
+      ...(isConnected
         ? [
             {
               href: `/send?sendChain=${chainUrlParam}&sendCurrency=${addressUrlParam}`,
@@ -59,7 +62,7 @@ export function TDPActionTabs() {
           ]
         : []),
     ],
-    [t, chainUrlParam, addressUrlParam, account.isConnected],
+    [t, chainUrlParam, addressUrlParam, isConnected],
   )
   return (
     <Flex row justifyContent="center" gap="$spacing8" width="100%">
@@ -72,10 +75,12 @@ export function TDPActionTabs() {
         } as ButtonProps
 
         return tab.label ? (
+          // biome-ignore lint/correctness/useJsxKeyInIterable: key is inside commeontProps
           <Button {...commonProps} icon={showIcons ? tab.icon : undefined}>
             {tab.label}
           </Button>
         ) : (
+          // biome-ignore lint/correctness/useJsxKeyInIterable: key is inside commeontProps
           <IconButton {...commonProps} icon={tab.icon} />
         )
       })}

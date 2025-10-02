@@ -3,6 +3,7 @@ import { expect, getTest } from 'playwright/fixtures'
 import { UNI, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
 
 const test = getTest()
 
@@ -29,8 +30,8 @@ test.describe('TokenDetailsSwap', () => {
     await page.getByTestId(OUTPUT_TOKEN_LABEL).click()
     await page.getByTestId('token-option-1-USDT').first().click()
 
-    await expect(page.url()).toContain(USDT.address.toLowerCase())
-    await expect(page.url()).not.toContain(UNI_MAINNET.address.toLowerCase())
+    await expect(page.url()).toContain(normalizeAddress(USDT.address, AddressStringFormat.Lowercase))
+    await expect(page.url()).not.toContain(normalizeAddress(UNI_MAINNET.address, AddressStringFormat.Lowercase))
   })
 
   test('should navigate to the new TDP with correct tokens selected', async ({ page }) => {

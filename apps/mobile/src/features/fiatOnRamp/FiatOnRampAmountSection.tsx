@@ -164,7 +164,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
         if (!isTextInputRefActuallyFocused) {
           inputRef.current?.focus()
         }
-      }, [inputRef, isTextInputRefActuallyFocused]),
+      }, [isTextInputRefActuallyFocused]),
     )
 
     const derivedFiatAmount = isOffRamp ? quoteAmount : sourceAmount

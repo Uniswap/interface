@@ -114,13 +114,13 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
     return key
   }, [initialTab, Pages])
 
+  // scroll to tab navbar on initial page mount only
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Intentionally only runs once on mount
   useEffect(() => {
     if (tabNavRef.current && initialTab) {
       const offsetTop = tabNavRef.current.getBoundingClientRect().top + window.scrollY
       window.scrollTo({ top: offsetTop - 90, behavior: 'smooth' })
     }
-    // scroll to tab navbar on initial page mount only
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {

@@ -1,8 +1,8 @@
-import { Status } from 'components/AccountDrawer/Status'
+import { AccountOption } from 'components/ReceiveCryptoModal/AccountOption'
 import { ProviderOption } from 'components/ReceiveCryptoModal/ProviderOption'
-import { ReceiveModalState, receiveCryptoModalStateAtom } from 'components/ReceiveCryptoModal/state'
-import { useAccount } from 'hooks/useAccount'
-import { useUpdateAtom } from 'jotai/utils'
+import { ReceiveModalState } from 'components/ReceiveCryptoModal/types'
+import { useOpenReceiveCryptoModal } from 'components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { useActiveAddresses } from 'features/accounts/store/hooks'
 import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
 import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
 import { useTranslation } from 'react-i18next'
@@ -19,17 +19,16 @@ function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
   return <IconButton emphasis="secondary" size="xxsmall" icon={<Icon />} />
 }
 
-function AccountCardItem(): JSX.Element {
-  const account = useAccount()
+function AccountCardItem({ address }: { address: Address }): JSX.Element {
   const { data: unitag } = useUnitagsAddressQuery({
-    params: account.address ? { address: account.address } : undefined,
+    params: address ? { address } : undefined,
   })
-  const { data: ENSName } = useENSName(account.address)
-  const setModalState = useUpdateAtom(receiveCryptoModalStateAtom)
+  const { data: ENSName } = useENSName(address)
 
-  const onPressShowWalletQr = (): void => {
-    setModalState(ReceiveModalState.QR_CODE)
-  }
+  const onPressShowWalletQr = useOpenReceiveCryptoModal({
+    modalState: ReceiveModalState.QR_CODE,
+    qrCodeAddress: address,
+  })
 
   return (
     <Flex row alignItems="flex-start" gap="$spacing12">
@@ -43,15 +42,10 @@ function AccountCardItem(): JSX.Element {
         p="$spacing12"
       >
         <Flex fill>
-          <Status
-            account={account.address!}
-            ensUsername={ENSName}
-            uniswapUsername={unitag?.username}
-            showAddressCopy={false}
-          />
+          <AccountOption account={address} ensUsername={ENSName} uniswapUsername={unitag?.username} />
         </Flex>
         <Flex centered row gap="$spacing12" px="$spacing8">
-          <CopyToClipboard toCopy={account.address!}>
+          <CopyToClipboard toCopy={address}>
             <ActionIcon Icon={CopySheets} />
           </CopyToClipboard>
           <TouchableArea onPress={onPressShowWalletQr}>
@@ -79,7 +73,7 @@ export function ChooseProvider({
   setErrorProvider,
 }: ChooseProviderProps): JSX.Element {
   const { t } = useTranslation()
-  const account = useAccount()
+  const activeAddresses = useActiveAddresses()
   const providers = useCexTransferProviders()
 
   if (errorProvider) {
@@ -103,7 +97,12 @@ export function ChooseProvider({
         </Text>
       </Flex>
       <Flex gap="$spacing12">
-        {!providersOnly && <AccountCardItem />}
+        {!providersOnly && (
+          <>
+            {activeAddresses.evmAddress && <AccountCardItem address={activeAddresses.evmAddress} />}
+            {activeAddresses.svmAddress && <AccountCardItem address={activeAddresses.svmAddress} />}
+          </>
+        )}
         {providers.length > 0 && (
           <Flex gap="$spacing12">
             {!providersOnly && (
@@ -115,13 +114,13 @@ export function ChooseProvider({
                 <Separator />
               </Flex>
             )}
-            {account.address && (
+            {activeAddresses.evmAddress !== undefined && (
               <Flex grow gap="$spacing12">
                 {providers.map((serviceProvider) => (
                   <ProviderOption
                     key={serviceProvider.name}
                     serviceProvider={serviceProvider}
-                    walletAddress={account.address!}
+                    walletAddress={activeAddresses.evmAddress ?? ''}
                     setConnectedProvider={setConnectedProvider}
                     setErrorProvider={setErrorProvider}
                   />

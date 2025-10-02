@@ -83,6 +83,7 @@ const InitialPriceInput = () => {
   }, [formattedDefaultInitialPrice, isInitialPriceDirty, setPriceRangeState])
 
   const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(currencies.display, priceInverted)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +priceInverted
   useEffect(() => {
     try {
       if (initialPrice && baseCurrency && quoteCurrency) {
@@ -93,7 +94,7 @@ const InitialPriceInput = () => {
         })
         setOtherCurrencyPrice(parsedPrice?.invert().toSignificant(8))
       }
-    } catch (error) {
+    } catch (_error) {
       setOtherCurrencyPrice(undefined)
     }
   }, [baseCurrency, quoteCurrency, initialPrice, priceInverted])

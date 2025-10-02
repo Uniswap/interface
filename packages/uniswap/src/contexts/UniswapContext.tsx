@@ -7,6 +7,7 @@ import { WalletDisplayNameOptions } from 'uniswap/src/features/accounts/useOncha
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SwapDelegationInfo } from 'uniswap/src/features/smartWallet/delegation/types'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -45,7 +46,7 @@ interface UniswapContextValue {
   useProviderHook: (chainId: number) => JsonRpcProvider | undefined
   useWalletDisplayName: (address: Maybe<Address>, options?: WalletDisplayNameOptions) => DisplayName | undefined
   // Used for triggering wallet connection on web
-  onConnectWallet?: () => void
+  onConnectWallet?: (platform?: Platform) => void
   // Used for web to open the token selector from a banner not in the swap flow
   isSwapTokenSelectorOpen: boolean
   setIsSwapTokenSelectorOpen: (open: boolean) => void
@@ -56,6 +57,8 @@ interface UniswapContextValue {
   getCanBatchTransactions?: (chainId: UniverseChainId | undefined) => boolean
   getSwapDelegationInfo?: (chainId: UniverseChainId | undefined) => SwapDelegationInfo
   useAccountsStoreContextHook: () => AccountsStore
+  // Function to check if current wallet can pay gas fees in any token
+  getCanPayGasInAnyToken?: () => boolean
 }
 
 export const UniswapContext = createContext<UniswapContextValue | null>(null)
@@ -84,6 +87,7 @@ export function UniswapProvider({
   getCanBatchTransactions,
   getSwapDelegationInfo,
   useAccountsStoreContextHook,
+  getCanPayGasInAnyToken,
 }: PropsWithChildren<
   Omit<UniswapContextValue, 'isSwapTokenSelectorOpen' | 'setIsSwapTokenSelectorOpen' | 'setSwapOutputChainId'>
 >): JSX.Element {
@@ -132,6 +136,7 @@ export function UniswapProvider({
       getCanBatchTransactions,
       getSwapDelegationInfo,
       useAccountsStoreContextHook,
+      getCanPayGasInAnyToken,
     }),
     [
       navigateToBuyOrReceiveWithEmptyWallet,
@@ -159,6 +164,7 @@ export function UniswapProvider({
       getSwapDelegationInfo,
       onSwapChainsChanged,
       useAccountsStoreContextHook,
+      getCanPayGasInAnyToken,
     ],
   )
 

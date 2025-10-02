@@ -12,13 +12,13 @@ export function flattenObjectOfObjects<T>(obj: Record<string, Record<string, T>>
 }
 
 // yolo copied from https://stackoverflow.com/questions/44134212/best-way-to-flatten-js-object-keys-and-values-to-a-single-depth-array
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: Generic type parameter needed for flexibility
 export function unnestObject(ob: Record<string, any>): Record<string, string> {
   const toReturn: Record<string, string> = {}
 
   for (const i in ob) {
     // `in` is safe because keys are extracted from object properties
-    if (!Object.prototype.hasOwnProperty.call(ob, i)) {
+    if (!Object.hasOwn(ob, i)) {
       continue
     }
 
@@ -29,7 +29,7 @@ export function unnestObject(ob: Record<string, any>): Record<string, string> {
 
     const flatObject = unnestObject(ob[i])
     for (const x in flatObject) {
-      if (!Object.prototype.hasOwnProperty.call(flatObject, x)) {
+      if (!Object.hasOwn(flatObject, x)) {
         continue
       }
       const property = flatObject[x]
@@ -80,4 +80,52 @@ export function sortKeysRecursively<T extends Record<string, unknown>>(input: T)
   }, {})
 
   return sortedObj as T
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return value !== null && typeof value === 'object' && !Array.isArray(value)
+}
+
+/**
+ * Deep merge two objects with special handling for arrays and null values
+ * @param base - The base object providing default values
+ * @param override - The override object that customizes/extends the base
+ * @returns New merged object
+ */
+export function deepMergeWithNullRemove<T extends Record<string, unknown>, K extends Record<string, unknown>>(
+  base: T,
+  override: K,
+): T & K {
+  const result: Record<string, unknown> = { ...base }
+
+  for (const key in override) {
+    if (Object.hasOwn(override, key)) {
+      const overrideValue = override[key]
+
+      if (isPlainObject(overrideValue)) {
+        const baseValue = result[key]
+        if (isPlainObject(baseValue)) {
+          result[key] = deepMergeWithNullRemove(baseValue, overrideValue)
+        } else {
+          result[key] = overrideValue
+        }
+      } else if (Array.isArray(overrideValue)) {
+        // Merge arrays instead of replacing
+        const baseValue = result[key]
+        if (Array.isArray(baseValue)) {
+          // Concatenate and deduplicate arrays
+          result[key] = [...new Set([...baseValue, ...overrideValue])]
+        } else {
+          result[key] = overrideValue
+        }
+      } else if (overrideValue === null) {
+        // When a key in override is explicitly null, remove it from the merged result
+        delete result[key]
+      } else {
+        result[key] = overrideValue
+      }
+    }
+  }
+
+  return result as T & K
 }

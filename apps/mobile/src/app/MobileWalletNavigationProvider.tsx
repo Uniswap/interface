@@ -7,6 +7,7 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
+import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { NavigateToNftItemArgs } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
@@ -26,7 +27,6 @@ import { getTokenUrl } from 'uniswap/src/utils/linking'
 import { closeKeyboardBeforeCallback } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
 import { noop } from 'utilities/src/react/noop'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
   getNavigateToSendFlowArgsInitialState,
   getNavigateToSwapFlowArgsInitialState,
@@ -249,18 +249,24 @@ function useNavigateToTokenDetails(): (currencyId: string) => void {
 
   return useCallback(
     (currencyId: string): void => {
+      const currentNavRouteName = navigationRef.getCurrentRoute()?.name
+      const isExploreNavigationActuallyFocused = Boolean(
+        currentNavRouteName === ModalName.Explore && exploreNavigationRef.current && exploreNavigationRef.isFocused(),
+      )
+
       closeKeyboardBeforeCallback(() => {
         const route = navigationRef.getCurrentRoute()
-
         const isSwap = route?.name === ModalName.Swap
-        const isExplore = route?.name === ModalName.Explore
 
-        if (!isBottomTabsEnabled || isSwap) {
-          dispatch(closeAllModals())
+        dispatch(closeAllModals())
+
+        if (!isBottomTabsEnabled) {
+          if (isExploreNavigationActuallyFocused) {
+            exploreNavigationRef.navigate(MobileScreens.TokenDetails, { currencyId })
+            return
+          }
+
           onClose()
-        }
-
-        if (isSwap) {
           appNavigation.reset({
             index: 1,
             routes: [{ name: MobileScreens.Home }, { name: MobileScreens.TokenDetails, params: { currencyId } }],
@@ -268,8 +274,14 @@ function useNavigateToTokenDetails(): (currencyId: string) => void {
           return
         }
 
-        if (!isBottomTabsEnabled && isExplore) {
-          exploreNavigationRef.navigate(MobileScreens.TokenDetails, { currencyId })
+        // Always call `onClose`
+        onClose()
+
+        if (isSwap) {
+          appNavigation.reset({
+            index: 1,
+            routes: [{ name: MobileScreens.Home }, { name: MobileScreens.TokenDetails, params: { currencyId } }],
+          })
           return
         }
 

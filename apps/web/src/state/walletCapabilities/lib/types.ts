@@ -1,4 +1,4 @@
-import type { HexString } from 'uniswap/src/utils/hex'
+import type { HexString } from 'utilities/src/addresses/hex'
 
 export interface ChainCapabilities {
   [capabilityName: string]:

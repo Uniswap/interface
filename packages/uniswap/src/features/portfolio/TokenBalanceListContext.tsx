@@ -32,18 +32,21 @@ type TokenBalanceListContextState = {
   rows: Array<TokenBalanceListRow>
   setHiddenTokensExpanded: Dispatch<SetStateAction<boolean>>
   onPressToken?: (currencyId: CurrencyId) => void
-  owner: Address
+  evmOwner?: Address
+  svmOwner?: Address
 }
 
 export const TokenBalanceListContext = createContext<TokenBalanceListContextState | undefined>(undefined)
 
 export function TokenBalanceListContextProvider({
-  owner,
+  evmOwner,
+  svmOwner,
   isExternalProfile,
   children,
   onPressToken,
 }: PropsWithChildren<{
-  owner: Address
+  evmOwner?: Address
+  svmOwner?: Address
   isExternalProfile: boolean
   onPressToken?: (currencyId: CurrencyId) => void
 }>): JSX.Element {
@@ -52,7 +55,8 @@ export function TokenBalanceListContextProvider({
     networkStatus,
     refetch,
   } = usePortfolioBalances({
-    evmAddress: owner,
+    evmAddress: evmOwner,
+    svmAddress: svmOwner,
     pollInterval: PollingInterval.KindaFast,
     fetchPolicy: 'cache-and-network',
   })
@@ -121,7 +125,8 @@ export function TokenBalanceListContextProvider({
       refetch,
       rows,
       setHiddenTokensExpanded,
-      owner,
+      evmOwner,
+      svmOwner,
     }),
     [
       balancesById,
@@ -132,7 +137,8 @@ export function TokenBalanceListContextProvider({
       onPressToken,
       refetch,
       rows,
-      owner,
+      evmOwner,
+      svmOwner,
     ],
   )
 

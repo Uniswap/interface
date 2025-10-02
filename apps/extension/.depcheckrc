@@ -8,7 +8,9 @@ ignores: [
     # Dependencies that depcheck thinks are missing but are actually present or never used
     ## Internal packages / workspaces
     'src',
+    'e2e',
     'tsconfig',
+    '@uniswap/biome-config',
     # Webpack plugins
     '@svgr/webpack',
     'tamagui-loader',

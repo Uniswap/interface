@@ -11,19 +11,18 @@
     "anvil:base": "dotenv -- bash -c 'RUST_LOG=debug anvil --print-traces --fork-url https://${REACT_APP_QUICKNODE_ENDPOINT_NAME}.base-mainnet.quiknode.pro/${REACT_APP_QUICKNODE_ENDPOINT_TOKEN} --hardfork prague --port 8546'",
     "check:deps:usage": "nx exec -- depcheck",
     "check:circular": "nx exec -- concurrently \"../../scripts/check-circular-imports.sh ./src/pages/App.tsx 2\" \"../../scripts/check-circular-imports.sh ./src/setupTests.ts 0\"",
-    "sitemap:generate": "nx exec -- bun run scripts/generate-sitemap.js",
+    "sitemap:generate": "bun run scripts/generate-sitemap.js",
     "start": "ROLLDOWN_OPTIONS_VALIDATION=loose vite dev",
     "dev": "ROLLDOWN_OPTIONS_VALIDATION=loose vite dev",
-    "build:production": "CLOUDFLARE_ENV=production ROLLDOWN_OPTIONS_VALIDATION=loose nx exec -- vite build",
-    "build:staging": "CLOUDFLARE_ENV=staging ROLLDOWN_OPTIONS_VALIDATION=loose nx exec -- vite build --mode staging",
-    "preview": "ROLLDOWN_OPTIONS_VALIDATION=loose nx exec -- vite preview --port 3000",
+    "build:production": "CLOUDFLARE_ENV=production ROLLDOWN_OPTIONS_VALIDATION=loose vite build",
+    "build:staging": "CLOUDFLARE_ENV=staging ROLLDOWN_OPTIONS_VALIDATION=loose vite build --mode staging",
+    "preview": "ROLLDOWN_OPTIONS_VALIDATION=loose vite preview --port 3000",
     "analyze": "source-map-explorer 'build/assets/*.js' --no-border-checks --gzip",
-    "format": "nx exec -- biome check . --linter-enabled=false",
     "lint": "NODE_OPTIONS=--max_old_space_size=8192 nx exec -- eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ --max-warnings=0 .",
     "lint:fix": "eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ . --fix",
-    "playwright:test": "nx e2e @universe/web",
-    "playwright:test:anvil": "nx e2e:anvil @universe/web",
-    "playwright:test:no-anvil": "nx e2e:no-anvil @universe/web",
+    "playwright:test": "playwright test",
+    "playwright:test:anvil": "playwright test --grep '\\.anvil\\.'",
+    "playwright:test:no-anvil": "playwright test --grep-invert '\\.anvil\\.'",
     "typecheck": "nx exec -- tsc && bun run typecheck:cloud",
     "typecheck:cloud": "nx exec -- tsc -p functions/tsconfig.json",
     "find:unused": "bash scripts/delete-unused-assets.sh",
@@ -44,20 +43,11 @@
     "storybook:test:standalone": "concurrently -k -s first -n \"SB BUILD,SB TEST\" -c \"magenta,blue\" \"bun run storybook:build && http-server storybook-static --port 6006 --silent\" \"wait-on --timeout 600000 tcp:127.0.0.1:6006 && bun run storybook:test --maxWorkers=2\""
   },
   "lint-staged": {
-    "bun.lock": [
-      "echo 'Bun automatically deduplicates dependencies'"
-    ]
+    "bun.lock": ["echo 'Bun automatically deduplicates dependencies'"]
   },
   "browserslist": {
-    "production": [
-      ">0.5%",
-      "not dead"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "production": [">0.5%", "not dead"],
+    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
   },
   "devDependencies": {
     "@babel/preset-env": "7.26.0",
@@ -99,6 +89,7 @@
     "@types/uuid": "9.0.1",
     "@types/wcag-contrast": "3.0.0",
     "@types/xml2js": "0.4.14",
+    "@uniswap/biome-config": "workspace:^",
     "@uniswap/client-trading": "0.1.0",
     "@uniswap/default-token-list": "11.19.0",
     "@uniswap/eslint-config": "workspace:^",
@@ -175,6 +166,7 @@
     "@rive-app/canvas": "2.19.0",
     "@rive-app/react-canvas": "4.13.0",
     "@solana/wallet-adapter-base": "0.9.27",
+    "@solana/wallet-adapter-coinbase": "0.1.23",
     "@solana/wallet-adapter-react": "0.15.39",
     "@solana/web3.js": "1.92.0",
     "@svgr/webpack": "8.0.1",
@@ -219,7 +211,6 @@
     "d3": "7.6.1",
     "date-fns": "2.30.0",
     "ethers": "5.7.2",
-    "expo-crypto": "12.8.1",
     "fancy-canvas": "2.1.0",
     "framer-motion": "10.17.6",
     "graphql": "16.6.0",
@@ -246,7 +237,6 @@
     "react-feather": "2.0.10",
     "react-helmet-async": "2.0.4",
     "react-i18next": "14.1.0",
-    "react-infinite-scroll-component": "6.1.0",
     "react-is": "18.3.1",
     "react-native-gesture-handler": "2.22.1",
     "react-native-reanimated": "3.16.7",
@@ -270,7 +260,6 @@
     "use-resize-observer": "9.1.0",
     "utilities": "workspace:^",
     "uuid": "9.0.0",
-    "video-extensions": "1.2.0",
     "viem": "2.30.5",
     "wagmi": "2.15.5",
     "wcag-contrast": "3.0.0",
@@ -284,9 +273,5 @@
     "node": "=22.13.1",
     "bun": ">=1.2.0"
   },
-  "sideEffects": [
-    "*.css",
-    "src/sideEffects.ts",
-    "src/tracing/index.ts"
-  ]
+  "sideEffects": ["*.css", "src/sideEffects.ts", "src/tracing/index.ts"]
 }

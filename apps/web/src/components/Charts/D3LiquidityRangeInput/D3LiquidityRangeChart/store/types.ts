@@ -1,9 +1,9 @@
+import { GraphQLApi } from '@universe/api'
 import { TickAlignment } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/priceToY'
 import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import * as d3 from 'd3'
 import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export type ChartState = {
   dimensions: {
@@ -23,7 +23,7 @@ export type ChartState = {
   maxPrice?: number
   minPrice?: number
   panY: number
-  selectedHistoryDuration: HistoryDuration
+  selectedHistoryDuration: GraphQLApi.HistoryDuration
   selectedPriceStrategy?: DefaultPriceStrategy
   zoomLevel: number
 }
@@ -79,7 +79,7 @@ type Renderers = {
 export type ChartActions = {
   setChartState: (state: Partial<ChartState>) => void
   setPriceStrategy: (strategy: DefaultPriceStrategy) => void
-  setTimePeriod: (timePeriod: HistoryDuration) => void
+  setTimePeriod: (timePeriod: GraphQLApi.HistoryDuration) => void
   updateDimensions: (dimensions: { width: number; height: number }) => void
   handlePriceChange: (changeType: 'min' | 'max', price?: number) => void
   initializeView: (params?: { minPrice: number | null; maxPrice: number | null }) => void

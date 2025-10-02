@@ -39,7 +39,6 @@ function createMockV4Pool(fee: number): V4Pool {
 }
 
 // Mock ClassicTrade helper - using weak typing for easier testing with less boilerplate
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createMockTrade(overrides: any): any {
   const defaultInputAmount = CurrencyAmount.fromRawAmount(mockTokenA, '1000000000')
   const defaultOutputAmount = CurrencyAmount.fromRawAmount(mockTokenB, '1000000000000000000')
@@ -132,7 +131,6 @@ describe('uniswapProvider', () => {
         ],
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(() => uniswapRoutingProvider.getRoutingEntries(trade as any)).toThrow('Unknown pool type')
     })
   })
@@ -376,7 +374,6 @@ describe('uniswapProvider', () => {
         ],
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(() => uniswapRoutingProvider.getRoutingEntries(trade as any)).toThrow('Invalid route path')
     })
   })

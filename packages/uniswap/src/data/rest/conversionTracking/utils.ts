@@ -40,7 +40,7 @@ export const getExternalConversionLeadsCookie = (): { key: PlatformIdType; value
   let parsedCookie
   try {
     parsedCookie = cookieValue ? JSON.parse(cookieValue) : null
-  } catch (e) {}
+  } catch (_e) {}
 
   let result
   if (parsedCookie) {

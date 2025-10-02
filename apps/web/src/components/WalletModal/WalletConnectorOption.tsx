@@ -1,10 +1,11 @@
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
 import Loader from 'components/Icons/LoadingSpinner'
 import { DetectedBadge } from 'components/WalletModal/shared'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
-import { ConnectionStatus, useConnectionState } from 'features/wallet/connection/connectors/state'
+import { useIsInjectedWallet } from 'features/accounts/store/hooks'
+import { ExternalWallet } from 'features/accounts/store/types'
 import { useConnectWallet } from 'features/wallet/connection/hooks/useConnectWallet'
-import { WalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
-import { isEqualWalletConnectorMetaId } from 'features/wallet/connection/utils'
 import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { Flex, Image, Text, useSporeColors } from 'ui/src'
@@ -19,6 +20,7 @@ import Badge, { BadgeVariant } from 'uniswap/src/components/badge/Badge'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isMobileWeb } from 'utilities/src/platform'
@@ -68,28 +70,28 @@ function OtherWalletsIcon() {
  * This function returns the correct icon for the connector.
  */
 function getIcon({
-  walletConnectorMeta,
+  wallet,
   isEmbeddedWalletEnabled,
   themeColors,
 }: {
-  walletConnectorMeta: WalletConnectorMeta
+  wallet: ExternalWallet
   isEmbeddedWalletEnabled: boolean
   themeColors: UseSporeColorsReturn
 }) {
   const iconSize = isEmbeddedWalletEnabled ? iconSizes.icon32 : iconSizes.icon40
 
-  if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
+  if (wallet.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
     return <EmbeddedWalletIcon />
-  } else if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
+  } else if (wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
     return <UniswapMobileIcon iconSize={iconSize} />
-  } else if (walletConnectorMeta.wagmi?.id === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID) {
+  } else if (wallet.id === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID) {
     return <BinanceWalletIcon iconSize={iconSize} />
   } else {
     // TODO(WEB-7217): RN Web Image is not properly displaying base64 encoded images (Phantom logo) */
     return (
       <img
-        src={walletConnectorMeta.icon}
-        alt={walletConnectorMeta.name}
+        src={wallet.icon}
+        alt={wallet.name}
         style={{
           width: iconSize,
           height: iconSize,
@@ -101,19 +103,13 @@ function getIcon({
   }
 }
 
-function getConnectorText({
-  walletConnectorMeta,
-  t,
-}: {
-  walletConnectorMeta: WalletConnectorMeta
-  t: ReturnType<typeof useTranslation>['t']
-}) {
-  if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
+function getConnectorText({ wallet, t }: { wallet: ExternalWallet; t: ReturnType<typeof useTranslation>['t'] }) {
+  if (wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
     return t('common.uniswapMobile')
-  } else if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
+  } else if (wallet.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
     return t('account.passkey.log.in.title')
   } else {
-    return walletConnectorMeta.name
+    return wallet.name
   }
 }
 
@@ -136,28 +132,41 @@ function RightSideDetail({
   return null
 }
 
-export function WalletConnectorOption({ walletConnectorMeta }: { walletConnectorMeta: WalletConnectorMeta }) {
+export function WalletConnectorOption({
+  wallet,
+  connectOnPlatform = 'any',
+}: {
+  wallet: ExternalWallet
+  connectOnPlatform?: Platform | 'any'
+}) {
   const { t } = useTranslation()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
-  const connectionState = useConnectionState()
-  const isPendingConnection =
-    connectionState.status === ConnectionStatus.Pending && connectionState.meta.name === walletConnectorMeta.name
+  const { connectWallet, pendingWallet } = useConnectWallet()
+
+  const isPendingConnection = pendingWallet?.id === wallet.id
 
   const recentConnectorId = useRecentConnectorId()
-  const isRecent = Boolean(recentConnectorId && isEqualWalletConnectorMetaId(walletConnectorMeta, recentConnectorId))
+  const isRecent = Boolean(recentConnectorId && wallet.id === recentConnectorId)
 
   const themeColors = useSporeColors()
-  const icon = getIcon({ walletConnectorMeta, isEmbeddedWalletEnabled, themeColors })
-  const text = getConnectorText({ walletConnectorMeta, t })
+  const icon = getIcon({ wallet, isEmbeddedWalletEnabled, themeColors })
+  const text = getConnectorText({ wallet, t })
   // Porto is set as injected, but we don't want to show it in the wallet modal as a detected wallet
-  const isDetected =
-    walletConnectorMeta.isInjected && walletConnectorMeta.wagmi?.id !== CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID
+  const isDetected = useIsInjectedWallet(wallet.id)
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
   const isDisabled = Boolean(isPendingConnection && !isIFramed())
 
-  const connectWallet = useConnectWallet()
-  const handleConnect = useEvent(() => connectWallet(walletConnectorMeta))
+  const accountDrawer = useAccountDrawer()
+  const setMenu = useSetMenu()
+
+  const onSuccess = useEvent(() => {
+    accountDrawer.close()
+    setMenu({ variant: MenuStateVariant.MAIN })
+  })
+
+  const individualPlatform = connectOnPlatform === 'any' ? undefined : connectOnPlatform
+  const handleConnect = useEvent(() => connectWallet({ wallet, onSuccess, individualPlatform }))
 
   return (
     <WalletConnectorOptionBase
@@ -170,8 +179,8 @@ export function WalletConnectorOption({ walletConnectorMeta }: { walletConnector
       isPendingConnection={isPendingConnection}
       isDisabled={isDisabled}
       analyticsProperties={{
-        wallet_name: walletConnectorMeta.name,
-        wallet_type: walletConnectorMeta.analyticsWalletType,
+        wallet_name: wallet.name,
+        wallet_type: wallet.analyticsWalletType,
       }}
     />
   )

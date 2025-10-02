@@ -4,7 +4,7 @@
 export const isAndroid: boolean = false
 export const isIOS: boolean = false
 
-export const isWeb: boolean = false
+export const isWebPlatform: boolean = false
 export const isMobileWeb: boolean = false
 
 export const isWebIOS: boolean = false
@@ -24,7 +24,7 @@ export const isMobileWebAndroid: boolean = false
 export const isBrowser: boolean = false
 
 // App
-export const isExtension: boolean = false
+export const isExtensionApp: boolean = false
 export const isMobileApp: boolean = false
-export const isInterface: boolean = false
+export const isWebApp: boolean = false
 export const isInterfaceDesktop: boolean = false

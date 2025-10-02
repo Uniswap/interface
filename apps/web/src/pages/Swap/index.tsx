@@ -33,6 +33,7 @@ import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
+import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { WebFORNudgeProvider } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { InterfaceEventName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -134,7 +135,9 @@ export function Swap({
   usePersistedFilteredChainIds?: boolean
   passkeyAuthStatus?: PasskeyAuthStatus
 }) {
-  useMissingPlatformWalletPopup()
+  const { isSwapTokenSelectorOpen, swapInputChainId, swapOutputChainId } = useUniswapContext()
+
+  useMissingPlatformWalletPopup(swapInputChainId ? chainIdToPlatform(swapInputChainId) : undefined) // show mismatching wallet platform popup if input chain id doesn't match
 
   const isExplorePage = useIsPage(PageType.EXPLORE)
   const isModeMismatch = useIsModeMismatch(chainId)
@@ -143,7 +146,6 @@ export function Swap({
   const input = currencyToAsset(initialInputCurrency)
   const output = currencyToAsset(initialOutputCurrency)
 
-  const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
   const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
 
   const prefilledState = useSwapPrefilledState({
@@ -258,7 +260,7 @@ function UniversalSwapFlow({
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       setCurrentTab(PATHNAME_TO_TAB[pathname] ?? SwapTab.Swap)
     }
-  }, [pathname, setCurrentTab, openSendFormModal])
+  }, [pathname, openSendFormModal, setCurrentTab])
 
   const onTabClick = useCallback(
     (tab: SwapTab) => {

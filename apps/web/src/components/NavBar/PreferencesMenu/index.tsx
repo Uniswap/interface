@@ -23,7 +23,7 @@ export function PreferenceMenu() {
 
   const [settingsView, setSettingsView] = useState<PreferencesView>(PreferencesView.SETTINGS)
   const [isOpen, setIsOpen] = useState(false)
-  const handleExitMenu = useCallback(() => setSettingsView(PreferencesView.SETTINGS), [setSettingsView])
+  const handleExitMenu = useCallback(() => setSettingsView(PreferencesView.SETTINGS), [])
   const onOpenChange = useCallback(
     (open: boolean) => {
       setIsOpen(open)
@@ -31,7 +31,7 @@ export function PreferenceMenu() {
         handleExitMenu()
       }
     },
-    [handleExitMenu, setIsOpen],
+    [handleExitMenu],
   )
 
   return (

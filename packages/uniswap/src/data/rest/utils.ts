@@ -2,31 +2,26 @@ import { PlainMessage } from '@bufbuild/protobuf'
 import { Platform, PlatformAddress, WalletAccount } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { ProtectionInfo as ProtectionInfoProtobuf } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import {
-  ProtectionAttackType,
-  ProtectionInfo,
-  ProtectionResult,
-  SafetyLevel,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 import { logger } from 'utilities/src/logger/logger'
 
 /**
  * Helper functions to parse string enum fields from REST API responses.
  *
  * Note: The Protobuf types use string enums instead of strictly typed enums because
- * Protobuf does not allow defining two of the same enum name in the same proto file. (i.e. both ProtectionAttackType and
- * ProtectionResult contain 'UNKNOWN')
+ * Protobuf does not allow defining two of the same enum name in the same proto file. (i.e. both GraphQLApi.ProtectionAttackType and
+ * GraphQLApi.ProtectionResult contain 'UNKNOWN')
  *
  * Since the Explore service just calls GraphQL, we have confidence the string values will match the GraphQL enums.
  * Just validating here!
  */
-export function parseSafetyLevel(safetyLevel?: string): SafetyLevel | undefined {
+export function parseSafetyLevel(safetyLevel?: string): GraphQLApi.SafetyLevel | undefined {
   if (!safetyLevel) {
     return undefined
   }
-  const validSafetyLevels: SafetyLevel[] = Object.values(SafetyLevel)
-  if (validSafetyLevels.includes(safetyLevel as SafetyLevel)) {
-    return safetyLevel as SafetyLevel
+  const validSafetyLevels: GraphQLApi.SafetyLevel[] = Object.values(GraphQLApi.SafetyLevel)
+  if (validSafetyLevels.includes(safetyLevel as GraphQLApi.SafetyLevel)) {
+    return safetyLevel as GraphQLApi.SafetyLevel
   } else {
     logger.warn(
       'uniswap/data/rest/utils.ts',
@@ -37,21 +32,21 @@ export function parseSafetyLevel(safetyLevel?: string): SafetyLevel | undefined 
   }
 }
 
-export function parseProtectionInfo(protectionInfo?: ProtectionInfoProtobuf): ProtectionInfo | undefined {
+export function parseProtectionInfo(protectionInfo?: ProtectionInfoProtobuf): GraphQLApi.ProtectionInfo | undefined {
   if (!protectionInfo) {
     return undefined
   }
 
-  let protectionResult: ProtectionResult | undefined
+  let protectionResult: GraphQLApi.ProtectionResult | undefined
   // protectionInfo.result and protectionInfo.attackTypes are a string instead of an enum
   // message TokenProtectionInfo {
   //   string result = 1;
   //   ...
   // }
   // So result and attackTypes are a capitalized string instead of an uppercase enum value
-  const validProtectionResults: string[] = Object.values(ProtectionResult)
+  const validProtectionResults: string[] = Object.values(GraphQLApi.ProtectionResult)
   if (validProtectionResults.includes(protectionInfo.result.toUpperCase())) {
-    protectionResult = protectionInfo.result.toUpperCase() as ProtectionResult
+    protectionResult = protectionInfo.result.toUpperCase() as GraphQLApi.ProtectionResult
   } else {
     logger.warn(
       'uniswap/data/rest/utils.ts',
@@ -61,10 +56,10 @@ export function parseProtectionInfo(protectionInfo?: ProtectionInfoProtobuf): Pr
     return undefined
   }
 
-  const validAttackTypes: string[] = Object.values(ProtectionAttackType)
+  const validAttackTypes: string[] = Object.values(GraphQLApi.ProtectionAttackType)
   const attackTypes = protectionInfo.attackTypes
     .filter((at) => validAttackTypes.includes(at.toUpperCase()))
-    .map((at) => at.toUpperCase() as ProtectionAttackType)
+    .map((at) => at.toUpperCase() as GraphQLApi.ProtectionAttackType)
   if (attackTypes.length !== protectionInfo.attackTypes.length) {
     logger.warn(
       'uniswap/data/rest/utils.ts',
@@ -127,13 +122,7 @@ export function transformInput<T extends Record<string, unknown> & { walletAccou
     return undefined
   }
 
-  const {
-    evmAddress,
-    svmAddress,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    walletAccount: _walletAccount,
-    ...restInput
-  } = input
+  const { evmAddress, svmAddress, walletAccount: _walletAccount, ...restInput } = input
 
   return {
     ...restInput,

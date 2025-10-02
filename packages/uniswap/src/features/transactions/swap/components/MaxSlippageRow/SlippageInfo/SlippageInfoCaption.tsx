@@ -8,7 +8,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { SlippageInfoProps } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/types'
 import { useFormatSlippageAmount } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/useFormatSlippageAmount'
 import { TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isMobileApp, isWeb } from 'utilities/src/platform'
+import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 
 function SlippageWarningText(): JSX.Element {
   const { t } = useTranslation()
@@ -16,7 +16,7 @@ function SlippageWarningText(): JSX.Element {
   return (
     <Flex centered row gap="$spacing8">
       <AlertTriangleFilled color="$statusWarning" size="$icon.16" />
-      <Text color="$statusWarning" variant={isWeb ? 'body4' : 'body2'}>
+      <Text color="$statusWarning" variant={isWebPlatform ? 'body4' : 'body2'}>
         {t('swap.settings.slippage.warning.message')}
       </Text>
     </Flex>
@@ -69,25 +69,25 @@ export function SlippageInfoCaption({
 
   return (
     <Flex gap="$spacing12" width="100%">
-      <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={isWeb ? 'body4' : 'body2'}>
+      <Text color="$neutral2" textAlign={isWebPlatform ? 'left' : 'center'} variant={isWebPlatform ? 'body4' : 'body2'}>
         {[TradeType.EXACT_INPUT, 'EXACT_INPUT'].includes(tradeType)
           ? t('swap.settings.slippage.input.message')
           : t('swap.settings.slippage.output.message')}{' '}
-        {isWeb && (
+        {isWebPlatform && (
           <Flex display="inline-flex">
             <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} textVariant="body4" textColor="white" />
           </Flex>
         )}
       </Text>
 
-      {showSlippageWarning && isWeb && <SlippageWarningText />}
+      {showSlippageWarning && isWebPlatform && <SlippageWarningText />}
 
       <Flex
         backgroundColor="$surface2"
-        borderRadius={isWeb ? '$rounded8' : '$rounded20'}
+        borderRadius={isWebPlatform ? '$rounded8' : '$rounded20'}
         gap="$spacing8"
-        px={isWeb ? '$spacing8' : '$spacing16'}
-        py={isWeb ? '$spacing8' : '$spacing12'}
+        px={isWebPlatform ? '$spacing8' : '$spacing16'}
+        py={isWebPlatform ? '$spacing8' : '$spacing12'}
         width="100%"
       >
         {isMobileApp && (
@@ -98,13 +98,13 @@ export function SlippageInfoCaption({
           />
         )}
 
-        <Flex row alignItems="center" gap={isWeb ? '$spacing8' : '$spacing12'} justifyContent="space-between">
-          <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant={isWeb ? 'body4' : 'body2'}>
+        <Flex row alignItems="center" gap={isWebPlatform ? '$spacing8' : '$spacing12'} justifyContent="space-between">
+          <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant={isWebPlatform ? 'body4' : 'body2'}>
             {[TradeType.EXACT_INPUT, 'EXACT_INPUT'].includes(tradeType)
               ? t('swap.settings.slippage.input.receive.title')
               : t('swap.settings.slippage.output.spend.title')}
           </Text>
-          <Text color="$neutral1" textAlign="center" variant={isWeb ? 'body4' : 'subheading2'}>
+          <Text color="$neutral1" textAlign="center" variant={isWebPlatform ? 'body4' : 'subheading2'}>
             {formattedSlippageAmount}
           </Text>
         </Flex>

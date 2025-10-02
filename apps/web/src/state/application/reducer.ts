@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { PositionInfo } from 'components/Liquidity/types'
 import { PopupType } from 'components/Popups/types'
+import { ReceiveCryptoModalInitialState } from 'components/ReceiveCryptoModal/types'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 
 export type LiquidityModalInitialState = PositionInfo
@@ -25,12 +26,18 @@ type BlockedAccountModalParams = {
   initialState: { blockedAddress?: string }
 }
 
+type ReceiveCryptoModalParams = {
+  name: typeof ModalName.ReceiveCryptoModal
+  initialState: ReceiveCryptoModalInitialState
+}
+
 export type OpenModalParams =
   | { name: ModalNameType; initialState?: undefined }
   | AddLiquidityModalParams
   | RemoveLiquidityModalParams
   | ClaimFeeModalParams
   | BlockedAccountModalParams
+  | ReceiveCryptoModalParams
 
 type CloseModalParams = ModalNameType
 

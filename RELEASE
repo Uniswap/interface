@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmW2N1jVYGV4M84L1cMTysFn1BtPJTKcjDkdoZtpmNE3xt`
-- CIDv1: `bafybeidsfyuzvuwapjnhk4dfkgjipmjnovf34gfv6c6broz6zjcsikwwbe`
+- CIDv0: `QmZDGpemKezoNt9EN6WRuTFPM4eXNYH2sxT3VXwnop1byu`
+- CIDv1: `bafybeifbrs7b4fucyijr6s24lgaaa736h6q25l62d3hagu3gxakobgdctq`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,100 +10,72 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeidsfyuzvuwapjnhk4dfkgjipmjnovf34gfv6c6broz6zjcsikwwbe.ipfs.dweb.link/
-- [ipfs://QmW2N1jVYGV4M84L1cMTysFn1BtPJTKcjDkdoZtpmNE3xt/](ipfs://QmW2N1jVYGV4M84L1cMTysFn1BtPJTKcjDkdoZtpmNE3xt/)
+- https://bafybeifbrs7b4fucyijr6s24lgaaa736h6q25l62d3hagu3gxakobgdctq.ipfs.dweb.link/
+- [ipfs://QmZDGpemKezoNt9EN6WRuTFPM4eXNYH2sxT3VXwnop1byu/](ipfs://QmZDGpemKezoNt9EN6WRuTFPM4eXNYH2sxT3VXwnop1byu/)
 
-## 5.111.0 (2025-09-24)
+## 5.112.0 (2025-10-02)
 
 
 ### Features
 
-* **web:** [lp] action buttons - center range (#23054) 53738d8
-* **web:** [lp] action buttons - history duration (#23068) e163e2c
-* **web:** [lp] action buttons - modify zoom options (#23069) 6666906
-* **web:** [lp] action buttons - reset (#23067) 39d2a4b
-* **web:** [lp] action buttons - zoom (#23061) 6a09678
-* **web:** [lp] add center range behavior (#22983) c568951
-* **web:** [lp] add chartInteractions - pinch to zoom (#22986) a41a9ca
-* **web:** [lp] add chartInteractions - scroll (#22985) 8b0bd0c
-* **web:** [lp] add handlePriceChange action (#23348) 4c4c7ce
-* **web:** [lp] add line swap (#23346) 134fb89
-* **web:** [lp] add scrollbar and min/max indicators (#22964) 1563c30
-* **web:** [lp] add tick based drag behavior (#22965) 8e587cf
-* **web:** [lp] add tick based drag to liquidity range area (#23047) 30bd10a
-* **web:** [lp] create current tick renderer (#22989) 312799a
-* **web:** [lp] current price (#23090) f7b9574
-* **web:** [lp] default price strats (#23141) 828d388
-* **web:** [lp] drag to create range area (#23048) 9096a52
-* **web:** [lp] full range state (#23086) 12bf3f5
-* **web:** [lp] hide default price strats when missing liquidity or price data (#23422) 8bf92e7
-* **web:** [lp] improved loading state (#23103) d8374b3
-* **web:** [lp] indicate at when at our around price strat (#23423) 931ef48
-* **web:** [lp] move current price and token selection to d3 liquidity input (#23140) 56c68fc
-* **web:** [lp] move range input component (#23491) dc34109
-* **web:** [lp] move range inputs (#23143) 90e06d4
-* **web:** [lp] on set min/max, transparent drags (#22962) cab80c9
-* **web:** [lp] pass initial min/max price (#23080) ebec3ff
-* **web:** [lp] percent indicators (#23157) 973e1a7
-* **web:** [lp] revert back to original default range logic (#23567) d9b1335
-* **web:** [lp] tick tooltips (#23142) 51b26e0
-* **web:** [lp] time scale (#23078) 48fa2e3
-* **web:** AccountsStore implementation (#23290) 6230f2a
-* **web:** add more configuration for web-ext (#23483) 03fe259
-* **web:** add pool info endpoint feature gate (#23521) da496bb
-* **web:** add v2 style options to table component (#23171) 03c21e6
-* **web:** create solana switch network toast prompt (#22414) 96cfa33
-* **web:** show notifications in mini portfolio for context menu actions (#23218) 79b0ccf
-* **web:** update CLAUDE.md for extension (#23507) d1e5c5f
-* **web:** use poolinfo endpoint (#22711) 817b639
+* **web:** add basic disconnected view for portfolio (#23459) 365239b
+* **web:** add new Solana receive crypto QR option (#23446) 3aa3b51
+* **web:** add percentage allocation chart (#23205) cf31a33
+* **web:** add portfolio activity filter controls (#23493) 32bfa25
+* **web:** add toucan skeleton page behind a feature flag (#23900) 3b14d35
+* **web:** add toucantoken page (#23906) 199e6a8
+* **web:** context menu for tokens table (#23434) e1dd094
+* **web:** disconnect menu tooltip (#23954) 79ce2a2
+* **web:** Include global types in web functions (#23874) fffa958
+* **web:** multiwallet UX address display v2 (#22894) bd4d4dd
+* **web:** portfolio tokens tab (#23193) f822c00
+* **web:** rename base Dropdown component and create DropdownSelector component (#23836) 81f0743
+* **web:** Replace graphql types with GraphQLApi from @universe/api (#23757) e551cd6
+* **web:** Support Solana FOR (#23653) 3b229fc
+* **web:** switch platform-specific account (#23970) 2c5e8af
+* **web:** use uniswap url for jupiter api (#22101) e0d1dec
 
 
 ### Bug Fixes
 
-* **web:** [lp] default to custom range (#23573) 2ba34e0
-* **web:** [lp] ensure minimum min/max indicator height on drag creation (#23572) 5dd689e
-* **web:** [lp] fix min/max at same closest tick (#23591) 3a4f390
-* **web:** [lp] render priceToY at specified tick alignment (#23571) 337649f
-* **web:** add query for extra limit orders - PORT-427 (#23667) 10848d5
-* **web:** detected label alignment in connection pane (#23708) 39e5c93
-* **web:** enhance Binance wallet connection handling (#23394) 6e82ab5
-* **web:** fix focus stealing issue on the deposit form (#23510) bb90d34
-* **web:** fix toastregularsimple design (#22493) 1539552
-* **web:** fix useAccountRiskCheck for solana and BlockedAccount modal for svm (#22976) d09e5d7
-* **web:** hover state on position cards (#22819) 1e9fa50
-* **web:** mweb fixes (#23596) c3dbe85
-* **web:** mweb mini-portfolio tabs bottom spacing - PORT-400 (#23372) 1bcd62b
-* **web:** prevent currency change causing re-render in create form (#23598) 3e2f37e
-* **web:** remove preserve sym links for better HMR (#23719) 113bb9c
-* **web:** remove receipt req for batch txs in updater - PORT-248 (#23371) ba1b742
-* **web:** remove unneeded param for deeplinking on web to native assets from portfolio (#23642) f039e38
-* **web:** show unsupported Solana error in create liquidity (#23399) 3dca695
-* **web:** updates receive modal copy animation (#23704) 37747e2
-* **web:** use useSwapAndLimitContext for currentTab (#23326) d7ba078
+* **web:** add more padding for smaller screens (#23799) 4b80cf1
+* **web:** add uniswap mobile wallet into accountstore (#23882) ba44b56
+* **web:** alignment for uniswap wallet QR code (#23992) 035d2df
+* **web:** avoid displaying two binance wallet options when trust wall… (#24248) 9bd62a9
+* **web:** debounce useMissingPlatformWalletPopup (#23965) ef1de10
+* **web:** don't run sitemap generation script with NX (#24061) 55711c5
+* **web:** env loading in production builds (#23973) fad5b5f
+* **web:** fix context menu on positions page (#23809) a9ef911
+* **web:** fix pool mini card menu zindex (#24220) 98b5d9c
+* **web:** fix portfolio e2e test (#23716) 6e5ac69
+* **web:** fix sitemap generation script (#24065) 8058e3f
+* **web:** fix solana-only miniP (#22895) 973103e
+* **web:** hide migrate to v3 button on unsupported chains (#23306) d73d883
+* **web:** open proper connect page when clicking swap connect wallet (#23991) 0e7f6a1
+* **web:** prevent regressions in non-solana wallet connection flow (#24044) ab315b0
+* **web:** re-enable solana coinbase adapter (#23982) 6927d70
+* **web:** re-instate activity parsing for web popups (#24154) 6d59743
+* **web:** remove custom env loading and bypass nx for staging/prod builds (#24045) df38e77
+* **web:** revert change to POPUP_MAX_WIDTH (#24041) e51797a
+* **web:** show disabled buy/sell/send form button if mismatched wallet platform (#23661) a5887c7
 
 
 ### Continuous Integration
 
-* **web:** update sitemaps b368c4b
+* **web:** update sitemaps 7bcdac9
 
 
 ### Styles
 
-* **web:** update copy icon animation (#23298) 20e9bde
-* **web:** update CopyHelper copy animation (#23358) 7c2d700
-* **web:** update explore copy icon (#23373) b834e84
+* **web:** fix spinning loader causing overflow issues in mini portfolio (#24048) 3ccd937
 
 
 ### Code Refactoring
 
-* **web:** [lp] clean up chart actions and utils (#23167) 199a3b7
-* **web:** [lp] clean up chart state (#23168) 81f689f
-* **web:** [lp] rename files and functions (#23169) f35fb74
-* **web:** rm rest of direct wagmi connection code + handle errors (#23461) 840f2cc
-
-
-### Tests
-
-* **web:** [lp] dynamic zoom min (#23258) fec8dd6
+* **web:** decluster WalletModal (#23953) 625ae78
+* **web:** gas hook integration (#23295) 653d744
+* **web:** integrate cancellation functions into web (#23292) 0aee376
+* **web:** kill walletConnectorMeta (#23909) ee69fbf
+* **web:** use AccountsStore shapes for connecting (#23844) 7713cb3
 
 

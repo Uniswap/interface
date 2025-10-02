@@ -2,31 +2,13 @@ import { connect } from '@wagmi/core'
 import { CONNECTOR_ICON_OVERRIDE_MAP } from 'components/Web3Provider/constants'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { uniswapWalletConnect } from 'components/Web3Provider/walletConnect'
+import { ConnectionService } from 'features/wallet/connection/services/IConnectionService'
 import { WalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
 import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
-import { useAtom } from 'jotai'
+import { useUpdateAtom } from 'jotai/utils'
+import { useMemo } from 'react'
 import { persistHideMobileAppPromoBannerAtom } from 'state/application/atoms'
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
-import { useEvent } from 'utilities/src/react/hooks'
-
-const CUSTOM_CONNECTOR_IDS = [
-  CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
-  CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
-] as const
-
-/** Type for non-standard wallet connectors that require custom handling. */
-export type CustomConnectorId = (typeof CUSTOM_CONNECTOR_IDS)[number]
-
-/** Returns a map of custom connector IDs to their connection functions. */
-export function useConnectCustomWalletsMap(): Record<CustomConnectorId, () => Promise<void>> {
-  const connectEmbeddedWallet = useConnectEmbeddedWallet()
-  const connectUniswapWallet = useConnectUniswapWallet()
-
-  return {
-    [CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID]: connectUniswapWallet,
-    [CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID]: connectEmbeddedWallet,
-  }
-}
 
 const APPLY_CUSTOM_CONNECTOR_META_MAP = {
   [CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID]: applyUniswapWalletConnectorMeta,
@@ -65,17 +47,23 @@ export function applyCustomConnectorMeta(walletConnectors: WalletConnectorMeta[]
 // Lazy-initialized on connection to prevent socket conflicts.
 // Standard wagmi initialization creates persistent WebSocket connections
 // that can interfere with each other and cause message drops.
-function useConnectUniswapWallet(): () => Promise<void> {
-  const [, setPersistHideMobileAppPromoBanner] = useAtom(persistHideMobileAppPromoBannerAtom)
+export function useUniswapMobileConnectionService(): ConnectionService {
+  const setPersistHideMobileAppPromoBanner = useUpdateAtom(persistHideMobileAppPromoBannerAtom)
 
-  return useEvent(async () => {
-    setPersistHideMobileAppPromoBanner(true)
+  return useMemo(
+    () => ({
+      connect: async () => {
+        setPersistHideMobileAppPromoBanner(true)
 
-    // Initialize Uniswap Wallet on click instead of in wagmi config
-    // to avoid multiple wallet connect sockets being opened
-    // and causing issues with messages getting dropped
-    await connect(wagmiConfig, { connector: uniswapWalletConnect() })
-  })
+        // Initialize Uniswap Wallet on click instead of in wagmi config
+        // to avoid multiple wallet connect sockets being opened
+        // and causing issues with messages getting dropped
+        await connect(wagmiConfig, { connector: uniswapWalletConnect() })
+        return { connected: true }
+      },
+    }),
+    [setPersistHideMobileAppPromoBanner],
+  )
 }
 
 const UNISWAP_WALLET_CONNECTOR_META = {
@@ -108,12 +96,16 @@ function applyEmbeddedWalletConnectorMeta(walletConnectors: WalletConnectorMeta[
   })
 }
 
-/** Returns a function that triggers the passkey sign-in flow and resolves after it has completed. */
-function useConnectEmbeddedWallet(): () => Promise<void> {
+export function useUniswapEmbeddedConnectionService(): ConnectionService {
   const { signInWithPasskeyAsync } = useSignInWithPasskey()
 
-  return useEvent(async () => {
-    // wraps to await but return void
-    await signInWithPasskeyAsync()
-  })
+  return useMemo(
+    () => ({
+      connect: async () => {
+        await signInWithPasskeyAsync()
+        return { connected: true }
+      },
+    }),
+    [signInWithPasskeyAsync],
+  )
 }

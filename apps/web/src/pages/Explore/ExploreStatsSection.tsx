@@ -86,7 +86,7 @@ const ExploreStatsSection = () => {
           key={data.label}
           borderLeftWidth={index === 0 ? 0 : '$spacing1'}
           borderColor="$surface3"
-          pl={index == 0 ? 0 : '$spacing24'}
+          pl={index === 0 ? 0 : '$spacing24'}
           flex={1}
           cursor={data.protocolPopoverFormattedData ? 'pointer' : 'default'}
           transition="opacity 0.3s ease, transform 0.3s ease"

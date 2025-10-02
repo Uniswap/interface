@@ -23,7 +23,7 @@ import {
   DappRequestCardLoggingName,
   OnboardingCardLoggingName,
 } from 'uniswap/src/features/telemetry/types'
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 
 const DESCRIPTION_LENGTH_THRESHOLD = 66
 
@@ -48,7 +48,7 @@ type IconGraphic = {
 
 export type ImageGraphic = {
   type: IntroCardGraphicType.Image
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: Image type varies by platform
   image: any
 }
 
@@ -179,7 +179,7 @@ export function IntroCard({
     }
   }, [cardType, isDarkMode, closeHandler, t])
 
-  const cardPadding = isExtension ? '$spacing12' : '$spacing16'
+  const cardPadding = isExtensionApp ? '$spacing12' : '$spacing16'
 
   return (
     <ClickableWithinGesture onPress={pressHandler}>
@@ -211,7 +211,7 @@ export function IntroCard({
               <Flex fill>
                 <ElementAfterText
                   text={title}
-                  textProps={{ color: '$neutral1', variant: isExtension ? 'body3' : 'subheading2' }}
+                  textProps={{ color: '$neutral1', variant: isExtensionApp ? 'body3' : 'subheading2' }}
                   element={isNew ? <NewTag /> : undefined}
                 />
               </Flex>
@@ -221,7 +221,7 @@ export function IntroCard({
             </Flex>
             <Text
               color="$neutral2"
-              variant={isExtension ? 'body4' : description.length > DESCRIPTION_LENGTH_THRESHOLD ? 'body3' : 'body2'}
+              variant={isExtensionApp ? 'body4' : description.length > DESCRIPTION_LENGTH_THRESHOLD ? 'body3' : 'body2'}
             >
               {description}
             </Text>

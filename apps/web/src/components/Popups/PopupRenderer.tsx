@@ -43,6 +43,8 @@ export function PopupRenderer() {
           background: 'transparent',
           border: 'none',
           boxShadow: 'none',
+          display: 'flex',
+          justifyContent: 'flex-end',
         },
       }}
     />

@@ -12,7 +12,7 @@ import { useForceUpgradeTranslations } from 'uniswap/src/features/forceUpgrade/h
 import { useLocalizedStatsigLanguage } from 'uniswap/src/features/language/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isExtension, isIOS, isMobileApp, isWeb } from 'utilities/src/platform'
+import { isExtensionApp, isIOS, isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { EXTENSION_FORCED_UPGRADE_HELP_LINK, MOBILE_APP_STORE_LINK } from 'wallet/src/constants/urls'
 import { startAndroidInAppUpdate } from 'wallet/src/features/forceUpgrade/startAndroidInAppUpdate'
@@ -96,7 +96,7 @@ function ForceUpgradeModal({
       onClose()
     }
 
-    if (isExtension) {
+    if (isExtensionApp) {
       await openUri({ uri: EXTENSION_FORCED_UPGRADE_HELP_LINK, openExternalBrowser: true, isSafeUri: true })
       return
     }
@@ -141,9 +141,9 @@ function ForceUpgradeModal({
         <Flex
           centered
           gap="$spacing24"
-          pb={isWeb ? '$none' : '$spacing12'}
+          pb={isWebPlatform ? '$none' : '$spacing12'}
           pt={upgradeStatus === UpgradeStatus.Required ? '$spacing24' : '$spacing12'}
-          px={isWeb ? '$none' : '$spacing24'}
+          px={isWebPlatform ? '$none' : '$spacing24'}
         >
           <Flex
             centered
@@ -190,7 +190,7 @@ function ForceUpgradeModal({
               {descriptionText}
             </Text>
           </Flex>
-          <Flex centered gap="$spacing8" pb={isWeb ? '$none' : '$spacing12'} width="100%">
+          <Flex centered gap="$spacing8" pb={isWebPlatform ? '$none' : '$spacing12'} width="100%">
             <Flex row width="100%">
               <Button size="medium" variant="branded" onPress={onPressConfirm}>
                 {isMobileApp ? t('forceUpgrade.action.confirm') : t('forceUpgrade.action.learn')}

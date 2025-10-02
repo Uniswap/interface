@@ -1,6 +1,6 @@
+import { GraphQLApi } from '@universe/api'
 import { useCallback, useMemo } from 'react'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { useTokenDetailsScreenLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -12,7 +12,7 @@ export function useTokenDetailsNavigation(): {
   navigateWithPop: (currencyId: CurrencyId) => void
 } {
   const navigation = useAppStackNavigation()
-  const [load] = useTokenDetailsScreenLazyQuery()
+  const [load] = GraphQLApi.useTokenDetailsScreenLazyQuery()
 
   const preload = useCallback(
     async (currencyId: CurrencyId): Promise<void> => {

@@ -1,7 +1,8 @@
 import { getTokenDetailsURL, gqlToCurrency } from 'appGraphql/data/util'
 import { Percent } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
-import { DropdownSelector } from 'components/DropdownSelector'
+import { Dropdown } from 'components/Dropdowns/Dropdown'
 import Row from 'components/deprecated/Row'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
@@ -15,7 +16,6 @@ import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import { ActionButtonStyle } from 'components/Tokens/TokenDetails/shared'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import styled, { useTheme } from 'lib/styled-components'
-import { ReversedArrowsIcon } from 'nft/components/iconExports'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
@@ -24,7 +24,7 @@ import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Shine, Text, TouchableArea, styled as tamaguiStyled, useIsTouchDevice, useMedia } from 'ui/src'
-import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -44,8 +44,8 @@ const StyledExternalLink = styled(ExternalLink)`
 interface PoolDetailsBreadcrumbProps {
   chainId?: UniverseChainId
   poolAddress?: string
-  token0?: Token
-  token1?: Token
+  token0?: GraphQLApi.Token
+  token1?: GraphQLApi.Token
   loading?: boolean
 }
 
@@ -83,15 +83,14 @@ const PoolDetailsTitle = ({
   toggleReversed,
   hookAddress,
 }: {
-  token0?: Token
-  token1?: Token
+  token0?: GraphQLApi.Token
+  token1?: GraphQLApi.Token
   chainId?: UniverseChainId
   feeTier?: FeeData
-  protocolVersion?: ProtocolVersion
+  protocolVersion?: GraphQLApi.ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
   hookAddress?: string
 }) => {
-  const theme = useTheme()
   const { defaultChainId } = useEnabledChains()
   const graphQLChain = toGraphQLChain(chainId ?? defaultChainId)
   return (
@@ -127,7 +126,7 @@ const PoolDetailsTitle = ({
         onPress={toggleReversed}
         testID="toggle-tokens-reverse-arrows"
       >
-        <ReversedArrowsIcon size="20px" color={theme.neutral2} />
+        <ArrowDownArrowUp size="$icon.20" color="$neutral2" />
       </TouchableArea>
     </Flex>
   )
@@ -157,7 +156,7 @@ const ContractsDropdownRow = ({
 }: {
   address?: string
   chainId?: number
-  tokens: (Token | undefined)[]
+  tokens: (GraphQLApi.Token | undefined)[]
 }) => {
   const theme = useTheme()
   const currency = tokens[0] && gqlToCurrency(tokens[0])
@@ -192,7 +191,7 @@ const ContractsDropdownRow = ({
           <ThemedText.BodyPrimary>
             {isPool ? <Trans i18nKey="common.pool" /> : tokens[0]?.symbol}
           </ThemedText.BodyPrimary>
-          <ThemedText.BodySecondary>{shortenAddress(address)}</ThemedText.BodySecondary>
+          <ThemedText.BodySecondary>{shortenAddress({ address })}</ThemedText.BodySecondary>
         </Row>
         <ExternalLinkIcon size="16px" stroke={theme.neutral2} />
       </ContractsDropdownRowContainer>
@@ -211,9 +210,9 @@ const PoolDetailsHeaderActions = ({
   chainId?: number
   poolAddress?: string
   poolName: string
-  token0?: Token
-  token1?: Token
-  protocolVersion?: ProtocolVersion
+  token0?: GraphQLApi.Token
+  token1?: GraphQLApi.Token
+  protocolVersion?: GraphQLApi.ProtocolVersion
 }) => {
   const { t } = useTranslation()
   const theme = useTheme()
@@ -222,7 +221,7 @@ const PoolDetailsHeaderActions = ({
 
   return (
     <Row width="max-content" justify="flex-end" gap="sm">
-      <DropdownSelector
+      <Dropdown
         isOpen={contractsModalIsOpen}
         toggleOpen={toggleContractsModal}
         menuLabel={
@@ -239,13 +238,13 @@ const PoolDetailsHeaderActions = ({
         alignRight
       >
         <>
-          {protocolVersion !== ProtocolVersion.V4 && (
+          {protocolVersion !== GraphQLApi.ProtocolVersion.V4 && (
             <ContractsDropdownRow address={poolAddress} chainId={chainId} tokens={[token0, token1]} />
           )}
           <ContractsDropdownRow address={token0?.address} chainId={chainId} tokens={[token0]} />
           <ContractsDropdownRow address={token1?.address} chainId={chainId} tokens={[token1]} />
         </>
-      </DropdownSelector>
+      </Dropdown>
       <ShareButton name={poolName} utmSource="share-pool" />
     </Row>
   )
@@ -262,10 +261,10 @@ const StyledLink = tamaguiStyled(Link, {
 interface PoolDetailsHeaderProps {
   chainId?: number
   poolAddress?: string
-  token0?: Token
-  token1?: Token
+  token0?: GraphQLApi.Token
+  token1?: GraphQLApi.Token
   feeTier?: FeeData
-  protocolVersion?: ProtocolVersion
+  protocolVersion?: GraphQLApi.ProtocolVersion
   toggleReversed: React.DispatchWithoutAction
   loading?: boolean
   hookAddress?: string

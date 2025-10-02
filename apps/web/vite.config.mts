@@ -74,8 +74,10 @@ const portWarningPlugin = (isProduction: boolean) =>
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 
 export default defineConfig(({ mode }) => {
-  // Load ALL env variables (including those without VITE_ prefix)
-  const env = loadEnv(mode, process.cwd(), '')
+  let env = loadEnv(mode, __dirname, '')
+
+  // Log environment loading for CI verification
+  console.log(`ENV_LOADED: mode=${mode} REACT_APP_AWS_API_ENDPOINT=${env.REACT_APP_AWS_API_ENDPOINT}`)
 
   const isProduction = mode === 'production'
   const root = path.resolve(__dirname)
@@ -84,7 +86,6 @@ export default defineConfig(({ mode }) => {
   const overrides = {
     // External package aliases
     'react-native': 'react-native-web',
-    crypto: 'expo-crypto',
     'expo-blur': path.resolve(__dirname, './.storybook/__mocks__/expo-blur.jsx'),
     '@web3-react/core': path.resolve(__dirname, 'src/connection/web3reactShim.ts'),
     'uniswap/src': path.resolve(__dirname, '../../packages/uniswap/src'),

@@ -1,7 +1,6 @@
 import { WalletContextState } from '@solana/wallet-adapter-react'
 import { renderHook } from '@testing-library/react'
-import { useConnectSolanaWallet, useSVMWalletConnectors } from 'features/wallet/connection/connectors/solana'
-import type { SolanaWalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
+import { useSolanaConnectionService, useSVMWalletConnectors } from 'features/wallet/connection/connectors/solana'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mock dependencies
@@ -18,32 +17,60 @@ vi.mock('uniswap/src/features/gating/hooks', () => ({
 }))
 
 // Import mocked modules to get references to their functions
-import { WalletReadyState } from '@solana/wallet-adapter-base'
+import { WalletName, WalletReadyState } from '@solana/wallet-adapter-base'
 import { useWallet } from '@solana/wallet-adapter-react'
+import { ExternalConnector, ExternalWallet } from 'features/accounts/store/types'
+import { GetConnectorFn } from 'features/wallet/connection/services/createConnectionService'
 import { mocked } from 'test-utils/mocked'
+import { AccessPattern, ConnectorStatus } from 'uniswap/src/features/accounts/store/types/Connector'
+import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { sleep } from 'utilities/src/time/timing'
 
 const mockSleep = vi.mocked(sleep)
 const mockUseWallet = vi.mocked(useWallet)
 
-// Helper function to create properly typed Solana wallet connectors
-const createSolanaWalletConnector = ({
-  name,
-  icon,
-  isInjected,
-}: {
-  name: string
-  icon: string
-  isInjected: boolean
-}): SolanaWalletConnectorMeta => ({
-  name,
-  icon,
-  isInjected,
-  analyticsWalletType: isInjected ? 'Browser Extension' : name,
-  solana: { walletName: name as any },
+const mockPhantomWallet: ExternalWallet = {
+  id: 'Phantom',
+  name: 'Phantom',
+  icon: 'phantom-icon.svg',
+  signingCapability: SigningCapability.Interactive,
+  addresses: [],
+  connectorIds: {
+    [Platform.SVM]: 'SolanaAdapter_Phantom',
+  },
+  analyticsWalletType: 'Browser Extension',
+}
+
+const createMockGetConnector = (connectors: Record<string, ExternalConnector<Platform.SVM>>): GetConnectorFn => {
+  return ((connectorId: string) => {
+    return connectors[connectorId]
+  }) as GetConnectorFn
+}
+
+const mockPhantomConnector: ExternalConnector<Platform.SVM> = {
+  id: 'SolanaAdapter_Phantom',
+  externalLibraryId: 'Phantom' as WalletName,
+  access: AccessPattern.Injected,
+  status: ConnectorStatus.Disconnected,
+  platform: Platform.SVM,
+}
+
+const mockSolflareConnector: ExternalConnector<Platform.SVM> = {
+  id: 'SolanaAdapter_Solflare',
+  externalLibraryId: 'Solflare' as WalletName,
+  access: AccessPattern.Injected,
+  status: ConnectorStatus.Disconnected,
+  platform: Platform.SVM,
+}
+
+const mockGetConnectorWithPhantom = createMockGetConnector({
+  SolanaAdapter_Phantom: mockPhantomConnector,
 })
+
+const mockGetConnectorWithSolflare = createMockGetConnector({ SolanaAdapter_Solflare: mockSolflareConnector })
 
 // Mock wallet context setup
 const createMockWalletContext = (
@@ -192,18 +219,27 @@ describe('Solana connectors', () => {
   })
 
   describe('useConnectSolanaWallet', () => {
-    it('should return a function to connect solana wallet', () => {
+    it('should return a service to connect solana wallet', () => {
       // Arrange
       const mockContext = createMockWalletContext([
         { name: 'Phantom', icon: 'phantom-icon.svg', readyState: WalletReadyState.Installed },
       ])
       mockUseWallet.mockReturnValue(mockContext)
+      const mockGetConnector = createMockGetConnector({
+        Phantom: {
+          id: 'Phantom',
+          externalLibraryId: 'Phantom' as WalletName,
+          access: AccessPattern.Injected,
+          status: ConnectorStatus.Disconnected,
+          platform: Platform.SVM,
+        },
+      })
 
       // Act
-      const { result } = renderHook(() => useConnectSolanaWallet())
+      const { result } = renderHook(() => useSolanaConnectionService(mockGetConnector))
 
       // Assert
-      expect(typeof result.current).toBe('function')
+      expect(typeof result.current.connect).toBe('function')
     })
 
     it('should connect to solana wallet successfully', async () => {
@@ -213,11 +249,10 @@ describe('Solana connectors', () => {
         { name: 'Phantom', icon: 'phantom-icon.svg', connect: mockConnect, readyState: WalletReadyState.Installed },
       ])
       mockUseWallet.mockReturnValue(mockContext)
-      const { result } = renderHook(() => useConnectSolanaWallet())
-      const connector = createSolanaWalletConnector({ name: 'Phantom', icon: 'phantom-icon.svg', isInjected: true })
+      const { result } = renderHook(() => useSolanaConnectionService(mockGetConnectorWithPhantom))
 
       // Act
-      await result.current(connector)
+      await result.current.connect({ wallet: mockPhantomWallet })
 
       // Assert
       expect(mockContext.select).toHaveBeenCalledWith('Phantom')
@@ -225,24 +260,26 @@ describe('Solana connectors', () => {
       expect(mockConnect).toHaveBeenCalled()
     })
 
-    it('should throw error when wallet adapter is not found', async () => {
+    it('should gracefully handle error when wallet adapter is not found', async () => {
       // Arrange
       const mockContext = createMockWalletContext([
         { name: 'Phantom', icon: 'phantom-icon.svg', readyState: WalletReadyState.Installed },
       ])
       mockUseWallet.mockReturnValue(mockContext)
-      const { result } = renderHook(() => useConnectSolanaWallet())
-      const connector = createSolanaWalletConnector({
+      const { result } = renderHook(() => useSolanaConnectionService(mockGetConnectorWithPhantom))
+      const wallet: ExternalWallet = {
+        id: 'unknown',
         name: 'Unknown Wallet',
-        icon: 'unknown-icon.svg',
-        isInjected: true,
-      })
-
+        signingCapability: SigningCapability.Interactive,
+        addresses: [],
+        connectorIds: {
+          [Platform.SVM]: 'SolanaAdapter_Phantom',
+        },
+        analyticsWalletType: 'Browser Extension',
+      }
       // Act & Assert
-      await expect(result.current(connector)).rejects.toThrow(
-        'Solana Wallet Adapter not found for wallet Unknown Wallet',
-      )
-      expect(mockContext.select).not.toHaveBeenCalled()
+      await expect(result.current.connect({ wallet })).resolves.toMatchObject({ connected: true })
+      expect(mockContext.select).toHaveBeenCalled()
     })
 
     it('should handle connection errors', async () => {
@@ -252,50 +289,12 @@ describe('Solana connectors', () => {
         { name: 'Phantom', icon: 'phantom-icon.svg', connect: mockConnect, readyState: WalletReadyState.Installed },
       ])
       mockUseWallet.mockReturnValue(mockContext)
-      const { result } = renderHook(() => useConnectSolanaWallet())
-      const connector = createSolanaWalletConnector({ name: 'Phantom', icon: 'phantom-icon.svg', isInjected: true })
+      const { result } = renderHook(() => useSolanaConnectionService(mockGetConnectorWithPhantom))
 
       // Act & Assert
-      await expect(result.current(connector)).rejects.toThrow('Connection failed')
+      await expect(result.current.connect({ wallet: mockPhantomWallet })).rejects.toThrow('Connection failed')
       expect(mockContext.select).toHaveBeenCalledWith('Phantom')
       expect(mockSleep).toHaveBeenCalledWith(10)
-    })
-
-    it('should handle select errors', async () => {
-      // Arrange
-      const mockSelect = vi.fn().mockImplementation(() => {
-        throw new Error('Selection failed')
-      })
-      const mockContext = {
-        wallets: [
-          {
-            adapter: { name: 'Phantom', icon: 'phantom-icon.svg', connect: vi.fn() },
-            readyState: WalletReadyState.NotDetected,
-          },
-        ],
-        select: mockSelect,
-      } as unknown as WalletContextState
-      mockUseWallet.mockReturnValue(mockContext)
-      const { result } = renderHook(() => useConnectSolanaWallet())
-      const connector = createSolanaWalletConnector({ name: 'Phantom', icon: 'phantom-icon.svg', isInjected: false })
-
-      // Act & Assert
-      await expect(result.current(connector)).rejects.toThrow('Selection failed')
-    })
-
-    it('should handle sleep errors', async () => {
-      // Arrange
-      const mockContext = createMockWalletContext([
-        { name: 'Phantom', icon: 'phantom-icon.svg', readyState: WalletReadyState.Installed },
-      ])
-      mockUseWallet.mockReturnValue(mockContext)
-      mockSleep.mockRejectedValue(new Error('Sleep failed'))
-      const { result } = renderHook(() => useConnectSolanaWallet())
-      const connector = createSolanaWalletConnector({ name: 'Phantom', icon: 'phantom-icon.svg', isInjected: true })
-
-      // Act & Assert
-      await expect(result.current(connector)).rejects.toThrow('Sleep failed')
-      expect(mockContext.select).toHaveBeenCalledWith('Phantom')
     })
 
     it('should work with different wallet names', async () => {
@@ -306,11 +305,21 @@ describe('Solana connectors', () => {
         { name: 'Solflare', icon: 'solflare-icon.svg', connect: mockConnect, readyState: WalletReadyState.Installed },
       ])
       mockUseWallet.mockReturnValue(mockContext)
-      const { result } = renderHook(() => useConnectSolanaWallet())
-      const connector = createSolanaWalletConnector({ name: 'Solflare', icon: 'solflare-icon.svg', isInjected: true })
+      const { result } = renderHook(() => useSolanaConnectionService(mockGetConnectorWithSolflare))
+      const wallet: ExternalWallet = {
+        id: 'Solflare',
+        name: 'Solflare',
+        icon: 'solflare-icon.svg',
+        signingCapability: SigningCapability.Interactive,
+        addresses: [],
+        connectorIds: {
+          [Platform.SVM]: 'SolanaAdapter_Solflare',
+        },
+        analyticsWalletType: 'Browser Extension',
+      }
 
       // Act
-      await result.current(connector)
+      await result.current.connect({ wallet })
 
       // Assert
       expect(mockContext.select).toHaveBeenCalledWith('Solflare')

@@ -3,9 +3,10 @@ import { onError } from '@apollo/client/link/error'
 import { RestLink } from 'apollo-link-rest'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { getVersionHeader, REQUEST_SOURCE } from 'uniswap/src/data/constants'
+import { getVersionHeader } from 'uniswap/src/data/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
+import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 
 // Handles fetching data from REST APIs
 // Responses will be stored in graphql cache

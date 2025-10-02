@@ -1,17 +1,17 @@
+import { GraphQLApi } from '@universe/api'
 import { createLiquidityChartStore } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/createLiquidityChartStore'
 import { LiquidityChartStoreContext } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/LiquidityChartStoreContext'
 import { ReactNode, useEffect, useState } from 'react'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 interface LiquidityChartStoreProviderProps {
   children: ReactNode
   minPrice?: number
   maxPrice?: number
   isFullRange?: boolean
-  selectedHistoryDuration: HistoryDuration
+  selectedHistoryDuration: GraphQLApi.HistoryDuration
   onMinPriceChange: (price?: number) => void
   onMaxPriceChange: (price?: number) => void
-  onTimePeriodChange?: (timePeriod: HistoryDuration) => void
+  onTimePeriodChange?: (timePeriod: GraphQLApi.HistoryDuration) => void
   setIsFullRange: (isFullRange: boolean) => void
 }
 

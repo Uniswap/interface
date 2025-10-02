@@ -1,11 +1,11 @@
 import { ApolloError } from '@apollo/client'
+import { GraphQLApi } from '@universe/api'
 import { atomWithReset, useResetAtom, useUpdateAtom } from 'jotai/utils'
-import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 export type ChainOutageData = {
   chainId: UniverseChainId
-  version?: ProtocolVersion
+  version?: GraphQLApi.ProtocolVersion
 }
 
 export const manualChainOutageAtom = atomWithReset<ChainOutageData | undefined>(undefined)
@@ -25,6 +25,6 @@ export function useUpdateManualOutage({
     setManualOutage({ chainId })
   }
   if (errorV2 && chainId) {
-    setManualOutage({ chainId, version: ProtocolVersion.V2 })
+    setManualOutage({ chainId, version: GraphQLApi.ProtocolVersion.V2 })
   }
 }

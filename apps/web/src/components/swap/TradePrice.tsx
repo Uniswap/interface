@@ -48,7 +48,7 @@ export default function TradePrice({ price }: TradePriceProps) {
 
   const label = showInverted ? `${price.quoteCurrency.symbol}` : `${price.baseCurrency.symbol} `
   const labelInverted = showInverted ? `${price.baseCurrency.symbol} ` : `${price.quoteCurrency.symbol}`
-  const flipPrice = useCallback(() => setShowInverted(!showInverted), [setShowInverted, showInverted])
+  const flipPrice = useCallback(() => setShowInverted(!showInverted), [showInverted])
 
   const text = `${'1 ' + labelInverted + ' = ' + formattedPrice} ${label}`
 

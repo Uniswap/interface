@@ -35,7 +35,7 @@ import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useIsErc20Contract } from 'wallet/src/features/contracts/hooks'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
@@ -236,7 +236,7 @@ export function SendReviewDetails({
           <Text color="$neutral2" variant="body2">
             {t('send.review.modal.title')}
           </Text>
-          {isWeb && (
+          {isWebPlatform && (
             <TouchableArea onPress={onPrev}>
               <X color="$neutral2" size="$icon.20" />
             </TouchableArea>
@@ -282,7 +282,7 @@ export function SendReviewDetails({
                   {fiatOffRampMetaData.name}
                 </Text>
                 <Text color="$neutral2" variant="body4">
-                  {shortenAddress(recipient)}
+                  {shortenAddress({ address: recipient })}
                 </Text>
               </Flex>
             ) : (
@@ -333,7 +333,7 @@ export function SendReviewDetails({
 
       <TransactionModalFooterContainer>
         <Flex row gap="$spacing8">
-          {!isWeb && <IconButton icon={<BackArrow />} emphasis="secondary" size="large" onPress={onPrev} />}
+          {!isWebPlatform && <IconButton icon={<BackArrow />} emphasis="secondary" size="large" onPress={onPrev} />}
           <Button
             isDisabled={actionButtonProps.disabled}
             icon={ButtonAuthIcon ?? undefined}

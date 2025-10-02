@@ -97,7 +97,7 @@ export function CancelOrdersDialog(props: CancelOrdersDialogProps) {
 
   const { title, icon } = useCancelOrdersDialogContent(cancelState, orders)
 
-  const gasEstimate = useCancelOrdersGasEstimate(orders)
+  const cancellationGasFeeInfo = useCancelOrdersGasEstimate(orders)
   if (
     [CancellationState.PENDING_SIGNATURE, CancellationState.PENDING_CONFIRMATION, CancellationState.CANCELLED].includes(
       cancelState,
@@ -169,7 +169,7 @@ export function CancelOrdersDialog(props: CancelOrdersDialogProps) {
         hasIconBackground
       >
         {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-        <GasEstimateDisplay chainId={orders[0].chainId} gasEstimateValue={gasEstimate?.value} />
+        <GasEstimateDisplay chainId={orders[0].chainId} gasEstimateValue={cancellationGasFeeInfo?.gasFeeDisplayValue} />
       </Dialog>
     )
   } else {

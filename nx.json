@@ -5,12 +5,14 @@
   "targetDefaults": {
     "prepare": {
       "inputs": [
+        "default",
         "dependencies"
       ],
       "cache": true
     },
     "build": {
       "dependsOn": [
+        "prepare",
         "^build"
       ],
       "inputs": [
@@ -52,7 +54,8 @@
     },
     "lint": {
       "dependsOn": [
-        "typecheck"
+        "typecheck",
+        "@uniswap/biome-config:prepare"
       ],
       "inputs": [
         "default"
@@ -61,7 +64,8 @@
     },
     "lint:fix": {
       "dependsOn": [
-        "typecheck"
+        "typecheck",
+        "@uniswap/biome-config:prepare"
       ],
       "cache": false
     },
@@ -256,6 +260,9 @@
   "workspaceLayout": {
     "appsDir": "apps",
     "libsDir": "packages"
+  },
+  "sync": {
+    "applyChanges": true
   },
   "parallel": 3,
   "defaultProject": "@universe/web",

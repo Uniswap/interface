@@ -17,7 +17,7 @@ import {
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 const INFINITE_AMOUNT = 'INF'
 const ZERO_AMOUNT = '0.0'
@@ -58,7 +58,7 @@ export function ApproveTransactionDetails({
       })
 
       navigateToTokenDetails(currencyInfo.currencyId)
-      if (!isWeb) {
+      if (!isWebPlatform) {
         onClose()
       }
     }

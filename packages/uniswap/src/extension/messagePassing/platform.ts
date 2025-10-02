@@ -13,7 +13,7 @@ export function parseMessage<TSchema extends z.ZodTypeAny>(
     // but this type can be `any` if the schema passed in is defined as `any`.
     // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return schema.parse(message)
-  } catch (e) {
+  } catch (_e) {
     return undefined
   }
 }
