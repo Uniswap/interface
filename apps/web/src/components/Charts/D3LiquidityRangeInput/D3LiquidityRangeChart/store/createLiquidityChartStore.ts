@@ -6,6 +6,7 @@ import { createRenderActions } from 'components/Charts/D3LiquidityRangeInput/D3L
 import { createViewActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/viewActions'
 import { ChartState, ChartStoreState } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
+import { RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create } from 'zustand'
 import { devtools, subscribeWithSelector } from 'zustand/middleware'
@@ -18,6 +19,7 @@ const INITIAL_VIEW_STATE = {
   },
   dynamicZoomMin: CHART_BEHAVIOR.ZOOM_MIN,
   initialViewSet: false,
+  inputMode: RangeAmountInputPriceMode.PRICE,
   panY: 0,
   zoomLevel: 1,
 }
@@ -48,19 +50,23 @@ const INITIAL_HOVER_STATE = {
 export type ChartStore = UseBoundStore<StoreApi<ChartStoreState>>
 
 export const createLiquidityChartStore = ({
+  inputMode,
   minPrice,
   maxPrice,
   isFullRange,
   selectedHistoryDuration,
+  onInputModeChange,
   onMinPriceChange,
   onMaxPriceChange,
   onTimePeriodChange,
   setIsFullRange,
 }: {
+  inputMode?: RangeAmountInputPriceMode
   minPrice?: number
   maxPrice?: number
   isFullRange?: boolean
   selectedHistoryDuration?: GraphQLApi.HistoryDuration
+  onInputModeChange: (inputMode: RangeAmountInputPriceMode) => void
   onMinPriceChange: (price?: number) => void
   onMaxPriceChange: (price?: number) => void
   onTimePeriodChange?: (timePeriod: GraphQLApi.HistoryDuration) => void
@@ -68,6 +74,7 @@ export const createLiquidityChartStore = ({
 }) => {
   // Group callbacks for action creators
   const callbacks = {
+    onInputModeChange,
     onMinPriceChange,
     onMaxPriceChange,
     onTimePeriodChange,
@@ -77,7 +84,7 @@ export const createLiquidityChartStore = ({
     devtools(
       subscribeWithSelector((set, get) => {
         // Create all action groups
-        const viewActions = createViewActions(set, get)
+        const viewActions = createViewActions({ set, get, callbacks })
         const priceActions = createPriceActions({ set, get, callbacks })
         const dragActions = createDragActions(get)
         const renderActions = createRenderActions(set, get)
@@ -91,6 +98,7 @@ export const createLiquidityChartStore = ({
 
           // View state
           ...INITIAL_VIEW_STATE,
+          inputMode: inputMode ?? INITIAL_VIEW_STATE.inputMode,
 
           // Drag state
           ...INITIAL_DRAG_STATE,

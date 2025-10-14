@@ -3,7 +3,7 @@ import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { Fragment, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { use24hProtocolVolume, useDailyTVLWithChange } from 'state/explore/protocolStats'
-import { Flex, isTouchable, Popover, Text, useMedia, useShadowPropsMedium } from 'ui/src'
+import { AnimatePresence, Flex, isTouchable, Popover, Text, useMedia, useShadowPropsMedium } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
@@ -18,7 +18,7 @@ interface ExploreStatSectionData {
   }[]
 }
 
-const ExploreStatsSection = () => {
+const ExploreStatsSection = ({ shouldHideStats = false }: { shouldHideStats?: boolean }) => {
   const media = useMedia()
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -80,26 +80,38 @@ const ExploreStatsSection = () => {
   ])
 
   return (
-    <Flex row width="100%">
-      {exploreStatsSectionData.map((data, index) => (
+    <AnimatePresence>
+      {!shouldHideStats && (
         <Flex
-          key={data.label}
-          borderLeftWidth={index === 0 ? 0 : '$spacing1'}
-          borderColor="$surface3"
-          pl={index === 0 ? 0 : '$spacing24'}
-          flex={1}
-          cursor={data.protocolPopoverFormattedData ? 'pointer' : 'default'}
+          row
+          width="100%"
+          key="explore-stats"
+          animation="300ms"
+          enterStyle={{ opacity: 0, y: -10 }}
+          exitStyle={{ opacity: 0, y: -10 }}
           transition="opacity 0.3s ease, transform 0.3s ease"
-          display={media.md && index > 1 ? 'none' : 'flex'}
         >
-          {isTouchable || !data.protocolPopoverFormattedData ? (
-            <StatDisplay data={data} isLoading={isStatDataLoading} />
-          ) : (
-            <StatDisplayWithPopover data={data} isLoading={isStatDataLoading} />
-          )}
+          {exploreStatsSectionData.map((data, index) => (
+            <Flex
+              key={data.label}
+              borderLeftWidth={index === 0 ? 0 : '$spacing1'}
+              borderColor="$surface3"
+              pl={index === 0 ? 0 : '$spacing24'}
+              flex={1}
+              cursor={data.protocolPopoverFormattedData ? 'pointer' : 'default'}
+              transition="opacity 0.3s ease, transform 0.3s ease"
+              display={media.md && index > 1 ? 'none' : 'flex'}
+            >
+              {isTouchable || !data.protocolPopoverFormattedData ? (
+                <StatDisplay data={data} isLoading={isStatDataLoading} />
+              ) : (
+                <StatDisplayWithPopover data={data} isLoading={isStatDataLoading} />
+              )}
+            </Flex>
+          ))}
         </Flex>
-      ))}
-    </Flex>
+      )}
+    </AnimatePresence>
   )
 }
 

@@ -1,4 +1,10 @@
-import { DEFAULT_FEE_DATA, FeeData, PositionFlowStep, PriceRangeState } from 'components/Liquidity/Create/types'
+import {
+  DEFAULT_FEE_DATA,
+  FeeData,
+  PositionFlowStep,
+  PriceRangeState,
+  RangeAmountInputPriceMode,
+} from 'components/Liquidity/Create/types'
 import { DepositState } from 'components/Liquidity/types'
 import { checkIsNative } from 'hooks/Tokens'
 import { createParser, parseAsJson } from 'nuqs'
@@ -20,6 +26,7 @@ const priceRangeStateSchema: z.ZodSchema<Partial<PriceRangeState>> = z
     maxPrice: z.string(),
     initialPrice: z.string(),
     isInitialPriceDirty: z.boolean(),
+    inputMode: z.nativeEnum(RangeAmountInputPriceMode),
   })
   .partial()
 

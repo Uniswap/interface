@@ -57,11 +57,13 @@ export enum ExtensionUserPropertyName {
   // alphabetize additional values.
 }
 
+// The ones marked 'for EVM' are bc they were introduced before SVM support was added. Want to maintain analytics backwards compatibility.
 export enum InterfaceUserPropertyName {
   AllWalletAddressesConnected = 'all_wallet_addresses_connected',
-  AllWalletChainIds = 'all_wallet_chain_ids',
+  AllSVMWalletAddressesConnected = 'all_svm_wallet_addresses_connected',
+  AllWalletChainIds = 'all_wallet_chain_ids', // for EVM
   Browser = 'browser',
-  ChainId = 'chain_id',
+  ChainId = 'chain_id', // for EVM
   DarkMode = 'is_dark_mode',
   ExpertMode = 'is_expert_mode',
   GitCommitHash = 'git_commit_hash',
@@ -72,10 +74,13 @@ export enum InterfaceUserPropertyName {
   SupportsAtomicBatching = 'supports_atomic_batching',
   TestnetModeEnabled = 'testnet_mode_enabled',
   UserAgent = 'user_agent',
-  WalletAddress = 'wallet_address',
-  WalletName = 'wallet_name',
-  WalletType = 'wallet_type',
-  WalletVersion = 'wallet_version',
+  WalletAddress = 'wallet_address', // for EVM
+  WalletAddressSVM = 'wallet_address_svm',
+  WalletName = 'wallet_name', // for EVM
+  WalletNameSVM = 'wallet_name_svm',
+  WalletType = 'wallet_type', // for EVM
+  WalletTypeSVM = 'wallet_type_svm',
+  WalletVersion = 'wallet_version', // for EVM
 }
 
 export enum UniswapUserPropertyName {

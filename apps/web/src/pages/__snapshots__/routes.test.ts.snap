@@ -28,6 +28,14 @@ exports[`Routes > router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
+    "path": "/explore/tokens/solana/So11111111111111111111111111111111111111112",
+  },
+  {
+    "enabled": [Function],
+    "getDescription": [Function],
+    "getElement": [Function],
+    "getTitle": [Function],
+    "nestedPaths": [],
     "path": "/explore/tokens/:chainName/:tokenAddress",
   },
   {

@@ -15,7 +15,6 @@ import { RouterPreference } from 'state/routing/types'
 import { UserState } from 'state/user/reducer'
 import { SerializedPair, SlippageTolerance } from 'state/user/types'
 import { WalletCapabilitiesState } from 'state/walletCapabilities/types'
-import { ConnectedWalletsState, Wallet } from 'state/wallets/types'
 import { InterfaceState } from 'state/webReducer'
 import { assert, Equals } from 'tsafe'
 import { UniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
@@ -62,7 +61,6 @@ type ExpectedAppState = CombinedState<{
   readonly fiatOnRampTransactions: FiatOnRampTransactionsState
   readonly lists: ListsState
   readonly application: ApplicationState
-  readonly wallets: ConnectedWalletsState
   readonly mint: MintState
   readonly mintV3: MintV3State
   readonly logs: LogsState
@@ -137,13 +135,6 @@ interface ExpectedApplicationState {
 }
 
 assert<Equals<ApplicationState, ExpectedApplicationState>>()
-
-interface ExpectedWalletState {
-  connectedWallets: Wallet[]
-  switchingChain: UniverseChainId | false
-}
-
-assert<Equals<ConnectedWalletsState, ExpectedWalletState>>()
 
 interface ExpectedMintState {
   readonly independentField: Field

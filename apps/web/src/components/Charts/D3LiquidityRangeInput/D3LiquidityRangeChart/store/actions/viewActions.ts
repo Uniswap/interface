@@ -8,11 +8,21 @@ import { calculateDynamicZoomMin } from 'components/Charts/D3LiquidityRangeInput
 import { getClosestTick } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/getClosestTick'
 import { calculateRangeViewport } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/rangeViewportUtils'
 import { getCandlestickPriceBounds } from 'components/Charts/PriceChart/utils'
+import { RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
 
-export const createViewActions = (
-  set: (fn: (state: ChartStoreState) => ChartStoreState) => void,
-  get: () => ChartStoreState,
-) => ({
+interface ViewActionCallbacks {
+  onInputModeChange: (inputMode: RangeAmountInputPriceMode) => void
+}
+
+export const createViewActions = ({
+  set,
+  get,
+  callbacks,
+}: {
+  set: (fn: (state: ChartStoreState) => ChartStoreState) => void
+  get: () => ChartStoreState
+  callbacks: ViewActionCallbacks
+}) => ({
   zoom: (targetZoom: number) => {
     const { zoomLevel, panY, actions, dimensions, renderingContext } = get()
 
@@ -222,5 +232,18 @@ export const createViewActions = (
     set((state) => ({ ...state, dimensions }))
     const { actions } = get()
     actions.drawAll()
+  },
+
+  toggleInputMode: () => {
+    const newMode =
+      get().inputMode === RangeAmountInputPriceMode.PRICE
+        ? RangeAmountInputPriceMode.PERCENTAGE
+        : RangeAmountInputPriceMode.PRICE
+    set((state) => ({
+      ...state,
+      inputMode: newMode,
+    }))
+
+    callbacks.onInputModeChange(newMode)
   },
 })

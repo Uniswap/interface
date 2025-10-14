@@ -12,7 +12,7 @@ import { useIndicativeQuoteTextDisplay } from 'uniswap/src/components/CurrencyIn
 import type { CurrencyInputPanelProps, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isExtensionApp, isInterfaceDesktop, isMobileWeb } from 'utilities/src/platform'
+import { isExtensionApp, isMobileWeb, isWebAppDesktop } from 'utilities/src/platform'
 
 export const CurrencyInputPanel = memo(
   forwardRef<CurrencyInputPanelRef, CurrencyInputPanelProps>(
@@ -61,7 +61,7 @@ export const CurrencyInputPanel = memo(
       const showMaxButton = showMaxButtonOnly && !isOutput && account
       const showPercentagePresetOptions = !showMaxButtonOnly && currencyField === CurrencyField.INPUT
 
-      const isDesktop = isInterfaceDesktop || isExtensionApp
+      const isDesktop = isWebAppDesktop || isExtensionApp
 
       const showPercentagePresetsOnBottom = showPercentagePresetOptions && (isMobileWeb || (isDesktop && !headerLabel))
 

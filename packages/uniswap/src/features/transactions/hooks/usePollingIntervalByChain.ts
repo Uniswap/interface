@@ -6,7 +6,7 @@ import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gati
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export const AVERAGE_L1_BLOCK_TIME_MS = 12 * ONE_SECOND_MS
-const AVERAGE_L2_BLOCK_TIME_MS = 3 * ONE_SECOND_MS
+export const AVERAGE_L2_BLOCK_TIME_MS = 3 * ONE_SECOND_MS
 
 export function usePollingIntervalByChain(chainId?: UniverseChainId): number {
   const averageL1BlockTimeMs = useDynamicConfigValue({

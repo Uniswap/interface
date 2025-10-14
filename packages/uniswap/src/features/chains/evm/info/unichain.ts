@@ -2,6 +2,7 @@ import { GraphQLApi } from '@universe/api'
 import { ETH_LOGO, ETHEREUM_LOGO, UNICHAIN_LOGO, UNICHAIN_SEPOLIA_LOGO } from 'ui/src/assets'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
+import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
 import {
   GqlChainId,
   NetworkLayer,
@@ -70,6 +71,7 @@ export const UNICHAIN_CHAIN_INFO = {
     address: '0x4200000000000000000000000000000000000006',
   },
   testnet: false,
+  gasConfig: GENERIC_L2_GAS_CONFIG,
   tradingApiPollingIntervalMs: 150,
 } as const satisfies UniverseChainInfo
 
@@ -134,5 +136,6 @@ export const UNICHAIN_SEPOLIA_CHAIN_INFO = {
     decimals: 18,
     address: '0x4200000000000000000000000000000000000006',
   },
+  gasConfig: GENERIC_L2_GAS_CONFIG,
   tradingApiPollingIntervalMs: 150,
 } as const satisfies UniverseChainInfo

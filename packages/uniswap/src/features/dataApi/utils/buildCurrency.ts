@@ -6,6 +6,7 @@ import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defa
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SolanaToken } from 'uniswap/src/features/tokens/SolanaToken'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { sortKeysRecursively } from 'utilities/src/primitives/objects'
@@ -65,7 +66,12 @@ export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency
       if (isNativeCurrencyAddress(chainId, address)) {
         // Return native SOL for native addresses
         result = nativeOnChain(chainId)
-      } else if (address === WRAPPED_SOL_ADDRESS_SOLANA) {
+      } else if (
+        areAddressesEqual({
+          addressInput1: { address, chainId },
+          addressInput2: { address: WRAPPED_SOL_ADDRESS_SOLANA, chainId: UniverseChainId.Solana },
+        })
+      ) {
         // Return singleton WSOL for wrapped address
         result = WRAPPED_NATIVE_CURRENCY[chainId]
       } else {

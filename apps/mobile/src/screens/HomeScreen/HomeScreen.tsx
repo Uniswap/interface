@@ -354,11 +354,7 @@ function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element
   }, [hasVideoError])
 
   const paddingTop = headerHeight + TAB_BAR_HEIGHT + (showEmptyWalletState ? 0 : TAB_STYLES.tabListInner.paddingTop)
-  const paddingBottom =
-    insets.bottom +
-    (isBottomTabsEnabled ? SWAP_BUTTON_HEIGHT : 0) +
-    TAB_STYLES.tabListInner.paddingBottom +
-    spacing.spacing12
+  const paddingBottom = insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom + spacing.spacing12
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({ paddingTop, paddingBottom }),

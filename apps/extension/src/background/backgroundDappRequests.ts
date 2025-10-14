@@ -34,7 +34,6 @@ import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { getCapabilitiesCore } from 'wallet/src/features/batchedTransactions/utils'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
 
 // Request classification constants for determining which requests need user interaction
@@ -51,31 +50,11 @@ const REQUEST_CLASSIFICATION = {
   silent: new Set([DappRequestType.ChangeChain, DappRequestType.RevokePermissions, DappRequestType.GetCapabilities]),
 } as const
 
-const INACTIVITY_ALARM_NAME = 'inactivity'
-// TODO(EXT-546): add a setting to turn off the auto-lock setting
-const INACTIVITY_TIMEOUT_MINUTES = 60 * 24 // 1 day
-
 const windowIdToSidebarPortMap = new Map<string, DappBackgroundPortChannel>()
 // TODO EXT-1020 add timeout support to avoid memory leaks
 const windowIdToPendingRequestsMap = new Map<string, DappRequestMessage[]>()
 
-chrome.alarms.onAlarm.addListener(async (alarm) => {
-  if (alarm.name !== INACTIVITY_ALARM_NAME) {
-    return
-  }
-
-  await lockWallet()
-})
-
-async function lockWallet(): Promise<void> {
-  logger.debug('background', 'lockWallet', 'Locking wallet via background script')
-  sendAnalyticsEvent(ExtensionEventName.ChangeLockedState, { locked: true, location: 'background' })
-  await Keyring.lock()
-}
-
 chrome.runtime.onConnect.addListener(async (port) => {
-  await chrome.alarms.clear(INACTIVITY_ALARM_NAME)
-
   const windowId = port.name
   const portChannel = createBackgroundToSidePanelMessagePort(port)
   windowIdToSidebarPortMap.set(windowId, portChannel)
@@ -92,12 +71,6 @@ chrome.runtime.onConnect.addListener(async (port) => {
   // Only gets called when `port.disconnect()` is called or `port.sendMessage()` for a disconnected port
   port.onDisconnect.addListener(async () => {
     windowIdToSidebarPortMap.delete(windowId)
-
-    if (windowIdToSidebarPortMap.size <= 0) {
-      await chrome.alarms.create(INACTIVITY_ALARM_NAME, {
-        delayInMinutes: INACTIVITY_TIMEOUT_MINUTES,
-      })
-    }
   })
 })
 

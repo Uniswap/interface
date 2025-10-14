@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query'
 import { useEffect, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { NavigationType, Outlet, ScrollRestoration, useLocation } from 'react-router'
+import { AutoLockProvider } from 'src/app/components/AutoLockProvider'
 import { SmartWalletNudgeModals } from 'src/app/components/modals/SmartWalletNudgeModals'
 import { DappRequestQueue } from 'src/app/features/dappRequests/DappRequestQueue'
 import { ForceUpgradeModal } from 'src/app/features/forceUpgrade/ForceUpgradeModal'
@@ -133,9 +134,11 @@ export function WebNavigation(): JSX.Element {
             {isLoggedIn === null ? (
               <Loading />
             ) : isLoggedIn === true ? (
-              <HideContentsWhenSidebarBecomesInactive>
-                <LoggedIn />
-              </HideContentsWhenSidebarBecomesInactive>
+              <AutoLockProvider>
+                <HideContentsWhenSidebarBecomesInactive>
+                  <LoggedIn />
+                </HideContentsWhenSidebarBecomesInactive>
+              </AutoLockProvider>
             ) : (
               <LoggedOut />
             )}

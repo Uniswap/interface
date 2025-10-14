@@ -61,16 +61,19 @@
   "module:jsx": "src",
   "private": true,
   "scripts": {
-    "build:icons": "bunx tsx ./src/scripts/componentize-icons.ts && biome check --write --unsafe",
-    "build:icons:missing": "bun run build:icons --skip-existing",
-    "check:deps:usage": "depcheck",
-    "lint:biome:fix": "biome check . --write --unsafe",
-    "lint": "bun run lint:biome && eslint src --max-warnings=0",
-    "lint:biome": "biome check --error-on-warnings .",
-    "lint:fix": "bun run lint:biome:fix && eslint src --fix",
-    "test": "jest && echo 'ignoring'",
-    "typecheck": "tsc -b",
-    "watch": "bun run build --watch"
+    "build:icons": "nx build:icons ui",
+    "build:icons:missing": "nx build:icons:missing ui",
+    "check:deps:usage": "nx check:deps:usage ui",
+    "lint": "nx lint ui",
+    "lint:fix": "nx lint:fix ui",
+    "lint:biome": "nx lint:biome ui",
+    "lint:biome:fix": "nx lint:biome:fix ui",
+    "test": "nx test ui",
+    "typecheck": "nx typecheck ui",
+    "watch": "nx watch ui"
+  },
+  "nx": {
+    "includedScripts": []
   },
   "sideEffects": ["*.css"],
   "types": "./types/index"

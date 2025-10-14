@@ -14,7 +14,11 @@ vi.mock('../../hooks/useSocksBalance', () => ({
   useHasSocks: () => true,
 }))
 
-vi.mock('features/accounts/store/hooks')
+vi.mock('features/accounts/store/hooks', () => ({
+  useActiveAddresses: vi.fn(),
+  useActiveWallet: vi.fn(),
+  useConnectionStatus: vi.fn(() => ({ isConnected: false, isConnecting: false, isDisconnected: true })),
+}))
 
 vi.mock('uniswap/src/features/gating/hooks', () => ({
   useFeatureFlag: () => false,

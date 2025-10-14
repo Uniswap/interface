@@ -11,7 +11,8 @@ import { useMissingPlatformWalletPopup } from 'hooks/useMissingPlatformWalletPop
 import { useModalState } from 'hooks/useModalState'
 import { useResetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
 import { useWebSwapSettings } from 'pages/Swap/settings/useWebSwapSettings'
-import { useCallback, useEffect, useMemo } from 'react'
+import { TDPContext } from 'pages/TokenDetails/TDPContext'
+import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router'
@@ -229,6 +230,10 @@ function UniversalSwapFlow({
   tokenColor?: string
 }) {
   const { currentTab, setCurrentTab } = useSwapAndLimitContext()
+
+  // Get TDP currency if available (will be null if not in TDP context)
+  const tdpCurrency = currencyToAsset(useContext(TDPContext)?.currency)
+
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -341,14 +346,14 @@ function UniversalSwapFlow({
         <BuyForm
           rampDirection={RampDirection.ONRAMP}
           disabled={disableTokenInputs}
-          initialCurrency={prefilledState?.output}
+          initialCurrency={tdpCurrency ?? prefilledState?.output}
         />
       )}
       {currentTab === SwapTab.Sell && BuyForm && (
         <BuyForm
           rampDirection={RampDirection.OFFRAMP}
           disabled={disableTokenInputs}
-          initialCurrency={prefilledState?.output}
+          initialCurrency={tdpCurrency ?? prefilledState?.output}
         />
       )}
     </Flex>

@@ -58,16 +58,19 @@ export interface IncreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo 
   type: LiquidityTransactionType.Increase
   unsigned: boolean
   increasePositionRequestArgs: TradingApi.IncreaseLPPositionRequest | undefined
+  sqrtRatioX96: string | undefined
 }
 
 export interface DecreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Decrease
+  sqrtRatioX96: string | undefined
 }
 
 export interface CreatePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Create
   unsigned: boolean
   createPositionRequestArgs: TradingApi.CreateLPPositionRequest | undefined
+  sqrtRatioX96: string | undefined
 }
 
 export interface MigrateV3PositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
@@ -93,6 +96,7 @@ export type ValidatedIncreasePositionTxAndGasInfo = Required<IncreasePositionTxA
         unsigned: false
         permit: PermitTransaction | undefined
         txRequest: ValidatedTransactionRequest
+        sqrtRatioX96: string | undefined
       }
   )
 
@@ -111,6 +115,7 @@ export type ValidatedCreatePositionTxAndGasInfo = Required<CreatePositionTxAndGa
         unsigned: false
         permit: PermitTransaction | undefined
         txRequest: ValidatedTransactionRequest
+        sqrtRatioX96: string | undefined
       }
   )
 

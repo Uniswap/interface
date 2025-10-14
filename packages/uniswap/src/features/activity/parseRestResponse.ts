@@ -82,13 +82,16 @@ export function parseRestResponseToTransactionDetails({
   return data.transactions.reduce((accum: TransactionDetails[], transaction) => {
     switch (transaction.transaction.case) {
       case RestTransactionType.OnChain: {
-        const parsed = extractRestOnChainTransactionDetails(transaction.transaction.value)
-        const isSpam = parsed?.typeInfo.isSpam
-        const currencyId = extractCurrencyIdFromTx(parsed)
-        const spamOverride = currencyId ? tokenVisibilityOverrides?.[currencyId]?.isVisible : false
-        const isNFTSpam = isNftTransactionHidden({ parsed, nftVisibility, isSpam })
-        if (parsed && !(hideSpamTokens && isSpam && !spamOverride) && !isNFTSpam) {
-          accum.push(parsed)
+        const parsedTransactions = extractRestOnChainTransactionDetails(transaction.transaction.value)
+        // Handle array of transactions (e.g., EXECUTE label can return multiple)
+        for (const parsed of parsedTransactions) {
+          const isSpam = parsed.typeInfo.isSpam
+          const currencyId = extractCurrencyIdFromTx(parsed)
+          const spamOverride = currencyId ? tokenVisibilityOverrides?.[currencyId]?.isVisible : false
+          const isNFTSpam = isNftTransactionHidden({ parsed, nftVisibility, isSpam })
+          if (!(hideSpamTokens && isSpam && !spamOverride) && !isNFTSpam) {
+            accum.push(parsed)
+          }
         }
         break
       }

@@ -6,7 +6,7 @@ import { iconSizes } from 'ui/src/theme'
 import { TransactionSettingRow } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModalContent/TransactionSettingsRow'
 import type { TransactionSettingsModalProps } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/types'
 import { type TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
-import { isExtensionApp, isInterfaceDesktop, isMobileApp, isMobileWeb, isWebPlatform } from 'utilities/src/platform'
+import { isExtensionApp, isMobileApp, isMobileWeb, isWebAppDesktop, isWebPlatform } from 'utilities/src/platform'
 
 const TopLevelSettings = ({
   settings,
@@ -59,7 +59,7 @@ const SettingsPageLayout = ({
     : isMobileApp || (isWebSmallScreen && !isExtensionApp)
 
   // Hide close button on desktop web
-  const shouldShowCloseButton = !isInterfaceDesktop && onClose
+  const shouldShowCloseButton = !isWebAppDesktop && onClose
   return (
     <Flex gap="$spacing16">
       {shouldShowTitle && (

@@ -11,6 +11,7 @@ import {
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   isBridge,
+  isChained,
   isClassic,
   isJupiter,
   isUniswapX,
@@ -127,12 +128,15 @@ export interface SolanaSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
 // TODO: SWAP-458 - Subject to change.
 export interface ChainedSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   routing: TradingApi.Routing.CHAINED
+  tradeId: string | undefined
   trade: ChainedActionTrade
   txRequests: PopulatedTransactionRequestArray | undefined
   /** Not needed for Chained Actions since it's already included in the steps/txRequests */
   approveTxRequest: undefined
   /** Not needed for Chained Actions since it's already included in the steps/txRequests */
   revocationTxRequest: undefined
+  gasFee: GasFeeResult
+  gasFeeEstimation: SwapGasFeeEstimation
 }
 
 interface BaseRequiredSwapTxContextFields {
@@ -194,6 +198,17 @@ export type ValidatedChainedSwapTxAndGasInfo = Prettify<
  */
 function validateSwapTxContext(swapTxContext: SwapTxAndGasInfo): ValidatedSwapTxContext | undefined {
   const gasFee = validateGasFeeResult(swapTxContext.gasFee)
+  // TODO: SWAP-476 - add gas fee estimation for chained actions
+  // move this function to the if(swapTxContext.trade) block
+  if (swapTxContext.trade && isChained(swapTxContext)) {
+    return {
+      ...swapTxContext,
+      // TODO SWAP-433: Add smart wallet delegation to chained actions
+      includesDelegation: false,
+      gasFee: { ...gasFee, value: gasFee?.value ?? '', isLoading: false, error: null },
+    }
+  }
+
   if (!gasFee) {
     return undefined
   }

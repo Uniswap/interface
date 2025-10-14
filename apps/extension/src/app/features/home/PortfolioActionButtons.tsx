@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useInterfaceBuyNavigator } from 'src/app/features/for/utils'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { Flex, getTokenValue, Text, useMedia } from 'ui/src'
+import { Flex, getTokenValue, Text, TouchableArea, useMedia } from 'ui/src'
 import { ArrowDownCircle, Bank, CoinConvert, SendAction } from 'ui/src/components/icons'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -43,30 +43,23 @@ function ActionButton({ label, Icon, onClick, url }: ActionButtonProps): JSX.Ele
       onClick
 
   return (
-    // TODO(EXT-248): Change to TouchableArea
-    // https://linear.app/uniswap/issue/EXT-248/need-web-equivalent-of-touchablearea
-    <Flex
-      fill
-      alignItems="flex-start"
-      backgroundColor="$accent2"
-      borderRadius="$rounded16"
+    <TouchableArea
+      flexGrow={1}
       flexBasis={1}
+      minWidth={100}
+      backgroundColor="$accent2"
       gap="$spacing12"
       hoverStyle={{ cursor: 'pointer', opacity: 0.8 }}
       justifyContent="space-between"
-      // Reduced button label line height to 11 as suggested by design to eliminate extra bottom space.
-      pb={11}
-      pressStyle={{ opacity: 0.5 }}
-      pt="$spacing12"
-      px="$spacing12"
+      p="$spacing12"
       userSelect="none"
       onPress={actionHandler}
     >
       {cloneElement(Icon, { color: ICON_COLOR, size: getTokenValue('$icon.24') })}
-      <Text color="$accent1" fontWeight="600" variant="buttonLabel2">
+      <Text numberOfLines={2} color="$accent1" fontWeight="600" variant="buttonLabel2">
         {label}
       </Text>
-    </Flex>
+    </TouchableArea>
   )
 }
 

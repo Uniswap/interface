@@ -4,6 +4,7 @@ import { useActiveAddresses, useActiveWallet } from 'features/accounts/store/hoo
 import { useHasSocks } from 'hooks/useSocksBalance'
 import styled from 'lib/styled-components'
 import { flexColumnNoWrap } from 'theme/styles'
+import { Flex } from 'ui/src/components/layout'
 import { breakpoints } from 'ui/src/theme'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -27,15 +28,17 @@ const IconWrapper = styled.div<{ size?: number }>`
   `};
 `
 
-const MiniIconContainer = styled.div<{ side: 'left' | 'right' }>`
+const MINI_ICON_SIZE = 16
+
+const MiniIconContainer = styled.div<{ side: 'left' | 'right'; size?: number; isIndicator?: boolean }>`
   position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 16px;
-  height: 16px;
-  bottom: -4px;
-  ${({ side }) => `${side === 'left' ? 'left' : 'right'}: -4px;`}
+  width: ${({ size }) => size ?? MINI_ICON_SIZE + 'px'};
+  height: ${({ size }) => size ?? MINI_ICON_SIZE + 'px'};
+  bottom: ${({ size, isIndicator }) => `-${isIndicator ? 0 : (size ?? MINI_ICON_SIZE) / 4}px`};
+  ${({ side, size, isIndicator }) => `${side === 'left' ? 'left' : 'right'}: -${isIndicator ? 0 : (size ?? MINI_ICON_SIZE) / 4}px`};
   border-radius: 50%;
   outline: 2px solid ${({ theme }) => theme.surface1};
   outline-offset: -0.1px;
@@ -47,8 +50,8 @@ const MiniIconContainer = styled.div<{ side: 'left' | 'right' }>`
 `
 
 const MiniImg = styled.img`
-  width: 16px;
-  height: 16px;
+  width: ${MINI_ICON_SIZE + 'px'};
+  height: ${MINI_ICON_SIZE + 'px'};
 `
 
 function Socks() {
@@ -75,13 +78,23 @@ function MiniWalletIcon({ platform }: { platform: Platform }) {
   )
 }
 
+function MiniConnectedIndicator() {
+  return (
+    <MiniIconContainer isIndicator side="right" size={10}>
+      <Flex backgroundColor="$statusSuccess" borderRadius="$roundedFull" height={10} width={10} />
+    </MiniIconContainer>
+  )
+}
+
 export default function StatusIcon({
   size = 16,
   showMiniIcons = true,
+  showConnectedIndicator,
   address,
 }: {
   size?: number
   showMiniIcons?: boolean
+  showConnectedIndicator?: boolean
   address?: string
 }) {
   const activeAddresses = useActiveAddresses()
@@ -93,7 +106,7 @@ export default function StatusIcon({
   return (
     <IconWrapper size={size} data-testid="StatusIconRoot">
       <AccountIcon address={addressToDisplay} size={size} />
-      {showMiniIcons && <MiniWalletIcon platform={platform} />}
+      {showConnectedIndicator ? <MiniConnectedIndicator /> : showMiniIcons && <MiniWalletIcon platform={platform} />}
       {hasSocks && showMiniIcons && <Socks />}
     </IconWrapper>
   )

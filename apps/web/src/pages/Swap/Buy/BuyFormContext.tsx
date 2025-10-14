@@ -51,8 +51,8 @@ type BuyFormState = {
   readonly providerModalOpen: boolean
   readonly rampDirection: RampDirection
   readonly selectedUnsupportedCurrency?: FiatOnRampCurrency
-  readonly moonpayOnly?: boolean
   readonly paymentMethod?: FORFilters
+  readonly providers?: string[]
 }
 
 type BuyInfo = {
@@ -84,8 +84,8 @@ const DEFAULT_BUY_FORM_STATE: BuyFormState = {
   providerModalOpen: false,
   rampDirection: RampDirection.ONRAMP,
   selectedUnsupportedCurrency: undefined,
-  moonpayOnly: false,
   paymentMethod: undefined,
+  providers: undefined,
 }
 
 export const BuyFormContext = createContext<BuyFormContextType>({

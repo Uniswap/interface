@@ -1,3 +1,5 @@
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
 import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import { DownloadWalletOption } from 'components/WalletModal/DownloadWalletOption'
 import { DetectedBadge } from 'components/WalletModal/shared'
@@ -16,6 +18,7 @@ import { iconSizes } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { isMobileWeb, isWebIOS } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 import { openDownloadApp } from 'utils/openDownloadApp'
 
 interface OptionContainerProps extends PropsWithChildren {
@@ -55,6 +58,14 @@ export function UniswapWalletOptions() {
   const uniswapExtensionWallet = useWalletWithId(CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS)
   const uniswapMobileWallet = useWalletWithId(CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID)
 
+  const accountDrawer = useAccountDrawer()
+  const setMenu = useSetMenu()
+
+  const onSuccess = useEvent(() => {
+    accountDrawer.close()
+    setMenu({ variant: MenuStateVariant.MAIN })
+  })
+
   const { connectWallet } = useConnectWallet()
 
   return (
@@ -63,7 +74,7 @@ export function UniswapWalletOptions() {
         {uniswapExtensionWallet ? (
           // If the extension is detected, show the option to connect
           <OptionContainer
-            onPress={() => connectWallet({ wallet: uniswapExtensionWallet })}
+            onPress={() => connectWallet({ wallet: uniswapExtensionWallet, onSuccess })}
             testID="connect-uniswap-extension"
           >
             <Flex row grow justifyContent="space-between" alignItems="center">
@@ -80,7 +91,7 @@ export function UniswapWalletOptions() {
           <DownloadWalletOption />
         ) : null}
         <OptionContainer
-          onPress={() => (uniswapMobileWallet ? connectWallet({ wallet: uniswapMobileWallet }) : undefined)}
+          onPress={() => (uniswapMobileWallet ? connectWallet({ wallet: uniswapMobileWallet, onSuccess }) : undefined)}
         >
           {isMobileWeb ? (
             <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />

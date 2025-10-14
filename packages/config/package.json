@@ -12,6 +12,14 @@
     "eslint": "8.44.0",
     "typescript": "5.3.3"
   },
+  "scripts": {
+    "typecheck": "nx typecheck config",
+    "lint": "nx lint config",
+    "lint:fix": "nx lint:fix config"
+  },
+  "nx": {
+    "includedScripts": []
+  },
   "main": "src/index.ts",
   "private": true,
   "sideEffects": false

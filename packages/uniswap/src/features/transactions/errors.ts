@@ -146,84 +146,46 @@ function getJupiterExecuteErrorContent(
   message: string
   supportArticleURL?: string
 } {
+  const errorContent = {
+    title: t('common.swap.failed'),
+    message: t('error.jupiterApi.execute.default.title'),
+    supportArticleURL: uniswapUrls.helpArticleUrls.jupiterApiError,
+  }
+
   switch (code) {
-    // Ultra endpoint errors
     case -1:
-      return {
-        title: t('error.jupiterApi.execute.missingCachedOrder.title'),
-        message: t('error.jupiterApi.execute.missingCachedOrder.message'),
-      }
+      errorContent.message += ' ' + t('error.jupiterApi.missingCachedOrder')
+      return errorContent
     case -2:
-      return {
-        title: t('error.jupiterApi.execute.invalidSignedTransaction.title'),
-        message: t('error.jupiterApi.execute.invalidSignedTransaction.message'),
-      }
+      errorContent.message += ' ' + t('error.jupiterApi.invalidSignedTransaction')
+      return errorContent
     case -3:
-      return {
-        title: t('error.jupiterApi.execute.invalidMessageBytes.title'),
-        message: t('error.jupiterApi.execute.invalidMessageBytes.message'),
-      }
-
-    // Aggregator swap errors
+      errorContent.message += ' ' + t('error.jupiterApi.invalidMessageBytes')
+      return errorContent
     case -1000:
-      return {
-        title: t('error.jupiterApi.execute.failedToLand.title'),
-        message: t('error.jupiterApi.execute.failedToLand.message'),
-      }
-    case -1001:
-      return {
-        title: t('error.jupiterApi.execute.unknownError.title'),
-        message: t('error.jupiterApi.execute.unknownError.message'),
-      }
-    case -1002:
-      return {
-        title: t('error.jupiterApi.execute.invalidTransaction.title'),
-        message: t('error.jupiterApi.execute.invalidTransaction.message'),
-      }
-    case -1003:
-      return {
-        title: t('error.jupiterApi.execute.notFullySigned.title'),
-        message: t('error.jupiterApi.execute.notFullySigned.message'),
-      }
-    case -1004:
-      return {
-        title: t('error.jupiterApi.execute.invalidBlockHeight.title'),
-        message: t('error.jupiterApi.execute.invalidBlockHeight.message'),
-      }
-
-    // RFQ swap errors
     case -2000:
-      return {
-        title: t('error.jupiterApi.execute.rfqFailedToLand.title'),
-        message: t('error.jupiterApi.execute.rfqFailedToLand.message'),
-      }
-    case -2001:
-      return {
-        title: t('error.jupiterApi.execute.rfqUnknownError.title'),
-        message: t('error.jupiterApi.execute.rfqUnknownError.message'),
-      }
+      errorContent.message += ' ' + t('error.jupiterApi.failedToLand', { code })
+      return errorContent
     case -2002:
-      return {
-        title: t('error.jupiterApi.execute.invalidPayload.title'),
-        message: t('error.jupiterApi.execute.invalidPayload.message'),
-      }
+      errorContent.message += ' ' + t('error.jupiterApi.invalidPayload')
+      return errorContent
     case -2003:
-      return {
-        title: t('error.jupiterApi.execute.quoteExpired.title'),
-        message: t('error.jupiterApi.execute.quoteExpired.message'),
-      }
-    case -2004:
-      return {
-        title: t('error.jupiterApi.execute.swapRejected.title'),
-        message: t('error.jupiterApi.execute.swapRejected.message'),
-      }
-
+      errorContent.title = t('transaction.status.swap.expired')
+      errorContent.message = t('error.jupiterApi.quoteExpired')
+      return errorContent
+    case -1002:
+      errorContent.message += ' ' + t('error.jupiterApi.invalidTransaction')
+      return errorContent
+    case -1003:
+      errorContent.message += ' ' + t('error.jupiterApi.notFullySigned')
+      return errorContent
+    case -1004:
+      errorContent.message += ' ' + t('error.jupiterApi.invalidBlockHeight')
+      return errorContent
     default:
       // Fallback for unmapped codes
-      return {
-        title: t('common.unknownError.error'),
-        message: t('common.swap.failed'),
-      }
+      errorContent.message += ' ' + t('error.jupiterApi.unknownErrorCode', { code })
+      return errorContent
   }
 }
 

@@ -1,9 +1,34 @@
 {
   "name": "@universe/api",
   "version": "0.0.0",
+  "scripts": {
+    "lint:biome": "nx lint:biome api",
+    "lint:biome:fix": "nx lint:biome:fix api",
+    "lint": "nx lint api",
+    "lint:fix": "nx lint:fix api",
+    "typecheck": "nx typecheck api",
+    "prepare": "nx prepare api",
+    "test": "nx test api",
+    "test:coverage": "nx test:coverage api",
+    "graphql:generate": "nx graphql:generate api",
+    "graphql:schema": "nx graphql:schema api",
+    "tradingapi:schema": "nx tradingapi:schema api",
+    "tradingapi:generate:openapi": "nx tradingapi:generate:openapi api",
+    "tradingapi:generate": "nx tradingapi:generate api"
+  },
+  "nx": {
+    "includedScripts": []
+  },
   "dependencies": {
     "@apollo/client": "3.10.4",
+    "@bufbuild/protobuf": "1.10.0",
+    "@connectrpc/connect": "1.4.0",
+    "@connectrpc/connect-web": "1.4.0",
     "@tanstack/react-query": "5.77.2",
+    "@uniswap/client-data-api": "0.0.14",
+    "@uniswap/client-embeddedwallet": "0.0.16",
+    "@uniswap/client-explore": "0.0.17",
+    "@uniswap/client-pools": "0.0.17",
     "@uniswap/client-trading": "0.1.0",
     "@universe/config": "workspace:^",
     "@universe/sessions": "workspace:^",
@@ -33,10 +58,6 @@
     "viem": "2.30.5",
     "vitest": "3.2.1",
     "zod": "3.22.4"
-  },
-  "scripts": {
-    "lint": "nx run lint",
-    "lint:fix": "nx lint:fix"
   },
   "main": "src/index.ts",
   "private": true,

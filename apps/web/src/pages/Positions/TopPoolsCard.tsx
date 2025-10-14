@@ -4,7 +4,6 @@ import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPosit
 import { LPIncentiveRewardsBadge } from 'components/Liquidity/LPIncentives/LPIncentiveRewardsBadge'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { Trans } from 'react-i18next'
-import { useNavigate } from 'react-router'
 import { PoolStat } from 'state/explore/types'
 import { Flex, Text } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -12,7 +11,6 @@ import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 
 export function TopPoolsCard({ pool }: { pool: PoolStat }) {
-  const navigate = useNavigate()
   const { defaultChainId } = useEnabledChains()
   const { formatPercent } = useLocalizationContext()
 
@@ -32,7 +30,11 @@ export function TopPoolsCard({ pool }: { pool: PoolStat }) {
       justifyContent="space-between"
       cursor="pointer"
       hoverStyle={{ backgroundColor: '$surface1Hovered', borderColor: '$surface3Hovered' }}
-      onPress={() => navigate(`/explore/pools/${toGraphQLChain(chainId).toLowerCase()}/${pool.id}`)}
+      tag="a"
+      href={`/explore/pools/${toGraphQLChain(chainId).toLowerCase()}/${pool.id}`}
+      $platform-web={{
+        textDecoration: 'none',
+      }}
     >
       <Flex row gap="$gap16">
         <DoubleCurrencyLogo currencies={[token0, token1]} size={44} />

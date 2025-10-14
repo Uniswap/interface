@@ -12,6 +12,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { useIsSupportedChainId, useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPrimaryStablecoin, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 // ETH amounts used when calculating spot price for a given currency.
@@ -25,7 +26,7 @@ function useETHPrice(currency?: Currency): {
   isLoading: boolean
 } {
   const chainId = currency?.chainId
-  const isSupportedChain = useIsSupportedChainId(chainId)
+  const isSupportedChain = useIsSupportedChainId(chainId) && isEVMChain(chainId)
   const isSupported = isSupportedChain && currency
 
   const amountOut = isSupported ? getEthAmountOut(chainId) : undefined

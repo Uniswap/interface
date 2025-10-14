@@ -179,6 +179,7 @@ export default function FeatureFlagModal() {
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Swap Features">
+            <FeatureFlagOption flag={FeatureFlags.ChainedActions} label="Enable Chained Actions" />
             <FeatureFlagOption flag={FeatureFlags.BatchedSwaps} label="Enable Batched Swaps" />
             <FeatureFlagOption flag={FeatureFlags.UnichainFlashblocks} label="Enable Unichain Flashblocks" />
             <FeatureFlagOption flag={FeatureFlags.UniquoteEnabled} label="Enable Uniquote" />

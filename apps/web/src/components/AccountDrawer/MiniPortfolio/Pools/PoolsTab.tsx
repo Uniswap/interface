@@ -9,12 +9,11 @@ import { PositionInfo } from 'components/Liquidity/types'
 import { getPositionUrl } from 'components/Liquidity/utils/getPositionUrl'
 import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
 import { useAccount } from 'hooks/useAccount'
-import { useSwitchChain } from 'hooks/useSwitchChain'
+import useSelectChain from 'hooks/useSelectChain'
 import { useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { AnimatePresence, Flex, TouchableArea } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
@@ -45,7 +44,6 @@ export default function Pools({ account }: { account: string }) {
   const accountDrawer = useAccountDrawer()
   const [showClosed, toggleShowClosed] = useReducer((showClosed) => !showClosed, false)
   const [showHidden, setShowHidden] = useState(false)
-  const [openMenuPositionKey, setOpenMenuPositionKey] = useState<string | null>(null)
 
   // Skip queries if Solana-only wallet
   const skipQueries = Boolean(svmAddress && !evmAddress)
@@ -140,12 +138,7 @@ export default function Pools({ account }: { account: string }) {
     <AnimatePresence>
       <Flex gap="$spacing12">
         {visibleOpenPositions.map((positionInfo) => (
-          <PositionListItem
-            key={getPositionKey(positionInfo)}
-            positionInfo={positionInfo}
-            openMenuPositionKey={openMenuPositionKey}
-            setOpenMenuPositionKey={setOpenMenuPositionKey}
-          />
+          <PositionListItem key={getPositionKey(positionInfo)} positionInfo={positionInfo} />
         ))}
       </Flex>
       {visibleClosedPositions.length > 0 && (
@@ -157,12 +150,7 @@ export default function Pools({ account }: { account: string }) {
         >
           <Flex gap="$spacing12">
             {visibleClosedPositions.map((positionInfo) => (
-              <PositionListItem
-                key={getPositionKey(positionInfo)}
-                positionInfo={positionInfo}
-                openMenuPositionKey={openMenuPositionKey}
-                setOpenMenuPositionKey={setOpenMenuPositionKey}
-              />
+              <PositionListItem key={getPositionKey(positionInfo)} positionInfo={positionInfo} />
             ))}
           </Flex>
         </ExpandoRow>
@@ -176,13 +164,7 @@ export default function Pools({ account }: { account: string }) {
         >
           <Flex gap="$spacing12">
             {hiddenPositions.map((position) => (
-              <PositionListItem
-                key={getPositionKey(position)}
-                positionInfo={position}
-                isVisible={false}
-                openMenuPositionKey={openMenuPositionKey}
-                setOpenMenuPositionKey={setOpenMenuPositionKey}
-              />
+              <PositionListItem key={getPositionKey(position)} positionInfo={position} isVisible={false} />
             ))}
           </Flex>
         </ExpandoRow>
@@ -191,17 +173,7 @@ export default function Pools({ account }: { account: string }) {
   )
 }
 
-function PositionListItem({
-  positionInfo,
-  isVisible = true,
-  openMenuPositionKey,
-  setOpenMenuPositionKey,
-}: {
-  positionInfo: PositionInfo
-  isVisible?: boolean
-  openMenuPositionKey: string | null
-  setOpenMenuPositionKey: (key: string | null) => void
-}) {
+function PositionListItem({ positionInfo, isVisible = true }: { positionInfo: PositionInfo; isVisible?: boolean }) {
   const { chainId, currency0Amount, currency1Amount } = positionInfo
   const token0 = currency0Amount.currency
   const token1 = currency1Amount.currency
@@ -209,23 +181,16 @@ function PositionListItem({
   const navigate = useNavigate()
   const accountDrawer = useAccountDrawer()
   const account = useAccount()
-  const switchChain = useSwitchChain()
+  const selectChain = useSelectChain()
   const positionUrl = getPositionUrl(positionInfo)
-
-  const positionKey = getPositionKey(positionInfo)
-  const hasMenuOpen = openMenuPositionKey === positionKey
 
   const onPress = useEvent(async () => {
     if (account.chainId !== chainId) {
-      await switchChain(chainId)
+      await selectChain(chainId)
     }
 
     accountDrawer.close()
     navigate(positionUrl)
-  })
-
-  const handleMenuOpenChange = useEvent((isOpen: boolean) => {
-    setOpenMenuPositionKey(isOpen ? positionKey : null)
   })
 
   const analyticsEventProperties = useMemo(
@@ -241,13 +206,12 @@ function PositionListItem({
 
   return (
     <Trace logPress element={ElementName.MiniPortfolioPoolsRow} properties={analyticsEventProperties}>
-      <TouchableArea onPress={onPress} mx="$spacing16" zIndex={hasMenuOpen ? zIndexes.mask : undefined}>
+      <TouchableArea onPress={onPress} mx="$spacing16">
         <LiquidityPositionCard
           isMiniVersion
           liquidityPosition={positionInfo}
           showVisibilityOption
           isVisible={isVisible}
-          onMenuOpenChange={handleMenuOpenChange}
         />
       </TouchableArea>
     </Trace>

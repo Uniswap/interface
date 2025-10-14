@@ -2,12 +2,9 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
-import { useShouldShowBiometricUnlock } from 'src/app/features/biometricUnlock/useShouldShowBiometricUnlock'
-import { useShouldShowBiometricUnlockEnrollment } from 'src/app/features/biometricUnlock/useShouldShowBiometricUnlockEnrollment'
 import { SettingsItem } from 'src/app/features/settings/components/SettingsItem'
 import { SettingsSection } from 'src/app/features/settings/components/SettingsSection'
 import { SettingsToggleRow } from 'src/app/features/settings/components/SettingsToggleRow'
-import { useDeviceAccessScreenTitle } from 'src/app/features/settings/DeviceAccessScreen'
 import { SettingsItemWithDropdown } from 'src/app/features/settings/SettingsItemWithDropdown'
 import ThemeToggle from 'src/app/features/settings/ThemeToggle'
 import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
@@ -21,7 +18,6 @@ import {
   FileListLock,
   Global,
   HelpCenter,
-  Key,
   Language,
   LineChartDots,
   Lock,
@@ -71,12 +67,6 @@ export function SettingsScreen(): JSX.Element {
   const currentLanguageInfo = useCurrentLanguageInfo()
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
   const hasViewedConnectionMigration = useSelector(selectHasViewedConnectionMigration)
-
-  const hasBiometricUnlockCredential = useShouldShowBiometricUnlock()
-  const showBiometricUnlockEnrollment = useShouldShowBiometricUnlockEnrollment({ flow: 'settings' })
-  const showNewDeviceAccessPage = hasBiometricUnlockCredential || showBiometricUnlockEnrollment
-
-  const deviceAccessScreenTitle = useDeviceAccessScreenTitle()
 
   const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWalletSettings)
 
@@ -281,19 +271,11 @@ export function SettingsScreen(): JSX.Element {
           )}
           <Flex pt="$padding16">
             <SettingsSection title={t('settings.section.privacyAndSecurity')}>
-              {showNewDeviceAccessPage ? (
-                <SettingsItem
-                  Icon={Lock}
-                  title={deviceAccessScreenTitle}
-                  onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.DeviceAccess}`)}
-                />
-              ) : (
-                <SettingsItem
-                  Icon={Key}
-                  title={t('settings.setting.password.title')}
-                  onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.ChangePassword}`)}
-                />
-              )}
+              <SettingsItem
+                Icon={Lock}
+                title={t('settings.setting.deviceAccess.title')}
+                onPress={(): void => navigateTo(`/${AppRoutes.Settings}/${SettingsRoutes.DeviceAccess}`)}
+              />
               <SettingsItem
                 Icon={FileListLock}
                 title={t('settings.setting.recoveryPhrase.title')}

@@ -86,18 +86,19 @@ export function createAccountsStoreGetters(getState: () => WebAccountsData) {
     return { ...(account as Account<P>), chainId }
   }
 
+  // TODO(SWAP-581): Refactor connection mutation vs status relationship
   function getAggregateConnectionStatus() {
     const connectorStatuses = Object.values(getState().activeConnectors).map((connector) => connector.status)
 
-    // If any connector is connecting, treat as a connecting status.
+    // If any connector is connected, treat as a connected status
+    if (connectorStatuses.includes(ConnectorStatus.Connected)) {
+      return ConnectorStatus.Connected
+    }
+
+    // If no connectors are connected and any connector is connecting, treat as a connecting status.
     // If the connection query is pending, also treat as a connecting status; this fixes gaps where one platforms connector has finished but another hasn't started yet.
     if (connectorStatuses.includes(ConnectorStatus.Connecting) || getState().connectionQueryIsPending) {
       return ConnectorStatus.Connecting
-    }
-
-    // If any connector is connected (and none are connecting), treat as a connected status
-    if (connectorStatuses.includes(ConnectorStatus.Connected)) {
-      return ConnectorStatus.Connected
     }
 
     // If no connectors are connected or connecting, treat as a disconnected status

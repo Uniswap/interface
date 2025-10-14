@@ -1,4 +1,4 @@
-import { meldSupportedCurrencyToCurrencyInfo } from 'appGraphql/data/types'
+import { useMeldSupportedCurrencyToCurrencyInfo } from 'appGraphql/data/types'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
@@ -80,16 +80,17 @@ export function useFiatOnRampSupportedTokens(
     countryCode: countryCode ?? 'US',
     isSolanaEnabled,
   })
+  const { meldSupportedCurrencyToCurrencyInfo } = useMeldSupportedCurrencyToCurrencyInfo()
 
   return useMemo(() => {
     return (
       quoteCurrencyOptions?.supportedTokens.map((currency) => {
         const meldCurrencyCode = currency.cryptoCurrencyCode
-        const currencyInfo = meldSupportedCurrencyToCurrencyInfo(currency)
+        const currencyInfo = meldSupportedCurrencyToCurrencyInfo?.(currency)
         return { currencyInfo, meldCurrencyCode }
       }) ?? []
     )
-  }, [quoteCurrencyOptions?.supportedTokens])
+  }, [quoteCurrencyOptions?.supportedTokens, meldSupportedCurrencyToCurrencyInfo])
 }
 
 export function useOffRampTransferDetailsRequest(): Maybe<OffRampTransferDetailsRequest> {

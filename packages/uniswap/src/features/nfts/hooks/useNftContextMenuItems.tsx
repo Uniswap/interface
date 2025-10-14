@@ -1,3 +1,4 @@
+import { TokenReportEventType } from '@universe/api'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -6,12 +7,12 @@ import { Eye } from 'ui/src/components/icons/Eye'
 import { EyeOff } from 'ui/src/components/icons/EyeOff'
 import { Flag } from 'ui/src/components/icons/Flag'
 import { Opensea } from 'ui/src/components/icons/Opensea'
-import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
-import { submitTokenReport, TokenReportEventType } from 'uniswap/src/data/apiClients/dataApi/DataApiClient'
+import { type MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
+import { DataServiceApiClient } from 'uniswap/src/data/apiClients/dataApi/DataApiClient'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useBlockExplorerLogo } from 'uniswap/src/features/chains/logos'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainExplorerName } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -77,7 +78,7 @@ export function useNFTContextMenuItems({
     }
 
     try {
-      await submitTokenReport({
+      await DataServiceApiClient.submitTokenReport({
         chainId,
         address: contractAddress,
         event: TokenReportEventType.FalseNegative,

@@ -7,11 +7,12 @@
   "bugs": "https://github.com/Uniswap/eslint-config/issues",
   "license": "MIT",
   "scripts": {
-    "lint:biome": "biome check --error-on-warnings .",
-    "lint:biome:fix": "biome check . --write --unsafe",
-    "lint": "bun run lint:biome && eslint .",
-    "lint:fix": "bun run lint:biome:fix && eslint . --fix",
-    "test": "jest"
+    "lint": "nx lint eslint-config",
+    "lint:fix": "nx lint:fix eslint-config",
+    "test": "nx test eslint-config"
+  },
+  "nx": {
+    "includedScripts": []
   },
   "main": "base.js",
   "files": [

@@ -5,6 +5,7 @@ import {
   TokenRankingsStat,
   TokenStats,
 } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { ALL_NETWORKS_ARG } from '@universe/api'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native'
@@ -24,7 +25,6 @@ import { Flex, Loader, Text } from 'ui/src'
 import { AnimatedBottomSheetFlashList, AnimatedFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'

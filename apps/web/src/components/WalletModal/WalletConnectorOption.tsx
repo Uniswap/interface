@@ -225,25 +225,25 @@ function WalletConnectorOptionBase({
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   return (
-    <Flex
-      backgroundColor={isEmbeddedWalletEnabled ? 'transparent' : '$surface2'}
-      row
-      alignItems="center"
-      width="100%"
-      justifyContent="space-between"
-      position="relative"
-      px="$spacing12"
-      py="$spacing18"
-      cursor={isDisabled ? 'auto' : 'pointer'}
-      hoverStyle={{ backgroundColor: isDisabled ? '$surface2' : '$surface1Hovered' }}
-      opacity={isDisabled && !isPendingConnection ? 0.5 : 1}
-      onPress={onPress}
+    <Trace
+      logPress
+      eventOnTrigger={InterfaceEventName.WalletSelected}
+      properties={analyticsProperties}
+      element={ElementName.WalletTypeOption}
     >
-      <Trace
-        logPress
-        eventOnTrigger={InterfaceEventName.WalletSelected}
-        properties={analyticsProperties}
-        element={ElementName.WalletTypeOption}
+      <Flex
+        backgroundColor={isEmbeddedWalletEnabled ? 'transparent' : '$surface2'}
+        row
+        alignItems="center"
+        width="100%"
+        justifyContent="space-between"
+        position="relative"
+        px="$spacing12"
+        py="$spacing18"
+        cursor={isDisabled ? 'auto' : 'pointer'}
+        hoverStyle={{ backgroundColor: isDisabled ? '$surface2' : '$surface1Hovered' }}
+        opacity={isDisabled && !isPendingConnection ? 0.5 : 1}
+        onPress={onPress}
       >
         <Flex row alignItems="center" gap="$gap12">
           {icon}
@@ -252,7 +252,7 @@ function WalletConnectorOptionBase({
           </Text>
         </Flex>
         {rightSideDetail}
-      </Trace>
-    </Flex>
+      </Flex>
+    </Trace>
   )
 }

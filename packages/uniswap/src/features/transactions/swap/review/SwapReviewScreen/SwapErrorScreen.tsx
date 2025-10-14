@@ -1,10 +1,11 @@
 import { TradingApi } from '@universe/api'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, IconButton } from 'ui/src'
+import { Button, Flex, IconButton, Text } from 'ui/src'
 import { HelpCenter } from 'ui/src/components/icons/HelpCenter'
 import { X } from 'ui/src/components/icons/X'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModalContent } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
@@ -63,6 +64,19 @@ export function SwapErrorScreen({
     await openUri({ uri: supportArticleURL ?? uniswapUrls.helpUrl })
   }
 
+  const caption = supportArticleURL ? (
+    <Flex gap="$spacing8" alignItems="center">
+      <Text color="$neutral2" textAlign="center" variant="body3">
+        {message}
+      </Text>
+      <LearnMoreLink url={supportArticleURL} />
+    </Flex>
+  ) : (
+    <Text color="$neutral2" textAlign="center" variant="body3">
+      {message}
+    </Text>
+  )
+
   return (
     <TransactionModalInnerContainer bottomSheetViewStyles={bottomSheetViewStyles} fullscreen={false}>
       <Flex gap="$spacing16">
@@ -78,7 +92,7 @@ export function SwapErrorScreen({
           <WarningModalContent
             modalName={ModalName.SwapError}
             title={title}
-            caption={message}
+            captionComponent={caption}
             severity={WarningSeverity.Low}
             rejectText={buttonText ?? t('common.button.tryAgain')}
             onReject={handleTryAgain}

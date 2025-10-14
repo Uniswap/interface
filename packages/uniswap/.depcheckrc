@@ -3,6 +3,10 @@ ignores: [
     "ethers",
     "@typechain/ethers-v5",
     "jest-presets",
+    "depcheck",
+    "get-graphql-schema",
+    "typechain",
+    'tamagui',
     # Dependencies that depcheck thinks are missing but are actually present or never used
     ## Internal packages / workspaces
     "uniswap",

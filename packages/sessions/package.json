@@ -1,6 +1,16 @@
 {
   "name": "@universe/sessions",
   "version": "0.0.0",
+  "scripts": {
+    "typecheck": "nx typecheck sessions",
+    "lint": "nx lint sessions",
+    "lint:fix": "nx lint:fix sessions",
+    "test": "nx test sessions",
+    "test:coverage": "nx test:coverage sessions"
+  },
+  "nx": {
+    "includedScripts": []
+  },
   "dependencies": {
     "@connectrpc/connect": "1.4.0",
     "@connectrpc/connect-web": "1.4.0",

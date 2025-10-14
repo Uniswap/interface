@@ -42,7 +42,6 @@
     "@types/chrome": "0.0.304",
     "@types/react": "18.3.18",
     "@types/uuid": "9.0.1",
-    "@uniswap/biome-config": "workspace:^",
     "@uniswap/eslint-config": "workspace:^",
     "eslint": "8.44.0",
     "jest": "29.7.0",
@@ -52,15 +51,18 @@
   "main": "src/index.ts",
   "private": true,
   "scripts": {
-    "build": "tsc -b",
-    "check:deps:usage": "depcheck && bun run check-promise-version",
-    "check-promise-version": "../../scripts/check-promise-version.sh",
-    "lint:biome": "biome check --error-on-warnings .",
-    "lint:biome:fix": "biome check . --write --unsafe",
-    "lint": "bun run lint:biome && eslint . --ext ts,tsx --max-warnings=0",
-    "lint:fix": "bun run lint:biome:fix && eslint . --ext ts,tsx --fix",
-    "test": "jest",
-    "typecheck": "tsc -b"
+    "build": "nx build utilities",
+    "check:deps:usage": "nx check:deps:usage utilities",
+    "check-promise-version": "nx check-promise-version utilities",
+    "lint:biome": "nx lint:biome utilities",
+    "lint:biome:fix": "nx lint:biome:fix utilities",
+    "lint": "nx lint utilities",
+    "lint:fix": "nx lint:fix utilities",
+    "test": "nx test utilities",
+    "typecheck": "nx typecheck utilities"
+  },
+  "nx": {
+    "includedScripts": []
   },
   "sideEffects": ["*.css"]
 }

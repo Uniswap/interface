@@ -1,4 +1,3 @@
-import { Dialog } from 'components/Dialog/Dialog'
 import { UserIcon } from 'components/Icons/UserIcon'
 import { SendModalProps } from 'pages/Swap/Send/SendReviewModal'
 import { useTranslation } from 'react-i18next'
@@ -6,6 +5,7 @@ import type { RecipientData } from 'state/send/hooks'
 import { useSendContext } from 'state/send/SendContext'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
+import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 

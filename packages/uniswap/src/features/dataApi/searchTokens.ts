@@ -2,9 +2,11 @@ import { SearchTokensResponse, SearchType } from '@uniswap/client-search/dist/se
 import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
 import { searchTokenToCurrencyInfo, useSearchTokensAndPoolsQuery } from 'uniswap/src/data/rest/searchTokensAndPools'
+import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { NUMBER_OF_RESULTS_LONG } from 'uniswap/src/features/search/SearchModal/constants'
 import { isWSOL } from 'uniswap/src/utils/isWSOL'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -14,13 +16,17 @@ export function useSearchTokens({
   chainFilter,
   skip,
   size = NUMBER_OF_RESULTS_LONG,
+  hideWSOL = false,
 }: {
   searchQuery: string | null
   chainFilter: UniverseChainId | null
   skip: boolean
   size?: number
+  hideWSOL?: boolean
 }): GqlResult<CurrencyInfo[]> {
   const { chains: enabledChainIds } = useEnabledChains()
+
+  const isSvmConnected = useConnectionStatus(Platform.SVM).isConnected
 
   const variables = useMemo(
     () => ({
@@ -29,8 +35,9 @@ export function useSearchTokens({
       searchType: SearchType.TOKEN,
       page: 1,
       size,
+      prioritizeSvm: isSvmConnected,
     }),
-    [searchQuery, chainFilter, size, enabledChainIds],
+    [searchQuery, chainFilter, size, enabledChainIds, isSvmConnected],
   )
 
   const tokenSelect = useEvent((data: SearchTokensResponse): CurrencyInfo[] => {
@@ -40,8 +47,8 @@ export function useSearchTokens({
         if (!c) {
           return false
         }
-        // Filter out WSOL from Solana search results
-        if (isWSOL(c.currency)) {
+        // Filter out WSOL from Solana search results when hideWSOL is true
+        if (hideWSOL && isWSOL(c.currency)) {
           return false
         }
         return true

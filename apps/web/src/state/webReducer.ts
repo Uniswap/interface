@@ -8,7 +8,6 @@ import mintV3 from 'state/mint/v3/reducer'
 import { routingApi } from 'state/routing/slice'
 import user from 'state/user/reducer'
 import walletCapabilities from 'state/walletCapabilities/reducer'
-import wallets from 'state/wallets/reducer'
 import { uniswapPersistedStateList, uniswapReducers } from 'uniswap/src/state/uniswapReducer'
 
 const interfaceReducers = {
@@ -17,7 +16,6 @@ const interfaceReducers = {
   lists,
   fiatOnRampTransactions,
   application,
-  wallets,
   walletCapabilities,
   mint,
   mintV3,

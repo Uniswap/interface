@@ -11,6 +11,7 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
+import { SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
@@ -73,6 +74,16 @@ export const AVALANCHE_CHAIN_INFO = {
     symbol: 'WAVAX',
     decimals: 18,
     address: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
+  },
+  gasConfig: {
+    send: {
+      configKey: SwapConfigKey.AvalancheSendMinGasAmount,
+      default: 25, // .0025 AVAX
+    },
+    swap: {
+      configKey: SwapConfigKey.AvalancheSwapMinGasAmount,
+      default: 200, // .02 AVAX
+    },
   },
   tradingApiPollingIntervalMs: 200,
 } as const satisfies UniverseChainInfo

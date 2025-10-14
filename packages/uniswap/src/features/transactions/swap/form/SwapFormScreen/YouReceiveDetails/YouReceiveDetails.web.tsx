@@ -43,7 +43,7 @@ import { useRoutingProvider } from 'uniswap/src/utils/routingDiagram/routingRegi
 // biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
-import { isInterfaceDesktop, isWebPlatform } from 'utilities/src/platform'
+import { isWebAppDesktop, isWebPlatform } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 const ZERO_PERCENT = new Percent(0, 100)
@@ -99,7 +99,7 @@ function YouReceiveDisplay({
           feeOnTransferProps={feeOnTransferProps}
           isLoadingIndicative={isLoadingIndicative}
         />
-        {isInterfaceDesktop && (
+        {isWebAppDesktop && (
           <Flex rotate={isOpen ? '180deg' : '0deg'} animation="simple" transition="ease-in-out">
             <ExpandoIcon color="$neutral2" size="$icon.24" />
           </Flex>

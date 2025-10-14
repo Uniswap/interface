@@ -23,6 +23,8 @@ import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { SearchContext } from 'uniswap/src/features/search/SearchModal/analytics/SearchContext'
 import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
@@ -74,12 +76,12 @@ export interface TokenSelectorProps {
   onSelectCurrency: ({
     currency,
     field,
-    forceIsBridgePair,
+    allowCrossChainPair,
     isPreselectedAsset,
   }: {
     currency: Currency
     field: CurrencyField
-    forceIsBridgePair: boolean
+    allowCrossChainPair: boolean
     isPreselectedAsset: boolean
   }) => void
 }
@@ -106,6 +108,7 @@ export function TokenSelectorContent({
   const debouncedParsedSearchFilter = useDebounce(parsedSearchFilter)
   const scrollbarStyles = useScrollbarStyles()
   const { navigateToBuyOrReceiveWithEmptyWallet } = useUniswapContext()
+  const isChainedActionsEnabled = useFeatureFlag(FeatureFlags.ChainedActions)
 
   const media = useMedia()
   const isSmallScreen = (media.sm && isWebApp) || isMobileApp || isMobileWeb
@@ -171,15 +174,17 @@ export function TokenSelectorContent({
         preselect_asset: false,
       })
 
-      const forceIsBridgePair = section.sectionKey === OnchainItemSectionName.BridgingTokens
+      const allowCrossChainPair =
+        isChainedActionsEnabled || section.sectionKey === OnchainItemSectionName.BridgingTokens
+
       onSelectCurrency({
         currency: currencyInfo.currency,
         field: currencyField,
-        forceIsBridgePair,
+        allowCrossChainPair,
         isPreselectedAsset: false,
       })
     },
-    [debouncedSearchFilter, chainFilter, flow, page, currencyField, onSelectCurrency],
+    [debouncedSearchFilter, chainFilter, flow, page, currencyField, onSelectCurrency, isChainedActionsEnabled],
   )
 
   const handlePaste = async (): Promise<void> => {

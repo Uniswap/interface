@@ -161,6 +161,8 @@ export enum ElementName {
   SmartWalletDisclaimer = 'smart-wallet-disclaimer',
   SmartWalletEnabled = 'smart-wallet-enabled',
   SmartWalletNotNow = 'smart-wallet-not-now',
+  SolanaPromoBanner = 'solana-promo-banner',
+  SolanaPromoStartSwappingButton = 'solana-promo-start-swapping-button',
   SupportLink = 'support-link',
   Swap = 'swap',
   SwapButton = 'swap-button',

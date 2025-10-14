@@ -1,9 +1,9 @@
-import { EnvelopeHeartIcon } from 'components/Icons/EnvelopeHeart'
 import { useExternallyConnectableExtensionId } from 'pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 import { Anchor, Button, Flex, SpinningLoader, Text } from 'ui/src'
+import { EnvelopeHeart } from 'ui/src/components/icons/EnvelopeHeart'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -169,7 +169,7 @@ export default function ExtensionPasskeyAuthPopUp() {
                 href={uniswapUrls.helpArticleUrls.passkeysInfo}
                 textDecorationLine="none"
               >
-                <Button icon={<EnvelopeHeartIcon />} size="xxsmall" emphasis="secondary">
+                <Button icon={<EnvelopeHeart size="$icon.16" color="$neutral2" />} size="xxsmall" emphasis="secondary">
                   {t('common.getHelp.button')}
                 </Button>
               </Anchor>

@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmZDGpemKezoNt9EN6WRuTFPM4eXNYH2sxT3VXwnop1byu`
-- CIDv1: `bafybeifbrs7b4fucyijr6s24lgaaa736h6q25l62d3hagu3gxakobgdctq`
+- CIDv0: `QmVwDGzz52bfNgBMBwALFJ1E6JNecNgizvEqj9o2faTgoB`
+- CIDv1: `bafybeidq3rqtrmkzoeos4k5jn6zvrdgajsidyejtrzgrlsalii6bqcifci`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,72 +10,62 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeifbrs7b4fucyijr6s24lgaaa736h6q25l62d3hagu3gxakobgdctq.ipfs.dweb.link/
-- [ipfs://QmZDGpemKezoNt9EN6WRuTFPM4eXNYH2sxT3VXwnop1byu/](ipfs://QmZDGpemKezoNt9EN6WRuTFPM4eXNYH2sxT3VXwnop1byu/)
+- https://bafybeidq3rqtrmkzoeos4k5jn6zvrdgajsidyejtrzgrlsalii6bqcifci.ipfs.dweb.link/
+- [ipfs://QmVwDGzz52bfNgBMBwALFJ1E6JNecNgizvEqj9o2faTgoB/](ipfs://QmVwDGzz52bfNgBMBwALFJ1E6JNecNgizvEqj9o2faTgoB/)
 
-## 5.112.0 (2025-10-02)
+## 5.113.0 (2025-10-14)
 
 
 ### Features
 
-* **web:** add basic disconnected view for portfolio (#23459) 365239b
-* **web:** add new Solana receive crypto QR option (#23446) 3aa3b51
-* **web:** add percentage allocation chart (#23205) cf31a33
-* **web:** add portfolio activity filter controls (#23493) 32bfa25
-* **web:** add toucan skeleton page behind a feature flag (#23900) 3b14d35
-* **web:** add toucantoken page (#23906) 199e6a8
-* **web:** context menu for tokens table (#23434) e1dd094
-* **web:** disconnect menu tooltip (#23954) 79ce2a2
-* **web:** Include global types in web functions (#23874) fffa958
-* **web:** multiwallet UX address display v2 (#22894) bd4d4dd
-* **web:** portfolio tokens tab (#23193) f822c00
-* **web:** rename base Dropdown component and create DropdownSelector component (#23836) 81f0743
-* **web:** Replace graphql types with GraphQLApi from @universe/api (#23757) e551cd6
-* **web:** Support Solana FOR (#23653) 3b229fc
-* **web:** switch platform-specific account (#23970) 2c5e8af
-* **web:** use uniswap url for jupiter api (#22101) e0d1dec
+* **web:** add an auction store with zustand (#24058) 79708f6
+* **web:** add bid container + placeholder components (#23999) 1ad50cf
+* **web:** add graduationThreshold marker (#24167) 2f49858
+* **web:** add max budget to the bid form (#24223) 86d6ae9
+* **web:** add multiplatform receive crypto modal (#24126) 5be7eb7
+* **web:** add progress bar (#24156) 638015f
+* **web:** add promo banner/modal clicked analytics (#24328) 1c3b366
+* **web:** add UI for intro modal (#23963) 9512c53
+* **web:** persist the hiding of the intro modal (#24031) 83874ac
+* **web:** toucan auction header (#23977) 6c08e97
+* **web:** update amplitude analytics for svm wallet connection (#24322) e441e41
+* **web:** update meldSupportedCurrencyToCurrencyInfo to use not deprecated common bases (#24275) a8dfa89
 
 
 ### Bug Fixes
 
-* **web:** add more padding for smaller screens (#23799) 4b80cf1
-* **web:** add uniswap mobile wallet into accountstore (#23882) ba44b56
-* **web:** alignment for uniswap wallet QR code (#23992) 035d2df
-* **web:** avoid displaying two binance wallet options when trust wall… (#24248) 9bd62a9
-* **web:** debounce useMissingPlatformWalletPopup (#23965) ef1de10
-* **web:** don't run sitemap generation script with NX (#24061) 55711c5
-* **web:** env loading in production builds (#23973) fad5b5f
-* **web:** fix context menu on positions page (#23809) a9ef911
-* **web:** fix pool mini card menu zindex (#24220) 98b5d9c
-* **web:** fix portfolio e2e test (#23716) 6e5ac69
-* **web:** fix sitemap generation script (#24065) 8058e3f
-* **web:** fix solana-only miniP (#22895) 973103e
-* **web:** hide migrate to v3 button on unsupported chains (#23306) d73d883
-* **web:** open proper connect page when clicking swap connect wallet (#23991) 0e7f6a1
-* **web:** prevent regressions in non-solana wallet connection flow (#24044) ab315b0
-* **web:** re-enable solana coinbase adapter (#23982) 6927d70
-* **web:** re-instate activity parsing for web popups (#24154) 6d59743
-* **web:** remove custom env loading and bypass nx for staging/prod builds (#24045) df38e77
-* **web:** revert change to POPUP_MAX_WIDTH (#24041) e51797a
-* **web:** show disabled buy/sell/send form button if mismatched wallet platform (#23661) a5887c7
+* **web:** add infinite loading for limits (#24280) 5b032bf
+* **web:** add v4 support for lp flow for celo (#24201) 9145081
+* **web:** avoid displaying two binance wallet options when trust wallet is installed (#24247) 950f64f
+* **web:** dedupe visx/responsive (#24114) 1b1d322
+* **web:** Default FOR country to device locale on country lookup failure (#24259) 626ec89
+* **web:** default to TDP token on buy/sell flows (#24199) dbc660b
+* **web:** delete extra EnvelopeHeart (#24229) b469696
+* **web:** detect solflare user reject + improve connection error modal (#24325) 396debe
+* **web:** enable sourcemaps in staging builds (#24087) fe4e2b6
+* **web:** explore table tokens dropdown should not show >1d for solana (#24046) 7d17539
+* **web:** fix limit form crash when selecting solana (#24069) eb4ddee
+* **web:** fix z-index issue on solana promo modal (#24441) (#24457) 1287d20
+* **web:** handle meld native SOL address (#24289) e772533
+* **web:** minor nits for solana (#24166) 9440e71
+* **web:** pin datadog action for e2e tests (#24136) 078aeb1
+* **web:** prevent WSOL TDP pages (#24121) 5a64884
+* **web:** re-instate activity parsing for web popups - PORT-454 (#24086) e5531e9
+* **web:** replace useNavigate with links [1/n] (#23324) 3a282cd
+* **web:** reset account drawer on uniswap wallet connection (#24338) 2dae9a4
+* **web:** use chain count for landing page chain count (#24459) 9fb5adb
+* **web:** use connected indicator if two diff wallets connected (#24042) e26d6f1
+* **web:** use default export lazy import for SolanaPromoModal (#24373) f348b15
+* **web:** use proper jup proxy for staging (#24388) ece9de3
 
 
 ### Continuous Integration
 
-* **web:** update sitemaps 7bcdac9
+* **web:** update sitemaps 0527e1f
 
 
-### Styles
+### Tests
 
-* **web:** fix spinning loader causing overflow issues in mini portfolio (#24048) 3ccd937
-
-
-### Code Refactoring
-
-* **web:** decluster WalletModal (#23953) 625ae78
-* **web:** gas hook integration (#23295) 653d744
-* **web:** integrate cancellation functions into web (#23292) 0aee376
-* **web:** kill walletConnectorMeta (#23909) ee69fbf
-* **web:** use AccountsStore shapes for connecting (#23844) 7713cb3
+* **web:** check sitemap generation in CI (#24066) eb163a6
 
 

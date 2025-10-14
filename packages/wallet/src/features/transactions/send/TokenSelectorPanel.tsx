@@ -23,11 +23,11 @@ interface TokenSelectorPanelProps {
   onSelectCurrency: ({
     currency,
     field,
-    forceIsBridgePair,
+    allowCrossChainPair,
   }: {
     currency: Currency
     field: CurrencyField
-    forceIsBridgePair: boolean
+    allowCrossChainPair: boolean
   }) => void
   onHideTokenSelector: () => void
   onShowTokenSelector: () => void

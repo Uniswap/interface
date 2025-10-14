@@ -1,4 +1,4 @@
-import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
+import { ChooseMultiPlatformProvider } from 'components/ReceiveCryptoModal/ChooseMultiPlatformProvider'
 import { ChooseProvider } from 'components/ReceiveCryptoModal/ChooseProvider'
 import { ReceiveModalState } from 'components/ReceiveCryptoModal/types'
 import { useOpenReceiveCryptoModal } from 'components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
@@ -9,6 +9,7 @@ import ms from 'ms'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { useEffect, useState } from 'react'
 import { AnimateTransition } from 'ui/src'
+import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ReceiveQRCode } from 'uniswap/src/components/ReceiveQRCode/ReceiveQRCode'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -21,7 +22,9 @@ export function ReceiveCryptoModal() {
   const modalState = useModalInitialState(ModalName.ReceiveCryptoModal)
   const { isOpen, closeModal } = useModalState(ModalName.ReceiveCryptoModal)
 
-  const accountAddress = modalState?.modalState === ReceiveModalState.QR_CODE ? modalState.qrCodeAddress : undefined
+  const qrCodeAddress = modalState?.modalState === ReceiveModalState.QR_CODE ? modalState.qrCodeAddress : undefined
+  const selectedServiceProvider =
+    modalState?.modalState === ReceiveModalState.CEX_TRANSFER_CHOOSE_PLATFORM ? modalState.serviceProvider : undefined
   const currentModalState = modalState?.modalState
 
   const [errorProvider, setErrorProvider] = useState<FORServiceProvider>()
@@ -72,7 +75,12 @@ export function ReceiveCryptoModal() {
       <ContentWrapper>
         <GetHelpHeader
           goBack={
-            currentModalState === ReceiveModalState.QR_CODE || connectedProvider || errorProvider ? goBack : undefined
+            currentModalState === ReceiveModalState.QR_CODE ||
+            currentModalState === ReceiveModalState.CEX_TRANSFER_CHOOSE_PLATFORM ||
+            connectedProvider ||
+            errorProvider
+              ? goBack
+              : undefined
           }
           link={uniswapUrls.helpArticleUrls.transferCryptoHelp}
           closeModal={onClose}
@@ -85,7 +93,17 @@ export function ReceiveCryptoModal() {
             setErrorProvider={setErrorProvider}
             setConnectedProvider={setConnectedProvider}
           />
-          {accountAddress && <ReceiveQRCode address={accountAddress} />}
+          {selectedServiceProvider ? (
+            <ChooseMultiPlatformProvider
+              errorProvider={errorProvider}
+              connectedProvider={connectedProvider}
+              setErrorProvider={setErrorProvider}
+              setConnectedProvider={setConnectedProvider}
+              selectedServiceProvider={selectedServiceProvider}
+            />
+          ) : qrCodeAddress ? (
+            <ReceiveQRCode address={qrCodeAddress} />
+          ) : null}
         </AnimateTransition>
       </ContentWrapper>
     </Modal>

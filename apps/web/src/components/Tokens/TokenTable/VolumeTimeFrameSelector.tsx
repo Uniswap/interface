@@ -3,11 +3,14 @@ import { Dropdown, InternalMenuItem } from 'components/Dropdowns/Dropdown'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { useAtom } from 'jotai'
 import { useTheme } from 'lib/styled-components'
-import { useState } from 'react'
+import { useExploreParams } from 'pages/Explore/redirects'
+import { useEffect, useState } from 'react'
 import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Flex, useMedia } from 'ui/src'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 
 export enum TimePeriodDisplay {
   HOUR = '1H',
@@ -41,6 +44,8 @@ export function getTimePeriodFromDisplay(display: TimePeriodDisplay): TimePeriod
   }
 }
 
+const SOLANA_ORDERED_TIMES: TimePeriod[] = [TimePeriod.HOUR, TimePeriod.DAY]
+
 export const ORDERED_TIMES: TimePeriod[] = [
   TimePeriod.HOUR,
   TimePeriod.DAY,
@@ -59,6 +64,17 @@ export default function VolumeTimeFrameSelector() {
   const media = useMedia()
   const isLargeScreen = !media.xl
 
+  // Solana volume data is only available for time frames < 1 day
+  const { chainName } = useExploreParams()
+  const currentChainId = chainName ? getChainIdFromChainUrlParam(chainName) : undefined
+  const orderedTimes = currentChainId === UniverseChainId.Solana ? SOLANA_ORDERED_TIMES : ORDERED_TIMES
+  useEffect(() => {
+    // if the current displayed time period is not available for Solana, set it 1 Day
+    if (currentChainId === UniverseChainId.Solana && !SOLANA_ORDERED_TIMES.includes(activeTime)) {
+      setTime(TimePeriod.DAY)
+    }
+  }, [currentChainId, activeTime, setTime])
+
   return (
     <Flex>
       <Dropdown
@@ -72,7 +88,7 @@ export default function VolumeTimeFrameSelector() {
         allowFlip
         alignRight={!media.lg}
       >
-        {ORDERED_TIMES.map((time) => (
+        {orderedTimes.map((time) => (
           <InternalMenuItem
             key={DISPLAYS[time]}
             data-testid={DISPLAYS[time]}

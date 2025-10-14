@@ -9,6 +9,7 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
+import { SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
@@ -72,5 +73,15 @@ export const MONAD_CHAIN_INFO = {
   },
   interfaceName: 'monad',
   tokens,
+  gasConfig: {
+    send: {
+      configKey: SwapConfigKey.MonSendMinGasAmount,
+      default: 20, // .002 ETH equivalent
+    },
+    swap: {
+      configKey: SwapConfigKey.MonSwapMinGasAmount,
+      default: 150, // .015 ETH equivalent
+    },
+  },
   tradingApiPollingIntervalMs: 200,
 } as const satisfies UniverseChainInfo

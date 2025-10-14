@@ -10,6 +10,7 @@ export enum FeatureFlags {
   // Shared
   ArbitrumDutchV3,
   BlockaidFotLogging,
+  ChainedActions,
   DisableSwap7702,
   EmbeddedWallet,
   FiatOffRamp,
@@ -36,6 +37,7 @@ export enum FeatureFlags {
 
   // Wallet
   BottomTabs,
+  BridgedAssetsBanner,
   DisableFiatOnRampKorea,
   EnableTransactionSpacingForDelegatedAccounts,
   EnableExportPrivateKeys,
@@ -82,6 +84,7 @@ export enum FeatureFlags {
 export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.ArbitrumDutchV3, 'uniswapx_dutchv3_orders_arbitrum'],
   [FeatureFlags.BlockaidFotLogging, 'blockaid_fot_logging'],
+  [FeatureFlags.ChainedActions, 'enable_chained_actions'],
   [FeatureFlags.DisableSwap7702, 'disable-swap-7702'],
   [FeatureFlags.EmbeddedWallet, 'embedded_wallet'],
   [FeatureFlags.EnablePermitMismatchUX, 'enable_permit2_mismatch_ux'],
@@ -141,6 +144,7 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   ...SHARED_FEATURE_FLAG_NAMES,
   [FeatureFlags.BlurredLockScreen, 'blurred_lock_screen'],
   [FeatureFlags.BottomTabs, 'bottom_tabs'],
+  [FeatureFlags.BridgedAssetsBanner, 'bridged_assets_banner'],
   [FeatureFlags.DisableFiatOnRampKorea, 'disable-fiat-onramp-korea'],
   [FeatureFlags.Eip5792Methods, 'eip_5792_methods'],
   [FeatureFlags.EnableExportPrivateKeys, 'enable-export-private-keys'],

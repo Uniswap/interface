@@ -36,6 +36,7 @@ export const createRenderActions = (
         dragStartY: state.dragStartY,
         dynamicZoomMin: state.dynamicZoomMin,
         initialViewSet: state.initialViewSet,
+        inputMode: state.inputMode,
         isFullRange: state.isFullRange,
         maxPrice: state.maxPrice,
         minPrice: state.minPrice,

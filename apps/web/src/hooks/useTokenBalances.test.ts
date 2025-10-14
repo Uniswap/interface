@@ -12,6 +12,8 @@ import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 
 vi.mock('features/accounts/store/hooks', () => ({
   useActiveAddresses: vi.fn(),
+  useActiveWallet: vi.fn(),
+  useConnectionStatus: vi.fn(() => ({ isConnected: false, isConnecting: false, isDisconnected: true })),
 }))
 
 // Mock the balances module with all exports

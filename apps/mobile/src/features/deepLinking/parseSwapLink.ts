@@ -5,7 +5,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromUniswapWebAppLink, isTestnetChain } from 'uniswap/src/features/chains/utils'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 
 /**
@@ -253,7 +253,14 @@ function parseCurrencyAddress(currency: string | null, chainId: UniverseChainId)
   }
 
   // Handle native currency representations
-  if (currency === 'ETH' || currency === 'NATIVE' || currency === 'EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE') {
+  if (
+    currency === 'ETH' ||
+    currency === 'NATIVE' ||
+    areAddressesEqual({
+      addressInput1: { address: currency, chainId },
+      addressInput2: { address: '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', chainId },
+    })
+  ) {
     return getNativeAddress(chainId)
   }
 

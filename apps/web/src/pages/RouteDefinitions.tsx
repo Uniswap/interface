@@ -6,6 +6,7 @@ import Swap from 'pages/Swap'
 import { lazy, ReactNode, Suspense, useMemo } from 'react'
 import { matchPath, Navigate, Route, Routes, useLocation } from 'react-router'
 import { CHROME_EXTENSION_UNINSTALL_URL_PATH } from 'uniswap/src/constants/urls'
+import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
@@ -132,6 +133,13 @@ export const routes: RouteDefinition[] = [
     getDescription: getExploreDescription,
     nestedPaths: [':tab', ':chainName', ':tab/:chainName'],
     getElement: () => <RedirectExplore />,
+  }),
+  // Special case: redirect WSOL to SOL TDP, as directly trading WSOL is not supported currently.
+  createRouteDefinition({
+    path: `/explore/tokens/solana/${WRAPPED_SOL_ADDRESS_SOLANA}`,
+    getTitle: () => i18n.t('common.buyAndSell'),
+    getDescription: () => StaticTitlesAndDescriptions.TDPDescription,
+    getElement: () => <Navigate to="/explore/tokens/solana/NATIVE" replace />,
   }),
   createRouteDefinition({
     path: '/explore/tokens/:chainName/:tokenAddress',

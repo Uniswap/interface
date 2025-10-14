@@ -95,7 +95,7 @@ exports[`NewAddressSpeedBumpModal > should not render AccountIcon if account has
                     class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-spa94665589 _width-10037"
                   >
                     <div
-                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-t-space-spa1360334080"
                     >
                       <a
                         href="https://support.uniswap.org/hc/en-us"
@@ -103,19 +103,16 @@ exports[`NewAddressSpeedBumpModal > should not render AccountIcon if account has
                         target="_blank"
                       >
                         <div
-                          class="_backgroundColor-0hover-surface2Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-fit-content _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665589 _pb-t-space-spa94665589 _backgroundColor-surface2 _gap-4px _alignItems-center"
+                          class="_backgroundColor-0hover-surface2Hov3121676 _width-_platformweb_fit-content _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665589 _pb-t-space-spa94665589 _backgroundColor-surface2 _gap-t-space-spa94665589 _alignItems-center"
                         >
                           <svg
-                            fill="rgba(19, 19, 19, 0.63)"
-                            height="16"
-                            stroke="none"
+                            stroke-width="8"
+                            style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
                             viewBox="0 0 16 16"
-                            width="16"
-                            xmlns="http://www.w3.org/2000/svg"
                           >
                             <path
-                              d="M11.3066 8.66699C11.7132 8.66699 12.0533 8.77366 12.3333 8.94033C12.5626 8.80633 12.8332 8.70966 13.1466 8.67766C13.2506 8.667 13.3333 8.58633 13.3333 8.48233V4.66699C13.3333 3.33366 12.6666 2.66699 11.3333 2.66699H3.33325C1.99992 2.66699 1.33325 3.33366 1.33325 4.66699V10.667C1.33325 12.0003 1.99992 12.667 3.33325 12.667H9.06665C9.25132 12.667 9.29996 12.5023 9.26196 12.4163C9.1733 12.213 9.10664 11.997 9.05998 11.767C8.89331 10.8937 9.0733 10.0603 9.5533 9.46699C9.9733 8.95366 10.5932 8.66699 11.3066 8.66699ZM8.01929 8.11966C7.81395 8.26899 7.57325 8.34366 7.33325 8.34366C7.09325 8.34366 6.85188 8.26899 6.64722 8.12032L3.37264 5.73832C3.14931 5.57632 3.09995 5.263 3.26261 5.03966C3.42461 4.81766 3.73585 4.76632 3.96118 4.92966L7.23592 7.31099C7.29459 7.35299 7.37257 7.35366 7.43123 7.31099L10.706 4.92966C10.9306 4.76632 11.2425 4.817 11.4045 5.03966C11.5672 5.263 11.5178 5.57565 11.2945 5.73832L8.01929 8.11966ZM14.6252 11.5697C14.3212 13.1117 12.3359 14.0003 12.3359 14.0003C12.3359 14.0003 10.3506 13.1123 10.0466 11.5697C9.85996 10.6237 10.2679 9.67166 11.3046 9.66699C12.0766 9.66366 12.3359 10.429 12.3359 10.429C12.3359 10.429 12.5953 9.66366 13.3673 9.66699C14.4066 9.67166 14.8119 10.6237 14.6252 11.5697Z"
-                              fill="rgba(19, 19, 19, 0.63)"
+                              d="M11.3063 8.66675C11.713 8.66675 12.053 8.77342 12.333 8.94008C12.5623 8.80608 12.833 8.70942 13.1463 8.67742C13.2503 8.66675 13.333 8.58609 13.333 8.48209V4.66675C13.333 3.33341 12.6663 2.66675 11.333 2.66675H3.33301C1.99967 2.66675 1.33301 3.33341 1.33301 4.66675V10.6667C1.33301 12.0001 1.99967 12.6667 3.33301 12.6667H9.06641C9.25107 12.6667 9.29972 12.5021 9.26172 12.4161C9.17305 12.2127 9.1064 11.9967 9.05973 11.7667C8.89307 10.8934 9.07306 10.0601 9.55306 9.46675C9.97306 8.95341 10.593 8.66675 11.3063 8.66675ZM8.01904 8.11941C7.81371 8.26875 7.57301 8.34341 7.33301 8.34341C7.09301 8.34341 6.85164 8.26874 6.64697 8.12008L3.3724 5.73808C3.14906 5.57608 3.0997 5.26275 3.26237 5.03942C3.42437 4.81742 3.7356 4.76608 3.96094 4.92941L7.23568 7.31075C7.29434 7.35275 7.37232 7.35342 7.43099 7.31075L10.7057 4.92941C10.9304 4.76608 11.2423 4.81675 11.4043 5.03942C11.567 5.26275 11.5176 5.57541 11.2943 5.73808L8.01904 8.11941ZM14.625 11.5694C14.321 13.1114 12.3356 14.0001 12.3356 14.0001C12.3356 14.0001 10.3504 13.1121 10.0464 11.5694C9.85972 10.6234 10.2677 9.67141 11.3044 9.66675C12.0764 9.66341 12.3356 10.4288 12.3356 10.4288C12.3356 10.4288 12.595 9.66341 13.367 9.66675C14.4064 9.67141 14.8117 10.6234 14.625 11.5694Z"
+                              fill="currentColor"
                             />
                           </svg>
                           <span

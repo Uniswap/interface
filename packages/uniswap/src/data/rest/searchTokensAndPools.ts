@@ -9,9 +9,9 @@ import {
   SearchTokensResponse,
 } from '@uniswap/client-search/dist/search/v1/api_pb'
 import { searchTokens } from '@uniswap/client-search/dist/search/v1/api-searchService_connectquery'
+import { parseProtectionInfo, parseRestProtocolVersion, parseSafetyLevel } from '@universe/api'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
-import { parseProtectionInfo, parseRestProtocolVersion, parseSafetyLevel } from 'uniswap/src/data/rest/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'

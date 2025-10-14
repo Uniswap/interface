@@ -13,6 +13,7 @@ import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { ChartType } from 'components/Charts/utils'
+import { RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo, useState } from 'react'
@@ -44,6 +45,8 @@ export function D3LiquidityRangeInput({
   isFullRange,
   minPrice,
   maxPrice,
+  inputMode,
+  setInputMode,
   setMinPrice,
   setMaxPrice,
   setIsFullRange,
@@ -69,6 +72,8 @@ export function D3LiquidityRangeInput({
   isFullRange?: boolean
   minPrice?: number
   maxPrice?: number
+  inputMode?: RangeAmountInputPriceMode
+  setInputMode: (inputMode: RangeAmountInputPriceMode) => void
   setMinPrice: (minPrice?: number | null) => void
   setMaxPrice: (maxPrice?: number | null) => void
   setIsFullRange: (isFullRange: boolean) => void
@@ -158,6 +163,8 @@ export function D3LiquidityRangeInput({
         minPrice={minPrice}
         maxPrice={maxPrice}
         isFullRange={isFullRange}
+        inputMode={inputMode}
+        onInputModeChange={setInputMode}
         onMinPriceChange={setMinPrice}
         onMaxPriceChange={setMaxPrice}
         onTimePeriodChange={setSelectedHistoryDuration}

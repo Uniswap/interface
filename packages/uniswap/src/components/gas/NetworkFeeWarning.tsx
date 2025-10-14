@@ -26,6 +26,7 @@ import { isMobileApp, isWebApp, isWebPlatform } from 'utilities/src/platform'
 export function NetworkFeeWarning({
   gasFeeHighRelativeToValue,
   children,
+  disabled = false,
   tooltipTrigger,
   placement = 'top',
   uniswapXGasFeeInfo,
@@ -33,6 +34,7 @@ export function NetworkFeeWarning({
   includesDelegation,
 }: PropsWithChildren<{
   gasFeeHighRelativeToValue?: boolean
+  disabled?: boolean
   tooltipTrigger?: InfoTooltipProps['trigger']
   placement?: InfoTooltipProps['placement']
   uniswapXGasFeeInfo?: FormattedUniswapXGasFeeInfo
@@ -103,7 +105,7 @@ export function NetworkFeeWarning({
         placement,
         icon: null,
         maxWidth: priceUxEnabled ? 300 : undefined,
-        enabled: !!tooltipTrigger,
+        enabled: !disabled,
       }}
       trigger={tooltipTrigger}
       analyticsTitle="Network cost"

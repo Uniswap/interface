@@ -45,7 +45,7 @@ export function usePortfolioTokenOptions({
   )
 
   const filteredPortfolioBalances = useMemo(
-    () => portfolioBalances && filter({ tokenOptions: portfolioBalances, chainFilter, searchFilter }),
+    () => portfolioBalances && filter({ tokenOptions: portfolioBalances, chainFilter, searchFilter, hideWSOL: true }),
     [chainFilter, portfolioBalances, searchFilter],
   )
 

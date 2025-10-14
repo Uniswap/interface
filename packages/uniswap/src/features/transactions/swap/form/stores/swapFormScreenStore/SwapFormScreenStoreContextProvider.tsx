@@ -156,8 +156,11 @@ export const SwapFormScreenStoreContextProvider = ({
     getTokenWarningSeverity(currencies.input) === WarningSeverity.Blocked ||
     getTokenWarningSeverity(currencies.output) === WarningSeverity.Blocked
 
-  // Always show footer on native mobile; otherwise only when we have tokens & amount and not blocked
-  const showFooter = Boolean(!hideFooter && (isMobileApp || (!isBlockedTokens && input && output && exactAmountToken)))
+  // Always show footer on native mobile; otherwise only when we have tokens & amount & not blocked, or when we have an exact output unavailable warning
+  const showFooter = Boolean(
+    !hideFooter &&
+      (isMobileApp || (!isBlockedTokens && input && output && exactAmountToken) || showExactOutputUnavailableWarning),
+  )
 
   // Compose full state object (same shape as SwapFormScreenStoreState)
   const derivedState = useMemo(

@@ -6,7 +6,10 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "types": ["chrome", "node"],
-    "paths": {}
+    "baseUrl": ".",
+    "paths": {
+      "@universe/api/*": ["./src/*"]
+    }
   },
   "types": ["vitest/globals"],
   "references": [

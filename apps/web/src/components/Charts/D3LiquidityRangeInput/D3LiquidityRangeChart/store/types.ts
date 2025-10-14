@@ -1,9 +1,20 @@
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Currency } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { TickAlignment } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/priceToY'
 import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { PriceChartData } from 'components/Charts/PriceChart'
+import { RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
 import * as d3 from 'd3'
 import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
+
+export type TickNavigationParams = {
+  tickSpacing: number
+  baseCurrency: Maybe<Currency>
+  quoteCurrency: Maybe<Currency>
+  priceInverted: boolean
+  protocolVersion: ProtocolVersion
+}
 
 export type ChartState = {
   dimensions: {
@@ -18,6 +29,7 @@ export type ChartState = {
   hoveredTick?: ChartEntry
   hoveredY?: number
   initialViewSet: boolean
+  inputMode: RangeAmountInputPriceMode
   isChartHovered?: boolean
   isFullRange: boolean
   maxPrice?: number
@@ -101,10 +113,11 @@ export type ChartActions = {
   reset: (params?: { animate?: boolean; minPrice?: number; maxPrice?: number }) => void
   drawAll: () => void
   animateToState: (params: AnimationParams) => void
-  incrementMax: () => void
-  decrementMax: () => void
-  incrementMin: () => void
-  decrementMin: () => void
+  incrementMax: (params: TickNavigationParams) => void
+  decrementMax: (params: TickNavigationParams) => void
+  incrementMin: (params: TickNavigationParams) => void
+  decrementMin: (params: TickNavigationParams) => void
+  toggleInputMode: () => void
 }
 
 export type ChartStoreState = ChartState & {

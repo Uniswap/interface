@@ -12,6 +12,9 @@ export const selectBackupReminderLastSeenTs = (state: WalletState): number | und
 
 export const selectHasUsedExplore = (state: WalletState): boolean => state.behaviorHistory.hasUsedExplore
 
+export const selectHasViewedBridgedAssetsCard = (state: WalletState): boolean =>
+  state.behaviorHistory.hasViewedBridgedAssetsCard ?? false
+
 export const selectHasViewedOffRampTooltip = (state: WalletState): boolean =>
   state.behaviorHistory.hasViewedOffRampTooltip
 

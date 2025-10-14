@@ -77,24 +77,6 @@ exports[`ReceiveScreen renders without error 1`] = `
                         />
                       </div>
                     </div>
-                    <div
-                      style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 1; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%;"
-                    >
-                      <div
-                        class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
-                      >
-                        <div
-                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _gap-t-space-spa94665589 _mt-t-space-non101 _pr-t-space-non101 _pl-t-space-non101 _pt-t-space-non101 _pb-t-space-non101"
-                        >
-                          <span
-                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
-                            data-disable-theme="true"
-                          >
-                            0x​82D56A...373Fa6
-                          </span>
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -6094,7 +6076,7 @@ exports[`ReceiveScreen renders without error 1`] = `
               <h2
                 class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
                 data-disable-theme="true"
-                id="title-:r1i:"
+                id="title-:r1e:"
                 role="heading"
               />
             </span>
@@ -6177,24 +6159,6 @@ exports[`ReceiveScreen renders without error 1`] = `
                         data-disable-theme="true"
                         data-testid="address-display/name/undefined"
                       />
-                    </div>
-                  </div>
-                  <div
-                    style="display: flex; align-items: stretch; flex-direction: column; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 1; height: 0px; overflow-x: hidden; overflow-y: hidden; width: 100%;"
-                  >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-absolute _width-10037"
-                    >
-                      <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _backgroundColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _gap-t-space-spa94665589 _mt-t-space-non101 _pr-t-space-non101 _pl-t-space-non101 _pt-t-space-non101 _pb-t-space-non101"
-                      >
-                        <span
-                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
-                          data-disable-theme="true"
-                        >
-                          0x​82D56A...373Fa6
-                        </span>
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -12196,7 +12160,7 @@ exports[`ReceiveScreen renders without error 1`] = `
             <h2
               class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
               data-disable-theme="true"
-              id="title-:r1i:"
+              id="title-:r1e:"
               role="heading"
             />
           </span>

@@ -29,7 +29,7 @@ import MigrateV2SettingsTab from 'pages/MigrateV2/Settings'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
-import { Navigate, useNavigate, useParams } from 'react-router'
+import { Navigate, useParams } from 'react-router'
 import { useTokenBalance } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { Bound, resetMintState } from 'state/mint/v3/actions'
@@ -814,7 +814,6 @@ export default function MigrateV2Pair() {
   const { address } = useParams<{ address: string }>()
   // reset mint state on component mount, and as a cleanup (on unmount)
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
   useEffect(() => {
     dispatch(resetMintState())
     return () => {
@@ -876,10 +875,6 @@ export default function MigrateV2Pair() {
 
   const MIGRATE_PAGE_URL = '/migrate/v2'
 
-  const handleNavigateBackToMigrate = useCallback(() => {
-    navigate(MIGRATE_PAGE_URL)
-  }, [navigate])
-
   // redirect for invalid url params
   if (!validatedAddress || !pair || (!pairAddressesLoading && !token0Address && !account.isConnecting)) {
     logger.warn('MigrateV2Pair', 'MigrateV2Pair', 'Invalid pair address', {
@@ -908,7 +903,11 @@ export default function MigrateV2Pair() {
             <TouchableArea
               p="$spacing6"
               borderRadius="$rounded8"
-              onPress={handleNavigateBackToMigrate}
+              tag="a"
+              href={MIGRATE_PAGE_URL}
+              $platform-web={{
+                textDecoration: 'none',
+              }}
               hoverable
               hoverStyle={{
                 backgroundColor: '$backgroundHover',

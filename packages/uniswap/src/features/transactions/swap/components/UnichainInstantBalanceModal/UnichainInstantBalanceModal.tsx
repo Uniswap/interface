@@ -17,7 +17,7 @@ import { useClearFlashblocksSwapNotifications } from 'uniswap/src/features/trans
 import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { UnichainPoweredMessage } from 'uniswap/src/features/transactions/TransactionDetails/UnichainPoweredMessage'
-import { isInterfaceDesktop, isWebApp, isWebPlatform } from 'utilities/src/platform'
+import { isWebApp, isWebAppDesktop, isWebPlatform } from 'utilities/src/platform'
 
 export function UnichainInstantBalanceModal(): JSX.Element | null {
   const { t } = useTranslation()
@@ -103,7 +103,7 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
               height="$spacing32"
               flexDirection="row-reverse"
               px="$padding12"
-              pt={isInterfaceDesktop ? '$padding20' : '$none'}
+              pt={isWebAppDesktop ? '$padding20' : '$none'}
             >
               <ModalCloseIcon onClose={handleClose} />
             </Flex>
@@ -130,7 +130,7 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
               <Text variant="subheading1" color="$neutral1">
                 {t('swap.details.completed')}
               </Text>
-              <Text variant={isInterfaceDesktop ? 'heading2' : 'heading3'} color="$neutral1">
+              <Text variant={isWebAppDesktop ? 'heading2' : 'heading3'} color="$neutral1">
                 {`${lastSwapOutputBalance} ${outputCurrencyInfo.currency.symbol}`}
               </Text>
               <UnichainPoweredMessage swappedInTime={confirmTimeSeconds} />

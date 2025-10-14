@@ -4,6 +4,7 @@ import tokenLogo from 'assets/images/token-logo.png'
 import V4_HOOK from 'assets/images/v4Hooks.png'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
 import { ExternalArrowLink } from 'components/Liquidity/ExternalArrowLink'
 import { LiquidityPositionCard, LiquidityPositionCardLoader } from 'components/Liquidity/LiquidityPositionCard'
 import { LpIncentiveClaimModal } from 'components/Liquidity/LPIncentives/LpIncentiveClaimModal'
@@ -19,7 +20,7 @@ import { atom, useAtom } from 'jotai'
 import { TopPools } from 'pages/Positions/TopPools'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Link, useNavigate } from 'react-router'
+import { Link } from 'react-router'
 import { FixedSizeList } from 'react-window'
 import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks'
 import { useRequestPositionsForSavedPairs } from 'state/user/hooks'
@@ -35,9 +36,11 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { InterfacePageName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
 import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 
 // The BE limits the number of positions by chain and protocol version.
@@ -47,8 +50,16 @@ const PAGE_SIZE = 25
 
 function DisconnectedWalletView() {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   const accountDrawer = useAccountDrawer()
+  const setMenu = useSetMenu()
+  const connectedWithoutEVM = useIsMissingPlatformWallet(Platform.EVM)
+
+  const handleConnectWallet = () => {
+    if (connectedWithoutEVM) {
+      setMenu({ variant: MenuStateVariant.CONNECT_PLATFORM, platform: Platform.EVM })
+    }
+    accountDrawer.open()
+  }
 
   return (
     <Flex gap="$spacing12">
@@ -56,7 +67,7 @@ function DisconnectedWalletView() {
         padding="$spacing24"
         centered
         gap="$gap16"
-        borderRadius="$rounded12"
+        borderRadius="$rounded20"
         borderColor="$surface3"
         borderWidth="$spacing1"
         borderStyle="solid"
@@ -64,16 +75,37 @@ function DisconnectedWalletView() {
         <Flex padding="$padding12" borderRadius="$rounded12" backgroundColor="$surface3">
           <Wallet size="$icon.24" color="$neutral1" />
         </Flex>
-        <Text variant="subheading1">{t('positions.welcome.connect.wallet')}</Text>
-        <Text variant="body2" color="$neutral2">
-          {t('positions.welcome.connect.description')}
-        </Text>
+        <Flex gap="$gap4" centered>
+          <Text variant="subheading1">
+            {connectedWithoutEVM ? t('pool.notAvailableOnSolana') : t('positions.welcome.connect.wallet')}
+          </Text>
+          <Text variant="body2" color="$neutral2">
+            {connectedWithoutEVM ? t('pool.connectEthereumToView') : t('positions.welcome.connect.description')}
+          </Text>
+        </Flex>
         <Flex row gap="$gap8">
-          <Button variant="default" size="small" emphasis="secondary" onPress={() => navigate('/positions/create/v4')}>
-            {t('position.new')}
-          </Button>
-          <Button variant="default" size="small" width={160} onPress={accountDrawer.open}>
-            {t('common.connectWallet.button')}
+          {!connectedWithoutEVM && (
+            <Button
+              variant="default"
+              size="small"
+              emphasis="secondary"
+              tag="a"
+              href="/positions/create/v4"
+              $platform-web={{
+                textDecoration: 'none',
+              }}
+            >
+              {t('position.new')}
+            </Button>
+          )}
+          <Button
+            variant="default"
+            size="small"
+            width={connectedWithoutEVM ? '100%' : 240}
+            borderRadius="$rounded12"
+            onPress={handleConnectWallet}
+          >
+            {connectedWithoutEVM ? t('common.connectAWallet.button.evm') : t('common.connectWallet.button')}
           </Button>
         </Flex>
       </Flex>
@@ -99,7 +131,6 @@ function DisconnectedWalletView() {
 
 function EmptyPositionsView() {
   const { t } = useTranslation()
-  const navigate = useNavigate()
   return (
     <Flex gap="$spacing12">
       <Flex
@@ -122,10 +153,28 @@ function EmptyPositionsView() {
           {t('positions.noPositions.description')}
         </Text>
         <Flex row gap="$gap8">
-          <Button variant="default" size="small" emphasis="secondary" onPress={() => navigate('/explore/pools')}>
+          <Button
+            variant="default"
+            size="small"
+            emphasis="secondary"
+            tag="a"
+            href="/explore/pools"
+            $platform-web={{
+              textDecoration: 'none',
+            }}
+          >
             {t('pools.explore')}
           </Button>
-          <Button variant="default" size="small" width={160} onPress={() => navigate('/positions/create/v4')}>
+          <Button
+            variant="default"
+            size="small"
+            width={240}
+            tag="a"
+            href="/positions/create/v4"
+            $platform-web={{
+              textDecoration: 'none',
+            }}
+          >
             {t('position.new')}
           </Button>
         </Flex>

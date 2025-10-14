@@ -42,7 +42,6 @@ type TokenBalanceListProps = TabProps & {
 }
 
 const ESTIMATED_TOKEN_ITEM_HEIGHT = 64
-const TOKEN_LIST_BOTTOM_PADDING = 75
 
 export const TokenBalanceList = forwardRef<FlatList<TokenBalanceListRow>, TokenBalanceListProps>(
   function _TokenBalanceList({ owner, onPressToken, isExternalProfile = false, ...rest }, ref): JSX.Element {
@@ -148,14 +147,7 @@ const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, TokenBal
     }, [])
 
     // add negative z index to prevent footer from covering hidden tokens row when minimized
-    // add padding bottom to ensure hidden tokens can scroll above bottom UI elements
-    const ListFooterComponentStyle = useMemo(
-      () => ({
-        zIndex: zIndexes.negative,
-        paddingBottom: isExternalProfile ? 0 : TOKEN_LIST_BOTTOM_PADDING,
-      }),
-      [isExternalProfile],
-    )
+    const ListFooterComponentStyle = useMemo(() => ({ zIndex: zIndexes.negative }), [])
 
     const List = renderedInModal ? BottomSheetFlatList<TokenBalanceListRow> : Animated.FlatList<TokenBalanceListRow>
 

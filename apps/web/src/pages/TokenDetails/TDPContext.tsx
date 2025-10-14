@@ -31,7 +31,7 @@ export type PendingTDPContext = BaseTDPContext & { currency: undefined }
 /** Token details context with a successfully resolved currency field */
 export type LoadedTDPContext = BaseTDPContext & { currency: Currency }
 
-const TDPContext = createContext<LoadedTDPContext | undefined>(undefined)
+export const TDPContext = createContext<LoadedTDPContext | undefined>(undefined)
 
 export function useTDPContext(): LoadedTDPContext {
   const context = useContext(TDPContext)

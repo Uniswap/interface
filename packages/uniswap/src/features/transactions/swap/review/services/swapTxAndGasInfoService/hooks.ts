@@ -276,6 +276,10 @@ function useSwapParams(): {
   }
 }
 
+/**
+ * Takes in the trade and then finds the appropriate service to use
+ * and to obtain the necessary information tx and gas info.
+ */
 function useSwapTxAndGasInfoQuery(input: {
   trade: Trade | undefined
   approvalTxInfo: ApprovalTxInfo
@@ -294,6 +298,10 @@ function useSwapTxAndGasInfoQuery(input: {
   return useQuery(getQueryOptions(input))
 }
 
+/**
+ * Main hook that manages fetching the swap's tx and gas info once
+ * the swap form has valid inputs and other conditions are met.
+ */
 export function useSwapTxAndGasInfo(): SwapTxAndGasInfo {
   const params = useSwapParams()
   const { data } = useSwapTxAndGasInfoQuery(params)

@@ -80,6 +80,7 @@ export default defineConfig(({ mode }) => {
   console.log(`ENV_LOADED: mode=${mode} REACT_APP_AWS_API_ENDPOINT=${env.REACT_APP_AWS_API_ENDPOINT}`)
 
   const isProduction = mode === 'production'
+  const isVercelDeploy = DEPLOY_TARGET === 'vercel'
   const root = path.resolve(__dirname)
 
   // External package aliases only
@@ -125,6 +126,7 @@ export default defineConfig(({ mode }) => {
         '@uniswap/universal-router-sdk',
         '@uniswap/uniswapx-sdk',
         '@uniswap/permit2-sdk',
+        '@visx/responsive',
         'jsbi',
         'ethers',
         'react',
@@ -297,8 +299,8 @@ export default defineConfig(({ mode }) => {
 
     build: {
       outDir: 'build',
-      sourcemap: isProduction || VITE_DISABLE_SOURCEMAP ? false : 'hidden',
-      minify: isProduction ? 'esbuild' : undefined,
+      sourcemap: VITE_DISABLE_SOURCEMAP ? false : (isProduction && !isVercelDeploy ? false : true),
+      minify: isProduction && !isVercelDeploy ? 'esbuild' : undefined,
       rollupOptions: {
         external: [/\.stories\.[tj]sx?$/, /\.mdx$/, /expo-clipboard\/build\/ClipboardPasteButton\.js/],
         output: {

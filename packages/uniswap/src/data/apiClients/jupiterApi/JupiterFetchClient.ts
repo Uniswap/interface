@@ -1,10 +1,12 @@
 import { createJupiterApiClient, JupiterApiClient as JupiterApiClientType } from '@universe/api'
+import { config } from 'uniswap/src/config'
 import { createUniswapFetchClient } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
 
-const JUPITER_API_URL = 'https://infra-auth-proxy.backend-dev.api.uniswap.org/jupiter/ultra/v1'
-
 const JupiterFetchClient = createUniswapFetchClient({
-  baseUrl: JUPITER_API_URL,
+  baseUrl: `${config.jupiterProxyUrl}/ultra/v1`,
+  additionalHeaders: {
+    'x-api-key': config.tradingApiKey,
+  },
 })
 
 export const JupiterApiClient: JupiterApiClientType = createJupiterApiClient({

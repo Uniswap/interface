@@ -1,3 +1,5 @@
+import StatusIcon from 'components/StatusIcon'
+import { useAccountsStore, useActiveAddresses } from 'features/accounts/store/hooks'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components/CopyHelper'
@@ -8,8 +10,6 @@ import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
-import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { MAINNET_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { SOLANA_CHAIN_INFO } from 'uniswap/src/features/chains/svm/info/solana'
@@ -103,18 +103,24 @@ function TooltipAccountRow({ account }: { account: AccountItem }) {
   const { chains: evmChains } = useEnabledChains({ platform: Platform.EVM })
   const numberOfSupportedEVMChains = evmChains.length
 
+  const multipleWalletsConnected = useAccountsStore((state) => {
+    const evmWalletId = state.activeConnectors.evm?.session?.walletId
+    const svmWalletId = state.activeConnectors.svm?.session?.walletId
+    return Boolean(evmWalletId && svmWalletId && evmWalletId !== svmWalletId)
+  })
+
   return (
     <Flex row alignItems="center" justifyContent="space-between" gap="$spacing24">
       <Flex row gap="$spacing8">
-        <AccountIcon address={account.address} size={28} />
+        <StatusIcon address={account.address} size={28} showMiniIcons={multipleWalletsConnected} />
         <Flex>
-          <Flex row gap="$spacing4">
+          <Flex row alignItems="center" gap="$spacing6">
             <Text variant="body4" color="$neutral1">
               {shortenAddress({ address: account.address })}
             </Text>
             <NetworkLogo
               chainId={account.platform === Platform.SVM ? UniverseChainId.Solana : UniverseChainId.Mainnet}
-              size={16}
+              size={iconSizes.icon12}
             />
           </Flex>
           <Text variant="body4" color="$neutral2">

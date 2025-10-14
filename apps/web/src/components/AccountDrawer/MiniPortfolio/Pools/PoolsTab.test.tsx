@@ -6,6 +6,14 @@ import { renderWithUniswapContext } from 'test-utils/render'
 
 vi.mock('./useMultiChainPositions')
 
+vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
+  useActiveAddresses: vi.fn(() => ({
+    evmAddress: '0x0000000000000000000000000000000000000000',
+    svmAddress: undefined,
+  })),
+  useConnectionStatus: vi.fn(() => ({ isConnected: true, isConnecting: false, isDisconnected: false })),
+}))
+
 vi.spyOn(console, 'warn').mockImplementation(() => {})
 vi.spyOn(console, 'error').mockImplementation(() => {})
 

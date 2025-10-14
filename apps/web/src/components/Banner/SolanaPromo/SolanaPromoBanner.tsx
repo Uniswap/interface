@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { setOpenModal } from 'state/application/reducer'
@@ -6,7 +7,8 @@ import { Flex, IconButton, styled, Text, TouchableArea, useIsDarkMode } from 'ui
 import { SOLANA_BANNER_DARK, SOLANA_BANNER_LIGHT, SOLANA_LOGO } from 'ui/src/assets'
 import { X } from 'ui/src/components/icons/X'
 import { zIndexes } from 'ui/src/theme/zIndexes'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export const SOLANA_PROMO_BANNER_STORAGE_KEY = 'solanaPromoHidden'
@@ -70,8 +72,10 @@ export function SolanaPromoBanner() {
   })
 
   const openSolanaPromoModal = useEvent(() => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.SolanaPromoBanner,
+    })
     dispatch(setOpenModal({ name: ModalName.SolanaPromo }))
-
     handleBannerClose()
   })
 

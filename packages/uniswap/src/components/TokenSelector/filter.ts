@@ -62,24 +62,27 @@ const getNameSearchPattern = (
  * @param tokenOptions list of `TokenOption`s to filter
  * @param chainFilter chain id to keep
  * @param searchFilter filter to apply to currency adddress, name, and symbol
+ * @param hideWSOL whether to filter out WSOL tokens
  */
 export function filter({
   tokenOptions,
   chainFilter,
   searchFilter,
+  hideWSOL = false,
 }: {
   tokenOptions: TokenOption[] | null
   chainFilter: UniverseChainId | null
   searchFilter?: string
+  hideWSOL?: boolean
 }): TokenOption[] {
   if (!tokenOptions || !tokenOptions.length) {
     return []
   }
 
-  // Filter out WSOL from Solana results
-  const filteredTokens = tokenOptions.filter((option) => {
-    return !isWSOL(option.currencyInfo.currency)
-  })
+  // Filter out WSOL from Solana results when hideWSOL is true
+  const filteredTokens = hideWSOL
+    ? tokenOptions.filter((option) => !isWSOL(option.currencyInfo.currency))
+    : tokenOptions
 
   if (!chainFilter && !searchFilter) {
     return filteredTokens

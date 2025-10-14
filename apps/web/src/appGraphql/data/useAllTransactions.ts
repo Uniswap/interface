@@ -1,6 +1,8 @@
 import { GraphQLApi } from '@universe/api'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useCallback, useMemo, useRef } from 'react'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import i18n from 'uniswap/src/i18n'
 
 export enum TransactionType {
@@ -35,6 +37,7 @@ export function useAllTransactions(
   filter: TransactionType[] = [TransactionType.SWAP, TransactionType.ADD, TransactionType.REMOVE],
 ) {
   const isWindowVisible = useIsWindowVisible()
+  const skipTransactionsQueries = !isWindowVisible || fromGraphQLChain(chain) === UniverseChainId.Solana
 
   const {
     data: dataV4,
@@ -43,7 +46,7 @@ export function useAllTransactions(
     fetchMore: fetchMoreV4,
   } = GraphQLApi.useV4TransactionsQuery({
     variables: { chain, first: ALL_TX_DEFAULT_QUERY_SIZE },
-    skip: !isWindowVisible,
+    skip: skipTransactionsQueries,
   })
   const {
     data: dataV3,
@@ -52,7 +55,7 @@ export function useAllTransactions(
     fetchMore: fetchMoreV3,
   } = GraphQLApi.useV3TransactionsQuery({
     variables: { chain, first: ALL_TX_DEFAULT_QUERY_SIZE },
-    skip: !isWindowVisible,
+    skip: skipTransactionsQueries,
   })
   const {
     data: dataV2,
@@ -61,7 +64,7 @@ export function useAllTransactions(
     fetchMore: fetchMoreV2,
   } = GraphQLApi.useV2TransactionsQuery({
     variables: { chain, first: ALL_TX_DEFAULT_QUERY_SIZE },
-    skip: !isWindowVisible,
+    skip: skipTransactionsQueries,
   })
 
   const loadingMoreV4 = useRef(false)

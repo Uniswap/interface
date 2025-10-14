@@ -25,6 +25,9 @@ vi.mock('utilities/src/platform', async () => {
 
 vi.mock('features/accounts/store/hooks', () => ({
   useAccountsStore: vi.fn(),
+  useActiveAddresses: vi.fn(() => ({ evmAddress: undefined, svmAddress: undefined })),
+  useActiveWallet: vi.fn(() => undefined),
+  useConnectionStatus: vi.fn(() => ({ isConnected: false, isConnecting: false, isDisconnected: true })),
 }))
 
 vi.mock('components/Web3Provider/constants', async () => {

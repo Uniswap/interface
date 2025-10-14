@@ -11,7 +11,10 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "types": ["node"],
-    "paths": {}
+    "baseUrl": ".",
+    "paths": {
+      "@universe/config/*": ["./src/*"]
+    }
   },
   "references": [
     {

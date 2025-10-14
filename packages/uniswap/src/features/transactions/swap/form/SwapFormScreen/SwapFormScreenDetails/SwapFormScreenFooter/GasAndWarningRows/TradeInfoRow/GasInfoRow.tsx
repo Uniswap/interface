@@ -57,6 +57,7 @@ export function GasInfoRow({ gasInfo, hidden }: { gasInfo: GasInfo; hidden?: boo
             <NetworkFeeWarningContent gasInfo={hidden ? undefined : gasInfo} />
           </Flex>
         }
+        disabled={hidden}
         uniswapXGasFeeInfo={gasInfo.uniswapXGasFeeInfo}
         chainId={gasInfo.chainId}
       />

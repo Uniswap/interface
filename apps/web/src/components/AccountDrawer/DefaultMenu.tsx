@@ -75,8 +75,13 @@ function DefaultMenu() {
       return
     } // menu is closed, don't log
 
-    sendAnalyticsEvent(InterfaceEventName.PortfolioMenuOpened, { name: menuState.variant })
-  }, [menuState.variant])
+    sendAnalyticsEvent(
+      InterfaceEventName.PortfolioMenuOpened,
+      menuState.variant === MenuStateVariant.CONNECT_PLATFORM
+        ? { name: menuState.variant, platform: menuState.platform }
+        : { name: menuState.variant },
+    )
+  }, [menuState])
 
   // eslint-disable-next-line consistent-return
   const SubMenu = useMemo(() => {

@@ -20,6 +20,7 @@ export const useChartViewState = () => {
       dimensions: s.dimensions,
       dynamicZoomMin: s.dynamicZoomMin,
       initialViewSet: s.initialViewSet,
+      inputMode: s.inputMode,
       panY: s.panY,
       zoomLevel: s.zoomLevel,
     })),
@@ -33,8 +34,10 @@ export const useLiquidityChartStoreRenderingContext = () => {
 
 export const useLiquidityChartStorePriceDifferences = ():
   | {
-      minPriceDiff: string | undefined
-      maxPriceDiff: string | undefined
+      minPriceDiffFormatted: string
+      maxPriceDiffFormatted: string
+      minPriceDiff: number | undefined
+      maxPriceDiff: number | undefined
     }
   | undefined => {
   const store = useLiquidityChartStore()
@@ -48,6 +51,8 @@ export const useLiquidityChartStorePriceDifferences = ():
 
       if (!currentPrice || !minPrice || !maxPrice || isFullRange) {
         return {
+          minPriceDiffFormatted: '',
+          maxPriceDiffFormatted: '',
           minPriceDiff: undefined,
           maxPriceDiff: undefined,
         }
@@ -62,8 +67,10 @@ export const useLiquidityChartStorePriceDifferences = ():
       }
 
       return {
-        minPriceDiff: formatDiff(minPriceDiffNum),
-        maxPriceDiff: formatDiff(maxPriceDiffNum),
+        minPriceDiffFormatted: formatDiff(minPriceDiffNum),
+        maxPriceDiffFormatted: formatDiff(maxPriceDiffNum),
+        minPriceDiff: minPriceDiffNum,
+        maxPriceDiff: maxPriceDiffNum,
       }
     }),
   )

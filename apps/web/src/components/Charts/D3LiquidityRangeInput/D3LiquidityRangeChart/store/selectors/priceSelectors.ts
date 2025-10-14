@@ -21,6 +21,7 @@ export const useChartPriceState = () => {
       minPrice: s.minPrice,
       selectedHistoryDuration: s.selectedHistoryDuration,
       selectedPriceStrategy: s.selectedPriceStrategy,
+      inputMode: s.inputMode,
     })),
   )
 }

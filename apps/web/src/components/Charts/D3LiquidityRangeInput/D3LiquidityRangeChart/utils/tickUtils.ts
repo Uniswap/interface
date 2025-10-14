@@ -1,8 +1,103 @@
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { nearestUsableTick, priceToClosestTick, TickMath, tickToPrice as tickToPriceV3 } from '@uniswap/v3-sdk'
+import { priceToClosestTick as priceToClosestV4Tick, tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
+import { TickNavigationParams } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { PriceChartData } from 'components/Charts/PriceChart'
+import { tryParsePrice } from 'state/mint/v3/utils'
+import { logger } from 'utilities/src/logger/logger'
+
+const PRICE_FIXED_DIGITS = 8
 
 /**
- * Finds the closest tick to a target price
+ * Navigates price by tick spacing
+ * using v3/v4 sdk functions
+ */
+export const navigateTick = ({
+  currentPrice,
+  tickSpacing,
+  direction,
+  baseCurrency,
+  quoteCurrency,
+  priceInverted,
+  protocolVersion,
+}: TickNavigationParams & { currentPrice: number; direction: 'increment' | 'decrement' }) => {
+  try {
+    if (!baseCurrency || !quoteCurrency) {
+      return undefined
+    }
+
+    const adjustedDirection = priceInverted ? (direction === 'increment' ? 'decrement' : 'increment') : direction
+
+    if (protocolVersion === ProtocolVersion.V3 || !protocolVersion) {
+      const baseToken = baseCurrency.wrapped
+      const quoteToken = quoteCurrency.wrapped
+
+      const price = tryParsePrice({
+        baseToken,
+        quoteToken,
+        value: currentPrice.toString(),
+      })
+
+      if (!price) {
+        return undefined
+      }
+
+      let tick = priceToClosestTick(price)
+
+      if (tick > TickMath.MAX_TICK) {
+        tick = TickMath.MAX_TICK
+      } else if (tick < TickMath.MIN_TICK) {
+        tick = TickMath.MIN_TICK
+      }
+
+      const currentTick = nearestUsableTick(tick, tickSpacing)
+      const newTick = adjustedDirection === 'increment' ? currentTick + tickSpacing : currentTick - tickSpacing
+
+      const newPriceObj = tickToPriceV3(baseToken, quoteToken, newTick)
+      return parseFloat(newPriceObj.toFixed(PRICE_FIXED_DIGITS))
+    }
+
+    if (protocolVersion === ProtocolVersion.V4) {
+      const price = tryParsePrice({
+        baseToken: baseCurrency,
+        quoteToken: quoteCurrency,
+        value: currentPrice.toString(),
+      })
+
+      if (!price) {
+        return undefined
+      }
+
+      let tick = priceToClosestV4Tick(price)
+
+      if (tick > TickMath.MAX_TICK) {
+        tick = TickMath.MAX_TICK
+      } else if (tick < TickMath.MIN_TICK) {
+        tick = TickMath.MIN_TICK
+      }
+
+      const currentTick = nearestUsableTick(tick, tickSpacing)
+      const newTick = adjustedDirection === 'increment' ? currentTick + tickSpacing : currentTick - tickSpacing
+
+      const newPriceObj = tickToPriceV4(baseCurrency, quoteCurrency, newTick)
+      return parseFloat(newPriceObj.toFixed(PRICE_FIXED_DIGITS))
+    }
+
+    return undefined
+  } catch (error) {
+    logger.error(error, {
+      tags: {
+        file: 'navigateTick',
+        function: 'navigateTick',
+      },
+    })
+    return undefined
+  }
+}
+
+/**
+ * Finds the closest tick from liquidity data to a target price
  */
 export const findClosestTick = (liquidityData: ChartEntry[], targetPrice: number): ChartEntry | undefined => {
   return liquidityData.reduce((closest, current) => {
@@ -13,7 +108,7 @@ export const findClosestTick = (liquidityData: ChartEntry[], targetPrice: number
 }
 
 /**
- * Calculates tick indices with price information for efficient lookups
+ * Calculates tick indices with price information for efficient lookups from liquidity data
  */
 export const calculateTickIndices = (liquidityData: ChartEntry[]) => {
   return liquidityData.map((d, i) => ({
@@ -32,35 +127,6 @@ export const getDataBounds = (data: PriceChartData[], liquidityData: ChartEntry[
     min: Math.min(...allPrices),
     max: Math.max(...allPrices),
   }
-}
-
-/**
- * Navigates to the next or previous tick from a given price
- */
-export const navigateTick = ({
-  liquidityData,
-  currentPrice,
-  direction,
-}: {
-  liquidityData: ChartEntry[]
-  currentPrice: number
-  direction: 'next' | 'prev'
-}): number | undefined => {
-  const currentTick = findClosestTick(liquidityData, currentPrice)
-
-  if (!currentTick) {
-    return undefined
-  }
-
-  const tickIndices = calculateTickIndices(liquidityData)
-  const currentIndex = tickIndices.find((t) => t.tick === currentTick.tick)?.index || 0
-
-  const targetIndex =
-    direction === 'next' ? Math.min(currentIndex + 1, liquidityData.length - 1) : Math.max(currentIndex - 1, 0)
-
-  const targetTick = liquidityData[targetIndex]
-
-  return targetTick.price0
 }
 
 /**

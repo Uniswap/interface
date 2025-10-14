@@ -301,6 +301,7 @@ export function SendReviewDetails({
             </Text>
             <AddressDisplay
               disableForcedWidth
+              flexGrow={false}
               address={account.address}
               hideAddressInSubtitle={true}
               horizontalGap="$spacing4"

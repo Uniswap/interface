@@ -11,6 +11,7 @@ import { yToPrice } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRan
 import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { ChartType } from 'components/Charts/utils'
+import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
 import { ChartQueryResult } from 'components/Tokens/TokenDetails/ChartSection/util'
 import * as d3 from 'd3'
 import { useEffect, useMemo, useRef } from 'react'
@@ -30,6 +31,8 @@ const D3LiquidityRangeChart = ({
   const colors = useSporeColors()
   const svgRef = useRef<SVGSVGElement | null>(null)
   const timescaleSvgRef = useRef<SVGSVGElement | null>(null)
+
+  const { priceRangeState } = useLiquidityUrlState()
 
   // Chart state
   const { zoomLevel, panY, dynamicZoomMin } = useChartViewState()
@@ -112,15 +115,27 @@ const D3LiquidityRangeChart = ({
   }, [priceData, liquidityData, colors, dimensions, tickScale, initializeRenderers, drawAll])
 
   // Update renderers when state changes
-  // biome-ignore lint/correctness/useExhaustiveDependencies: minPrice and maxPrice should also trigger re-renders
+  // biome-ignore lint/correctness/useExhaustiveDependencies: minPrice and maxPrice should trigger re-renders
   useEffect(() => {
     drawAll()
   }, [minPrice, maxPrice, drawAll])
 
-  // Reset the chart when the price data changes (currentPrice omitted)
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +priceData.dataHash
+  // Reset the chart when the price data changes (currentPrice omitted), maintaining the price range from the URL
+  // biome-ignore lint/correctness/useExhaustiveDependencies: priceRangeState should not trigger re-renders
   useEffect(() => {
-    reset()
+    let minPrice
+    let maxPrice
+    if (priceRangeState.minPrice && !isNaN(parseFloat(priceRangeState.minPrice))) {
+      minPrice = parseFloat(priceRangeState.minPrice)
+    }
+    if (priceRangeState.maxPrice && !isNaN(parseFloat(priceRangeState.maxPrice))) {
+      maxPrice = parseFloat(priceRangeState.maxPrice)
+    }
+
+    reset({
+      minPrice,
+      maxPrice,
+    })
   }, [priceData.dataHash, reset])
 
   return (

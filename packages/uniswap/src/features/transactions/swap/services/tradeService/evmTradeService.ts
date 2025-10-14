@@ -36,13 +36,6 @@ interface EVMTradeServiceContext {
   // Core dependencies
   tradeRepository: TradeRepository
   logger?: Logger
-  onTradeError?: (
-    error: Error,
-    ctx: {
-      input: UseTradeArgs
-      quoteRequestArgs?: GetQuoteRequestResult
-    },
-  ) => void
 
   // Configuration dependencies
   getIsUniswapXSupported?: (chainId?: number) => boolean
@@ -52,14 +45,8 @@ interface EVMTradeServiceContext {
 }
 
 export function createEVMTradeService(ctx: EVMTradeServiceContext): TradeService {
-  const {
-    tradeRepository,
-    getIsUniswapXSupported,
-    getEnabledChains,
-    getIsL2ChainId,
-    getMinAutoSlippageToleranceL2,
-    onTradeError,
-  } = ctx
+  const { tradeRepository, getIsUniswapXSupported, getEnabledChains, getIsL2ChainId, getMinAutoSlippageToleranceL2 } =
+    ctx
 
   // Create protocols filter
   const getProtocolsForChain = createGetProtocolsForChain({
@@ -129,10 +116,6 @@ export function createEVMTradeService(ctx: EVMTradeServiceContext): TradeService
         }
       } catch (e) {
         const error = e instanceof Error ? e : new Error('Unknown error')
-        onTradeError?.(error, {
-          input,
-          quoteRequestArgs,
-        })
         quoteRequestArgs = undefined
         throw error
       }

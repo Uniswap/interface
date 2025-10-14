@@ -42,20 +42,66 @@
       "cache": true
     },
     "typecheck": {
+      "command": "tsc -b",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
       "dependsOn": [
         "prepare",
         "^typecheck"
       ],
       "inputs": [
-        "sourceFiles"
+        "{projectRoot}/package.json",
+        "{workspaceRoot}/config/tsconfig/app.json",
+        "{workspaceRoot}/tsconfig.base.json",
+        "{projectRoot}/tsconfig.json",
+        "{projectRoot}/src/**/*.ts",
+        "{projectRoot}/src/**/*.tsx",
+        "{projectRoot}/src/**/*.json",
+        "!{projectRoot}/src/**/*.spec.ts",
+        "!{projectRoot}/src/**/*.spec.tsx",
+        "!{projectRoot}/src/**/*.test.ts",
+        "!{projectRoot}/src/**/*.test.tsx",
+        {
+          "dependentTasksOutputFiles": "**/*.d.ts"
+        }
       ],
       "outputs": [],
       "cache": true
     },
+    "lint:biome": {
+      "command": "biome check --error-on-warnings .",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["@uniswap/biome-config:prepare"]
+    },
+    "lint:biome:fix": {
+      "command": "biome check . --write --unsafe",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["@uniswap/biome-config:prepare"]
+    },
+    "lint:eslint": {
+      "command": "eslint . --ext ts,tsx --max-warnings=0",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint:eslint:fix": {
+      "command": "eslint . --ext ts,tsx --fix",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
     "lint": {
+      "executor": "nx:noop",
       "dependsOn": [
         "typecheck",
-        "@uniswap/biome-config:prepare"
+        "check:circular",
+        "lint:eslint",
+        "lint:biome"
       ],
       "inputs": [
         "default"
@@ -63,10 +109,8 @@
       "cache": true
     },
     "lint:fix": {
-      "dependsOn": [
-        "typecheck",
-        "@uniswap/biome-config:prepare"
-      ],
+      "executor": "nx:noop",
+      "dependsOn": ["lint:biome:fix", "lint:eslint:fix"],
       "cache": false
     },
     "test": {

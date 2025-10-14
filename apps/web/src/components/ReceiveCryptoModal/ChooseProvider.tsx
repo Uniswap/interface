@@ -114,19 +114,16 @@ export function ChooseProvider({
                 <Separator />
               </Flex>
             )}
-            {activeAddresses.evmAddress !== undefined && (
-              <Flex grow gap="$spacing12">
-                {providers.map((serviceProvider) => (
-                  <ProviderOption
-                    key={serviceProvider.name}
-                    serviceProvider={serviceProvider}
-                    walletAddress={activeAddresses.evmAddress ?? ''}
-                    setConnectedProvider={setConnectedProvider}
-                    setErrorProvider={setErrorProvider}
-                  />
-                ))}
-              </Flex>
-            )}
+            <Flex grow gap="$spacing12">
+              {providers.map((serviceProvider) => (
+                <ProviderOption
+                  key={serviceProvider.name}
+                  serviceProvider={serviceProvider}
+                  setConnectedProvider={setConnectedProvider}
+                  setErrorProvider={setErrorProvider}
+                />
+              ))}
+            </Flex>
           </Flex>
         )}
       </Flex>

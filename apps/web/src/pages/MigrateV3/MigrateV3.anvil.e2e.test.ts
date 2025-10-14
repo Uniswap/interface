@@ -8,7 +8,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const test = getTest({ withAnvil: true })
 
-const ANIMATION_DELAY = 100
+const ANIMATION_DELAY = 300
 
 test.describe('Migrate V3', () => {
   test('should migrate from v3 to v4', async ({ page, anvil }) => {

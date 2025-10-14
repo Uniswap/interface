@@ -37,6 +37,7 @@ export const uniswapUrls = {
     hiddenTokenInfo: createHelpArticleUrl('30432674756749-How-to-hide-and-unhide-tokens-in-the-Uniswap-Wallet'),
     hiddenNFTInfo: createHelpArticleUrl('14185028445837-How-to-hide-and-unhide-NFTs-in-the-Uniswap-Wallet'),
     impermanentLoss: createHelpArticleUrl('20904453751693-What-is-Impermanent-Loss'),
+    jupiterApiError: createHelpArticleUrl('39829559404685'),
     limitsFailure: createHelpArticleUrl('24300813697933-Why-did-my-limit-order-fail-or-not-execute'),
     limitsInfo: createHelpArticleUrl('24470337797005'),
     limitsNetworkSupport: createHelpArticleUrl('24470251716237-What-networks-do-limits-support'),
@@ -152,6 +153,7 @@ export const uniswapUrls = {
     poolInfo: `${tradingApiVersionPrefix}/lp/pool_info`,
     order: `${tradingApiVersionPrefix}/order`,
     orders: `${tradingApiVersionPrefix}/orders`,
+    priceDiscrepancy: `${tradingApiVersionPrefix}/lp/price_discrepancy`,
     quote: `${tradingApiVersionPrefix}/quote`,
     swap: `${tradingApiVersionPrefix}/swap`,
     swap5792: `${tradingApiVersionPrefix}/swap_5792`,
@@ -189,7 +191,4 @@ export const uniswapUrls = {
     'https://docs.google.com/forms/d/e/1FAIpQLSepzL5aMuSfRhSgw0zDw_gVmc2aeVevfrb1UbOwn6WGJ--46w/viewform',
 
   dataApiServiceUrl: `${getCloudflareApiBaseUrl()}/v2/data.v1.DataApiService`,
-  dataApiServicePaths: {
-    report: '/SubmitReport',
-  },
 }

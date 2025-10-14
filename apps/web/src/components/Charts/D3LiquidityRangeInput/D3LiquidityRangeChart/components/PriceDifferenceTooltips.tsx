@@ -5,6 +5,7 @@ import {
   useLiquidityChartStorePriceDifferences,
   useLiquidityChartStoreRenderingContext,
 } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/viewSelectors'
+import { RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
 import { Flex, Text } from 'ui/src'
 
 function PriceDifferenceTooltip({
@@ -44,12 +45,17 @@ function PriceDifferenceTooltip({
 
 export function PriceDifferenceTooltips() {
   const { isChartHovered } = useChartHoverState()
-  const { minPrice, maxPrice } = useChartPriceState()
+  const { minPrice, maxPrice, inputMode } = useChartPriceState()
   const priceDifferences = useLiquidityChartStorePriceDifferences()
   const renderingContext = useLiquidityChartStoreRenderingContext()
 
   // Only show tooltips when hovering the chart and we have the required data
-  const shouldShow = isChartHovered && minPrice && maxPrice && priceDifferences && renderingContext
+  const shouldShow =
+    (inputMode === RangeAmountInputPriceMode.PERCENTAGE || isChartHovered) &&
+    minPrice &&
+    maxPrice &&
+    priceDifferences &&
+    renderingContext
 
   return (
     <>
@@ -60,7 +66,7 @@ export function PriceDifferenceTooltips() {
             <PriceDifferenceTooltip
               containerHeight={CHART_DIMENSIONS.LIQUIDITY_CHART_HEIGHT}
               lineY={renderingContext.priceToY({ price: minPrice })}
-              priceDiff={priceDifferences.minPriceDiff}
+              priceDiff={priceDifferences.minPriceDiffFormatted}
             />
           ) : null}
 
@@ -69,7 +75,7 @@ export function PriceDifferenceTooltips() {
             <PriceDifferenceTooltip
               containerHeight={CHART_DIMENSIONS.LIQUIDITY_CHART_HEIGHT}
               lineY={renderingContext.priceToY({ price: maxPrice })}
-              priceDiff={priceDifferences.maxPriceDiff}
+              priceDiff={priceDifferences.maxPriceDiffFormatted}
             />
           ) : null}
         </>

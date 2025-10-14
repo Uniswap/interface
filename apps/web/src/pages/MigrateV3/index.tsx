@@ -411,7 +411,7 @@ export default function MigrateV3() {
       <MultichainContextProvider initialChainId={chainId}>
         <LPTransactionSettingsStoreContextProvider autoSlippageTolerance={autoSlippageTolerance}>
           <CreateLiquidityContextProvider
-            initialPositionState={{ initialPosition }}
+            initialPositionState={{ initialPosition, fee: initialPosition?.fee }}
             currencyInputs={currencyInputs}
             setCurrencyInputs={setCurrencyInputs}
             initialFlowStep={urlState.flowStep}

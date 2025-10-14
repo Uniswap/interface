@@ -232,6 +232,10 @@ vi.mock('uniswap/src/features/telemetry/Trace', () => ({
   },
 }))
 
+vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
+  useConnectionStatus: vi.fn(() => ({ isConnecting: false })),
+}))
+
 vi.mock('expo-web-browser', () => ({
   openBrowserAsync: vi.fn().mockResolvedValue({ type: 'opened' }),
   dismissBrowser: vi.fn().mockResolvedValue(undefined),

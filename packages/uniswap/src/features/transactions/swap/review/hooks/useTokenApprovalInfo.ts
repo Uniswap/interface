@@ -45,6 +45,8 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
   const { account, chainId, wrapType, currencyInAmount, currencyOutAmount, routing } = params
 
   const isWrap = wrapType !== WrapType.NotApplicable
+  /** Approval is included elsewhere for Chained Actions so it can be skipped */
+  const isChained = routing === TradingApi.Routing.CHAINED
 
   const address = account?.address
   const inputWillBeWrapped = routing && isUniswapX({ routing })
@@ -95,7 +97,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
   ])
 
   const approvalWillBeBatchedWithSwap = useApprovalWillBeBatchedWithSwap(chainId, routing)
-  const shouldSkip = !approvalRequestArgs || isWrap || !address || approvalWillBeBatchedWithSwap
+  const shouldSkip = !approvalRequestArgs || isWrap || !address || approvalWillBeBatchedWithSwap || isChained
 
   const { data, isLoading, error } = useCheckApprovalQuery({
     params: shouldSkip ? undefined : approvalRequestArgs,
@@ -114,7 +116,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
     }
 
     // Approval is N/A for wrap transactions or unconnected state.
-    if (isWrap || !address || approvalWillBeBatchedWithSwap) {
+    if (isWrap || !address || approvalWillBeBatchedWithSwap || isChained) {
       return {
         action: ApprovalAction.None,
         txRequest: null,
@@ -159,7 +161,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
       txRequest: null,
       cancelTxRequest: null,
     }
-  }, [address, approvalRequestArgs, approvalWillBeBatchedWithSwap, data, error, isWrap])
+  }, [address, approvalRequestArgs, approvalWillBeBatchedWithSwap, data, error, isWrap, isChained])
 
   return useMemo(() => {
     const gasEstimate = data?.gasEstimates?.[0]

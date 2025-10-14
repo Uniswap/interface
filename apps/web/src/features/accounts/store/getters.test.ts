@@ -627,9 +627,9 @@ describe('Web Accounts Store Getters', () => {
 
         // Then
         expect(status).toMatchObject({
-          status: ConnectorStatus.Connecting,
-          isConnected: false,
-          isConnecting: true,
+          status: ConnectorStatus.Connected,
+          isConnected: true,
+          isConnecting: false,
           isDisconnected: false,
         }) // Connecting has higher priority than Connected
       })

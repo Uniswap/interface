@@ -1,17 +1,26 @@
 import { FetchError } from '@universe/api/src/clients/base/errors'
-import type { CustomOptions, FetchClient, StandardFetchOptions } from '@universe/api/src/clients/base/types'
+import type {
+  CustomOptions,
+  FetchClient,
+  FetchClientContext,
+  StandardFetchOptions,
+} from '@universe/api/src/clients/base/types'
 import { getSessionService } from '@universe/api/src/getSessionService'
 
 export function createFetchClient({
   baseUrl,
   headers: additionalHeaders = {},
   getSessionServiceBaseUrl,
-}: {
-  baseUrl: string
-  headers?: HeadersInit
-  getSessionServiceBaseUrl: () => string
-}): FetchClient {
+}: FetchClientContext): FetchClient {
   return {
+    get context() {
+      return () => ({
+        baseUrl,
+        headers: additionalHeaders,
+        getSessionServiceBaseUrl,
+      })
+    },
+
     get fetch() {
       return async <T = Response>(path: string, options: StandardFetchOptions): Promise<T> => {
         const sessionService = getSessionService({ getBaseUrl: getSessionServiceBaseUrl })

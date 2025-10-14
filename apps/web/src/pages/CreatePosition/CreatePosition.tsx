@@ -1,5 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import type { Currency } from '@uniswap/sdk-core'
+import { parseRestProtocolVersion } from '@universe/api'
 import { Dropdown } from 'components/Dropdowns/Dropdown'
 import { DynamicFeeTierSpeedbump } from 'components/Liquidity/Create/DynamicFeeTierSpeedbump'
 import { FormStepsWrapper, FormWrapper } from 'components/Liquidity/Create/FormWrapper'
@@ -10,7 +11,6 @@ import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'components/Liquidity/C
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { LPSettings } from 'components/LPSettings'
-
 import {
   CreateLiquidityContextProvider,
   DEFAULT_PRICE_RANGE_STATE,
@@ -25,7 +25,6 @@ import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { Button, Flex, styled, Text, TouchableArea } from 'ui/src'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
-import { parseRestProtocolVersion } from 'uniswap/src/data/rest/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'

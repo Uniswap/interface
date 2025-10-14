@@ -10895,4 +10895,19 @@
     <lastmod>2025-09-27T01:47:04.978Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/arbitrum/0x0a1a1a107e45b7ced86833863f482bc5f4ed82ef</loc>
+    <lastmod>2025-10-03T22:05:38.913Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/ethereum/0x52a8845df664d76c69d2eea607cd793565af42b8</loc>
+    <lastmod>2025-10-03T22:05:38.913Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/base/0x9c4315eb7ba91b7bdc1727ad5f76ea4ac8875506</loc>
+    <lastmod>2025-10-03T22:05:38.913Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

@@ -71,7 +71,7 @@ const DefaultPriceStrategyComponent = ({
   selected: boolean
 }) => {
   return (
-    <Trace logPress element={ElementName.LiquidityDefaultPriceStrategy} key={strategy.key}>
+    <Trace logPress element={ElementName.LiquidityDefaultPriceStrategy} properties={{ strategy: strategy.key }}>
       <Container
         onPress={() => onSelect(strategy.key)}
         background={selected ? '$surface3' : '$surface1'}
@@ -134,16 +134,18 @@ export function DefaultPriceStrategies({ isLoading }: { isLoading: boolean }) {
           <Text variant="body3" color="$neutral2">
             {i18n.t('common.fullRange')}
           </Text>
-          <Switch
-            size="$spacing12"
-            variant="branded"
-            checked={isFullRange}
-            onPress={() =>
-              actions.setChartState({
-                isFullRange: !isFullRange,
-              })
-            }
-          />
+          <Trace logPress element={ElementName.LiquidityDefaultPriceStrategy} properties={{ strategy: 'full_range' }}>
+            <Switch
+              size="$spacing12"
+              variant="branded"
+              checked={isFullRange}
+              onPress={() =>
+                actions.setChartState({
+                  isFullRange: !isFullRange,
+                })
+              }
+            />
+          </Trace>
         </Flex>
       </Flex>
       <Flex

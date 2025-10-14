@@ -1,21 +1,13 @@
 import { UseMutationResult, useMutation } from '@tanstack/react-query'
+import { BiometricUnlockStorage } from 'src/app/features/biometricUnlock/BiometricUnlockStorage'
 import {
-  BiometricUnlockStorage,
-  BiometricUnlockStorageData,
-} from 'src/app/features/biometricUnlock/BiometricUnlockStorage'
+  authenticateWithBiometricCredential,
+  decryptPasswordFromBiometricData,
+} from 'src/app/features/biometricUnlock/biometricAuthUtils'
 import { startNavigatorCredentialRequest } from 'src/app/features/biometricUnlock/useNavigatorCredentialAbortSignal'
-import { assertAuthenticatorAssertionResponse } from 'src/app/features/biometricUnlock/utils/assertAuthenticatorAssertionResponse'
-import { assertPublicKeyCredential } from 'src/app/features/biometricUnlock/utils/assertPublicKeyCredential'
 import { useUnlockWithPassword } from 'src/app/features/lockScreen/useUnlockWithPassword'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import {
-  convertBytesToCryptoKey,
-  decodeFromStorage,
-  decrypt,
-  generateNew256BitRandomBuffer,
-} from 'wallet/src/features/wallet/Keyring/crypto'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 export function useUnlockWithBiometricCredentialMutation(): UseMutationResult<void, Error, void> {
@@ -69,82 +61,7 @@ async function getPasswordFromBiometricCredential(abortSignal: AbortSignal): Pro
   const { credentialId } = biometricUnlockCredential
 
   // Authenticate with WebAuthn using the stored credential and decrypt password
-  const publicKeyCredential = await authenticateWithCredential({ credentialId, abortSignal })
-  const password = await decryptPasswordFromCredential({ publicKeyCredential, biometricUnlockCredential })
+  const { encryptionKey } = await authenticateWithBiometricCredential({ credentialId, abortSignal })
+  const password = await decryptPasswordFromBiometricData({ encryptionKey, biometricUnlockCredential })
   return password
-}
-
-async function authenticateWithCredential({
-  credentialId,
-  abortSignal,
-}: {
-  credentialId: string
-  abortSignal: AbortSignal
-}): Promise<PublicKeyCredential> {
-  // Convert stored credential ID back to binary format
-  const credentialIdBuffer = Uint8Array.from(atob(credentialId), (c) => c.charCodeAt(0))
-
-  const credential = await navigator.credentials.get({
-    publicKey: {
-      challenge: generateNew256BitRandomBuffer(),
-      allowCredentials: [
-        {
-          type: 'public-key',
-          id: credentialIdBuffer,
-        },
-      ],
-      userVerification: 'required',
-      timeout: 15 * ONE_SECOND_MS,
-    },
-    signal: abortSignal,
-  })
-
-  const publicKeyCredential = assertPublicKeyCredential(credential)
-
-  return publicKeyCredential
-}
-
-async function getCryptoKeyFromCredential({
-  publicKeyCredential,
-}: {
-  publicKeyCredential: PublicKeyCredential
-}): Promise<CryptoKey> {
-  const response = publicKeyCredential.response
-  assertAuthenticatorAssertionResponse(response)
-
-  if (!response.userHandle) {
-    throw new Error('No user handle returned from biometric authentication')
-  }
-
-  // The user handle contains our encryption key (stored during credential creation)
-  const encryptionKeyBuffer = new Uint8Array(response.userHandle)
-
-  // Create a `CryptoKey` from the encryption key
-  const cryptoKey = await convertBytesToCryptoKey(encryptionKeyBuffer)
-
-  return cryptoKey
-}
-
-async function decryptPasswordFromCredential({
-  publicKeyCredential,
-  biometricUnlockCredential,
-}: {
-  publicKeyCredential: PublicKeyCredential
-  biometricUnlockCredential: BiometricUnlockStorageData
-}): Promise<string> {
-  const encryptionKey = await getCryptoKeyFromCredential({ publicKeyCredential })
-
-  // Decrypt the password
-  const decryptedPassword = await decrypt({
-    encryptionKey,
-    ciphertext: decodeFromStorage(biometricUnlockCredential.secretPayload.ciphertext),
-    iv: decodeFromStorage(biometricUnlockCredential.secretPayload.iv),
-    additionalData: biometricUnlockCredential.credentialId, // Use credential ID as additional authenticated data
-  })
-
-  if (!decryptedPassword) {
-    throw new Error('Failed to decrypt password')
-  }
-
-  return decryptedPassword
 }

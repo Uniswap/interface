@@ -10,6 +10,7 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
+import { SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildUSDC } from 'uniswap/src/features/tokens/stablecoin'
@@ -56,7 +57,7 @@ export const CELO_CHAIN_INFO = {
   pendingTransactionsRetryOptions: undefined,
   tokens,
   statusPage: undefined,
-  supportsV4: false,
+  supportsV4: true,
   urlParam: 'celo',
   rpcUrls: {
     [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Celo)] },
@@ -68,6 +69,16 @@ export const CELO_CHAIN_INFO = {
     symbol: 'CELO',
     decimals: 18,
     address: '0x471EcE3750Da237f93B8E339c536989b8978a438',
+  },
+  gasConfig: {
+    send: {
+      configKey: SwapConfigKey.CeloSendMinGasAmount,
+      default: 13, // .0013 CELO
+    },
+    swap: {
+      configKey: SwapConfigKey.CeloSwapMinGasAmount,
+      default: 2000, // .2 CELO
+    },
   },
   tradingApiPollingIntervalMs: 200,
 } as const satisfies UniverseChainInfo

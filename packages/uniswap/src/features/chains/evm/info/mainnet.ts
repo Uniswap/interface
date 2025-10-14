@@ -16,6 +16,7 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
+import { SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildDAI, buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
@@ -98,6 +99,16 @@ export const MAINNET_CHAIN_INFO = {
     decimals: 18,
     address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   },
+  gasConfig: {
+    send: {
+      configKey: SwapConfigKey.EthSendMinGasAmount,
+      default: 20, // .002 ETH
+    },
+    swap: {
+      configKey: SwapConfigKey.EthSwapMinGasAmount,
+      default: 150, // .015 ETH
+    },
+  },
   tradingApiPollingIntervalMs: 500,
 } as const satisfies UniverseChainInfo
 
@@ -169,6 +180,16 @@ export const SEPOLIA_CHAIN_INFO = {
     symbol: 'WETH',
     decimals: 18,
     address: '0xfff9976782d46cc05630d1f6ebab18b2324d6b14',
+  },
+  gasConfig: {
+    send: {
+      configKey: SwapConfigKey.EthSendMinGasAmount,
+      default: 20, // .002 ETH
+    },
+    swap: {
+      configKey: SwapConfigKey.EthSwapMinGasAmount,
+      default: 150, // .015 ETH
+    },
   },
   tradingApiPollingIntervalMs: 500,
 } as const satisfies UniverseChainInfo

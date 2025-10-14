@@ -1,4 +1,3 @@
-import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import ms from 'ms'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
@@ -10,6 +9,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
@@ -35,7 +35,7 @@ interface ChooseProviderModal {
 
 function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
   const { derivedBuyFormInfo, buyFormState, setBuyFormState } = useBuyFormContext()
-  const { quoteCurrency, selectedCountry, inputAmount, inputInFiat, rampDirection, moonpayOnly, paymentMethod } =
+  const { quoteCurrency, selectedCountry, inputAmount, inputInFiat, rampDirection, providers, paymentMethod } =
     buyFormState
   const { quotes, meldSupportedFiatCurrency, amountOut } = derivedBuyFormInfo
   const [errorProvider, setErrorProvider] = useState<FORServiceProvider>()
@@ -68,16 +68,20 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
     if (!quotes?.quotes) {
       return undefined
     }
-    if (moonpayOnly) {
-      // Force moonpay when the user has arrived from an ad and there's a moonpay quote available
-      if (quotes.quotes.some((q: FORQuote) => q.serviceProviderDetails.serviceProvider.toLowerCase() === 'moonpay')) {
-        return quotes.quotes.filter(
-          (q: FORQuote) => q.serviceProviderDetails.serviceProvider.toLowerCase() === 'moonpay',
+
+    if (providers && providers.length > 0) {
+      // Force selected providers when the user has arrived from an ad
+      if (
+        quotes.quotes.some((q: FORQuote) => providers.includes(q.serviceProviderDetails.serviceProvider.toLowerCase()))
+      ) {
+        return quotes.quotes.filter((q: FORQuote) =>
+          providers.includes(q.serviceProviderDetails.serviceProvider.toLowerCase()),
         )
       }
     }
+
     return [...quotes.quotes].sort((a) => (a.isMostRecentlyUsedProvider ? -1 : 1))
-  }, [moonpayOnly, quotes])
+  }, [providers, quotes])
 
   const filteredQuotes = useMemo(() => {
     if (!quotes?.quotes) {

@@ -4,6 +4,7 @@ import { useMemo } from 'react'
 import { Flex, ScrollView } from 'ui/src'
 import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export default function ActivityTab({
   evmOwner,
@@ -42,7 +43,7 @@ export default function ActivityTab({
   }
 
   return (
-    <Flex mx="$spacing8" gap="$none">
+    <Flex mx="$spacing8" gap="$none" testID={TestID.ActivityContent}>
       {evmOwner && (
         <OpenLimitOrdersButton
           openLimitsMenu={() => setMenu({ variant: MenuStateVariant.LIMITS })}

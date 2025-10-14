@@ -11,7 +11,10 @@
     "noEmit": false,
     "emitDeclarationOnly": true,
     "types": ["chrome", "node"],
-    "paths": {}
+    "baseUrl": ".",
+    "paths": {
+      "@universe/sessions/*": ["./src/*"]
+    }
   },
   "references": [
     {

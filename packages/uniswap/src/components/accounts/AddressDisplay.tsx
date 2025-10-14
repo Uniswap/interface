@@ -2,16 +2,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { PropsWithChildren, useMemo, useState } from 'react'
 import type { FlexAlignType, LayoutChangeEvent } from 'react-native'
 import { useDispatch } from 'react-redux'
-import {
-  AnimatableCopyIcon,
-  ColorTokens,
-  Flex,
-  HeightAnimator,
-  SpaceTokens,
-  Text,
-  TextProps,
-  TouchableArea,
-} from 'ui/src'
+import { AnimatableCopyIcon, ColorTokens, Flex, SpaceTokens, Text, TextProps, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -203,7 +194,8 @@ export function AddressDisplay({
             )}
           </Flex>
         </CopyButtonWrapper>
-        <HeightAnimator useInitialHeight open={showAddressAsSubtitle}>
+        {/* TODO(PORT-453): re-add HeightAnimator on web */}
+        {showAddressAsSubtitle && (
           <AddressSubtitle
             address={address}
             captionSize={captionSize}
@@ -216,7 +208,7 @@ export function AddressDisplay({
             isCopied={isCopied}
             onPressCopyAddress={onPressCopyAddress}
           />
-        </HeightAnimator>
+        )}
       </Flex>
     </Flex>
   )

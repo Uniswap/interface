@@ -8,9 +8,8 @@ import {
   TokenRankingsStat,
 } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { tokenRankings } from '@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery'
-
+import { parseProtectionInfo, parseSafetyLevel } from '@universe/api'
 import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
-import { parseProtectionInfo, parseSafetyLevel } from 'uniswap/src/data/rest/utils'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'

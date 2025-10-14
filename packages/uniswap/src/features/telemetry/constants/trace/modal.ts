@@ -35,6 +35,7 @@ export const ModalName = {
   ConnectionError: 'connection-error-modal',
   ConnectionsDappListModal: 'connections-dapp-list-modal',
   ContractAddressExplainer: 'contract-address-explainer-modal',
+  CreateNewPassword: 'create-new-password-modal',
   CreatePasskey: 'create-passkey-modal',
   CreatePosition: 'create-position-modal',
   ConfirmDisableSmartWalletScreen: 'confirm-disable-smart-wallet-screen',

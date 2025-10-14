@@ -5,61 +5,15 @@
   "projectType": "library",
   "tags": [],
   "targets": {
-    "typecheck": {
-      "command": "tsc -b",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "lint:biome": {
-      "command": "biome check --error-on-warnings .",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "lint:biome:fix": {
-      "command": "biome check . --write --unsafe",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "lint:eslint": {
-      "command": "eslint . --ext ts,tsx --max-warnings=0",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "lint:eslint:fix": {
-      "command": "eslint . --ext ts,tsx --fix",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "lint": {
-      "executor": "nx:noop",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "dependsOn": ["lint:biome", "lint:eslint"]
-    },
-    "lint:fix": {
-      "executor": "nx:noop",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "dependsOn": ["lint:biome:fix", "lint:eslint:fix"]
-    },
-    "format": {
-      "command": "biome check . --linter-enabled=false",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
+    "lint:biome": {},
+    "lint:biome:fix": {},
+    "lint:eslint": {},
+    "lint:eslint:fix": {},
+    "lint": {},
+    "lint:fix": {},
+    "typecheck": {},
     "prepare": {
-      "command": "echo 'preparing @universe/api'",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
+      "executor": "nx:noop",
       "dependsOn": ["tradingapi:generate", "graphql:generate"],
       "cache": true
     },
@@ -72,13 +26,13 @@
       "cache": true
     },
     "test": {
-      "command": "vitest",
+      "command": "vitest run",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "test:coverage": {
-      "command": "vitest --coverage",
+      "command": "vitest run --coverage",
       "options": {
         "cwd": "{projectRoot}"
       }

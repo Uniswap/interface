@@ -1,7 +1,7 @@
 import { Send } from 'components/Icons/Send'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useActiveAccount, useConnectionStatus } from 'features/accounts/store/hooks'
-import { useSwitchChain } from 'hooks/useSwitchChain'
+import useSelectChain from 'hooks/useSelectChain'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -20,7 +20,7 @@ type TabItem = {
 export function TDPActionTabs() {
   const { t } = useTranslation()
   const { currencyChain, currencyChainId, address, tokenColor } = useTDPContext()
-  const switchChain = useSwitchChain()
+  const selectChain = useSelectChain()
   const navigate = useNavigate()
 
   const currentConnectedChainId = useActiveAccount(currencyChainId)?.chainId
@@ -34,11 +34,11 @@ export function TDPActionTabs() {
   const toActionLink = useCallback(
     async (href: string) => {
       if (currentConnectedChainId && currentConnectedChainId !== currencyChainId && isEVMChain(currencyChainId)) {
-        await switchChain(currencyChainId)
+        await selectChain(currencyChainId)
       }
       navigate(href)
     },
-    [currentConnectedChainId, currencyChainId, switchChain, navigate],
+    [currentConnectedChainId, currencyChainId, selectChain, navigate],
   )
 
   const tabs: TabItem[] = useMemo(

@@ -15,6 +15,7 @@ import { Settings } from 'components/Icons/Settings'
 import { ReceiveModalState } from 'components/ReceiveCryptoModal/types'
 import { useOpenReceiveCryptoModal } from 'components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
 import StatusIcon from 'components/StatusIcon'
+import { useAccountsStore } from 'features/accounts/store/hooks'
 import { useIsUniswapExtensionConnected } from 'hooks/useIsUniswapExtensionConnected'
 import { useModalState } from 'hooks/useModalState'
 import { useTheme } from 'lib/styled-components'
@@ -60,6 +61,12 @@ export default function AuthenticatedHeader({
   const { t } = useTranslation()
 
   const isSolanaConnected = useConnectionStatus(Platform.SVM).isConnected
+  const multipleWalletsConnected = useAccountsStore((state) => {
+    const evmWalletId = state.activeConnectors.evm?.session?.walletId
+    const svmWalletId = state.activeConnectors.svm?.session?.walletId
+    return Boolean(evmWalletId && svmWalletId && evmWalletId !== svmWalletId)
+  }) // if different wallets are connected, do not show mini wallet icon
+
   const shouldShowExtensionDeeplinks = useIsUniswapExtensionConnected() && !isSolanaConnected
 
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -121,7 +128,11 @@ export default function AuthenticatedHeader({
       <Flex flex={1} px="$padding16" py={shouldShowExtensionDeeplinks ? '$spacing16' : '$spacing20'}>
         <TestnetModeBanner mt={shouldShowExtensionDeeplinks ? -16 : -20} mx={-24} mb="$spacing16" />
         <Flex row justifyContent="space-between" alignItems="flex-start" mb="$spacing8">
-          <StatusIcon size={48} />
+          <StatusIcon
+            showMiniIcons={!multipleWalletsConnected}
+            showConnectedIndicator={multipleWalletsConnected}
+            size={48}
+          />
           <Flex row gap="$spacing4">
             <IconButton
               size="small"

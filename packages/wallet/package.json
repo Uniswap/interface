@@ -2,14 +2,17 @@
   "name": "wallet",
   "version": "0.0.0",
   "scripts": {
-    "check:deps:usage": "depcheck",
-    "lint:biome": "biome check --error-on-warnings .",
-    "lint:biome:fix": "biome check . --write --unsafe",
-    "lint": "bun run lint:biome && eslint . --ext ts,tsx --max-warnings=0",
-    "lint:fix": "bun run lint:biome:fix && eslint . --ext ts,tsx --fix",
-    "test": "jest",
-    "snapshots": "jest -u",
-    "typecheck": "tsc -b"
+    "check:deps:usage": "nx check:deps:usage wallet",
+    "lint:biome": "nx lint:biome wallet",
+    "lint:biome:fix": "nx lint:biome:fix wallet",
+    "lint": "nx lint wallet",
+    "lint:fix": "nx lint:fix wallet",
+    "test": "nx test wallet",
+    "snapshots": "nx snapshots wallet",
+    "typecheck": "nx typecheck wallet"
+  },
+  "nx": {
+    "includedScripts": []
   },
   "dependencies": {
     "@apollo/client": "3.10.4",

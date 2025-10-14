@@ -247,7 +247,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     enabled: isQueryEnabled,
   })
 
-  const { increase, gasFee: actualGasFee, dependentAmount } = increaseCalldata || {}
+  const { increase, gasFee: actualGasFee, dependentAmount, sqrtRatioX96 } = increaseCalldata || {}
 
   if (calldataError) {
     const message = parseErrorMessageTitle(calldataError, { defaultTitle: 'unknown IncreaseLpPositionCalldataQuery' })
@@ -334,6 +334,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       positionTokenPermitTransaction: undefined,
       increasePositionRequestArgs: { ...increaseCalldataQueryParams, batchPermitData: permitData ?? undefined },
       txRequest,
+      sqrtRatioX96,
       unsigned,
     }
   }, [
@@ -353,6 +354,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     token0PermitTransaction,
     token1PermitTransaction,
     increaseCalldataQueryParams,
+    sqrtRatioX96,
   ])
 
   const totalGasFee = useMemo(() => {

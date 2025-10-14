@@ -26,7 +26,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isInterfaceDesktop } from 'utilities/src/platform'
+import { isWebAppDesktop } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type WormholeModalProps = {
@@ -89,7 +89,7 @@ export function WormholeModal({
             justifyContent="flex-end"
             alignItems="center"
             gap={10}
-            display={isInterfaceDesktop ? 'flex' : 'none'}
+            display={isWebAppDesktop ? 'flex' : 'none'}
           >
             <Trace logPress element={ElementName.GetHelp}>
               <TouchableArea onPress={onPressLearnMore}>

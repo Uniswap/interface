@@ -5,10 +5,10 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { queries } from '@testing-library/dom'
 import { RenderOptions, render } from '@testing-library/react'
 import { RenderHookOptions, renderHook, WrapperComponent } from '@testing-library/react-hooks'
-import { Web3ProviderUpdater } from 'components/Web3Provider'
 import TestWeb3Provider from 'components/Web3Provider/TestWeb3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
 import { WebAccountsStoreProvider } from 'features/accounts/store/provider'
+import { WebAccountsStoreUpdater } from 'features/accounts/store/updater'
 import { ConnectWalletMutationProvider } from 'features/wallet/connection/hooks/useConnectWalletMutation'
 import { ExternalWalletProvider } from 'features/wallet/providers/ExternalWalletProvider'
 import { BlockNumberContext } from 'lib/hooks/useBlockNumber'
@@ -54,7 +54,7 @@ function CommonTestProviders({ children }: PropsWithChildren) {
             <MockedBlockNumberProvider>
               <ThemeProvider>
                 <TamaguiProvider>
-                  <Web3ProviderUpdater />
+                  <WebAccountsStoreUpdater />
                   <MockedMismatchProvider>{children}</MockedMismatchProvider>
                 </TamaguiProvider>
               </ThemeProvider>

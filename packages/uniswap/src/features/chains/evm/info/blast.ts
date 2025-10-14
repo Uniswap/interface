@@ -8,6 +8,7 @@ import {
   getQuicknodeEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
+import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
 import {
   GqlChainId,
   NetworkLayer,
@@ -73,5 +74,6 @@ export const BLAST_CHAIN_INFO = {
     decimals: 18,
     address: '0x4300000000000000000000000000000000000004',
   },
+  gasConfig: GENERIC_L2_GAS_CONFIG,
   tradingApiPollingIntervalMs: 200,
 } as const satisfies UniverseChainInfo

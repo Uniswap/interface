@@ -27,4 +27,4 @@ export const isBrowser: boolean = false
 export const isExtensionApp: boolean = false
 export const isMobileApp: boolean = true
 export const isWebApp: boolean = false
-export const isInterfaceDesktop: boolean = false
+export const isWebAppDesktop: boolean = false

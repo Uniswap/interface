@@ -16,7 +16,9 @@ export interface MigratePositionTransactionStep extends OnChainTransactionFields
 export interface MigratePositionTransactionStepAsync {
   // Migrations that require permit
   type: TransactionStepType.MigratePositionTransactionAsync
-  getTxRequest(signature: string): Promise<ValidatedTransactionRequest | undefined>
+  getTxRequest(
+    signature: string,
+  ): Promise<{ txRequest: ValidatedTransactionRequest | undefined; sqrtRatioX96?: string }>
 }
 
 export function createMigratePositionStep(txRequest: ValidatedTransactionRequest): MigratePositionTransactionStep {
@@ -32,9 +34,11 @@ export function createMigratePositionAsyncStep(
 ): MigratePositionTransactionStepAsync {
   return {
     type: TransactionStepType.MigratePositionTransactionAsync,
-    getTxRequest: async (signature: string): Promise<ValidatedTransactionRequest | undefined> => {
+    getTxRequest: async (
+      signature: string,
+    ): Promise<{ txRequest: ValidatedTransactionRequest | undefined; sqrtRatioX96?: string }> => {
       if (!migratePositionRequestArgs || !signatureDeadline) {
-        return undefined
+        return { txRequest: undefined }
       }
 
       try {
@@ -45,7 +49,7 @@ export function createMigratePositionAsyncStep(
           simulateTransaction: true,
         })
 
-        return validateTransactionRequest(migrate)
+        return { txRequest: validateTransactionRequest(migrate) }
       } catch (e) {
         const message = parseErrorMessageTitle(e, { includeRequestId: true })
         if (message) {

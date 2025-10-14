@@ -1,0 +1,73 @@
+{
+  "targets": {
+    "prepare": {
+      "command": "bun contracts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build": {
+      "command": "tsc -b",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["prepare", "^build", "contracts", "graphql:generate"]
+    },
+    "contracts:compile:abi": {
+      "command": "typechain --target ethers-v5 --out-dir src/abis/types \"./src/abis/**/*.json\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": ["default", "!{projectRoot}/src/abis/types/**", "!{projectRoot}/src/data/graphql/**"],
+      "outputs": ["{projectRoot}/src/abis/types/*.ts", "{projectRoot}/src/abis/types/factories"]
+    },
+    "contracts:compile:v3": {
+      "command": "typechain --target ethers-v5 --out-dir src/abis/types/v3 \"../../node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": ["default", "!{projectRoot}/src/abis/types/**", "!{projectRoot}/src/data/graphql/**"],
+      "outputs": [
+        "{projectRoot}/src/abis/types/v3/**",
+        "{workspaceRoot}/node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json"
+      ]
+    },
+    "contracts": {
+      "command": "echo \"Compiling contracts...\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "dependsOn": ["contracts:compile:abi", "contracts:compile:v3"]
+    },
+    "check:deps:usage": {
+      "command": "depcheck",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "typecheck": {
+      "dependsOn": ["prepare", "^typecheck", "contracts"]
+    },
+    "lint:biome": {},
+    "lint:biome:fix": {},
+    "lint:eslint": {},
+    "lint:eslint:fix": {},
+    "lint": {},
+    "lint:fix": {},
+    "test": {
+      "command": "jest --passWithNoTests",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "snapshots": {
+      "command": "jest -u",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

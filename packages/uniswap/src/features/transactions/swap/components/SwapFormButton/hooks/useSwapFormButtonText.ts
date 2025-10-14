@@ -29,7 +29,7 @@ export const useSwapFormButtonText = (): string => {
   const isAmountSelectionInvalid = useIsAmountSelectionInvalid()
 
   const { isDisconnected } = useConnectionStatus()
-  const isMissingPlatformWallet = useIsMissingPlatformWallet(currencies[CurrencyField.INPUT]?.currency.chainId)
+  const isMissingPlatformWallet = useIsMissingPlatformWallet(chainId)
 
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const { insufficientBalanceWarning, blockingWarning, insufficientGasFundsWarning } = useParsedSwapWarnings()

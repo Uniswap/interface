@@ -7,6 +7,6 @@ export function useIsMissingPlatformWallet(expectedFlexiblePlatform: FlexiblePla
       return false
     }
 
-    return Boolean(s.getConnectionStatus().isConnected && s.getActiveAddress(expectedFlexiblePlatform) === undefined)
+    return Boolean(s.getConnectionStatus().isConnected && !s.getConnectionStatus(expectedFlexiblePlatform).isConnected)
   })
 }

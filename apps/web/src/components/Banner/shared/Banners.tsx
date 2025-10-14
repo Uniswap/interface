@@ -1,7 +1,6 @@
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { getOutageBannerSessionStorageKey, OutageBanner } from 'components/Banner/Outage/OutageBanner'
 import { SOLANA_PROMO_BANNER_STORAGE_KEY, SolanaPromoBanner } from 'components/Banner/SolanaPromo/SolanaPromoBanner'
-import { LPIncentiveAnnouncementBanner } from 'components/Liquidity/LPIncentives/LPIncentiveAnnouncementBanner'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { useLocation } from 'react-router'
@@ -15,7 +14,6 @@ import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 export function Banners() {
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
-  const isLPIncentivesEnabled = useFeatureFlag(FeatureFlags.LpIncentives)
   const isSolanaPromoEnabled = useFeatureFlag(FeatureFlags.SolanaPromo)
 
   const manualOutage = useAtomValue(manualChainOutageAtom)
@@ -54,10 +52,6 @@ export function Banners() {
   const userAlreadySeenSolanaPromo = localStorage.getItem(SOLANA_PROMO_BANNER_STORAGE_KEY) === 'true'
   if (isSolanaPromoEnabled && !userAlreadySeenSolanaPromo) {
     return <SolanaPromoBanner />
-  }
-
-  if (isLPIncentivesEnabled) {
-    return <LPIncentiveAnnouncementBanner />
   }
 
   return null
