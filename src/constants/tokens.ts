@@ -1,6 +1,8 @@
 import { ChainId, Currency, Ether, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@uniswap/sdk-core'
 import invariant from 'tiny-invariant'
 
+import { TAIKO_HOODI_ADDRESSES, TAIKO_HOODI_CHAIN_ID } from './taiko'
+
 export const NATIVE_CHAIN_ID = 'NATIVE'
 
 // When decimals are not specified for an ERC20 token
@@ -333,6 +335,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     18,
     'WAVAX',
     'Wrapped AVAX'
+  ),
+  [TAIKO_HOODI_CHAIN_ID]: new Token(
+    TAIKO_HOODI_CHAIN_ID,
+    TAIKO_HOODI_ADDRESSES.weth9,
+    18,
+    'WETH',
+    'Wrapped Ether'
   ),
 }
 

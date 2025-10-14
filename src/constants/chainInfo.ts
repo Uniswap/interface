@@ -20,6 +20,7 @@ import { darkTheme } from 'theme/colors'
 
 import { SupportedL1ChainId, SupportedL2ChainId } from './chains'
 import { ARBITRUM_LIST, AVALANCHE_LIST, BASE_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
+import { TAIKO_HOODI_CHAIN_ID } from './taiko'
 
 export const AVERAGE_L1_BLOCK_TIME = ms(`12s`)
 
@@ -258,6 +259,21 @@ const CHAIN_INFO: ChainInfoMap = {
     squareLogoUrl: baseSquareLogo,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_84531,
+  },
+  [TAIKO_HOODI_CHAIN_ID]: {
+    networkType: NetworkType.L2,
+    blockWaitMsBeforeWarning: ms(`25m`),
+    bridge: 'https://bridge.taiko.xyz',
+    docs: 'https://docs.taiko.xyz/',
+    explorer: 'https://hoodi.taikoscan.io/',
+    infoLink: 'https://info.uniswap.org/#/',
+    label: 'Taiko Hoodi',
+    logoUrl: ethereumLogoUrl, // TODO: Replace with Taiko logo
+    circleLogoUrl: ethereumLogoUrl, // TODO: Replace with Taiko logo
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    statusPage: 'https://status.taiko.xyz/',
+    defaultListUrl: '', // No default token list yet
+    color: darkTheme.chain_1, // TODO: Add Taiko-specific color
   },
 } as const
 

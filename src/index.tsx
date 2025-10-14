@@ -29,6 +29,10 @@ import OrderUpdater from './state/signatures/updater'
 import TransactionUpdater from './state/transactions/updater'
 import ThemeProvider, { ThemedGlobalStyle } from './theme'
 import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
+import { patchSdkAddressesForTaiko } from './utils/patchSdkAddresses'
+
+// Patch SDK addresses to support Taiko Hoodi
+patchSdkAddressesForTaiko()
 
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false

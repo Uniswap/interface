@@ -1,5 +1,7 @@
 import { ChainId, SUPPORTED_CHAINS, SupportedChainsType } from '@uniswap/sdk-core'
 
+import { TAIKO_HOODI_CHAIN_ID } from './taiko'
+
 export const CHAIN_IDS_TO_NAMES = {
   [ChainId.MAINNET]: 'mainnet',
   [ChainId.GOERLI]: 'goerli',
@@ -15,13 +17,17 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.BNB]: 'bnb',
   [ChainId.AVALANCHE]: 'avalanche',
   [ChainId.BASE]: 'base',
+  [TAIKO_HOODI_CHAIN_ID]: 'taiko_hoodi',
 } as const
 
 // Include ChainIds in this array if they are not supported by the UX yet, but are already in the SDK.
 const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = [ChainId.BASE_GOERLI]
 
+// Custom chains not in SDK
+const CUSTOM_SUPPORTED_CHAIN_IDS: number[] = [TAIKO_HOODI_CHAIN_ID]
+
 // TODO: include BASE_GOERLI when routing is implemented
-export type SupportedInterfaceChain = Exclude<SupportedChainsType, ChainId.BASE_GOERLI>
+export type SupportedInterfaceChain = Exclude<SupportedChainsType, ChainId.BASE_GOERLI> | typeof TAIKO_HOODI_CHAIN_ID
 
 export function isSupportedChain(
   chainId: number | null | undefined | ChainId,
@@ -30,7 +36,11 @@ export function isSupportedChain(
   if (featureFlags && chainId && chainId in featureFlags) {
     return featureFlags[chainId]
   }
-  return !!chainId && SUPPORTED_CHAINS.indexOf(chainId) !== -1 && NOT_YET_UX_SUPPORTED_CHAIN_IDS.indexOf(chainId) === -1
+  return (
+    !!chainId &&
+    (SUPPORTED_CHAINS.indexOf(chainId) !== -1 || CUSTOM_SUPPORTED_CHAIN_IDS.indexOf(chainId) !== -1) &&
+    NOT_YET_UX_SUPPORTED_CHAIN_IDS.indexOf(chainId) === -1
+  )
 }
 
 export function asSupportedChain(
@@ -67,6 +77,7 @@ export const TESTNET_CHAIN_IDS = [
   ChainId.ARBITRUM_GOERLI,
   ChainId.OPTIMISM_GOERLI,
   ChainId.CELO_ALFAJORES,
+  TAIKO_HOODI_CHAIN_ID,
 ] as const
 
 /**
@@ -96,6 +107,7 @@ export const L2_CHAIN_IDS = [
   ChainId.OPTIMISM,
   ChainId.OPTIMISM_GOERLI,
   ChainId.BASE,
+  TAIKO_HOODI_CHAIN_ID,
 ] as const
 
 export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
@@ -105,7 +117,7 @@ export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
  * @param {ChainId} chainId - The chainId to determine the priority for.
  * @returns {number} The priority of the chainId, the lower the priority, the earlier it should be displayed, with base of MAINNET=0.
  */
-export function getChainPriority(chainId: ChainId): number {
+export function getChainPriority(chainId: ChainId | number): number {
   switch (chainId) {
     case ChainId.MAINNET:
     case ChainId.GOERLI:
@@ -129,8 +141,10 @@ export function getChainPriority(chainId: ChainId): number {
     case ChainId.CELO:
     case ChainId.CELO_ALFAJORES:
       return 7
-    default:
+    case TAIKO_HOODI_CHAIN_ID:
       return 8
+    default:
+      return 9
   }
 }
 
