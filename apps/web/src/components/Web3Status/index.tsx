@@ -137,6 +137,7 @@ function Web3StatusInner() {
               <Web3StatusGeneric
                 data-testid={TestID.Web3StatusConnected}
                 onPress={handleWalletDropdownClick}
+                onDisabledPress={handleWalletDropdownClick}
                 loading
                 ref={ref}
                 icon={undefined}
