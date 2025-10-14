@@ -55,3 +55,7 @@ cypress/screenshots
 .vercel
 
 .wrangler
+
+# Git worktrees (Crystal)
+/worktrees/
+/worktree-*/
