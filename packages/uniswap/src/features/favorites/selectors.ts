@@ -1,5 +1,4 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { UniswapRootState } from 'uniswap/src/state'
 import { unique } from 'utilities/src/primitives/array'
 
@@ -11,7 +10,7 @@ export const makeSelectHasTokenFavorited = (): Selector<UniswapRootState, boolea
   createSelector(
     selectFavoriteTokens,
     (_: UniswapRootState, currencyId: string) => currencyId,
-    (tokens, currencyId) => tokens.includes(normalizeCurrencyIdForMapLookup(currencyId)),
+    (tokens, currencyId) => tokens.includes(currencyId.toLowerCase()),
   )
 
 const selectWatchedAddresses = (state: UniswapRootState): string[] => state.favorites.watchedAddresses

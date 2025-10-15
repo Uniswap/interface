@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import { AVALANCHE_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
+import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
@@ -11,7 +11,6 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
-import { SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
@@ -32,7 +31,7 @@ export const AVALANCHE_CHAIN_INFO = {
   platform: Platform.EVM,
   assetRepoNetworkName: 'avalanchec',
   backendChain: {
-    chain: GraphQLApi.Chain.Avalanche as GqlChainId,
+    chain: BackendChainId.Avalanche as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },
@@ -74,16 +73,6 @@ export const AVALANCHE_CHAIN_INFO = {
     symbol: 'WAVAX',
     decimals: 18,
     address: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
-  },
-  gasConfig: {
-    send: {
-      configKey: SwapConfigKey.AvalancheSendMinGasAmount,
-      default: 25, // .0025 AVAX
-    },
-    swap: {
-      configKey: SwapConfigKey.AvalancheSwapMinGasAmount,
-      default: 200, // .02 AVAX
-    },
   },
   tradingApiPollingIntervalMs: 200,
 } as const satisfies UniverseChainInfo

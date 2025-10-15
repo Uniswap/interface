@@ -20,7 +20,6 @@ export enum MobileEventName {
   RestoreSuccess = 'Restore Success',
   SeedPhraseInputSubmitError = 'Seed Phrase Input Submit Error',
   ShareLinkOpened = 'Share Link Opened',
-  SwapLongPress = 'Swap Long Press',
   TokenDetailsOtherChainButtonPressed = 'Token Details Other Chain Button Pressed',
   TokenDetailsContextMenuAction = 'Token Details Context Menu Action Selected',
   WalletConnectSheetCompleted = 'Wallet Connect Sheet Completed',

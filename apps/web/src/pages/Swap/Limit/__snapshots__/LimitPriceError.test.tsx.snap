@@ -75,7 +75,7 @@ exports[`LimitPriceError > renders the limit price error correctly when there is
 
 .c3 {
   padding: 12px;
-  border: 1px solid rgba(19,19,19,0.08);
+  border: 1px solid rgba(34,34,34,0.05);
   border-radius: 16px;
   margin-top: 4px;
 }
@@ -241,7 +241,7 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
 
 .c3 {
   padding: 12px;
-  border: 1px solid rgba(19,19,19,0.08);
+  border: 1px solid rgba(34,34,34,0.05);
   border-radius: 16px;
   margin-top: 4px;
 }
@@ -407,7 +407,7 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
 
 .c3 {
   padding: 12px;
-  border: 1px solid rgba(19,19,19,0.08);
+  border: 1px solid rgba(34,34,34,0.05);
   border-radius: 16px;
   margin-top: 4px;
 }
@@ -573,7 +573,7 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
 
 .c3 {
   padding: 12px;
-  border: 1px solid rgba(19,19,19,0.08);
+  border: 1px solid rgba(34,34,34,0.05);
   border-radius: 16px;
   margin-top: 4px;
 }
@@ -739,7 +739,7 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
 
 .c3 {
   padding: 12px;
-  border: 1px solid rgba(19,19,19,0.08);
+  border: 1px solid rgba(34,34,34,0.05);
   border-radius: 16px;
   margin-top: 4px;
 }

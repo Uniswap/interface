@@ -17,7 +17,7 @@ import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/envir
 import { isBetaEnv } from 'utilities/src/environment/env'
 import { getDatadogEnvironment } from 'utilities/src/logger/datadog/env'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtensionApp, isWebApp } from 'utilities/src/platform'
+import { isExtension, isInterface } from 'utilities/src/platform'
 
 // In case Statsig is not available
 const EXTENSION_DEFAULT_DATADOG_SESSION_SAMPLE_RATE = 10 // percent
@@ -77,21 +77,21 @@ export async function initializeDatadog(appName: string): Promise<void> {
   >({
     config: DynamicConfigs.DatadogSessionSampleRate,
     key: DatadogSessionSampleRateKey.Rate,
-    defaultValue: isExtensionApp
+    defaultValue: isExtension
       ? EXTENSION_DEFAULT_DATADOG_SESSION_SAMPLE_RATE
       : INTERFACE_DEFAULT_DATADOG_SESSION_SAMPLE_RATE,
   })
 
   const sharedDatadogConfig = {
     clientToken: config.datadogClientToken,
-    service: isWebApp ? `web-${getDatadogEnvironment()}` : `extension-${getDatadogEnvironment()}`,
+    service: isInterface ? `web-${getDatadogEnvironment()}` : `extension-${getDatadogEnvironment()}`,
     env: getDatadogEnvironment(),
-    version: isExtensionApp ? process.env.VERSION : process.env.REACT_APP_VERSION_TAG,
+    version: isExtension ? process.env.VERSION : process.env.REACT_APP_VERSION_TAG,
     trackingConsent: undefined,
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const shouldUseFullSampleRate = localDevDatadogEnabled || (isWebApp && isBetaEnv())
+  const shouldUseFullSampleRate = localDevDatadogEnabled || (isInterface && isBetaEnv())
 
   datadogRum.init({
     ...sharedDatadogConfig,

@@ -1,13 +1,21 @@
-import { GraphQLApi } from '@universe/api'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCallback, useMemo, useRef } from 'react'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
+import {
+  PoolTransactionType,
+  ProtocolVersion,
+  Token,
+  useV2PairTransactionsQuery,
+  useV3PoolTransactionsQuery,
+  useV4PoolTransactionsQuery,
+  V2PairTransactionsQuery,
+  V3PoolTransactionsQuery,
+  V4PoolTransactionsQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fromGraphQLChain, toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import i18n from 'uniswap/src/i18n'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
 export enum PoolTableTransactionType {
   BUY = 'Buy',
@@ -70,55 +78,53 @@ export function usePoolTransactions({
   chainId?: UniverseChainId
   // sortState: PoolTxTableSortState, TODO(WEB-3706): Implement sorting when BE supports
   filter?: PoolTableTransactionType[]
-  token0?: GraphQLApi.Token
-  protocolVersion?: GraphQLApi.ProtocolVersion
+  token0?: Token
+  protocolVersion?: ProtocolVersion
   first?: number
 }) {
   const { defaultChainId } = useEnabledChains()
   const variables = { first, chain: toGraphQLChain(chainId ?? defaultChainId) }
-  const isSolanaChain = chainId && isSVMChain(chainId)
-
   const {
     loading: loadingV4,
     error: errorV4,
     data: dataV4,
     fetchMore: fetchMoreV4,
-  } = GraphQLApi.useV4PoolTransactionsQuery({
+  } = useV4PoolTransactionsQuery({
     variables: {
       ...variables,
       poolId: address,
     },
-    skip: protocolVersion !== GraphQLApi.ProtocolVersion.V4 || isSolanaChain,
+    skip: protocolVersion !== ProtocolVersion.V4,
   })
   const {
     loading: loadingV3,
     error: errorV3,
     data: dataV3,
     fetchMore: fetchMoreV3,
-  } = GraphQLApi.useV3PoolTransactionsQuery({
+  } = useV3PoolTransactionsQuery({
     variables: {
       ...variables,
       address,
     },
-    skip: protocolVersion !== GraphQLApi.ProtocolVersion.V3 || isSolanaChain,
+    skip: protocolVersion !== ProtocolVersion.V3,
   })
   const {
     loading: loadingV2,
     error: errorV2,
     data: dataV2,
     fetchMore: fetchMoreV2,
-  } = GraphQLApi.useV2PairTransactionsQuery({
+  } = useV2PairTransactionsQuery({
     variables: {
       ...variables,
       address,
     },
-    skip: !chainId || protocolVersion !== GraphQLApi.ProtocolVersion.V2 || isSolanaChain,
+    skip: !chainId || protocolVersion !== ProtocolVersion.V2,
   })
   const loadingMore = useRef(false)
   const { transactions, loading, fetchMore, error } =
-    protocolVersion === GraphQLApi.ProtocolVersion.V4
+    protocolVersion === ProtocolVersion.V4
       ? { transactions: dataV4?.v4Pool?.transactions, loading: loadingV4, fetchMore: fetchMoreV4, error: errorV4 }
-      : protocolVersion === GraphQLApi.ProtocolVersion.V3
+      : protocolVersion === ProtocolVersion.V3
         ? { transactions: dataV3?.v3Pool?.transactions, loading: loadingV3, fetchMore: fetchMoreV3, error: errorV3 }
         : { transactions: dataV2?.v2Pair?.transactions, loading: loadingV2, fetchMore: fetchMoreV2, error: errorV2 }
 
@@ -139,22 +145,22 @@ export function usePoolTransactions({
           }
           onComplete?.()
           const mergedData =
-            protocolVersion === GraphQLApi.ProtocolVersion.V4
+            protocolVersion === ProtocolVersion.V4
               ? {
                   v4Pool: {
                     ...fetchMoreResult.v4Pool,
                     transactions: [
-                      ...((prev as GraphQLApi.V4PoolTransactionsQuery).v4Pool?.transactions ?? []),
+                      ...((prev as V4PoolTransactionsQuery).v4Pool?.transactions ?? []),
                       ...fetchMoreResult.v4Pool.transactions,
                     ],
                   },
                 }
-              : protocolVersion === GraphQLApi.ProtocolVersion.V3
+              : protocolVersion === ProtocolVersion.V3
                 ? {
                     v3Pool: {
                       ...fetchMoreResult.v3Pool,
                       transactions: [
-                        ...((prev as GraphQLApi.V3PoolTransactionsQuery).v3Pool?.transactions ?? []),
+                        ...((prev as V3PoolTransactionsQuery).v3Pool?.transactions ?? []),
                         ...fetchMoreResult.v3Pool.transactions,
                       ],
                     },
@@ -163,7 +169,7 @@ export function usePoolTransactions({
                     v2Pair: {
                       ...fetchMoreResult.v2Pair,
                       transactions: [
-                        ...((prev as GraphQLApi.V2PairTransactionsQuery).v2Pair?.transactions ?? []),
+                        ...((prev as V2PairTransactionsQuery).v2Pair?.transactions ?? []),
                         ...fetchMoreResult.v2Pair.transactions,
                       ],
                     },
@@ -187,19 +193,13 @@ export function usePoolTransactions({
           token0?.address === NATIVE_CHAIN_ID
             ? WRAPPED_NATIVE_CURRENCY[chainId ?? UniverseChainId.Mainnet]?.address
             : token0?.address
-        const isSell = areAddressesEqual({
-          addressInput1: {
-            address: tokenIn.address,
-            chainId: fromGraphQLChain(tokenIn.chain) ?? UniverseChainId.Mainnet,
-          },
-          addressInput2: { address: token0Address, chainId: chainId ?? UniverseChainId.Mainnet },
-        })
+        const isSell = tokenIn.address?.toLowerCase() === token0Address?.toLowerCase()
         const type =
-          tx.type === GraphQLApi.PoolTransactionType.Swap
+          tx.type === PoolTransactionType.Swap
             ? isSell
               ? PoolTableTransactionType.SELL
               : PoolTableTransactionType.BUY
-            : tx.type === GraphQLApi.PoolTransactionType.Remove
+            : tx.type === PoolTransactionType.Remove
               ? PoolTableTransactionType.REMOVE
               : PoolTableTransactionType.ADD
         if (!filter.includes(type)) {

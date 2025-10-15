@@ -1,4 +1,4 @@
-import { TradingApi } from '@universe/api'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getRouteAnalyticsData, logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
@@ -94,7 +94,7 @@ describe('analytics', () => {
 
     it('returns uniswapXUsed=true for UniswapX trade', () => {
       // We need to cast to Trade because the mock isn't a complete implementation
-      const mockTrade = { routing: TradingApi.Routing.DUTCH_V2 } as Trade
+      const mockTrade = { routing: Routing.DUTCH_V2 } as Trade
 
       const result = getRouteAnalyticsData(mockTrade)
       expect(result).toEqual({
@@ -102,13 +102,12 @@ describe('analytics', () => {
         v3Used: false,
         v4Used: false,
         uniswapXUsed: true,
-        jupiterUsed: false,
       })
     })
 
     it('extracts route data from classic trade with V2 and V3 pools', () => {
       const mockClassicTrade = {
-        routing: TradingApi.Routing.CLASSIC,
+        routing: Routing.CLASSIC,
         routes: [{ pools: [mockV2Pool] }, { pools: [mockV3Pool] }],
       } as unknown as ClassicTrade
 
@@ -126,14 +125,13 @@ describe('analytics', () => {
         v3Used: true,
         v4Used: false,
         uniswapXUsed: false,
-        jupiterUsed: false,
       })
     })
 
     it('extracts route data from classic trade with V4 pools', () => {
       // We need to cast to Trade because the mock isn't a complete implementation
       const mockClassicTrade = {
-        routing: TradingApi.Routing.CLASSIC,
+        routing: Routing.CLASSIC,
         routes: [{ pools: [mockV4Pool] }],
       } as unknown as ClassicTrade
 
@@ -147,14 +145,13 @@ describe('analytics', () => {
         v3Used: false,
         v4Used: true,
         uniswapXUsed: false,
-        jupiterUsed: false,
       })
     })
 
     it('returns default result if route extraction fails', () => {
       // Create a mock trade that will cause extraction to fail
       const mockBrokenTrade = {
-        routing: TradingApi.Routing.CLASSIC,
+        routing: Routing.CLASSIC,
         routes: null, // This will cause an error during extraction
       } as unknown as ClassicTrade
 
@@ -166,7 +163,6 @@ describe('analytics', () => {
         v3Used: false,
         v4Used: false,
         uniswapXUsed: false,
-        jupiterUsed: false,
       })
     })
   })

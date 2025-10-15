@@ -1,6 +1,5 @@
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useInterfaceWrap'
 import { useSwapFormWarningStoreActions } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/useSwapFormWarningStore'
@@ -38,9 +37,7 @@ export function usePrepareSwap(ctx: { warningService: WarningService }): () => v
   }))
   const { currencies, exactCurrencyField, chainId } = derivedSwapInfo
   const { swapRedirectCallback, setScreen } = useTransactionModalContext()
-
-  const wallet = useWallet()
-  const activeAccount = isSVMChain(chainId) ? wallet.svmAccount : wallet.evmAccount
+  const activeAccount = useWallet().evmAccount
   const { onConnectWallet } = useUniswapContext()
 
   // needsTokenProtectionWarning is only true in interface, where swap component might be prefilled with a token that has a protection warning
@@ -57,7 +54,7 @@ export function usePrepareSwap(ctx: { warningService: WarningService }): () => v
   return useEvent(
     createPrepareSwap({
       // getAction
-      isConnected: !!activeAccount,
+      activeAccount,
       isViewOnlyWallet,
       isInterfaceWrap,
       currencies,

@@ -25,7 +25,7 @@ import {
   TransferNFTNotificationBase,
   WalletConnectNotification,
   WrapTxNotification,
-} from 'uniswap/src/features/notifications/slice/types'
+} from 'uniswap/src/features/notifications/types'
 import {
   FinalizedTransactionStatus,
   TransactionStatus,

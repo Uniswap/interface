@@ -1,13 +1,13 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Currency, Price } from '@uniswap/sdk-core'
 import { D3LiquidityRangeInput } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeInput'
 import { LiquidityRangeInput } from 'components/Charts/LiquidityRangeInput/LiquidityRangeInput'
+import { BaseQuoteFiatAmount } from 'components/Liquidity/BaseQuoteFiatAmount'
 import { useDefaultInitialPrice } from 'components/Liquidity/Create/hooks/useDefaultInitialPrice'
 import { useTokenControlOptions } from 'components/Liquidity/Create/hooks/useTokenControlOptions'
 import { PoolOutOfSyncError } from 'components/Liquidity/Create/PoolOutOfSyncError'
 import { PositionOutOfRangeError } from 'components/Liquidity/Create/PositionOutOfRangeError'
-import { RangeAmountInput, RangeSelectionInput } from 'components/Liquidity/Create/RangeAmountInput'
 import { PriceRangeState } from 'components/Liquidity/Create/types'
-import { DisplayCurrentPrice } from 'components/Liquidity/DisplayCurrentPrice'
 import { PositionInfo } from 'components/Liquidity/types'
 import { getBaseAndQuoteCurrencies } from 'components/Liquidity/utils/currency'
 import { getPriceDifference } from 'components/Liquidity/utils/getPriceDifference'
@@ -18,17 +18,52 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useRangeHopCallbacks } from 'state/mint/v3/hooks'
 import { tryParsePrice } from 'state/mint/v3/utils'
 import { PositionField } from 'types/position'
-import { AnimatePresence, Button, Flex, SegmentedControl, Text, useMedia, useSporeColors } from 'ui/src'
+import { AnimatePresence, Button, Flex, SegmentedControl, Text, TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
+import { Minus } from 'ui/src/components/icons/Minus'
+import { Plus } from 'ui/src/components/icons/Plus'
 import { fonts, zIndexes } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
+import { numericInputRegex } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+
+enum RangeSelectionInput {
+  MIN = 0,
+  MAX = 1,
+}
 
 enum RangeSelection {
   FULL = 'FULL',
   CUSTOM = 'CUSTOM',
+}
+
+export function DisplayCurrentPrice({ price, isLoading }: { price?: Price<Currency, Currency>; isLoading?: boolean }) {
+  return (
+    <Flex gap="$gap4" row alignItems="center" $md={{ row: false, alignItems: 'flex-start' }}>
+      {isLoading ? (
+        <Text variant="body3" color="$neutral2">
+          <Trans i18nKey="common.marketPrice.fetching" />
+        </Text>
+      ) : price ? (
+        <>
+          <Text variant="body3" color="$neutral2">
+            <Trans i18nKey="common.marketPrice.label" />
+          </Text>
+          <BaseQuoteFiatAmount price={price} base={price.baseCurrency} quote={price.quoteCurrency} />
+        </>
+      ) : (
+        <Flex row alignItems="center" gap="$spacing4">
+          <AlertTriangleFilled size={16} color="$neutral2" />
+          <Text variant="body3" color="$neutral2">
+            <Trans i18nKey="common.marketPrice.unavailable" />
+          </Text>
+        </Flex>
+      )}
+    </Flex>
+  )
 }
 
 const InitialPriceInput = () => {
@@ -83,7 +118,6 @@ const InitialPriceInput = () => {
   }, [formattedDefaultInitialPrice, isInitialPriceDirty, setPriceRangeState])
 
   const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(currencies.display, priceInverted)
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +priceInverted
   useEffect(() => {
     try {
       if (initialPrice && baseCurrency && quoteCurrency) {
@@ -94,7 +128,7 @@ const InitialPriceInput = () => {
         })
         setOtherCurrencyPrice(parsedPrice?.invert().toSignificant(8))
       }
-    } catch (_error) {
+    } catch (error) {
       setOtherCurrencyPrice(undefined)
     }
   }, [baseCurrency, quoteCurrency, initialPrice, priceInverted])
@@ -283,14 +317,161 @@ function RangeControl({ value, active }: { value: string; active: boolean }) {
   )
 }
 
+function numericInputEnforcerWithInfinity(value?: string): boolean {
+  return !value || numericInputRegex.test(value) || value === '∞'
+}
+
+function RangeInput({
+  value,
+  input,
+  decrement,
+  increment,
+  isIncrementDisabled,
+  isDecrementDisabled,
+  showIncrementButtons = true,
+  isInvalid = false,
+}: {
+  value: string
+  input: RangeSelectionInput
+  decrement: () => string
+  increment: () => string
+  isIncrementDisabled?: boolean
+  isDecrementDisabled?: boolean
+  showIncrementButtons?: boolean
+  isInvalid?: boolean
+}) {
+  const colors = useSporeColors()
+  const { t } = useTranslation()
+
+  const {
+    currencies,
+    creatingPoolOrPair,
+    priceRangeState: { priceInverted },
+    setPriceRangeState,
+  } = useCreateLiquidityContext()
+
+  const [typedValue, setTypedValue] = useState('')
+  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(currencies.display, priceInverted)
+  const [displayUserTypedValue, setDisplayUserTypedValue] = useState(false)
+
+  const handlePriceRangeInput = useCallback(
+    (input: RangeSelectionInput, value: string) => {
+      if (input === RangeSelectionInput.MIN) {
+        setPriceRangeState((prev) => ({ ...prev, minPrice: value, fullRange: false }))
+      } else {
+        setPriceRangeState((prev) => ({ ...prev, maxPrice: value, fullRange: false }))
+      }
+
+      setTypedValue(value)
+      setDisplayUserTypedValue(true)
+    },
+    [setPriceRangeState],
+  )
+
+  const handleDecrement = useCallback(() => {
+    handlePriceRangeInput(input, decrement())
+    setDisplayUserTypedValue(false)
+  }, [decrement, handlePriceRangeInput, input])
+
+  const handleIncrement = useCallback(() => {
+    handlePriceRangeInput(input, increment())
+    setDisplayUserTypedValue(false)
+  }, [handlePriceRangeInput, increment, input])
+
+  return (
+    <Flex
+      row
+      flex={1}
+      position="relative"
+      backgroundColor="$surface2"
+      borderTopLeftRadius={creatingPoolOrPair && input === RangeSelectionInput.MIN ? '$rounded20' : '$none'}
+      borderTopRightRadius={creatingPoolOrPair && input === RangeSelectionInput.MAX ? '$rounded20' : '$none'}
+      borderBottomRightRadius={input === RangeSelectionInput.MIN ? '$none' : '$rounded20'}
+      borderBottomLeftRadius={input === RangeSelectionInput.MIN ? '$rounded20' : '$none'}
+      $lg={{
+        borderBottomRightRadius: input === RangeSelectionInput.MAX ? '$rounded20' : '$none',
+        borderBottomLeftRadius: input === RangeSelectionInput.MAX ? '$rounded20' : '$none',
+      }}
+      p="$spacing16"
+      justifyContent="space-between"
+      overflow="hidden"
+    >
+      <Flex gap="$gap4" overflow="hidden" flex={1}>
+        <Text variant="body3" color="$neutral2">
+          {input === RangeSelectionInput.MIN ? t(`pool.minPrice`) : t(`pool.maxPrice`)}
+        </Text>
+        <AmountInput
+          backgroundColor="$transparent"
+          borderWidth="$none"
+          borderRadius="$none"
+          color={isInvalid ? '$statusCritical' : '$neutral1'}
+          fontFamily="$heading"
+          fontSize={fonts.heading3.fontSize}
+          fontWeight={fonts.heading3.fontWeight}
+          maxDecimals={quoteCurrency?.decimals ?? 18}
+          overflow="visible"
+          placeholder="0"
+          placeholderTextColor={colors.neutral3.val}
+          px="$none"
+          py="$none"
+          value={displayUserTypedValue ? typedValue : value}
+          onChangeText={(text) => handlePriceRangeInput(input, text)}
+          onBlur={() => setDisplayUserTypedValue(false)}
+          inputEnforcer={numericInputEnforcerWithInfinity}
+          $md={{
+            fontSize: fonts.subheading2.fontSize,
+            fontWeight: fonts.subheading2.fontWeight,
+          }}
+          testID={`${TestID.RangeInput}-${input}`}
+        />
+        <Text variant="body3" color="$neutral2">
+          {quoteCurrency?.symbol} = 1 {baseCurrency?.symbol}
+        </Text>
+      </Flex>
+      {showIncrementButtons && (
+        <Flex gap={10}>
+          <TouchableArea
+            disabled={isIncrementDisabled}
+            testID={`${TestID.RangeInputIncrement}-${input}`}
+            alignItems="center"
+            justifyContent="center"
+            onPress={handleIncrement}
+            borderRadius="$roundedFull"
+            p={8}
+            backgroundColor="$surface3"
+            hoverable
+            hoverStyle={{ backgroundColor: '$surface3Hovered' }}
+          >
+            <Plus size="$icon.16" color="$neutral2" />
+          </TouchableArea>
+          <TouchableArea
+            disabled={isDecrementDisabled}
+            testID={`${TestID.RangeInputDecrement}-${input}`}
+            alignItems="center"
+            justifyContent="center"
+            onPress={handleDecrement}
+            borderRadius="$roundedFull"
+            p={8}
+            backgroundColor="$surface3"
+            hoverable
+            hoverStyle={{ backgroundColor: '$surface3Hovered' }}
+          >
+            <Minus size="$icon.16" color="$neutral2" />
+          </TouchableArea>
+        </Flex>
+      )}
+    </Flex>
+  )
+}
+
 export const SelectPriceRangeStep = ({
   positionInfo,
   onContinue,
-  disableContinue,
+  onDisableContinue,
 }: {
   positionInfo?: PositionInfo
   onContinue?: () => void
-  disableContinue?: boolean
+  onDisableContinue?: boolean
 }) => {
   const { t } = useTranslation()
   const isD3LiquidityRangeChartEnabled = useFeatureFlag(FeatureFlags.D3LiquidityRangeChart)
@@ -438,7 +619,7 @@ export const SelectPriceRangeStep = ({
   const invalidRange = isInvalidRange(ticks[0], ticks[1])
 
   const invalidState =
-    disableContinue ||
+    onDisableContinue ||
     invalidPrice ||
     invalidRange ||
     (creatingPoolOrPair && (!priceRangeState.initialPrice || priceRangeState.initialPrice.length === 0))
@@ -481,7 +662,7 @@ export const SelectPriceRangeStep = ({
             <Trans i18nKey="position.setRange" />
           </Text>
         </Flex>
-        {!initialPosition?.isOutOfRange && !isD3LiquidityRangeChartEnabled && (
+        {!initialPosition?.isOutOfRange && (
           <SegmentedControl
             options={segmentedControlRangeOptions}
             selectedOption={priceRangeState.fullRange ? RangeSelection.FULL : RangeSelection.CUSTOM}
@@ -515,120 +696,99 @@ export const SelectPriceRangeStep = ({
               zIndex={zIndexes.overlay}
             />
           )}
-          {baseCurrency &&
-            quoteCurrency &&
-            (isD3LiquidityRangeChartEnabled ? (
-              <D3LiquidityRangeInput
-                key={buildRangeInputKeyV2({ protocolVersion, poolId: poolId ?? '', priceRangeState })}
-                baseCurrency={baseCurrency}
-                quoteCurrency={quoteCurrency}
-                sdkCurrencies={currencies.sdk}
-                creatingPoolOrPair={creatingPoolOrPair}
-                currencyControlOptions={controlOptions}
-                priceInverted={priceRangeState.priceInverted}
-                feeTier={fee.feeAmount}
-                hook={hook}
-                tickSpacing={poolOrPair?.tickSpacing}
-                protocolVersion={protocolVersion}
-                poolId={poolId}
-                poolOrPairLoading={poolOrPairLoading}
-                price={price}
-                currentPrice={Number(price?.toSignificant())}
-                inputMode={priceRangeState.inputMode}
-                minPrice={rangeInputMinPrice}
-                maxPrice={rangeInputMaxPrice}
-                isFullRange={priceRangeState.fullRange}
-                handleSelectToken={handleSelectToken}
-                setMinPrice={(minPrice?: number | null) => {
-                  handleChartRangeInput(RangeSelectionInput.MIN, minPrice?.toString())
-                }}
-                setMaxPrice={(maxPrice?: number | null) => {
-                  handleChartRangeInput(RangeSelectionInput.MAX, maxPrice?.toString())
-                }}
-                setIsFullRange={(isFullRange: boolean) => {
-                  handleSelectRange(isFullRange ? RangeSelection.FULL : RangeSelection.CUSTOM)
-                }}
-                setInputMode={(inputMode) => {
-                  setPriceRangeState((prev) => ({ ...prev, inputMode }))
-                }}
-              />
-            ) : (
+          {baseCurrency && quoteCurrency && (
+            <Flex
+              backgroundColor="$surface2"
+              p="$padding16"
+              gap="$gap16"
+              borderRadius={poolId ? '$none' : '$rounded20'}
+              borderTopLeftRadius={poolId ? '$rounded20' : '$none'}
+              borderTopRightRadius={poolId ? '$rounded20' : '$none'}
+              $lg={{
+                px: '$spacing8',
+              }}
+            >
               <Flex
-                backgroundColor="$surface2"
-                gap="$gap16"
-                borderRadius={poolId ? '$none' : '$rounded20'}
-                borderTopLeftRadius={poolId ? '$rounded20' : '$none'}
-                borderTopRightRadius={poolId ? '$rounded20' : '$none'}
+                row
+                justifyContent="space-between"
+                alignItems="center"
+                $sm={{ row: false, alignItems: 'flex-start', gap: '$gap8' }}
               >
-                <Flex
-                  row
-                  justifyContent="space-between"
-                  alignItems="center"
-                  p="$padding16"
-                  $sm={{ row: false, alignItems: 'flex-start', gap: '$gap8' }}
-                >
-                  <DisplayCurrentPrice price={price} isLoading={poolOrPairLoading} />
-                  {!creatingPoolOrPair && (
-                    <SegmentedControl
-                      options={controlOptions}
-                      selectedOption={baseCurrency.symbol ?? ''}
-                      onSelectOption={handleSelectToken}
-                      size="smallThumbnail"
-                    />
-                  )}
-                </Flex>
-                <Flex p="$padding16">
-                  <LiquidityRangeInput
-                    key={buildRangeInputKey({ protocolVersion, poolId: poolId ?? '', priceRangeState })}
-                    quoteCurrency={quoteCurrency}
-                    baseCurrency={baseCurrency}
-                    sdkCurrencies={currencies.sdk}
-                    priceInverted={priceRangeState.priceInverted}
-                    feeTier={fee.feeAmount}
-                    hook={hook}
-                    tickSpacing={poolOrPair?.tickSpacing}
-                    protocolVersion={protocolVersion}
-                    poolId={poolId}
-                    poolOrPairLoading={poolOrPairLoading}
-                    disableBrushInteraction={priceRangeState.fullRange}
-                    midPrice={Number(price?.toSignificant())}
-                    minPrice={rangeInputMinPrice}
-                    maxPrice={rangeInputMaxPrice}
-                    setMinPrice={(minPrice?: number) => {
-                      handleChartRangeInput(RangeSelectionInput.MIN, minPrice?.toString())
-                    }}
-                    setMaxPrice={(maxPrice?: number) => {
-                      handleChartRangeInput(RangeSelectionInput.MAX, maxPrice?.toString())
-                    }}
-                    setFallbackRangePrices={setFallbackRangePrices}
+                <DisplayCurrentPrice price={price} isLoading={poolOrPairLoading} />
+                {!creatingPoolOrPair && (
+                  <SegmentedControl
+                    options={controlOptions}
+                    selectedOption={baseCurrency.symbol ?? ''}
+                    onSelectOption={handleSelectToken}
+                    size="smallThumbnail"
                   />
-                </Flex>
+                )}
               </Flex>
-            ))}
-          {isD3LiquidityRangeChartEnabled ? null : (
-            <Flex row gap="$gap4" $lg={{ row: false }}>
-              <RangeAmountInput
-                input={RangeSelectionInput.MIN}
-                decrement={priceRangeState.priceInverted ? getIncrementUpper : getDecrementLower}
-                increment={priceRangeState.priceInverted ? getDecrementUpper : getIncrementLower}
-                isIncrementDisabled={false}
-                isDecrementDisabled={ticksAtLimit[0]}
-                value={rangeSelectionInputValues[0]}
-                showIncrementButtons={showIncrementButtons}
-                isInvalid={invalidRange}
-              />
-              <RangeAmountInput
-                input={RangeSelectionInput.MAX}
-                decrement={priceRangeState.priceInverted ? getIncrementLower : getDecrementUpper}
-                increment={priceRangeState.priceInverted ? getDecrementLower : getIncrementUpper}
-                isIncrementDisabled={ticksAtLimit[1]}
-                isDecrementDisabled={false}
-                value={rangeSelectionInputValues[1]}
-                showIncrementButtons={showIncrementButtons}
-                isInvalid={invalidRange}
-              />
+              {isD3LiquidityRangeChartEnabled ? (
+                <D3LiquidityRangeInput
+                  key={buildRangeInputKey({ protocolVersion, poolId: poolId ?? '', priceRangeState })}
+                  quoteCurrency={quoteCurrency}
+                  sdkCurrencies={currencies.sdk}
+                  priceInverted={priceRangeState.priceInverted}
+                  feeTier={fee.feeAmount}
+                  hook={hook}
+                  tickSpacing={poolOrPair?.tickSpacing}
+                  protocolVersion={protocolVersion}
+                  poolId={poolId}
+                  poolOrPairLoading={poolOrPairLoading}
+                  currentPrice={Number(price?.toSignificant())}
+                />
+              ) : (
+                <LiquidityRangeInput
+                  key={buildRangeInputKey({ protocolVersion, poolId: poolId ?? '', priceRangeState })}
+                  quoteCurrency={quoteCurrency}
+                  baseCurrency={baseCurrency}
+                  sdkCurrencies={currencies.sdk}
+                  priceInverted={priceRangeState.priceInverted}
+                  feeTier={fee.feeAmount}
+                  hook={hook}
+                  tickSpacing={poolOrPair?.tickSpacing}
+                  protocolVersion={protocolVersion}
+                  poolId={poolId}
+                  poolOrPairLoading={poolOrPairLoading}
+                  disableBrushInteraction={priceRangeState.fullRange}
+                  midPrice={Number(price?.toSignificant())}
+                  minPrice={rangeInputMinPrice}
+                  maxPrice={rangeInputMaxPrice}
+                  setMinPrice={(minPrice?: number) => {
+                    handleChartRangeInput(RangeSelectionInput.MIN, minPrice?.toString())
+                  }}
+                  setMaxPrice={(maxPrice?: number) => {
+                    handleChartRangeInput(RangeSelectionInput.MAX, maxPrice?.toString())
+                  }}
+                  setFallbackRangePrices={setFallbackRangePrices}
+                />
+              )}
             </Flex>
           )}
+          <Flex row gap="$gap4" $lg={{ row: false }}>
+            <RangeInput
+              input={RangeSelectionInput.MIN}
+              // TODO: [WEB-8003: `useRangeHopCallbacks` should look at priceInverted and then return the appropriate callback depending on that rather than doing that check here.](https://linear.app/uniswap/issue/WEB-8003/userangehopcallbacks-should-look-at-priceinverted-and-then-return-the)
+              decrement={priceRangeState.priceInverted ? getIncrementUpper : getDecrementLower}
+              increment={priceRangeState.priceInverted ? getDecrementUpper : getIncrementLower}
+              isIncrementDisabled={false}
+              isDecrementDisabled={ticksAtLimit[0]}
+              value={rangeSelectionInputValues[0]}
+              showIncrementButtons={showIncrementButtons}
+              isInvalid={invalidRange}
+            />
+            <RangeInput
+              input={RangeSelectionInput.MAX}
+              decrement={priceRangeState.priceInverted ? getIncrementLower : getDecrementUpper}
+              increment={priceRangeState.priceInverted ? getDecrementLower : getIncrementUpper}
+              isIncrementDisabled={ticksAtLimit[1]}
+              isDecrementDisabled={false}
+              value={rangeSelectionInputValues[1]}
+              showIncrementButtons={showIncrementButtons}
+              isInvalid={invalidRange}
+            />
+          </Flex>
         </Flex>
         {(invalidPrice || invalidRange) && (
           <Flex row alignItems="center" px="$padding16" gap="$gap4">
@@ -660,16 +820,4 @@ function buildRangeInputKey({
   priceRangeState: PriceRangeState
 }) {
   return `${poolId}-${priceRangeState.fullRange}-${priceRangeState.priceInverted}-${protocolVersion}`
-}
-
-function buildRangeInputKeyV2({
-  protocolVersion,
-  poolId,
-  priceRangeState,
-}: {
-  protocolVersion: ProtocolVersion
-  poolId: string
-  priceRangeState: PriceRangeState
-}) {
-  return `${poolId}-${priceRangeState.priceInverted}-${protocolVersion}`
 }

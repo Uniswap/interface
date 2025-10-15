@@ -66,7 +66,7 @@ export function CompatibleAddressModal({
               checkedColor="$neutral1"
               text={
                 <Text color="$neutral2" variant="buttonLabel3">
-                  {t('token.safety.warning.dontShowWarningAgainShort')}
+                  {t('token.safety.warning.dontShowWarningAgain')}
                 </Text>
               }
               size="$icon.16"

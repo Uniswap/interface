@@ -13,11 +13,9 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { isAddress } from 'utilities/src/addresses'
 import { getParsedChainId } from 'utils/chainParams'
 
 export function useSwapActionHandlers(): {
@@ -67,9 +65,9 @@ function parseFromURLParameter(urlParam: ParsedQs[string]): string | undefined {
   return undefined
 }
 
-export function parseCurrencyFromURLParameter(urlParam: ParsedQs[string], platform: Platform): string | undefined {
+export function parseCurrencyFromURLParameter(urlParam: ParsedQs[string]): string | undefined {
   if (typeof urlParam === 'string') {
-    const valid = getValidAddress({ address: urlParam, platform, withEVMChecksum: true })
+    const valid = isAddress(urlParam)
     if (valid) {
       return valid
     }
@@ -187,15 +185,9 @@ export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCu
   const chainId = getParsedChainId(parsedQs)
   const outputChainId = getParsedChainId(parsedQs, CurrencyField.OUTPUT)
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const parsedInputCurrencyAddress = parseCurrencyFromURLParameter(
-    parsedQs.inputCurrency || parsedQs.inputcurrency,
-    chainIdToPlatform(chainId ?? UniverseChainId.Mainnet),
-  )
+  const parsedInputCurrencyAddress = parseCurrencyFromURLParameter(parsedQs.inputCurrency ?? parsedQs.inputcurrency)
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  const parsedOutputCurrencyAddress = parseCurrencyFromURLParameter(
-    parsedQs.outputCurrency || parsedQs.outputcurrency,
-    chainIdToPlatform(outputChainId ?? UniverseChainId.Mainnet),
-  )
+  const parsedOutputCurrencyAddress = parseCurrencyFromURLParameter(parsedQs.outputCurrency ?? parsedQs.outputcurrency)
   const outputCurrencyAddress =
     parsedOutputCurrencyAddress === parsedInputCurrencyAddress && outputChainId === chainId
       ? undefined
@@ -251,7 +243,6 @@ export function useInitialCurrencyState(): {
     }
   }, [parsedCurrencyState.inputCurrencyAddress, parsedCurrencyState.outputCurrencyAddress, setIsUserSelectedToken])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: We do not want to rerender on a change to persistedFilteredChainIds
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
     // Default to native if no query params or chain is not compatible with testnet or mainnet mode
     if (!hasCurrencyQueryParams || !isSupportedChainCompatible) {
@@ -273,6 +264,8 @@ export function useInitialCurrencyState(): {
       initialInputCurrencyAddress: parsedCurrencyState.outputCurrencyAddress ? undefined : 'ETH',
       initialChainId: supportedChainId,
     }
+    // We do not want to rerender on a change to persistedFilteredChainIds
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     hasCurrencyQueryParams,
     isSupportedChainCompatible,

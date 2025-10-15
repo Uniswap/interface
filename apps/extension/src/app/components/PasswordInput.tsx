@@ -20,7 +20,6 @@ const hoverStyle: FlexProps = {
 interface PasswordInputProps extends InputProps {
   passwordStrength?: PasswordStrength
   hideInput: boolean
-  hideBiometrics?: boolean
   onToggleHideInput?: (hideInput: boolean) => void
 }
 
@@ -56,14 +55,11 @@ export const PasswordInput = forwardRef<TextInput, PasswordInputProps>(function 
 export const PasswordInputWithBiometrics = forwardRef<
   TextInput,
   PasswordInputProps & { onPressBiometricUnlock: () => void }
->(function PasswordInputWithBiometrics(
-  { onPressBiometricUnlock, hideBiometrics = false, ...passwordInputProps },
-  ref,
-): JSX.Element {
-  const shouldShowBiometricUnlock = useShouldShowBiometricUnlock() && !hideBiometrics
+>(function PasswordInputWithBiometrics({ onPressBiometricUnlock, ...passwordInputProps }, ref): JSX.Element {
+  const shouldShowBiometricUnlock = useShouldShowBiometricUnlock()
 
   return (
-    <Flex row width="100%" alignItems="center">
+    <Flex row alignItems="center">
       <Flex grow>
         <PasswordInput
           ref={ref}

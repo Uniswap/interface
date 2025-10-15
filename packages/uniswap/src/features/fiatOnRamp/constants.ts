@@ -1,8 +1,7 @@
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { getVersionHeader } from 'uniswap/src/data/constants'
+import { getVersionHeader, REQUEST_SOURCE } from 'uniswap/src/data/constants'
 import { isMobileApp } from 'utilities/src/platform'
-import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 
 export const FOR_API_HEADERS = {
   'Content-Type': 'application/json',

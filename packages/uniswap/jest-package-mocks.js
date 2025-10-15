@@ -16,10 +16,6 @@ jest.mock('react-native-localize', () => mockRNLocalize)
 jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 jest.mock('uniswap/src/data/apiClients/SharedPersistQueryClientProvider', () => mockSharedPersistQueryClientProvider)
 
-jest.mock('utilities/src/device/uniqueId', () => {
-  return jest.requireActual('uniswap/src/test/mocks/uniqueId')
-})
-
 jest.mock('uniswap/src/features/gating/sdk/statsig', () => {
   const actualStatsig = jest.requireActual('uniswap/src/features/gating/sdk/statsig')
   return {

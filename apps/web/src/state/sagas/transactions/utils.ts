@@ -2,7 +2,6 @@ import { datadogRum } from '@datadog/browser-rum'
 import type { TransactionResponse } from '@ethersproject/abstract-provider'
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
-import { FetchError, TradingApi } from '@universe/api'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { clientToProvider } from 'hooks/useEthersProvider'
 import ms from 'ms'
@@ -13,6 +12,8 @@ import { isPendingTx } from 'state/transactions/utils'
 import type { InterfaceState } from 'state/webReducer'
 import type { SagaGenerator } from 'typed-redux-saga'
 import { call, cancel, delay, fork, put, race, select, spawn, take } from 'typed-redux-saga'
+import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { BlockedAsyncSubmissionChainIdsConfigKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
@@ -57,23 +58,16 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getInterfaceTransaction, isInterfaceTransaction } from 'uniswap/src/features/transactions/types/utils'
 import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { HexString, isValidHexString } from 'uniswap/src/utils/hex'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
-import { HexString, isValidHexString } from 'utilities/src/addresses/hex'
+import { isSameAddress } from 'utilities/src/addresses'
 import { noop } from 'utilities/src/react/noop'
 import { signTypedData } from 'utils/signing'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import type { Transaction } from 'viem'
 import { getConnectorClient, getTransaction } from 'wagmi/actions'
-
-export enum TransactionBreadcrumbStatus {
-  Initiated = 'initiated',
-  Complete = 'complete',
-  InProgress = 'in progress',
-  Interrupted = 'interrupted',
-}
 
 export interface HandleSignatureStepParams<T extends SignatureTransactionStep = SignatureTransactionStep> {
   account: AccountDetails
@@ -102,7 +96,7 @@ export function* handleSignatureStep({ setCurrentStep, step, ignoreInterrupt, ac
   // If the transaction flow was interrupted, throw an error after the step has completed
   yield* call(throwIfInterrupted)
 
-  addTransactionBreadcrumb({ step, data: { signature }, status: TransactionBreadcrumbStatus.Complete })
+  addTransactionBreadcrumb({ step, data: { signature }, status: 'complete' })
 
   return signature
 }
@@ -145,14 +139,14 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
       addTransactionBreadcrumb({
         step,
         data: { duplicativeTx: true, hash: interfaceDuplicativeTx.hash },
-        status: TransactionBreadcrumbStatus.Complete,
+        status: 'complete',
       })
       return interfaceDuplicativeTx.hash
     } else {
       addTransactionBreadcrumb({
         step,
         data: { duplicativeTx: true, hash: interfaceDuplicativeTx.hash },
-        status: TransactionBreadcrumbStatus.InProgress,
+        status: 'in progress',
       })
       setCurrentStep({ step, accepted: true })
       return yield* handleOnChainConfirmation(params, interfaceDuplicativeTx.hash)
@@ -254,7 +248,7 @@ function* handleOnChainConfirmation(params: HandleOnChainStepParams, hash: strin
     throw new HandledTransactionInterrupt('Transaction flow was interrupted')
   }
 
-  addTransactionBreadcrumb({ step, data: { txHash: hash }, status: TransactionBreadcrumbStatus.Complete })
+  addTransactionBreadcrumb({ step, data: { txHash: hash }, status: 'complete' })
 
   return hash
 }
@@ -450,12 +444,7 @@ function* findDuplicativeTx({
   )
 
   const transactionsForAccount = Object.values(transactionMap)
-    .filter((tx) =>
-      areAddressesEqual({
-        addressInput1: { address: tx.from, chainId: tx.chainId },
-        addressInput2: { address: account.address, chainId },
-      }),
-    )
+    .filter((tx) => isSameAddress(tx.from, account.address))
     .filter(isInterfaceTransaction)
 
   // Check all pending and recent transactions
@@ -534,7 +523,7 @@ export function getSwapTransactionInfo(trade: UniswapXTrade): SwapInfo & { isUni
 export function getSwapTransactionInfo(
   trade: ClassicTrade | BridgeTrade | UniswapXTrade | SolanaTrade,
 ): SwapInfo | BridgeTransactionInfo {
-  if (trade.routing === TradingApi.Routing.BRIDGE) {
+  if (trade.routing === Routing.BRIDGE) {
     return {
       type: TransactionType.Bridge,
       inputCurrencyId: currencyId(trade.inputAmount.currency),
@@ -570,13 +559,13 @@ export function getSwapTransactionInfo(
 export function addTransactionBreadcrumb({
   step,
   data = {},
-  status = TransactionBreadcrumbStatus.Initiated,
+  status = 'initiated',
 }: {
   step: TransactionStep
   data?: {
     [key: string]: string | number | boolean | undefined | object | null
   }
-  status?: TransactionBreadcrumbStatus
+  status?: 'initiated' | 'complete' | 'in progress' | 'interrupted'
 }) {
   datadogRum.addAction('Transaction Action', {
     message: `${step.type} ${status}`,
@@ -600,11 +589,7 @@ export function getDisplayableError({
   if (userRejected || error instanceof HandledTransactionInterrupt) {
     const loggableMessage = userRejected ? 'user rejected request' : error.message // for user rejections, avoid logging redundant/long message
     if (step) {
-      addTransactionBreadcrumb({
-        step,
-        status: TransactionBreadcrumbStatus.Interrupted,
-        data: { message: loggableMessage },
-      })
+      addTransactionBreadcrumb({ step, status: 'interrupted', data: { message: loggableMessage } })
     }
     return undefined
   } else if (error instanceof TransactionError) {

@@ -1,5 +1,4 @@
 import { Currency, Token, WETH9 } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import type { ImageSourcePropType } from 'react-native'
 import { CELO_LOGO, ETH_LOGO } from 'ui/src/assets'
 import {
@@ -46,13 +45,13 @@ import {
   WETH_POLYGON,
   WRAPPED_NATIVE_CURRENCY,
 } from 'uniswap/src/constants/tokens'
+import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { isSameAddress } from 'utilities/src/addresses'
 
 type ChainCurrencyList = {
   readonly [chainId: number]: CurrencyInfo[]
@@ -188,12 +187,7 @@ export function getCommonBase(chainId?: number, address?: string): CurrencyInfo 
   const isNative = isNativeCurrencyAddress(chainId, address)
   return COMMON_BASES[chainId]?.find(
     (base) =>
-      (base.currency.isNative && isNative) ||
-      (base.currency.isToken &&
-        areAddressesEqual({
-          addressInput1: { address: base.currency.address, chainId: base.currency.chainId },
-          addressInput2: { address, chainId },
-        })),
+      (base.currency.isNative && isNative) || (base.currency.isToken && isSameAddress(base.currency.address, address)),
   )
 }
 
@@ -209,22 +203,10 @@ function getTokenLogoURI(chainId: UniverseChainId, address: string): ImageSource
   const chainInfo = getChainInfo(chainId)
   const networkName = chainInfo.assetRepoNetworkName
 
-  if (
-    chainId === UniverseChainId.Celo &&
-    areAddressesEqual({
-      addressInput1: { address, platform: Platform.EVM },
-      addressInput2: { address: nativeOnChain(chainId).wrapped.address, platform: Platform.EVM },
-    })
-  ) {
+  if (chainId === UniverseChainId.Celo && isSameAddress(address, nativeOnChain(chainId).wrapped.address)) {
     return CELO_LOGO as ImageSourcePropType
   }
-  if (
-    chainId === UniverseChainId.Celo &&
-    areAddressesEqual({
-      addressInput1: { address, platform: Platform.EVM },
-      addressInput2: { address: PORTAL_ETH_CELO.address, platform: Platform.EVM },
-    })
-  ) {
+  if (chainId === UniverseChainId.Celo && isSameAddress(address, PORTAL_ETH_CELO.address)) {
     return ETH_LOGO as ImageSourcePropType
   }
 
@@ -243,7 +225,7 @@ export function buildPartialCurrencyInfo(commonBase: Currency): CurrencyInfo {
     logoUrl,
     safetyInfo: {
       tokenList: TokenList.Default,
-      protectionResult: GraphQLApi.ProtectionResult.Benign,
+      protectionResult: ProtectionResult.Benign,
     },
     isSpam: false,
   } as CurrencyInfo)

@@ -12,8 +12,8 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -58,13 +58,7 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
     const signerManager = yield* call(getSignerManager)
     let result: string | SendCallsResult = ''
     if (method === EthMethod.PersonalSign || method === EthMethod.EthSign) {
-      // For personal_sign, pass signAsString=true to keep the message as a string for proper EIP-191 hashing
-      result = yield* call(signMessage, {
-        message: params.message,
-        account,
-        signerManager,
-        signAsString: method === EthMethod.PersonalSign,
-      })
+      result = yield* call(signMessage, { message: params.message, account, signerManager })
 
       // TODO: add `isCheckIn` type to uwulink request info so that this can be generalized
       if (

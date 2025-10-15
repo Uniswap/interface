@@ -1,6 +1,5 @@
 /* eslint-disable complexity, max-lines */
 import { ApolloQueryResult } from '@apollo/client'
-import { GraphQLApi } from '@universe/api'
 import { isAddress } from 'ethers/lib/utils'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -35,11 +34,16 @@ import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import {
+  NftActivityType,
+  NftItemScreenQuery,
+  useNftItemScreenQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useNFTContextMenuItems } from 'uniswap/src/features/nfts/hooks/useNftContextMenuItems'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -86,14 +90,14 @@ function NFTItemScreenContents({
     data,
     loading: nftLoading,
     refetch,
-  } = GraphQLApi.useNftItemScreenQuery({
+  } = useNftItemScreenQuery({
     variables: {
       contractAddress: address,
       filter: { tokenIds: [tokenId] },
       activityFilter: {
         address,
         tokenId,
-        activityTypes: [GraphQLApi.NftActivityType.Sale],
+        activityTypes: [NftActivityType.Sale],
       },
     },
     pollInterval: PollingInterval.Slow,
@@ -305,7 +309,7 @@ function NFTItemScreenContents({
                           <BaseCard.ErrorState
                             retryButtonLabel={t('common.button.retry')}
                             title={t('tokens.nfts.details.error.load.title')}
-                            onRetry={(): Promise<ApolloQueryResult<GraphQLApi.NftItemScreenQuery>> => refetch()}
+                            onRetry={(): Promise<ApolloQueryResult<NftItemScreenQuery>> => refetch()}
                           />
                         )}
                       </Flex>
@@ -402,7 +406,7 @@ function NFTItemScreenContents({
                           justifyContent="center"
                           onPress={onPressCopyAddress}
                         >
-                          <Text variant="body2">{shortenAddress({ address: contractAddress })}</Text>
+                          <Text variant="body2">{shortenAddress(contractAddress)}</Text>
                           <CopyAlt color="$neutral3" size="$icon.16" />
                         </TouchableArea>
                       }

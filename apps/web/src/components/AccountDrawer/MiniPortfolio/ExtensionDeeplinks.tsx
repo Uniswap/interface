@@ -1,9 +1,10 @@
 import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import { useOpenLimitOrders, usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
 import { Pool } from 'components/Icons/Pool'
-import { ExtensionRequestMethods, useUniswapExtensionRequest } from 'components/WalletModal/useWagmiConnectorWithId'
+import { ExtensionRequestMethods, useUniswapExtensionConnector } from 'components/WalletModal/useConnectorWithId'
+import { useUpdateAtom } from 'jotai/utils'
 import { useTheme } from 'lib/styled-components'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -46,9 +47,9 @@ const DeepLinkButton = ({ Icon, Label, onPress }: { Icon: JSX.Element; Label: st
 export function ExtensionDeeplinks({ account }: { account: string }) {
   const { t } = useTranslation()
   const theme = useTheme()
-  const uniswapExtensionRequest = useUniswapExtensionRequest()
+  const uniswapExtensionConnector = useUniswapExtensionConnector()
   const accountDrawer = useAccountDrawer()
-  const setMenu = useSetMenu()
+  const setMenu = useUpdateAtom(miniPortfolioMenuStateAtom)
   const { openLimitOrders } = useOpenLimitOrders(account)
 
   const [activityUnread, setActivityUnread] = useState(false)
@@ -64,7 +65,7 @@ export function ExtensionDeeplinks({ account }: { account: string }) {
     positionStatuses: [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE, PositionStatus.CLOSED],
   })
 
-  if (!uniswapExtensionRequest) {
+  if (!uniswapExtensionConnector) {
     return null
   }
 
@@ -74,7 +75,7 @@ export function ExtensionDeeplinks({ account }: { account: string }) {
         Icon={<Image height={iconSizes.icon20} source={UNISWAP_LOGO} width={iconSizes.icon20} />}
         Label={t('extension.open')}
         onPress={() => {
-          uniswapExtensionRequest(ExtensionRequestMethods.OPEN_SIDEBAR, 'Tokens')
+          uniswapExtensionConnector.extensionRequest(ExtensionRequestMethods.OPEN_SIDEBAR, 'Tokens')
           accountDrawer.close()
         }}
       />
@@ -87,7 +88,7 @@ export function ExtensionDeeplinks({ account }: { account: string }) {
         }
         Label={t('common.activity')}
         onPress={() => {
-          uniswapExtensionRequest(ExtensionRequestMethods.OPEN_SIDEBAR, 'Activity')
+          uniswapExtensionConnector.extensionRequest(ExtensionRequestMethods.OPEN_SIDEBAR, 'Activity')
           accountDrawer.close()
           setActivityUnread(false)
         }}
@@ -96,14 +97,14 @@ export function ExtensionDeeplinks({ account }: { account: string }) {
         <DeepLinkButton
           Icon={<Pool width="20px" height="20px" fill={theme.neutral1} />}
           Label={t('common.pools')}
-          onPress={() => setMenu({ variant: MenuStateVariant.POOLS })}
+          onPress={() => setMenu(MenuState.POOLS)}
         />
       )}
       {openLimitOrders.length > 0 && (
         <DeepLinkButton
           Icon={<ArrowRightToLine size="$icon.20" color="$neutral1" />}
           Label={t('common.limits')}
-          onPress={() => setMenu({ variant: MenuStateVariant.LIMITS })}
+          onPress={() => setMenu(MenuState.LIMITS)}
         />
       )}
     </Flex>

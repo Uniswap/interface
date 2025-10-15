@@ -13,22 +13,21 @@ import { SendAction } from 'ui/src/components/icons/SendAction'
 import { ShareArrow } from 'ui/src/components/icons/ShareArrow'
 import { MenuOptionItemWithId } from 'uniswap/src/components/menus/ContextMenuV2'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
-import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { selectHasViewedContractAddressExplainer } from 'uniswap/src/features/behaviorHistory/selectors'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioCacheUpdater } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName, SectionName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTokenVisibility } from 'uniswap/src/features/visibility/selectors'
 import { setTokenVisibility } from 'uniswap/src/features/visibility/slice'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { isExtensionApp, isMobileApp, isWebPlatform } from 'utilities/src/platform'
+import { isExtension, isMobileApp, isWeb } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export enum TokenMenuActionType {
@@ -68,7 +67,11 @@ export function useTokenContextMenuOptions({
   const dispatch = useDispatch()
   const { defaultChainId } = useEnabledChains()
 
-  const activeAddresses = useActiveAddresses()
+  const { evmAccount } = useWallet()
+  const activeAccountAddress = evmAccount?.address
+  if (!activeAccountAddress) {
+    throw new Error('No active account address')
+  }
 
   const { navigateToSwapFlow, navigateToReceive, navigateToSendFlow, handleShareToken, navigateToTokenDetails } =
     useUniswapContext()
@@ -118,7 +121,7 @@ export function useTokenContextMenuOptions({
     handleShareToken({ currencyId })
   }, [currencyId, handleShareToken])
 
-  const updateCache = usePortfolioCacheUpdater(activeAddresses.evmAddress, activeAddresses.svmAddress)
+  const updateCache = usePortfolioCacheUpdater(activeAccountAddress)
 
   const hasViewedContractAddressExplainer = useSelector(selectHasViewedContractAddressExplainer)
 
@@ -146,7 +149,7 @@ export function useTokenContextMenuOptions({
       // we log the state to which it's transitioning
       visible: !isVisible,
     })
-    dispatch(setTokenVisibility({ currencyId: normalizeCurrencyIdForMapLookup(currencyId), isVisible: !isVisible }))
+    dispatch(setTokenVisibility({ currencyId: currencyId.toLowerCase(), isVisible: !isVisible }))
 
     if (tokenSymbolForNotification) {
       dispatch(
@@ -169,26 +172,19 @@ export function useTokenContextMenuOptions({
         onPress: () => onPressSwap(CurrencyField.INPUT),
         Icon: CoinConvert,
       },
-    ]
-
-    const isSolanaToken = currencyIdToChain(currencyId) === UniverseChainId.Solana
-
-    // Only add Send action for non-Solana tokens
-    if (!isSolanaToken) {
-      actions.push({
+      {
         id: TokenMenuActionType.Send,
         label: t('common.button.send'),
         onPress: onPressSend,
         Icon: SendAction,
-      })
-    }
-
-    actions.push({
-      id: TokenMenuActionType.Receive,
-      label: t('common.button.receive'),
-      onPress: navigateToReceive,
-      Icon: ReceiveAlt,
-    })
+      },
+      {
+        id: TokenMenuActionType.Receive,
+        label: t('common.button.receive'),
+        onPress: navigateToReceive,
+        Icon: ReceiveAlt,
+      },
+    ]
 
     if (!isTestnetModeEnabled && copyAddressToClipboard && !isNative) {
       actions.push({
@@ -199,7 +195,7 @@ export function useTokenContextMenuOptions({
       })
     }
 
-    if (!isWebPlatform) {
+    if (!isWeb) {
       actions.push({
         id: TokenMenuActionType.Share,
         label: t('common.button.share'),
@@ -208,7 +204,7 @@ export function useTokenContextMenuOptions({
       })
     }
 
-    if (isExtensionApp && !isTestnetModeEnabled) {
+    if (isExtension && !isTestnetModeEnabled) {
       actions.push({
         id: TokenMenuActionType.ViewDetails,
         label: t('common.button.viewDetails'),
@@ -237,7 +233,6 @@ export function useTokenContextMenuOptions({
       return actions
     }
   }, [
-    currencyId,
     t,
     isBlocked,
     onPressSend,

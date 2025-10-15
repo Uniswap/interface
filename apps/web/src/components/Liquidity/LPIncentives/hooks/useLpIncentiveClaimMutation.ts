@@ -1,9 +1,9 @@
 import { useMutation } from '@tanstack/react-query'
 import { Token } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
 import { useAccount } from 'hooks/useAccount'
 import { useLpIncentivesClaim } from 'hooks/useLpIncentivesClaim'
 import { useLpIncentivesClaimData } from 'hooks/useLpIncentivesClaimData'
+import { ChainId, Distributor } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
@@ -30,7 +30,7 @@ export function useLpIncentiveClaimMutation({ token, onSuccess, onClose, onError
         walletAddress: address,
         chainId: token.chainId,
         tokens: [token.address],
-        distributor: TradingApi.Distributor.MERKL,
+        distributor: Distributor.MERKL,
       })
       if (error) {
         sendAnalyticsEvent(UniswapEventName.LpIncentiveCollectRewardsErrorThrown, {
@@ -50,7 +50,7 @@ export function useLpIncentiveClaimMutation({ token, onSuccess, onClose, onError
             walletMeta: { id: 'test-id', name: 'test', icon: 'test' }, // hmm
           },
           claimData: data,
-          chainId: chainId as unknown as TradingApi.ChainId,
+          chainId: chainId as unknown as ChainId,
           tokenAddress: token.address,
           onSuccess: () => {
             resolve()

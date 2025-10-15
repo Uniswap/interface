@@ -1,12 +1,10 @@
 import { memo } from 'react'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import { Tooltip } from 'ui/src/components/tooltip/Tooltip'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
-import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
+import type { OnchainItemSection } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
-import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 function _TokenCard({
@@ -27,10 +25,8 @@ function _TokenCard({
   }
 
   const tokenLabel = getSymbolDisplayText(currency.symbol)
-  const isBridgingToken = section.sectionKey === OnchainItemSectionName.BridgingTokens
-  const chainLabel = getChainLabel(currency.chainId)
 
-  const tokenCard = (
+  return (
     <TouchableArea
       hoverable
       borderRadius="$roundedFull"
@@ -59,22 +55,6 @@ function _TokenCard({
       </Flex>
     </TouchableArea>
   )
-
-  // for bridgeable assets, show a tooltip with the chain name
-  if (isBridgingToken) {
-    return (
-      <Tooltip placement="bottom" offset={{ mainAxis: 4 }} delay={{ close: 0, open: 750 }}>
-        <Tooltip.Trigger>{tokenCard}</Tooltip.Trigger>
-        <Tooltip.Content>
-          <Text variant="body3" color="$neutral1">
-            {chainLabel}
-          </Text>
-        </Tooltip.Content>
-      </Tooltip>
-    )
-  }
-
-  return tokenCard
 }
 
 export const TokenCard = memo(_TokenCard)

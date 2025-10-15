@@ -1,5 +1,4 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { TradingApi } from '@universe/api'
 import { getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
 import { getProtocolItems } from 'components/Liquidity/utils/protocolVersion'
 import JSBI from 'jsbi'
@@ -8,6 +7,8 @@ import type { RemoveLiquidityTxInfo } from 'pages/RemoveLiquidity/RemoveLiquidit
 import { useEffect, useMemo, useState } from 'react'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useDecreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useDecreaseLpPositionCalldataQuery'
+import type { CheckApprovalLPRequest, DecreaseLPPositionRequest } from 'uniswap/src/data/tradingApi/__generated__'
+import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
@@ -30,12 +31,12 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
   const currency0 = currencies?.TOKEN0
   const currency1 = currencies?.TOKEN1
 
-  const v2LpTokenApprovalQueryParams: TradingApi.CheckApprovalLPRequest | undefined = useMemo(() => {
+  const v2LpTokenApprovalQueryParams: CheckApprovalLPRequest | undefined = useMemo(() => {
     if (!positionInfo || !positionInfo.liquidityToken || percentInvalid || !positionInfo.liquidityAmount) {
       return undefined
     }
     return {
-      protocol: TradingApi.ProtocolItems.V2,
+      protocol: ProtocolItems.V2,
       walletAddress: account,
       chainId: positionInfo.liquidityToken.chainId,
       positionToken: positionInfo.liquidityToken.address,
@@ -78,7 +79,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
 
   const { token0UncollectedFees, token1UncollectedFees } = positionInfo ?? {}
 
-  const decreaseCalldataQueryParams = useMemo((): TradingApi.DecreaseLPPositionRequest | undefined => {
+  const decreaseCalldataQueryParams = useMemo((): DecreaseLPPositionRequest | undefined => {
     const apiProtocolItems = getProtocolItems(positionInfo?.version)
     if (!positionInfo || !apiProtocolItems || !account || percentInvalid || !currency0 || !currency1) {
       return undefined
@@ -147,7 +148,6 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
         (!v2ApprovalLoading && !approvalError && Boolean(v2LpTokenApproval))),
   })
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +decreaseCalldataQueryParams
   useEffect(() => {
     setTransactionError(getErrorMessageToDisplay({ approvalError, calldataError }))
   }, [calldataError, decreaseCalldataQueryParams, approvalError])

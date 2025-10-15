@@ -5,21 +5,20 @@
   "exclude": [".storybook/storybook.requires.ts"],
   "references": [
     {
-      "path": "../../packages/wallet"
+      "path": "../../packages/ui"
     },
     {
       "path": "../../packages/utilities"
     },
     {
-      "path": "../../packages/uniswap"
+      "path": "../../packages/wallet"
     },
     {
-      "path": "../../packages/api"
+      "path": "../../packages/uniswap"
     }
   ],
   "compilerOptions": {
     "baseUrl": "./",
     "types": ["jest", "node"]
-  },
-  "include": ["**/*.ts", "**/*.tsx", "global.d.ts"]
+  }
 }

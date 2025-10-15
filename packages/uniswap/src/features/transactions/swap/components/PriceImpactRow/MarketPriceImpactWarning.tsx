@@ -1,4 +1,3 @@
-import { TradingApi } from '@universe/api'
 import { TFunction } from 'i18next'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -8,12 +7,13 @@ import { zIndexes } from 'ui/src/theme'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isWebPlatform } from 'utilities/src/platform'
+import { isWeb } from 'utilities/src/platform'
 
-function getPriceImpactInfo({ t, routing, missing }: { t: TFunction; routing: TradingApi.Routing; missing: boolean }): {
+function getPriceImpactInfo({ t, routing, missing }: { t: TFunction; routing: Routing; missing: boolean }): {
   caption: string
   link: string
 } {
@@ -41,7 +41,7 @@ export function MarketPriceImpactWarningModal({
   children,
   routing,
   missing,
-}: PropsWithChildren<{ routing: TradingApi.Routing; missing: boolean }>): JSX.Element {
+}: PropsWithChildren<{ routing: Routing; missing: boolean }>): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
@@ -51,21 +51,17 @@ export function MarketPriceImpactWarningModal({
     <WarningInfo
       infoButton={
         <TouchableArea onPress={async () => await openUri({ uri: link })}>
-          <Text color="$accent1" variant={isWebPlatform ? 'body4' : 'buttonLabel2'}>
+          <Text color="$accent1" variant={isWeb ? 'body4' : 'buttonLabel2'}>
             {t('common.button.learn')}
           </Text>
         </TouchableArea>
       }
       modalProps={{
-        hideIcon: isWebPlatform,
+        hideIcon: isWeb,
         icon: <ChartBar color="$neutral1" size="$icon.18" />,
         backgroundIconColor: colors.surface2.get(),
         captionComponent: (
-          <Text
-            color="$neutral2"
-            textAlign={isWebPlatform ? 'left' : 'center'}
-            variant={isWebPlatform ? 'body4' : 'body2'}
-          >
+          <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={isWeb ? 'body4' : 'body2'}>
             {caption}
           </Text>
         ),

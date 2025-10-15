@@ -1,8 +1,8 @@
 import { AnimatePresence, Flex, useIsShortMobileDevice } from 'ui/src'
-import { ExactOutputUnavailableWarningRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/ExactOutputUnavailableWarningRow'
+import { FoTWarningRow } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/FoTWarningRow'
 import { GasAndWarningRows } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/GasAndWarningRows'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
-import { isWebPlatform } from 'utilities/src/platform'
+import { isWeb } from 'utilities/src/platform'
 
 /**
  * IMPORTANT: If you modify the footer layout, you must test this on a small device and verify that the `DecimalPad`
@@ -11,14 +11,15 @@ import { isWebPlatform } from 'utilities/src/platform'
  */
 export function SwapFormScreenFooter(): JSX.Element | null {
   const isShortMobileDevice = useIsShortMobileDevice()
-  const { outputTokenHasBuyTax, showFooter, showExactOutputUnavailableWarning, exactAmountToken, currencies } =
-    useSwapFormScreenStore((state) => ({
+  const { outputTokenHasBuyTax, showFooter, showWarning, exactAmountToken, currencies } = useSwapFormScreenStore(
+    (state) => ({
       outputTokenHasBuyTax: state.outputTokenHasBuyTax,
       showFooter: state.showFooter,
-      showExactOutputUnavailableWarning: state.showExactOutputUnavailableWarning,
+      showWarning: state.showWarning,
       exactAmountToken: state.exactAmountToken,
       currencies: state.currencies,
-    }))
+    }),
+  )
 
   if (!showFooter) {
     return null
@@ -28,7 +29,7 @@ export function SwapFormScreenFooter(): JSX.Element | null {
    * *********** IMPORTANT! ***********
    *
    * We *always* want to render `GasAndWarningRows` on native mobile,
-   * except when rendering an exact output unavailable warning.
+   * except when rendering a FoT warning.
    *
    * We do not want `GasAndWarningsRows` to be conditionally rendered
    * because it's used to calculate the available space for the `DecimalPad`,
@@ -36,16 +37,12 @@ export function SwapFormScreenFooter(): JSX.Element | null {
    *
    * *********** IMPORTANT! ***********
    */
-  const showGasAndWarningRows = isWebPlatform
-    ? exactAmountToken && !showExactOutputUnavailableWarning
-    : !showExactOutputUnavailableWarning
+  const showGasAndWarningRows = isWeb ? exactAmountToken && !showWarning : !showWarning
 
   return (
     <Flex minHeight="$spacing40" pt={isShortMobileDevice ? '$spacing8' : '$spacing12'}>
       <AnimatePresence>
-        {showExactOutputUnavailableWarning && (
-          <ExactOutputUnavailableWarningRow currencies={currencies} outputTokenHasBuyTax={outputTokenHasBuyTax} />
-        )}
+        {showWarning && <FoTWarningRow currencies={currencies} outputTokenHasBuyTax={outputTokenHasBuyTax} />}
       </AnimatePresence>
       {/* Accordion.Toggle is nested in GasAndWarningRows */}
       {showGasAndWarningRows && <GasAndWarningRows />}

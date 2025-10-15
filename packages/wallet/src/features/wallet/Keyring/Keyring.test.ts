@@ -1,4 +1,3 @@
-import { chrome } from 'jest-chrome'
 import {
   SAMPLE_PASSWORD,
   SAMPLE_SEED,
@@ -13,16 +12,10 @@ import {
   SAMPLE_SEED_ADDRESS_9,
   SAMPLE_SEED_ADDRESS_10,
 } from 'uniswap/src/test/fixtures'
+import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
 import { WebKeyring } from 'wallet/src/features/wallet/Keyring/Keyring.web'
 
-// Mock the chrome utilities to return valid chrome
-// Needed because the jest runner doesn't currently support platform file-splitting
-jest.mock('utilities/src/chrome/chrome', () => {
-  return {
-    // Re-import here due to jests's implicit hoisting of mocks
-    getChromeWithThrow: (): unknown => require('jest-chrome').chrome,
-  }
-})
+const chrome = getChromeWithThrow()
 
 type ChromeSessionStore = { [prop: string]: unknown }
 
@@ -31,6 +24,7 @@ const mockSessionStorage = (): unknown => {
 
   return {
     get: async (
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       key: string | string[] | { [key: string]: any } | null,
       _callback: (items: { [key: string]: unknown }) => void,
     ): Promise<Record<string, unknown>> => {
@@ -90,10 +84,6 @@ const mockSessionStorage = (): unknown => {
 }
 
 Object.defineProperty(chrome.storage, 'session', {
-  value: mockSessionStorage(),
-})
-
-Object.defineProperty(chrome.storage, 'local', {
   value: mockSessionStorage(),
 })
 
@@ -260,7 +250,6 @@ describe(WebKeyring, () => {
 
   describe('generateAddressesForMnemonicId', () => {
     beforeEach(() => {
-      // @ts-expect-error - jest-chrome doesn't have a session property
       jest.spyOn(chrome.storage.session, 'get').mockImplementation(() => {
         return new Promise((resolve) => {
           resolve({ [ENCRYPTION_KEY_KEY]: base64EncryptionKey })

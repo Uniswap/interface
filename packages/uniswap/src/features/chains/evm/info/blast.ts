@@ -1,14 +1,13 @@
 import { Token } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
 import { BLAST_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
+import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
   DEFAULT_RETRY_OPTIONS,
   getQuicknodeEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
-import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
 import {
   GqlChainId,
   NetworkLayer,
@@ -32,7 +31,7 @@ export const BLAST_CHAIN_INFO = {
   platform: Platform.EVM,
   assetRepoNetworkName: 'blast',
   backendChain: {
-    chain: GraphQLApi.Chain.Blast as GqlChainId,
+    chain: BackendChainId.Blast as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },
@@ -74,6 +73,5 @@ export const BLAST_CHAIN_INFO = {
     decimals: 18,
     address: '0x4300000000000000000000000000000000000004',
   },
-  gasConfig: GENERIC_L2_GAS_CONFIG,
   tradingApiPollingIntervalMs: 200,
 } as const satisfies UniverseChainInfo

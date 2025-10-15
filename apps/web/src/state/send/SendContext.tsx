@@ -132,7 +132,7 @@ export function SendContextProvider({ children }: PropsWithChildren) {
       setSendState,
       derivedSendInfo,
     }),
-    [derivedSendInfo, sendState],
+    [derivedSendInfo, setSendState, sendState],
   )
 
   return <SendContext.Provider value={value}>{children}</SendContext.Provider>

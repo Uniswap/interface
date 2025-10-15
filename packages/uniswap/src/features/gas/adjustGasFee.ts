@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
-import { FeeType } from '@universe/api'
 import { providers } from 'ethers/lib/ethers'
+import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { BigNumberMax } from 'uniswap/src/utils/number'
 

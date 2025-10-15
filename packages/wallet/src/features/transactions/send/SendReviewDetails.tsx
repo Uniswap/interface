@@ -19,8 +19,8 @@ import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TransactionModalFooterContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
@@ -35,7 +35,7 @@ import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
-import { isWebPlatform } from 'utilities/src/platform'
+import { isWeb } from 'utilities/src/platform'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useIsErc20Contract } from 'wallet/src/features/contracts/hooks'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
@@ -236,7 +236,7 @@ export function SendReviewDetails({
           <Text color="$neutral2" variant="body2">
             {t('send.review.modal.title')}
           </Text>
-          {isWebPlatform && (
+          {isWeb && (
             <TouchableArea onPress={onPrev}>
               <X color="$neutral2" size="$icon.20" />
             </TouchableArea>
@@ -282,7 +282,7 @@ export function SendReviewDetails({
                   {fiatOffRampMetaData.name}
                 </Text>
                 <Text color="$neutral2" variant="body4">
-                  {shortenAddress({ address: recipient })}
+                  {shortenAddress(recipient)}
                 </Text>
               </Flex>
             ) : (
@@ -301,7 +301,6 @@ export function SendReviewDetails({
             </Text>
             <AddressDisplay
               disableForcedWidth
-              flexGrow={false}
               address={account.address}
               hideAddressInSubtitle={true}
               horizontalGap="$spacing4"
@@ -334,7 +333,7 @@ export function SendReviewDetails({
 
       <TransactionModalFooterContainer>
         <Flex row gap="$spacing8">
-          {!isWebPlatform && <IconButton icon={<BackArrow />} emphasis="secondary" size="large" onPress={onPrev} />}
+          {!isWeb && <IconButton icon={<BackArrow />} emphasis="secondary" size="large" onPress={onPrev} />}
           <Button
             isDisabled={actionButtonProps.disabled}
             icon={ButtonAuthIcon ?? undefined}

@@ -7,18 +7,16 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { getRoutingForTransaction } from 'state/activity/utils'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { PendingTransactionDetails } from 'state/transactions/types'
-import { isConfirmedTx, isPendingTx, isUniswapXOrderPending } from 'state/transactions/utils'
+import { isConfirmedTx, isPendingTx } from 'state/transactions/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { selectTransactions } from 'uniswap/src/features/transactions/selectors'
 import { addTransaction, deleteTransaction, interfaceCancelTransaction } from 'uniswap/src/features/transactions/slice'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import type {
   InterfaceTransactionDetails,
   TransactionDetails,
   TransactionTypeInfo as TransactionInfo,
-  UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
   TransactionOriginType,
@@ -299,31 +297,4 @@ export function usePendingLPTransactionsChangeListener(callback: () => void) {
       callback()
     }
   }, [pendingLPTransactions, callback, previousPendingCount])
-}
-
-// TODO(PORT-343): unify with wallet
-export function useUniswapXOrderByOrderHash(orderHash?: string): UniswapXOrderDetails | undefined {
-  const allTransactions = useAllTransactionsByChain()
-
-  return useMemo(() => {
-    if (!orderHash) {
-      return undefined
-    }
-
-    return Object.values(allTransactions).find(
-      (tx): tx is UniswapXOrderDetails => isUniswapX(tx) && 'orderHash' in tx && tx.orderHash === orderHash,
-    )
-  }, [allTransactions, orderHash])
-}
-
-// TODO(PORT-343): unify with wallet
-export function usePendingUniswapXOrders(): UniswapXOrderDetails[] {
-  const allTransactions = useAllTransactionsByChain()
-  const account = useAccount()
-
-  return useMemo(() => {
-    return Object.values(allTransactions).filter(
-      (tx): tx is UniswapXOrderDetails => tx.from === account.address && isUniswapX(tx) && isUniswapXOrderPending(tx),
-    )
-  }, [account.address, allTransactions])
 }

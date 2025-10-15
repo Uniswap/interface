@@ -28,14 +28,6 @@ exports[`Routes > router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
-    "path": "/explore/tokens/solana/So11111111111111111111111111111111111111112",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
     "path": "/explore/tokens/:chainName/:tokenAddress",
   },
   {
@@ -69,14 +61,6 @@ exports[`Routes > router definition should match snapshot 1`] = `
     "getTitle": [Function],
     "nestedPaths": [],
     "path": "/explore/pools/:chainName/:poolAddress",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
-    "path": "/explore/toucan/:id",
   },
   {
     "enabled": [Function],
@@ -335,19 +319,6 @@ exports[`Routes > router definition should match snapshot 1`] = `
     "getTitle": [Function],
     "nestedPaths": [],
     "path": "/manage/passkey/:walletAddress",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [
-      "tokens",
-      "defi",
-      "nfts",
-      "activity",
-    ],
-    "path": "/portfolio",
   },
   {
     "enabled": [Function],

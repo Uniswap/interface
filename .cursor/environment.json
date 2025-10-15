@@ -1,0 +1,18 @@
+{
+  "snapshot": "Default",
+  "install": "npm add --global nx && curl -fsSL https://bun.sh/install | bash && source ~/.bashrc && bun install",
+  "terminals": [
+    {
+      "name": "Run mobile",
+      "command": "bun mobile start"
+    },
+    {
+      "name": "Run web",
+      "command": "bun web start"
+    },
+    {
+      "name": "Run extension",
+      "command": "bun extension start"
+    }
+  ]
+}

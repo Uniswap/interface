@@ -25,15 +25,14 @@ import { useNetworkFee } from 'uniswap/src/features/activity/hooks/useNetworkFee
 import { getFormattedSwapRatio, hasInterfaceFees } from 'uniswap/src/features/activity/utils/swapInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FORMAT_DATE_TIME_MEDIUM, useFormattedDateTime } from 'uniswap/src/features/language/localizedDayjs'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/utils/getAmountsFromTrade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   BridgeTransactionInfo,
-  LiquidityTransactionBaseInfos,
   OffRampSaleInfo,
   OnRampPurchaseInfo,
   OnRampTransferInfo,
@@ -93,7 +92,6 @@ function useTransactionDetailsInfoRows({
 
   switch (typeInfo.type) {
     case TransactionType.Approve:
-    case TransactionType.Permit2Approve:
     case TransactionType.NFTApprove:
     case TransactionType.NFTMint:
       if (typeInfo.dappInfo && typeInfo.dappInfo.name) {
@@ -174,8 +172,6 @@ function useTransactionDetailsInfoRows({
     case TransactionType.CollectFees:
     case TransactionType.CreatePair:
     case TransactionType.CreatePool:
-      specificRows.push(<PoolRow key="pool" typeInfo={typeInfo} />)
-      break
     case TransactionType.Wrap:
     case TransactionType.NFTTrade:
       // For now, these cases don't add any specific rows
@@ -197,7 +193,7 @@ function useTransactionDetailsInfoRows({
         if (address) {
           specificRows.push(
             <InfoRow key="contract" label={t('common.text.contract')}>
-              <Text variant="body3">{shortenAddress({ address })}</Text>
+              <Text variant="body3">{shortenAddress(address)}</Text>
               <TouchableArea
                 onPress={async (): Promise<void> => {
                   await openUri({
@@ -293,7 +289,7 @@ function TransactionOfframpRow({ transactionId }: { transactionId?: string }): J
           )
         }}
       >
-        <Text variant="body3">{shortenAddress({ address: transactionId })}</Text>
+        <Text variant="body3">{shortenAddress(transactionId)}</Text>
         <CopyAlt color="$neutral3" size="$icon.16" />
       </TouchableArea>
     </InfoRow>
@@ -406,21 +402,6 @@ function FORProviderRow({
         uri={isDarkMode ? typeInfo.serviceProvider.logoDarkUrl : typeInfo.serviceProvider.logoLightUrl}
       />
       <Text variant="body3">{typeInfo.serviceProvider.name}</Text>
-    </InfoRow>
-  )
-}
-
-function PoolRow({ typeInfo }: { typeInfo: LiquidityTransactionBaseInfos }): JSX.Element {
-  const { t } = useTranslation()
-
-  const currency0 = useCurrencyInfo(typeInfo.currency0Id)
-  const currency1 = useCurrencyInfo(typeInfo.currency1Id)
-
-  return (
-    <InfoRow label={t('common.pool')}>
-      <Text variant="body3">
-        {currency0?.currency.symbol ?? '-'} / {currency1?.currency.symbol ?? '-'}
-      </Text>
     </InfoRow>
   )
 }

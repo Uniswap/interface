@@ -44,9 +44,12 @@ export function SmartWalletNudgesProvider({ children }: { children: ReactNode })
     name?: string
   }>()
 
-  const openModal = useCallback((modal: ModalNameType): void => {
-    setActiveModal(modal)
-  }, [])
+  const openModal = useCallback(
+    (modal: ModalNameType): void => {
+      setActiveModal(modal)
+    },
+    [setActiveModal],
+  )
 
   const closeModal = useCallback((): void => {
     setActiveModal(null)
@@ -74,7 +77,6 @@ export function SmartWalletNudgesProvider({ children }: { children: ReactNode })
     delegationStatus.status === SmartWalletDelegationAction.PromptUpgrade &&
     !delegationStatus.loading
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: delegationStatus is used in shouldShowNudge calculation above
   useEffect(() => {
     if (last5792DappInfo && shouldShowNudge) {
       setDappInfo({

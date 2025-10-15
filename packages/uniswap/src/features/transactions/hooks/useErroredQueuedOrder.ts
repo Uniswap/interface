@@ -29,14 +29,8 @@ function isErroredQueuedOrder(tx: TransactionDetails): tx is ErroredQueuedOrder 
   )
 }
 
-export function useErroredQueuedOrders({
-  evmAddress,
-  svmAddress,
-}: {
-  evmAddress?: Address
-  svmAddress?: Address
-}): ErroredQueuedOrder[] | undefined {
-  const transactions = useSelectAddressTransactions({ evmAddress, svmAddress })
+export function useErroredQueuedOrders(address: Address | null): ErroredQueuedOrder[] | undefined {
+  const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {
     if (!transactions) {
       return undefined

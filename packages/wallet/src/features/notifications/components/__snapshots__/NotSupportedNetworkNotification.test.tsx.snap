@@ -5,33 +5,28 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
   <View
     collapsable={false}
     forwardedRef={[Function]}
-    jestAnimatedStyle={
-      {
-        "value": {
-          "opacity": 0,
-          "top": 12,
-          "transform": [
-            {
-              "translateY": -150,
-            },
-          ],
-          "width": "100%",
-        },
-      }
-    }
-    pointerEvents="none"
+    handlerTag={1}
+    handlerType="FlingGestureHandler"
+    onGestureHandlerEvent={[Function]}
+    pointerEvents="box-none"
     style={
       {
+        "alignItems": "center",
+        "borderBottomLeftRadius": 24,
+        "borderBottomRightRadius": 24,
+        "borderTopLeftRadius": 24,
+        "borderTopRightRadius": 24,
         "flexDirection": "column",
-        "opacity": 0,
-        "top": 12,
+        "justifyContent": "center",
+        "position": "absolute",
+        "top": 0,
         "transform": [
           {
             "translateY": -150,
           },
         ],
         "width": "100%",
-        "zIndex": 100001,
+        "zIndex": 1060,
       }
     }
   >
@@ -42,7 +37,7 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
           "borderBottomColor": {
             "dynamic": {
               "dark": "rgba(255,255,255,0.12)",
-              "light": "rgba(19, 19, 19, 0.08)",
+              "light": "rgba(34,34,34,0.05)",
             },
           },
           "borderBottomLeftRadius": 999999,
@@ -51,14 +46,14 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
           "borderLeftColor": {
             "dynamic": {
               "dark": "rgba(255,255,255,0.12)",
-              "light": "rgba(19, 19, 19, 0.08)",
+              "light": "rgba(34,34,34,0.05)",
             },
           },
           "borderLeftWidth": 1,
           "borderRightColor": {
             "dynamic": {
               "dark": "rgba(255,255,255,0.12)",
-              "light": "rgba(19, 19, 19, 0.08)",
+              "light": "rgba(34,34,34,0.05)",
             },
           },
           "borderRightWidth": 1,
@@ -66,7 +61,7 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
           "borderTopColor": {
             "dynamic": {
               "dark": "rgba(255,255,255,0.12)",
-              "light": "rgba(19, 19, 19, 0.08)",
+              "light": "rgba(34,34,34,0.05)",
             },
           },
           "borderTopLeftRadius": 999999,

@@ -44,7 +44,7 @@ export const TokenIcon = memo(
       onSelectCurrency({
         currency: currencyInfo.currency,
         field: currencyField,
-        allowCrossChainPair: false,
+        forceIsBridgePair: false,
         isPreselectedAsset: true,
       })
       sendSelectCurrencyEvent({

@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
-import { TradingApi } from '@universe/api'
 import { providers } from 'ethers/lib/ethers'
 import createSagaMiddleware from 'redux-saga'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { makeSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { transactionActions, transactionReducer } from 'uniswap/src/features/transactions/slice'
@@ -75,7 +75,7 @@ describe('TransactionRepositoryImplRedux', () => {
     typeInfo: mockTransactionTypeInfo,
     status: TransactionStatus.Pending,
     addedTime: Date.now(),
-    routing: TradingApi.Routing.CLASSIC,
+    routing: Routing.CLASSIC,
     options: {
       request: mockTransactionRequest,
     },

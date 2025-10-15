@@ -75,7 +75,7 @@ const getParsedObjectDisplay = ({
   depth = 0,
 }: {
   chainId: number
-  // biome-ignore lint/suspicious/noExplicitAny: Function handles arbitrary JSON data structure
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   obj: any
   depth?: number
 }): JSX.Element => {

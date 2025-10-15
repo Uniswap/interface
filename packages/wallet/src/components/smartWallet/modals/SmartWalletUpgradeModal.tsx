@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useEvent } from 'utilities/src/react/hooks'
 import { SmartWalletModal } from 'wallet/src/components/smartWallet/modals/SmartWalletModal'
 import { SmartWalletUnavailableModal } from 'wallet/src/components/smartWallet/modals/SmartWalletUnavailableModal'
 import {
@@ -53,26 +52,19 @@ export function SmartWalletUpgradeModals({
     }
   }, [dispatch, delegationStatus, showModal, account.address])
 
-  const handleSmartWalletDismiss = useEvent((): void => {
+  const handleSmartWalletDismiss = (): void => {
     dispatch(setHasDismissedSmartWalletHomeScreenNudge({ walletAddress: account.address, hasDismissed: true }))
     setShowModal(false)
 
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element: ElementName.SmartWalletNotNow })
-  })
+  }
 
-  const handleEnableSmartWalletClick = useEvent((): void => {
+  const handleEnableSmartWalletClick = (): void => {
     onEnableSmartWallet(() => setShowModal(false))
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, { element: ElementName.SmartWalletEnabled })
-  })
+  }
 
   const isModalOpen = showModal && isHomeScreenFocused
-
-  const handleOnClose = useEvent((): void => {
-    handleSmartWalletDismiss()
-    if (hasSmartWalletConsent) {
-      dispatch(setSmartWalletConsent({ address: account.address, smartWalletConsent: false }))
-    }
-  })
 
   switch (delegationStatus) {
     case SmartWalletDelegationAction.None:
@@ -83,7 +75,12 @@ export function SmartWalletUpgradeModals({
           isOpen={isModalOpen}
           displayName={selectedWalletDisplayName?.name || account.address}
           walletAddress={account.address}
-          onClose={handleOnClose}
+          onClose={() => {
+            handleSmartWalletDismiss()
+            if (hasSmartWalletConsent) {
+              dispatch(setSmartWalletConsent({ address: account.address, smartWalletConsent: false }))
+            }
+          }}
         />
       )
     case SmartWalletDelegationAction.PromptUpgrade:

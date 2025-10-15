@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useLPSlippageValue } from 'components/Liquidity/Create/hooks/useLPSlippageValues'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { useModalState } from 'hooks/useModalState'

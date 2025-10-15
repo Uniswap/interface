@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GeneratedIcon } from 'ui/src'
-import { Bank, SwapDotted } from 'ui/src/components/icons'
+import { Bank, SwapCoin } from 'ui/src/components/icons'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 interface TokenCTAButtonVariant {
@@ -40,7 +40,7 @@ export function useTokenDetailsCTAVariant({
   return useMemo(() => {
     const swapVariant = {
       title: t('common.button.swap'),
-      icon: SwapDotted,
+      icon: SwapCoin,
       onPress: () => onPressSwap(hasTokenBalance ? CurrencyField.INPUT : CurrencyField.OUTPUT),
     }
 

@@ -19,7 +19,6 @@ exports[`renders UnitagName with a name 1`] = `
       "opacity": 0,
     }
   }
-  testID="testing.uni.eth"
 >
   <Text
     allowFontScaling={true}
@@ -98,7 +97,6 @@ exports[`renders UnitagName without a name 1`] = `
       "opacity": 0,
     }
   }
-  testID="undefined.uni.eth"
 >
   <Text
     allowFontScaling={true}

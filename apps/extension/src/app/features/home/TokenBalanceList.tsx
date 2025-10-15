@@ -18,7 +18,7 @@ export const ExtensionTokenBalanceList = memo(function _ExtensionTokenBalanceLis
   const backgroundImageWrapperCallback = usePortfolioEmptyStateBackground()
   return (
     <TokenBalanceListWeb
-      evmOwner={owner}
+      owner={owner}
       onPressReceive={onPressReceive}
       onPressBuy={onPressBuy}
       backgroundImageWrapperCallback={backgroundImageWrapperCallback}

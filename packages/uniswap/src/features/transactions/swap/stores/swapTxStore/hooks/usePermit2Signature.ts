@@ -1,10 +1,9 @@
 import type { UseQueryResult } from '@tanstack/react-query'
 import { useQuery } from '@tanstack/react-query'
-import { TradingApi } from '@universe/api'
 import type { TypedDataField } from 'ethers/lib/ethers'
 import { useCallback } from 'react'
 import { useSigner } from 'uniswap/src/contexts/UniswapContext'
-
+import type { Permit } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { signTypedData } from 'uniswap/src/features/transactions/signing'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { queryWithoutCache } from 'utilities/src/reactQuery/queryOptions'
@@ -14,7 +13,7 @@ export function usePermit2SignatureWithData({
   permitData,
   skip,
 }: {
-  permitData: Maybe<TradingApi.Permit>
+  permitData: Maybe<Permit>
   skip?: boolean
 }): UseQueryResult<string | null> {
   const signer = useSigner()

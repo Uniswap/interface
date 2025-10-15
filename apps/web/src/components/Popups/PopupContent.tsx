@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useOpenOffchainActivityModal } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import {
   getFORTransactionToActivityQueryOptions,
+  getSignatureToActivityQueryOptions,
   getTransactionToActivityQueryOptions,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
@@ -12,7 +13,8 @@ import { POPUP_MAX_WIDTH } from 'components/Popups/constants'
 import { ToastRegularSimple } from 'components/Popups/ToastRegularSimple'
 import { useIsRecentFlashblocksNotification } from 'hooks/useIsRecentFlashblocksNotification'
 import { useTranslation } from 'react-i18next'
-import { useTransaction, useUniswapXOrderByOrderHash } from 'state/transactions/hooks'
+import { useOrder } from 'state/signatures/hooks'
+import { useTransaction } from 'state/transactions/hooks'
 import { isPendingTx } from 'state/transactions/utils'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -44,10 +46,10 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: Univer
       icon={<AlertTriangleFilled color="$yellow" size="32px" />}
       text={
         <Flex gap="$gap4" flexWrap="wrap" flex={1}>
-          <Text variant="body4" color="$neutral1">
+          <Text variant="body2" color="$neutral1">
             {t('common.failedSwitchNetwork')}
           </Text>
-          <Text variant="body4" color="$neutral2" flexWrap="wrap">
+          <Text variant="body3" color="$neutral2" flexWrap="wrap">
             {t('settings.switchNetwork.warning', { label: chainInfo.label })}
           </Text>
         </Flex>
@@ -57,7 +59,6 @@ export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: Univer
 }
 
 type ActivityPopupContentProps = { activity: Activity; onClick?: () => void; onClose: () => void }
-
 function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupContentProps) {
   const success = activity.status === TransactionStatus.Success
   const pending = activity.status === TransactionStatus.Pending
@@ -171,20 +172,18 @@ export function TransactionPopupContent({ hash, onClose }: { hash: string; onClo
 }
 
 export function UniswapXOrderPopupContent({ orderHash, onClose }: { orderHash: string; onClose: () => void }) {
-  const order = useUniswapXOrderByOrderHash(orderHash)
+  const order = useOrder(orderHash)
   const openOffchainActivityModal = useOpenOffchainActivityModal()
 
   const { formatNumberOrString } = useLocalizationContext()
-
-  const { data: activity } = useQuery(
-    getTransactionToActivityQueryOptions({ transaction: order, formatNumber: formatNumberOrString }),
-  )
+  const { data: activity } = useQuery(getSignatureToActivityQueryOptions(order, formatNumberOrString))
 
   if (!activity || !order) {
     return null
   }
 
-  const onClick = () => openOffchainActivityModal(order)
+  const onClick = () =>
+    openOffchainActivityModal(order, { inputLogo: activity.logos?.[0], outputLogo: activity.logos?.[1] })
 
   return <ActivityPopupContent activity={activity} onClose={onClose} onClick={onClick} />
 }

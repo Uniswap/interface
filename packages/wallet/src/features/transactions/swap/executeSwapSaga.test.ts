@@ -1,16 +1,15 @@
 /* eslint-disable max-lines */
 import { call } from '@redux-saga/core/effects'
-import { TradingApi } from '@universe/api'
 import { expectSaga } from 'redux-saga-test-plan'
-import type { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
+import { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
 import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
-
 import {
   getShouldWaitBetweenTransactions,
   getSwapTransactionCount,
@@ -37,10 +36,9 @@ import {
   prepareUniswapXSwapTxContext,
 } from 'wallet/src/features/transactions/swap/types/fixtures'
 import {
-  type TransactionExecutionResult,
+  TransactionExecutionResult,
   TransactionStepType,
 } from 'wallet/src/features/transactions/swap/types/transactionExecutor'
-import { DelegationType } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 
 // Mock dependencies
 jest.mock('wallet/src/features/transactions/factories/createTransactionServices')
@@ -79,13 +77,10 @@ describe('executeSwapSaga', () => {
         account,
         chainId: CHAIN_ID,
         submitViaPrivateRpc: false,
-        delegationType: DelegationType.Auto,
+        includesDelegation: false,
         request: mockSwapTxRequest,
       }),
-      {
-        transactionSigner: mockTransactionSigner,
-        transactionService: mockTransactionService,
-      },
+      { transactionSigner: mockTransactionSigner, transactionService: mockTransactionService },
     ],
     [
       call(getShouldWaitBetweenTransactions, {
@@ -269,7 +264,7 @@ describe('executeSwapSaga', () => {
     it('should execute a wrap transaction', async () => {
       const params = prepareExecuteSwapSagaParams({
         swapTxContext: prepareSwapTxContext({
-          routing: TradingApi.Routing.WRAP,
+          routing: Routing.WRAP,
           trade: mockWrapTrade,
         }),
       })
@@ -302,7 +297,7 @@ describe('executeSwapSaga', () => {
 
       const params = prepareExecuteSwapSagaParams({
         swapTxContext: prepareSwapTxContext({
-          routing: TradingApi.Routing.WRAP,
+          routing: Routing.WRAP,
           trade: mockWrapTrade,
           approveTxRequest: {
             to: '0xtoken',
@@ -352,7 +347,7 @@ describe('executeSwapSaga', () => {
 
       const params = prepareExecuteSwapSagaParams({
         swapTxContext: prepareSwapTxContext({
-          routing: TradingApi.Routing.WRAP,
+          routing: Routing.WRAP,
           trade: mockWrapTrade,
           approveTxRequest: {
             to: '0xtoken',
@@ -395,7 +390,7 @@ describe('executeSwapSaga', () => {
     it('should call onFailure and log error when wrap transaction fails', async () => {
       const params = prepareExecuteSwapSagaParams({
         swapTxContext: prepareSwapTxContext({
-          routing: TradingApi.Routing.WRAP,
+          routing: Routing.WRAP,
           trade: mockWrapTrade,
         }),
       })
@@ -441,7 +436,7 @@ describe('executeSwapSaga', () => {
           },
           typeInfo: { type: TransactionType.Swap },
           quote: params.swapTxContext.trade.quote.quote,
-          routing: TradingApi.Routing.DUTCH_V2,
+          routing: Routing.DUTCH_V2,
           txId: 'test-tx-id',
           onSuccess: params.onSuccess,
           onFailure: params.onFailure,
@@ -530,7 +525,7 @@ describe('executeSwapSaga', () => {
     it('should execute a bridge transaction', async () => {
       const params = prepareExecuteSwapSagaParams({
         swapTxContext: prepareSwapTxContext({
-          routing: TradingApi.Routing.BRIDGE,
+          routing: Routing.BRIDGE,
           trade: mockBridgeTrade,
         }),
       })
@@ -563,7 +558,7 @@ describe('executeSwapSaga', () => {
 
       const params = prepareExecuteSwapSagaParams({
         swapTxContext: prepareSwapTxContext({
-          routing: TradingApi.Routing.BRIDGE,
+          routing: Routing.BRIDGE,
           trade: mockBridgeTrade,
           approveTxRequest: {
             to: '0xtoken',
@@ -613,7 +608,7 @@ describe('executeSwapSaga', () => {
 
       const params = prepareExecuteSwapSagaParams({
         swapTxContext: prepareSwapTxContext({
-          routing: TradingApi.Routing.BRIDGE,
+          routing: Routing.BRIDGE,
           trade: mockBridgeTrade,
           approveTxRequest: {
             to: '0xtoken',
@@ -656,7 +651,7 @@ describe('executeSwapSaga', () => {
     it('should call onFailure and log error when bridge transaction fails', async () => {
       const params = prepareExecuteSwapSagaParams({
         swapTxContext: prepareSwapTxContext({
-          routing: TradingApi.Routing.BRIDGE,
+          routing: Routing.BRIDGE,
           trade: mockBridgeTrade,
         }),
       })
@@ -688,7 +683,7 @@ describe('executeSwapSaga', () => {
 
       const params = prepareExecuteSwapSagaParams({
         swapTxContext: prepareSwapTxContext({
-          routing: TradingApi.Routing.CLASSIC,
+          routing: Routing.CLASSIC,
           trade: mockClassicTrade,
           approveTxRequest: {
             to: '0xtoken',
@@ -712,13 +707,10 @@ describe('executeSwapSaga', () => {
               account,
               chainId: CHAIN_ID,
               submitViaPrivateRpc: false,
-              delegationType: DelegationType.Auto,
+              includesDelegation: false,
               request: mockSwapTxRequest,
             }),
-            {
-              transactionSigner: mockTransactionSigner,
-              transactionService: mockTransactionService,
-            },
+            { transactionSigner: mockTransactionSigner, transactionService: mockTransactionService },
           ],
           [
             call(getShouldWaitBetweenTransactions, {
@@ -738,7 +730,7 @@ describe('executeSwapSaga', () => {
     it('should call onSuccess immediately when no spacing is required', async () => {
       const params = prepareExecuteSwapSagaParams({
         swapTxContext: prepareSwapTxContext({
-          routing: TradingApi.Routing.CLASSIC,
+          routing: Routing.CLASSIC,
           trade: mockClassicTrade,
         }),
       })
@@ -820,7 +812,7 @@ describe('executeSwapSaga', () => {
               account,
               chainId: CHAIN_ID,
               submitViaPrivateRpc: false,
-              delegationType: DelegationType.Auto,
+              includesDelegation: false,
               request: mockSwapTxRequest,
             }),
             Promise.reject(error),
@@ -885,13 +877,10 @@ describe('executeSwapSaga', () => {
               account,
               chainId: CHAIN_ID,
               submitViaPrivateRpc: false,
-              delegationType: DelegationType.Auto,
+              includesDelegation: false,
               request: mockSwapTxRequest,
             }),
-            {
-              transactionSigner: mockTransactionSigner,
-              transactionService: mockTransactionService,
-            },
+            { transactionSigner: mockTransactionSigner, transactionService: mockTransactionService },
           ],
           [
             call(getShouldWaitBetweenTransactions, {
@@ -943,13 +932,10 @@ describe('executeSwapSaga', () => {
               account,
               chainId: CHAIN_ID,
               submitViaPrivateRpc: true,
-              delegationType: DelegationType.Auto,
+              includesDelegation: false,
               request: mockSwapTxRequest,
             }),
-            {
-              transactionSigner: mockTransactionSigner,
-              transactionService: mockTransactionService,
-            },
+            { transactionSigner: mockTransactionSigner, transactionService: mockTransactionService },
           ],
           [
             call(getShouldWaitBetweenTransactions, {
@@ -964,7 +950,7 @@ describe('executeSwapSaga', () => {
           account,
           chainId: CHAIN_ID,
           submitViaPrivateRpc: true,
-          delegationType: DelegationType.Auto,
+          includesDelegation: false,
           request: mockSwapTxRequest,
         })
         .call(params.onSuccess)
@@ -1011,13 +997,10 @@ describe('Sync transaction submission', () => {
             account,
             chainId: CHAIN_ID,
             submitViaPrivateRpc: false,
-            delegationType: DelegationType.Auto,
+            includesDelegation: false,
             request: mockSwapTxRequest,
           }),
-          {
-            transactionSigner: mockTransactionSigner,
-            transactionService: mockTransactionService,
-          },
+          { transactionSigner: mockTransactionSigner, transactionService: mockTransactionService },
         ],
         [
           call(getShouldWaitBetweenTransactions, {

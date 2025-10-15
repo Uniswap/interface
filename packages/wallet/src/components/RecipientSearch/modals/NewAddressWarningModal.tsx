@@ -126,7 +126,7 @@ export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewA
                 variant="body3"
                 whiteSpace="initial"
               >
-                {shortenAddress({ address, chars: 6 })}
+                {shortenAddress(address, 6)}
               </Text>
             }
           />

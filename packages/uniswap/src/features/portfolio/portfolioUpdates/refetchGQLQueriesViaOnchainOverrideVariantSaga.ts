@@ -1,10 +1,13 @@
 import { ApolloClient, NormalizedCacheObject, Reference } from '@apollo/client'
 import { AsStoreObject, isArray, isReference } from '@apollo/client/utilities'
 import { QueryClient } from '@tanstack/react-query'
-import { GraphQLApi } from '@universe/api'
 import { call, delay, put } from 'typed-redux-saga'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
+import {
+  Amount,
+  PortfolioBalancesDocument,
+  PortfolioBalancesQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/portfolio/portfolioUpdates/constants'
 import { fetchOnChainBalances } from 'uniswap/src/features/portfolio/portfolioUpdates/fetchOnChainBalances'
@@ -87,8 +90,8 @@ function* modifyLocalCache({
 
   const { gqlChains } = yield* call(getEnabledChainIdsSaga)
 
-  const cachedPortfolio = apolloClient.readQuery<GraphQLApi.PortfolioBalancesQuery>({
-    query: GraphQLApi.PortfolioBalancesDocument,
+  const cachedPortfolio = apolloClient.readQuery<PortfolioBalancesQuery>({
+    query: PortfolioBalancesDocument,
     variables: {
       ownerAddress,
       chains: gqlChains,
@@ -145,7 +148,7 @@ function* modifyLocalCache({
             return
           }
 
-          const currencyId = normalizeCurrencyIdForMapLookup(buildCurrencyId(chainId, tokenAddress))
+          const currencyId = buildCurrencyId(chainId, tokenAddress).toLowerCase()
           const onchainBalance = onchainBalancesByCurrencyId.get(currencyId)
 
           if (!onchainBalance) {
@@ -184,7 +187,7 @@ function* modifyLocalCache({
               quantity: () => {
                 return onchainQuantity
               },
-              denominatedValue: (cachedDenominatedValue: Reference | AsStoreObject<GraphQLApi.Amount> | null) => {
+              denominatedValue: (cachedDenominatedValue: Reference | AsStoreObject<Amount> | null) => {
                 if (!cachedDenominatedValue) {
                   logger.debug(
                     'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
@@ -205,19 +208,16 @@ function* modifyLocalCache({
 
                 if (isReference(cachedDenominatedValue)) {
                   // This should never happen unless there's a regression in our apollo cache config.
-                  logger.error(
-                    new Error('Unexpected `cachedDenominatedValue` as Reference instead of GraphQLApi.Amount'),
-                    {
-                      tags: {
-                        file: 'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
-                        function: 'modifyLocalCache',
-                      },
-                      extra: {
-                        currencyId,
-                        cachedDenominatedValue,
-                      },
+                  logger.error(new Error('Unexpected `cachedDenominatedValue` as Reference instead of Amount'), {
+                    tags: {
+                      file: 'refetchGQLQueriesViaOnchainOverrideVariantSaga.ts',
+                      function: 'modifyLocalCache',
                     },
-                  )
+                    extra: {
+                      currencyId,
+                      cachedDenominatedValue,
+                    },
+                  })
                   return cachedDenominatedValue
                 }
 

@@ -1,4 +1,4 @@
-import { TradingApi } from '@universe/api'
+import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { createGetSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -39,10 +39,10 @@ const mockCreateGetSupportedChainId = createGetSupportedChainId as jest.Mock
 
 describe('protocols', () => {
   const allProtocols: FrontendSupportedProtocol[] = [
-    TradingApi.ProtocolItems.UNISWAPX_V2,
-    TradingApi.ProtocolItems.V4,
-    TradingApi.ProtocolItems.V3,
-    TradingApi.ProtocolItems.V2,
+    ProtocolItems.UNISWAPX_V2,
+    ProtocolItems.V4,
+    ProtocolItems.V3,
+    ProtocolItems.V2,
   ]
 
   beforeEach(() => {
@@ -71,7 +71,7 @@ describe('protocols', () => {
       })
 
       const result = protocolFilter(allProtocols, UniverseChainId.Mainnet)
-      expect(result).toEqual([TradingApi.ProtocolItems.V4, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V2])
+      expect(result).toEqual([ProtocolItems.V4, ProtocolItems.V3, ProtocolItems.V2])
     })
 
     it('filters out UniswapX when chain is not in LAUNCHED_UNISWAPX_CHAINS and no special conditions', () => {
@@ -84,7 +84,7 @@ describe('protocols', () => {
 
       // Polygon is not in LAUNCHED_UNISWAPX_CHAINS
       const result = protocolFilter(allProtocols, UniverseChainId.Polygon)
-      expect(result).toEqual([TradingApi.ProtocolItems.V4, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V2])
+      expect(result).toEqual([ProtocolItems.V4, ProtocolItems.V3, ProtocolItems.V2])
     })
 
     it('keeps UniswapX when priority orders are allowed', () => {
@@ -110,10 +110,10 @@ describe('protocols', () => {
 
       const result = protocolFilter(allProtocols, UniverseChainId.ArbitrumOne)
       expect(result).toEqual([
-        TradingApi.ProtocolItems.UNISWAPX_V3, // V2 replaced with V3
-        TradingApi.ProtocolItems.V4,
-        TradingApi.ProtocolItems.V3,
-        TradingApi.ProtocolItems.V2,
+        ProtocolItems.UNISWAPX_V3, // V2 replaced with V3
+        ProtocolItems.V4,
+        ProtocolItems.V3,
+        ProtocolItems.V2,
       ])
     })
 
@@ -126,11 +126,7 @@ describe('protocols', () => {
       })
 
       const result = protocolFilter(allProtocols, UniverseChainId.Mainnet)
-      expect(result).toEqual([
-        TradingApi.ProtocolItems.UNISWAPX_V2,
-        TradingApi.ProtocolItems.V3,
-        TradingApi.ProtocolItems.V2,
-      ])
+      expect(result).toEqual([ProtocolItems.UNISWAPX_V2, ProtocolItems.V3, ProtocolItems.V2])
     })
 
     it('handles empty protocol list', () => {
@@ -155,7 +151,7 @@ describe('protocols', () => {
 
       const result = protocolFilter(allProtocols, undefined)
       // When chainId is undefined, uniswapXAllowedForChain is false
-      expect(result).toEqual([TradingApi.ProtocolItems.V4, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V2])
+      expect(result).toEqual([ProtocolItems.V4, ProtocolItems.V3, ProtocolItems.V2])
     })
 
     it('verifies duplicate filtering logic does not cause issues', () => {
@@ -168,15 +164,15 @@ describe('protocols', () => {
 
       // Start with duplicate UNISWAPX_V2 entries
       const protocolsWithDuplicates: FrontendSupportedProtocol[] = [
-        TradingApi.ProtocolItems.UNISWAPX_V2,
-        TradingApi.ProtocolItems.UNISWAPX_V2,
-        TradingApi.ProtocolItems.V4,
-        TradingApi.ProtocolItems.V3,
+        ProtocolItems.UNISWAPX_V2,
+        ProtocolItems.UNISWAPX_V2,
+        ProtocolItems.V4,
+        ProtocolItems.V3,
       ]
 
       const result = protocolFilter(protocolsWithDuplicates, UniverseChainId.Mainnet)
       // Both duplicates should be filtered out
-      expect(result).toEqual([TradingApi.ProtocolItems.V4, TradingApi.ProtocolItems.V3])
+      expect(result).toEqual([ProtocolItems.V4, ProtocolItems.V3])
     })
   })
 
@@ -272,8 +268,8 @@ describe('protocols', () => {
 
       const result = getProtocolsFilter(allProtocols, UniverseChainId.ArbitrumOne)
       // Should have UNISWAPX_V3 instead of V2 due to ArbitrumDutchV3 flag
-      expect(result).toContain(TradingApi.ProtocolItems.UNISWAPX_V3)
-      expect(result).not.toContain(TradingApi.ProtocolItems.UNISWAPX_V2)
+      expect(result).toContain(ProtocolItems.UNISWAPX_V3)
+      expect(result).not.toContain(ProtocolItems.UNISWAPX_V2)
     })
 
     it('handles missing getIsUniswapXSupported (uses feature flag only)', () => {
@@ -287,7 +283,7 @@ describe('protocols', () => {
       })
 
       const result = getProtocolsFilter(allProtocols, UniverseChainId.Mainnet)
-      expect(result).toContain(TradingApi.ProtocolItems.UNISWAPX_V2)
+      expect(result).toContain(ProtocolItems.UNISWAPX_V2)
     })
 
     it('handles present getIsUniswapXSupported (combines with feature flag)', () => {
@@ -304,7 +300,7 @@ describe('protocols', () => {
 
       const result = getProtocolsFilter(allProtocols, UniverseChainId.Mainnet)
       // Should not contain UniswapX because chain support returned false
-      expect(result).not.toContain(TradingApi.ProtocolItems.UNISWAPX_V2)
+      expect(result).not.toContain(ProtocolItems.UNISWAPX_V2)
       expect(getIsUniswapXSupported).toHaveBeenCalledWith(UniverseChainId.Mainnet)
     })
 
@@ -318,11 +314,11 @@ describe('protocols', () => {
 
       // Test Mainnet (V4 allowed)
       const mainnetResult = getProtocolsFilter(allProtocols, UniverseChainId.Mainnet)
-      expect(mainnetResult).toContain(TradingApi.ProtocolItems.V4)
+      expect(mainnetResult).toContain(ProtocolItems.V4)
 
       // Test Polygon (V4 not allowed)
       const polygonResult = getProtocolsFilter(allProtocols, UniverseChainId.Polygon)
-      expect(polygonResult).not.toContain(TradingApi.ProtocolItems.V4)
+      expect(polygonResult).not.toContain(ProtocolItems.V4)
     })
 
     it('returns expected protocols for various chain/flag combinations', () => {
@@ -353,11 +349,7 @@ describe('protocols', () => {
       })
 
       const baseResult = getProtocolsFilter(allProtocols, UniverseChainId.Base)
-      expect(baseResult).toEqual([
-        TradingApi.ProtocolItems.V4,
-        TradingApi.ProtocolItems.V3,
-        TradingApi.ProtocolItems.V2,
-      ])
+      expect(baseResult).toEqual([ProtocolItems.V4, ProtocolItems.V3, ProtocolItems.V2])
     })
   })
 })

@@ -2,8 +2,8 @@ import { providers } from 'ethers'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { HexString } from 'utilities/src/addresses/hex'
+import { HexString } from 'uniswap/src/utils/hex'
+import { isAddress } from 'utilities/src/addresses/index'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { PublicClient } from 'viem'
@@ -58,20 +58,12 @@ export async function signAndSubmitTransaction({
       throw new Error('Delegation contract address not found')
     }
 
-    const delegationContractAddress = getValidAddress({
-      address: delegationInfo.contractAddress,
-      chainId,
-      withEVMChecksum: true,
-    }) as Nullable<HexString>
+    const delegationContractAddress = isAddress(delegationInfo.contractAddress)
     if (!delegationContractAddress) {
       throw new Error('Delegation contract address is invalid')
     }
 
-    const walletAddress = getValidAddress({
-      address: account.address,
-      chainId,
-      withEVMChecksum: true,
-    }) as Nullable<HexString>
+    const walletAddress = isAddress(account.address)
     if (!walletAddress) {
       throw new Error('Wallet address is invalid')
     }

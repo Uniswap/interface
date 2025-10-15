@@ -1,7 +1,6 @@
 import { useAccount } from 'hooks/useAccount'
 import { Navigate, useParams } from 'react-router'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
 import { getChainUrlParam } from 'utils/chainParams'
 
 export default function AddLiquidityV3WithTokenRedirects() {
@@ -23,7 +22,7 @@ export default function AddLiquidityV3WithTokenRedirects() {
   if (currencyIdA) {
     url.searchParams.append('currencyA', currencyIdA)
   }
-  if (currencyIdB && (!currencyIdA || !areCurrencyIdsEqual(currencyIdA, currencyIdB))) {
+  if (currencyIdB && currencyIdA?.toLowerCase() !== currencyIdB.toLowerCase()) {
     url.searchParams.append('currencyB', currencyIdB)
   }
   return <Navigate to={url.pathname + url.search} replace />

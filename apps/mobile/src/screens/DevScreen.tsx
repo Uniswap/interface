@@ -8,8 +8,8 @@ import { Screen } from 'src/components/layout/Screen'
 import { Flex, Switch, Text, TouchableArea } from 'ui/src'
 import { CheckmarkCircle, CopyAlt } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import {
   resetDismissedBridgedAssetWarnings,
   resetDismissedCompatibleAddressWarnings,

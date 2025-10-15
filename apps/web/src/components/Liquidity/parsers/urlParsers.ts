@@ -1,10 +1,4 @@
-import {
-  DEFAULT_FEE_DATA,
-  FeeData,
-  PositionFlowStep,
-  PriceRangeState,
-  RangeAmountInputPriceMode,
-} from 'components/Liquidity/Create/types'
+import { DEFAULT_FEE_DATA, FeeData, PositionFlowStep, PriceRangeState } from 'components/Liquidity/Create/types'
 import { DepositState } from 'components/Liquidity/types'
 import { checkIsNative } from 'hooks/Tokens'
 import { createParser, parseAsJson } from 'nuqs'
@@ -12,8 +6,7 @@ import { parseCurrencyFromURLParameter } from 'state/swap/hooks'
 import { PositionField } from 'types/position'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { isAddress } from 'utilities/src/addresses'
 import { getChainIdFromChainUrlParam, getChainUrlParam } from 'utils/chainParams'
 import { assume0xAddress } from 'utils/wagmi'
 import { z } from 'zod'
@@ -26,7 +19,6 @@ const priceRangeStateSchema: z.ZodSchema<Partial<PriceRangeState>> = z
     maxPrice: z.string(),
     initialPrice: z.string(),
     isInitialPriceDirty: z.boolean(),
-    inputMode: z.nativeEnum(RangeAmountInputPriceMode),
   })
   .partial()
 
@@ -55,7 +47,7 @@ export const parseAsCurrencyAddress = createParser({
       return null
     }
 
-    const parsedAddress = parseCurrencyFromURLParameter(query, Platform.EVM)
+    const parsedAddress = parseCurrencyFromURLParameter(query)
     return parsedAddress || null
   },
   serialize: (value: string) => value,
@@ -130,7 +122,7 @@ export const parseAsHookAddress = createParser({
       return null
     }
 
-    const validAddress = getValidAddress({ address: query, platform: Platform.EVM, withEVMChecksum: true })
+    const validAddress = isAddress(query)
     return validAddress ? assume0xAddress(validAddress) : null
   },
   serialize: (value: string) => value,

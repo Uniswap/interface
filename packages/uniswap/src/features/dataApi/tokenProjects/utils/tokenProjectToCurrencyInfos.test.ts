@@ -1,15 +1,18 @@
-import type { GraphQLApi } from '@universe/api'
+import {
+  Token as GQLToken,
+  TokenProject,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/tokenProjects/utils/tokenProjectToCurrencyInfos'
-import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { removeSafetyInfo, usdcTokenProject } from 'uniswap/src/test/fixtures'
 
 describe(tokenProjectToCurrencyInfos, () => {
   const project = usdcTokenProject()
 
-  const getExpectedResult = (token: GraphQLApi.Token): CurrencyInfo =>
+  const getExpectedResult = (token: GQLToken): CurrencyInfo =>
     ({
       logoUrl: project.logoUrl,
       currencyId: `${fromGraphQLChain(token.chain)}-${token.address}`,
@@ -46,12 +49,12 @@ describe(tokenProjectToCurrencyInfos, () => {
           chain: 'INVALID',
         },
       ],
-    } as GraphQLApi.TokenProject
+    } as TokenProject
 
     const result = tokenProjectToCurrencyInfos([projectWithInvalidTokens], UniverseChainId.Mainnet).map(
       removeSafetyInfo,
     )
 
-    expect(result).toEqual([getExpectedResult(project.tokens[0] as GraphQLApi.Token)])
+    expect(result).toEqual([getExpectedResult(project.tokens[0] as GQLToken)])
   })
 })

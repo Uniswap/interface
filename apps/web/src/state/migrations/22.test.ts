@@ -26,9 +26,7 @@ import { Language } from 'uniswap/src/features/language/constants'
 import * as languageUtils from 'uniswap/src/features/language/utils'
 
 vi.mock('utilities/src/platform', () => ({
-  isWebApp: true,
-  isMobileApp: false,
-  isExtensionApp: false,
+  isInterface: true,
 }))
 
 vi.mock('uniswap/src/features/language/utils', () => ({
@@ -36,6 +34,10 @@ vi.mock('uniswap/src/features/language/utils', () => ({
 }))
 
 const mockGetCurrentLanguageFromNavigator = vi.mocked(languageUtils.getCurrentLanguageFromNavigator)
+
+vi.mock('utilities/src/platform', () => ({
+  isInterface: true,
+}))
 
 vi.mock('uniswap/src/features/language/hooks', () => ({
   navigatorLocale: vi.fn().mockReturnValue('en-US'),

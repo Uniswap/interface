@@ -1,4 +1,5 @@
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { useAccount } from 'hooks/useAccount'
 import { ReactNode } from 'react'
@@ -11,7 +12,6 @@ import { capitalize } from 'tsafe'
 import { Button, Flex, Separator, styled } from 'ui/src'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { Unitag } from 'ui/src/components/icons/Unitag'
-import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -145,13 +145,11 @@ export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInner
                   {recipientData.unitag && <Unitag size={18} />}
                 </Flex>
               ) : (
-                shortenAddress({ address: recipientData?.address })
+                shortenAddress(recipientData?.address)
               )
             }
-            subheader={
-              (recipientData?.unitag || recipientData?.ensName) && shortenAddress({ address: recipientData.address })
-            }
-            image={<AccountIcon address={recipientData?.address} size={36} />}
+            subheader={(recipientData?.unitag || recipientData?.ensName) && shortenAddress(recipientData.address)}
+            image={<Identicon account={recipientData?.address} size={36} />}
           />
         </Flex>
         <Separator />

@@ -1,4 +1,4 @@
-// biome-ignore lint/style/noRestrictedImports: until the web app needs all of tamagui, avoid heavy imports there
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { SpaceTokens } from '@tamagui/core'
 import { PropsWithChildren } from 'react'
 import { Flex } from 'ui/src/components/layout/Flex'

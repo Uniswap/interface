@@ -37,7 +37,7 @@ let previewEntry = TokenPriceEntry(
   backgroundColor: ColorExtraction.extractImageColorWithSpecialCase(
     imageURL: "https://token-icons.s3.amazonaws.com/eth.png"
   ),
-  tokenPriceHistory: TokenPriceHistoryResponse(priceHistory: placeholderPriceHistory, price: 2165, pricePercentChange24h: -9.87)
+  tokenPriceHistory: TokenPriceHistoryResponse(priceHistory: placeholderPriceHistory)
 )
 
 let placeholderEntry = TokenPriceEntry(
@@ -80,20 +80,22 @@ struct Provider: IntentTimelineProvider {
     }
     var tokenPriceHistory: TokenPriceHistoryResponse? = nil
     
-    tokenPriceHistory = isSnapshot ?
-    try await DataQueries.fetchTokenPriceHistoryData(
-      chain: WidgetConstants.ethereumChain,
-      address: nil) :
-    try await DataQueries.fetchTokenPriceHistoryData(
-      chain: configuration.selectedToken?.chain ?? WidgetConstants.ethereumChain,
-      address: configuration.selectedToken?.address)
+    if (context.family == .systemMedium) {
+      tokenPriceHistory = isSnapshot ?
+      try await DataQueries.fetchTokenPriceHistoryData(
+        chain: WidgetConstants.ethereumChain,
+        address: nil) :
+      try await DataQueries.fetchTokenPriceHistoryData(
+        chain: configuration.selectedToken?.chain ?? WidgetConstants.ethereumChain,
+        address: configuration.selectedToken?.address)
+    }
     
     return TokenPriceEntry(
       date: entryDate,
       configuration: configuration,
       currency: conversionResponse.currency,
-      spotPrice: tokenPriceHistory?.price ?? spotPrice,
-      pricePercentChange: tokenPriceHistory?.pricePercentChange24h ?? pricePercentChange,
+      spotPrice: spotPrice,
+      pricePercentChange: pricePercentChange,
       symbol: symbol,
       logo: logo,
       backgroundColor: backgroundColor,

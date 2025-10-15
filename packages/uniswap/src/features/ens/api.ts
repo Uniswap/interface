@@ -5,7 +5,6 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
@@ -107,15 +106,13 @@ function useEnsQuery(type: EnsLookupType, nameOrAddress?: string | null) {
 }
 
 export function useENSName(address?: Address) {
-  const isValidEVMAddress = isEVMAddress(address)
-  return useEnsQuery(EnsLookupType.Name, isValidEVMAddress ? address : undefined)
+  return useEnsQuery(EnsLookupType.Name, address)
 }
 export function useAddressFromEns(maybeName: string | null) {
   return useEnsQuery(EnsLookupType.Address, maybeName)
 }
 export function useENSAvatar(address?: string | null) {
-  const isValidEVMAddress = isEVMAddress(address)
-  return useEnsQuery(EnsLookupType.Avatar, isValidEVMAddress ? address : undefined)
+  return useEnsQuery(EnsLookupType.Avatar, address)
 }
 export function useENSDescription(name?: string | null) {
   return useEnsQuery(EnsLookupType.Description, name)

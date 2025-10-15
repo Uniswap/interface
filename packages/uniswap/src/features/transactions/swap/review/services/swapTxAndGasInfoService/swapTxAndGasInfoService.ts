@@ -1,4 +1,4 @@
-import { TradingApi } from '@universe/api'
+import type { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
@@ -14,7 +14,7 @@ export interface SwapTxAndGasInfoService<T extends Trade = Trade> {
   getSwapTxAndGasInfo: (ctx: SwapTxAndGasInfoParameters<T>) => Promise<SwapTxAndGasInfo>
 }
 
-export type RoutingServicesMap = { [K in TradingApi.Routing]: SwapTxAndGasInfoService<Trade & { routing: K }> }
+export type RoutingServicesMap = { [K in Routing]: SwapTxAndGasInfoService<Trade & { routing: K }> }
 
 export function createSwapTxAndGasInfoService(ctx: { services: RoutingServicesMap }): SwapTxAndGasInfoService<Trade> {
   function getServiceForTrade<T extends Trade>(trade: T): SwapTxAndGasInfoService<T> {

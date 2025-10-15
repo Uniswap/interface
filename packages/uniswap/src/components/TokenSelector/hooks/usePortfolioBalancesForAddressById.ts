@@ -1,5 +1,5 @@
-import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
+import { GqlResult } from 'uniswap/src/data/types'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 

@@ -1,5 +1,5 @@
-import { CustomRankingType, RankingType } from '@universe/api'
 import { AppTFunction } from 'ui/src/i18n/types'
+import { CustomRankingType, RankingType } from 'uniswap/src/data/types'
 import { ExploreOrderBy, TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
 export function getTokenMetadataDisplayType(orderBy: ExploreOrderBy): TokenMetadataDisplayType {

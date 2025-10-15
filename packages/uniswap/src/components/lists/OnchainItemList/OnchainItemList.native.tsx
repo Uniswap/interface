@@ -20,8 +20,6 @@ export const OnchainItemList = memo(function _OnchainItemList({
   renderItem,
   renderSectionHeader,
   sections,
-  renderedInModal,
-  contentContainerStyle,
 }: OnchainItemListProps<OnchainItemListOption>): JSX.Element {
   const insets = useAppInsets()
   const ref = useRef<FlashList<ProcessedRow>>(null)
@@ -79,15 +77,13 @@ export const OnchainItemList = memo(function _OnchainItemList({
     },
     [keyExtractor],
   )
-  const ListComponent = renderedInModal ? AnimatedBottomSheetFlashList : FlashList
-
   return (
-    <ListComponent
+    <AnimatedBottomSheetFlashList
       ref={ref}
       data={data}
       ListEmptyComponent={ListEmptyComponent}
       estimatedItemSize={TOKEN_ITEM_SIZE}
-      contentContainerStyle={{ paddingBottom: insets.bottom, ...contentContainerStyle }}
+      contentContainerStyle={{ paddingBottom: insets.bottom }}
       keyboardShouldPersistTaps="always"
       keyExtractor={makeKey}
       keyboardDismissMode="on-drag"

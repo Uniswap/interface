@@ -1,12 +1,17 @@
-import { GraphQLApi } from '@universe/api'
 import { FeeData } from 'components/Liquidity/Create/types'
 import ms from 'ms'
 import { useMemo } from 'react'
 import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
+import {
+  ProtocolVersion,
+  Token,
+  useV2PairQuery,
+  useV3PoolQuery,
+  useV4PoolQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 
 interface RewardsCampaign {
   id: string
@@ -22,15 +27,15 @@ export interface PoolData {
   idOrAddress: string
   feeTier?: FeeData
   txCount?: number
-  protocolVersion?: GraphQLApi.ProtocolVersion
+  protocolVersion?: ProtocolVersion
   hookAddress?: string
 
   // token info
-  token0: GraphQLApi.Token
+  token0: Token
   tvlToken0?: number
   token0Price?: number
 
-  token1: GraphQLApi.Token
+  token1: Token
   tvlToken1?: number
   token1Price?: number
 
@@ -93,33 +98,31 @@ export function usePoolData({
 } {
   const { defaultChainId } = useEnabledChains()
   const chain = toGraphQLChain(chainId ?? defaultChainId)
-  const isSolanaChain = chainId && isSVMChain(chainId)
-
   const {
     loading: loadingV4,
     error: errorV4,
     data: dataV4,
-  } = GraphQLApi.useV4PoolQuery({
+  } = useV4PoolQuery({
     variables: { chain, poolId: poolIdOrAddress },
     errorPolicy: 'all',
-    skip: isPoolAddress || isSolanaChain,
+    skip: isPoolAddress,
   })
   const {
     loading: loadingV3,
     error: errorV3,
     data: dataV3,
-  } = GraphQLApi.useV3PoolQuery({
+  } = useV3PoolQuery({
     variables: { chain, address: poolIdOrAddress },
     errorPolicy: 'all',
-    skip: !isPoolAddress || isSolanaChain,
+    skip: !isPoolAddress,
   })
   const {
     loading: loadingV2,
     error: errorV2,
     data: dataV2,
-  } = GraphQLApi.useV2PairQuery({
+  } = useV2PairQuery({
     variables: { chain, address: poolIdOrAddress },
-    skip: !chainId || !isPoolAddress || isSolanaChain,
+    skip: !chainId || !isPoolAddress,
     errorPolicy: 'all',
   })
 
@@ -141,10 +144,10 @@ export function usePoolData({
             idOrAddress: poolId,
             txCount: pool.txCount,
             protocolVersion: pool.protocolVersion,
-            token0: pool.token0 as GraphQLApi.Token,
+            token0: pool.token0 as Token,
             tvlToken0: pool.token0Supply,
             token0Price: pool.token0?.project?.markets?.[0]?.price?.value ?? pool.token0?.market?.price?.value,
-            token1: pool.token1 as GraphQLApi.Token,
+            token1: pool.token1 as Token,
             tvlToken1: pool.token1Supply,
             token1Price: pool.token1?.project?.markets?.[0]?.price?.value ?? pool.token1?.market?.price?.value,
             feeTier,

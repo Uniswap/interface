@@ -6,8 +6,8 @@ import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
-import { isWebApp } from 'utilities/src/platform'
+import { currencyId } from 'uniswap/src/utils/currencyId'
+import { isInterface } from 'utilities/src/platform'
 
 /*
  * Display token protection warning modal on swap button click.
@@ -40,10 +40,10 @@ export function usePrefilledNeedsTokenProtectionWarning(
     const outputCurrencyId = outputCurrencyInfo && currencyId(outputCurrencyInfo.currency)
     const isInputPrefilled =
       inputCurrencyId &&
-      prefilledCurrencies?.some((currency) => areCurrencyIdsEqual(currencyId(currency), inputCurrencyId))
+      prefilledCurrencies?.some((currency) => currencyId(currency).toLowerCase() === inputCurrencyId.toLowerCase())
     const isOutputPrefilled =
       outputCurrencyId &&
-      prefilledCurrencies?.some((currency) => areCurrencyIdsEqual(currencyId(currency), outputCurrencyId))
+      prefilledCurrencies?.some((currency) => currencyId(currency).toLowerCase() === outputCurrencyId.toLowerCase())
 
     if (
       inputCurrencyInfo &&
@@ -70,7 +70,7 @@ export function usePrefilledNeedsTokenProtectionWarning(
     outputTokenWarningPreviouslyDismissed,
   ])
 
-  if (!isWebApp) {
+  if (!isInterface) {
     return {
       needsTokenProtectionWarning: false,
       currenciesWithProtectionWarnings: [],

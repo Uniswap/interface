@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { PositionInfo } from 'components/Liquidity/types'
@@ -11,6 +10,7 @@ import { useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { ClickableStyle } from 'theme/components/styles'
+import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 
 enum PoolDetailsTableTabs {
@@ -31,9 +31,9 @@ export function PoolDetailsTableTab({
   protocolVersion,
 }: {
   poolAddress: string
-  token0?: GraphQLApi.Token
-  token1?: GraphQLApi.Token
-  protocolVersion?: GraphQLApi.ProtocolVersion
+  token0?: Token
+  token1?: Token
+  protocolVersion?: ProtocolVersion
 }) {
   const [activeTable, setActiveTable] = useState<PoolDetailsTableTabs>(PoolDetailsTableTabs.TRANSACTIONS)
   const account = useAccount()

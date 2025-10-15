@@ -1,6 +1,6 @@
 import { isNonTestDev } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
-// biome-ignore lint/style/noRestrictedImports: Platform-specific implementation needs internal types
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { UserPropertyValue } from 'utilities/src/telemetry/analytics/analytics'
 
 interface ErrorLoggers {

@@ -1,7 +1,6 @@
 import 'test-utils/tokens/mocks'
 
 import userEvent from '@testing-library/user-event'
-import { GraphQLApi } from '@universe/api'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetailsStatsButtons'
 import { useAccount } from 'hooks/useAccount'
@@ -11,7 +10,7 @@ import { mocked } from 'test-utils/mocked'
 import { useMultiChainPositionsReturnValue, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { AccountsStore } from 'uniswap/src/features/accounts/store/types/AccountsState'
+import { Currency, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 import * as useSwapFormStoreModule from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
@@ -37,7 +36,7 @@ describe('PoolDetailsStatsButton', () => {
     token0: validBEPoolToken0,
     token1: validBEPoolToken1,
     feeTier: 500,
-    protocolVersion: GraphQLApi.ProtocolVersion.V3,
+    protocolVersion: ProtocolVersion.V3,
   } as const
 
   const mockPropsTokensReversed = {
@@ -64,7 +63,6 @@ describe('PoolDetailsStatsButton', () => {
     signer: undefined,
     useProviderHook: () => undefined,
     useWalletDisplayName: () => undefined,
-    useAccountsStoreContextHook: () => ({}) as AccountsStore,
   }
 
   beforeEach(() => {
@@ -81,7 +79,7 @@ describe('PoolDetailsStatsButton', () => {
           currencies: {
             INPUT: {
               currencyId: '0x',
-              currency: {} as GraphQLApi.Currency,
+              currency: {} as Currency,
             },
           },
           chainId: UniverseChainId.Mainnet,

@@ -258,7 +258,6 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     const { formatCurrencyAmount } = useLocalizationContext()
     const { t } = useTranslation()
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: +setModalOpen
     const handleDismissSearch = useCallback(() => {
       setModalOpen(false)
     }, [setModalOpen])
@@ -273,7 +272,6 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     }, [tooltipVisible, numericalInputSettings])
 
     // reset tooltip state when currency changes
-    // biome-ignore lint/correctness/useExhaustiveDependencies: currency dependency is sufficient for this effect
     useEffect(() => setTooltipVisible(false), [currency])
 
     const showCurrencyLoadingSpinner =

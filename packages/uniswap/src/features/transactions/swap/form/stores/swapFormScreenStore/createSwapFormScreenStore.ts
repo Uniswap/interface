@@ -42,7 +42,7 @@ export type SwapFormScreenStoreState = {
   tokenColor?: string
   walletNeedsRestore: boolean | undefined
   showFooter: boolean
-  showExactOutputUnavailableWarning: boolean | undefined
+  showWarning: boolean | undefined
   outputTokenHasBuyTax: boolean
   exactAmountToken: string | undefined
   isBridge: boolean
@@ -62,7 +62,7 @@ export type SwapFormScreenStoreState = {
   onOutputSelectionChange: (start: number, end: number) => void
   onSetExactAmountOutput: (amount: string) => void
   onShowTokenSelectorOutput: () => void
-  showTemporaryExactOutputUnavailableWarning: () => void
+  showTemporaryFoTWarning: () => void
   onDecimalPadTriggerInputShake: () => void
 }
 

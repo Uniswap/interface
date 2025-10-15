@@ -1,4 +1,4 @@
-import { TradingApi } from '@universe/api'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'
 import type { SwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
 import { createLogSwapRequestErrors } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
@@ -20,7 +20,7 @@ export function createDecorateSwapTxInfoServiceWithEVMLogging(ctx: {
       async getSwapTxAndGasInfo(params) {
         const result = await service.getSwapTxAndGasInfo(params)
 
-        if (result.routing === TradingApi.Routing.CLASSIC || result.routing === TradingApi.Routing.BRIDGE) {
+        if (result.routing === Routing.CLASSIC || result.routing === Routing.BRIDGE) {
           const { derivedSwapInfo } = params
           const { txId } = derivedSwapInfo
           const previousRequestId = txId ? swapFlowTxIdToRecentRequestIdMap.get(txId) : undefined

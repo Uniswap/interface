@@ -40,7 +40,7 @@ export class ProviderManager {
   tryGetProvider(chainId: UniverseChainId): ethersProviders.JsonRpcProvider | null {
     try {
       return this.getProvider(chainId)
-    } catch (_error) {
+    } catch (error) {
       return null
     }
   }

@@ -3,8 +3,6 @@ flows:
   - 'flows/swap/*'
   - 'flows/restore/*'
   - 'flows/deeplinks/*'
-  - 'flows/explore/*'
-  - 'flows/portfolio/*'
 baselineBranch: main
 executionOrder:
   continueOnFailure: true

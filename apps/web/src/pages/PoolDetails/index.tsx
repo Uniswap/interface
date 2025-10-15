@@ -1,7 +1,6 @@
 import { PoolData, usePoolData } from 'appGraphql/data/pools/usePoolData'
 import { calculateApr } from 'appGraphql/data/pools/useTopPools'
 import { gqlToCurrency, unwrapToken } from 'appGraphql/data/util'
-import { GraphQLApi } from '@universe/api'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { LpIncentivesPoolDetailsRewardsDistribution } from 'components/LpIncentives/LpIncentivesPoolDetailsRewardsDistribution'
@@ -25,13 +24,13 @@ import { Text } from 'rebass'
 import { ThemeProvider } from 'theme'
 import { Flex } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
+import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { isAddress } from 'utilities/src/addresses'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
 const PageWrapper = styled(Row)`
@@ -102,10 +101,10 @@ function getUnwrappedPoolToken({
 }: {
   poolData?: PoolData
   chainId?: number
-  protocolVersion?: GraphQLApi.ProtocolVersion
-}): [GraphQLApi.Token | undefined, GraphQLApi.Token | undefined] {
+  protocolVersion?: ProtocolVersion
+}): [Token | undefined, Token | undefined] {
   // for v4 pools can be created with ETH or WETH so we need to keep the original tokens
-  if (protocolVersion === GraphQLApi.ProtocolVersion.V4) {
+  if (protocolVersion === ProtocolVersion.V4) {
     return [poolData?.token0, poolData?.token1]
   }
 
@@ -120,9 +119,9 @@ export default function PoolDetailsPage() {
   const urlChain = useChainIdFromUrlParam()
   const chainInfo = urlChain ? getChainInfo(urlChain) : undefined
   const { data: poolData, loading } = usePoolData({
-    poolIdOrAddress: normalizeAddress(poolAddress ?? '', AddressStringFormat.Lowercase),
+    poolIdOrAddress: poolAddress?.toLowerCase() ?? '',
     chainId: chainInfo?.id,
-    isPoolAddress: isEVMAddress(poolAddress),
+    isPoolAddress: Boolean(isAddress(poolAddress)),
   })
   const [isReversed, toggleReversed] = useReducer((x) => !x, false)
   const unwrappedTokens = getUnwrappedPoolToken({
@@ -251,7 +250,7 @@ export default function PoolDetailsPage() {
               protocolVersion={poolData?.protocolVersion}
             />
           </LeftColumn>
-          <Flex gap="$spacing24" width={360} $xl={{ width: '100%', mt: 44, minWidth: 'unset', mb: 24 }}>
+          <Flex gap="$spacing24" width={360} $xl={{ width: '100%', mt: 44, minWidth: 'unset' }}>
             <Flex $xl={{ marginTop: -24 }}>
               <PoolDetailsStatsButtons
                 chainId={chainInfo.id}
@@ -279,7 +278,7 @@ export default function PoolDetailsPage() {
                 <Trans i18nKey="common.links" />
               </TokenDetailsHeader>
               <LinksContainer>
-                {poolData?.protocolVersion !== GraphQLApi.ProtocolVersion.V4 && (
+                {poolData?.protocolVersion !== ProtocolVersion.V4 && (
                   <PoolDetailsLink
                     address={poolAddress}
                     chainId={chainInfo.id}

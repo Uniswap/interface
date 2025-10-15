@@ -1,14 +1,18 @@
-import type { OnChainTransaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { Direction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { GraphQLApi } from '@universe/api'
+import { Direction, OnChainTransaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import {
+  TokenStandard,
+  TokenTransfer,
+  TransactionDirection,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { deriveCurrencyAmountFromAssetResponse } from 'uniswap/src/features/activity/utils/remote'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { ACROSS_DAPP_INFO } from 'uniswap/src/features/transactions/swap/utils/routing'
-import type {
+import {
   BridgeTransactionInfo,
+  TransactionDetailsType,
   TransactionListQueryResponse,
+  TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { TransactionDetailsType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
 type AssetChanges = NonNullable<
@@ -25,8 +29,8 @@ export default function parseBridgingTransaction(
     return undefined
   }
 
-  const outTokenTransfer = findTokenTransfer(transaction.details.assetChanges, GraphQLApi.TransactionDirection.Out)
-  const inTokenTransfer = findTokenTransfer(transaction.details.assetChanges, GraphQLApi.TransactionDirection.In)
+  const outTokenTransfer = findTokenTransfer(transaction.details.assetChanges, TransactionDirection.Out)
+  const inTokenTransfer = findTokenTransfer(transaction.details.assetChanges, TransactionDirection.In)
 
   const outChainId = fromGraphQLChain(outTokenTransfer?.asset.chain)
   const inChainId = fromGraphQLChain(inTokenTransfer?.asset.chain)
@@ -36,14 +40,14 @@ export default function parseBridgingTransaction(
   }
 
   const outCurrencyId =
-    outTokenTransfer.tokenStandard === GraphQLApi.TokenStandard.Native
+    outTokenTransfer.tokenStandard === TokenStandard.Native
       ? buildNativeCurrencyId(outChainId)
       : outTokenTransfer.asset.address
         ? buildCurrencyId(outChainId, outTokenTransfer.asset.address)
         : undefined
 
   const inCurrencyId =
-    inTokenTransfer.tokenStandard === GraphQLApi.TokenStandard.Native
+    inTokenTransfer.tokenStandard === TokenStandard.Native
       ? buildNativeCurrencyId(inChainId)
       : inTokenTransfer.asset.address
         ? buildCurrencyId(inChainId, inTokenTransfer.asset.address)
@@ -79,12 +83,9 @@ export default function parseBridgingTransaction(
   }
 }
 
-function findTokenTransfer(
-  assetChanges: AssetChanges,
-  direction: GraphQLApi.TransactionDirection,
-): GraphQLApi.TokenTransfer | undefined {
+function findTokenTransfer(assetChanges: AssetChanges, direction: TransactionDirection): TokenTransfer | undefined {
   return assetChanges.find(
-    (t): t is Extract<GraphQLApi.TokenTransfer, { __typename: 'TokenTransfer' }> =>
+    (t): t is Extract<TokenTransfer, { __typename: 'TokenTransfer' }> =>
       t?.__typename === 'TokenTransfer' && t.direction === direction,
   )
 }

@@ -1,6 +1,6 @@
-import { GraphQLApi } from '@universe/api'
 import { POLYGON_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
+import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
@@ -10,7 +10,6 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
-import { SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildDAI, buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
@@ -31,7 +30,7 @@ export const POLYGON_CHAIN_INFO = {
   assetRepoNetworkName: 'polygon',
   blockPerMainnetEpochForChainId: 5,
   backendChain: {
-    chain: GraphQLApi.Chain.Polygon as GqlChainId,
+    chain: BackendChainId.Polygon as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: '0x0000000000000000000000000000000000001010',
   },
@@ -73,16 +72,6 @@ export const POLYGON_CHAIN_INFO = {
     symbol: 'WPOL',
     decimals: 18,
     address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
-  },
-  gasConfig: {
-    send: {
-      configKey: SwapConfigKey.PolygonSendMinGasAmount,
-      default: 75, // .0075 MATIC
-    },
-    swap: {
-      configKey: SwapConfigKey.PolygonSwapMinGasAmount,
-      default: 600, // .06 MATIC
-    },
   },
   tradingApiPollingIntervalMs: 250,
 } as const satisfies UniverseChainInfo

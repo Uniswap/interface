@@ -1,4 +1,4 @@
-/* biome-ignore-all lint/suspicious/noExplicitAny: Chrome extension message passing requires flexible typing for arbitrary message payloads */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MessageParsers } from 'uniswap/src/extension/messagePassing/platform'
 import { logger } from 'utilities/src/logger/logger'
 

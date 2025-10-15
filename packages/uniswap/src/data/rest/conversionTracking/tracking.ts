@@ -1,7 +1,7 @@
 import type { PartialMessage } from '@bufbuild/protobuf'
-import { type ConversionTrackingApi } from '@universe/api'
 import { format } from 'date-fns'
 import ms from 'ms'
+import { ProxyRequest } from 'uniswap/src/data/rest/conversionTracking/api/api_pb'
 import {
   DEFAULT_HEADERS,
   GOOGLE_CONVERSION_DATETIME_FORMAT,
@@ -9,7 +9,7 @@ import {
   REDDIT_CONVERSION_URL,
   TWITTER_CONVERSION_URL,
 } from 'uniswap/src/data/rest/conversionTracking/constants'
-import { type BuildProxyRequestArgs, PlatformIdType, RequestType } from 'uniswap/src/data/rest/conversionTracking/types'
+import { BuildProxyRequestArgs, PlatformIdType, RequestType } from 'uniswap/src/data/rest/conversionTracking/types'
 import { addJitter, hashAddress } from 'uniswap/src/data/rest/conversionTracking/utils'
 
 const buildTwitterProxyRequest = ({
@@ -17,7 +17,7 @@ const buildTwitterProxyRequest = ({
   address,
   eventId,
   eventName,
-}: BuildProxyRequestArgs): PartialMessage<ConversionTrackingApi.ProxyRequest> => ({
+}: BuildProxyRequestArgs): PartialMessage<ProxyRequest> => ({
   requestType: eventName,
   identifier: hashAddress(address),
   to: TWITTER_CONVERSION_URL,
@@ -39,7 +39,7 @@ const buildRedditProxyRequest = ({
   address,
   eventId,
   eventName,
-}: BuildProxyRequestArgs): PartialMessage<ConversionTrackingApi.ProxyRequest> => ({
+}: BuildProxyRequestArgs): PartialMessage<ProxyRequest> => ({
   requestType: eventName,
   identifier: hashAddress(address),
   to: REDDIT_CONVERSION_URL,
@@ -50,7 +50,7 @@ const buildRedditProxyRequest = ({
       {
         click_id: lead.id,
         // Note: Reddit refuses requests that are more than 5m in the future
-        event_at: new Date(new Date().valueOf() + ms('4m')),
+        event_at: new Date(new Date().valueOf() + ms('5m')),
         event_metadata: { currency: 'USD', value_decimal: 1 },
         event_type: {
           tracking_type: eventId,
@@ -65,7 +65,7 @@ const buildGoogleProxyRequest = ({
   address,
   eventId,
   eventName,
-}: BuildProxyRequestArgs): PartialMessage<ConversionTrackingApi.ProxyRequest> => ({
+}: BuildProxyRequestArgs): PartialMessage<ProxyRequest> => ({
   requestType: eventName,
   identifier: hashAddress(address),
   to: GOOGLE_CONVERSION_URL,
@@ -83,7 +83,7 @@ const buildGoogleProxyRequest = ({
   }),
 })
 
-export const buildProxyRequest = (args: BuildProxyRequestArgs): PartialMessage<ConversionTrackingApi.ProxyRequest> => {
+export const buildProxyRequest = (args: BuildProxyRequestArgs): PartialMessage<ProxyRequest> => {
   const { lead } = args
 
   switch (lead.type) {

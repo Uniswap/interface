@@ -7,15 +7,15 @@ import Animated from 'react-native-reanimated'
 // TODO(WALL-5764): update @gorhom/bottom-sheet to latest version so we can use their BottomSheetFlashList
 
 // difficult to properly type
-// biome-ignore lint/suspicious/noExplicitAny: Complex type from external library requires any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ReanimatedFlashList = Animated.createAnimatedComponent(FlashList as any) as any
 
 // We use `any` to make list work with forwardRef, but lose correct typing.
 // Need to extend manually Pick props from FlashListProps (if not included in FlatListProps)
-// biome-ignore lint/suspicious/noExplicitAny: Generic FlashList props require any for flexibility
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type AnimatedFlashListProps = FlatListProps<any> &
   Pick<
-    // biome-ignore lint/suspicious/noExplicitAny: Generic FlashList props require any for flexibility
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     FlashListProps<any>,
     | 'disableAutoLayout'
     | 'estimatedItemSize'

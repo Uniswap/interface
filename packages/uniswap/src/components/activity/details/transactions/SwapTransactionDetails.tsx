@@ -1,16 +1,17 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { useSporeColors } from 'ui/src'
+import { Flex, Loader, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
-import { iconSizes } from 'ui/src/theme'
-import {
-  TwoTokenDetails,
-  useTokenAmountInfo,
-} from 'uniswap/src/components/activity/details/transactions/utilityComponents'
+import { fonts, iconSizes } from 'ui/src/theme'
 import { SwapTypeTransactionInfo } from 'uniswap/src/components/activity/details/types'
+import { useFormattedCurrencyAmountAndUSDValue } from 'uniswap/src/components/activity/hooks/useFormattedCurrencyAmountAndUSDValue'
+import { useTokenDetailsNavigation } from 'uniswap/src/components/activity/hooks/useTokenDetailsNavigation'
+import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/utils/getAmountsFromTrade'
 import { isConfirmedSwapTypeInfo } from 'uniswap/src/features/transactions/types/utils'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 export function SwapTransactionDetails({
   typeInfo,
@@ -61,29 +62,77 @@ export function SwapTransactionContent({
   disableClick?: boolean
 }): JSX.Element {
   const colors = useSporeColors()
+  const formatter = useLocalizationContext()
 
-  const { descriptor: inputDescriptor, value: inputValue } = useTokenAmountInfo({
+  const {
+    tilde: inputTilde,
+    amount: inputAmount,
+    value: inputValue,
+  } = useFormattedCurrencyAmountAndUSDValue({
     currency: inputCurrency?.currency,
-    amountRaw: inputCurrencyAmountRaw,
+    currencyAmountRaw: inputCurrencyAmountRaw,
+    formatter,
     isApproximateAmount: isConfirmed ? false : tradeType === TradeType.EXACT_OUTPUT,
   })
-  const { descriptor: outputDescriptor, value: outputValue } = useTokenAmountInfo({
+  const {
+    tilde: outputTilde,
+    amount: outputAmount,
+    value: outputValue,
+  } = useFormattedCurrencyAmountAndUSDValue({
     currency: outputCurrency?.currency,
-    amountRaw: outputCurrencyAmountRaw,
+    currencyAmountRaw: outputCurrencyAmountRaw,
+    formatter,
     isApproximateAmount: isConfirmed ? false : tradeType === TradeType.EXACT_INPUT,
   })
+  const inputSymbol = getSymbolDisplayText(inputCurrency?.currency.symbol)
+  const outputSymbol = getSymbolDisplayText(outputCurrency?.currency.symbol)
+
+  const onPressInputToken = useTokenDetailsNavigation(inputCurrency, onClose)
+  const onPressOutputToken = useTokenDetailsNavigation(outputCurrency, onClose)
 
   return (
-    <TwoTokenDetails
-      inputCurrency={inputCurrency}
-      outputCurrency={outputCurrency}
-      tokenDescriptorA={inputDescriptor}
-      usdValueA={inputValue}
-      tokenDescriptorB={outputDescriptor}
-      usdValueB={outputValue}
-      separatorElement={<Arrow color={colors.neutral3.val} direction="s" size={iconSizes.icon20} />}
-      disableClick={disableClick}
-      onClose={onClose}
-    />
+    <Flex gap="$spacing16" px="$spacing8" py="$spacing12">
+      <TouchableArea
+        cursor={disableClick ? 'default' : 'pointer'}
+        onPress={disableClick ? undefined : onPressInputToken}
+      >
+        <Flex centered row justifyContent="space-between">
+          <Flex>
+            <Text variant="heading3">
+              {inputTilde}
+              {inputAmount} {inputSymbol}
+            </Text>
+            <ValueText value={inputValue} />
+          </Flex>
+          <CurrencyLogo hideNetworkLogo currencyInfo={inputCurrency} size={iconSizes.icon40} />
+        </Flex>
+      </TouchableArea>
+      <Flex>
+        <Arrow color={colors.neutral3.val} direction="s" size={iconSizes.icon20} />
+      </Flex>
+      <TouchableArea onPress={disableClick ? undefined : onPressOutputToken}>
+        <Flex centered row justifyContent="space-between">
+          <Flex>
+            <Text variant="heading3">
+              {outputTilde}
+              {outputAmount} {outputSymbol}
+            </Text>
+            <ValueText value={outputValue} />
+          </Flex>
+          <CurrencyLogo hideNetworkLogo currencyInfo={outputCurrency} size={iconSizes.icon40} />
+        </Flex>
+      </TouchableArea>
+    </Flex>
+  )
+}
+
+export function ValueText({ value }: { value: string }): JSX.Element {
+  const isLoading = value === '-'
+  return isLoading ? (
+    <Loader.Box height={fonts.body3.lineHeight} width={iconSizes.icon36} />
+  ) : (
+    <Text color="$neutral2" variant="body3">
+      {value}
+    </Text>
   )
 }

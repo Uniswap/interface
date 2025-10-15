@@ -42,7 +42,6 @@ function useDocumentVisibility(): boolean {
     setIsDocumentVisible(!document.hidden)
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: handleVisibilityChange is created fresh each render but behavior stays the same
   useEffect(() => {
     document.addEventListener('visibilitychange', handleVisibilityChange)
 

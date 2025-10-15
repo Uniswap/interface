@@ -1,6 +1,7 @@
-import { FetchError, isRateLimitFetchError, TradingApi } from '@universe/api'
 import { TFunction } from 'i18next'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { FetchError, isRateLimitFetchError } from 'uniswap/src/data/apiClients/FetchError'
+import { Err404 } from 'uniswap/src/data/tradingApi/__generated__'
 
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 
@@ -31,7 +32,7 @@ export function getSwapWarningFromError({
 
     // Map errorCode to Warning
     switch (error.data?.errorCode) {
-      case TradingApi.Err404.errorCode.QUOTE_AMOUNT_TOO_LOW_ERROR: {
+      case Err404.errorCode.QUOTE_AMOUNT_TOO_LOW_ERROR: {
         return {
           type: WarningLabel.EnterLargerAmount,
           severity: WarningSeverity.Low,
@@ -41,7 +42,7 @@ export function getSwapWarningFromError({
         }
       }
 
-      case TradingApi.Err404.errorCode.RESOURCE_NOT_FOUND: {
+      case Err404.errorCode.RESOURCE_NOT_FOUND: {
         if (isBridgeTrade) {
           return {
             type: WarningLabel.NoQuotesFound,

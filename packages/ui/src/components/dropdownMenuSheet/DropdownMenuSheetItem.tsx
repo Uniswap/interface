@@ -2,18 +2,18 @@ import { type BaseSyntheticEvent, useMemo } from 'react'
 import { I18nManager, type Role } from 'react-native'
 import { Spacer, type YStackProps } from 'tamagui'
 import { getMenuItemColor } from 'ui/src/components/dropdownMenuSheet/utils'
-import { CheckCircleFilled, ExternalLink } from 'ui/src/components/icons'
+import { CheckCircleFilled } from 'ui/src/components/icons'
 import { Flex, type FlexProps } from 'ui/src/components/layout'
 import { Text, type TextProps } from 'ui/src/components/text'
 import { TouchableArea } from 'ui/src/components/touchable'
-import { isMobileApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type DropdownMenuSheetItemProps = {
   label: string
   icon?: React.ReactNode
-  actionType?: 'default' | 'external-link'
   isSelected?: boolean
+  onPress: () => void
+  handleCloseMenu?: () => void
   disabled?: boolean
   destructive?: boolean
   closeDelay?: number
@@ -22,25 +22,24 @@ export type DropdownMenuSheetItemProps = {
   height?: number
   role?: Role
   subheader?: string
-  onPress: () => void
-  handleCloseMenu?: () => void
+  rightIcon?: React.ReactNode
 }
 
 export const DropdownMenuSheetItem = ({
   label,
   icon,
-  actionType = 'default',
   isSelected,
+  onPress,
   disabled,
   destructive,
   closeDelay,
   textColor,
+  handleCloseMenu,
   variant,
   height,
   role = 'button',
   subheader,
-  onPress,
-  handleCloseMenu,
+  rightIcon,
 }: DropdownMenuSheetItemProps): JSX.Element => {
   const handlePress = useEvent((e: BaseSyntheticEvent) => {
     e.stopPropagation()
@@ -81,6 +80,7 @@ export const DropdownMenuSheetItem = ({
       alignItems="center"
       disabled={disabled}
       borderRadius="$rounded12"
+      width="100%"
       userSelect="none"
       role={role}
       cursor={disabled ? 'default' : 'pointer'}
@@ -109,15 +109,13 @@ export const DropdownMenuSheetItem = ({
             </Text>
           )}
         </Flex>
+        {rightIcon && (
+          <Flex row alignItems="center">
+            <Spacer size="$spacing40" />
+            {rightIcon}
+          </Flex>
+        )}
       </Flex>
-      {actionType === 'external-link' && (
-        <Flex grow flexShrink={0} alignItems="flex-end">
-          <ExternalLink
-            size={isMobileApp ? (subheader ? '$icon.20' : '$icon.16') : subheader ? '$icon.16' : '$icon.12'}
-            color="$neutral2"
-          />
-        </Flex>
-      )}
       {isSelected !== undefined && (
         <Flex flexShrink={0}>{isSelected ? <CheckCircleFilled size="$icon.20" /> : <Spacer size="$spacing20" />}</Flex>
       )}

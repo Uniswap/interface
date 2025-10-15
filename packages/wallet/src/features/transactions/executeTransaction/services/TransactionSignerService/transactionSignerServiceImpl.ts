@@ -1,8 +1,6 @@
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { signTypedData as signTypedDataFunction } from 'uniswap/src/features/transactions/signing'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { HexString } from 'utilities/src/addresses/hex'
+import { isAddress } from 'utilities/src/addresses/index'
 import { PublicClient } from 'viem'
 import { DelegationCheckResult } from 'wallet/src/features/smartWallet/delegation/types'
 import {
@@ -112,20 +110,12 @@ export function createBundledDelegationTransactionSignerService(ctx: {
     if (!ctx.delegationInfo.contractAddress) {
       throw new Error('Delegation contract address is required')
     }
-    const delegationContractAddress = getValidAddress({
-      address: ctx.delegationInfo.contractAddress,
-      platform: Platform.EVM,
-      withEVMChecksum: true,
-    }) as Nullable<HexString>
+    const delegationContractAddress = isAddress(ctx.delegationInfo.contractAddress)
     if (!delegationContractAddress) {
       throw new Error('Delegation contract address is invalid')
     }
 
-    const walletAddress = getValidAddress({
-      address: account.address,
-      chainId,
-      withEVMChecksum: true,
-    }) as Nullable<HexString>
+    const walletAddress = isAddress(account.address)
     if (!walletAddress) {
       throw new Error('Wallet address is invalid')
     }

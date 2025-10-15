@@ -19,15 +19,7 @@ export function FavoriteHeaderRow({
 }): JSX.Element {
   const { t } = useTranslation()
   return (
-    <Flex
-      row
-      alignItems="center"
-      gap="$spacing16"
-      justifyContent="space-between"
-      mb="$spacing8"
-      mx="$spacing8"
-      testID={TestID.FavoriteTokensHeader}
-    >
+    <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between" mb="$spacing8" mx="$spacing8">
       <Text color="$neutral2" variant="subheading2">
         {isEditing ? editingTitle : title}
       </Text>

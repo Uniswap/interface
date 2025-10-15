@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartHoverData, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import {
@@ -25,6 +24,7 @@ import { Trans } from 'react-i18next'
 import { Flex, styled, Text } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
+import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -32,7 +32,7 @@ export type PriceChartData = CandlestickData<UTCTimestamp> & AreaData<UTCTimesta
 
 interface PriceChartModelParams extends ChartModelParams<PriceChartData> {
   type: PriceChartType
-  timePeriod?: GraphQLApi.HistoryDuration
+  timePeriod?: HistoryDuration
 }
 
 const LOW_PRICE_RANGE_THRESHOLD = 0.2
@@ -43,7 +43,7 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   private originalData: PriceChartData[]
   private lowPriceRangeScaleFactor = 1
   private type: PriceChartType
-  private timePeriod?: GraphQLApi.HistoryDuration
+  private timePeriod?: HistoryDuration
   private minPriceLine: IPriceLine | undefined
   private maxPriceLine: IPriceLine | undefined
   private priceLineOptions: Partial<PriceLineOptions> | undefined
@@ -252,7 +252,7 @@ interface PriceChartProps {
   height: number
   data: PriceChartData[]
   stale: boolean
-  timePeriod?: GraphQLApi.HistoryDuration
+  timePeriod?: HistoryDuration
 }
 
 const CandlestickTooltipRow = styled(Flex, {

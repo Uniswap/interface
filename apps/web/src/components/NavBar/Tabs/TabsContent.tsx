@@ -9,7 +9,6 @@ import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
 import { Compass } from 'ui/src/components/icons/Compass'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { ReceiveAlt } from 'ui/src/components/icons/ReceiveAlt'
-import { Wallet } from 'ui/src/components/icons/Wallet'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
@@ -31,8 +30,6 @@ export const useTabsContent = (): TabsSection[] => {
   const { pathname } = useLocation()
   const theme = useTheme()
   const isFiatOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
-  const isPortfolioPageEnabled = useFeatureFlag(FeatureFlags.PortfolioPage)
-  const isToucanEnabled = useFeatureFlag(FeatureFlags.Toucan)
 
   return [
     {
@@ -84,7 +81,6 @@ export const useTabsContent = (): TabsSection[] => {
           href: '/explore/transactions',
           internal: true,
         },
-        ...(isToucanEnabled ? [{ label: 'Toucan', href: '/explore/toucan', internal: true }] : []),
       ],
     },
     {
@@ -105,42 +101,5 @@ export const useTabsContent = (): TabsSection[] => {
         },
       ],
     },
-    ...(isPortfolioPageEnabled
-      ? [
-          {
-            title: t('common.portfolio'),
-            href: '/portfolio',
-            isActive: pathname.startsWith('/portfolio'),
-            icon: <Wallet color="$accent1" size="$icon.20" />,
-            items: [
-              {
-                label: t('portfolio.overview.title'),
-                href: '/portfolio',
-                internal: true,
-              },
-              {
-                label: t('portfolio.tokens.title'),
-                href: '/portfolio/tokens',
-                internal: true,
-              },
-              {
-                label: t('portfolio.defi.title'),
-                href: '/portfolio/defi',
-                internal: true,
-              },
-              {
-                label: t('portfolio.nfts.title'),
-                href: '/portfolio/nfts',
-                internal: true,
-              },
-              {
-                label: t('portfolio.activity.title'),
-                href: '/portfolio/activity',
-                internal: true,
-              },
-            ],
-          },
-        ]
-      : []),
   ]
 }

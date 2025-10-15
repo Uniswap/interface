@@ -13,7 +13,6 @@ import {
   tokenProject,
   tokenProjectMarket,
 } from 'uniswap/src/test/fixtures'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { queryResolvers } from 'uniswap/src/test/utils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
@@ -49,7 +48,7 @@ const favoriteToken = ethToken({
   }),
 })
 
-const touchableId = `${TestID.FavoriteTokenCardPrefix}${favoriteToken.symbol}`
+const touchableId = `token-box-${favoriteToken.symbol}`
 
 const defaultProps: FavoriteTokenCardProps = {
   currencyId: SAMPLE_CURRENCY_ID_1,
@@ -119,7 +118,7 @@ describe('FavoriteTokenCard', () => {
     it('navigates to the token details screen when pressed', async () => {
       const { findByTestId } = render(<FavoriteTokenCard {...defaultProps} />, { resolvers })
 
-      const touchable = await findByTestId(`${TestID.FavoriteTokenCardPrefix}${favoriteToken.symbol}`)
+      const touchable = await findByTestId(`token-box-${favoriteToken.symbol}`)
       act(() => {
         fireEvent.press(touchable, ON_PRESS_EVENT_PAYLOAD)
       })

@@ -12,7 +12,7 @@ import { logContentScriptError } from 'src/contentScript/utils'
 
 export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereumRequest> {
   private methodHandlers: {
-    // biome-ignore lint/suspicious/noExplicitAny: Provider method handlers accept varied parameter types from JSON-RPC calls
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: (provider: JsonRpcProvider, params: any[]) => Promise<any>
   }
 
@@ -89,7 +89,7 @@ export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereu
     source,
     requestId,
   }: {
-    // biome-ignore lint/suspicious/noExplicitAny: JSON-RPC response can contain arbitrary data structures
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     response: Promise<any>
     source: MessageEventSource | null
     requestId: string

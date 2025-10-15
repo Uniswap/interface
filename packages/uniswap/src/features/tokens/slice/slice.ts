@@ -23,7 +23,7 @@ const slice = createSlice({
       state.dismissedTokenWarnings[token.chainId] = state.dismissedTokenWarnings[token.chainId] || {}
       const normalizedAddress = getValidAddress(token)
       if (normalizedAddress) {
-        // biome-ignore lint/style/noNonNullAssertion: array access is safe here
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         state.dismissedTokenWarnings[token.chainId]![normalizedAddress] = token
       }
     },
@@ -35,7 +35,7 @@ const slice = createSlice({
       state.dismissedBridgedAssetWarnings[token.chainId] = state.dismissedBridgedAssetWarnings[token.chainId] || {}
       const normalizedAddress = getValidAddress(token)
       if (normalizedAddress) {
-        // biome-ignore lint/style/noNonNullAssertion: array access is safe here
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         state.dismissedBridgedAssetWarnings[token.chainId]![normalizedAddress] = token
       }
     },
@@ -48,7 +48,7 @@ const slice = createSlice({
         state.dismissedCompatibleAddressWarnings[token.chainId] || {}
       const normalizedAddress = getValidAddress(token)
       if (normalizedAddress) {
-        // biome-ignore lint/style/noNonNullAssertion: array access is safe here
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         state.dismissedCompatibleAddressWarnings[token.chainId]![normalizedAddress] = token
       }
     },

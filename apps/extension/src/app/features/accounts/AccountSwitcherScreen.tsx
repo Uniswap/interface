@@ -21,13 +21,11 @@ import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { AccountType, DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { sleep } from 'utilities/src/time/timing'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
@@ -62,16 +60,7 @@ export function AccountSwitcherScreen(): JSX.Element {
 
   const accounts = useSignerAccounts()
   const accountAddresses = useMemo(
-    () =>
-      accounts
-        .map((account) => account.address)
-        .filter(
-          (address) =>
-            !areAddressesEqual({
-              addressInput1: { address, platform: Platform.EVM },
-              addressInput2: { address: activeAddress, platform: Platform.EVM },
-            }),
-        ),
+    () => accounts.map((account) => account.address).filter((address) => address !== activeAddress),
     [accounts, activeAddress],
   )
   const { dappUrl } = useDappContext()

@@ -1,5 +1,5 @@
 import type { EdgeInsets } from 'react-native-safe-area-context'
-// biome-ignore lint/style/noRestrictedImports: useSafeAreaInsets is allowed for this use case
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { DEFAULT_BOTTOM_INSET } from 'ui/src/hooks/constants'
 

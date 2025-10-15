@@ -1,12 +1,7 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { NetworkChangedNotification } from 'wallet/src/features/notifications/components/NetworkChangedNotification'
 import { renderWithProviders } from 'wallet/src/test/render'
-
-// Use the web implementation of NotificationToast for testing
-jest.mock('uniswap/src/components/notifications/NotificationToast', () => {
-  return jest.requireActual('uniswap/src/components/notifications/NotificationToast.web')
-})
 
 describe(NetworkChangedNotification, () => {
   it('renders with swap flow', () => {

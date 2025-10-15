@@ -13,7 +13,6 @@ import { useAtomValue } from 'jotai/utils'
 import { useContext, useMemo } from 'react'
 import { ExploreContext, giveExploreStatDefaultValue } from 'state/explore'
 import { TokenStat } from 'state/explore/types'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -105,7 +104,7 @@ function useFilteredTokens(tokens: TokenStat[] | undefined) {
     let returnTokens = tokens
     if (lowercaseFilterString) {
       returnTokens = returnTokens.filter((token) => {
-        const addressIncludesFilterString = normalizeTokenAddressForCache(token.address).includes(lowercaseFilterString)
+        const addressIncludesFilterString = token.address.toLowerCase().includes(lowercaseFilterString)
         const projectNameIncludesFilterString = token.project?.name?.toLowerCase().includes(lowercaseFilterString)
         const nameIncludesFilterString = token.name?.toLowerCase().includes(lowercaseFilterString)
         const symbolIncludesFilterString = token.symbol?.toLowerCase().includes(lowercaseFilterString)
@@ -156,8 +155,7 @@ export function useTopTokens() {
     const map: SparklineMap = {}
     unwrappedTokens?.forEach((current) => {
       if (current !== undefined) {
-        const address =
-          current.address === NATIVE_CHAIN_ID ? NATIVE_CHAIN_ID : normalizeTokenAddressForCache(current.address)
+        const address = current.address === NATIVE_CHAIN_ID ? NATIVE_CHAIN_ID : current.address.toLowerCase()
         map[address] = current.priceHistory
       }
     })

@@ -1,5 +1,4 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
 import ms from 'ms'
 import {
   getQuickPollingInterval,
@@ -10,41 +9,21 @@ import {
   QUICK_POLL_MEDIUM_PHASE,
   usePollPendingOrders,
 } from 'state/activity/polling/orders'
-import * as hooks from 'state/transactions/hooks'
+import * as hooks from 'state/signatures/hooks'
+import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { act, renderHook } from 'test-utils/render'
+import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { updateTransaction } from 'uniswap/src/features/transactions/slice'
-import {
-  TransactionOriginType,
-  TransactionStatus,
-  TransactionType,
-  UniswapXOrderDetails,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
 import type { Mock } from 'vitest'
 
-vi.mock('state/transactions/hooks', async () => {
-  const actual = await vi.importActual('state/transactions/hooks')
+vi.mock('state/signatures/hooks', async () => {
+  const actual = await vi.importActual('state/signatures/hooks')
   return {
     ...actual,
-    usePendingUniswapXOrders: vi.fn(),
-  }
-})
-
-vi.mock('state/hooks', async () => {
-  const actual = await vi.importActual('state/hooks')
-  return {
-    ...actual,
-    useAppDispatch: () => vi.fn(),
-  }
-})
-
-vi.mock('uniswap/src/features/transactions/slice', async () => {
-  const actual = await vi.importActual('uniswap/src/features/transactions/slice')
-  return {
-    ...actual,
-    updateTransaction: vi.fn((tx: any) => ({ type: 'transactions/updateTransaction', payload: tx })),
+    usePendingOrders: vi.fn(),
   }
 })
 
@@ -64,15 +43,14 @@ vi.mock('hooks/useAccount', async () => {
 })
 
 const mockL1Order: UniswapXOrderDetails = {
-  routing: TradingApi.Routing.DUTCH_V2,
+  type: SignatureType.SIGN_UNISWAPX_ORDER,
   orderHash: '0xa9dd6f05ad6d6c79bee654c31ede4d0d2392862711be0f3bc4a9124af24a6a19',
-  status: TransactionStatus.Pending,
+  status: UniswapXOrderStatus.OPEN,
   id: '1',
   addedTime: 1686339087000, // from createdAt in openStatusResponse
   chainId: UniverseChainId.Mainnet,
-  from: '0x80becb808bfade4143183e58d18f2080e84e57a1',
-  transactionOriginType: TransactionOriginType.Internal,
-  typeInfo: {
+  offerer: '0x80becb808bfade4143183e58d18f2080e84e57a1',
+  swapInfo: {
     isUniswapXOrder: true,
     type: TransactionType.Swap,
     inputCurrencyAmountRaw: '100000000',
@@ -150,7 +128,7 @@ describe('useStandardPolling', () => {
 
   it('should not poll when no orders exist', () => {
     const onActivityUpdate = vi.fn()
-    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([])
+    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
 
     renderHook(() => usePollPendingOrders(onActivityUpdate))
 
@@ -163,8 +141,8 @@ describe('useStandardPolling', () => {
 
   it('should poll L1 orders with exponential backoff', async () => {
     const onActivityUpdate = vi.fn()
-    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([mockL1Order])
-    const mockResponse = { orders: [{ orderHash: mockL1Order.orderHash, orderStatus: TradingApi.OrderStatus.OPEN }] }
+    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([mockL1Order])
+    const mockResponse = { orders: [{ ...mockL1Order, orderStatus: UniswapXOrderStatus.OPEN }] }
     ;(global.fetch as Mock).mockImplementation(() =>
       Promise.resolve({
         json: () => Promise.resolve(mockResponse),
@@ -203,13 +181,13 @@ describe('useStandardPolling', () => {
     const mockOrder = { ...mockL1Order }
 
     // Start with returning the open order
-    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([mockOrder])
+    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([mockOrder])
     ;(global.fetch as Mock)
       .mockImplementationOnce(() =>
         Promise.resolve({
           json: () =>
             Promise.resolve({
-              orders: [{ orderHash: mockOrder.orderHash, orderStatus: TradingApi.OrderStatus.OPEN }],
+              orders: [{ ...mockOrder, orderStatus: UniswapXOrderStatus.OPEN }],
             }),
         }),
       )
@@ -217,9 +195,7 @@ describe('useStandardPolling', () => {
         Promise.resolve({
           json: () =>
             Promise.resolve({
-              orders: [
-                { orderHash: mockOrder.orderHash, orderStatus: TradingApi.OrderStatus.FILLED, txHash: '0xfilled123' },
-              ],
+              orders: [{ ...mockOrder, orderStatus: UniswapXOrderStatus.FILLED }],
             }),
         }),
       )
@@ -228,14 +204,8 @@ describe('useStandardPolling', () => {
 
     // After the second poll returns FILLED, update the mock to return no pending orders
     setTimeout(() => {
-      vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([])
+      vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
     }, 3500)
-
-    // Mock the updateTransaction to avoid errors
-    vi.mocked(updateTransaction).mockImplementation((tx: any) => ({
-      type: 'transactions/updateTransaction',
-      payload: tx,
-    }))
 
     // First poll - order is open
     await act(async () => {
@@ -270,7 +240,7 @@ describe('useQuickPolling', () => {
 
   it('should not poll when no orders exist', () => {
     const onActivityUpdate = vi.fn()
-    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([])
+    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([])
 
     renderHook(() => usePollPendingOrders(onActivityUpdate))
 
@@ -291,10 +261,10 @@ describe('useQuickPolling', () => {
       addedTime: now,
     }
 
-    vi.spyOn(hooks, 'usePendingUniswapXOrders').mockReturnValue([recentOrder])
+    vi.spyOn(hooks, 'usePendingOrders').mockReturnValue([recentOrder])
     ;(global.fetch as Mock).mockImplementation(() =>
       Promise.resolve({
-        json: () => Promise.resolve({ orders: [{ ...recentOrder, orderStatus: TradingApi.OrderStatus.OPEN }] }),
+        json: () => Promise.resolve({ orders: [{ ...recentOrder, orderStatus: 'open' }] }),
       }),
     )
 

@@ -15,9 +15,14 @@ import {
   ApproveTransactionInfo,
   BridgeTransactionInfo,
   ClaimUniTransactionInfo,
-  LiquidityTransactionBaseInfos,
+  CollectFeesTransactionInfo,
+  CreatePairTransactionInfo,
+  CreatePoolTransactionInfo,
+  LiquidityDecreaseTransactionInfo,
+  LiquidityIncreaseTransactionInfo,
   LpIncentivesClaimTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
+  MigrateV3LiquidityToV4TransactionInfo,
   NFTApproveTransactionInfo,
   NFTMintTransactionInfo,
   NFTTradeTransactionInfo,
@@ -77,7 +82,6 @@ export function TransactionDetailsHeaderLogo({ transactionDetails }: HeaderLogoP
 
   switch (typeInfo.type) {
     case TransactionType.Approve:
-    case TransactionType.Permit2Approve:
       return <ApproveHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     case TransactionType.NFTApprove:
     case TransactionType.NFTMint:
@@ -99,23 +103,28 @@ export function TransactionDetailsHeaderLogo({ transactionDetails }: HeaderLogoP
       return <OnRampHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     case TransactionType.OffRampSale:
       return <OffRampHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+    // Local FOR transactions are never visible
+    case TransactionType.LocalOnRamp:
+    case TransactionType.LocalOffRamp:
+      return null
+    // TODO: Add Permit2ApproveHeaderLogo
+    // TODO WALL-7056: Implement Remove Delegation Header Logo
+    case TransactionType.SendCalls:
+    case TransactionType.Permit2Approve:
+    case TransactionType.RemoveDelegation:
+      return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+    // Cases of web only transactions
+    // TODO(WALL-7197) handle these cases
+    case TransactionType.ClaimUni:
     case TransactionType.CreatePool:
     case TransactionType.CreatePair:
     case TransactionType.LiquidityIncrease:
     case TransactionType.LiquidityDecrease:
     case TransactionType.CollectFees:
-    case TransactionType.MigrateLiquidityV3ToV4:
-      return <LiquidityHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    // Local FOR transactions are never visible
-    case TransactionType.LocalOnRamp:
-    case TransactionType.LocalOffRamp:
-      return null
-    // TODO WALL-7056: Implement Remove Delegation Header Logo
-    case TransactionType.SendCalls:
-    case TransactionType.RemoveDelegation:
-    case TransactionType.ClaimUni:
     case TransactionType.MigrateLiquidityV2ToV3:
+    case TransactionType.MigrateLiquidityV3ToV4:
     case TransactionType.LPIncentivesClaimRewards:
+      return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     default:
       return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
   }
@@ -160,33 +169,11 @@ function SwapHeaderLogo({
   )
 }
 
-function LiquidityHeaderLogo({
-  transactionDetails,
-  typeInfo,
-}: SpecificHeaderLogoProps<LiquidityTransactionBaseInfos>): JSX.Element {
-  const inputCurrency = useCurrencyInfo(typeInfo.currency0Id)
-  const outputCurrency = useCurrencyInfo(typeInfo.currency1Id)
-
-  return (
-    <SplitLogo
-      chainId={transactionDetails.chainId}
-      inputCurrencyInfo={inputCurrency}
-      outputCurrencyInfo={outputCurrency}
-      size={TXN_DETAILS_ICON_SIZE}
-    />
-  )
-}
-
 function ApproveHeaderLogo({
   transactionDetails,
   typeInfo,
-}: SpecificHeaderLogoProps<ApproveTransactionInfo | Permit2ApproveTransactionInfo>): JSX.Element {
-  const currencyInfo = useCurrencyInfo(buildCurrencyId(transactionDetails.chainId, typeInfo.tokenAddress ?? ''))
-
-  if (!currencyInfo && typeInfo.type === TransactionType.Permit2Approve) {
-    return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-  }
-
+}: SpecificHeaderLogoProps<ApproveTransactionInfo>): JSX.Element {
+  const currencyInfo = useCurrencyInfo(buildCurrencyId(transactionDetails.chainId, typeInfo.tokenAddress))
   return getLogoWithTxStatus({
     assetType: AssetType.Currency,
     currencyInfo,
@@ -276,9 +263,15 @@ function UnknownHeaderLogo({
   | UnknownTransactionInfo
   | SendCallsTransactionInfo
   | Permit2ApproveTransactionInfo
+  | CollectFeesTransactionInfo
+  | CreatePairTransactionInfo
+  | CreatePoolTransactionInfo
+  | LiquidityIncreaseTransactionInfo
+  | LiquidityDecreaseTransactionInfo
   | RemoveDelegationTransactionInfo
   | ClaimUniTransactionInfo
   | MigrateV2LiquidityToV3TransactionInfo
+  | MigrateV3LiquidityToV4TransactionInfo
   | LpIncentivesClaimTransactionInfo
 >): JSX.Element {
   const colors = useSporeColors()

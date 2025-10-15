@@ -1,14 +1,9 @@
-import { type TransactionRequest } from '@ethersproject/providers'
-import { keepPreviousData, skipToken, type UseQueryResult } from '@tanstack/react-query'
-import {
-  type UseQueryWithImmediateGarbageCollectionApiHelperHookArgs,
-  useQueryWithImmediateGarbageCollection,
-} from '@universe/api'
+import { TransactionRequest } from '@ethersproject/providers'
+import { keepPreviousData, skipToken, UseQueryResult } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import {
-  createFetchGasFee,
-  type GasFeeResultWithoutState,
-} from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
+import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClients/hooks/useQueryWithImmediateGarbageCollection'
+import { UseQueryWithImmediateGarbageCollectionApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
+import { createFetchGasFee, GasFeeResultWithoutState } from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
 import { getActiveGasStrategy } from 'uniswap/src/features/gas/utils'
 import { useStatsigClientStatus } from 'uniswap/src/features/gating/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'

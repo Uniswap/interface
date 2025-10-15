@@ -7,7 +7,7 @@ import {
   OnRampTransferInfo,
   TransactionDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { FiatCurrencyComponents } from 'utilities/src/format/localeBased'
 
 // Moonpay Legacy Info
@@ -139,7 +139,6 @@ export type FORSupportedTokensRequest = {
   fiatCurrency: string
   countryCode: string
   rampDirection?: RampDirection
-  isSolanaEnabled?: boolean
 }
 
 export type FORSupportedToken = {

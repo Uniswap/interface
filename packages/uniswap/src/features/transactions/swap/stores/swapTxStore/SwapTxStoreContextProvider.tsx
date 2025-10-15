@@ -9,7 +9,6 @@ import { SwapTxStoreContext } from 'uniswap/src/features/transactions/swap/store
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { usePreviousWithLayoutEffect } from 'utilities/src/react/usePreviousWithLayoutEffect'
 
-/** @deprecated Delete when ServiceBasedSwapTransactionInfo is fully rolled out */
 const LegacySwapTxStoreContextProvider = ({ children }: { children: React.ReactNode }): JSX.Element => {
   const account = useWallet().evmAccount
   const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)

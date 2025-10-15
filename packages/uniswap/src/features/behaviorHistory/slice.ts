@@ -25,7 +25,6 @@ export interface UniswapBehaviorHistoryState {
     [walletAddress: string]: number
   }
   hasShownSmartWalletNudge?: boolean
-  hasSeenToucanIntroModal?: boolean
 }
 
 export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
@@ -44,7 +43,6 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
   },
   hasShownMismatchToast: false,
   hasShownSmartWalletNudge: false,
-  hasSeenToucanIntroModal: false,
 }
 
 const slice = createSlice({
@@ -105,9 +103,6 @@ const slice = createSlice({
     setHasShownSmartWalletNudge: (state, action: PayloadAction<boolean>) => {
       state.hasShownSmartWalletNudge = action.payload
     },
-    setHasSeenToucanIntroModal: (state, action: PayloadAction<boolean>) => {
-      state.hasSeenToucanIntroModal = action.payload
-    },
   },
 })
 
@@ -127,7 +122,6 @@ export const {
   setHasShownMismatchToast,
   setEmbeddedWalletGraduateCardDismissed,
   setHasShownSmartWalletNudge,
-  setHasSeenToucanIntroModal,
 } = slice.actions
 
 export const uniswapBehaviorHistoryReducer = slice.reducer

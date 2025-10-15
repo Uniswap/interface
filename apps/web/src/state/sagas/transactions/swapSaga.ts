@@ -1,5 +1,4 @@
 import { useTotalBalancesUsdForAnalytics } from 'appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
-import { TradingApi } from '@universe/api'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS, ZERO_PERCENT } from 'constants/misc'
@@ -25,6 +24,7 @@ import {
 import { VitalTxFields } from 'state/transactions/types'
 import invariant from 'tiny-invariant'
 import { call } from 'typed-redux-saga'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
@@ -35,10 +35,7 @@ import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
 import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import {
-  ExtractedBaseTradeAnalyticsProperties,
-  getBaseTradeAnalyticsProperties,
-} from 'uniswap/src/features/transactions/swap/analytics'
+import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { FLASHBLOCKS_UI_SKIP_ROUTES } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
 import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
@@ -72,7 +69,7 @@ interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'i
   step: SwapTransactionStep | SwapTransactionStepAsync
   signature?: string
   trade: ClassicTrade | BridgeTrade
-  analytics: ExtractedBaseTradeAnalyticsProperties
+  analytics: SwapTradeBaseProperties
   onTransactionHash?: (hash: string) => void
 }
 function* handleSwapTransactionStep(params: HandleSwapStepParams) {
@@ -195,7 +192,7 @@ type SwapParams = {
   selectChain: (chainId: number) => Promise<boolean>
   startChainId?: number
   account: SignerMnemonicAccountDetails
-  analytics: ExtractedBaseTradeAnalyticsProperties
+  analytics: SwapTradeBaseProperties
   swapTxContext: ValidatedSwapTxContext
   setCurrentStep: SetCurrentStepFn
   setSteps: (steps: TransactionStep[]) => void
@@ -209,7 +206,7 @@ type SwapParams = {
 }
 
 /** Asserts that a given object fits a given routing variant. */
-function requireRouting<T extends TradingApi.Routing, V extends { routing: TradingApi.Routing }>(
+function requireRouting<T extends Routing, V extends { routing: Routing }>(
   val: V,
   routing: readonly T[],
 ): asserts val is V & { routing: T } {
@@ -284,7 +281,7 @@ function* swap(params: SwapParams) {
         }
         case TransactionStepType.SwapTransaction:
         case TransactionStepType.SwapTransactionAsync: {
-          requireRouting(trade, [TradingApi.Routing.CLASSIC, TradingApi.Routing.BRIDGE])
+          requireRouting(trade, [Routing.CLASSIC, Routing.BRIDGE])
           yield* call(handleSwapTransactionStep, {
             account,
             signature,
@@ -297,7 +294,7 @@ function* swap(params: SwapParams) {
           break
         }
         case TransactionStepType.SwapTransactionBatched: {
-          requireRouting(trade, [TradingApi.Routing.CLASSIC, TradingApi.Routing.BRIDGE])
+          requireRouting(trade, [Routing.CLASSIC, Routing.BRIDGE])
           yield* call(handleSwapTransactionBatchedStep, {
             account,
             step,

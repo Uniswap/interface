@@ -179,7 +179,6 @@ export default function FeatureFlagModal() {
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Swap Features">
-            <FeatureFlagOption flag={FeatureFlags.ChainedActions} label="Enable Chained Actions" />
             <FeatureFlagOption flag={FeatureFlags.BatchedSwaps} label="Enable Batched Swaps" />
             <FeatureFlagOption flag={FeatureFlags.UnichainFlashblocks} label="Enable Unichain Flashblocks" />
             <FeatureFlagOption flag={FeatureFlags.UniquoteEnabled} label="Enable Uniquote" />
@@ -216,13 +215,6 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.D3LiquidityRangeChart} label="Enable new D3 liquidity range chart" />
             <FeatureFlagOption flag={FeatureFlags.LpIncentives} label="Enable LP Incentives" />
             <FeatureFlagOption flag={FeatureFlags.MigrateV2} label="Enable new Migrate V2 flow" />
-            <FeatureFlagOption
-              flag={FeatureFlags.PoolInfoEndpoint}
-              label="Enable create flow with new PoolInfo endpoint"
-            />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Toucan">
-            <FeatureFlagOption flag={FeatureFlags.Toucan} label="Enable Toucan" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="FOR">
             <FeatureFlagOption flag={FeatureFlags.FiatOffRamp} label="Enable Fiat OffRamp" />
@@ -240,6 +232,10 @@ export default function FeatureFlagModal() {
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Mini Portfolio">
+            <FeatureFlagOption
+              flag={FeatureFlags.SharedPortfolioUI}
+              label="Enable new mini portfolio UI shared across platforms"
+            />
             <FeatureFlagOption flag={FeatureFlags.SelfReportSpamNFTs} label="Report spam NFTs" />
             <FeatureFlagOption
               flag={FeatureFlags.DisableExtensionDeeplinks}
@@ -273,9 +269,7 @@ export default function FeatureFlagModal() {
           <FeatureFlagGroup name="New Wallet Connectors">
             <FeatureFlagOption flag={FeatureFlags.PortoWalletConnector} label="Enable Porto Wallet Connector" />
           </FeatureFlagGroup>
-          <FeatureFlagGroup name="Misc">
-            <FeatureFlagOption flag={FeatureFlags.PortfolioPage} label="Enable Portfolio page" />
-          </FeatureFlagGroup>
+          <FeatureFlagGroup name="Misc"></FeatureFlagGroup>
           <FeatureFlagGroup name="Experiments">
             <Flex ml="$padding8">
               <ExperimentRow value={Experiments.ForFilters} />

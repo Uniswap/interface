@@ -1,9 +1,12 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { GraphQLApi } from '@universe/api'
 import { PoolState, usePool } from 'hooks/usePools'
 import ms from 'ms'
 import { useMemo } from 'react'
+import {
+  useFeeTierDistributionQuery,
+  useIsV3SubgraphStaleQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { logger } from 'utilities/src/logger/logger'
@@ -94,7 +97,7 @@ export function useFeeTierDistribution(
 function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
   const { defaultChainId } = useEnabledChains()
   const chain = toGraphQLChain(token0?.chainId ?? defaultChainId)
-  const { loading, error, data } = GraphQLApi.useFeeTierDistributionQuery({
+  const { loading, error, data } = useFeeTierDistributionQuery({
     variables: {
       chain,
       token0: token0?.address ?? '',
@@ -103,7 +106,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
     pollInterval: ms(`30s`),
   })
 
-  const { data: isSubgraphStaleData, error: isSubgraphStaleError } = GraphQLApi.useIsV3SubgraphStaleQuery({
+  const { data: isSubgraphStaleData, error: isSubgraphStaleError } = useIsV3SubgraphStaleQuery({
     variables: { chain },
     pollInterval: ms(`30s`),
   })

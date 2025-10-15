@@ -7,7 +7,6 @@ export default function PrimaryAppInstanceDebugger(): JSX.Element | null {
   const isPrimaryAppInstance = useIsPrimaryAppInstance()
 
   return (
-    // biome-ignore  lint/correctness/noRestrictedElements: needed here
     <div
       style={{
         position: 'fixed',

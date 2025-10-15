@@ -1,7 +1,6 @@
-import { TradingApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
-
+import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { createGetSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -10,12 +9,7 @@ import { createGetV4SwapEnabled, useV4SwapEnabled } from 'uniswap/src/features/t
 
 export const DEFAULT_PROTOCOL_OPTIONS = [
   // `as const` allows us to derive a type narrower than ProtocolItems, and the `...` spread removes readonly, allowing DEFAULT_PROTOCOL_OPTIONS to be passed around as an argument without `readonly`
-  ...([
-    TradingApi.ProtocolItems.UNISWAPX_V2,
-    TradingApi.ProtocolItems.V4,
-    TradingApi.ProtocolItems.V3,
-    TradingApi.ProtocolItems.V2,
-  ] as const),
+  ...([ProtocolItems.UNISWAPX_V2, ProtocolItems.V4, ProtocolItems.V3, ProtocolItems.V2] as const),
 ]
 export type FrontendSupportedProtocol = (typeof DEFAULT_PROTOCOL_OPTIONS)[number]
 
@@ -25,7 +19,7 @@ const LAUNCHED_UNISWAPX_CHAINS = [UniverseChainId.Mainnet]
 export function useProtocolsForChain(
   userSelectedProtocols: FrontendSupportedProtocol[],
   chainId?: UniverseChainId,
-): TradingApi.ProtocolItems[] {
+): ProtocolItems[] {
   const getIsUniswapXSupported = useUniswapContextSelector((state) => state.getIsUniswapXSupported)
   const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
   const priorityOrdersAllowed = useUniswapXPriorityOrderFlag(chainId)
@@ -56,10 +50,7 @@ export function createProtocolFilter(ctx: {
   getV4Enabled: (chainId?: UniverseChainId) => boolean
   getArbitrumDutchV3Enabled: () => boolean
 }) {
-  return function filterProtocols(
-    protocols: FrontendSupportedProtocol[],
-    chainId?: UniverseChainId,
-  ): TradingApi.ProtocolItems[] {
+  return function filterProtocols(protocols: FrontendSupportedProtocol[], chainId?: UniverseChainId): ProtocolItems[] {
     const uniswapXEnabled = ctx.getUniswapXEnabled()
     const uniswapXSupportedForChain = ctx.getIsUniswapXSupported ? ctx.getIsUniswapXSupported(chainId) : true
     const combinedUniswapXEnabled = uniswapXEnabled && uniswapXSupportedForChain
@@ -71,22 +62,22 @@ export function createProtocolFilter(ctx: {
     const uniswapXAllowedForChain =
       (chainId && LAUNCHED_UNISWAPX_CHAINS.includes(chainId)) || priorityOrdersAllowed || arbDutchV3Enabled
 
-    let filteredProtocols: TradingApi.ProtocolItems[] = [...protocols]
+    let filteredProtocols: ProtocolItems[] = [...protocols]
 
     // Remove UniswapX from the options we send to TradingAPI if UniswapX hasn't been launched or isn't in experiment on that chain
     if (!uniswapXAllowedForChain || !combinedUniswapXEnabled) {
-      filteredProtocols = filteredProtocols.filter((protocol) => protocol !== TradingApi.ProtocolItems.UNISWAPX_V2)
+      filteredProtocols = filteredProtocols.filter((protocol) => protocol !== ProtocolItems.UNISWAPX_V2)
     }
 
     // Replace UniswapXV2 with V3 if V3 experiment is enabled on arbitrum
     if (arbDutchV3Enabled) {
       filteredProtocols = filteredProtocols.map((protocol) =>
-        protocol === TradingApi.ProtocolItems.UNISWAPX_V2 ? TradingApi.ProtocolItems.UNISWAPX_V3 : protocol,
+        protocol === ProtocolItems.UNISWAPX_V2 ? ProtocolItems.UNISWAPX_V3 : protocol,
       )
     }
 
     if (!v4Enabled) {
-      filteredProtocols = filteredProtocols.filter((protocol) => protocol !== TradingApi.ProtocolItems.V4)
+      filteredProtocols = filteredProtocols.filter((protocol) => protocol !== ProtocolItems.V4)
     }
 
     return filteredProtocols
@@ -105,7 +96,7 @@ export function createGetProtocolsForChain(ctx: {
   // these need to come from react unfortunately
   getIsUniswapXSupported?: (chainId?: UniverseChainId) => boolean
   getEnabledChains: () => UniverseChainId[]
-}): (userSelectedProtocols: FrontendSupportedProtocol[], chainId?: UniverseChainId) => TradingApi.ProtocolItems[] {
+}): (userSelectedProtocols: FrontendSupportedProtocol[], chainId?: UniverseChainId) => ProtocolItems[] {
   const uniswapXEnabled = getFeatureFlag(FeatureFlags.UniswapX)
   const isDutchV3Enabled = getFeatureFlag(FeatureFlags.ArbitrumDutchV3)
 

@@ -16,23 +16,26 @@ import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
 import styled from 'lib/styled-components'
+import { ReversedArrowsIcon } from 'nft/components/iconExports'
 import { useCallback, useMemo, useState } from 'react'
 import { useLimitContext } from 'state/limit/LimitContext'
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ThemedText } from 'theme/components'
 import { ClickableStyle } from 'theme/components/styles'
-import { TouchableArea } from 'ui/src'
-import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-// biome-ignore lint/style/noRestrictedImports: We need to import this directly so we can format with `en-US` locale
-import { formatCurrencyAmount as formatCurrencyAmountRaw } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
 
 const Container = styled(InputPanel)`
   gap: 4px;
+`
+
+const ReverseIconContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  ${ClickableStyle}
 `
 
 const OutputCurrencyContainer = styled(PrefetchBalancesWrapper)`
@@ -155,17 +158,15 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
       )
       const marketOutputAmount = adjustedPrice?.quote(oneUnitOfBaseCurrency)
       changeLimitPrice(
-        formatCurrencyAmountRaw({
-          // Always use `.` as decimal separator for the internal state
-          locale: 'en-US',
-          amount: marketOutputAmount,
+        formatCurrencyAmount({
+          value: marketOutputAmount,
           type: NumberType.SwapTradeAmount,
           placeholder: limitPrice,
         }),
       )
       sendAnalyticsEvent(InterfaceEventName.LimitPresetRateSelected, { value: adjustmentPercentage })
     },
-    [baseCurrency, limitPrice, changeLimitPrice],
+    [baseCurrency, limitPrice, changeLimitPrice, formatCurrencyAmount],
   )
 
   const { currentPriceAdjustment } = useCurrentPriceAdjustment({
@@ -179,10 +180,8 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
   const onInvertLimitPrices = useCallback(() => {
     if (baseCurrency && marketPrice && quoteCurrency) {
       changeLimitPrice(
-        formatCurrencyAmountRaw({
-          // Always use `.` as decimal separator for the internal state
-          locale: 'en-US',
-          amount: marketPrice
+        formatCurrencyAmount({
+          value: marketPrice
             .invert()
             .quote(CurrencyAmount.fromRawAmount(quoteCurrency, JSBI.BigInt(parseUnits('1', quoteCurrency.decimals)))),
           type: NumberType.SwapTradeAmount,
@@ -192,7 +191,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
     }
     setLimitState((prev) => ({ ...prev, limitPriceInverted: !prev.limitPriceInverted, limitPriceEdited: true }))
     sendAnalyticsEvent(InterfaceEventName.LimitPriceReversed)
-  }, [baseCurrency, marketPrice, quoteCurrency, changeLimitPrice, setLimitState])
+  }, [baseCurrency, marketPrice, quoteCurrency, changeLimitPrice, setLimitState, formatCurrencyAmount])
 
   const presets = limitPriceInverted ? INVERTED_PRICE_ADJUSTMENT_PRESETS : PRICE_ADJUSTMENT_PRESETS
 
@@ -204,9 +203,9 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
           showCurrencyMessage={!!formattedLimitPriceOutputAmount}
           openCurrencySearchModal={() => setCurrencySelectModalField('inputCurrency')}
         />
-        <TouchableArea onPress={onInvertLimitPrices}>
-          <ArrowDownArrowUp color="$neutral2" size="$icon.16" />
-        </TouchableArea>
+        <ReverseIconContainer onClick={onInvertLimitPrices}>
+          <ReversedArrowsIcon size="16px" />
+        </ReverseIconContainer>
       </Row>
       <TextInputRow>
         <StyledNumericalInput

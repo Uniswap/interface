@@ -1,5 +1,4 @@
 import { MismatchToastItem } from 'components/Popups/MismatchToastItem'
-import { MismatchWalletPlatformToastItem } from 'components/Popups/MismatchWalletPlatformToast'
 import {
   FailedNetworkSwitchPopup,
   FORTransactionPopupContent,
@@ -11,9 +10,7 @@ import { PopupContent, PopupType, SwitchNetworkAction } from 'components/Popups/
 import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
-import { spacing } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -57,18 +54,6 @@ export function PopupItem({ content, onClose }: { content: PopupContent; popKey:
     }
     case PopupType.FORTransaction: {
       return <FORTransactionPopupContent transaction={content.transaction} onClose={onClose} />
-    }
-    case PopupType.Error: {
-      return (
-        <ToastRegularSimple
-          onDismiss={onClose}
-          icon={<AlertTriangleFilled color="$statusCritical" size="$icon.24" />}
-          text={content.error}
-        />
-      )
-    }
-    case PopupType.MissingPlatformWallet: {
-      return <MismatchWalletPlatformToastItem expectedPlatform={content.expectedPlatform} onDismiss={onClose} />
     }
   }
 }
@@ -114,17 +99,17 @@ function BridgeToast({
   const originChain = getChainInfo(inputChainId)
   const targetChain = getChainInfo(outputChainId)
   return (
-    <Flex row alignItems="center" gap="$gap8">
-      <Flex row gap={spacing.spacing6}>
+    <Flex row gap="$gap8">
+      <Flex row gap="$gap4">
         <NetworkLogo chainId={inputChainId} />
-        <Text variant="body4" lineHeight={20}>
+        <Text variant="body2" lineHeight={20}>
           {originChain.label}
         </Text>
       </Flex>
-      <Shuffle color="$neutral2" size="$icon.16" />
-      <Flex row gap={spacing.spacing6}>
+      <Shuffle color="$neutral2" size="$icon.20" />
+      <Flex row gap="$gap4">
         <NetworkLogo chainId={outputChainId} />
-        <Text variant="body4" lineHeight={20}>
+        <Text variant="body2" lineHeight={20}>
           {targetChain.label}
         </Text>
       </Flex>

@@ -63,7 +63,7 @@ import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProvi
 import { getStatsigClient, StatsigUser, Storage } from 'uniswap/src/features/gating/sdk/statsig'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
-import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice/slice'
+import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -78,9 +78,8 @@ import { logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-// biome-ignore lint/style/noRestrictedImports: Required for Apollo client initialization at app root
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
-import { AccountsStoreContextProvider } from 'wallet/src/features/accounts/store/provider'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { useHeartbeatReporter } from 'wallet/src/features/telemetry/hooks/useHeartbeatReporter'
 import { useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks/useLastBalancesReporter'
@@ -254,19 +253,17 @@ function AppOuter(): JSX.Element | null {
                   <NavigationContainer>
                     <MobileWalletNavigationProvider>
                       <NativeWalletProvider>
-                        <AccountsStoreContextProvider>
-                          <WalletUniswapProvider>
-                            <DataUpdaters />
-                            <BottomSheetModalProvider>
-                              <AppModals />
-                              <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                <AppInner />
-                              </PerformanceProfiler>
-                            </BottomSheetModalProvider>
-                            <NotificationToastWrapper />
-                          </WalletUniswapProvider>
-                        </AccountsStoreContextProvider>
+                        <WalletUniswapProvider>
+                          <DataUpdaters />
+                          <BottomSheetModalProvider>
+                            <AppModals />
+                            <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                              <AppInner />
+                            </PerformanceProfiler>
+                          </BottomSheetModalProvider>
+                        </WalletUniswapProvider>
                       </NativeWalletProvider>
+                      <NotificationToastWrapper />
                     </MobileWalletNavigationProvider>
                   </NavigationContainer>
                 </WalletContextProvider>

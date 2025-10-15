@@ -116,7 +116,7 @@ export function MaxSlippageTooltip({
                 <ShieldCheck size="$icon.12" color="$uniswapXPurple" />
               </Flex>
             </Flex>
-            <Tooltip.LineItemLabel label={t('settings.maxSlippage.amount', { amount: currentSlippageTolerance })} />
+            <Tooltip.LineItemLabel label={t('settings.maxSlippage.percent', { percent: currentSlippageTolerance })} />
             {autoSlippageEnabled && <AutoSlippageBadge />}
           </Flex>
         </Tooltip.Row>

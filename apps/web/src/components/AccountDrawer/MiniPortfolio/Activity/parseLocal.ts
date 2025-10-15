@@ -2,7 +2,6 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import type { Currency } from '@uniswap/sdk-core'
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
 import UniswapXBolt from 'assets/svg/bolt.svg'
 import StaticRouteIcon from 'assets/svg/static_route.svg'
 import { getCurrencyFromCurrencyId } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
@@ -20,6 +19,9 @@ import {
   forTransactionStatusToTransactionStatus,
   statusToTransactionInfoStatus,
 } from 'state/fiatOnRampTransactions/utils'
+import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
+import type { SignatureDetails } from 'state/signatures/types'
+import { SignatureType } from 'state/signatures/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
 import { isConfirmedTx } from 'state/transactions/utils'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
@@ -27,9 +29,6 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { hasTradeType } from 'uniswap/src/features/transactions/swap/utils/trade'
 import type {
   ApproveTransactionInfo,
   BridgeTransactionInfo,
@@ -37,21 +36,19 @@ import type {
   ConfirmedSwapTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
-  InterfaceBaseTransactionDetails,
   InterfaceTransactionDetails,
   LiquidityDecreaseTransactionInfo,
   LiquidityIncreaseTransactionInfo,
   LpIncentivesClaimTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
   SendTokenTransactionInfo,
-  UniswapXOrderDetails,
   WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isConfirmedSwapTypeInfo } from 'uniswap/src/features/transactions/types/utils'
 import i18n from 'uniswap/src/i18n'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { isAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -59,35 +56,6 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 type FormatNumberFunctionType = ReturnType<typeof useLocalizationContext>['formatNumberOrString']
 type FormatFiatPriceFunctionType = ReturnType<typeof useLocalizationContext>['convertFiatAmountFormatted']
-
-// Narrowing helper for when we actually need UniswapX-specific fields
-function isUniswapXDetails(
-  details: InterfaceTransactionDetails,
-): details is UniswapXOrderDetails<InterfaceBaseTransactionDetails> {
-  return 'routing' in details && isUniswapX(details)
-}
-
-/**
- * Checks if a transaction is a UniswapX order by examining both the routing field (new approach)
- * and the isUniswapXOrder flag (legacy approach for backward compatibility)
- */
-function isUniswapXActivity(details: InterfaceTransactionDetails): boolean {
-  const { typeInfo } = details
-
-  // Must be a swap with trade type info
-  if (typeInfo.type !== TransactionType.Swap || !hasTradeType(typeInfo)) {
-    return false
-  }
-
-  // Check new routing-based approach
-  if (isUniswapXDetails(details)) {
-    return true
-  }
-
-  // Fall back to legacy flag for backward compatibility with existing transactions
-  // stored before migration to routing-based structure (see WALL-7143)
-  return 'isUniswapXOrder' in typeInfo && typeInfo.isUniswapXOrder === true
-}
 
 function buildCurrencyDescriptor({
   currencyA,
@@ -385,9 +353,7 @@ async function parseSend({
           type: NumberType.TokenNonTx,
         })
       : i18n.t('common.unknown')
-  // TODO(SWAP-119): edit to allow SVM platform if Solana send is supported
-  const otherAccount =
-    getValidAddress({ address: recipient, platform: Platform.EVM, withEVMChecksum: true }) || undefined
+  const otherAccount = isAddress(recipient) || undefined
 
   return {
     descriptor: i18n.t('activity.transaction.send.descriptor', {
@@ -414,56 +380,6 @@ async function parseLpIncentivesClaim({
   }
 }
 
-async function parseUniswapXOrderLocal({
-  details,
-  formatNumber,
-}: {
-  details: InterfaceTransactionDetails
-  formatNumber: FormatNumberFunctionType
-}): Promise<Partial<Activity>> {
-  const { typeInfo } = details
-  const uniswapXOrderDetails = isUniswapXDetails(details) ? details : undefined
-  const isLimitOrder = uniswapXOrderDetails?.routing === TradingApi.Routing.DUTCH_LIMIT
-
-  // Get the appropriate order text table
-  const orderTextTable = getOrderTextTable()
-  const limitOrderTextTable = getLimitOrderTextTable()
-  let orderTextTableEntry = (isLimitOrder ? limitOrderTextTable : orderTextTable)[details.status]
-
-  // Fallback for missing status entries
-  if (!orderTextTableEntry) {
-    // Use default swap title/status as fallback
-    orderTextTableEntry = {
-      getTitle: () => getActivityTitle({ type: TransactionType.Swap, status: details.status }),
-      status: details.status,
-    }
-  }
-
-  const title = orderTextTableEntry.getTitle()
-  const statusMessage = orderTextTableEntry.getStatusMessage?.()
-  const swapFields = await parseSwap({
-    swap: typeInfo as ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo,
-    formatNumber,
-  })
-
-  // Create offchainOrderDetails if we have routing information
-  const offchainOrderDetails = uniswapXOrderDetails
-    ? {
-        ...uniswapXOrderDetails,
-        orderHash: uniswapXOrderDetails.orderHash || uniswapXOrderDetails.hash,
-      }
-    : undefined
-
-  return {
-    ...swapFields,
-    title,
-    status: orderTextTableEntry.status,
-    statusMessage,
-    prefixIconSrc: UniswapXBolt,
-    offchainOrderDetails,
-  }
-}
-
 export async function transactionToActivity({
   details,
   formatNumber,
@@ -476,16 +392,13 @@ export async function transactionToActivity({
   }
   const { chainId } = details
   try {
-    // For swaps that might be UniswapX, we'll set the title later
-    const shouldDeferTitle = details.typeInfo.type === TransactionType.Swap && isUniswapXActivity(details)
-
     const defaultFields: Activity = {
       id: details.id,
       hash: details.hash,
       chainId,
       // Store transaction request in options.request for consistent nonce access
       options: 'options' in details ? details.options : undefined,
-      title: shouldDeferTitle ? '' : getActivityTitle({ type: details.typeInfo.type, status: details.status }),
+      title: getActivityTitle({ type: details.typeInfo.type, status: details.status }),
       status: details.status,
       timestamp: (isConfirmedTx(details) ? details.receipt.confirmedTime : details.addedTime) / ONE_SECOND_MS,
       from: details.from,
@@ -494,25 +407,17 @@ export async function transactionToActivity({
     let additionalFields: Partial<Activity> = {}
     const info = details.typeInfo
     if (info.type === TransactionType.Swap) {
-      if (isUniswapXActivity(details)) {
-        additionalFields = await parseUniswapXOrderLocal({
-          details,
+      const confirmedSwap = isConfirmedSwapTypeInfo(info)
+      if (!confirmedSwap) {
+        additionalFields = await parseSwap({
+          swap: info,
           formatNumber,
         })
       } else {
-        // Handle as regular swap
-        const confirmedSwap = isConfirmedSwapTypeInfo(info)
-        if (!confirmedSwap) {
-          additionalFields = await parseSwap({
-            swap: info,
-            formatNumber,
-          })
-        } else {
-          additionalFields = await parseConfirmedSwap({
-            swap: info,
-            formatNumber,
-          })
-        }
+        additionalFields = await parseConfirmedSwap({
+          swap: info,
+          formatNumber,
+        })
       }
     } else if (info.type === TransactionType.Bridge) {
       additionalFields = await parseBridge({
@@ -572,10 +477,8 @@ export async function transactionToActivity({
 
     const activity = { ...defaultFields, ...additionalFields }
 
-    // Skip the canceled transaction override for UniswapX orders since they handle it specially
-    const isUniswapX = details.typeInfo.type === TransactionType.Swap && isUniswapXActivity(details)
     const CancelledTransactionTitleTable = getCancelledTransactionTitleTable()
-    if (details.status === TransactionStatus.Canceled && !isUniswapX) {
+    if (details.status === TransactionStatus.Canceled) {
       activity.title = CancelledTransactionTitleTable[details.typeInfo.type]
       activity.status = TransactionStatus.Success
     }
@@ -597,6 +500,16 @@ export function getTransactionToActivityQueryOptions({
   return queryOptions({
     queryKey: [ReactQueryCacheKey.TransactionToActivity, transaction],
     queryFn: async () => transactionToActivity({ details: transaction, formatNumber }),
+  })
+}
+
+export function getSignatureToActivityQueryOptions(
+  signature: SignatureDetails | undefined,
+  formatNumber: FormatNumberFunctionType,
+) {
+  return queryOptions({
+    queryKey: [ReactQueryCacheKey.SignatureToActivity, signature],
+    queryFn: async () => signatureToActivity(signature, formatNumber),
   })
 }
 
@@ -671,13 +584,65 @@ function convertToSecTimestamp(timestamp: number) {
   }
 }
 
+export async function signatureToActivity(
+  signature: SignatureDetails | undefined,
+  formatNumber: FormatNumberFunctionType,
+): Promise<Activity | undefined> {
+  if (!signature) {
+    return undefined
+  }
+  switch (signature.type) {
+    case SignatureType.SIGN_UNISWAPX_ORDER:
+    case SignatureType.SIGN_UNISWAPX_V2_ORDER:
+    case SignatureType.SIGN_UNISWAPX_V3_ORDER:
+    case SignatureType.SIGN_PRIORITY_ORDER:
+    case SignatureType.SIGN_LIMIT: {
+      // Only returns Activity items for orders that don't have an on-chain counterpart
+      if (isOnChainOrder(signature.status)) {
+        return undefined
+      }
+
+      const OrderTextTable = getOrderTextTable()
+      const LimitOrderTextTable = getLimitOrderTextTable()
+
+      const orderTextTableEntry =
+        signature.type === SignatureType.SIGN_LIMIT
+          ? LimitOrderTextTable[signature.status]
+          : OrderTextTable[signature.status]
+
+      const title = orderTextTableEntry.getTitle()
+      const statusMessage = orderTextTableEntry.getStatusMessage?.()
+
+      return {
+        id: signature.id,
+        hash: signature.orderHash,
+        chainId: signature.chainId,
+        title,
+        status: orderTextTableEntry.status,
+        offchainOrderDetails: signature,
+        timestamp: convertToSecTimestamp(signature.addedTime),
+        from: signature.offerer,
+        statusMessage,
+        prefixIconSrc: UniswapXBolt,
+        ...(await parseSwap({
+          swap: signature.swapInfo,
+          formatNumber,
+        })),
+      }
+    }
+    default:
+      return undefined
+  }
+}
+
 export function useLocalActivities(account: string): ActivityMap {
   const allTransactions = useMultichainTransactions(account)
+  const allSignatures = useAllSignatures()
   const { formatNumberOrString } = useLocalizationContext()
   const { chains } = useEnabledChains()
 
   const { data } = useQuery({
-    queryKey: [ReactQueryCacheKey.LocalActivities, account, allTransactions],
+    queryKey: [ReactQueryCacheKey.LocalActivities, account, allTransactions, allSignatures],
     queryFn: async () => {
       const transactions = Object.values(allTransactions)
         .filter(([, chainId]) => chains.includes(chainId))
@@ -687,8 +652,11 @@ export function useLocalActivities(account: string): ActivityMap {
             formatNumber: formatNumberOrString,
           }),
         )
+      const signatures = Object.values(allSignatures)
+        .filter((signature) => signature.offerer === account)
+        .map((signature) => signatureToActivity(signature, formatNumberOrString))
 
-      const allActivities = await Promise.all([...transactions])
+      const allActivities = await Promise.all([...transactions, ...signatures])
       return createActivityMapByHash(allActivities)
     },
   })

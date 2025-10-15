@@ -5,16 +5,8 @@ import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
-// We want this to return fresh data.
-// We only return cached data if it's called multiple times almost at the exact same time.
-const SOLANA_ONCHAIN_BALANCE_CACHE_TIME_MS = 100
-
-// Solana has two primary token programs; we need to fetch for both
-// ref: https://solana.com/docs/tokens#token-program
-const SOLANA_TOKEN_PROGRAM_IDS = [
-  new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA'),
-  new PublicKey('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb'),
-]
+const SOLANA_ONCHAIN_BALANCE_CACHE_TIME = 100
+const SOLANA_TOKEN_PROGRAM_ID = new PublicKey('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA')
 
 type SolanaParsedTokenAccountsByOwnerQueryParams = {
   accountAddress: string
@@ -56,17 +48,13 @@ export function getSolanaParsedTokenAccountsByOwnerQueryOptions({
     queryFn: async () => {
       const connection = getSolanaConnection()
 
-      const tokenAccountBalances = (
-        await Promise.all(
-          SOLANA_TOKEN_PROGRAM_IDS.map((programId) =>
-            connection.getParsedTokenAccountsByOwner(new PublicKey(params.accountAddress), { programId }),
-          ),
-        )
-      ).flatMap((result) => result.value)
+      const tokenAccounts = await connection.getParsedTokenAccountsByOwner(new PublicKey(params.accountAddress), {
+        programId: SOLANA_TOKEN_PROGRAM_ID,
+      })
 
       const balanceMap: Record<string, SolanaParsedTokenAccount> = {}
 
-      tokenAccountBalances.forEach((account) => {
+      tokenAccounts.value.forEach((account) => {
         const parsedTokenAccount = parseTokenAccount(account.account.data)
         if (parsedTokenAccount.mint) {
           balanceMap[parsedTokenAccount.mint] = parsedTokenAccount
@@ -75,7 +63,7 @@ export function getSolanaParsedTokenAccountsByOwnerQueryOptions({
 
       return balanceMap
     },
-    staleTime: SOLANA_ONCHAIN_BALANCE_CACHE_TIME_MS,
-    gcTime: SOLANA_ONCHAIN_BALANCE_CACHE_TIME_MS,
+    staleTime: SOLANA_ONCHAIN_BALANCE_CACHE_TIME,
+    gcTime: SOLANA_ONCHAIN_BALANCE_CACHE_TIME,
   })
 }

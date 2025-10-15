@@ -1,9 +1,10 @@
-import { GasStrategy, TradingApi } from '@universe/api'
+import type { TradeType, Urgency } from 'uniswap/src/data/tradingApi/__generated__'
+import type { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import {
   createBuildQuoteRequest,
   flattenQuoteRequestResult,
   type ParsedTradeInput,
-  parseTradeInputForTradingApiQuote,
+  parseTradeInputForQuote,
   validateParsedInput,
 } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/buildQuoteRequest'
 import { UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -27,8 +28,8 @@ export type GetQuoteRequestResult = QuoteRoutingParamsResult &
     tokenInChainId: number
     tokenOut: string
     tokenOutChainId: number
-    type: TradingApi.TradeType
-    urgency?: TradingApi.Urgency
+    type: TradeType
+    urgency?: Urgency
   }
 
 export type GetQuoteRequestArgsGetter = (input: UseTradeArgs) => GetQuoteRequestResult | undefined
@@ -52,7 +53,7 @@ export function createGetQuoteRequestArgs(ctx: {
     }
 
     // Step 2: Parse the input
-    const parsedInput = parseTradeInputForTradingApiQuote(input)
+    const parsedInput = parseTradeInputForQuote(input)
 
     // Step 3: Validate the data structure
     const validatedInput = validateParsedInput(parsedInput)

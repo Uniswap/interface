@@ -1,9 +1,8 @@
 import { ApolloError } from '@apollo/client'
-import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
 import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
+import { GqlResult } from 'uniswap/src/data/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { usePersistedError } from 'uniswap/src/features/dataApi/utils/usePersistedError'
@@ -85,7 +84,7 @@ export function useCurrencyInfosToTokenOptions({
       : currencyInfos
 
     return sortedCurrencyInfos.map((currencyInfo) => {
-      const portfolioBalance = portfolioBalancesById?.[normalizeCurrencyIdForMapLookup(currencyInfo.currencyId)]
+      const portfolioBalance = portfolioBalancesById?.[currencyInfo.currencyId.toLowerCase()]
       return portfolioBalance
         ? { type: OnchainItemListOptionType.Token, ...portfolioBalance }
         : createEmptyBalanceOption(currencyInfo)

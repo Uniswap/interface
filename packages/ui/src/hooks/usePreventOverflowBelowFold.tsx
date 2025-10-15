@@ -14,7 +14,6 @@ export function usePreventOverflowBelowFold(isVisible = true): {
     return diff > 0 ? diff : 0
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to trigger this effect when isVisible changes
   useEffect(() => {
     // Effectively waits for the menu to render before calculating the offset
     setTimeout(() => {

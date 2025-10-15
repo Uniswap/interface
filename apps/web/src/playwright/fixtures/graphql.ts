@@ -1,4 +1,4 @@
-// biome-ignore lint/style/noRestrictedImports: GraphQL fixtures need direct Playwright imports
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { test as base } from '@playwright/test'
 import path from 'path'
 import { Mocks } from 'playwright/mocks/mocks'
@@ -53,6 +53,7 @@ export const test = base.extend<GraphqlFixture>({
           return data.operationName === operationName
         })
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.warn('GraphQL waitForResponse error:', error)
       }
     }
@@ -81,6 +82,7 @@ export const test = base.extend<GraphqlFixture>({
 
         return route.continue()
       } catch (error) {
+        // eslint-disable-next-line no-console
         console.warn('GraphQL intercept error:', error)
         return route.continue()
       }

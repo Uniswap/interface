@@ -1,7 +1,7 @@
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { SubmitTransactionParamsWithTypeInfo } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
+import { SubmitTransactionParams } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 
 export interface BaseTransactionContext {
   chainId: number
@@ -43,6 +43,6 @@ export enum TransactionStepType {
 
 export interface TransactionStep {
   type: TransactionStepType
-  params: SubmitTransactionParamsWithTypeInfo
+  params: SubmitTransactionParams
   shouldWait?: boolean
 }

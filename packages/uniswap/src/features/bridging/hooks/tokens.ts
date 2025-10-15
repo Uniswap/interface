@@ -1,4 +1,3 @@
-import { GqlResult, GraphQLApi, TradingApi } from '@universe/api'
 import { useCallback, useMemo } from 'react'
 import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
@@ -7,7 +6,9 @@ import { createEmptyTokenOptionFromBridgingToken } from 'uniswap/src/components/
 import { useTradingApiSwappableTokensQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
+import { useTokenProjectsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
+import { GqlResult } from 'uniswap/src/data/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -35,7 +36,7 @@ export function useBridgingTokenWithHighestBalance({
 }): {
   data:
     | {
-        token: TradingApi.GetSwappableTokensResponse['tokens'][number]
+        token: GetSwappableTokensResponse['tokens'][number]
         balance: PortfolioBalance
         currencyInfo: CurrencyInfo
       }
@@ -46,7 +47,7 @@ export function useBridgingTokenWithHighestBalance({
   const tokenIn = currencyAddress ? getTokenAddressFromChainForTradingApi(currencyAddress, currencyChainId) : undefined
   const tokenInChainId = toTradingApiSupportedChainId(currencyChainId)
 
-  const { data: tokenProjectsData, loading: tokenProjectsLoading } = GraphQLApi.useTokenProjectsQuery({
+  const { data: tokenProjectsData, loading: tokenProjectsLoading } = useTokenProjectsQuery({
     variables: { contracts: [currencyIdToContractInput(currencyId)] },
   })
 
@@ -79,7 +80,7 @@ export function useBridgingTokenWithHighestBalance({
 
     const tokenWithHighestBalance = bridgingTokens.tokens.reduce<
       | {
-          token: TradingApi.GetSwappableTokensResponse['tokens'][number]
+          token: GetSwappableTokensResponse['tokens'][number]
           balance: PortfolioBalance
           currencyInfo: CurrencyInfo
         }
@@ -184,7 +185,7 @@ export function useBridgingTokensOptions({
 }
 
 function useBridgingTokensToTokenOptions(
-  bridgingTokens: TradingApi.GetSwappableTokensResponse['tokens'] | undefined,
+  bridgingTokens: GetSwappableTokensResponse['tokens'] | undefined,
   portfolioBalancesById?: Record<string, PortfolioBalance>,
 ): TokenOption[] | undefined {
   const { chains: enabledChainIds } = useEnabledChains()
@@ -215,8 +216,7 @@ function useBridgingTokensToTokenOptions(
         const isNative = token.address === NATIVE_ADDRESS_FOR_TRADING_API
         const currencyId = isNative ? buildNativeCurrencyId(chainId) : buildCurrencyId(chainId, token.address)
         return {
-          ...(portfolioBalancesById?.[normalizeCurrencyIdForMapLookup(currencyId)] ??
-            createEmptyTokenOptionFromBridgingToken(token)),
+          ...(portfolioBalancesById?.[currencyId.toLowerCase()] ?? createEmptyTokenOptionFromBridgingToken(token)),
           type: OnchainItemListOptionType.Token,
         }
       })

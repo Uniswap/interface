@@ -11,7 +11,7 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { ensure0xHex } from 'utilities/src/addresses/hex'
+import { ensure0xHex } from 'uniswap/src/utils/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
@@ -20,7 +20,6 @@ import { TransactionRepository } from 'wallet/src/features/transactions/executeT
 import {
   PrepareTransactionParams,
   SubmitTransactionParams,
-  SubmitTransactionParamsWithTypeInfo,
   TransactionService,
 } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { createTransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionServiceImpl'
@@ -150,9 +149,7 @@ describe('TransactionService', () => {
     ...overrides,
   })
 
-  const createSubmitTransactionParams = (
-    overrides: Partial<SubmitTransactionParams> = {},
-  ): SubmitTransactionParamsWithTypeInfo => {
+  const createSubmitTransactionParams = (overrides: Partial<SubmitTransactionParams> = {}): SubmitTransactionParams => {
     const defaultValidatedRequest = {
       to: '0xabcdef1234567890123456789012345678901234',
       value: '0x1234',
@@ -750,7 +747,7 @@ describe('TransactionService', () => {
         analytics?: Record<string, unknown>
         transactionOriginType?: TransactionOriginType
       } = {},
-    ): SubmitTransactionParamsWithTypeInfo => {
+    ): SubmitTransactionParams => {
       const defaultValidatedRequest = {
         to: '0xabcdef1234567890123456789012345678901234',
         value: '0x1234',
@@ -786,7 +783,7 @@ describe('TransactionService', () => {
         typeInfo: overrides.typeInfo || defaultTypeInfo,
         transactionOriginType: overrides.transactionOriginType || TransactionOriginType.Internal,
         ...(overrides.analytics && { analytics: overrides.analytics }),
-      } as SubmitTransactionParamsWithTypeInfo
+      } as SubmitTransactionParams
     }
 
     it('should successfully submit a transaction using sync method and return transaction details', async () => {
@@ -1509,385 +1506,5 @@ describe('TransactionService', () => {
       })
       expect(result).toEqual({ nonce: 8, pendingPrivateTxCount: 3 }) // 5 + 3 = 8
     })
-  })
-
-  describe('trackTransactionAnalytics', () => {
-    // Test the trackTransactionAnalytics function behavior through service methods
-
-    const mockAnalyticsData = {
-      token_in_symbol: 'ETH',
-      token_out_symbol: 'USDC',
-      token_in_amount: '1.0',
-      token_out_amount: '1700.0',
-      routing: 'classic' as const,
-      transactionOriginType: 'internal',
-    }
-
-    it('should track analytics for swap transactions with analytics data', async () => {
-      // Arrange
-      const service = createTestService()
-
-      const swapTypeInfo: TransactionTypeInfo = {
-        type: TransactionType.Swap,
-        tradeType: 0,
-        inputCurrencyId: 'eth',
-        outputCurrencyId: 'usdc',
-        inputCurrencyAmountRaw: '1000000000000000000',
-        expectedOutputCurrencyAmountRaw: '1700000000',
-        minimumOutputCurrencyAmountRaw: '1683000000',
-      }
-
-      const params = createSubmitTransactionParams({
-        typeInfo: swapTypeInfo,
-        analytics: mockAnalyticsData,
-        transactionOriginType: TransactionOriginType.Internal,
-      })
-
-      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
-      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
-
-      // Act
-      await service.submitTransaction(params)
-      await new Promise((resolve) => setTimeout(resolve, 100))
-
-      // Assert
-      expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
-        expect.objectContaining({
-          typeInfo: swapTypeInfo,
-          hash: txHash,
-        }),
-        mockAnalyticsData,
-      )
-      expect(mockLogger.error).not.toHaveBeenCalled()
-    })
-
-    it('should log error for internal swap transactions without analytics data', async () => {
-      // Arrange
-      const service = createTestService()
-
-      const swapTypeInfo: TransactionTypeInfo = {
-        type: TransactionType.Swap,
-        tradeType: 0,
-        inputCurrencyId: 'eth',
-        outputCurrencyId: 'usdc',
-        inputCurrencyAmountRaw: '1000000000000000000',
-        expectedOutputCurrencyAmountRaw: '1700000000',
-        minimumOutputCurrencyAmountRaw: '1683000000',
-      }
-
-      const params = createSubmitTransactionParams({
-        typeInfo: swapTypeInfo,
-        transactionOriginType: TransactionOriginType.Internal,
-        // Note: No analytics provided
-      })
-
-      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
-      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
-
-      // Act
-      await service.submitTransaction(params)
-      await new Promise((resolve) => setTimeout(resolve, 100))
-
-      // Assert
-      expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
-      expect(mockLogger.error).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: 'Missing `analytics` for swap when calling `sendTransaction`',
-        }),
-        expect.objectContaining({
-          tags: { file: 'TransactionService', function: 'sendTransaction' },
-          extra: expect.objectContaining({
-            transaction: expect.objectContaining({
-              typeInfo: swapTypeInfo,
-            }),
-          }),
-        }),
-      )
-    })
-
-    it('should track analytics for bridge transactions with analytics data', async () => {
-      // Arrange
-      const service = createTestService()
-
-      const bridgeTypeInfo: TransactionTypeInfo = {
-        type: TransactionType.Bridge,
-        inputCurrencyId: 'eth',
-        inputCurrencyAmountRaw: '1000000000000000000',
-        outputCurrencyId: 'matic',
-        outputCurrencyAmountRaw: '1700000000000000000',
-      }
-
-      const bridgeAnalyticsData = {
-        token_in_symbol: 'ETH',
-        token_out_symbol: 'MATIC',
-        token_in_amount: '1.0',
-        token_out_amount: '1700.0',
-        routing: 'bridge' as const,
-        transactionOriginType: 'internal',
-        chain_id_in: UniverseChainId.Mainnet,
-        chain_id_out: UniverseChainId.Polygon,
-      }
-
-      const params = createSubmitTransactionParams({
-        typeInfo: bridgeTypeInfo,
-        analytics: bridgeAnalyticsData,
-        transactionOriginType: TransactionOriginType.Internal,
-      })
-
-      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
-      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
-
-      // Act
-      await service.submitTransaction(params)
-      await new Promise((resolve) => setTimeout(resolve, 100))
-
-      // Assert
-      expect(mockAnalyticsService.trackSwapSubmitted).toHaveBeenCalledWith(
-        expect.objectContaining({
-          typeInfo: bridgeTypeInfo,
-          hash: txHash,
-        }),
-        bridgeAnalyticsData,
-      )
-      expect(mockLogger.error).not.toHaveBeenCalled()
-    })
-
-    it('should log error for internal bridge transactions without analytics data', async () => {
-      // Arrange
-      const service = createTestService()
-
-      const bridgeTypeInfo: TransactionTypeInfo = {
-        type: TransactionType.Bridge,
-        inputCurrencyId: 'eth',
-        inputCurrencyAmountRaw: '1000000000000000000',
-        outputCurrencyId: 'matic',
-        outputCurrencyAmountRaw: '1700000000000000000',
-      }
-
-      const params = createSubmitTransactionParams({
-        typeInfo: bridgeTypeInfo,
-        transactionOriginType: TransactionOriginType.Internal,
-        // Note: No analytics provided
-      })
-
-      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
-      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
-
-      // Act
-      await service.submitTransaction(params)
-      await new Promise((resolve) => setTimeout(resolve, 100))
-
-      // Assert
-      expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
-      expect(mockLogger.error).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: 'Missing `analytics` for swap when calling `sendTransaction`',
-        }),
-        expect.objectContaining({
-          tags: { file: 'TransactionService', function: 'sendTransaction' },
-          extra: expect.objectContaining({
-            transaction: expect.objectContaining({
-              typeInfo: bridgeTypeInfo,
-            }),
-          }),
-        }),
-      )
-    })
-
-    it('should NOT log error for non-swap/bridge transactions without analytics data', async () => {
-      // Arrange
-      const service = createTestService()
-
-      const sendTypeInfo: TransactionTypeInfo = {
-        type: TransactionType.Send,
-        assetType: AssetType.Currency,
-        recipient: '0xabcdef1234567890123456789012345678901234',
-        tokenAddress: '0x0000000000000000000000000000000000000000',
-        currencyAmountRaw: '0x1234',
-      }
-
-      const params = createSubmitTransactionParams({
-        typeInfo: sendTypeInfo,
-        transactionOriginType: TransactionOriginType.Internal,
-        // Note: No analytics provided
-      })
-
-      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
-      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
-
-      // Act
-      await service.submitTransaction(params)
-      await new Promise((resolve) => setTimeout(resolve, 100))
-
-      // Assert
-      expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
-      expect(mockLogger.error).not.toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: expect.stringContaining('Missing `analytics`'),
-        }),
-        expect.anything(),
-      )
-    })
-
-    it('should NOT log error for external swap transactions without analytics data', async () => {
-      // Arrange
-      const service = createTestService()
-
-      const swapTypeInfo: TransactionTypeInfo = {
-        type: TransactionType.Swap,
-        tradeType: 0,
-        inputCurrencyId: 'eth',
-        outputCurrencyId: 'usdc',
-        inputCurrencyAmountRaw: '1000000000000000000',
-        expectedOutputCurrencyAmountRaw: '1700000000',
-        minimumOutputCurrencyAmountRaw: '1683000000',
-      }
-
-      const params = createSubmitTransactionParams({
-        typeInfo: swapTypeInfo,
-        transactionOriginType: TransactionOriginType.External, // External transaction
-        // Note: No analytics provided
-      })
-
-      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
-      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
-
-      // Act
-      await service.submitTransaction(params)
-      await new Promise((resolve) => setTimeout(resolve, 100))
-
-      // Assert
-      expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
-      expect(mockLogger.error).not.toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: expect.stringContaining('Missing `analytics`'),
-        }),
-        expect.anything(),
-      )
-    })
-
-    it('should NOT log error for external bridge transactions without analytics data', async () => {
-      // Arrange
-      const service = createTestService()
-
-      const bridgeTypeInfo: TransactionTypeInfo = {
-        type: TransactionType.Bridge,
-        inputCurrencyId: 'eth',
-        inputCurrencyAmountRaw: '1000000000000000000',
-        outputCurrencyId: 'matic',
-        outputCurrencyAmountRaw: '1700000000000000000',
-      }
-
-      const params = createSubmitTransactionParams({
-        typeInfo: bridgeTypeInfo,
-        transactionOriginType: TransactionOriginType.External, // External transaction
-        // Note: No analytics provided
-      })
-
-      const txHash = '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890'
-      mockTransactionSigner.sendTransaction.mockResolvedValue(txHash)
-
-      // Act
-      await service.submitTransaction(params)
-      await new Promise((resolve) => setTimeout(resolve, 100))
-
-      // Assert
-      expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
-      expect(mockLogger.error).not.toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: expect.stringContaining('Missing `analytics`'),
-        }),
-        expect.anything(),
-      )
-    })
-
-    it('should work correctly in submitTransactionSync for swap transactions', async () => {
-      // Arrange
-      const swapTypeInfo: TransactionTypeInfo = {
-        type: TransactionType.Swap,
-        tradeType: 0,
-        inputCurrencyId: 'eth',
-        outputCurrencyId: 'usdc',
-        inputCurrencyAmountRaw: '1000000000000000000',
-        expectedOutputCurrencyAmountRaw: '1700000000',
-        minimumOutputCurrencyAmountRaw: '1683000000',
-      }
-
-      const params = createSubmitTransactionParams({
-        typeInfo: swapTypeInfo,
-        transactionOriginType: TransactionOriginType.Internal,
-        // Note: No analytics provided
-      })
-
-      const syncService = createTestServiceWithJsonRpc()
-      const mockReceipt = createMockFormattedReceipt()
-      mockTransactionSigner.sendTransactionSync.mockResolvedValue(mockReceipt)
-
-      // Act
-      await syncService.submitTransactionSync(params)
-
-      // Assert
-      expect(mockAnalyticsService.trackSwapSubmitted).not.toHaveBeenCalled()
-      expect(mockLogger.error).toHaveBeenCalledWith(
-        expect.objectContaining({
-          message: 'Missing `analytics` for swap when calling `submitTransactionSync`',
-        }),
-        expect.objectContaining({
-          tags: { file: 'TransactionService', function: 'submitTransactionSync' },
-          extra: expect.objectContaining({
-            transaction: expect.objectContaining({
-              typeInfo: swapTypeInfo,
-            }),
-          }),
-        }),
-      )
-    })
-
-    // Helper function for sync tests - reuse from existing code
-    const createTestServiceWithJsonRpc = (mockProvider: JsonRpcProvider | null = null): TransactionService => {
-      const provider = mockProvider || createMockJsonRpcProvider()
-      return createTransactionService({
-        transactionRepository: mockTransactionRepository,
-        transactionSigner: mockTransactionSigner,
-        analyticsService: mockAnalyticsService,
-        configService: mockConfigService,
-        logger: mockLogger,
-        getProvider: jest.fn().mockResolvedValue(provider),
-      })
-    }
-
-    const createMockJsonRpcProvider = (): JsonRpcProvider => {
-      const mockSend = jest.fn().mockResolvedValue({})
-      const mockFormatterReceipt = jest.fn().mockImplementation(() => createMockFormattedReceipt())
-
-      return {
-        ...mockBaseProvider,
-        send: mockSend,
-        formatter: {
-          receipt: mockFormatterReceipt,
-        },
-      } as unknown as JsonRpcProvider
-    }
-
-    const createMockFormattedReceipt = (): TransactionReceipt =>
-      ({
-        transactionHash: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-        blockNumber: 0x123456,
-        gasUsed: BigNumber.from('0x5208'),
-        status: 1,
-        blockHash: '0xblock123',
-        transactionIndex: 0,
-        from: '0x1234567890123456789012345678901234567890',
-        to: '0xabcdef1234567890123456789012345678901234',
-        logs: [],
-        cumulativeGasUsed: BigNumber.from('0x5208'),
-        effectiveGasPrice: BigNumber.from('0x9184e72a000'),
-        contractAddress: null,
-        logsBloom: '0x0',
-        root: '0x0',
-        type: 2,
-        byzantium: true,
-        confirmations: 1,
-      }) as unknown as TransactionReceipt
   })
 })

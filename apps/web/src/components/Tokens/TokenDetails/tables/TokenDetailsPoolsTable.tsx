@@ -8,7 +8,6 @@ import { PoolsTable, sortAscendingAtom, sortMethodAtom } from 'components/Pools/
 import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { useEffect, useMemo } from 'react'
 import { Flex } from 'ui/src'
-import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
 
 const HIDDEN_COLUMNS = [PoolSortFields.VolOverTvl, PoolSortFields.RewardApr]
 
@@ -43,7 +42,7 @@ export function TokenDetailsPoolsTable({ referenceCurrency }: { referenceCurrenc
   }, [resetSortAscending, resetSortMethod])
 
   return (
-    <Flex data-testid={`tdp-pools-table-${normalizeAddress(referenceToken.address, AddressStringFormat.Lowercase)}`}>
+    <Flex data-testid={`tdp-pools-table-${referenceToken.address.toLowerCase()}`}>
       <PoolsTable
         pools={pools}
         loading={allDataStillLoading}

@@ -1,26 +1,22 @@
 import { BigNumber, providers } from 'ethers'
 import { call, put, select } from 'typed-redux-saga'
-import { AccountType } from 'uniswap/src/features/accounts/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { addTransaction, deleteTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   OnChainTransactionDetails,
   TransactionDetails,
-  TransactionOriginType,
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
-import {
-  ExecuteTransactionParams,
-  executeTransaction,
-} from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import { signAndSubmitTransaction } from 'wallet/src/features/transactions/executeTransaction/signAndSubmitTransaction'
 import { getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
+import { getPrivateProvider, getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 
 export function* attemptReplaceTransaction({
@@ -56,9 +52,6 @@ export function* attemptReplaceTransaction({
     if (!account) {
       throw new Error(`Cannot replace transaction, account missing: ${hash}`)
     }
-    if (account.type !== AccountType.SignerMnemonic) {
-      throw new Error(`Cannot replace transaction, account is not a signer account: ${hash}`)
-    }
 
     const request: providers.TransactionRequest = {
       ...newTxRequest,
@@ -66,28 +59,28 @@ export function* attemptReplaceTransaction({
       nonce,
     }
 
-    const executeTransactionParams: ExecuteTransactionParams = {
-      txId: replacementTxnId,
-      chainId,
-      account,
-      options: {
-        request,
-        submitViaPrivateRpc: transaction.options.submitViaPrivateRpc,
-      },
-      transactionOriginType: TransactionOriginType.Internal,
-      // Don't send typeInfo so the service just submits without updating local state
-      typeInfo: undefined,
-    }
+    // If the transaction was submitted through Flashbots, use Flashbots to submit the replacement transaction
+    const provider =
+      transaction.options.privateRpcProvider === 'flashbots'
+        ? yield* call(getPrivateProvider, chainId)
+        : yield* call(getProvider, chainId)
+    const signerManager = yield* call(getSignerManager)
 
-    const { transactionHash } = yield* call(executeTransaction, executeTransactionParams)
-    logger.debug('replaceTransaction', '', 'Tx submitted. New hash:', transactionHash)
+    const { transactionResponse, populatedRequest } = yield* call(signAndSubmitTransaction, {
+      request,
+      account,
+      provider,
+      signerManager,
+      isCancellation,
+    })
+    logger.debug('replaceTransaction', '', 'Tx submitted. New hash:', transactionResponse.hash)
 
     if (isCancellation) {
       yield* call(sendAnalyticsEvent, WalletEventName.CancelSubmitted, {
         original_transaction_hash: transaction.hash,
-        replacement_transaction_hash: transactionHash,
+        replacement_transaction_hash: transactionResponse.hash,
         chain_id: chainId,
-        nonce: request.nonce,
+        nonce: transactionResponse.nonce,
       })
     }
 
@@ -95,13 +88,13 @@ export function* attemptReplaceTransaction({
       ...transaction,
       // Ensure we create a new, unique txn to monitor
       id: replacementTxnId,
-      hash: transactionHash,
+      hash: transactionResponse.hash,
       status: isCancellation ? TransactionStatus.Cancelling : TransactionStatus.Pending,
       receipt: undefined,
       addedTime: Date.now(), // update timestamp to now
       options: {
         ...options,
-        request: getSerializableTransactionRequest(request, chainId),
+        request: getSerializableTransactionRequest(populatedRequest, chainId),
         replacedTransactionHash: transaction.hash,
       },
     }

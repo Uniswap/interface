@@ -1,5 +1,4 @@
 import { NetworkStatus } from '@apollo/client'
-import { isWarmLoadingStatus } from '@universe/api'
 import isEqual from 'lodash/isEqual'
 import {
   createContext,
@@ -12,6 +11,7 @@ import {
   useState,
 } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { isWarmLoadingStatus } from 'uniswap/src/data/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
   sortPortfolioBalances,
@@ -32,21 +32,18 @@ type TokenBalanceListContextState = {
   rows: Array<TokenBalanceListRow>
   setHiddenTokensExpanded: Dispatch<SetStateAction<boolean>>
   onPressToken?: (currencyId: CurrencyId) => void
-  evmOwner?: Address
-  svmOwner?: Address
+  owner: Address
 }
 
 export const TokenBalanceListContext = createContext<TokenBalanceListContextState | undefined>(undefined)
 
 export function TokenBalanceListContextProvider({
-  evmOwner,
-  svmOwner,
+  owner,
   isExternalProfile,
   children,
   onPressToken,
 }: PropsWithChildren<{
-  evmOwner?: Address
-  svmOwner?: Address
+  owner: Address
   isExternalProfile: boolean
   onPressToken?: (currencyId: CurrencyId) => void
 }>): JSX.Element {
@@ -55,8 +52,7 @@ export function TokenBalanceListContextProvider({
     networkStatus,
     refetch,
   } = usePortfolioBalances({
-    evmAddress: evmOwner,
-    svmAddress: svmOwner,
+    evmAddress: owner,
     pollInterval: PollingInterval.KindaFast,
     fetchPolicy: 'cache-and-network',
   })
@@ -125,8 +121,7 @@ export function TokenBalanceListContextProvider({
       refetch,
       rows,
       setHiddenTokensExpanded,
-      evmOwner,
-      svmOwner,
+      owner,
     }),
     [
       balancesById,
@@ -137,8 +132,7 @@ export function TokenBalanceListContextProvider({
       onPressToken,
       refetch,
       rows,
-      evmOwner,
-      svmOwner,
+      owner,
     ],
   )
 

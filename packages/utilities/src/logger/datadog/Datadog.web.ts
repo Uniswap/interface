@@ -1,4 +1,4 @@
-/* biome-ignore-all lint/suspicious/noExplicitAny: Third-party types not available */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { datadogLogs } from '@datadog/browser-logs'
 import { datadogRum } from '@datadog/browser-rum'
 import { Action, AnyAction, PreloadedState, Reducer, StoreEnhancerStoreCreator } from 'redux'
@@ -7,7 +7,7 @@ import { NotImplementedError } from 'utilities/src/errors'
 import { ReduxEnhancerConfig } from 'utilities/src/logger/datadog/Datadog'
 import { handleReduxAction } from 'utilities/src/logger/datadog/reduxUtils'
 import { LoggerErrorContext, LogLevel } from 'utilities/src/logger/types'
-import { isExtensionApp, isWebApp } from 'utilities/src/platform'
+import { isExtension, isInterface } from 'utilities/src/platform'
 
 export function logToDatadog(
   message: string,
@@ -24,7 +24,7 @@ export function logToDatadog(
   if (isTestEnv()) {
     return
   }
-  if (isExtensionApp) {
+  if (isExtension) {
     datadogLogs.logger[level](message, { ...options, reduxState })
   } else {
     datadogLogs.logger[level](message, options)
@@ -40,7 +40,7 @@ export function logWarningToDatadog(
     functionName: string
   },
 ): void {
-  datadogLogs.logger.warn(message, { ...options, ...(isExtensionApp ? { reduxState } : {}) })
+  datadogLogs.logger.warn(message, { ...options, ...(isExtension ? { reduxState } : {}) })
 }
 
 export function logErrorToDatadog(error: Error, context?: LoggerErrorContext): void {
@@ -48,7 +48,7 @@ export function logErrorToDatadog(error: Error, context?: LoggerErrorContext): v
     return
   }
 
-  if (isExtensionApp || isWebApp) {
+  if (isExtension || isInterface) {
     datadogRum.addError(error, { ...context, reduxState })
     return
   }

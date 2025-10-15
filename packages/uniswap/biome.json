@@ -1,9 +1,16 @@
 {
-  "extends": ["@uniswap/biome-config/uniswap"],
+  "extends": "//",
   "files": {
-    "experimentalScannerIgnores": ["codegen.ts", "src/data/rest/conversionTracking/api/**"]
+    "experimentalScannerIgnores": [
+      "codegen.ts",
+      "src/data/rest/conversionTracking/api/**"
+    ]
   },
   "formatter": {
-    "includes": ["**", "!codegen.ts", "!src/data/rest/conversionTracking/api"]
+    "includes": [
+      "**",
+      "!codegen.ts",
+      "!src/data/rest/conversionTracking/api"
+    ]
   }
 }

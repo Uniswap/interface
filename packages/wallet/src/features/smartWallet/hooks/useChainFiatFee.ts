@@ -23,7 +23,6 @@ export function useChainFiatFee(params: {
 
   const { price: usdPrice } = useUSDCPrice(currencyAmount?.currency)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: -chainId
   useEffect(() => {
     if (!currencyAmount) {
       onError?.(true)
@@ -35,7 +34,7 @@ export function useChainFiatFee(params: {
     try {
       const usdAmount = usdPrice.quote(currencyAmount)
       setFiatAmount(convertFiatAmount(Number(usdAmount.toExact())).amount)
-    } catch (_error) {
+    } catch (error) {
       onError?.(true)
     }
   }, [currencyAmount, usdPrice, convertFiatAmount, onError, chainId])

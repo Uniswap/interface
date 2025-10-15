@@ -129,14 +129,13 @@ test.describe('Create position', () => {
           )
 
           await expect(page.getByRole('button', { name: '0xA0b0...10cc' })).toBeVisible()
-          await expect(page.getByText('Add a hook')).not.toBeVisible()
         })
 
         test('handles invalid hook address', async ({ page }) => {
           await page.goto(`/positions/create/v4?currencyA=NATIVE&currencyB=${USDT.address}&hook=invalid-address`)
 
           // Should not show any hook button when invalid
-          await expect(page.getByText('Add a hook')).toBeVisible()
+          await expect(page.getByRole('button', { name: /0x.*/ })).not.toBeVisible()
         })
       })
 

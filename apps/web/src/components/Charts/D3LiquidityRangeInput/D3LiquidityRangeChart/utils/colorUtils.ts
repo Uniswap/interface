@@ -7,12 +7,12 @@ export const getColorForPrice = ({
   getInactiveColor,
 }: {
   value: number
-  minPrice?: number
-  maxPrice?: number
+  minPrice: number | null
+  maxPrice: number | null
   getActiveColor: () => string
   getInactiveColor: () => string
 }): string => {
-  if (minPrice !== undefined && maxPrice !== undefined) {
+  if (minPrice !== null && maxPrice !== null) {
     const isInRange = value >= minPrice && value <= maxPrice
     return isInRange ? getActiveColor() : getInactiveColor()
   }
@@ -25,10 +25,10 @@ export const getOpacityForPrice = ({
   maxPrice,
 }: {
   value: number
-  minPrice?: number
-  maxPrice?: number
+  minPrice: number | null
+  maxPrice: number | null
 }): number => {
-  if (minPrice !== undefined && maxPrice !== undefined) {
+  if (minPrice !== null && maxPrice !== null) {
     const isInRange = value >= minPrice && value <= maxPrice
     return isInRange ? 0.5 : 0.2
   }

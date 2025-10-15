@@ -1,12 +1,10 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
 import { useIncreasePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
 import { hasLPFoTTransferError } from 'components/Liquidity/utils/hasLPFoTTransferError'
 import { getProtocolItems } from 'components/Liquidity/utils/protocolVersion'
 import { useAccount } from 'hooks/useAccount'
-import { useModalInitialState } from 'hooks/useModalInitialState'
 import { useIncreaseLiquidityContext } from 'pages/IncreaseLiquidity/IncreaseLiquidityContext'
 import {
   createContext,
@@ -18,15 +16,21 @@ import {
   useMemo,
   useState,
 } from 'react'
+import { useAppSelector } from 'state/hooks'
 import { PositionField } from 'types/position'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useIncreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useIncreaseLpPositionCalldataQuery'
+import {
+  type CheckApprovalLPRequest,
+  type IncreaseLPPositionRequest,
+  IndependentToken,
+} from 'uniswap/src/data/tradingApi/__generated__'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
-import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
@@ -55,8 +59,7 @@ interface IncreasePositionContextType {
 const IncreaseLiquidityTxContext = createContext<IncreasePositionContextType | undefined>(undefined)
 
 export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildren): JSX.Element {
-  const positionInfo = useModalInitialState(ModalName.AddLiquidity)
-
+  const positionInfo = useAppSelector((state) => state.application.openModal)?.initialState
   const { derivedIncreaseLiquidityInfo, increaseLiquidityState, currentTransactionStep } = useIncreaseLiquidityContext()
   const { customDeadline, customSlippageTolerance } = useTransactionSettingsStore((s) => ({
     customDeadline: s.customDeadline,
@@ -71,7 +74,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
 
   const account = useAccount()
 
-  const increaseLiquidityApprovalParams: TradingApi.CheckApprovalLPRequest | undefined = useMemo(() => {
+  const increaseLiquidityApprovalParams: CheckApprovalLPRequest | undefined = useMemo(() => {
     if (!positionInfo || !account.address || !currencyAmounts?.TOKEN0 || !currencyAmounts.TOKEN1) {
       return undefined
     }
@@ -163,7 +166,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   const token0Amount = currencyAmounts?.TOKEN0?.quotient.toString()
   const token1Amount = currencyAmounts?.TOKEN1?.quotient.toString()
 
-  const increaseCalldataQueryParams = useMemo((): TradingApi.IncreaseLPPositionRequest | undefined => {
+  const increaseCalldataQueryParams = useMemo((): IncreaseLPPositionRequest | undefined => {
     const apiProtocolItems = getProtocolItems(positionInfo?.version)
     if (
       !positionInfo ||
@@ -179,8 +182,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
 
     const [independentAmount, dependentAmount] =
       exactField === PositionField.TOKEN0 ? [token0Amount, token1Amount] : [token1Amount, token0Amount]
-    const independentToken =
-      exactField === PositionField.TOKEN0 ? TradingApi.IndependentToken.TOKEN_0 : TradingApi.IndependentToken.TOKEN_1
+    const independentToken = exactField === PositionField.TOKEN0 ? IndependentToken.TOKEN_0 : IndependentToken.TOKEN_1
 
     return {
       simulateTransaction: !approvalsNeeded,
@@ -247,7 +249,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     enabled: isQueryEnabled,
   })
 
-  const { increase, gasFee: actualGasFee, dependentAmount, sqrtRatioX96 } = increaseCalldata || {}
+  const { increase, gasFee: actualGasFee, dependentAmount } = increaseCalldata || {}
 
   if (calldataError) {
     const message = parseErrorMessageTitle(calldataError, { defaultTitle: 'unknown IncreaseLpPositionCalldataQuery' })
@@ -284,9 +286,8 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
         calldataError,
       }),
     )
-  }, [approvalError, calldataError])
+  }, [approvalError, calldataError, setTransactionError])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +token0Amount, +token1Amount
   useEffect(() => {
     setTransactionError(false)
   }, [token0Amount, token1Amount])
@@ -334,7 +335,6 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       positionTokenPermitTransaction: undefined,
       increasePositionRequestArgs: { ...increaseCalldataQueryParams, batchPermitData: permitData ?? undefined },
       txRequest,
-      sqrtRatioX96,
       unsigned,
     }
   }, [
@@ -354,7 +354,6 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     token0PermitTransaction,
     token1PermitTransaction,
     increaseCalldataQueryParams,
-    sqrtRatioX96,
   ])
 
   const totalGasFee = useMemo(() => {

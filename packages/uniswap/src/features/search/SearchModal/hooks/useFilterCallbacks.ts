@@ -87,7 +87,7 @@ export function useFilterCallbacks(
     setSearchFilter(null)
   }, [])
 
-  const onChangeText = useCallback((newSearchFilter: string) => setSearchFilter(newSearchFilter), [])
+  const onChangeText = useCallback((newSearchFilter: string) => setSearchFilter(newSearchFilter), [setSearchFilter])
 
   return {
     chainFilter,

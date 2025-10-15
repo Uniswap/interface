@@ -17,7 +17,6 @@ import { EnvelopeHeart } from 'ui/src/components/icons/EnvelopeHeart'
 import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
 import { Verified } from 'ui/src/components/icons/Verified'
 import { iconSizes } from 'ui/src/theme'
-import { getBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -27,7 +26,7 @@ import { ElementName, ModalName, ModalNameType } from 'uniswap/src/features/tele
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useDismissedBridgedAssetWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isWebAppDesktop } from 'utilities/src/platform'
+import { isInterfaceDesktop } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type BridgedAssetModalProps = {
@@ -47,8 +46,7 @@ export const BridgedAssetModalAtom = atom<BridgedAssetModalProps | undefined>(un
 function BridgedAssetModalContent({ currencyInfo }: { currencyInfo: CurrencyInfo }): JSX.Element | null {
   const { t } = useTranslation()
   const chainName = getChainLabel(currencyInfo.currency.chainId)
-  const bridgedAsset = getBridgedAsset(currencyInfo)
-  if (!currencyInfo.currency.symbol || !bridgedAsset) {
+  if (!currencyInfo.currency.symbol) {
     return null
   }
 
@@ -104,12 +102,10 @@ function BridgedAssetModalContent({ currencyInfo }: { currencyInfo: CurrencyInfo
           </Flex>
           <Flex flex={1}>
             <Text variant="subheading2" color="$neutral1">
-              {t('bridgedAsset.modal.feature.withdrawToNativeChain', { nativeChainName: bridgedAsset.nativeChain })}
+              {t('bridgedAsset.modal.feature.withdrawToHyperEVM')}
             </Text>
             <Text variant="body3" color="$neutral2">
-              {t('bridgedAsset.modal.feature.withdrawToNativeChain.description', {
-                nativeChainName: bridgedAsset.nativeChain,
-              })}
+              {t('bridgedAsset.modal.feature.withdrawToHyperEVM.description')}
             </Text>
           </Flex>
         </Flex>
@@ -146,7 +142,6 @@ export function BridgedAssetModal({
     return getContrastPassingTextColor(validTokenColor ?? colors.accent1.val)
   }, [colors.accent1.val, validTokenColor])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +isOpen
   useEffect(() => {
     setShowingSecondCurrency(false)
   }, [isOpen])
@@ -189,7 +184,7 @@ export function BridgedAssetModal({
             justifyContent="flex-end"
             alignItems="center"
             gap={10}
-            display={isWebAppDesktop ? 'flex' : 'none'}
+            display={isInterfaceDesktop ? 'flex' : 'none'}
           >
             <Trace logPress element={ElementName.GetHelp}>
               <TouchableArea onPress={onPressGetHelp}>

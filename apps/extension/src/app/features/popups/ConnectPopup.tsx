@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Link } from 'react-router'
-import { removeDappConnection, saveDappConnection } from 'src/app/features/dapp/actions'
+import { removeDappConnection } from 'src/app/features/dapp/actions'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
 import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
 import { closePopup, PopupName } from 'src/app/features/popups/slice'
@@ -25,8 +25,8 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceholder'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
@@ -51,13 +51,6 @@ export function ConnectPopupContent({
   const activeAccount = useActiveAccountWithThrow()
 
   const [isSwitchNetworksModalOpen, setSwitchNetworksModalOpen] = useState(false)
-
-  const onConnect = async (): Promise<void> => {
-    await saveDappConnection({ dappUrl, account: activeAccount, iconUrl: dappIconUrl })
-    dispatch(pushNotification({ type: AppNotificationType.DappConnected, dappIconUrl }))
-    dispatch(closePopup(PopupName.Connect))
-    sendAnalyticsEvent(ExtensionEventName.SidebarConnect, { dappUrl })
-  }
 
   const onDisconnect = async (): Promise<void> => {
     await removeDappConnection(dappUrl, activeAccount)
@@ -196,19 +189,11 @@ export function ConnectPopupContent({
               </Flex>
             </Popover.Close>
 
-            {isConnected ? (
+            {isConnected && (
               <Popover.Close asChild>
                 <Flex row>
                   <Button icon={<Power />} size="small" emphasis="secondary" onPress={onDisconnect}>
                     {t('common.button.disconnect')}
-                  </Button>
-                </Flex>
-              </Popover.Close>
-            ) : (
-              <Popover.Close asChild>
-                <Flex row>
-                  <Button size="small" emphasis="primary" onPress={onConnect}>
-                    {t('common.button.connect')}
                   </Button>
                 </Flex>
               </Popover.Close>

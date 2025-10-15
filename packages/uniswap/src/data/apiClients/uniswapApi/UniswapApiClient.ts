@@ -1,24 +1,24 @@
-import type { TransactionRequest } from '@ethersproject/providers'
-import type { GasEstimate, GasStrategy } from '@universe/api'
+import { TransactionRequest } from '@ethersproject/providers'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { createUniswapFetchClient } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
+import { createApiClient } from 'uniswap/src/data/apiClients/createApiClient'
+import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { convertGasFeeToDisplayValue } from 'uniswap/src/features/gas/hooks'
-import type {
+import {
   GasFeeResponse,
   GasFeeResult,
   TransactionEip1559FeeParams,
   TransactionLegacyFeeParams,
 } from 'uniswap/src/features/gas/types'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
-import { isWebApp } from 'utilities/src/platform'
+import { isInterface } from 'utilities/src/platform'
 
-const UniswapFetchClient = createUniswapFetchClient({
+const UniswapApiClient = createApiClient({
   baseUrl: uniswapUrls.apiBaseUrl,
   additionalHeaders: {
     'x-api-key': config.uniswapApiKey,
   },
-  includeBaseUniswapHeaders: !isWebApp,
+  includeBaseUniswapHeaders: !isInterface,
 })
 
 type FetchGasFn = ({
@@ -77,7 +77,7 @@ export function createFetchGasFee({
         value: gasUseEstimate.toString(),
         displayValue: gasUseEstimate.toString(),
       }
-    } catch (_e) {
+    } catch (e) {
       // provider.estimateGas will error if the account doesn't have sufficient ETH balance, but we should show an estimated cost anyway
       return {
         value: fallbackGasLimit?.toString(),
@@ -91,7 +91,7 @@ export function createFetchGasFee({
     const body = JSON.stringify(injectGasStrategies(injectSmartContractDelegationAddress(tx)))
 
     try {
-      const gasFeeResponse = await UniswapFetchClient.post<GasFeeResponse>(uniswapUrls.gasServicePath, {
+      const gasFeeResponse = await UniswapApiClient.post<GasFeeResponse>(uniswapUrls.gasServicePath, {
         body,
         headers: smartContractDelegationAddress
           ? {
@@ -101,7 +101,7 @@ export function createFetchGasFee({
       })
       return processGasFeeResponse(gasFeeResponse)
     } catch (error) {
-      if (isWebApp) {
+      if (isInterface) {
         // Gas Fee API currently errors on gas estimations on disconnected state & insufficient funds
         // Fallback to clientside estimate using provider.estimateGas
         return tryClientSideFallback({ tx, fallbackGasLimit })
@@ -137,7 +137,7 @@ export type ScreenRequest = {
 }
 
 export async function fetchTrmScreen(params: ScreenRequest): Promise<ScreenResponse> {
-  return await UniswapFetchClient.post<ScreenResponse>(uniswapUrls.trmPath, {
+  return await UniswapApiClient.post<ScreenResponse>(uniswapUrls.trmPath, {
     body: JSON.stringify(params),
   })
 }

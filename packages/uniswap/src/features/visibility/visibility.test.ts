@@ -1,4 +1,4 @@
-/* biome-ignore-all lint/suspicious/noExplicitAny: legacy code needs review */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {

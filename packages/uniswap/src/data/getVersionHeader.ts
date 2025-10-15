@@ -1,7 +1,7 @@
-import { isExtensionApp } from 'utilities/src/platform'
+import { isExtension } from 'utilities/src/platform'
 
 export const getVersionHeader = (): string => {
-  if (isExtensionApp) {
+  if (isExtension) {
     return process.env.VERSION ?? ''
   } else {
     // unimplemented for interface

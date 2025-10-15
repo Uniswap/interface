@@ -39,7 +39,6 @@ export function PersonalSignRequestContent({ dappRequest }: PersonalSignRequestP
 
   const [isScrollable, setIsScrollable] = useState(false)
   const messageRef = useRef<HTMLElement>(null)
-  // biome-ignore lint/correctness/useExhaustiveDependencies: viewEncoding and utf8Message affect rendered content which changes scroll height
   useEffect(() => {
     const checkScroll = (): void => {
       if (!messageRef.current) {
@@ -52,7 +51,7 @@ export function PersonalSignRequestContent({ dappRequest }: PersonalSignRequestP
     window.addEventListener('resize', checkScroll)
 
     return () => window.removeEventListener('resize', checkScroll)
-  }, [viewEncoding, utf8Message])
+  }, [setIsScrollable, viewEncoding, utf8Message])
 
   return (
     <DappRequestContent

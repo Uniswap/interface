@@ -15,7 +15,7 @@ const walletSagas = [initProviders, notificationWatcher] as const
 
 export interface MonitoredSaga {
   // TODO(MOB-645): Add more specific types
-  // biome-ignore lint/suspicious/noExplicitAny: Generic saga state interface needs flexible typing
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any
 }
 
@@ -25,7 +25,7 @@ export function getMonitoredSagaReducers(monitoredSagas: Record<string, Monitore
   return combineReducers(
     Object.keys(monitoredSagas).reduce((acc: { [name: string]: Reducer<SagaState> }, sagaName: string) => {
       // Safe non-null assertion because key `sagaName` comes from `Object.keys(monitoredSagas)`
-      // biome-ignore lint/style/noNonNullAssertion: Safe assertion in test or migration context
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       acc[sagaName] = monitoredSagas[sagaName]!.reducer
       return acc
     }, {}),

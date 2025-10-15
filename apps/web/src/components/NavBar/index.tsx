@@ -1,18 +1,18 @@
 import Row from 'components/deprecated/Row'
+import { ChainSelector } from 'components/NavBar/ChainSelector'
 import { CompanyMenu } from 'components/NavBar/CompanyMenu'
 import { NewUserCTAButton } from 'components/NavBar/DownloadApp/NewUserCTAButton'
 import { PreferenceMenu } from 'components/NavBar/PreferencesMenu'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { SearchBar } from 'components/NavBar/SearchBar'
-import { useIsSearchBarVisible } from 'components/NavBar/SearchBar/useIsSearchBarVisible'
 import { Tabs } from 'components/NavBar/Tabs/Tabs'
 import TestnetModeTooltip from 'components/NavBar/TestnetMode/TestnetModeTooltip'
 import Web3Status from 'components/Web3Status'
+import { useAccount } from 'hooks/useAccount'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import deprecatedStyled, { css } from 'lib/styled-components'
 import { Flex, styled, Nav as TamaguiNav, useMedia } from 'ui/src'
 import { breakpoints, INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
-import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -47,14 +47,41 @@ const Right = deprecatedStyled(Row)`
   ${NavItems}
 `
 
+function useShouldHideChainSelector() {
+  const isLandingPage = useIsPage(PageType.LANDING)
+  const isSendPage = useIsPage(PageType.SEND)
+  const isSwapPage = useIsPage(PageType.SWAP)
+  const isLimitPage = useIsPage(PageType.LIMIT)
+  const isExplorePage = useIsPage(PageType.EXPLORE)
+  const isPositionsPage = useIsPage(PageType.POSITIONS)
+  const isMigrateV3Page = useIsPage(PageType.MIGRATE_V3)
+  const isBuyPage = useIsPage(PageType.BUY)
+  const isSellPage = useIsPage(PageType.SELL)
+
+  const multichainHiddenPages =
+    isLandingPage ||
+    isSendPage ||
+    isSwapPage ||
+    isLimitPage ||
+    isExplorePage ||
+    isPositionsPage ||
+    isMigrateV3Page ||
+    isBuyPage ||
+    isSellPage
+
+  return multichainHiddenPages
+}
+
 export default function Navbar() {
   const isLandingPage = useIsPage(PageType.LANDING)
 
   const media = useMedia()
   const isSmallScreen = media.md
   const areTabsVisible = useTabsVisible()
-  const isSearchBarVisible = useIsSearchBarVisible()
-  const { isConnected } = useConnectionStatus()
+  const collapseSearchBar = media.xl
+  const account = useAccount()
+
+  const hideChainSelector = useShouldHideChainSelector()
 
   const { isTestnetModeEnabled } = useEnabledChains()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
@@ -67,14 +94,15 @@ export default function Navbar() {
           {areTabsVisible && <Tabs />}
         </Left>
 
-        {isSearchBarVisible && <SearchBar />}
+        {!collapseSearchBar && <SearchBar />}
 
         <Right>
-          {!isSearchBarVisible && <SearchBar />}
+          {collapseSearchBar && <SearchBar />}
           {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
-          {!isConnected && <PreferenceMenu />}
+          {!account.isConnected && <PreferenceMenu />}
+          {!hideChainSelector && <ChainSelector />}
           {isTestnetModeEnabled && <TestnetModeTooltip />}
-          {isEmbeddedWalletEnabled && !isConnected && <NewUserCTAButton />}
+          {isEmbeddedWalletEnabled && !account.address && <NewUserCTAButton />}
           <Web3Status />
         </Right>
       </UnpositionedFlex>

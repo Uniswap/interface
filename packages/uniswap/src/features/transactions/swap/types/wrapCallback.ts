@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { GasEstimate } from '@universe/api'
+import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'

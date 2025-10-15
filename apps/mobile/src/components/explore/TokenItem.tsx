@@ -1,6 +1,6 @@
-import React, { memo, ReactNode, useMemo } from 'react'
+import React, { memo, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LayoutChangeEvent, LayoutRectangle } from 'react-native'
+import { LayoutRectangle } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { TokenItemChart } from 'src/components/explore/TokenItemChart'
@@ -22,7 +22,6 @@ import {
   currencyIdToChain,
 } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { useEvent } from 'utilities/src/react/hooks'
 import { noop } from 'utilities/src/react/noop'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
@@ -73,7 +72,7 @@ export const TokenItem = memo(function _TokenItem({
   const volume24hFormatted = convertFiatAmountFormatted(volume24h, NumberType.FiatTokenDetails)
   const totalValueLockedFormatted = convertFiatAmountFormatted(totalValueLocked, NumberType.FiatTokenDetails)
 
-  const metadataSubtitle = useMemo((): string | undefined => {
+  const getMetadataSubtitle = (): string | undefined => {
     switch (metadataDisplayType) {
       case TokenMetadataDisplayType.MarketCap:
         return t('explore.tokens.metadata.marketCap', { number: marketCapFormatted })
@@ -88,13 +87,9 @@ export const TokenItem = memo(function _TokenItem({
       default:
         return undefined
     }
-  }, [metadataDisplayType, marketCapFormatted, volume24hFormatted, totalValueLockedFormatted, symbol, t])
+  }
 
-  const onLayout = useEvent((e: LayoutChangeEvent): void => {
-    onPriceWrapperLayout?.(e.nativeEvent.layout)
-  })
-
-  const onPress = useEvent((): void => {
+  const onPress = (): void => {
     tokenDetailsNavigation.preload(_currencyId)
     tokenDetailsNavigation.navigate(_currencyId)
     sendAnalyticsEvent(eventName, {
@@ -103,7 +98,7 @@ export const TokenItem = memo(function _TokenItem({
       name: tokenItemData.name,
       position: index + 1,
     })
-  })
+  }
 
   const { menuActions, onContextMenuPress } = useExploreTokenContextMenu({
     chainId,
@@ -131,11 +126,17 @@ export const TokenItem = memo(function _TokenItem({
               {name}
             </Text>
             <Text color="$neutral2" numberOfLines={1} testID="token-item/metadata-subtitle" variant="subheading2">
-              {metadataSubtitle}
+              {getMetadataSubtitle()}
             </Text>
           </Flex>
           {showChart && <TokenItemChart height={20} tokenItemData={tokenItemData} width={40} />}
-          <Flex row alignItems="center" justifyContent="flex-end" onLayout={onLayout} {...priceWrapperProps}>
+          <Flex
+            row
+            alignItems="center"
+            justifyContent="flex-end"
+            onLayout={(e) => onPriceWrapperLayout?.(e.nativeEvent.layout)}
+            {...priceWrapperProps}
+          >
             <TokenMetadata>
               <Text lineHeight={24} testID="token-item/price" variant="body1">
                 {convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)}

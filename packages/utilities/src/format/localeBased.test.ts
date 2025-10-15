@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { formatNumber } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
 

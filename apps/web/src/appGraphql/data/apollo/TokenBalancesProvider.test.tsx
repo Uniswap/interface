@@ -20,14 +20,11 @@ const { mockLazyFetch, mockBalanceQueryResponse } = vi.hoisted(() => {
   return { mockLazyFetch, mockBalanceQueryResponse }
 })
 
-vi.mock('@universe/api', async () => {
-  const actual = await vi.importActual('@universe/api')
+vi.mock('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks.ts', async () => {
+  const actual = await vi.importActual('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks.ts')
   return {
     ...actual,
-    GraphQLApi: {
-      ...(actual.GraphQLApi || {}),
-      usePortfolioBalancesLazyQuery: () => mockBalanceQueryResponse,
-    },
+    usePortfolioBalancesLazyQuery: () => mockBalanceQueryResponse,
   }
 })
 

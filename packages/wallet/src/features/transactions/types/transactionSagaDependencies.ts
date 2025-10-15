@@ -1,5 +1,4 @@
-import type { TransactionRequest } from '@ethersproject/providers'
-import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { makeSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
@@ -21,21 +20,8 @@ import type { TransactionConfigService } from 'wallet/src/features/transactions/
 import type { TransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
 import type { TransactionParamsFactory } from 'wallet/src/features/transactions/swap/services/transactionParamsFactory'
 import type { BaseTransactionContext } from 'wallet/src/features/transactions/swap/types/transactionExecutor'
-import type { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import type { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import type { RunSagaEffect } from 'wallet/src/state/createSagaEffectRunner'
-
-/**
- * Defines the type of delegation handling required for a transaction
- */
-export enum DelegationType {
-  /** Auto-detect delegation based on account and transaction properties */
-  Auto = 'AUTO',
-  /** Transaction should include delegation. Only used for swaps, when the transaction is already prepared with delegation */
-  Delegate = 'DELEGATE',
-  /** Transaction should remove delegation */
-  RemoveDelegation = 'REMOVE_DELEGATION',
-}
 
 /**
  * Dependencies for transaction sagas - provides all services needed for executing transactions
@@ -84,13 +70,7 @@ export interface TransactionSagaDependencies {
 
   // External dependencies
   getViemClients: () => ViemClientManager
-  getDelegationInfoForTransaction: (params: {
-    delegationType: DelegationType
-    activeAccount: SignerMnemonicAccount
-    chainId: UniverseChainId
-    transactionRequest?: TransactionRequest
-    logger: Logger
-  }) => Promise<DelegationCheckResult>
+  getDelegationDetails: (address: string, chainId: UniverseChainId) => Promise<DelegationCheckResult>
   logger: Logger
   sendAnalyticsEvent: typeof sendAnalyticsEvent
   transactionActions: typeof transactionActions

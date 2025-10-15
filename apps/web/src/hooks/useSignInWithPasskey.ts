@@ -1,7 +1,6 @@
-import { connect } from '@wagmi/core'
-import { useWagmiConnectorWithId } from 'components/WalletModal/useWagmiConnectorWithId'
-import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
+import { useConnectorWithId } from 'components/WalletModal/useConnectorWithId'
 import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
+import { useConnect } from 'hooks/useConnect'
 import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
 import { useDispatch } from 'react-redux'
 import { useEmbeddedWalletState } from 'state/embeddedWallet/store'
@@ -46,7 +45,8 @@ export function useSignInWithPasskey({
   onError,
 }: SignInWithPasskeyOptions = {}) {
   const { setIsConnected, setWalletAddress } = useEmbeddedWalletState()
-  const connector = useWagmiConnectorWithId(CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID, {
+  const connection = useConnect() // TODO(WEB-8088): use new connection state here
+  const connector = useConnectorWithId(CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID, {
     shouldThrow: true,
   })
   const claimUnitag = useClaimUnitag()
@@ -109,7 +109,7 @@ export function useSignInWithPasskey({
         dispatch(updateIsEmbeddedWalletBackedUp({ isEmbeddedWalletBackedUp: exported ?? false }))
         setWalletAddress(walletAddress)
         setIsConnected(true)
-        connect(wagmiConfig, { connector })
+        connection.connect({ connector })
         if (createNewWallet) {
           sendAnalyticsEvent(InterfaceEventName.EmbeddedWalletCreated)
         } else {

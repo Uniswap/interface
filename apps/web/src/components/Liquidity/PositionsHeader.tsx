@@ -1,5 +1,5 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Dropdown } from 'components/Dropdowns/Dropdown'
+import { DropdownSelector } from 'components/DropdownSelector'
 import { lpStatusConfig } from 'components/Liquidity/constants'
 import { getProtocolStatusLabel, getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { useMemo, useState } from 'react'
@@ -151,7 +151,7 @@ export function PositionsHeader({
                   {t('common.new')}
                 </Text>
               </Flex>
-              <Dropdown
+              <DropdownSelector
                 containerStyle={{ width: 'auto' }}
                 menuLabel={
                   <Flex
@@ -179,10 +179,10 @@ export function PositionsHeader({
                 alignRight={media.sm}
               >
                 {createOptions}
-              </Dropdown>
+              </DropdownSelector>
             </Flex>
             <Flex row alignItems="center" shrink height="100%" gap="$gap4">
-              <Dropdown
+              <DropdownSelector
                 isOpen={protocolDropdownOpen}
                 toggleOpen={() => {
                   setProtocolDropdownOpen((prev) => !prev)
@@ -193,8 +193,8 @@ export function PositionsHeader({
                 alignRight={false}
               >
                 {statusFilterOptions}
-              </Dropdown>
-              <Dropdown
+              </DropdownSelector>
+              <DropdownSelector
                 isOpen={statusDropdownOpen}
                 toggleOpen={() => setStatusDropdownOpen((prev) => !prev)}
                 menuLabel={<Text variant="buttonLabel3">{t('common.protocol')}</Text>}
@@ -202,7 +202,7 @@ export function PositionsHeader({
                 buttonStyle={StyledDropdownButton}
               >
                 {versionFilterOptions}
-              </Dropdown>
+              </DropdownSelector>
               <Flex
                 alignItems="center"
                 justifyContent="center"

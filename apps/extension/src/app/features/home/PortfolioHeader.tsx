@@ -16,8 +16,8 @@ import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceh
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -99,7 +99,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
 
   const displayName = useDisplayName(address)
   const walletHasName = displayName && displayName.type !== DisplayNameType.Address
-  const formattedAddress = sanitizeAddressText(shortenAddress({ address }))
+  const formattedAddress = sanitizeAddressText(shortenAddress(address))
   const { isOpen: isPopupOpen } = useSelector(selectPopupState(PopupName.Connect))
 
   // Used to delay popup showing on initial render, which leads to improper anchoring

@@ -1,6 +1,4 @@
-import { ContentStyle } from '@shopify/flash-list'
 import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { ALL_NETWORKS_ARG, GqlResult, GraphQLApi } from '@universe/api'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNftSearchResultsToNftCollectionOptions } from 'uniswap/src/components/lists/items/nfts/useNftSearchResultsToNftCollectionOptions'
@@ -11,7 +9,10 @@ import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/componen
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { useTrendingTokensCurrencyInfos } from 'uniswap/src/components/TokenSelector/hooks/useTrendingTokensCurrencyInfos'
+import { useSearchPopularNftCollectionsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
+import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ClearRecentSearchesButton } from 'uniswap/src/features/search/ClearRecentSearchesButton'
 import {
@@ -22,7 +23,7 @@ import {
 import { useRecentlySearchedOptions } from 'uniswap/src/features/search/SearchModal/hooks/useRecentlySearchedOptions'
 import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
-import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
+import { isMobileApp, isWeb } from 'utilities/src/platform'
 import { noop } from 'utilities/src/react/noop'
 
 function useSectionsForNoQuerySearch({
@@ -68,7 +69,7 @@ function useSectionsForNoQuerySearch({
   const poolQueryVariables = useMemo(
     () => ({
       input: { chainId: chainFilter ? chainFilter.toString() : ALL_NETWORKS_ARG },
-      enabled: isWebPlatform && (activeTab === SearchTab.All || activeTab === SearchTab.Pools),
+      enabled: isWeb && (activeTab === SearchTab.All || activeTab === SearchTab.Pools),
       select: (data: ExploreStatsResponse): PoolStats[] | undefined =>
         data.stats?.poolStats
           .sort((a, b) => (b.volume1Day?.value ?? 0) - (a.volume1Day?.value ?? 0)) // Sort by 24h volume
@@ -89,12 +90,12 @@ function useSectionsForNoQuerySearch({
   })
 
   // Load popular NFTs by top trading volume
-  const skipPopularNftsQuery = isWebPlatform || (activeTab !== SearchTab.NFTCollections && activeTab !== SearchTab.All)
+  const skipPopularNftsQuery = isWeb || (activeTab !== SearchTab.NFTCollections && activeTab !== SearchTab.All)
   const {
     data: popularNfts,
     loading: loadingPopularNfts,
     error: popularNftsError,
-  } = GraphQLApi.useSearchPopularNftCollectionsQuery({ skip: skipPopularNftsQuery })
+  } = useSearchPopularNftCollectionsQuery({ skip: skipPopularNftsQuery })
   const popularNftOptions = useNftSearchResultsToNftCollectionOptions(popularNfts, chainFilter)
   const popularNftSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.PopularNFTCollections,
@@ -144,7 +145,7 @@ function useSectionsForNoQuerySearch({
         }
       default:
       case SearchTab.All:
-        if (isWebPlatform) {
+        if (isWeb) {
           sections = [...(recentSearchSection ?? []), ...(trendingTokenSection ?? []), ...(trendingPoolSection ?? [])]
         } else {
           sections = [...(recentSearchSection ?? []), ...(trendingTokenSection ?? []), ...(popularNftSection ?? [])]
@@ -181,32 +182,16 @@ interface SearchModalNoQueryListProps {
   chainFilter: UniverseChainId | null
   activeTab: SearchTab
   onSelect?: SearchModalListProps['onSelect']
-  renderedInModal?: boolean
-  contentContainerStyle?: ContentStyle
 }
 
 export const SearchModalNoQueryList = memo(function _SearchModalNoQueryList({
   chainFilter,
   activeTab,
   onSelect,
-  renderedInModal,
-  contentContainerStyle,
 }: SearchModalNoQueryListProps): JSX.Element {
   const { t } = useTranslation()
 
   const { data: sections, loading, error, refetch } = useSectionsForNoQuerySearch({ chainFilter, activeTab })
-
-  // PORT-279: Temporary fix, renders an empty component for nfts and wallets no query search
-  // when there is no recent or favorite items to display
-  const getEmptyElementComponent = (): JSX.Element | undefined => {
-    switch (activeTab) {
-      case SearchTab.NFTCollections:
-      case SearchTab.Wallets:
-        return <></>
-      default:
-        return undefined
-    }
-  }
 
   return (
     <SearchModalList
@@ -219,9 +204,6 @@ export const SearchModalNoQueryList = memo(function _SearchModalNoQueryList({
         searchChainFilter: chainFilter,
         searchTabFilter: activeTab,
       }}
-      renderedInModal={renderedInModal}
-      contentContainerStyle={contentContainerStyle}
-      emptyElement={getEmptyElementComponent()}
       onSelect={onSelect}
     />
   )

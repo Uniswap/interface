@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
-import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { DEFAULT_NATIVE_ADDRESS, DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/defaults'
@@ -48,7 +48,7 @@ export function isCurrencyIdValid(_currencyId: CurrencyId): boolean {
     const validAddress = getValidAddress({ address, chainId: validChainId })
 
     return !!validAddress
-  } catch (_error) {
+  } catch (error) {
     return false
   }
 }
@@ -62,7 +62,7 @@ export function buildWrappedNativeCurrencyId(chainId: UniverseChainId): string {
 }
 
 export function areCurrencyIdsEqual(id1: CurrencyId, id2: CurrencyId): boolean {
-  return normalizeCurrencyIdForMapLookup(id1) === normalizeCurrencyIdForMapLookup(id2)
+  return id1.toLowerCase() === id2.toLowerCase()
 }
 
 export function areCurrenciesEqual(currency1?: Maybe<Currency>, currency2?: Maybe<Currency>): boolean {
@@ -104,12 +104,16 @@ export const isNativeCurrencyAddress = (chainId: UniverseChainId, address: Maybe
   const nativeAddress = getNativeAddress(chainId)
 
   if (isSVMChain(chainId)) {
-    // For Solana, only consider DEFAULT_NATIVE_ADDRESS_SOLANA (11111...) as native
-    // WSOL (So111...) should be treated as a regular token, not native
-    return areAddressesEqual({
-      addressInput1: { address, platform },
-      addressInput2: { address: DEFAULT_NATIVE_ADDRESS_SOLANA, platform },
-    })
+    return (
+      areAddressesEqual({
+        addressInput1: { address, platform },
+        addressInput2: { address: DEFAULT_NATIVE_ADDRESS_SOLANA, platform },
+      }) ||
+      areAddressesEqual({
+        addressInput1: { address, platform },
+        addressInput2: { address: nativeAddress, platform },
+      })
+    )
   }
 
   // allow both native address formats until all backend endpoints return the new one

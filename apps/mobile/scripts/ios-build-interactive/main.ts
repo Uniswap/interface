@@ -1,5 +1,5 @@
 #!/usr/bin/env ts-node
-// biome-ignore lint/suspicious/noConsole: CLI tool needs console for user interaction
+/* eslint-disable no-console */
 import { spawn } from 'child_process'
 import { existsSync } from 'fs'
 import inquirer from 'inquirer'

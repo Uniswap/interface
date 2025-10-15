@@ -1,14 +1,10 @@
 import { type ButtonProps, type ColorTokens, useColorsFromTokenColor } from 'ui/src'
-import { useActiveAccount } from 'uniswap/src/features/accounts/store/hooks'
-import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { useIsShowingWebFORNudge, useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useIsBlockingWithCustomMessage } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsBlockingWithCustomMessage'
 import { useIsSwapButtonDisabled } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsSwapButtonDisabled'
-import {
-  useSwapFormStore,
-  useSwapFormStoreDerivedSwapInfo,
-} from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 
 type ButtonColors = Pick<ButtonProps, 'backgroundColor' | 'variant' | 'emphasis'> & {
   buttonTextColor?: ColorTokens
@@ -17,11 +13,7 @@ type ButtonColors = Pick<ButtonProps, 'backgroundColor' | 'variant' | 'emphasis'
 export const useSwapFormButtonColors = (tokenColor?: string): ButtonColors => {
   const disabled = useIsSwapButtonDisabled()
   const isBlockingWithCustomMessage = useIsBlockingWithCustomMessage()
-
-  const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
-  const platform = chainIdToPlatform(chainId)
-  const activeAccount = useActiveAccount(platform)
-
+  const activeAccount = useWallet().evmAccount
   const isSubmitting = useSwapFormStore((s) => s.isSubmitting)
   const isShowingWebFORNudge = useIsShowingWebFORNudge()
   const { validTokenColor, lightTokenColor } = useColorsFromTokenColor(tokenColor)

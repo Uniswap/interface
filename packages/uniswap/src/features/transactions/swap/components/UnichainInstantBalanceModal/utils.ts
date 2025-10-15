@@ -1,8 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Log, TransactionReceipt } from '@ethersproject/providers'
-import { TradingApi } from '@universe/api'
 import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import {
@@ -27,9 +26,9 @@ export function getOutputAmountUsingOutputTransferLog({
 }): BigNumber {
   const chainId = outputCurrencyInfo.currency.chainId
 
-  const outputTokenAddress = normalizeTokenAddressForCache(
-    outputCurrencyInfo.currency.isToken ? outputCurrencyInfo.currency.address : getWrappedNativeAddress(chainId),
-  )
+  const outputTokenAddress = outputCurrencyInfo.currency.isToken
+    ? outputCurrencyInfo.currency.address.toLowerCase()
+    : getWrappedNativeAddress(chainId).toLowerCase()
 
   // calculate output amount from transaction logs
   let outputAmount = BigNumber.from(0)
@@ -37,15 +36,15 @@ export function getOutputAmountUsingOutputTransferLog({
   const isErc20TransferLog = (log: Log): boolean => {
     return !!(
       log.topics[0]?.toLowerCase() === ERC20_TRANSFER_SIGNATURE &&
-      normalizeTokenAddressForCache(log.address) === outputTokenAddress &&
-      log.topics[2]?.toLowerCase().endsWith(normalizeTokenAddressForCache(accountAddress).slice(2))
+      log.address.toLowerCase() === outputTokenAddress &&
+      log.topics[2]?.toLowerCase().endsWith(accountAddress.toLowerCase().slice(2))
     )
   }
 
   const isNativeTransferLog = (log: Log): boolean => {
     return !!(
       log.topics[0]?.toLowerCase() === NATIVE_WITHDRAWAL_SIGNATURE &&
-      normalizeTokenAddressForCache(log.address) === outputTokenAddress &&
+      log.address.toLowerCase() === outputTokenAddress &&
       isUniverseChainId(chainId) &&
       CHAIN_TO_UNIVERSAL_ROUTER_ADDRESS[chainId]?.some((routerAddress) =>
         log.topics[1]?.toLowerCase().endsWith(routerAddress.slice(2)),
@@ -58,7 +57,7 @@ export function getOutputAmountUsingOutputTransferLog({
       // log.data is value
       try {
         outputAmount = outputAmount.add(BigNumber.from(log.data))
-      } catch (_e) {
+      } catch (e) {
         // skip logs that can't be parsed
       }
     }
@@ -72,7 +71,7 @@ export function getOutputAmountUsingOutputTransferLog({
  * @param routing - The routing type to check
  * @returns true if the routing should show flashblocks UI
  */
-export function shouldShowFlashblocksUI(routing?: TradingApi.Routing): boolean {
+export function shouldShowFlashblocksUI(routing?: Routing): boolean {
   return routing ? !FLASHBLOCKS_UI_SKIP_ROUTES.includes(routing) : false
 }
 
@@ -85,7 +84,7 @@ export function shouldShowFlashblocksUI(routing?: TradingApi.Routing): boolean {
  */
 export function isNonInstantFlashblockTransactionType({ typeInfo, routing }: TransactionDetails): boolean {
   // TODO: APPS(8557): wraps are labeled classic in tx flow; remove when fixed
-  const trueRoute = typeInfo.type === TransactionType.Wrap ? TradingApi.Routing.WRAP : routing
+  const trueRoute = typeInfo.type === TransactionType.Wrap ? Routing.WRAP : routing
 
   return FLASHBLOCKS_UI_SKIP_ROUTES.includes(trueRoute)
 }

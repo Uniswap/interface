@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "Expo",
-  "extends": "../../tsconfig.base.json",
+  "extends": "./base.json",
   "compilerOptions": {
     "allowJs": true,
     "alwaysStrict": true,
@@ -17,7 +17,21 @@
     "types": [
       "react-native",
       "jest"
-    ]
+    ],
+    "paths": {
+      "ui/*": [
+        "../../packages/ui/*"
+      ],
+      "uniswap/*": [
+        "../../packages/uniswap/*"
+      ],
+      "utilities/*": [
+        "../../packages/utilities/*"
+      ],
+      "wallet/*": [
+        "../../packages/wallet/*"
+      ],
+    }
   },
   "exclude": [
     "node_modules",

@@ -1,6 +1,5 @@
 import { FiatOnRampTransaction, FiatOnRampTransactionStatus } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { TradingApi } from '@universe/api'
-
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { parseRestOnRampTransaction } from 'uniswap/src/features/activity/parse/parseOnRampTransaction'
 import {
   TransactionDetails,
@@ -60,7 +59,7 @@ export default function extractRestFiatOnRampDetails(transaction: FiatOnRampTran
       : undefined
 
     return {
-      routing: TradingApi.Routing.CLASSIC,
+      routing: Routing.CLASSIC,
       hash: transactionHash,
       id: externalSessionId,
       chainId,

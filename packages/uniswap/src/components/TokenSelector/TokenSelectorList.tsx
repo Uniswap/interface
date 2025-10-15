@@ -99,7 +99,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
       // Handle bridged asset warning modal visibility
       setShowBridgedAssetWarningModal(visible)
     },
-    [shouldShowWarningModalOnPress],
+    [shouldShowWarningModalOnPress, setShowWarningModal, setShowBridgedAssetWarningModal],
   )
 
   const onAcceptTokenWarning = useCallback(() => {

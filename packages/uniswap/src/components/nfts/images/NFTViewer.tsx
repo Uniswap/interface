@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { ImageUri, ImageUriProps } from 'uniswap/src/components/nfts/images/ImageUri'
 import { WebSvgUri } from 'uniswap/src/components/nfts/images/WebSvgUri'
-import { shortenAddress } from 'utilities/src/addresses'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { isAddress, shortenAddress } from 'utilities/src/addresses'
 import { isGifUri, isSVGUri, uriToHttpUrls } from 'utilities/src/format/urls'
 
 type Props = {
@@ -37,12 +36,12 @@ export function NFTViewer(props: Props): JSX.Element {
   const imageHttpUri = svgRenderingDisabled && thumbnailUrl ? thumbnailUrl : uri ? uriToHttpUrls(uri)[0] : undefined
 
   const fallback = useMemo(() => {
-    const isPlaceholderAddress = isEVMAddress(placeholderContent)
+    const isPlaceholderAddress = isAddress(placeholderContent)
     return (
       <Flex centered fill aspectRatio={1} backgroundColor="$surface2" maxHeight={maxHeight ?? '100%'} p="$spacing8">
         <Text color="$neutral2" textAlign="center" variant="subheading2">
           {isPlaceholderAddress
-            ? shortenAddress({ address: placeholderContent })
+            ? shortenAddress(isPlaceholderAddress)
             : placeholderContent || t('tokens.nfts.error.unavailable')}
         </Text>
       </Flex>

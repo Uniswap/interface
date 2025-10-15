@@ -1,18 +1,15 @@
-import { GraphQLApi, TradingApi } from '@universe/api'
-import {
-  type OnchainItemListOption,
-  OnchainItemListOptionType,
-  type TokenOption,
-} from 'uniswap/src/components/lists/items/types'
+import { OnchainItemListOption, OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
-import { ModalName, type ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { SafetyLevel as GqlSafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GetSwappableTokensResponse, SafetyLevel } from 'uniswap/src/data/tradingApi/__generated__'
+import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
 import { differenceWith } from 'utilities/src/primitives/array'
 
 export function createEmptyTokenOptionFromBridgingToken(
-  token: TradingApi.GetSwappableTokensResponse['tokens'][0],
+  token: GetSwappableTokensResponse['tokens'][0],
 ): TokenOption | undefined {
   const currencyInfo = tradingApiSwappableTokenToCurrencyInfo(token)
 
@@ -28,16 +25,16 @@ export function createEmptyTokenOptionFromBridgingToken(
   }
 }
 
-export function toGqlSafetyLevel(safetyLevel: TradingApi.SafetyLevel): GraphQLApi.SafetyLevel | null {
+export function toGqlSafetyLevel(safetyLevel: SafetyLevel): GqlSafetyLevel | null {
   switch (safetyLevel) {
-    case TradingApi.SafetyLevel.BLOCKED:
-      return GraphQLApi.SafetyLevel.Blocked
-    case TradingApi.SafetyLevel.MEDIUM_WARNING:
-      return GraphQLApi.SafetyLevel.MediumWarning
-    case TradingApi.SafetyLevel.STRONG_WARNING:
-      return GraphQLApi.SafetyLevel.StrongWarning
-    case TradingApi.SafetyLevel.VERIFIED:
-      return GraphQLApi.SafetyLevel.Verified
+    case SafetyLevel.BLOCKED:
+      return GqlSafetyLevel.Blocked
+    case SafetyLevel.MEDIUM_WARNING:
+      return GqlSafetyLevel.MediumWarning
+    case SafetyLevel.STRONG_WARNING:
+      return GqlSafetyLevel.StrongWarning
+    case SafetyLevel.VERIFIED:
+      return GqlSafetyLevel.Verified
     default:
       return null
   }

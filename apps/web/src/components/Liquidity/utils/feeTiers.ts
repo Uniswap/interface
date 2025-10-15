@@ -5,13 +5,11 @@ import { DYNAMIC_FEE_DATA, DynamicFeeData, FeeData } from 'components/Liquidity/
 import { defaultFeeTiers } from 'components/Liquidity/constants'
 import { FeeTierData } from 'components/Liquidity/types'
 import { BIPS_BASE } from 'constants/misc'
+import { t } from 'i18next'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import i18n from 'uniswap/src/i18n'
-import { PercentNumberDecimals } from 'utilities/src/format/types'
 
 export const MAX_FEE_TIER_DECIMALS = 4
 const MAX_FEE_TIER_VALUE = 99.9999
-const MIN_FEE_TIER_TVL = 1000
 
 export function validateFeeTier(feeTier: string): string {
   const numValue = parseFloat(feeTier)
@@ -33,16 +31,16 @@ export function getFeeTierKey(feeTier: number, isDynamicFee: boolean): string {
 export function getFeeTierTitle(feeAmount: number, isDynamic?: boolean): string {
   switch (feeAmount) {
     case FeeAmount.LOWEST:
-      return i18n.t(`fee.bestForVeryStable`)
+      return t(`fee.bestForVeryStable`)
     case FeeAmount.LOW:
-      return i18n.t(`fee.bestForStablePairs`)
+      return t(`fee.bestForStablePairs`)
     case FeeAmount.MEDIUM:
-      return i18n.t(`fee.bestForMost`)
+      return t(`fee.bestForMost`)
     case FeeAmount.HIGH:
-      return i18n.t(`fee.bestForExotic`)
+      return t(`fee.bestForExotic`)
     default:
       if (isDynamic) {
-        return i18n.t(`fee.bestForCustomizability`)
+        return t(`fee.bestForCustomizability`)
       }
       return ''
   }
@@ -56,7 +54,7 @@ export function mergeFeeTiers({
 }: {
   feeTiers: Record<string, FeeTierData>
   defaultFeeData: FeeData[]
-  formatPercent: (percent: string | number | undefined, maxDecimals?: PercentNumberDecimals) => string
+  formatPercent: (percent: string | number | undefined, maxDecimals?: 2 | 3 | 4) => string
   formattedDynamicFeeTier: string
 }): Record<string, FeeTierData> {
   const result: Record<string, FeeTierData> = {}
@@ -196,25 +194,17 @@ export function getDefaultFeeTiersWithData({
 
   // For V4, include the top 8 fee tiers sorted by TVL
   if (protocolVersion === ProtocolVersion.V4) {
-    return (
-      Object.entries(feeTierData)
-        .map(([feeAmount, data]) => ({
-          tier: parseInt(feeAmount),
-          value: data.fee,
-          title: getFeeTierTitle(data.fee.feeAmount, data.fee.isDynamic),
-          selectionPercent: data.percentage,
-          tvl: data.tvl,
-          boostedApr: data.boostedApr,
-        }))
-        // if tvl is less than MIN_FEE_TIER_TVL and not default fee tier, filter it out
-        .filter(
-          (feeTier) =>
-            parseFloat(feeTier.tvl) >= MIN_FEE_TIER_TVL ||
-            Object.keys(defaultFeeTiersForChain).includes(feeTier.tier.toString()),
-        )
-        .sort(sortFeeTiersByTvl)
-        .slice(0, 4)
-    )
+    return Object.entries(feeTierData)
+      .map(([feeAmount, data]) => ({
+        tier: parseInt(feeAmount),
+        value: data.fee,
+        title: getFeeTierTitle(data.fee.feeAmount, data.fee.isDynamic),
+        selectionPercent: data.percentage,
+        tvl: data.tvl,
+        boostedApr: data.boostedApr,
+      }))
+      .sort(sortFeeTiersByTvl)
+      .slice(0, 8)
   }
 
   // For V2/V3, filter to only include default fee tiers and sort by TVL

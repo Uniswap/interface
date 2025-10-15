@@ -7,7 +7,6 @@ import {
   Position as RestPosition,
   Token as RestToken,
 } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { PoolInformation } from '@uniswap/client-trading/dist/trading/v1/api_pb'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
@@ -19,39 +18,39 @@ import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { logger } from 'utilities/src/logger/logger'
 
-function parseV3FeeTier(feeTier: number | string | undefined): FeeData | undefined {
-  const parsedFee = Number(feeTier || '')
+function parseV3FeeTier(feeTier: string | undefined): FeeData | undefined {
+  const parsedFee = parseInt(feeTier || '')
 
   return parsedFee in FeeAmount
     ? { feeAmount: parsedFee, tickSpacing: DEFAULT_TICK_SPACING, isDynamic: false }
     : undefined
 }
 
-function getSDKPoolFromPoolPosition({
+export function getPoolFromRest({
   pool,
   token0,
   token1,
   protocolVersion,
 }: {
-  pool?: PoolPosition
+  pool?: RestPool | PoolPosition
   token0?: Token
   token1?: Token
   protocolVersion: ProtocolVersion.V3
 }): V3Pool | undefined
-function getSDKPoolFromPoolPosition({
+export function getPoolFromRest({
   pool,
   token0,
   token1,
   protocolVersion,
   hooks,
 }: {
-  pool?: PoolPosition
+  pool?: RestPool | PoolPosition
   token0: Maybe<Currency>
   token1: Maybe<Currency>
   protocolVersion: ProtocolVersion.V4
   hooks: string
 }): V4Pool | undefined
-function getSDKPoolFromPoolPosition({
+export function getPoolFromRest({
   pool,
   token0,
   token1,
@@ -59,14 +58,14 @@ function getSDKPoolFromPoolPosition({
   hooks,
 }:
   | {
-      pool?: PoolPosition
+      pool?: RestPool | PoolPosition
       token0?: Token
       token1?: Token
       protocolVersion: ProtocolVersion.V3
       hooks?: undefined
     }
   | {
-      pool?: PoolPosition
+      pool?: RestPool | PoolPosition
       token0: Maybe<Currency>
       token1: Maybe<Currency>
       protocolVersion: ProtocolVersion.V4
@@ -76,156 +75,54 @@ function getSDKPoolFromPoolPosition({
     return undefined
   }
 
-  if (protocolVersion === ProtocolVersion.V3) {
-    const feeTier = parseV3FeeTier(pool.feeTier)
-    if (feeTier) {
-      return new V3Pool(
-        token0 as Token,
-        token1 as Token,
-        feeTier.feeAmount,
-        pool.currentPrice,
-        pool.currentLiquidity,
-        parseInt(pool.currentTick),
-      )
+  if (pool instanceof RestPool) {
+    if (protocolVersion === ProtocolVersion.V3) {
+      return new V3Pool(token0 as Token, token1 as Token, pool.fee, pool.sqrtPriceX96, pool.liquidity, pool.tick)
     }
 
-    return undefined
-  }
-
-  const fee = parseInt(pool.feeTier)
-  return new V4Pool(
-    token0,
-    token1,
-    fee,
-    parseInt(pool.tickSpacing),
-    hooks || ZERO_ADDRESS,
-    pool.currentPrice,
-    pool.currentLiquidity,
-    parseInt(pool.currentTick),
-  )
-}
-
-export function getV4SDKPoolFromRestPool({
-  pool,
-  token0,
-  token1,
-  hooks,
-}: {
-  pool?: RestPool
-  token0: Maybe<Currency>
-  token1: Maybe<Currency>
-  hooks: string
-}): V4Pool | undefined {
-  if (!pool || !token0 || !token1) {
-    return undefined
-  }
-
-  return new V4Pool(
-    token0,
-    token1,
-    pool.fee,
-    pool.tickSpacing,
-    hooks || ZERO_ADDRESS,
-    pool.sqrtPriceX96,
-    pool.liquidity,
-    pool.tick,
-  )
-}
-
-export function getSDKPoolFromPoolInformation({
-  poolOrPair,
-  token0,
-  token1,
-  protocolVersion,
-}: {
-  poolOrPair?: PoolInformation
-  token0?: Token
-  token1?: Token
-  protocolVersion: ProtocolVersion.V2
-}): Pair | undefined
-export function getSDKPoolFromPoolInformation({
-  poolOrPair,
-  token0,
-  token1,
-  protocolVersion,
-}: {
-  poolOrPair?: PoolInformation
-  token0?: Token
-  token1?: Token
-  protocolVersion: ProtocolVersion.V3
-}): V3Pool | undefined
-export function getSDKPoolFromPoolInformation({
-  poolOrPair,
-  token0,
-  token1,
-  protocolVersion,
-  hooks,
-}: {
-  poolOrPair?: PoolInformation
-  token0: Maybe<Currency>
-  token1: Maybe<Currency>
-  protocolVersion: ProtocolVersion.V4
-  hooks: string
-}): V4Pool | undefined
-export function getSDKPoolFromPoolInformation({
-  poolOrPair,
-  token0,
-  token1,
-  protocolVersion,
-  hooks,
-}:
-  | {
-      poolOrPair?: PoolInformation
-      token0?: Token
-      token1?: Token
-      protocolVersion: ProtocolVersion.V2
-      hooks?: undefined
-    }
-  | {
-      poolOrPair?: PoolInformation
-      token0?: Token
-      token1?: Token
-      protocolVersion: ProtocolVersion.V3
-      hooks?: undefined
-    }
-  | {
-      poolOrPair?: PoolInformation
-      token0: Maybe<Currency>
-      token1: Maybe<Currency>
-      protocolVersion: ProtocolVersion.V4
-      hooks: string
-    }): V3Pool | V4Pool | Pair | undefined {
-  if (!poolOrPair || !token0 || !token1) {
-    return undefined
-  }
-  if (protocolVersion === ProtocolVersion.V2) {
-    return new Pair(
-      CurrencyAmount.fromRawAmount(token0, poolOrPair.tokenAReserves ?? '0'),
-      CurrencyAmount.fromRawAmount(token1, poolOrPair.tokenBReserves ?? '0'),
+    return new V4Pool(
+      token0,
+      token1,
+      pool.fee,
+      pool.tickSpacing,
+      hooks || ZERO_ADDRESS,
+      pool.sqrtPriceX96,
+      pool.liquidity,
+      pool.tick,
     )
   }
 
-  if (protocolVersion === ProtocolVersion.V3) {
-    return new V3Pool(
-      token0 as Token,
-      token1 as Token,
-      parseV3FeeTier(poolOrPair.fee)?.feeAmount ?? FeeAmount.MEDIUM,
-      poolOrPair.sqrtRatioX96 ?? '0',
-      poolOrPair.poolLiquidity ?? '0',
-      poolOrPair.currentTick ?? 0,
+  if (pool instanceof PoolPosition) {
+    if (protocolVersion === ProtocolVersion.V3) {
+      const feeTier = parseV3FeeTier(pool.feeTier)
+      if (feeTier) {
+        return new V3Pool(
+          token0 as Token,
+          token1 as Token,
+          feeTier.feeAmount,
+          pool.currentPrice,
+          pool.currentLiquidity,
+          parseInt(pool.currentTick),
+        )
+      }
+
+      return undefined
+    }
+
+    const fee = parseInt(pool.feeTier)
+    return new V4Pool(
+      token0,
+      token1,
+      fee,
+      parseInt(pool.tickSpacing),
+      hooks || ZERO_ADDRESS,
+      pool.currentPrice,
+      pool.currentLiquidity,
+      parseInt(pool.currentTick),
     )
   }
 
-  return new V4Pool(
-    token0,
-    token1,
-    poolOrPair.fee ?? FeeAmount.MEDIUM,
-    poolOrPair.tickSpacing ?? DEFAULT_TICK_SPACING,
-    hooks || ZERO_ADDRESS,
-    poolOrPair.sqrtRatioX96 ?? '0',
-    poolOrPair.poolLiquidity ?? '0',
-    poolOrPair.currentTick ?? 0,
-  )
+  return undefined
 }
 
 function parseRestToken<T extends Currency>(token: RestToken | undefined): T | undefined {
@@ -302,7 +199,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
         return undefined
       }
 
-      const pool = getSDKPoolFromPoolPosition({
+      const pool = getPoolFromRest({
         pool: position.position.value,
         token0,
         token1,
@@ -352,7 +249,7 @@ export function parseRestPosition(position?: RestPosition): PositionInfo | undef
       }
 
       const hook = position.position.value.hooks[0]?.address
-      const pool = getSDKPoolFromPoolPosition({
+      const pool = getPoolFromRest({
         pool: v4Position,
         token0,
         token1,

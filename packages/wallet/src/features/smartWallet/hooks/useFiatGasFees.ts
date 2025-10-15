@@ -24,7 +24,6 @@ export function useFiatGasFees(gasFees: GasFeeData[]): UseFiatGasFeesReturnType 
     setHasError(false)
   }, [])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: -gasFees
   useEffect(() => {
     resetState()
   }, [gasFees, resetState])

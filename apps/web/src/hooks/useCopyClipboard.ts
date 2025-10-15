@@ -20,7 +20,7 @@ export default function useCopyClipboard(timeout = 500): [boolean, (toCopy: stri
       }
     }
     return undefined
-  }, [isCopied, timeout])
+  }, [isCopied, setIsCopied, timeout])
 
   return [isCopied, staticCopy]
 }

@@ -11,7 +11,6 @@ export function useResponsiveDimensions() {
 
   const deviceDimensions = useDeviceDimensions()
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +deviceDimensions
   useEffect(() => {
     const calculateDimensions = () => {
       const chartContainer = document.getElementById('d3-liquidity-range-input')

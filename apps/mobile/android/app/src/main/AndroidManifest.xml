@@ -89,27 +89,12 @@
         <data
             android:scheme="https"
             android:host="app.uniswap.org"
-            android:pathPrefix="/tokens" />
+            android:pathPrefix="/tokens/" />
 
         <data
             android:scheme="https"
             android:host="app.uniswap.org"
             android:pathPrefix="/address/" />
-
-        <data
-            android:scheme="https"
-            android:host="app.uniswap.org"
-            android:pathPrefix="/explore/" />
-
-        <data
-            android:scheme="https"
-            android:host="app.uniswap.org"
-            android:pathPrefix="/swap" />
-
-        <data
-            android:scheme="https"
-            android:host="app.uniswap.org"
-            android:pathPrefix="/buy" />
       </intent-filter>
       <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />

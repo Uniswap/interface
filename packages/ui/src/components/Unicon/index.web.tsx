@@ -3,8 +3,7 @@ import { Flex } from 'ui/src/components/layout/Flex'
 import { UniconProps } from 'ui/src/components/Unicon/types'
 import { getUniconColors, getUniconsDeterministicHash } from 'ui/src/components/Unicon/utils'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
-import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
-import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
+import { isAddress } from 'utilities/src/addresses'
 
 // In test environments, import Icons synchronously
 const isTestEnv = process.env.NODE_ENV === 'test'
@@ -16,7 +15,7 @@ function UniconSVGInner({
   icons,
 }: UniconProps & { icons: typeof Icons }): React.ReactElement | null {
   const isDarkMode = useIsDarkMode()
-  if (!address || (!isEVMAddressWithChecksum(address) && !isSVMAddress(address))) {
+  if (!address || !isAddress(address)) {
     return null
   }
 

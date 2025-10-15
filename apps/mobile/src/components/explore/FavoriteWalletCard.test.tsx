@@ -1,5 +1,4 @@
 import { UseQueryResult } from '@tanstack/react-query'
-import type { UnitagAddressResponse } from '@universe/api'
 import configureMockStore from 'redux-mock-store'
 import { thunk } from 'redux-thunk'
 import FavoriteWalletCard, { FavoriteWalletCardProps } from 'src/components/explore/FavoriteWalletCard'
@@ -7,6 +6,7 @@ import { preloadedMobileState } from 'src/test/fixtures'
 import { fireEvent, render, waitFor } from 'src/test/test-utils'
 import * as unitagHooks from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import * as ensHooks from 'uniswap/src/features/ens/api'
+import { UnitagAddressResponse } from 'uniswap/src/features/unitags/types'
 import { ON_PRESS_EVENT_PAYLOAD, SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
@@ -110,7 +110,7 @@ describe('FavoriteWalletCard', () => {
     it('renders wallet address in other cases', () => {
       const { queryByText } = render(<FavoriteWalletCard {...defaultProps} />)
 
-      const displayedAddress = sanitizeAddressText(shortenAddress({ address: defaultProps.address }))!
+      const displayedAddress = sanitizeAddressText(shortenAddress(defaultProps.address))!
 
       expect(queryByText(displayedAddress)).toBeTruthy()
     })

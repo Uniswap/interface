@@ -60,7 +60,7 @@ function mapMatch(
   'worklet'
   let match = locale
 
-  if (!Object.hasOwn(map, locale)) {
+  if (!Object.prototype.hasOwnProperty.call(map, locale)) {
     match = 'en'
   }
 

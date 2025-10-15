@@ -156,6 +156,7 @@ export function ContextMenu({
       (
         {
           label,
+          textColor,
           Icon,
           iconColor,
           disabled: itemDisabled,
@@ -163,8 +164,9 @@ export function ContextMenu({
           showDivider,
           closeDelay,
           destructive,
+          rightIcon,
+          subheader,
           height,
-          ...otherProps
         },
         index,
       ) => (
@@ -174,7 +176,10 @@ export function ContextMenu({
             key={index}
             variant="medium"
             label={label}
+            textColor={textColor}
             icon={Icon && <Icon size="$icon.24" color={iconColor ?? (destructive ? '$statusCritical' : '$neutral2')} />}
+            subheader={subheader}
+            rightIcon={rightIcon}
             height={height ?? spacing.spacing40}
             disabled={itemDisabled}
             destructive={destructive}
@@ -194,7 +199,6 @@ export function ContextMenu({
                 })
               }
             }}
-            {...otherProps}
           />
         </Fragment>
       ),

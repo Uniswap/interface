@@ -1,23 +1,21 @@
 import { ReactComponent as TooltipTriangle } from 'assets/svg/tooltip_triangle.svg'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { forwardRef, PropsWithChildren, ReactNode, useCallback, useImperativeHandle, useRef, useState } from 'react'
+import { CheckCircle, Copy, Icon } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
-import { AnimatableCopyIcon, ColorTokens, Flex, isTouchable, Text, TextProps } from 'ui/src'
+import { Flex, isTouchable, Text } from 'ui/src'
 
 const TOOLTIP_WIDTH = 60
 
-function Tooltip() {
+function Tooltip({ isCopyContractTooltip, tooltipX }: { isCopyContractTooltip: boolean; tooltipX?: number }) {
   return (
     <Flex
       alignItems="center"
       position="absolute"
-      top="100%"
-      marginTop="$spacing8"
+      left={isCopyContractTooltip && tooltipX ? `${tooltipX - TOOLTIP_WIDTH / 2}px` : '50%'}
+      transform="translate(5px, 32px)"
       zIndex="$tooltip"
-      animation="quick"
-      enterStyle={{ opacity: 0, y: -5 }}
-      exitStyle={{ opacity: 0, y: -5 }}
     >
       <TooltipTriangle path="black" />
       <Text
@@ -27,9 +25,9 @@ function Tooltip() {
         backgroundColor="$black"
         textAlign="center"
         justifyContent="center"
-        width={`${TOOLTIP_WIDTH}px`}
-        height="32px"
-        lineHeight="32px"
+        width={!isCopyContractTooltip ? `${TOOLTIP_WIDTH}px` : 'auto'}
+        height={!isCopyContractTooltip ? '32px' : 'auto'}
+        lineHeight={!isCopyContractTooltip ? '32px' : 'auto'}
       >
         <Trans i18nKey="common.copied" />
       </Text>
@@ -42,21 +40,19 @@ export function CopyToClipboard({ toCopy, children }: PropsWithChildren<{ toCopy
   const copy = useCallback(() => {
     setCopied(toCopy)
   }, [toCopy, setCopied])
-
   return (
     <Flex
       row
       onPress={copy}
       justifyContent="center"
       alignItems="center"
-      position="relative"
       {...ClickableTamaguiStyle}
       $platform-web={{
         textDecoration: 'none',
       }}
     >
       {children}
-      {isCopied && <Tooltip />}
+      {isCopied && <Tooltip isCopyContractTooltip={false} />}
     </Flex>
   )
 }
@@ -66,18 +62,17 @@ function isEllipsisActive(element: HTMLDivElement | null) {
 }
 
 interface CopyHelperProps {
+  InitialIcon?: Icon | null
+  CopiedIcon?: Icon
   toCopy: string
-  color?: ColorTokens
-  textProps?: TextProps
+  color?: string
+  fontSize?: number
   iconSize?: number
   gap?: number
   iconPosition?: 'left' | 'right'
-  iconColor?: ColorTokens
+  iconColor?: string
   alwaysShowIcon?: boolean
-  dataTestId?: string
-  disabled?: boolean
   children: ReactNode
-  externalHover?: boolean
 }
 
 type CopyHelperRefType = { forceCopy: () => void }
@@ -85,23 +80,21 @@ type CopyHelperRefType = { forceCopy: () => void }
 export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
   (
     {
+      InitialIcon = Copy,
+      CopiedIcon = (props) => <CheckCircle {...props} color="var(--statusSuccess)" strokeWidth={1.5} />,
       toCopy,
       color,
-      textProps,
+      fontSize,
       iconSize = 20,
       gap = 4,
       iconPosition = 'left',
-      iconColor = '$neutral2',
+      iconColor = 'currentColor',
       alwaysShowIcon = false,
-      dataTestId,
-      disabled = false,
       children,
-      externalHover = false,
     }: CopyHelperProps,
     ref,
   ) => {
-    const [isCopied, setCopied] = useCopyClipboard(1000)
-
+    const [isCopied, setCopied] = useCopyClipboard()
     const copy = useCallback(() => {
       setCopied(toCopy)
     }, [toCopy, setCopied])
@@ -123,35 +116,33 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
 
     // Copy-helpers w/ left icon always show icon & display "Copied!" in copied state
     // Copy-helpers w/ right icon show icon on hover & do not change text
-    const showIcon =
-      alwaysShowIcon || Boolean(iconPosition === 'left' || isHover || externalHover || isTouchable || isCopied)
+    const showIcon = alwaysShowIcon || Boolean(iconPosition === 'left' || isHover || isTouchable || isCopied)
+    const Icon = isCopied ? CopiedIcon : showIcon ? InitialIcon : null
     const offset = showIcon ? gap + iconSize : 0
     return (
       <Flex
         row
-        onPress={disabled ? undefined : copy}
+        onPress={copy}
         gap={displayGap}
         onMouseEnter={onHover}
         onMouseLeave={offHover}
-        {...(!disabled && ClickableTamaguiStyle)}
-        position="relative"
+        {...ClickableTamaguiStyle}
         alignItems="center"
         $platform-web={{
           color: color ?? 'inherit',
         }}
       >
-        {iconPosition === 'left' && showIcon && (
-          <AnimatableCopyIcon
-            hideIcon={!showIcon}
-            isCopied={isCopied}
-            size={iconSize}
-            textColor={iconColor}
-            dataTestId={dataTestId}
-          />
-        )}
-        <Flex ref={textRef} maxWidth={`calc(100% - ${offset + 'px'})`} {...EllipsisTamaguiStyle}>
+        {iconPosition === 'left' && Icon && <Icon size={iconSize} strokeWidth={1.5} color={iconColor} />}
+        <Flex
+          ref={textRef}
+          maxWidth={`calc(100% - ${offset + 'px'})`}
+          {...EllipsisTamaguiStyle}
+          $platform-web={{
+            fontSize: fontSize ? fontSize : 'inherit',
+          }}
+        >
           {isCopied && iconPosition === 'left' ? (
-            <Text variant="body3" color="neutral3" {...textProps}>
+            <Text>
               <Trans i18nKey="common.copied" />
             </Text>
           ) : (
@@ -159,15 +150,7 @@ export const CopyHelper = forwardRef<CopyHelperRefType, CopyHelperProps>(
           )}
         </Flex>
         <Flex $platform-web={{ clear: 'both' }} />
-        {iconPosition === 'right' && !disabled && (
-          <AnimatableCopyIcon
-            hideIcon={!showIcon}
-            isCopied={isCopied}
-            size={iconSize}
-            textColor={iconColor}
-            dataTestId={dataTestId}
-          />
-        )}
+        {iconPosition === 'right' && Icon && <Icon size={iconSize} strokeWidth={1.5} color={iconColor} />}
       </Flex>
     )
   },

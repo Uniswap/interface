@@ -2,7 +2,7 @@ import type { TransactionRequest } from '@ethersproject/abstract-provider'
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersProvider } from 'hooks/useEthersProvider'
-import useSelectChain from 'hooks/useSelectChain'
+import { useSwitchChain } from 'hooks/useSwitchChain'
 import type { GasFeeResult } from 'hooks/useTransactionGasFee'
 import { useCallback, useRef } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
@@ -36,7 +36,7 @@ export function useSendCallback({
   providerRef.current = provider
 
   const addTransaction = useTransactionAdder()
-  const selectChain = useSelectChain()
+  const switchChain = useSwitchChain()
   const supportedTransactionChainId = useSupportedChainId(transactionRequest?.chainId)
 
   return useCallback(async () => {
@@ -67,10 +67,7 @@ export function useSendCallback({
             throw new Error('wallet must be connected to send')
           }
           if (account.chainId !== supportedTransactionChainId) {
-            const success = await selectChain(supportedTransactionChainId)
-            if (!success) {
-              throw new Error('Failed to switch chain')
-            }
+            await switchChain(supportedTransactionChainId)
             // We need to reassign the provider after switching chains
             // otherwise sendTransaction will use the provider that is
             // not connected to the correct chain
@@ -117,7 +114,7 @@ export function useSendCallback({
     gasFee?.params,
     recipient,
     supportedTransactionChainId,
-    selectChain,
+    switchChain,
     transactionRequest,
   ])
 }

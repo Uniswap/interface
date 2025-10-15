@@ -93,7 +93,7 @@ export function ContextMenu({
         keeping normal click behavior intact.
       */}
       <Popover.Trigger onMouseDown={isLeftClick ? onContextMenu : undefined}>
-        {/* biome-ignore  lint/correctness/noRestrictedElements: needed here */}
+        {/* eslint-disable-next-line react/forbid-elements */}
         <div ref={triggerContainerRef} onContextMenu={isLeftClick ? undefined : onContextMenu}>
           {children}
         </div>

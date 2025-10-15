@@ -26,7 +26,6 @@ export function FastImageWrapper({
     ...(isLoaded.value ? style : {}),
   }))
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to trigger this effect when uri changes
   useEffect(() => {
     isLoaded.value = false
   }, [isLoaded, uri])

@@ -1,9 +1,9 @@
+import { EnvelopeHeartIcon } from 'components/Icons/EnvelopeHeart'
 import { useExternallyConnectableExtensionId } from 'pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 import { Anchor, Button, Flex, SpinningLoader, Text } from 'ui/src'
-import { EnvelopeHeart } from 'ui/src/components/icons/EnvelopeHeart'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -46,7 +46,6 @@ export default function ExtensionPasskeyAuthPopUp() {
 
   const [searchParams] = useSearchParams()
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Intentionally only runs once on mount
   useEffect(() => {
     const chromeRuntime = getChromeRuntime()
 
@@ -98,6 +97,7 @@ export default function ExtensionPasskeyAuthPopUp() {
       } satisfies PasskeySignInFlowOpened,
       handleMessageRequestPasskey,
     )
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const onPressSignIn = async () => {
@@ -169,7 +169,7 @@ export default function ExtensionPasskeyAuthPopUp() {
                 href={uniswapUrls.helpArticleUrls.passkeysInfo}
                 textDecorationLine="none"
               >
-                <Button icon={<EnvelopeHeart size="$icon.16" color="$neutral2" />} size="xxsmall" emphasis="secondary">
+                <Button icon={<EnvelopeHeartIcon />} size="xxsmall" emphasis="secondary">
                   {t('common.getHelp.button')}
                 </Button>
               </Anchor>

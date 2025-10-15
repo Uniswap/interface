@@ -1,7 +1,7 @@
 import { call, delay, put, race, select, take } from 'typed-redux-saga'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { FORTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
-import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
+import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
 import { forceFetchFiatOnRampTransactions, upsertFiatOnRampTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'

@@ -1,28 +1,27 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { canUnwrapCurrency, getCurrencyWithOptionalUnwrap } from 'components/Liquidity/utils/currency'
 import { getProtocolItems } from 'components/Liquidity/utils/protocolVersion'
+import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useAccount } from 'hooks/useAccount'
-import { useModalInitialState } from 'hooks/useModalInitialState'
 import { useModalState } from 'hooks/useModalState'
 import useSelectChain from 'hooks/useSelectChain'
 import { Dispatch, SetStateAction, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'state/hooks'
+import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
 import { Button, Flex, Switch, Text } from 'ui/src'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { PollingInterval, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useClaimLpFeesCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useClaimLpFeesCalldataQuery'
+import { ClaimLPFeesRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
@@ -85,7 +84,7 @@ export function ClaimFeeModal() {
   const { t } = useTranslation()
   const trace = useTrace()
   const { formatCurrencyAmount, convertFiatAmountFormatted } = useLocalizationContext()
-  const positionInfo = useModalInitialState(ModalName.ClaimFee)
+  const positionInfo = useAppSelector((state) => state.application.openModal)?.initialState
   const account = useWallet().evmAccount
   const [currentTransactionStep, setCurrentTransactionStep] = useState<
     { step: TransactionStep; accepted: boolean } | undefined
@@ -148,7 +147,7 @@ export function ClaimFeeModal() {
       expectedTokenOwed0RawAmount: positionInfo.version !== ProtocolVersion.V4 ? token0UncollectedFees : undefined,
       expectedTokenOwed1RawAmount: positionInfo.version !== ProtocolVersion.V4 ? token1UncollectedFees : undefined,
       collectAsWETH: positionInfo.version !== ProtocolVersion.V4 ? !unwrapNativeCurrency : undefined,
-    } satisfies TradingApi.ClaimLPFeesRequest
+    } satisfies ClaimLPFeesRequest
   }, [
     account?.address,
     currency0,

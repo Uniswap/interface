@@ -1,6 +1,20 @@
-import { createHelpArticleUrl, getCloudflareApiBaseUrl, helpUrl, TrafficFlows } from '@universe/api'
 import { config } from 'uniswap/src/config'
-import { isDevEnv, isPlaywrightEnv } from 'utilities/src/environment/env'
+import { isBetaEnv, isDevEnv, isPlaywrightEnv, isTestEnv } from 'utilities/src/environment/env'
+import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
+
+enum TrafficFlows {
+  GraphQL = 'graphql',
+  Metrics = 'metrics',
+  Gating = 'gating',
+  TradingApi = 'trading-api-labs',
+  Unitags = 'unitags',
+  FOR = 'for',
+  Scantastic = 'scantastic',
+}
+
+const FLOWS_USING_BETA = [TrafficFlows.FOR]
+
+const isDevOrBeta = isPlaywrightEnv() ? false : isDevEnv() || isBetaEnv()
 
 export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
 const EMBEDDED_WALLET_HOSTNAME = isPlaywrightEnv() || isDevEnv() ? 'staging.ew.unihq.org' : UNISWAP_WEB_HOSTNAME
@@ -9,8 +23,10 @@ export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
 export const UNISWAP_APP_URL = 'https://uniswap.org/app'
 export const UNISWAP_MOBILE_REDIRECT_URL = 'https://uniswap.org/mobile-redirect'
 
+const helpUrl = 'https://support.uniswap.org/hc/en-us'
+
 // The trading api uses custom builds for testing which may not use the v1 prefix
-export const tradingApiVersionPrefix = config.tradingApiWebTestEnv === 'true' ? '' : '/v1'
+const tradingApiVersionPrefix = config.tradingApiWebTestEnv === 'true' ? '' : '/v1'
 
 export const CHROME_EXTENSION_UNINSTALL_URL_PATH = '/extension/uninstall'
 
@@ -37,7 +53,6 @@ export const uniswapUrls = {
     hiddenTokenInfo: createHelpArticleUrl('30432674756749-How-to-hide-and-unhide-tokens-in-the-Uniswap-Wallet'),
     hiddenNFTInfo: createHelpArticleUrl('14185028445837-How-to-hide-and-unhide-NFTs-in-the-Uniswap-Wallet'),
     impermanentLoss: createHelpArticleUrl('20904453751693-What-is-Impermanent-Loss'),
-    jupiterApiError: createHelpArticleUrl('39829559404685'),
     limitsFailure: createHelpArticleUrl('24300813697933-Why-did-my-limit-order-fail-or-not-execute'),
     limitsInfo: createHelpArticleUrl('24470337797005'),
     limitsNetworkSupport: createHelpArticleUrl('24470251716237-What-networks-do-limits-support'),
@@ -142,35 +157,35 @@ export const uniswapUrls = {
   trmPath: '/v1/screen',
   gasServicePath: '/v1/gas-fee',
   tradingApiPaths: {
-    approval: `${tradingApiVersionPrefix}/check_approval`,
-    claimLpFees: `${tradingApiVersionPrefix}/lp/claim`,
-    claimRewards: `${tradingApiVersionPrefix}/lp/claim_rewards`,
-    createLp: `${tradingApiVersionPrefix}/lp/create`,
-    decreaseLp: `${tradingApiVersionPrefix}/lp/decrease`,
-    increaseLp: `${tradingApiVersionPrefix}/lp/increase`,
-    lpApproval: `${tradingApiVersionPrefix}/lp/approve`,
-    migrate: `${tradingApiVersionPrefix}/lp/migrate`,
-    poolInfo: `${tradingApiVersionPrefix}/lp/pool_info`,
-    order: `${tradingApiVersionPrefix}/order`,
-    orders: `${tradingApiVersionPrefix}/orders`,
-    priceDiscrepancy: `${tradingApiVersionPrefix}/lp/price_discrepancy`,
     quote: `${tradingApiVersionPrefix}/quote`,
+    approval: `${tradingApiVersionPrefix}/check_approval`,
     swap: `${tradingApiVersionPrefix}/swap`,
     swap5792: `${tradingApiVersionPrefix}/swap_5792`,
-    swap7702: `${tradingApiVersionPrefix}/swap_7702`,
-    swappableTokens: `${tradingApiVersionPrefix}/swappable_tokens`,
+    order: `${tradingApiVersionPrefix}/order`,
+    orders: `${tradingApiVersionPrefix}/orders`,
     swaps: `${tradingApiVersionPrefix}/swaps`,
-    trade: `${tradingApiVersionPrefix}/trade`,
+    swappableTokens: `${tradingApiVersionPrefix}/swappable_tokens`,
+    createLp: `${tradingApiVersionPrefix}/lp/create`,
+    increaseLp: `${tradingApiVersionPrefix}/lp/increase`,
+    decreaseLp: `${tradingApiVersionPrefix}/lp/decrease`,
+    claimLpFees: `${tradingApiVersionPrefix}/lp/claim`,
+    lpApproval: `${tradingApiVersionPrefix}/lp/approve`,
+    migrate: `${tradingApiVersionPrefix}/lp/migrate`,
+    claimRewards: `${tradingApiVersionPrefix}/lp/claim_rewards`,
     wallet: {
       checkDelegation: `${tradingApiVersionPrefix}/wallet/check_delegation`,
       encode7702: `${tradingApiVersionPrefix}/wallet/encode_7702`,
     },
+    swap7702: `${tradingApiVersionPrefix}/swap_7702`,
+  },
+
+  jupiterApiUrl: 'https://lite-api.jup.ag/ultra/v1',
+  jupiterApiPaths: {
+    order: '/order',
+    execute: '/execute',
   },
 
   wormholeUrl: 'https://portalbridge.com/',
-
-  // Limit orders paths
-  limitOrderStatusesPath: '/limit-orders',
 
   // App and Redirect URL's
   appBaseUrl: UNISWAP_APP_URL,
@@ -191,4 +206,48 @@ export const uniswapUrls = {
     'https://docs.google.com/forms/d/e/1FAIpQLSepzL5aMuSfRhSgw0zDw_gVmc2aeVevfrb1UbOwn6WGJ--46w/viewform',
 
   dataApiServiceUrl: `${getCloudflareApiBaseUrl()}/v2/data.v1.DataApiService`,
+  dataApiServicePaths: {
+    report: '/SubmitReport',
+  },
+}
+
+function getCloudflarePrefix(flow?: TrafficFlows): string {
+  if (flow && isDevOrBeta && FLOWS_USING_BETA.includes(flow)) {
+    return `beta`
+  }
+
+  if (isMobileApp) {
+    return `${isAndroid ? 'android' : 'ios'}.wallet`
+  }
+
+  if (isExtension) {
+    return 'extension'
+  }
+
+  if (isPlaywrightEnv() || isInterface) {
+    return 'interface'
+  }
+
+  if (isTestEnv()) {
+    return 'wallet'
+  }
+
+  throw new Error('Could not determine app to generate Cloudflare prefix')
+}
+
+function getServicePrefix(flow?: TrafficFlows): string {
+  if (flow && (isPlaywrightEnv() || !(isDevOrBeta && FLOWS_USING_BETA.includes(flow)))) {
+    return flow + '.'
+  } else {
+    return ''
+  }
+}
+
+function getCloudflareApiBaseUrl(flow?: TrafficFlows): string {
+  return `https://${getServicePrefix(flow)}${getCloudflarePrefix(flow)}.gateway.uniswap.org`
+}
+
+function createHelpArticleUrl(resourceId: string, path: string = 'articles'): string {
+  const product = isMobileApp ? 'mobileApp' : isExtension ? 'extension' : 'web'
+  return `${helpUrl}/${path}/${resourceId}?product_link=${product}`
 }

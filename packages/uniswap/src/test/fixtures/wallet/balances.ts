@@ -1,4 +1,4 @@
-import { GraphQLApi } from '@universe/api'
+import { Portfolio, Token, TokenBalance } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
@@ -19,8 +19,8 @@ const portfolioBalanceBase = createFixture<PortfolioBalance>()(() => ({
 }))
 
 type PortfolioBalanceOptions = {
-  fromBalance: RequireNonNullable<GraphQLApi.TokenBalance, 'quantity' | 'token'> | null
-  fromToken: GraphQLApi.Token | null
+  fromBalance: RequireNonNullable<TokenBalance, 'quantity' | 'token'> | null
+  fromToken: Token | null
 }
 
 export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalanceOptions>({
@@ -68,7 +68,7 @@ export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalance
 })
 
 type PortfolioBalancesOptions = {
-  portfolio: GraphQLApi.Portfolio
+  portfolio: Portfolio
 }
 
 export const portfolioBalances = createFixture<PortfolioBalance[], PortfolioBalancesOptions>(() => ({
@@ -79,7 +79,7 @@ export const portfolioBalances = createFixture<PortfolioBalance[], PortfolioBala
       ?.map((balance) => {
         if (balance?.quantity && balance.token) {
           return portfolioBalance({
-            fromBalance: balance as RequireNonNullable<GraphQLApi.TokenBalance, 'quantity' | 'token'>,
+            fromBalance: balance as RequireNonNullable<TokenBalance, 'quantity' | 'token'>,
           })
         }
         return undefined

@@ -1,11 +1,9 @@
-const biomeSupportedRules = require('@uniswap/eslint-config/biome-supported')
-
 module.exports = {
   root: true,
   extends: ['@uniswap/eslint-config/native'],
   ignorePatterns: ['node_modules', '.turbo', '.eslintrc.js', 'codegen.ts', '.nx'],
   parserOptions: {
-    project: 'tsconfig.eslint.json',
+    project: 'tsconfig.json',
     tsconfigRootDir: __dirname,
     ecmaFeatures: {
       jsx: true,
@@ -14,13 +12,6 @@ module.exports = {
     sourceType: 'module',
   },
   overrides: [
-    {
-      files: ['**'],
-      rules: {
-        // Disable all ESLint rules that have been migrated to Biome
-        ...biomeSupportedRules,
-      },
-    },
     {
       files: ['src/components/landing/elements/index.tsx', 'src/index.ts', 'src/state/index.ts', 'src/test/**'],
       rules: {

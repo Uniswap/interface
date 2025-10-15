@@ -2,9 +2,9 @@ import { Flex, Text } from 'ui/src'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { NetworkChangedBridgeNotification as NetworkChangedBridgeNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { NetworkChangedBridgeNotification as NetworkChangedBridgeNotificationType } from 'uniswap/src/features/notifications/types'
+import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 
 export function NetworkChangedBridgeNotification({
   notification,

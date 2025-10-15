@@ -1,9 +1,11 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { useSolanaTrade } from 'uniswap/src/features/transactions/swap/hooks/useSolanaTrade'
 import { parseQuoteCurrencies } from 'uniswap/src/features/transactions/swap/hooks/useTrade/parseQuoteCurrencies'
 import { useIndicativeTradeQuery } from 'uniswap/src/features/transactions/swap/hooks/useTrade/useIndicativeTradeQuery'
 import { useTradeQuery } from 'uniswap/src/features/transactions/swap/hooks/useTrade/useTradeQuery'
-import type { TradeWithGasEstimates } from 'uniswap/src/features/transactions/swap/services/tradeService/tradeService'
+import { TradeWithGasEstimates } from 'uniswap/src/features/transactions/swap/services/tradeService/tradeService'
 import { TradeWithStatus, UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
 
 // error strings hardcoded in @uniswap/unified-routing-api
@@ -18,7 +20,13 @@ export function useTrade(params: UseTradeArgs): TradeWithStatus {
   const indicative = useIndicativeTradeQuery(params)
   const { currencyIn, currencyOut } = parseQuoteCurrencies(params)
 
+  // TODO(SWAP-153): Integrate Solana into useTradeQuery
+  const solanaTrade = useSolanaTrade(params)
+
   return useMemo(() => {
+    if (currencyIn?.chainId === UniverseChainId.Solana) {
+      return solanaTrade
+    }
     return parseTradeResult({
       data,
       currencyIn,
@@ -29,7 +37,7 @@ export function useTrade(params: UseTradeArgs): TradeWithStatus {
       error,
       isDebouncing: params.isDebouncing,
     })
-  }, [currencyIn, currencyOut, data, error, indicative, isFetching, isLoading, params.isDebouncing])
+  }, [currencyIn, currencyOut, data, error, indicative, isFetching, isLoading, params.isDebouncing, solanaTrade])
 }
 
 function parseTradeResult(input: {

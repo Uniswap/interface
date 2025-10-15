@@ -4,16 +4,16 @@ import {
   PoolPosition,
   PositionStatus,
   ProtocolVersion,
+  Pool as RestPool,
   Position as RestPosition,
   Token as RestToken,
   V4Position as RestV4Position,
 } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { ChainId, PoolInformation } from '@uniswap/client-trading/dist/trading/v1/api_pb'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
 import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
-import { getSDKPoolFromPoolInformation, parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
+import { getPoolFromRest, parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
 import { ETH_MAINNET } from 'test-utils/constants'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI, USDT } from 'uniswap/src/constants/tokens'
@@ -64,68 +64,72 @@ class MockPoolPosition extends PoolPosition {
   }
 }
 
-describe('getSDKPoolFromPoolInformation', () => {
+const MOCK_V3_REST_POOL_POSITION = new MockPoolPosition(ProtocolVersion.V3, '3000')
+const MOCK_V4_REST_POOL_POSITION = new MockPoolPosition(ProtocolVersion.V4, '1')
+
+describe('getPoolFromRest', () => {
   const HOOK_ADDRESS = '0x09DEA99D714A3a19378e3D80D1ad22Ca46085080'
   const token0 = ETH_MAINNET.wrapped
   const token1 = USDT
   const hooks = { address: HOOK_ADDRESS } as Hook
 
-  class MockPoolInformation extends PoolInformation {
+  class MockRestPool extends RestPool {
     fee = FeeAmount.MEDIUM
-    sqrtRatioX96 = '4054976535745954444738484'
-    poolLiquidity = '7201247293608325509'
-    currentTick = -197613
+    sqrtPriceX96 = '4054976535745954444738484'
+    liquidity = '7201247293608325509'
+    tick = -197613
     tickSpacing = TICK_SPACINGS[FeeAmount.MEDIUM]
-    poolReferenceIdentifier = '12345'
-    tokenAddressA = token0.address
-    tokenAddressB = token1.address
-    chainId = ChainId.MAINNET
-    tokenAReserves = '1000000000000000000'
-    tokenBReserves = '2000000000000000000'
-    hookAddress = hooks.address
+    poolId = '12345'
+    token0 = token0.address
+    token1 = token1.address
+    chainId = UniverseChainId.Mainnet
+    isDynamicFee = false
+    totalLiquidityUsd = '1000'
+    apr = 0
+    boostedApr = 0
+    totalApr = 0
+    hooks = hooks
     constructor(readonly protocolVersion: ProtocolVersion) {
       super()
     }
   }
 
-  const MOCK_V3_POOL_INFORMATION = new MockPoolInformation(ProtocolVersion.V3)
-  const MOCK_V4_POOL_INFORMATION = new MockPoolInformation(ProtocolVersion.V4)
+  const MOCK_V3_REST_POOL = new MockRestPool(ProtocolVersion.V3)
+  const MOCK_V4_REST_POOL = new MockRestPool(ProtocolVersion.V4)
 
   const V3_POOL = new V3Pool(
     token0,
     token1,
-    MOCK_V3_POOL_INFORMATION.fee,
-    MOCK_V3_POOL_INFORMATION.sqrtRatioX96,
-    MOCK_V3_POOL_INFORMATION.poolLiquidity,
-    MOCK_V3_POOL_INFORMATION.currentTick,
+    MOCK_V3_REST_POOL.fee,
+    MOCK_V3_REST_POOL.sqrtPriceX96,
+    MOCK_V3_REST_POOL.liquidity,
+    MOCK_V3_REST_POOL.tick,
   )
 
   const V4_POOL = new V4Pool(
     token0,
     token1,
-    MOCK_V4_POOL_INFORMATION.fee,
-    MOCK_V4_POOL_INFORMATION.tickSpacing,
-    MOCK_V4_POOL_INFORMATION.hookAddress,
-    MOCK_V4_POOL_INFORMATION.sqrtRatioX96,
-    MOCK_V4_POOL_INFORMATION.poolLiquidity,
-    MOCK_V4_POOL_INFORMATION.currentTick,
+    MOCK_V4_REST_POOL.fee,
+    MOCK_V4_REST_POOL.tickSpacing,
+    MOCK_V4_REST_POOL.hooks.address,
+    MOCK_V4_REST_POOL.sqrtPriceX96,
+    MOCK_V4_REST_POOL.liquidity,
+    MOCK_V4_REST_POOL.tick,
   )
 
-  it('returns undefined if poolOrPair, token0, or token1 is missing', () => {
+  it('returns undefined if pool, token0, or token1 is missing', () => {
+    expect(getPoolFromRest({ pool: undefined, token0, token1, protocolVersion: ProtocolVersion.V3 })).toBeUndefined()
     expect(
-      getSDKPoolFromPoolInformation({ poolOrPair: undefined, token0, token1, protocolVersion: ProtocolVersion.V3 }),
-    ).toBeUndefined()
-    expect(
-      getSDKPoolFromPoolInformation({
-        poolOrPair: MOCK_V3_POOL_INFORMATION,
+      getPoolFromRest({
+        pool: MOCK_V3_REST_POOL_POSITION,
         token0: undefined,
         token1,
         protocolVersion: ProtocolVersion.V3,
       }),
     ).toBeUndefined()
     expect(
-      getSDKPoolFromPoolInformation({
-        poolOrPair: MOCK_V3_POOL_INFORMATION,
+      getPoolFromRest({
+        pool: MOCK_V3_REST_POOL_POSITION,
         token0,
         token1: undefined,
         protocolVersion: ProtocolVersion.V3,
@@ -133,25 +137,71 @@ describe('getSDKPoolFromPoolInformation', () => {
     ).toBeUndefined()
   })
 
-  it('returns V3Pool for ProtocolVersion.V3', () => {
-    const result = getSDKPoolFromPoolInformation({
-      poolOrPair: MOCK_V3_POOL_INFORMATION,
-      token0,
-      token1,
-      protocolVersion: ProtocolVersion.V3,
-    })
+  it('returns V3Pool for RestPool and ProtocolVersion.V3', () => {
+    const result = getPoolFromRest({ pool: MOCK_V3_REST_POOL, token0, token1, protocolVersion: ProtocolVersion.V3 })
     expect(result).toEqual(V3_POOL)
   })
 
-  it('returns V4Pool for ProtocolVersion.V4', () => {
-    const result = getSDKPoolFromPoolInformation({
-      poolOrPair: MOCK_V4_POOL_INFORMATION,
+  it('returns V4Pool for RestPool and ProtocolVersion.V4', () => {
+    const result = getPoolFromRest({
+      pool: MOCK_V4_REST_POOL,
       token0,
       token1,
       protocolVersion: ProtocolVersion.V4,
       hooks: hooks.address,
     })
     expect(result).toEqual(V4_POOL)
+  })
+
+  it('returns V3Pool for PoolPosition and ProtocolVersion.V3 with valid feeTier', () => {
+    const result = getPoolFromRest({
+      pool: MOCK_V3_REST_POOL_POSITION,
+      token0,
+      token1,
+      protocolVersion: ProtocolVersion.V3,
+    })
+    expect(result).toEqual(
+      new V3Pool(
+        token0,
+        token1,
+        Number(MOCK_V3_REST_POOL_POSITION.feeTier),
+        MOCK_V3_REST_POOL_POSITION.currentPrice,
+        MOCK_V3_REST_POOL_POSITION.currentLiquidity,
+        Number(MOCK_V3_REST_POOL_POSITION.currentTick),
+      ),
+    )
+  })
+
+  it('returns undefined for PoolPosition and ProtocolVersion.V3 with invalid feeTier', () => {
+    const result = getPoolFromRest({
+      pool: new MockPoolPosition(ProtocolVersion.V3, '1000000'),
+      token0,
+      token1,
+      protocolVersion: ProtocolVersion.V3,
+    })
+    expect(result).toEqual(undefined)
+  })
+
+  it('returns V4Pool for PoolPosition and ProtocolVersion.V4', () => {
+    const result = getPoolFromRest({
+      pool: MOCK_V4_REST_POOL_POSITION,
+      token0,
+      token1,
+      protocolVersion: ProtocolVersion.V4,
+      hooks: ZERO_ADDRESS,
+    })
+    expect(result).toEqual(
+      new V4Pool(
+        token0,
+        token1,
+        Number(MOCK_V4_REST_POOL_POSITION.feeTier),
+        Number(MOCK_V4_REST_POOL_POSITION.tickSpacing),
+        ZERO_ADDRESS,
+        MOCK_V4_REST_POOL_POSITION.currentPrice,
+        MOCK_V4_REST_POOL_POSITION.currentLiquidity,
+        Number(MOCK_V4_REST_POOL_POSITION.currentTick),
+      ),
+    )
   })
 })
 

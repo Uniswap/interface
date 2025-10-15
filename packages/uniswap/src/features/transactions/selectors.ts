@@ -1,7 +1,6 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { uniqueAddressesOnly } from 'uniswap/src/features/address/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -15,7 +14,6 @@ import {
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
-import { isLimitOrder } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { selectTokensVisibility } from 'uniswap/src/features/visibility/selectors'
 import { CurrencyIdToVisibility } from 'uniswap/src/features/visibility/slice'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
@@ -38,79 +36,53 @@ export const selectSwapTransactionsCount = createSelector(selectTransactions, (t
   return swapTransactionCount
 })
 
-type PlatformAddresses = {
-  evmAddress: Address | null
-  svmAddress: Address | null
-}
-
-export type AddressTransactionsSelector = Selector<UniswapState, TransactionDetails[] | undefined, [PlatformAddresses]>
-export function makeSelectAddressTransactions(): AddressTransactionsSelector {
-  const extractAddresses = (_: UniswapState, addresses: PlatformAddresses): PlatformAddresses => addresses
-
-  return createSelector(selectTransactions, extractAddresses, (transactions, { evmAddress, svmAddress }) => {
-    if (!evmAddress && !svmAddress) {
-      return undefined
-    }
-
-    const evmAddressTransactions = evmAddress ? transactions[evmAddress] : undefined
-    const svmAddressTransactions = svmAddress ? transactions[svmAddress] : undefined
-
-    if (!evmAddressTransactions && !svmAddressTransactions) {
-      return undefined
-    }
-
-    // Combine transactions from both addresses
-    const combinedTransactions = {
-      ...(evmAddressTransactions || {}),
-      ...(svmAddressTransactions || {}),
-    }
-
-    // eslint-disable-next-line max-params
-    return unique(flattenObjectOfObjects(combinedTransactions), (tx, _, self) => {
-      // Remove dummy local FOR transactions from TransactionList, notification badge, etc.
-      // this is what prevents the local transactions from actually appearing in the activity tab.
-      if (tx.typeInfo.type === TransactionType.LocalOnRamp || tx.typeInfo.type === TransactionType.LocalOffRamp) {
-        return false
+export type AddressTransactionsSelector = Selector<UniswapState, TransactionDetails[] | undefined, [Address | null]>
+export const makeSelectAddressTransactions = (): AddressTransactionsSelector =>
+  createSelector(
+    selectTransactions,
+    (_: UniswapState, address: Address | null) => address,
+    (transactions, address) => {
+      if (!address) {
+        return undefined
       }
-      // Remove limit orders from the main activity list (they appear in their own menu)
-      if (isLimitOrder(tx)) {
-        return false
-      }
-      /*
-       * Remove duplicate transactions with the same chain and nonce, keep the one with the higher addedTime,
-       * this represents a txn that is replacing or cancelling the older txn.
-       */
-      const duplicate = self.find(
-        (tx2) =>
-          tx2.id !== tx.id &&
-          (isClassic(tx) || isBridge(tx)) &&
-          (isClassic(tx2) || isBridge(tx2)) &&
-          tx2.options.request.chainId &&
-          tx2.options.request.chainId === tx.options.request.chainId &&
-          tx.options.request.nonce &&
-          tx2.options.request.nonce === tx.options.request.nonce,
-      )
-      if (duplicate) {
-        return tx.addedTime > duplicate.addedTime
-      }
-      return true
-    })
-  })
-}
 
-export function useSelectAddressTransactions({
-  evmAddress,
-  svmAddress,
-}: {
-  evmAddress?: Address | null
-  svmAddress?: Address | null
-}): TransactionDetails[] | undefined {
-  const selectAddressTransactions = useMemo(makeSelectAddressTransactions, [])
-  const addressParams = useMemo(
-    () => ({ evmAddress: evmAddress ?? null, svmAddress: svmAddress ?? null }),
-    [evmAddress, svmAddress],
+      const addressTransactions = transactions[address]
+      if (!addressTransactions) {
+        return undefined
+      }
+
+      // eslint-disable-next-line max-params
+      return unique(flattenObjectOfObjects(addressTransactions), (tx, _, self) => {
+        // Remove dummy local FOR transactions from TransactionList, notification badge, etc.
+        // this is what prevents the local transactions from actually appearing in the activity tab.
+        if (tx.typeInfo.type === TransactionType.LocalOnRamp || tx.typeInfo.type === TransactionType.LocalOffRamp) {
+          return false
+        }
+        /*
+         * Remove duplicate transactions with the same chain and nonce, keep the one with the higher addedTime,
+         * this represents a txn that is replacing or cancelling the older txn.
+         */
+        const duplicate = self.find(
+          (tx2) =>
+            tx2.id !== tx.id &&
+            (isClassic(tx) || isBridge(tx)) &&
+            (isClassic(tx2) || isBridge(tx2)) &&
+            tx2.options.request.chainId &&
+            tx2.options.request.chainId === tx.options.request.chainId &&
+            tx.options.request.nonce &&
+            tx2.options.request.nonce === tx.options.request.nonce,
+        )
+        if (duplicate) {
+          return tx.addedTime > duplicate.addedTime
+        }
+        return true
+      })
+    },
   )
-  return useSelector((state: UniswapState) => selectAddressTransactions(state, addressParams))
+
+export function useSelectAddressTransactions(address: Address | null): TransactionDetails[] | undefined {
+  const selectAddressTransactions = useMemo(makeSelectAddressTransactions, [])
+  return useSelector((state: UniswapState) => selectAddressTransactions(state, address))
 }
 
 export function useCurrencyIdToVisibility(addresses: Address[]): CurrencyIdToVisibility {
@@ -145,12 +117,12 @@ const makeSelectTokenVisibilityFromLocalTxs = (): Selector<UniswapState, Currenc
 
         Object.values(flattenObjectOfObjects(addressTransactions)).forEach((tx) => {
           if (tx.typeInfo.type === TransactionType.Send) {
-            acc[normalizeCurrencyIdForMapLookup(buildCurrencyId(tx.chainId, tx.typeInfo.tokenAddress))] = {
+            acc[buildCurrencyId(tx.chainId, tx.typeInfo.tokenAddress.toLowerCase())] = {
               isVisible: true,
             }
           } else if (tx.typeInfo.type === TransactionType.Swap) {
-            acc[normalizeCurrencyIdForMapLookup(tx.typeInfo.inputCurrencyId)] = { isVisible: true }
-            acc[normalizeCurrencyIdForMapLookup(tx.typeInfo.outputCurrencyId)] = { isVisible: true }
+            acc[tx.typeInfo.inputCurrencyId.toLowerCase()] = { isVisible: true }
+            acc[tx.typeInfo.outputCurrencyId.toLowerCase()] = { isVisible: true }
           }
         })
 
@@ -246,24 +218,4 @@ export const selectIncompleteTransactions = (state: UniswapState): TransactionDe
       .filter((tx) => !isFinalizedTx(tx))
     return [...accum, ...pendingTxs]
   }, [])
-}
-
-interface SelectTransactionParams {
-  address: string
-  chainId: UniverseChainId
-  txId: string
-}
-
-/**
- * Selector to get a specific transaction from the store
- * Returns the transaction if it exists, undefined otherwise
- */
-export const selectTransaction = (
-  state: UniswapState,
-  params: SelectTransactionParams,
-): TransactionDetails | InterfaceTransactionDetails | undefined => {
-  const transactions = selectTransactions(state)
-  const { address, chainId, txId } = params
-
-  return transactions[address]?.[chainId]?.[txId]
 }

@@ -14,8 +14,6 @@ import Animated, { SharedValue } from 'react-native-reanimated'
 import { Route } from 'react-native-tab-view'
 import { Flex, Text } from 'ui/src'
 import { colorsLight, spacing } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { PendingNotificationBadge } from 'wallet/src/features/notifications/components/PendingNotificationBadge'
 
@@ -114,9 +112,6 @@ export const TabLabel = ({
   textStyleType = 'primary',
   enableNotificationBadge,
 }: TabLabelProps): JSX.Element => {
-  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
-  const showNotificationBadge = !isBottomTabsEnabled && enableNotificationBadge && !isExternalProfile && !focused
-
   return (
     <Flex row alignItems="center" gap="$spacing4" testID={`home-tab-${route.title}`}>
       <Text
@@ -135,7 +130,7 @@ export const TabLabel = ({
       </Text>
       {/* Streamline UI by hiding the Activity tab spinner when focused
       and showing it only on the specific pending transactions. */}
-      {showNotificationBadge ? <PendingNotificationBadge /> : null}
+      {enableNotificationBadge && !isExternalProfile && !focused ? <PendingNotificationBadge /> : null}
     </Flex>
   )
 }

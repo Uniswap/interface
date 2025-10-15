@@ -12,9 +12,9 @@ import {
 import { MAX_RECENT_SEARCH_RESULTS } from 'uniswap/src/components/TokenSelector/constants'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+
 import {
   isEtherscanSearchHistoryResult,
   isNFTCollectionSearchHistoryResult,
@@ -112,22 +112,22 @@ export function useRecentlySearchedOptions({
     /** Otherwise need to re-order our optionItems to match the original recentHistory order: */
     const tokenOptionsMap: { [key: string]: TokenOption } = {}
     tokenOptions?.forEach((option) => {
-      tokenOptionsMap[normalizeCurrencyIdForMapLookup(currencyId(option.currencyInfo.currency))] = option
+      tokenOptionsMap[currencyId(option.currencyInfo.currency).toLowerCase()] = option
     })
 
     const poolOptionsMap: { [key: string]: PoolOption } = {}
     poolOptions.forEach((option) => {
-      poolOptionsMap[`${option.chainId}-${normalizeTokenAddressForCache(option.poolId)}`] = option
+      poolOptionsMap[`${option.chainId}-${option.poolId.toLowerCase()}`] = option
     })
 
     const walletOptionsMap: { [key: string]: WalletByAddressOption } = {}
     walletOptions.forEach((option) => {
-      walletOptionsMap[normalizeTokenAddressForCache(option.address)] = option
+      walletOptionsMap[option.address.toLowerCase()] = option
     })
 
     const nftOptionsMap: { [key: string]: NFTCollectionOption } = {}
     nftOptions.forEach((option) => {
-      nftOptionsMap[normalizeTokenAddressForCache(option.address)] = option
+      nftOptionsMap[option.address.toLowerCase()] = option
     })
 
     const data: SearchModalOption[] = []
@@ -135,19 +135,17 @@ export function useRecentlySearchedOptions({
       if (isTokenSearchHistoryResult(asset)) {
         const option =
           tokenOptionsMap[
-            normalizeCurrencyIdForMapLookup(
-              buildCurrencyId(asset.chainId, asset.address ?? getNativeAddress(asset.chainId)),
-            )
+            buildCurrencyId(asset.chainId, asset.address ?? getNativeAddress(asset.chainId)).toLowerCase()
           ]
         option && data.push(option)
       } else if (isPoolSearchHistoryResult(asset)) {
-        const option = poolOptionsMap[`${asset.chainId}-${normalizeTokenAddressForCache(asset.poolId)}`]
+        const option = poolOptionsMap[`${asset.chainId}-${asset.poolId.toLowerCase()}`]
         option && data.push(option)
       } else if (isWalletSearchHistoryResult(asset)) {
-        const option = walletOptionsMap[normalizeTokenAddressForCache(asset.address)]
+        const option = walletOptionsMap[asset.address.toLowerCase()]
         option && data.push(option)
       } else if (isNFTCollectionSearchHistoryResult(asset)) {
-        const option = nftOptionsMap[normalizeTokenAddressForCache(asset.address)]
+        const option = nftOptionsMap[asset.address.toLowerCase()]
         option && data.push(option)
       }
     })

@@ -1,19 +1,16 @@
 import 'test-utils/tokens/mocks'
 
 import { WETH9 } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitsMenu'
+import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { mocked } from 'test-utils/mocked'
 import { act, fireEvent, render, screen } from 'test-utils/render'
+import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import {
-  TransactionOriginType,
-  TransactionStatus,
-  TransactionType,
-  UniswapXOrderDetails,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 vi.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', async () => {
@@ -33,10 +30,10 @@ vi.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', async () => {
 })
 
 const mockOrderDetails: UniswapXOrderDetails = {
-  routing: TradingApi.Routing.DUTCH_LIMIT,
+  type: SignatureType.SIGN_LIMIT,
   orderHash: '0x1234',
-  status: TransactionStatus.Pending,
-  typeInfo: {
+  status: UniswapXOrderStatus.OPEN,
+  swapInfo: {
     isUniswapXOrder: true,
     type: TransactionType.Swap,
     tradeType: 0,
@@ -52,8 +49,18 @@ const mockOrderDetails: UniswapXOrderDetails = {
   addedTime: 3,
   chainId: UniverseChainId.Mainnet,
   expiry: 4,
-  from: '0x1234',
-  transactionOriginType: TransactionOriginType.Internal,
+  offerer: '0x1234',
+}
+
+const mockLimitActivity: Activity = {
+  id: '0x123',
+  hash: '0x123',
+  chainId: UniverseChainId.Mainnet,
+  status: TransactionStatus.Pending,
+  timestamp: 1,
+  title: 'Limit pending',
+  from: '0x456',
+  offchainOrderDetails: mockOrderDetails,
 }
 
 describe('LimitsMenu', () => {
@@ -63,7 +70,7 @@ describe('LimitsMenu', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
 
     mocked(useOpenLimitOrders).mockReturnValue({
-      openLimitOrders: [mockOrderDetails],
+      openLimitOrders: [mockLimitActivity],
       loading: false,
     })
 
@@ -78,7 +85,7 @@ describe('LimitsMenu', () => {
 
   it('should render when there are two open orders', async () => {
     mocked(useOpenLimitOrders).mockReturnValue({
-      openLimitOrders: [mockOrderDetails, { ...mockOrderDetails, id: '0x456', orderHash: '0x456', hash: '0x456' }],
+      openLimitOrders: [mockLimitActivity, { ...mockLimitActivity, id: '0x456', hash: '0x456' }],
       loading: false,
     })
     await act(async () => {
@@ -93,7 +100,7 @@ describe('LimitsMenu', () => {
   it('should call the close callback', async () => {
     const onClose = vi.fn()
     mocked(useOpenLimitOrders).mockReturnValue({
-      openLimitOrders: [mockOrderDetails],
+      openLimitOrders: [mockLimitActivity],
       loading: false,
     })
     await act(async () => {

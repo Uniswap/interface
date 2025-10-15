@@ -1,5 +1,5 @@
-import { TradingApi } from '@universe/api'
 import { USDC, WBTC } from 'uniswap/src/constants/tokens'
+import { Routing, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import {
   SwapTxAndGasInfo,
@@ -50,10 +50,10 @@ describe('Swap', () => {
     gasFee: { error: null, isLoading: false, value: '1000000000000000000' },
     gasFeeEstimation: { swapEstimate: undefined, approvalEstimate: undefined },
     permit: undefined,
-    routing: TradingApi.Routing.CLASSIC,
+    routing: Routing.CLASSIC,
     swapRequestArgs: {
       permitData: undefined,
-      quote: { tradeType: TradingApi.TradeType.EXACT_INPUT },
+      quote: { tradeType: TradeType.EXACT_INPUT },
       refreshGasPrice: true,
       signature: undefined,
       simulateTransaction: true,
@@ -64,7 +64,7 @@ describe('Swap', () => {
     includesDelegation: false,
   } as const satisfies SwapTxAndGasInfo
 
-  describe(TradingApi.Routing.CLASSIC, () => {
+  describe(Routing.CLASSIC, () => {
     it('should return steps for classic trade with txRequest', () => {
       expect(generateSwapTransactionSteps(baseSwapTxContext)).toEqual([
         {
@@ -126,7 +126,7 @@ describe('Swap', () => {
 
     it('should return steps for classic trade with approval and permit required', () => {
       // We only expect `SwapTransactionAsync` step when on interface swap (unsigned w/o a wallet interaction)
-      UserAgentMock.isWebApp = true
+      UserAgentMock.isInterface = true
 
       const swapTxContext = {
         ...baseSwapTxContext,
@@ -156,12 +156,12 @@ describe('Swap', () => {
     })
   })
 
-  describe(TradingApi.Routing.DUTCH_V2, () => {
+  describe(Routing.DUTCH_V2, () => {
     it('should return steps for uniswapx trade', () => {
       const swapTxContext: UniswapXSwapTxAndGasInfo = {
         ...baseSwapTxContext,
         trade: mockUniswapXTrade,
-        routing: TradingApi.Routing.DUTCH_V2,
+        routing: Routing.DUTCH_V2,
         gasFeeBreakdown: {
           approvalCost: '1000000000000000000',
           classicGasUseEstimateUSD: '1000000000000000000',
@@ -184,7 +184,7 @@ describe('Swap', () => {
       const swapTxContext: UniswapXSwapTxAndGasInfo = {
         ...baseSwapTxContext,
         trade: mockUniswapXTrade,
-        routing: TradingApi.Routing.DUTCH_V2,
+        routing: Routing.DUTCH_V2,
         approveTxRequest: mockApproveRequest,
         revocationTxRequest: mockRevokeRequest,
         gasFeeBreakdown: {
@@ -223,7 +223,7 @@ describe('Swap', () => {
       const swapTxContext: UniswapXSwapTxAndGasInfo = {
         ...baseSwapTxContext,
         trade: mockUniswapXTrade,
-        routing: TradingApi.Routing.DUTCH_V2,
+        routing: Routing.DUTCH_V2,
         approveTxRequest: mockApproveRequest,
         gasFeeBreakdown: {
           approvalCost: '1000000000000000000',

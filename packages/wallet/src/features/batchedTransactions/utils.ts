@@ -1,8 +1,9 @@
-import { TradingApi } from '@universe/api'
 import { checkWalletDelegation } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { ChainDelegationMap, WalletCheckDelegationResponseBody } from 'uniswap/src/data/tradingApi/__generated__'
+import { TransactionRequest } from 'uniswap/src/data/tradingApi/__generated__/models/TransactionRequest'
 import { DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
-import { numberToHex } from 'utilities/src/addresses/hex'
+import { numberToHex } from 'uniswap/src/utils/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { Capability } from 'wallet/src/features/dappRequests/types'
 import { isFreshDelegation } from 'wallet/src/features/smartWallet/delegation/utils'
@@ -31,9 +32,9 @@ export function transformCallsToTransactionRequests({
   calls: EthTransaction[]
   chainId: number
   accountAddress: Address
-}): TradingApi.TransactionRequest[] {
+}): TransactionRequest[] {
   return calls
-    .map((call): TradingApi.TransactionRequest | undefined => {
+    .map((call): TransactionRequest | undefined => {
       if (call.to === undefined || call.data === undefined || !chainId) {
         return undefined
       }
@@ -45,11 +46,11 @@ export function transformCallsToTransactionRequests({
         chainId: chainId.valueOf(),
       }
     })
-    .filter((call): call is TradingApi.TransactionRequest => !!call)
+    .filter((call): call is TransactionRequest => !!call)
 }
 
 export function getCapabilitiesForDelegationStatus(
-  delegationStatus: TradingApi.ChainDelegationMap | undefined,
+  delegationStatus: ChainDelegationMap | undefined,
   hasSmartWalletConsent: boolean,
 ): Record<string, Capability> {
   if (!delegationStatus) {
@@ -93,7 +94,7 @@ export async function getCapabilitiesCore({
   requestId: string
   response: Record<string, Capability>
 }> {
-  let delegationStatusResponse: TradingApi.WalletCheckDelegationResponseBody | undefined
+  let delegationStatusResponse: WalletCheckDelegationResponseBody | undefined
 
   try {
     delegationStatusResponse = await checkWalletDelegation({

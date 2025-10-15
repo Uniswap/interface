@@ -1,8 +1,7 @@
-import { GraphQLApi } from '@universe/api'
 import { ETH_LOGO, ZKSYNC_LOGO } from 'ui/src/assets'
+import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
-import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
 import {
   GqlChainId,
   NetworkLayer,
@@ -27,7 +26,7 @@ export const ZKSYNC_CHAIN_INFO = {
   platform: Platform.EVM,
   assetRepoNetworkName: 'zksync',
   backendChain: {
-    chain: GraphQLApi.Chain.Zksync as GqlChainId,
+    chain: BackendChainId.Zksync as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },
@@ -68,6 +67,5 @@ export const ZKSYNC_CHAIN_INFO = {
     decimals: 18,
     address: '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91',
   },
-  gasConfig: GENERIC_L2_GAS_CONFIG,
   tradingApiPollingIntervalMs: 250,
 } as const satisfies UniverseChainInfo

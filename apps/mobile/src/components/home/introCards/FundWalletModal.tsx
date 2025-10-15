@@ -70,7 +70,7 @@ export function FundWalletModal(): JSX.Element {
           icon:
             cexTransferProviders.length > 0 ? (
               <OverlappingLogos
-                // biome-ignore lint/correctness/useJsxKeyInIterable: Array items are static and don't require keys
+                // eslint-disable-next-line react/jsx-key
                 logos={[<ReceiveCryptoIcon />, ...cexTransferProviders.map((provider) => provider.logos.lightLogo)]}
               />
             ) : (

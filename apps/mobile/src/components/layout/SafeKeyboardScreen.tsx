@@ -5,7 +5,7 @@ import { Screen, ScreenProps } from 'src/components/layout/Screen'
 import { Flex, flexStyles } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
-import { isIOS } from 'utilities/src/platform'
+import { isAndroid, isIOS } from 'utilities/src/platform'
 
 type OnboardingScreenProps = ScreenProps & {
   header?: JSX.Element
@@ -32,7 +32,7 @@ export function SafeKeyboardScreen({
   const minHeight = minHeightWhenKeyboardExpanded && compact ? keyboard.containerHeight - footerHeight : 0
 
   return (
-    <Screen {...screenProps}>
+    <Screen {...screenProps} noInsets={isAndroid}>
       <KeyboardAvoidingView behavior={isIOS ? 'padding' : 'height'} style={styles.base}>
         {header}
         <ScrollView

@@ -55,7 +55,7 @@ export function EditUnitagProfileScreen({ enableBack = false }: { enableBack?: b
         destructive: true,
       },
     ]
-  }, [t])
+  }, [t, setShowChangeUnitagModal, setShowDeleteUnitagModal])
 
   const refreshUnitags = async (): Promise<void> => {
     await backgroundToSidePanelMessageChannel.sendMessage({

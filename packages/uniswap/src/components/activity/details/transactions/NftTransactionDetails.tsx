@@ -13,7 +13,7 @@ import {
   SendTokenTransactionInfo,
   TransactionDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { isWebPlatform } from 'utilities/src/platform'
+import { isWeb } from 'utilities/src/platform'
 
 const MAX_NFT_IMAGE_HEIGHT = 375
 
@@ -73,8 +73,8 @@ export function NftTransactionContent({
     }
   }
 
-  const disableOnPressNftItem = isWebPlatform
-  const disableOnPressNftCollection = isWebPlatform || chainId !== UniverseChainId.Mainnet
+  const disableOnPressNftItem = isWeb
+  const disableOnPressNftCollection = isWeb || chainId !== UniverseChainId.Mainnet
 
   return (
     <Flex borderRadius="$rounded20" overflow="hidden">

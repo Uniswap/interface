@@ -1,9 +1,8 @@
 import { renderHook } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { ChainId, PoolInformation } from '@uniswap/client-trading/dist/trading/v1/api_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
+import { FeeAmount, TICK_SPACINGS, TickMath, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import {
   getSortedCurrenciesForProtocol,
@@ -17,83 +16,39 @@ import {
 } from 'components/Liquidity/Create/types'
 import { PoolState } from 'hooks/usePools'
 import { PairState } from 'hooks/useV2Pairs'
+import JSBI from 'jsbi'
 import { ETH_MAINNET } from 'test-utils/constants'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI, nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-
-class MockPoolInformation extends PoolInformation {
-  fee = FeeAmount.MEDIUM
-  sqrtRatioX96 = '4054976535745954444738484'
-  poolLiquidity = '7201247293608325509'
-  currentTick = -197613
-  tickSpacing = TICK_SPACINGS[FeeAmount.MEDIUM]
-  poolReferenceIdentifier = '12345'
-  tokenAddressA = ETH_MAINNET.wrapped.address
-  tokenAddressB = USDT.address
-  chainId = ChainId.MAINNET
-  tokenAReserves = '1000000000000000000'
-  tokenBReserves = '2000000000000000000'
-  hookAddress = ZERO_ADDRESS
-
-  constructor(readonly protocolVersion: ProtocolVersion) {
-    super()
-  }
-}
-
-const mockV4PoolInformation = new MockPoolInformation(ProtocolVersion.V4)
-const mockV3PoolInformation = new MockPoolInformation(ProtocolVersion.V3)
-const mockV2PairInformation = new MockPoolInformation(ProtocolVersion.V2)
 
 const mockV3Pool = new V3Pool(
   ETH_MAINNET.wrapped,
   USDT,
-  mockV3PoolInformation.fee,
-  mockV3PoolInformation.sqrtRatioX96,
-  mockV3PoolInformation.poolLiquidity,
-  mockV3PoolInformation.currentTick,
+  FeeAmount.MEDIUM,
+  TickMath.getSqrtRatioAtTick(-196257),
+  JSBI.BigInt(0),
+  -196257,
 )
 
 const mockV4Pool = new V4Pool(
-  ETH_MAINNET,
+  ETH_MAINNET.wrapped,
   USDT,
-  mockV4PoolInformation.fee,
-  mockV4PoolInformation.tickSpacing,
-  mockV4PoolInformation.hookAddress,
-  mockV4PoolInformation.sqrtRatioX96,
-  mockV4PoolInformation.poolLiquidity,
-  mockV4PoolInformation.currentTick,
+  FeeAmount.MEDIUM,
+  TICK_SPACINGS[FeeAmount.MEDIUM],
+  ZERO_ADDRESS,
+  TickMath.getSqrtRatioAtTick(-196257),
+  JSBI.BigInt(0),
+  -196257,
 )
 
-const mockPair = new Pair(
-  CurrencyAmount.fromRawAmount(ETH_MAINNET.wrapped, mockV2PairInformation.tokenAReserves),
-  CurrencyAmount.fromRawAmount(USDT, mockV2PairInformation.tokenBReserves),
-)
-
-// remove the following mocks once the PoolInfoEndpoint is fully rolled out
-const mockUseMultichainContext = vi.fn()
 const mockUseGetPoolsByTokens = vi.fn()
-const mockGetFeatureFlag = vi.mocked(getFeatureFlag)
 const mockUseV2Pair = vi.fn()
 const mockUsePool = vi.fn()
-
-const mockUsePoolInfoQuery = vi.fn()
 const mockUseDefaultInitialPrice = vi.fn()
-
-vi.mock('state/multichain/useMultichainContext', () => ({
-  useMultichainContext: () => mockUseMultichainContext(),
-}))
-
-vi.mock('uniswap/src/data/rest/getPools', () => ({
-  useGetPoolsByTokens: () => mockUseGetPoolsByTokens(),
-}))
-
-vi.mock('uniswap/src/features/gating/hooks', (importOriginal) => ({
-  ...importOriginal(),
-  getFeatureFlag: vi.fn(),
-}))
+const mockUseMultichainContext = vi.fn()
+const mockGetPoolFromRest = vi.fn()
 
 vi.mock('hooks/useV2Pairs', async (importOriginal) => ({
   ...(await importOriginal()),
@@ -109,9 +64,22 @@ vi.mock('components/Liquidity/Create/hooks/useDefaultInitialPrice', () => ({
   useDefaultInitialPrice: () => mockUseDefaultInitialPrice(),
 }))
 
-vi.mock('uniswap/src/data/apiClients/tradingApi/usePoolInfoQuery', () => ({
-  usePoolInfoQuery: () => mockUsePoolInfoQuery(),
+vi.mock('state/multichain/useMultichainContext', () => ({
+  useMultichainContext: () => mockUseMultichainContext(),
 }))
+
+vi.mock('uniswap/src/data/rest/getPools', () => ({
+  useGetPoolsByTokens: () => mockUseGetPoolsByTokens(),
+}))
+
+vi.mock('components/Liquidity/utils/parseFromRest', () => ({
+  getPoolFromRest: () => mockGetPoolFromRest(),
+}))
+
+const mockPair = new Pair(
+  CurrencyAmount.fromRawAmount(ETH_MAINNET.wrapped, '1000000000000000000'),
+  CurrencyAmount.fromRawAmount(USDT, '1000000'),
+)
 
 describe('useDerivedPositionInfo', () => {
   const defaultCurrencyInputs = {
@@ -132,14 +100,12 @@ describe('useDerivedPositionInfo', () => {
   beforeEach(() => {
     vi.clearAllMocks()
 
-    mockGetFeatureFlag.mockReturnValue(true)
-
     mockUseMultichainContext.mockReturnValue({
       chainId: UniverseChainId.Mainnet,
     })
 
     mockUseGetPoolsByTokens.mockReturnValue({
-      data: undefined,
+      data: { pools: [mockV3Pool] },
       isLoading: false,
       isFetched: true,
       refetch: vi.fn(),
@@ -155,14 +121,7 @@ describe('useDerivedPositionInfo', () => {
   })
 
   describe('V4 Protocol', () => {
-    beforeEach(() => {
-      mockUsePoolInfoQuery.mockReturnValue({
-        data: { pools: [mockV4PoolInformation] },
-        isLoading: false,
-        isFetched: true,
-        refetch: vi.fn(),
-      })
-    })
+    mockGetPoolFromRest.mockReturnValue(mockV4Pool)
 
     it('should return V4 position info when protocol version is V4', () => {
       const { result } = renderHook(() => useDerivedPositionInfo(defaultCurrencyInputs, defaultPositionState))
@@ -174,7 +133,7 @@ describe('useDerivedPositionInfo', () => {
       expect(v4Result.currencies.sdk.TOKEN1).toBe(USDT)
       expect(v4Result.currencies.display.TOKEN0).toBe(ETH_MAINNET)
       expect(v4Result.currencies.display.TOKEN1).toBe(USDT)
-      expect(v4Result.pool).toEqual(mockV4Pool)
+      expect(v4Result.pool).toBe(mockV4Pool)
     })
 
     it('should return V4 position info when tokens are unsorted', () => {
@@ -189,11 +148,11 @@ describe('useDerivedPositionInfo', () => {
       expect(v4Result.currencies.sdk.TOKEN1).toBe(USDT)
       expect(v4Result.currencies.display.TOKEN0).toBe(ETH_MAINNET)
       expect(v4Result.currencies.display.TOKEN1).toBe(USDT)
-      expect(v4Result.pool).toEqual(mockV4Pool)
+      expect(v4Result.pool).toBe(mockV4Pool)
     })
 
     it('should indicate creating new pool when no pool exists', () => {
-      mockUsePoolInfoQuery.mockReturnValue({
+      mockUseGetPoolsByTokens.mockReturnValue({
         data: { pools: [] },
         isLoading: false,
         isFetched: true,
@@ -206,7 +165,7 @@ describe('useDerivedPositionInfo', () => {
     })
 
     it('should handle loading state', () => {
-      mockUsePoolInfoQuery.mockReturnValue({
+      mockUseGetPoolsByTokens.mockReturnValue({
         data: undefined,
         isLoading: true,
         isFetched: false,
@@ -225,21 +184,12 @@ describe('useDerivedPositionInfo', () => {
       protocolVersion: ProtocolVersion.V3,
     }
 
-    beforeEach(() => {
-      mockUsePoolInfoQuery.mockReturnValue({
-        data: { pools: [mockV3PoolInformation] },
-        isLoading: false,
-        isFetched: true,
-        refetch: vi.fn(),
-      })
-    })
-
     it('should return V3 position info when protocol version is V3', () => {
       const { result } = renderHook(() => useDerivedPositionInfo(defaultCurrencyInputs, v3PositionState))
       const v3Result = result.current as CreateV3PositionInfo
 
       expect(v3Result.protocolVersion).toBe(ProtocolVersion.V3)
-      expect(v3Result.pool).toEqual(mockV3Pool)
+      expect(v3Result.pool).toBe(mockV3Pool)
       expect(v3Result.currencies.sdk.TOKEN0).toBe(ETH_MAINNET.wrapped)
       expect(v3Result.currencies.sdk.TOKEN1).toBe(USDT)
       expect(v3Result.currencies.display.TOKEN0).toBe(ETH_MAINNET)
@@ -253,7 +203,7 @@ describe('useDerivedPositionInfo', () => {
       const v3Result = result.current as CreateV3PositionInfo
 
       expect(v3Result.protocolVersion).toBe(ProtocolVersion.V3)
-      expect(v3Result.pool).toEqual(mockV3Pool)
+      expect(v3Result.pool).toBe(mockV3Pool)
       expect(v3Result.currencies.sdk.TOKEN0).toBe(ETH_MAINNET.wrapped)
       expect(v3Result.currencies.sdk.TOKEN1).toBe(USDT)
       expect(v3Result.currencies.display.TOKEN0).toBe(ETH_MAINNET)
@@ -261,12 +211,7 @@ describe('useDerivedPositionInfo', () => {
     })
 
     it('should indicate creating new pool when V3 pool does not exist', () => {
-      mockUsePoolInfoQuery.mockReturnValue({
-        data: { pools: [] },
-        isLoading: false,
-        isFetched: true,
-        refetch: vi.fn(),
-      })
+      mockUsePool.mockReturnValue([PoolState.NOT_EXISTS, null])
 
       const { result } = renderHook(() => useDerivedPositionInfo(defaultCurrencyInputs, v3PositionState))
 
@@ -280,21 +225,12 @@ describe('useDerivedPositionInfo', () => {
       protocolVersion: ProtocolVersion.V2,
     }
 
-    beforeEach(() => {
-      mockUsePoolInfoQuery.mockReturnValue({
-        data: { pools: [mockV2PairInformation] },
-        isLoading: false,
-        isFetched: true,
-        refetch: vi.fn(),
-      })
-    })
-
     it('should return V2 position info when protocol version is V2', () => {
       const { result } = renderHook(() => useDerivedPositionInfo(defaultCurrencyInputs, v2PositionState))
       const v2Result = result.current as CreateV2PositionInfo
 
       expect(v2Result.protocolVersion).toBe(ProtocolVersion.V2)
-      expect(v2Result.pair).toEqual(mockPair)
+      expect(v2Result.pair).toBe(mockPair)
       expect(v2Result.currencies.sdk.TOKEN0).toBe(ETH_MAINNET.wrapped)
       expect(v2Result.currencies.sdk.TOKEN1).toBe(USDT)
       expect(v2Result.currencies.display.TOKEN0).toBe(ETH_MAINNET)
@@ -308,7 +244,7 @@ describe('useDerivedPositionInfo', () => {
       const v2Result = result.current as CreateV2PositionInfo
 
       expect(v2Result.protocolVersion).toBe(ProtocolVersion.V2)
-      expect(v2Result.pair).toEqual(mockPair)
+      expect(v2Result.pair).toBe(mockPair)
       expect(v2Result.currencies.sdk.TOKEN0).toBe(ETH_MAINNET.wrapped)
       expect(v2Result.currencies.sdk.TOKEN1).toBe(USDT)
       expect(v2Result.currencies.display.TOKEN0).toBe(ETH_MAINNET)
@@ -316,12 +252,7 @@ describe('useDerivedPositionInfo', () => {
     })
 
     it('should indicate creating new pair when V2 pair does not exist', () => {
-      mockUsePoolInfoQuery.mockReturnValue({
-        data: { pools: [] },
-        isLoading: false,
-        isFetched: true,
-        refetch: vi.fn(),
-      })
+      mockUseV2Pair.mockReturnValue([PairState.NOT_EXISTS, null])
 
       const { result } = renderHook(() => useDerivedPositionInfo(defaultCurrencyInputs, v2PositionState))
 
@@ -329,12 +260,7 @@ describe('useDerivedPositionInfo', () => {
     })
 
     it('should handle pair loading state', () => {
-      mockUsePoolInfoQuery.mockReturnValue({
-        data: undefined,
-        isLoading: true,
-        isFetched: false,
-        refetch: vi.fn(),
-      })
+      mockUseV2Pair.mockReturnValue([PairState.LOADING, null])
 
       const { result } = renderHook(() => useDerivedPositionInfo(defaultCurrencyInputs, v2PositionState))
 
@@ -366,9 +292,13 @@ describe('useDerivedPositionInfo', () => {
     })
 
     it('should handle fee tier filtering', () => {
-      // When pools exist but none match the required fee, should indicate creating new pool
-      mockUsePoolInfoQuery.mockReturnValue({
-        data: { pools: [] },
+      const poolWithDifferentFee = {
+        ...mockV3Pool,
+        fee: 10000,
+      }
+
+      mockUseGetPoolsByTokens.mockReturnValue({
+        data: { pools: [poolWithDifferentFee] },
         isLoading: false,
         isFetched: true,
         refetch: vi.fn(),
@@ -383,8 +313,8 @@ describe('useDerivedPositionInfo', () => {
   describe('Refetch Functionality', () => {
     it('should provide refetch function', () => {
       const mockRefetch = vi.fn()
-      mockUsePoolInfoQuery.mockReturnValue({
-        data: { pools: [mockV4PoolInformation] },
+      mockUseGetPoolsByTokens.mockReturnValue({
+        data: { pools: [mockV3Pool] },
         isLoading: false,
         isFetched: true,
         refetch: mockRefetch,

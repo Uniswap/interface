@@ -1,7 +1,0 @@
-{
-  "root": false,
-  "extends": ["./compiled/biome-config.json"],
-  "formatter": {
-    "includes": ["**"]
-  }
-}

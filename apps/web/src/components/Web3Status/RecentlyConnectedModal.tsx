@@ -1,4 +1,4 @@
-import StatusIcon from 'components/StatusIcon'
+import StatusIcon from 'components/Identicon/StatusIcon'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { useAccount } from 'hooks/useAccount'
@@ -37,10 +37,10 @@ export function useWalletDisplay(walletAddress: string | undefined) {
   })
 
   return {
-    displayName: displayName?.name ?? shortenAddress({ address: walletAddress }),
+    displayName: displayName?.name ?? shortenAddress(walletAddress),
     showUnitagIcon: displayName?.type === DisplayNameType.Unitag,
     showShortAddress: displayName?.type === DisplayNameType.Unitag || displayName?.type === DisplayNameType.ENS,
-    shortAddress: shortenAddress({ address: walletAddress }),
+    shortAddress: shortenAddress(walletAddress),
   }
 }
 
@@ -206,7 +206,6 @@ export function RecentlyConnectedModal() {
     }
   }, [walletAddress, account, isEmbeddedWalletEnabled, openModal, recentConnectorId])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: account.isConnecting dependency is sufficient for this effect
   useEffect(() => {
     if (account.isConnected && isOpen) {
       closeModal()

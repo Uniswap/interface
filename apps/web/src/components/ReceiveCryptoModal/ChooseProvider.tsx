@@ -1,8 +1,8 @@
-import { AccountOption } from 'components/ReceiveCryptoModal/AccountOption'
+import { Status } from 'components/AccountDrawer/Status'
 import { ProviderOption } from 'components/ReceiveCryptoModal/ProviderOption'
-import { ReceiveModalState } from 'components/ReceiveCryptoModal/types'
-import { useOpenReceiveCryptoModal } from 'components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
-import { useActiveAddresses } from 'features/accounts/store/hooks'
+import { ReceiveModalState, receiveCryptoModalStateAtom } from 'components/ReceiveCryptoModal/state'
+import { useAccount } from 'hooks/useAccount'
+import { useUpdateAtom } from 'jotai/utils'
 import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
 import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
 import { useTranslation } from 'react-i18next'
@@ -19,16 +19,17 @@ function ActionIcon({ Icon }: { Icon: GeneratedIcon }) {
   return <IconButton emphasis="secondary" size="xxsmall" icon={<Icon />} />
 }
 
-function AccountCardItem({ address }: { address: Address }): JSX.Element {
+function AccountCardItem(): JSX.Element {
+  const account = useAccount()
   const { data: unitag } = useUnitagsAddressQuery({
-    params: address ? { address } : undefined,
+    params: account.address ? { address: account.address } : undefined,
   })
-  const { data: ENSName } = useENSName(address)
+  const { data: ENSName } = useENSName(account.address)
+  const setModalState = useUpdateAtom(receiveCryptoModalStateAtom)
 
-  const onPressShowWalletQr = useOpenReceiveCryptoModal({
-    modalState: ReceiveModalState.QR_CODE,
-    qrCodeAddress: address,
-  })
+  const onPressShowWalletQr = (): void => {
+    setModalState(ReceiveModalState.QR_CODE)
+  }
 
   return (
     <Flex row alignItems="flex-start" gap="$spacing12">
@@ -42,10 +43,15 @@ function AccountCardItem({ address }: { address: Address }): JSX.Element {
         p="$spacing12"
       >
         <Flex fill>
-          <AccountOption account={address} ensUsername={ENSName} uniswapUsername={unitag?.username} />
+          <Status
+            account={account.address!}
+            ensUsername={ENSName}
+            uniswapUsername={unitag?.username}
+            showAddressCopy={false}
+          />
         </Flex>
         <Flex centered row gap="$spacing12" px="$spacing8">
-          <CopyToClipboard toCopy={address}>
+          <CopyToClipboard toCopy={account.address!}>
             <ActionIcon Icon={CopySheets} />
           </CopyToClipboard>
           <TouchableArea onPress={onPressShowWalletQr}>
@@ -73,7 +79,7 @@ export function ChooseProvider({
   setErrorProvider,
 }: ChooseProviderProps): JSX.Element {
   const { t } = useTranslation()
-  const activeAddresses = useActiveAddresses()
+  const account = useAccount()
   const providers = useCexTransferProviders()
 
   if (errorProvider) {
@@ -97,12 +103,7 @@ export function ChooseProvider({
         </Text>
       </Flex>
       <Flex gap="$spacing12">
-        {!providersOnly && (
-          <>
-            {activeAddresses.evmAddress && <AccountCardItem address={activeAddresses.evmAddress} />}
-            {activeAddresses.svmAddress && <AccountCardItem address={activeAddresses.svmAddress} />}
-          </>
-        )}
+        {!providersOnly && <AccountCardItem />}
         {providers.length > 0 && (
           <Flex gap="$spacing12">
             {!providersOnly && (
@@ -114,16 +115,19 @@ export function ChooseProvider({
                 <Separator />
               </Flex>
             )}
-            <Flex grow gap="$spacing12">
-              {providers.map((serviceProvider) => (
-                <ProviderOption
-                  key={serviceProvider.name}
-                  serviceProvider={serviceProvider}
-                  setConnectedProvider={setConnectedProvider}
-                  setErrorProvider={setErrorProvider}
-                />
-              ))}
-            </Flex>
+            {account.address && (
+              <Flex grow gap="$spacing12">
+                {providers.map((serviceProvider) => (
+                  <ProviderOption
+                    key={serviceProvider.name}
+                    serviceProvider={serviceProvider}
+                    walletAddress={account.address!}
+                    setConnectedProvider={setConnectedProvider}
+                    setErrorProvider={setErrorProvider}
+                  />
+                ))}
+              </Flex>
+            )}
           </Flex>
         )}
       </Flex>

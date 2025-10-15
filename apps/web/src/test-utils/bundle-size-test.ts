@@ -1,4 +1,4 @@
-// biome-ignore-all lint/suspicious/noConsole: util script
+/* eslint-disable no-console */
 // This ensures the web app entry js size is under a limit
 
 // NOTE: not using a typical jest/.test.ts file because this test requires the

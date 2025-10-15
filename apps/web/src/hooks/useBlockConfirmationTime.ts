@@ -29,7 +29,7 @@ export function useBlockConfirmationTime() {
           setError(true)
           setBlockConfirmationTime(null)
         }
-      } catch (_e) {
+      } catch (e) {
         setError(true)
         setBlockConfirmationTime(null)
       }

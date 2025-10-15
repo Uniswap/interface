@@ -1,6 +1,7 @@
 import { getChromeRuntime } from 'utilities/src/chrome/chrome'
 import { TRUSTED_CHROME_EXTENSION_IDS } from 'utilities/src/environment/extensionId'
-import { isExtensionApp, isWebApp } from 'utilities/src/platform'
+import { logger } from 'utilities/src/logger/logger'
+import { isExtension, isInterface } from 'utilities/src/platform'
 
 export function isTestEnv(): boolean {
   return (
@@ -16,13 +17,13 @@ export function isPlaywrightEnv(): boolean {
 }
 
 export function isDevEnv(): boolean {
-  if (isWebApp) {
+  if (isInterface) {
     return process.env.NODE_ENV === 'development'
-  } else if (isExtensionApp) {
+  } else if (isExtension) {
     const chromeRuntime = getChromeRuntime()
 
     if (!chromeRuntime) {
-      // biome-ignore lint/suspicious/noConsole: Console logging needed for debugging
+      // eslint-disable-next-line no-console
       console.warn(
         'Avoid using `isDevEnv()` inside the injected script. Use `__DEV__` instead. ' +
           '`chrome.runtime` is only available when the injected script is running inside a trusted site (`app.uniswap.org`). ' +
@@ -44,13 +45,13 @@ export function isDevEnv(): boolean {
 }
 
 export function isBetaEnv(): boolean {
-  if (isWebApp) {
+  if (isInterface) {
     // This is set in vercel builds for all pre-production envs, including `web/staging` and all other branches.
     return Boolean(process.env.REACT_APP_STAGING)
-  } else if (isExtensionApp) {
+  } else if (isExtension) {
     const chromeRuntime = getChromeRuntime()
     if (!chromeRuntime) {
-      // biome-ignore lint/suspicious/noConsole: Console logging needed for debugging
+      // eslint-disable-next-line no-console
       console.warn(
         'Avoid using `isBetaEnv()` inside the injected script. ' +
           '`chrome.runtime` is only available when the injected script is running inside a trusted site (`app.uniswap.org`). ' +
@@ -68,12 +69,12 @@ export function isBetaEnv(): boolean {
 }
 
 export function isProdEnv(): boolean {
-  if (isWebApp) {
+  if (isInterface) {
     return process.env.NODE_ENV === 'production' && !isBetaEnv()
-  } else if (isExtensionApp) {
+  } else if (isExtension) {
     const chromeRuntime = getChromeRuntime()
     if (!chromeRuntime) {
-      // biome-ignore lint/suspicious/noConsole: Console logging needed for debugging
+      // eslint-disable-next-line no-console
       console.warn(
         'Avoid using `isProdEnv()` inside the injected script. ' +
           '`chrome.runtime` is only available when the injected script is running inside a trusted site (`app.uniswap.org`). ' +
@@ -92,8 +93,12 @@ export function isProdEnv(): boolean {
 
 function createAndLogError(funcName: string): Error {
   const e = new Error('Unsupported app environment that failed all checks')
-  // biome-ignore lint/suspicious/noConsole: Console logging needed for debugging
-  console.error(`[utilities/env.web.ts/${funcName}]`, e)
+  logger.error(e, {
+    tags: {
+      file: 'utilities/src/environment/env.web.ts',
+      function: funcName,
+    },
+  })
   return e
 }
 

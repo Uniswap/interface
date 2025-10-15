@@ -52,7 +52,6 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }:
   }
   const { onBiometricContinue } = useBiometricAppSpeedBump(onShowSeedPhraseConfirmed)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to recalculate this when showSeedPhrase changes
   useEffect(() => {
     const listener = addScreenshotListener(() =>
       navigate(ModalName.ScreenshotWarning, { acknowledgeText: t('common.button.close') }),

@@ -20,10 +20,10 @@ import { ViewOnlyExplainerModal } from 'src/app/modals/ViewOnlyExplainerModal'
 import { renderHeaderBackButton, renderHeaderBackImage } from 'src/app/navigation/components'
 import { fiatOnRampNavigationRef, navigationRef } from 'src/app/navigation/navigationRef'
 import { navNativeStackOptions, navStackOptions } from 'src/app/navigation/navStackOptions'
-import { TabsNavigator } from 'src/app/navigation/tabs/TabsNavigator'
 import { startTracking, stopTracking } from 'src/app/navigation/trackingHelpers'
 import {
   AppStackParamList,
+  AppStackScreenProp,
   FiatOnRampStackParamList,
   OnboardingStackParamList,
   SettingsStackParamList,
@@ -70,7 +70,7 @@ import { ExternalProfileScreen } from 'src/screens/ExternalProfileScreen'
 import { FiatOnRampConnectingScreen } from 'src/screens/FiatOnRampConnecting'
 import { FiatOnRampScreen } from 'src/screens/FiatOnRampScreen'
 import { FiatOnRampServiceProvidersScreen } from 'src/screens/FiatOnRampServiceProviders'
-import { WrappedHomeScreen } from 'src/screens/HomeScreen/HomeScreen'
+import { HomeScreen } from 'src/screens/HomeScreen/HomeScreen'
 import { ImportMethodScreen } from 'src/screens/Import/ImportMethodScreen'
 import { OnDeviceRecoveryScreen } from 'src/screens/Import/OnDeviceRecoveryScreen'
 import { OnDeviceRecoveryViewSeedPhraseScreen } from 'src/screens/Import/OnDeviceRecoveryViewSeedPhraseScreen'
@@ -123,6 +123,7 @@ import {
   UnitagStackParamList,
 } from 'uniswap/src/types/screens/mobile'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
 /**
@@ -187,6 +188,13 @@ function SettingsStackGroup(): JSX.Element {
       </SettingsStack.Group>
     </SettingsStack.Navigator>
   )
+}
+
+function WrappedHomeScreen(props: AppStackScreenProp<MobileScreens.Home>): JSX.Element {
+  const activeAccount = useActiveAccountWithThrow()
+  // Adding `key` forces a full re-render and re-mount when switching accounts
+  // to avoid issues with wrong cached data being shown in some memoized components that are already mounted.
+  return <HomeScreen key={activeAccount.address} {...props} />
 }
 
 export function FiatOnRampStackNavigator(): JSX.Element {
@@ -347,8 +355,6 @@ export function AppStackNavigator(): JSX.Element {
   const finishedOnboarding = useSelector(selectFinishedOnboarding)
   const navigation = useAppStackNavigation()
 
-  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
-
   useEffect(() => {
     // Adds a menu item to navigate to Storybook in debug builds
     if (__DEV__) {
@@ -371,12 +377,7 @@ export function AppStackNavigator(): JSX.Element {
         animation: 'slide_from_right',
       }}
     >
-      {finishedOnboarding && (
-        <AppStack.Screen
-          component={isBottomTabsEnabled ? TabsNavigator : WrappedHomeScreen}
-          name={MobileScreens.Home}
-        />
-      )}
+      {finishedOnboarding && <AppStack.Screen component={WrappedHomeScreen} name={MobileScreens.Home} />}
       <AppStack.Screen
         component={OnboardingStackNavigator}
         name={MobileScreens.OnboardingStack}

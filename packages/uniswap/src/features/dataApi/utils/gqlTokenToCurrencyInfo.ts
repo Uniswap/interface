@@ -1,4 +1,4 @@
-import { GraphQLApi } from '@universe/api'
+import { TokenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, buildCurrencyInfo } from 'uniswap/src/features/dataApi/utils/buildCurrency'
@@ -6,8 +6,8 @@ import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCur
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 // Type for the token parameter that gqlTokenToCurrencyInfo expects
-export type GqlTokenToCurrencyInfoToken = Omit<NonNullable<NonNullable<GraphQLApi.TokenQuery['token']>>, 'project'> & {
-  project?: Omit<NonNullable<NonNullable<GraphQLApi.TokenQuery['token']>['project']>, 'tokens'>
+export type GqlTokenToCurrencyInfoToken = Omit<NonNullable<NonNullable<TokenQuery['token']>>, 'project'> & {
+  project?: Omit<NonNullable<NonNullable<TokenQuery['token']>['project']>, 'tokens'>
 }
 
 export function gqlTokenToCurrencyInfo(token: GqlTokenToCurrencyInfoToken): CurrencyInfo | null {

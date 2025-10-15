@@ -73,20 +73,13 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
 
   if (isError) {
     return (
-      <Flex alignSelf="center" px="$spacing16" gap="$spacing16">
+      <Flex alignSelf="center" px="$spacing16">
         <BaseCard.ErrorState
           description={t('account.cloud.error.backup.message')}
           icon={<OSDynamicCloudIcon color="$neutral3" size={imageSizes.image48} />}
           retryButtonLabel={t('common.button.retry')}
           title={t('account.cloud.error.backup.title')}
-          alternativeButtonLabel={t('onboarding.import.method.restoreSeedPhrase.wallet.title')}
           onRetry={triggerCloudStorageBackupsFetch}
-          onAlternativePress={() => {
-            navigation.replace(OnboardingScreens.SeedPhraseInput, {
-              ...params,
-              showAsCloudBackupFallback: true,
-            })
-          }}
         />
       </Flex>
     )

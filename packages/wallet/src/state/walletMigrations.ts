@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-/* biome-ignore-all lint/suspicious/noExplicitAny: Migration types require dynamic typing */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
-import { RankingType } from '@universe/api'
+import { RankingType } from 'uniswap/src/data/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
@@ -274,7 +274,7 @@ export function moveDismissedTokenWarnings(state: any): any {
         address,
       }
       newWarnings[chainId] = newWarnings[chainId] || {}
-      // biome-ignore lint/style/noNonNullAssertion: Safe assertion in migration context - we just created this key
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       newWarnings[chainId]![address] = serializedToken
     }
   })
@@ -458,7 +458,7 @@ export function migrateLiquidityTransactionInfo(state: any): any {
                 ...typeInfoRest,
               },
             }
-          } catch (_e) {
+          } catch (e) {
             // if any error occurs, ignore but remove the transaction
           }
         }

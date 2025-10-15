@@ -1,5 +1,4 @@
 import { useCallback } from 'react'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import type { GetExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
@@ -23,8 +22,7 @@ interface UseSwapServiceParams {
 export function useCreateGetExecuteSwapService(ctx: UseSwapServiceParams): GetExecuteSwapService {
   const { swapCallback, wrapCallback, swapHandlers, derivedSwapInfo } = ctx
 
-  const wallet = useWallet()
-  const account = isSVMChain(derivedSwapInfo.chainId) ? wallet.svmAccount : wallet.evmAccount
+  const account = useWallet().evmAccount
   const customSlippageTolerance = useTransactionSettingsStore((s) => s.customSlippageTolerance)
   const { isFiatMode, presetPercentage, preselectAsset } = useSwapFormStore((s) => ({
     isFiatMode: s.isFiatMode,

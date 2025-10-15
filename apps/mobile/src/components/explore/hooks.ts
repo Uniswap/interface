@@ -1,26 +1,22 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { NativeSyntheticEvent } from 'react-native'
-import type { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
-import type { SharedValue, StyleProps } from 'react-native-reanimated'
-import { interpolate, useAnimatedStyle } from 'react-native-reanimated'
+import { NativeSyntheticEvent } from 'react-native'
+import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
+import { interpolate, SharedValue, StyleProps, useAnimatedStyle } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
-import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { AssetType } from 'uniswap/src/entities/assets'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSelectHasTokenFavorited } from 'uniswap/src/features/favorites/useSelectHasTokenFavorited'
 import { useToggleFavoriteCallback } from 'uniswap/src/features/favorites/useToggleFavoriteCallback'
-import type { SectionName } from 'uniswap/src/features/telemetry/constants'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import type { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import type { CurrencyId } from 'uniswap/src/types/currency'
-import { CurrencyField } from 'uniswap/src/types/currency'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
-import { useEvent } from 'utilities/src/react/hooks'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 
 interface TokenMenuParams {
@@ -53,17 +49,18 @@ export function useExploreTokenContextMenu({
   // currencyId, where we have hardcoded addresses for native currencies
   const currencyAddress = currencyIdToAddress(currencyId)
 
-  const onPressReceive = useEvent(() =>
-    dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })),
+  const onPressReceive = useCallback(
+    () => dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })),
+    [dispatch],
   )
 
-  const onPressShare = useEvent(async () => {
+  const onPressShare = useCallback(async () => {
     handleShareToken({ currencyId })
-  })
+  }, [currencyId, handleShareToken])
 
   const toggleFavoriteToken = useToggleFavoriteCallback({ id: currencyId, tokenName, isFavoriteToken: isFavorited })
 
-  const onPressSwap = useEvent(() => {
+  const onPressSwap = useCallback(() => {
     const swapFormState: TransactionState = {
       exactCurrencyField: CurrencyField.INPUT,
       exactAmountToken: '',
@@ -79,11 +76,11 @@ export function useExploreTokenContextMenu({
       element: ElementName.Swap,
       section: analyticsSection,
     })
-  })
+  }, [analyticsSection, chainId, currencyAddress])
 
-  const onPressToggleFavorite = useEvent(() => {
+  const onPressToggleFavorite = useCallback(() => {
     toggleFavoriteToken()
-  })
+  }, [toggleFavoriteToken])
 
   const menuActions = useMemo(
     () => [

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { EmitterSubscription, Keyboard, KeyboardEvent, useWindowDimensions } from 'react-native'
 import { KeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
 import { isAndroid } from 'utilities/src/platform'
@@ -8,7 +8,6 @@ export function useKeyboardLayout(): KeyboardLayout {
   const window = useWindowDimensions()
 
   const [keyboardPosition, setKeyboardPosition] = useState(window.height)
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +window.height
   useEffect(() => {
     const keyboardListeners: EmitterSubscription[] = []
 

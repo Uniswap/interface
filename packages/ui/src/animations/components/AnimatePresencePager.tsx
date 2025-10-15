@@ -5,28 +5,32 @@ import { animations } from 'ui/src/theme/animations'
 import { usePrevious } from 'utilities/src/react/hooks'
 
 type TransitionDirection = 'forward' | 'backward' | 'up' | 'down'
-export type AnimationType = 'fade' | TransitionDirection
+type AnimationType = 'fade' | TransitionDirection
 
 type AnimationKey = keyof (typeof animations)['animations']
 type AnimationTransitionType = 'unset' | AnimationKey | null | undefined
 
-function getAnimationOffsets(
-  animationType: AnimationType,
-  distance: number,
-): { enterOffset: object; exitOffset: object } {
-  switch (animationType) {
-    case 'forward':
-      return { enterOffset: { x: distance }, exitOffset: { x: -distance } }
-    case 'backward':
-      return { enterOffset: { x: -distance }, exitOffset: { x: distance } }
-    case 'up':
-      return { enterOffset: { y: distance }, exitOffset: { y: -distance } }
-    case 'down':
-      return { enterOffset: { y: -distance }, exitOffset: { y: distance } }
-    case 'fade':
-    default:
-      return { enterOffset: {}, exitOffset: {} }
-  }
+const AnimationStyle: { [key in AnimationType]: { enter: object; exit: object } } = {
+  fade: {
+    enter: {},
+    exit: {},
+  },
+  forward: {
+    enter: { x: 10 },
+    exit: { x: -10 },
+  },
+  backward: {
+    enter: { x: -10 },
+    exit: { x: 10 },
+  },
+  up: {
+    enter: { y: 10 },
+    exit: { y: -10 },
+  },
+  down: {
+    enter: { y: -10 },
+    exit: { y: 10 },
+  },
 }
 
 const AnimatedItem = styled(Flex, {
@@ -36,20 +40,17 @@ const AnimatedItem = styled(Flex, {
   grow: true,
 
   variants: {
-    going: ({ type, distance = 10 }: { type: AnimationType; distance?: number }) => {
-      const { enterOffset, exitOffset } = getAnimationOffsets(type, distance)
-      return {
-        enterStyle: {
-          ...enterOffset,
-          opacity: 0,
-        },
-        exitStyle: {
-          zIndex: 0,
-          ...exitOffset,
-          opacity: 0,
-        },
-      }
-    },
+    going: (going: AnimationType) => ({
+      enterStyle: {
+        ...AnimationStyle[going as AnimationType].enter,
+        opacity: 0,
+      },
+      exitStyle: {
+        zIndex: 0,
+        ...AnimationStyle[going as AnimationType].exit,
+        opacity: 0,
+      },
+    }),
   },
 } as const)
 
@@ -59,19 +60,17 @@ export function TransitionItem({
   animationType = 'fade',
   childKey,
   animation = 'fastHeavy',
-  distance,
   children,
 }: {
   animationType?: AnimationType
   childKey?: string | number
   animation?: AnimationTransitionType
-  distance?: number
   children?: ReactNode
 }): JSX.Element {
   return (
-    <AnimatePresence exitBeforeEnter custom={{ going: { type: animationType, distance } }} initial={false}>
+    <AnimatePresence exitBeforeEnter custom={{ going: animationType }} initial={false}>
       {children && (
-        <AnimatedItem key={childKey ?? 'animated-item'} animation={animation} going={{ type: animationType, distance }}>
+        <AnimatedItem key={childKey ?? 'animated-item'} animation={animation} going={animationType}>
           {children}
         </AnimatedItem>
       )}
@@ -83,20 +82,18 @@ export function AnimateTransition({
   currentIndex,
   animationType = 'fade',
   animation = 'fastHeavy',
-  distance,
   children,
 }: {
   currentIndex: number
   children: ReactNode
   animationType?: AnimationType
-  distance?: number
   animation?: AnimationTransitionType
 }): JSX.Element {
   const childrenArray = Children.toArray(children)
 
   return (
-    <AnimatePresence exitBeforeEnter custom={{ going: { type: animationType, distance } }} initial={false}>
-      <AnimatedItem key={`slide-item-${currentIndex}`} animation={animation} going={{ type: animationType, distance }}>
+    <AnimatePresence exitBeforeEnter custom={{ going: animationType }} initial={false}>
+      <AnimatedItem key={`slide-item-${currentIndex}`} animation={animation} going={animationType}>
         {childrenArray[currentIndex]}
       </AnimatedItem>
     </AnimatePresence>
@@ -104,15 +101,13 @@ export function AnimateTransition({
 }
 
 export function AnimatedPager({
+  children,
   currentIndex,
   animation,
-  distance,
-  children,
 }: {
   currentIndex: number
-  animation?: AnimationTransitionType
-  distance?: number
   children: ReactNode
+  animation?: AnimationTransitionType
 }): JSX.Element {
   const prevIndex = usePrevious(currentIndex)
   const [direction, setDirection] = useState<TransitionDirection>('forward')
@@ -125,9 +120,9 @@ export function AnimatedPager({
     } else if (currentIndex < prevIndex) {
       setDirection('backward')
     }
-  }, [currentIndex, prevIndex])
+  }, [currentIndex, prevIndex, setDirection])
   return (
-    <AnimateTransition animationType={direction} distance={distance} currentIndex={currentIndex} animation={animation}>
+    <AnimateTransition animationType={direction} currentIndex={currentIndex} animation={animation}>
       {children}
     </AnimateTransition>
   )
