@@ -234,6 +234,8 @@ type FailedUniswapXOrderResultProperties = Omit<UniswapXTransactionResultPropert
 
 type FailedClassicSwapResultProperties = Omit<ClassicSwapTransactionResultProperties, 'hash'> & {
   hash: string | undefined
+  error_message?: string
+  error_code?: number
 }
 
 type FailedBridgeSwapResultProperties = Omit<BridgeSwapTransactionResultProperties, 'hash'> & {

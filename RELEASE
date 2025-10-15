@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmakBbUKZVD81rBrgPjF2sjxaegGifz5wStiEoGZxH8guA`
-- CIDv1: `bafybeifykoddc5p7s6d7qhvp62zxf34duq7qhoovc5bogt2a23cgwsrliu`
+- CIDv0: `QmX6cUAdvaHcmqZtGP3fV3H97jiTsgtgNprq3jhHe2RvmM`
+- CIDv1: `bafybeiececcjdwkpst4okuvb4n5e42keo3vrowgpcrh6jarhqy5idg6boa`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,9 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeifykoddc5p7s6d7qhvp62zxf34duq7qhoovc5bogt2a23cgwsrliu.ipfs.dweb.link/
-- [ipfs://QmakBbUKZVD81rBrgPjF2sjxaegGifz5wStiEoGZxH8guA/](ipfs://QmakBbUKZVD81rBrgPjF2sjxaegGifz5wStiEoGZxH8guA/)
+- https://bafybeiececcjdwkpst4okuvb4n5e42keo3vrowgpcrh6jarhqy5idg6boa.ipfs.dweb.link/
+- [ipfs://QmX6cUAdvaHcmqZtGP3fV3H97jiTsgtgNprq3jhHe2RvmM/](ipfs://QmX6cUAdvaHcmqZtGP3fV3H97jiTsgtgNprq3jhHe2RvmM/)
 
-### 5.113.1 (2025-10-14)
-
-
-### Bug Fixes
-
-* **web:** add onDisabledPress to web3status (#24505) 6ee07f1
+### 5.113.2 (2025-10-15)
 
 

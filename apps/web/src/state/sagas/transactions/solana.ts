@@ -103,11 +103,13 @@ function logJupiterSwapFinalized({
   analytics,
   hash,
   timeSigned,
+  error,
 }: {
   success: boolean
   analytics: ExtractedBaseTradeAnalyticsProperties
   hash?: string
   timeSigned?: number
+  error?: Error
 }) {
   // We log SwapSigned here, rather than immediately after signing, because the hash may be unknown until jupiter api response time.
   sendAnalyticsEvent(SwapEventName.SwapSigned, {
@@ -130,6 +132,8 @@ function logJupiterSwapFinalized({
       ? undefined
       : timestampTracker.getElapsedTime(SwapEventType.FirstSwapSuccess, SwapEventType.FirstSwapAction),
     chain_id: analytics.chain_id_in,
+    error_message: error?.message,
+    error_code: error && error instanceof JupiterExecuteError ? error.code : undefined,
   })
 }
 
@@ -146,7 +150,7 @@ function withAnalyticsLogging(swap: (params: JupiterSwapParams) => Generator<any
 
       logJupiterSwapFinalized({ success: true, analytics: params.analytics, hash, timeSigned })
     } catch (error) {
-      logJupiterSwapFinalized({ success: false, analytics: params.analytics, timeSigned })
+      logJupiterSwapFinalized({ success: false, analytics: params.analytics, timeSigned, error })
       throw error
     }
   }

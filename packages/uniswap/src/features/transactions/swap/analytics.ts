@@ -22,6 +22,7 @@ import type { ClassicTrade, Trade } from 'uniswap/src/features/transactions/swap
 import { getSwapFeeUsd } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
 import { isChained, isClassic, isJupiter, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
+import { getProtocolVersionFromTrade } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
@@ -241,6 +242,14 @@ function getQuoteRequestIdFields(trade: Trade): {
   return { requestId, ura_request_id: uraRequestId, quoteId }
 }
 
+function getAnalyticsProtocolType(trade: Trade): string | undefined {
+  if (isJupiter(trade)) {
+    return trade.quote.quote.router.raw
+  }
+
+  return getProtocolVersionFromTrade(trade)
+}
+
 // hook-based analytics because this one is data-lifecycle dependent
 export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
   const formatter = useLocalizationContext()
@@ -340,6 +349,7 @@ export function getBaseTradeAnalyticsProperties({
   return {
     ...trace,
     routing: tradeRoutingToFillType(trade),
+    protocol: getAnalyticsProtocolType(trade),
     total_balances_usd: portfolioBalanceUsd,
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
