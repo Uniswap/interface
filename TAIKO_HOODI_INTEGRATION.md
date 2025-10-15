@@ -80,6 +80,12 @@ This document describes the integration of Taiko Hoodi Testnet (Chain ID: 167012
    - Called patchSdkAddressesForTaiko() at app initialization
    - Ensures SDK address constants include Taiko support
 
+8. **`src/theme/colors.ts`**
+   - Added Taiko brand colors based on official Taiko bridge
+   - Primary: #C8047D (pink-500 from Taiko brand guidelines)
+   - Soft background: rgba(200, 4, 125, 0.16)
+   - Chain-specific colors for chain_167012
+
 ## Architecture Notes
 
 ### Custom Chain Integration
@@ -113,9 +119,10 @@ This is called early in `index.tsx` to ensure all SDK-dependent code sees the pa
    - [ ] Add Taiko square logo variant
    - [ ] Update `src/constants/chainInfo.ts` with proper logo paths
 
-2. **Theme Colors**: Using default Ethereum colors
-   - [ ] Add Taiko-specific colors to `src/theme/colors.ts`
-   - [ ] Update `src/constants/chainInfo.ts` with Taiko colors
+2. **Theme Colors**: ✅ Completed
+   - [x] Added Taiko brand color (#C8047D - pink/magenta from bridge.taiko.xyz)
+   - [x] Added soft variant for backgrounds (rgba(200, 4, 125, 0.16))
+   - [x] Updated `src/constants/chainInfo.ts` with proper Taiko colors
 
 3. **Token List**: No default token list configured
    - [ ] Create or import Taiko Hoodi token list

@@ -268,12 +268,13 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://hoodi.taikoscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Taiko Hoodi',
-    logoUrl: ethereumLogoUrl, // TODO: Replace with Taiko logo
-    circleLogoUrl: ethereumLogoUrl, // TODO: Replace with Taiko logo
+    logoUrl: ethereumLogoUrl, // TODO: Replace with Taiko logo when available
+    circleLogoUrl: ethereumLogoUrl, // TODO: Replace with Taiko logo when available
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     statusPage: 'https://status.taiko.xyz/',
     defaultListUrl: '', // No default token list yet
-    color: darkTheme.chain_1, // TODO: Add Taiko-specific color
+    color: darkTheme.chain_167012,
+    backgroundColor: darkTheme.chain_167012_background,
   },
 } as const
 

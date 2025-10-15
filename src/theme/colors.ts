@@ -97,6 +97,8 @@ export const colors = {
   networkPolygonSoft: 'rgba(164, 87, 255, 0.16)',
   networkEthereumSoft: 'rgba(98, 126, 234, 0.16)',
   networkBase: '#0052FF',
+  networkTaiko: '#C8047D',
+  networkTaikoSoft: 'rgba(200, 4, 125, 0.16)',
   //NEW COLORS FOR SPORE - need to define light/dark here cause they are root colors now (different system)
   neutral1_dark: '#FFFFFF',
   neutral2_dark: '#9B9B9B',
@@ -148,6 +150,8 @@ const commonTheme = {
   chain_42161_background: colors.blue900,
   chain_84531: colors.networkBase,
   chain_56_background: colors.networkBsc,
+  chain_167012: colors.networkTaiko,
+  chain_167012_background: colors.pink900,
   promotional: colors.magenta300,
 
   brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',

@@ -8,7 +8,7 @@
   "editor.formatOnSave": false,
   "editor.inlineSuggest.enabled": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": "explicit"
   },
   "files.eol": "\n",
   "eslint.enable": true,
@@ -22,4 +22,7 @@
   "[typescriptreact]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
+  "i18n-ally.localesPaths": [
+    "src/locales"
+  ],
 }
