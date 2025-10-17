@@ -116,6 +116,26 @@ export const TAIKO_SWAP_ROUTER_02_ADDRESSES = {
   [TAIKO_HOODI_CHAIN_ID]: TAIKO_HOODI_ADDRESSES.router,
 } as const
 
+export const TAIKO_UNIVERSAL_ROUTER_ADDRESS = {
+  [TAIKO_MAINNET_CHAIN_ID]: '0x0000000000000000000000000000000000000000', // TODO: Update with actual Taiko Mainnet Universal Router address
+  [TAIKO_HOODI_CHAIN_ID]: '0x7812fF6117c838cC025F5cfaD5ac8C300baA0c5D', // Universal Router deployed on Taiko Hoodi
+} as const
+
+/**
+ * Get Universal Router address for a given chain ID, with support for Taiko chains
+ * @param chainId - The chain ID to get the Universal Router address for
+ * @returns The Universal Router address for the given chain, or undefined if not supported
+ */
+export function getUniversalRouterAddress(chainId: number): string | undefined {
+  // Check if it's a Taiko chain
+  if (chainId === TAIKO_MAINNET_CHAIN_ID || chainId === TAIKO_HOODI_CHAIN_ID) {
+    return TAIKO_UNIVERSAL_ROUTER_ADDRESS[chainId as keyof typeof TAIKO_UNIVERSAL_ROUTER_ADDRESS]
+  }
+
+  // For non-Taiko chains, return undefined and let the caller handle SDK lookup
+  return undefined
+}
+
 // Legacy exports for backward compatibility
 export const TAIKO_HOODI_V3_CORE_FACTORY_ADDRESSES = {
   [TAIKO_HOODI_CHAIN_ID]: TAIKO_HOODI_ADDRESSES.factory,

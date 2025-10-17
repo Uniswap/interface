@@ -8,9 +8,13 @@ import { useIsDarkMode } from '../../theme/components/ThemeToggle'
 import { AutoColumn } from '../Column'
 
 export const PageWrapper = styled.div`
+  position: relative;
   padding: 68px 8px 0px;
   max-width: 480px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     padding-top: 48px;
@@ -21,13 +25,90 @@ export const PageWrapper = styled.div`
   }
 `
 
+// Gradient background for swap page
+export const SwapGradientBackground = styled.div<{ isDarkMode: boolean }>`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -2;
+  pointer-events: none;
+  ${({ isDarkMode }) =>
+    isDarkMode
+      ? css`
+          background: linear-gradient(rgba(8, 10, 24, 0) 0%, rgb(8 10 24 / 100%) 45%);
+        `
+      : css`
+          background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%);
+        `};
+`
+
+// Glow effect behind swap card
+export const SwapGlowContainer = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+`
+
+export const SwapGlow = styled.div`
+  position: absolute;
+  top: 100px;
+  background: radial-gradient(
+    72.04% 72.04% at 50% 3.99%,
+    rgba(200, 4, 125, 0.6) 0%,
+    rgba(252, 114, 255, 0.3) 30%,
+    rgba(255, 55, 235, 0.2) 60%,
+    rgba(166, 151, 255, 0) 100%
+  );
+  filter: blur(100px);
+  border-radius: 50%;
+  max-width: 600px;
+  width: 100%;
+  height: 600px;
+  animation: pulse 4s ease-in-out infinite;
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1.05);
+    }
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
+    max-width: 400px;
+    height: 400px;
+    filter: blur(80px);
+  }
+`
+
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
 const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
   position: relative;
   z-index: ${Z_INDEX.default};
-  border: 1px solid ${({ theme }) => theme.surface3};
-  transition: transform 250ms ease;
+  border: 1px solid ${({ theme, isDark }) => (isDark ? 'rgba(200, 4, 125, 0.3)' : theme.surface3)};
+  transition: all 250ms ease;
   border-radius: 24px;
+  box-shadow: ${({ isDark }) =>
+    isDark
+      ? '0 0 40px rgba(200, 4, 125, 0.15), 0 0 80px rgba(252, 114, 255, 0.1)'
+      : '0 4px 12px rgba(0, 0, 0, 0.05)'};
 
   &:before {
     content: ' ';
@@ -36,12 +117,20 @@ const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
     inset: 0;
     transform: scale(1.1);
     filter: blur(50px);
-    background-color: rgba(252, 114, 255, 0.075);
+    background: ${({ isDark }) =>
+      isDark
+        ? 'radial-gradient(circle at center, rgba(200, 4, 125, 0.15), rgba(252, 114, 255, 0.08))'
+        : 'rgba(252, 114, 255, 0.075)'};
     z-index: -2;
   }
 
   &:hover {
-    border: 1px solid ${({ theme }) => theme.surface3};
+    border: 1px solid ${({ theme, isDark }) => (isDark ? 'rgba(200, 4, 125, 0.5)' : theme.surface3)};
+    box-shadow: ${({ isDark }) =>
+      isDark
+        ? '0 0 50px rgba(200, 4, 125, 0.2), 0 0 100px rgba(252, 114, 255, 0.15)'
+        : '0 4px 16px rgba(0, 0, 0, 0.08)'};
+    transform: translateY(-2px);
   }
 `
 

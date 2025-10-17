@@ -68,25 +68,34 @@ export const BaseButton = styled(RebassButton)<BaseButtonProps>`
 `
 
 export const ButtonPrimary = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.accent1};
+  background: linear-gradient(93.06deg, #C8047D 2.66%, #FC72FF 98.99%);
   font-size: 20px;
   font-weight: 535;
   padding: 16px;
   color: ${({ theme }) => theme.white};
+  box-shadow: 0 0 20px rgba(200, 4, 125, 0.3);
+  transition: all 250ms ease;
+
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.accent1)};
-    background-color: ${({ theme }) => darken(0.05, theme.accent1)};
+    box-shadow: 0 0 0 2pt rgba(200, 4, 125, 0.4), 0 0 30px rgba(200, 4, 125, 0.4);
+    background: linear-gradient(93.06deg, #B00370 2.66%, #E865F0 98.99%);
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.accent1)};
+    background: linear-gradient(93.06deg, #B00370 2.66%, #E865F0 98.99%);
+    box-shadow: 0 0 30px rgba(200, 4, 125, 0.5);
+    transform: translateY(-1px);
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.accent1)};
-    background-color: ${({ theme }) => darken(0.1, theme.accent1)};
+    box-shadow: 0 0 0 2pt rgba(200, 4, 125, 0.5), 0 0 35px rgba(200, 4, 125, 0.5);
+    background: linear-gradient(93.06deg, #A00268 2.66%, #D655E0 98.99%);
   }
   &:disabled {
-    background-color: ${({ theme, altDisabledStyle, disabled }) =>
-      altDisabledStyle ? (disabled ? theme.accent1 : theme.surface3) : theme.surface3};
+    background: ${({ theme, altDisabledStyle, disabled }) =>
+      altDisabledStyle
+        ? disabled
+          ? 'linear-gradient(93.06deg, #C8047D 2.66%, #FC72FF 98.99%)'
+          : theme.surface3
+        : theme.surface3};
     color: ${({ altDisabledStyle, disabled, theme }) =>
       altDisabledStyle ? (disabled ? theme.white : theme.neutral2) : theme.neutral2};
     cursor: auto;
@@ -264,26 +273,30 @@ const ButtonConfirmedStyle = styled(BaseButton)`
 `
 
 const ButtonErrorStyle = styled(BaseButton)`
-  background-color: ${({ theme }) => theme.critical};
-  border: 1px solid ${({ theme }) => theme.critical};
+  background: linear-gradient(93.06deg, #C8047D 2.66%, #FC72FF 98.99%);
+  border: 1px solid rgba(200, 4, 125, 0.5);
+  box-shadow: 0 0 20px rgba(200, 4, 125, 0.3);
+  transition: all 250ms ease;
 
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.critical)};
-    background-color: ${({ theme }) => darken(0.05, theme.critical)};
+    box-shadow: 0 0 0 2pt rgba(200, 4, 125, 0.4), 0 0 30px rgba(200, 4, 125, 0.4);
+    background: linear-gradient(93.06deg, #B00370 2.66%, #E865F0 98.99%);
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.critical)};
+    background: linear-gradient(93.06deg, #B00370 2.66%, #E865F0 98.99%);
+    box-shadow: 0 0 30px rgba(200, 4, 125, 0.5);
+    transform: translateY(-1px);
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.critical)};
-    background-color: ${({ theme }) => darken(0.1, theme.critical)};
+    box-shadow: 0 0 0 2pt rgba(200, 4, 125, 0.5), 0 0 35px rgba(200, 4, 125, 0.5);
+    background: linear-gradient(93.06deg, #A00268 2.66%, #D655E0 98.99%);
   }
   &:disabled {
     opacity: 50%;
     cursor: auto;
     box-shadow: none;
-    background-color: ${({ theme }) => theme.critical};
-    border: 1px solid ${({ theme }) => theme.critical};
+    background: linear-gradient(93.06deg, #C8047D 2.66%, #FC72FF 98.99%);
+    border: 1px solid rgba(200, 4, 125, 0.3);
   }
 `
 

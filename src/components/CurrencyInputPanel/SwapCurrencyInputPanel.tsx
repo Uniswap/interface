@@ -63,7 +63,8 @@ const CurrencySelect = styled(ButtonGray)<{
   animateShake?: boolean
 }>`
   align-items: center;
-  background-color: ${({ selected, theme }) => (selected ? theme.surface1 : theme.accent1)};
+  background: ${({ selected, theme }) =>
+    selected ? theme.surface1 : 'linear-gradient(93.06deg, #C8047D 2.66%, #FC72FF 98.99%)'};
   opacity: ${({ disabled }) => (!disabled ? 1 : 0.4)};
   color: ${({ selected, theme }) => (selected ? theme.neutral1 : theme.white)};
   cursor: pointer;
@@ -71,7 +72,7 @@ const CurrencySelect = styled(ButtonGray)<{
   border-radius: 18px;
   outline: none;
   user-select: none;
-  border: 1px solid ${({ selected, theme }) => (selected ? theme.surface3 : theme.accent1)};
+  border: 1px solid ${({ selected, theme }) => (selected ? theme.surface3 : 'rgba(200, 4, 125, 0.5)')};
   font-size: 24px;
   font-weight: 485;
   width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
@@ -79,11 +80,14 @@ const CurrencySelect = styled(ButtonGray)<{
   gap: 8px;
   justify-content: space-between;
   margin-left: ${({ hideInput }) => (hideInput ? '0' : '12px')};
-  box-shadow: ${({ theme }) => theme.deprecated_shallowShadow};
+  box-shadow: ${({ selected }) => (selected ? 'none' : '0 0 15px rgba(200, 4, 125, 0.3)')};
+  transition: all 250ms ease;
 
   &:hover,
   &:active {
-    background-color: ${({ theme, selected }) => (selected ? theme.surface2 : theme.accent1)};
+    background: ${({ theme, selected }) =>
+      selected ? theme.surface2 : 'linear-gradient(93.06deg, #B00370 2.66%, #E865F0 98.99%)'};
+    box-shadow: ${({ selected }) => (selected ? 'none' : '0 0 20px rgba(200, 4, 125, 0.4)')};
   }
 
   &:before {

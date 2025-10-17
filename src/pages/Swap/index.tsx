@@ -9,7 +9,6 @@ import {
   SwapEventName,
 } from '@uniswap/analytics-events'
 import { ChainId, Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, Trace, TraceEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
@@ -24,7 +23,14 @@ import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWith
 import ConfirmSwapModal from 'components/swap/ConfirmSwapModal'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import PriceImpactWarning from 'components/swap/PriceImpactWarning'
-import { ArrowWrapper, PageWrapper, SwapWrapper } from 'components/swap/styled'
+import {
+  ArrowWrapper,
+  PageWrapper,
+  SwapGlow,
+  SwapGlowContainer,
+  SwapGradientBackground,
+  SwapWrapper,
+} from 'components/swap/styled'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import SwapHeader from 'components/swap/SwapHeader'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -62,6 +68,8 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
+
+import { UNIVERSAL_ROUTER_ADDRESS } from 'utils/patchUniversalRouter'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
@@ -143,9 +151,14 @@ export default function SwapPage({ className }: { className?: string }) {
   const location = useLocation()
 
   const supportedChainId = asSupportedChain(connectedChainId)
+  const isDark = useIsDarkMode()
 
   return (
     <Trace page={InterfacePageName.SWAP_PAGE} shouldLogImpression>
+      <SwapGradientBackground isDarkMode={isDark} />
+      <SwapGlowContainer>
+        <SwapGlow />
+      </SwapGlowContainer>
       <PageWrapper>
         <Swap
           className={className}
