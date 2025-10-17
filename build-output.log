@@ -1,0 +1,22 @@
+
+> @uniswap/interface@1.1.0 build /Users/korbinian/dev/taiko/repos/uniswap-interface/worktrees/hoodi
+> craco build
+
+Creating an optimized production build...
+Failed to compile.
+
+Module not found: Error: Can't resolve 'workbox-expiration' in '/Users/korbinian/dev/taiko/repos/uniswap-interface/worktrees/hoodi/src/serviceWorker'
+
+
+ ELIFECYCLE  Command failed with exit code 1.
+
+> @uniswap/interface@1.1.0 build /Users/korbinian/dev/taiko/repos/uniswap-interface/worktrees/hoodi
+> craco build
+
+Creating an optimized production build...
+Failed to compile.
+
+Module not found: Error: Can't resolve 'workbox-strategies' in '/Users/korbinian/dev/taiko/repos/uniswap-interface/worktrees/hoodi/src/serviceWorker'
+
+
+ ELIFECYCLE  Command failed with exit code 1.

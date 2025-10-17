@@ -120,6 +120,8 @@ module.exports = {
           // See https://sandroroth.com/blog/vanilla-extract-cra#production-build.
           if (plugin instanceof ModuleScopePlugin) {
             plugin.allowedPaths.push(path.join(__dirname, 'node_modules/@vanilla-extract/webpack-plugin'))
+            // Also allow pnpm's .pnpm directory structure
+            plugin.allowedPaths.push(path.join(__dirname, 'node_modules/.pnpm'))
           }
 
           return plugin
@@ -128,6 +130,18 @@ module.exports = {
         fallback: {
           // - react-markdown requires path
           path: require.resolve('path-browserify'),
+          // - Additional polyfills for Babel build
+          http: require.resolve('stream-http'),
+          https: require.resolve('https-browserify'),
+          stream: require.resolve('stream-browserify'),
+          crypto: require.resolve('crypto-browserify'),
+          assert: require.resolve('assert'),
+          buffer: require.resolve('buffer'),
+          util: require.resolve('util'),
+          os: require.resolve('os-browserify/browser'),
+          fs: false, // fs is not available in browser
+          net: false,
+          tls: false,
         },
       })
 
@@ -138,11 +152,13 @@ module.exports = {
       }
 
       // Configure webpack transpilation (create-react-app specifies transpilation rules in a oneOf):
+      // NOTE: Switched back to babel-loader due to SWC plugin crashes on Apple Silicon
       webpackConfig.module.rules[1].oneOf = webpackConfig.module.rules[1].oneOf.map((rule) => {
-        if (rule.loader && rule.loader.match(/babel-loader/)) {
-          rule.loader = 'swc-loader'
-          delete rule.options
-        }
+        // Keep babel-loader instead of swc-loader to avoid plugin crashes
+        // if (rule.loader && rule.loader.match(/babel-loader/)) {
+        //   rule.loader = 'swc-loader'
+        //   delete rule.options
+        // }
         return rule
       })
 
@@ -153,7 +169,7 @@ module.exports = {
           minimize: isProduction,
           minimizer: [
             new TerserPlugin({
-              minify: TerserPlugin.swcMinify,
+              minify: TerserPlugin.terserMinify, // Use terser instead of swc for minification
               parallel: require('os').cpus().length,
             }),
           ],
