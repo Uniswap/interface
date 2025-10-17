@@ -150,6 +150,8 @@ const commonTheme = {
   chain_42161_background: colors.blue900,
   chain_84531: colors.networkBase,
   chain_56_background: colors.networkBsc,
+  chain_167000: colors.networkTaiko,
+  chain_167000_background: colors.pink900,
   chain_167012: colors.networkTaiko,
   chain_167012_background: colors.pink900,
   promotional: colors.magenta300,

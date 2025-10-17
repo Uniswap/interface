@@ -20,7 +20,7 @@ import { darkTheme } from 'theme/colors'
 
 import { SupportedL1ChainId, SupportedL2ChainId } from './chains'
 import { ARBITRUM_LIST, AVALANCHE_LIST, BASE_LIST, CELO_LIST, OPTIMISM_LIST, PLASMA_BNB_LIST } from './lists'
-import { TAIKO_HOODI_CHAIN_ID } from './taiko'
+import { TAIKO_HOODI_CHAIN_ID, TAIKO_MAINNET_CHAIN_ID } from './taiko'
 
 export const AVERAGE_L1_BLOCK_TIME = ms(`12s`)
 
@@ -260,6 +260,22 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     color: darkTheme.chain_84531,
   },
+  [TAIKO_MAINNET_CHAIN_ID]: {
+    networkType: NetworkType.L2,
+    blockWaitMsBeforeWarning: ms(`25m`),
+    bridge: 'https://bridge.taiko.xyz',
+    docs: 'https://docs.taiko.xyz/',
+    explorer: 'https://taikoscan.io/',
+    infoLink: 'https://info.uniswap.org/#/',
+    label: 'Taiko',
+    logoUrl: ethereumLogoUrl, // TODO: Replace with Taiko logo when available
+    circleLogoUrl: ethereumLogoUrl, // TODO: Replace with Taiko logo when available
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    statusPage: 'https://status.taiko.xyz/',
+    defaultListUrl: '', // No default token list yet
+    color: darkTheme.chain_167000,
+    backgroundColor: darkTheme.chain_167000_background,
+  },
   [TAIKO_HOODI_CHAIN_ID]: {
     networkType: NetworkType.L2,
     blockWaitMsBeforeWarning: ms(`25m`),
@@ -316,7 +332,7 @@ export function getChainInfo(
   return undefined
 }
 
-const MAINNET_INFO = CHAIN_INFO[ChainId.MAINNET]
+const TAIKO_MAINNET_INFO = CHAIN_INFO[TAIKO_MAINNET_CHAIN_ID]
 export function getChainInfoOrDefault(chainId: number | undefined, featureFlags?: Record<number, boolean>) {
-  return getChainInfo(chainId, featureFlags) ?? MAINNET_INFO
+  return getChainInfo(chainId, featureFlags) ?? TAIKO_MAINNET_INFO
 }

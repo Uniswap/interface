@@ -1,5 +1,6 @@
 import Badge from 'components/Badge'
 import { getChainInfo } from 'constants/chainInfo'
+import { TAIKO_HOODI_CHAIN_ID, TAIKO_MAINNET_CHAIN_ID } from 'constants/taiko'
 import {
   BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS,
   BACKEND_SUPPORTED_CHAINS,
@@ -16,6 +17,9 @@ import styled, { css, useTheme } from 'styled-components'
 import { EllipsisStyle } from 'theme'
 
 import FilterOption from './FilterOption'
+
+// Only show Taiko chains in the network filter
+const TAIKO_ONLY_CHAINS = [TAIKO_MAINNET_CHAIN_ID, TAIKO_HOODI_CHAIN_ID]
 
 const InternalMenuItem = styled.div`
   flex: 1;
@@ -146,14 +150,17 @@ export default function NetworkFilter() {
       </NetworkFilterOption>
       {open && (
         <MenuTimeFlyout>
-          {BACKEND_SUPPORTED_CHAINS.map((network) => {
-            const chainInfo = getChainInfo(supportedChainIdFromGQLChain(network))
+          {TAIKO_ONLY_CHAINS.map((chainId) => {
+            const chainInfo = getChainInfo(chainId)
+            // Create a simple chain name for navigation
+            const chainName = chainId === TAIKO_MAINNET_CHAIN_ID ? 'taiko_mainnet' : 'taiko_hoodi'
+            const isSelected = chainId === supportedChainIdFromGQLChain(currentChainName)
             return (
               <InternalLinkMenuItem
-                key={network}
-                data-testid={`tokens-network-filter-option-${network.toLowerCase()}`}
+                key={chainId}
+                data-testid={`tokens-network-filter-option-${chainName}`}
                 onClick={() => {
-                  navigate(`/tokens/${network.toLowerCase()}`)
+                  navigate(`/tokens/${chainName}`)
                   toggleMenu()
                 }}
               >
@@ -161,27 +168,11 @@ export default function NetworkFilter() {
                   <Logo src={chainInfo.logoUrl} />
                   {chainInfo.label}
                 </NetworkLabel>
-                {network === currentChainName && (
+                {isSelected && (
                   <CheckContainer>
                     <Check size={16} color={theme.accent1} />
                   </CheckContainer>
                 )}
-              </InternalLinkMenuItem>
-            )
-          })}
-          {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
-            const chainInfo = getChainInfo(network)
-            return (
-              <InternalLinkMenuItem
-                key={network}
-                data-testid={`tokens-network-filter-option-${network}-chain`}
-                disabled
-              >
-                <NetworkLabel>
-                  <Logo src={chainInfo.logoUrl} />
-                  {chainInfo.label}
-                </NetworkLabel>
-                <Tag>Coming soon</Tag>
               </InternalLinkMenuItem>
             )
           })}

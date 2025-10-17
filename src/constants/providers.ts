@@ -8,7 +8,7 @@ import { ChainId } from '@uniswap/sdk-core'
 import { AVERAGE_L1_BLOCK_TIME } from './chainInfo'
 import { CHAIN_IDS_TO_NAMES, SupportedInterfaceChain } from './chains'
 import { RPC_URLS } from './networks'
-import { TAIKO_HOODI_CHAIN_ID } from './taiko'
+import { TAIKO_HOODI_CHAIN_ID, TAIKO_MAINNET_CHAIN_ID } from './taiko'
 
 class AppJsonRpcProvider extends StaticJsonRpcProvider {
   private _blockCache = new Map<string, Promise<any>>()
@@ -73,5 +73,6 @@ export const RPC_PROVIDERS: { [key in SupportedInterfaceChain]: StaticJsonRpcPro
   [ChainId.BNB]: new AppJsonRpcProvider(ChainId.BNB),
   [ChainId.AVALANCHE]: new AppJsonRpcProvider(ChainId.AVALANCHE),
   [ChainId.BASE]: new AppJsonRpcProvider(ChainId.BASE),
+  [TAIKO_MAINNET_CHAIN_ID]: new AppJsonRpcProvider(TAIKO_MAINNET_CHAIN_ID as SupportedInterfaceChain),
   [TAIKO_HOODI_CHAIN_ID]: new AppJsonRpcProvider(TAIKO_HOODI_CHAIN_ID as SupportedInterfaceChain),
 }

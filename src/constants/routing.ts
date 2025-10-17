@@ -44,7 +44,7 @@ import {
   WETH_POLYGON_MUMBAI,
   WRAPPED_NATIVE_CURRENCY,
 } from './tokens'
-import { TAIKO_HOODI_CHAIN_ID } from './taiko'
+import { TAIKO_HOODI_CHAIN_ID, TAIKO_MAINNET_CHAIN_ID } from './taiko'
 
 type ChainTokenList = {
   readonly [chainId: number]: Token[]
@@ -116,6 +116,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     USDT_AVALANCHE,
     WETH_AVALANCHE,
   ],
+  [TAIKO_MAINNET_CHAIN_ID]: [nativeOnChain(TAIKO_MAINNET_CHAIN_ID), WRAPPED_NATIVE_CURRENCY[TAIKO_MAINNET_CHAIN_ID] as Token],
   [TAIKO_HOODI_CHAIN_ID]: [nativeOnChain(TAIKO_HOODI_CHAIN_ID), WRAPPED_NATIVE_CURRENCY[TAIKO_HOODI_CHAIN_ID] as Token],
 }
 

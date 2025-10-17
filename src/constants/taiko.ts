@@ -1,16 +1,55 @@
 /**
- * Taiko Hoodi Testnet Configuration
- * Chain ID: 167012
+ * Taiko Chain Configurations
+ *
+ * Taiko Mainnet - Chain ID: 167000
+ * Taiko Hoodi Testnet - Chain ID: 167012
  *
  * Deployment Information:
- * - Network: Taiko Hoodi Testnet
- * - RPC URL: https://rpc.hoodi.taiko.xyz
- * - Block Explorer: https://hoodi.taikoscan.io/
+ * - Mainnet RPC URL: https://rpc.mainnet.taiko.xyz
+ * - Hoodi RPC URL: https://rpc.hoodi.taiko.xyz
+ * - Mainnet Block Explorer: https://taikoscan.io/
+ * - Hoodi Block Explorer: https://hoodi.taikoscan.io/
  * - Deployer: 0xFE5124f99f544a84C3C6D0A26339a04937cD2Ff4
  */
 
-// Custom ChainId for Taiko Hoodi Testnet
+// Custom ChainIds for Taiko networks
+export const TAIKO_MAINNET_CHAIN_ID = 167000 as const
 export const TAIKO_HOODI_CHAIN_ID = 167012 as const
+
+/**
+ * Uniswap V3 Contract Addresses on Taiko Mainnet
+ *
+ * Research Notes (as of October 2025):
+ * - Uniswap V3 deployment on Taiko Mainnet was approved by governance in 2024
+ * - Position Manager (NFT) confirmed deployed at: 0x8b3c541c30f9b29560f56b9e44b59718916b69ef
+ * - Other contract addresses are likely deployed but not yet publicly documented
+ * - Taiko Mainnet uses standard Uniswap V3 contracts but addresses should be verified on taikoscan.io
+ *
+ * TODO: Verify and update these addresses with official Taiko Mainnet deployments
+ * WARNING: Do not use these placeholder addresses in production without verification!
+ */
+export const TAIKO_MAINNET_ADDRESSES = {
+  // Core Protocol
+  weth9: '0x0000000000000000000000000000000000000000', // TODO: Update with actual Taiko Mainnet WETH address
+  factory: '0x0000000000000000000000000000000000000000', // TODO: Verify - typically 0x1F98431c8aD98523631AE4a59f267346ea31F984
+
+  // Periphery Contracts
+  router: '0x0000000000000000000000000000000000000000', // TODO: Verify - typically 0xe592427a0AEce92De3Edee1F18E0157C05861564
+  positionManager: '0x8b3c541c30f9b29560f56b9e44b59718916b69ef', // CONFIRMED on taikoscan.io
+  quoterV2: '0x0000000000000000000000000000000000000000', // TODO: Verify - typically 0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6
+  multicall: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
+  tickLens: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
+
+  // Additional Contracts
+  v3Migrator: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
+  v3Staker: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
+
+  // Governance & Admin
+  proxyAdmin: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
+  nftDescriptorProxy: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
+  nftDescriptorImplementation: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
+  nftDescriptorLibrary: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
+} as const
 
 /**
  * Uniswap V3 Contract Addresses on Taiko Hoodi
@@ -40,8 +79,44 @@ export const TAIKO_HOODI_ADDRESSES = {
 
 /**
  * Extended address mappings for SDK compatibility
- * These extend the @uniswap/sdk-core address constants with Taiko Hoodi support
+ * These extend the @uniswap/sdk-core address constants with Taiko support
  */
+export const TAIKO_V3_CORE_FACTORY_ADDRESSES = {
+  [TAIKO_MAINNET_CHAIN_ID]: TAIKO_MAINNET_ADDRESSES.factory,
+  [TAIKO_HOODI_CHAIN_ID]: TAIKO_HOODI_ADDRESSES.factory,
+} as const
+
+export const TAIKO_V3_MIGRATOR_ADDRESSES = {
+  [TAIKO_MAINNET_CHAIN_ID]: TAIKO_MAINNET_ADDRESSES.v3Migrator,
+  [TAIKO_HOODI_CHAIN_ID]: TAIKO_HOODI_ADDRESSES.v3Migrator,
+} as const
+
+export const TAIKO_MULTICALL_ADDRESSES = {
+  [TAIKO_MAINNET_CHAIN_ID]: TAIKO_MAINNET_ADDRESSES.multicall,
+  [TAIKO_HOODI_CHAIN_ID]: TAIKO_HOODI_ADDRESSES.multicall,
+} as const
+
+export const TAIKO_QUOTER_ADDRESSES = {
+  [TAIKO_MAINNET_CHAIN_ID]: TAIKO_MAINNET_ADDRESSES.quoterV2,
+  [TAIKO_HOODI_CHAIN_ID]: TAIKO_HOODI_ADDRESSES.quoterV2,
+} as const
+
+export const TAIKO_NONFUNGIBLE_POSITION_MANAGER_ADDRESSES = {
+  [TAIKO_MAINNET_CHAIN_ID]: TAIKO_MAINNET_ADDRESSES.positionManager,
+  [TAIKO_HOODI_CHAIN_ID]: TAIKO_HOODI_ADDRESSES.positionManager,
+} as const
+
+export const TAIKO_TICK_LENS_ADDRESSES = {
+  [TAIKO_MAINNET_CHAIN_ID]: TAIKO_MAINNET_ADDRESSES.tickLens,
+  [TAIKO_HOODI_CHAIN_ID]: TAIKO_HOODI_ADDRESSES.tickLens,
+} as const
+
+export const TAIKO_SWAP_ROUTER_02_ADDRESSES = {
+  [TAIKO_MAINNET_CHAIN_ID]: TAIKO_MAINNET_ADDRESSES.router,
+  [TAIKO_HOODI_CHAIN_ID]: TAIKO_HOODI_ADDRESSES.router,
+} as const
+
+// Legacy exports for backward compatibility
 export const TAIKO_HOODI_V3_CORE_FACTORY_ADDRESSES = {
   [TAIKO_HOODI_CHAIN_ID]: TAIKO_HOODI_ADDRESSES.factory,
 } as const

@@ -1,6 +1,6 @@
 import { ChainId } from '@uniswap/sdk-core'
 
-import { TAIKO_HOODI_CHAIN_ID } from './taiko'
+import { TAIKO_HOODI_CHAIN_ID, TAIKO_MAINNET_CHAIN_ID } from './taiko'
 
 const INFURA_KEY = process.env.REACT_APP_INFURA_KEY
 if (typeof INFURA_KEY === 'undefined') {
@@ -117,6 +117,10 @@ export const FALLBACK_URLS = {
     'https://1rpc.io/base',
     'https://base.meowrpc.com',
   ],
+  [TAIKO_MAINNET_CHAIN_ID]: [
+    // "Safe" URLs
+    'https://rpc.mainnet.taiko.xyz',
+  ],
   [TAIKO_HOODI_CHAIN_ID]: [
     // "Safe" URLs
     'https://rpc.hoodi.taiko.xyz',
@@ -154,5 +158,6 @@ export const RPC_URLS = {
   [ChainId.BNB]: [QUICKNODE_BNB_RPC_URL, ...FALLBACK_URLS[ChainId.BNB]],
   [ChainId.AVALANCHE]: [`https://avalanche-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.AVALANCHE]],
   [ChainId.BASE]: [`https://base-mainnet.infura.io/v3/${INFURA_KEY}`, ...FALLBACK_URLS[ChainId.BASE]],
+  [TAIKO_MAINNET_CHAIN_ID]: FALLBACK_URLS[TAIKO_MAINNET_CHAIN_ID],
   [TAIKO_HOODI_CHAIN_ID]: FALLBACK_URLS[TAIKO_HOODI_CHAIN_ID],
 }
