@@ -1,6 +1,9 @@
 import { ChainId, SUPPORTED_CHAINS, SupportedChainsType } from '@uniswap/sdk-core'
 
-import { TAIKO_HOODI_CHAIN_ID, TAIKO_MAINNET_CHAIN_ID } from './taiko'
+import { TAIKO_HOODI_CHAIN_ID, getEnabledChainIds } from 'config/chains'
+
+// Get enabled Taiko chains from the validated registry
+const ENABLED_TAIKO_CHAIN_IDS = getEnabledChainIds()
 
 export const CHAIN_IDS_TO_NAMES = {
   [ChainId.MAINNET]: 'mainnet',
@@ -17,18 +20,19 @@ export const CHAIN_IDS_TO_NAMES = {
   [ChainId.BNB]: 'bnb',
   [ChainId.AVALANCHE]: 'avalanche',
   [ChainId.BASE]: 'base',
-  [TAIKO_MAINNET_CHAIN_ID]: 'taiko_mainnet',
+  // Only enabled Taiko chains (Taiko Mainnet removed due to zero addresses)
   [TAIKO_HOODI_CHAIN_ID]: 'taiko_hoodi',
 } as const
 
 // Include ChainIds in this array if they are not supported by the UX yet, but are already in the SDK.
 const NOT_YET_UX_SUPPORTED_CHAIN_IDS: number[] = [ChainId.BASE_GOERLI]
 
-// Custom chains not in SDK
-const CUSTOM_SUPPORTED_CHAIN_IDS: number[] = [TAIKO_MAINNET_CHAIN_ID, TAIKO_HOODI_CHAIN_ID]
+// Custom chains not in SDK - only enabled chains from registry
+const CUSTOM_SUPPORTED_CHAIN_IDS: number[] = ENABLED_TAIKO_CHAIN_IDS
 
 // TODO: include BASE_GOERLI when routing is implemented
-export type SupportedInterfaceChain = Exclude<SupportedChainsType, ChainId.BASE_GOERLI> | typeof TAIKO_MAINNET_CHAIN_ID | typeof TAIKO_HOODI_CHAIN_ID
+// Note: Only enabled Taiko chains are included (Taiko Mainnet excluded due to zero addresses)
+export type SupportedInterfaceChain = Exclude<SupportedChainsType, ChainId.BASE_GOERLI> | typeof TAIKO_HOODI_CHAIN_ID
 
 export function isSupportedChain(
   chainId: number | null | undefined | ChainId,
@@ -90,7 +94,7 @@ export const MAINNET_CHAIN_IDS = [
   ChainId.BNB,
   ChainId.AVALANCHE,
   ChainId.BASE,
-  TAIKO_MAINNET_CHAIN_ID,
+  // Taiko Mainnet excluded - not yet fully deployed
 ] as const
 
 /**
@@ -120,8 +124,8 @@ export const L2_CHAIN_IDS = [
   ChainId.OPTIMISM,
   ChainId.OPTIMISM_GOERLI,
   ChainId.BASE,
-  TAIKO_MAINNET_CHAIN_ID,
   TAIKO_HOODI_CHAIN_ID,
+  // Taiko Mainnet excluded - not yet fully deployed
 ] as const
 
 export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
@@ -133,7 +137,8 @@ export type SupportedL2ChainId = (typeof L2_CHAIN_IDS)[number]
  */
 export function getChainPriority(chainId: ChainId | number): number {
   switch (chainId) {
-    case TAIKO_MAINNET_CHAIN_ID:
+    // Taiko Hoodi is highest priority (only enabled Taiko chain)
+    case TAIKO_HOODI_CHAIN_ID:
       return 0
     case ChainId.MAINNET:
     case ChainId.GOERLI:
@@ -157,8 +162,6 @@ export function getChainPriority(chainId: ChainId | number): number {
     case ChainId.CELO:
     case ChainId.CELO_ALFAJORES:
       return 8
-    case TAIKO_HOODI_CHAIN_ID:
-      return 9
     default:
       return 10
   }
