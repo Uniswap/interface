@@ -99,15 +99,13 @@ export default function useWrapCallback(
         execute:
           sufficientBalance && inputAmount
             ? async () => {
-                const network = await wethContract.provider.getNetwork()
-                if (
-                  network.chainId !== chainId ||
-                  wethContract.address !== WRAPPED_NATIVE_CURRENCY[network.chainId]?.address
-                ) {
+                // Use the chainId from the connected wallet, not from provider.getNetwork()
+                // which may return incorrect chain info for custom networks like Taiko
+                if (wethContract.address !== WRAPPED_NATIVE_CURRENCY[chainId]?.address) {
                   sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_INVALIDATED, {
                     ...eventProperties,
                     contract_address: wethContract.address,
-                    contract_chain_id: network.chainId,
+                    contract_chain_id: chainId,
                     type: WrapType.WRAP,
                   })
                   const error = new Error(`Invalid WETH contract

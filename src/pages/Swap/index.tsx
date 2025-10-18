@@ -162,7 +162,7 @@ export default function SwapPage({ className }: { className?: string }) {
       <PageWrapper>
         <Swap
           className={className}
-          chainId={supportedChainId ?? ChainId.MAINNET}
+          chainId={supportedChainId ?? connectedChainId}
           initialInputCurrencyId={loadedUrlParams?.[Field.INPUT]?.currencyId}
           initialOutputCurrencyId={loadedUrlParams?.[Field.OUTPUT]?.currencyId}
           disableTokenInputs={supportedChainId === undefined}
@@ -422,12 +422,13 @@ export function Swap({
   )
 
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
+  const universalRouterAddress = isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
   const allowance = usePermit2Allowance(
     maximumAmountIn ??
       (parsedAmounts[Field.INPUT]?.currency.isToken
         ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
         : undefined),
-    isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
+    universalRouterAddress,
     trade?.fillType
   )
 

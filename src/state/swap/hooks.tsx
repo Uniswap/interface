@@ -98,6 +98,8 @@ export type SwapInfo = {
 export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefined): SwapInfo {
   const { account } = useWeb3React()
 
+  console.log('[DEBUG] useDerivedSwapInfo - chainId parameter:', chainId)
+
   const {
     independentField,
     typedValue,
@@ -108,6 +110,9 @@ export function useDerivedSwapInfo(state: SwapState, chainId: ChainId | undefine
 
   const inputCurrency = useCurrency(inputCurrencyId, chainId)
   const outputCurrency = useCurrency(outputCurrencyId, chainId)
+
+  console.log('[DEBUG] useDerivedSwapInfo - inputCurrency:', inputCurrency?.symbol, 'chainId:', inputCurrency?.chainId)
+  console.log('[DEBUG] useDerivedSwapInfo - outputCurrency:', outputCurrency?.symbol, 'chainId:', outputCurrency?.chainId)
 
   const fotAdjustmentsEnabled = useFotAdjustmentsEnabled()
   const { inputTax, outputTax } = useSwapTaxes(

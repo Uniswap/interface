@@ -56,6 +56,8 @@ export function useUniversalRouterSwapCallback(
   const blockNumber = useBlockNumber()
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
 
+  console.log('[DEBUG] useUniversalRouterSwapCallback - chainId from useWeb3React:', chainId)
+
   return useCallback(async () => {
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
       try {
@@ -63,8 +65,15 @@ export function useUniversalRouterSwapCallback(
         if (!chainId) throw new Error('missing chainId')
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
+
+        console.log('[DEBUG] useUniversalRouterSwapCallback - Starting swap with chainId:', chainId)
         const connectedChainId = await provider.getSigner().getChainId()
-        if (chainId !== connectedChainId) throw new WrongChainError()
+        console.log('[DEBUG] useUniversalRouterSwapCallback - Provider chainId:', connectedChainId)
+
+        if (chainId !== connectedChainId) {
+          console.error('[DEBUG] useUniversalRouterSwapCallback - Chain ID mismatch! Expected:', chainId, 'Got:', connectedChainId)
+          throw new WrongChainError()
+        }
 
         setTraceData('slippageTolerance', options.slippageTolerance.toFixed(2))
 
@@ -79,13 +88,18 @@ export function useUniversalRouterSwapCallback(
           fee: options.feeOptions,
         })
 
+        const routerAddress = UNIVERSAL_ROUTER_ADDRESS(chainId)
+        console.log('[DEBUG] useUniversalRouterSwapCallback - Universal Router address for chainId', chainId, ':', routerAddress)
+
         const tx = {
           from: account,
-          to: UNIVERSAL_ROUTER_ADDRESS(chainId),
+          to: routerAddress,
           data,
           // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
           ...(value && !isZero(value) ? { value: toHex(value) } : {}),
         }
+
+        console.log('[DEBUG] useUniversalRouterSwapCallback - Transaction details:', { from: tx.from, to: tx.to, chainId })
 
         let gasEstimate: BigNumber
         try {
