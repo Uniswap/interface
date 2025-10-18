@@ -40,6 +40,7 @@ const TokenDetails = lazy(() => import('pages/TokenDetails'))
 const ExtensionPasskeyAuthPopUp = lazy(() => import('pages/ExtensionPasskeyAuthPopUp'))
 const PasskeyManagement = lazy(() => import('pages/PasskeyManagement'))
 const ExtensionUninstall = lazy(() => import('pages/ExtensionUninstall/ExtensionUninstall'))
+const Profile = lazy(() => import('pages/Profile'))
 
 interface RouterConfig {
   browserRouterEnabled?: boolean
@@ -364,6 +365,12 @@ export const routes: RouteDefinition[] = [
     path: CHROME_EXTENSION_UNINSTALL_URL_PATH,
     getElement: () => <ExtensionUninstall />,
     getTitle: () => i18n.t('title.extension.uninstall'),
+  }),
+  createRouteDefinition({
+    path: '/profile',
+    getElement: () => <Profile />,
+    getTitle: () => 'Profile',
+    getDescription: () => 'Manage your account settings and preferences',
   }),
   createRouteDefinition({ path: '*', getElement: () => <Navigate to="/not-found" replace /> }),
   createRouteDefinition({ path: '/not-found', getElement: () => <NotFound /> }),

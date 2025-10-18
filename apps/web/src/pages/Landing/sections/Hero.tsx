@@ -9,7 +9,7 @@ import { ChevronDown } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
-import { Flex, Text, useMedia } from 'ui/src'
+import { Button, Flex, Text, useMedia } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
@@ -138,6 +138,14 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
           <Text variant="body1" textAlign="center" maxWidth={430} color="$neutral2" $short={{ variant: 'body2' }}>
             <Trans i18nKey="hero.subtitle" />
           </Text>
+        </RiseIn>
+
+        <RiseIn delay={0.5}>
+          <Flex pointerEvents="auto">
+            <Button size="medium" onPress={() => navigate('/profile')} testID="profile-button">
+              Go to Profile
+            </Button>
+          </Flex>
         </RiseIn>
       </Flex>
 
