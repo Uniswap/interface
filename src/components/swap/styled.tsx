@@ -10,7 +10,7 @@ import { AutoColumn } from '../Column'
 export const PageWrapper = styled.div`
   position: relative;
   padding: 68px 8px 0px;
-  max-width: 480px;
+  max-width: 520px;
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -18,10 +18,12 @@ export const PageWrapper = styled.div`
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     padding-top: 48px;
+    max-width: 480px;
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     padding-top: 20px;
+    max-width: 100%;
   }
 `
 
@@ -67,33 +69,49 @@ export const SwapGlow = styled.div`
   position: absolute;
   top: 100px;
   background: radial-gradient(
-    72.04% 72.04% at 50% 3.99%,
-    rgba(200, 4, 125, 0.6) 0%,
-    rgba(252, 114, 255, 0.3) 30%,
-    rgba(255, 55, 235, 0.2) 60%,
+    circle at center,
+    rgba(200, 4, 125, 0.5) 0%,
+    rgba(220, 45, 145, 0.4) 15%,
+    rgba(235, 75, 180, 0.35) 25%,
+    rgba(245, 95, 205, 0.28) 35%,
+    rgba(252, 114, 255, 0.22) 45%,
+    rgba(250, 125, 245, 0.16) 55%,
+    rgba(240, 140, 235, 0.12) 65%,
+    rgba(220, 160, 245, 0.08) 75%,
+    rgba(200, 180, 250, 0.04) 85%,
+    rgba(180, 195, 255, 0.02) 92%,
     rgba(166, 151, 255, 0) 100%
   );
-  filter: blur(100px);
+  filter: blur(120px);
   border-radius: 50%;
-  max-width: 600px;
+  max-width: 700px;
   width: 100%;
-  height: 600px;
+  height: 700px;
   animation: pulse 4s ease-in-out infinite;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 
   @keyframes pulse {
     0%, 100% {
-      opacity: 0.6;
-      transform: scale(1);
+      opacity: 0.7;
+      transform: scale(1) translateZ(0);
     }
     50% {
-      opacity: 0.8;
-      transform: scale(1.05);
+      opacity: 0.9;
+      transform: scale(1.08) translateZ(0);
     }
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
-    max-width: 400px;
-    height: 400px;
+    max-width: 500px;
+    height: 500px;
+    filter: blur(100px);
+  }
+
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    max-width: 350px;
+    height: 350px;
     filter: blur(80px);
   }
 `

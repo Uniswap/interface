@@ -31,6 +31,8 @@ export {
   getDisabledChains,
   getChainConfig,
   isChainEnabled,
+  getDefaultChain,
+  getDefaultChainId,
   getChainAddresses,
   getChainMetadata,
   getEnabledChainIds,

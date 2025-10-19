@@ -27,6 +27,7 @@ export interface ChainConfig {
   addresses: ChainAddresses
   metadata: TaikoChainMetadata
   enabled: boolean
+  isDefault?: boolean
 }
 
 /**
@@ -40,6 +41,7 @@ const ALL_CHAINS: ChainConfig[] = [
     addresses: TAIKO_HOODI_ADDRESSES,
     metadata: TAIKO_HOODI_METADATA,
     enabled: true,
+    isDefault: true, // Currently the only enabled chain, so default
   },
   // Taiko Mainnet - DISABLED (has zero addresses for critical contracts)
   {
@@ -47,6 +49,7 @@ const ALL_CHAINS: ChainConfig[] = [
     addresses: TAIKO_MAINNET_ADDRESSES,
     metadata: TAIKO_MAINNET_METADATA,
     enabled: false, // Set to true once contracts are deployed and verified
+    isDefault: false, // Will become default when enabled in production
   },
 ]
 
@@ -91,6 +94,34 @@ export function getChainConfig(chainId: number): ChainConfig | undefined {
 export function isChainEnabled(chainId: number): boolean {
   const chain = getChainConfig(chainId)
   return chain?.enabled ?? false
+}
+
+/**
+ * Get the default chain configuration
+ * Returns the first enabled chain marked as default, or the first enabled chain if none marked
+ * @returns Default chain configuration
+ * @throws Error if no enabled chains are available
+ */
+export function getDefaultChain(): ChainConfig {
+  const enabledChains = getEnabledChains()
+
+  if (enabledChains.length === 0) {
+    throw new Error('No enabled chains available in registry')
+  }
+
+  // Find chain marked as default
+  const defaultChain = enabledChains.find((chain) => chain.isDefault)
+
+  // Return default chain or first enabled chain
+  return defaultChain ?? enabledChains[0]
+}
+
+/**
+ * Get the default chain ID
+ * @returns Default chain ID
+ */
+export function getDefaultChainId(): number {
+  return getDefaultChain().chainId
 }
 
 /**
