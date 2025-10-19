@@ -1,4 +1,5 @@
 import { ChainId } from '@uniswap/sdk-core'
+import { TAIKO_MAINNET_CHAIN_ID, TAIKO_HOODI_CHAIN_ID } from 'config/chains'
 
 const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [ChainId.MAINNET]: 'https://etherscan.io',
@@ -13,6 +14,8 @@ const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [ChainId.BNB]: 'https://bscscan.com',
   [ChainId.AVALANCHE]: 'https://snowtrace.io',
   [ChainId.BASE]: 'https://basescan.org',
+  [TAIKO_MAINNET_CHAIN_ID]: 'https://taikoscan.io',
+  [TAIKO_HOODI_CHAIN_ID]: 'https://holesky.taikoscan.io',
 }
 
 export enum ExplorerDataType {

@@ -1,6 +1,7 @@
 import { ChainId } from '@uniswap/sdk-core'
 
 import { ExplorerDataType, getExplorerLink } from './getExplorerLink'
+import { TAIKO_MAINNET_CHAIN_ID, TAIKO_HOODI_CHAIN_ID } from 'config/chains'
 
 describe('#getExplorerLink', () => {
   it('correct for tx', () => {
@@ -37,5 +38,25 @@ describe('#getExplorerLink', () => {
   })
   it('base', () => {
     expect(getExplorerLink(ChainId.BASE, 'abc', ExplorerDataType.ADDRESS)).toEqual('https://basescan.org/address/abc')
+  })
+  it('taiko mainnet', () => {
+    expect(getExplorerLink(TAIKO_MAINNET_CHAIN_ID, 'abc', ExplorerDataType.ADDRESS)).toEqual(
+      'https://taikoscan.io/address/abc'
+    )
+  })
+  it('taiko hoodi', () => {
+    expect(getExplorerLink(TAIKO_HOODI_CHAIN_ID, 'abc', ExplorerDataType.ADDRESS)).toEqual(
+      'https://holesky.taikoscan.io/address/abc'
+    )
+  })
+  it('taiko mainnet token', () => {
+    expect(getExplorerLink(TAIKO_MAINNET_CHAIN_ID, 'abc', ExplorerDataType.TOKEN)).toEqual(
+      'https://taikoscan.io/token/abc'
+    )
+  })
+  it('taiko hoodi token', () => {
+    expect(getExplorerLink(TAIKO_HOODI_CHAIN_ID, 'abc', ExplorerDataType.TOKEN)).toEqual(
+      'https://holesky.taikoscan.io/token/abc'
+    )
   })
 })
