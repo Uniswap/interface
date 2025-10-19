@@ -33,7 +33,7 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   position: relative;
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
   z-index: 1;
-  width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+  width: 100%;
   transition: height 1s ease;
   will-change: height;
 `
@@ -52,7 +52,7 @@ const FixedContainer = styled.div`
 const Container = styled.div<{ hideInput: boolean }>`
   min-height: 44px;
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
-  width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+  width: 100%;
 `
 
 const CurrencySelect = styled(ButtonGray)<{
@@ -75,7 +75,7 @@ const CurrencySelect = styled(ButtonGray)<{
   border: 1px solid ${({ selected, theme }) => (selected ? theme.surface3 : 'rgba(200, 4, 125, 0.5)')};
   font-size: 24px;
   font-weight: 485;
-  width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+  width: ${({ hideInput }) => (hideInput ? '100%' : 'auto')};
   padding: ${({ selected }) => (selected ? '4px 8px 4px 4px' : '6px 6px 6px 8px')};
   gap: 8px;
   justify-content: space-between;

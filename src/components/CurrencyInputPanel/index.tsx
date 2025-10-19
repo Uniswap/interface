@@ -31,7 +31,7 @@ const InputPanel = styled.div<{ hideInput?: boolean }>`
   background-color: ${({ theme, hideInput }) => (hideInput ? 'transparent' : theme.surface2)};
 
   z-index: 1;
-  width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+  width: 100%;
   transition: height 1s ease;
   will-change: height;
 `
@@ -40,7 +40,7 @@ const Container = styled.div<{ hideInput: boolean; disabled: boolean }>`
   border-radius: ${({ hideInput }) => (hideInput ? '16px' : '20px')};
   border: 1px solid ${({ theme }) => theme.surface3};
   background-color: ${({ theme }) => theme.surface2};
-  width: ${({ hideInput }) => (hideInput ? '100%' : 'initial')};
+  width: 100%;
   ${({ theme, hideInput, disabled }) =>
     !disabled &&
     `
