@@ -4,8 +4,7 @@ import { ScrollBarStyles } from 'components/Common'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import usePrevious from 'hooks/usePrevious'
 import { useWindowSize } from 'hooks/useWindowSize'
-import { atom } from 'jotai'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { useGesture } from 'react-use-gesture'
@@ -25,14 +24,14 @@ const DRAWER_TOP_MARGIN_MOBILE_WEB = '72px'
 const accountDrawerOpenAtom = atom(false)
 
 export function useToggleAccountDrawer() {
-  const updateAccountDrawerOpen = useUpdateAtom(accountDrawerOpenAtom)
+  const updateAccountDrawerOpen = useSetAtom(accountDrawerOpenAtom)
   return useCallback(() => {
     updateAccountDrawerOpen((open) => !open)
   }, [updateAccountDrawerOpen])
 }
 
 export function useCloseAccountDrawer() {
-  const updateAccountDrawerOpen = useUpdateAtom(accountDrawerOpenAtom)
+  const updateAccountDrawerOpen = useSetAtom(accountDrawerOpenAtom)
   return useCallback(() => updateAccountDrawerOpen(false), [updateAccountDrawerOpen])
 }
 

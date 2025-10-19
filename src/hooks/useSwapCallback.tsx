@@ -34,9 +34,6 @@ export function useSwapCallback(
   const addOrder = useAddOrder()
   const { account, chainId } = useWeb3React()
 
-  console.log('[DEBUG] useSwapCallback - chainId from useWeb3React:', chainId)
-  console.log('[DEBUG] useSwapCallback - trade type:', trade ? (isUniswapXTrade(trade) ? 'UniswapX' : 'Classic') : 'none')
-
   const uniswapXSwapCallback = useUniswapXSwapCallback({
     trade: isUniswapXTrade(trade) ? trade : undefined,
     allowedSlippage,
@@ -59,7 +56,6 @@ export function useSwapCallback(
     if (!trade) throw new Error('missing trade')
     if (!account || !chainId) throw new Error('wallet must be connected to swap')
 
-    console.log('[DEBUG] useSwapCallback - Executing swap with chainId:', chainId, 'account:', account)
     const result = await swapCallback()
 
     const swapInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo = {

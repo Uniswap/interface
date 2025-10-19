@@ -3,7 +3,8 @@ import {
   Trace as AnalyticsTrace,
   TraceEvent as AnalyticsEvent,
 } from '@uniswap/analytics'
-import { atomWithStorage, useAtomValue } from 'jotai/utils'
+import { useAtomValue } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
 import { memo } from 'react'
 
 export {

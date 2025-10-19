@@ -42,7 +42,6 @@ export function useRoutingAPIArguments({
   return useMemo(
     () => {
       if (!tokenIn || !tokenOut || !amount || tokenIn.equals(tokenOut) || tokenIn.wrapped.equals(tokenOut.wrapped)) {
-        console.log('[DEBUG] useRoutingAPIArguments - Skipping query (invalid inputs)')
         return skipToken
       }
 
@@ -68,10 +67,6 @@ export function useRoutingAPIArguments({
         inputTax,
         outputTax,
       }
-
-      console.log('[DEBUG] useRoutingAPIArguments - tokenInChainId:', args.tokenInChainId)
-      console.log('[DEBUG] useRoutingAPIArguments - tokenOutChainId:', args.tokenOutChainId)
-      console.log('[DEBUG] useRoutingAPIArguments - Full args:', args)
 
       return args
     },

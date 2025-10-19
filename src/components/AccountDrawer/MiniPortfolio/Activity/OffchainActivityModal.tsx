@@ -8,8 +8,7 @@ import Modal from 'components/Modal'
 import { AnimatedEntranceConfirmationIcon, FadePresence } from 'components/swap/PendingModalContent/Logos'
 import { TradeSummary } from 'components/swap/PendingModalContent/TradeSummary'
 import { useCurrency } from 'hooks/Tokens'
-import { atom } from 'jotai'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { UniswapXOrderStatus } from 'lib/hooks/orders/types'
 import { useCallback, useMemo } from 'react'
 import { X } from 'react-feather'
@@ -30,7 +29,7 @@ type SelectedOrderInfo = {
 const selectedOrderAtom = atom<SelectedOrderInfo | undefined>(undefined)
 
 export function useOpenOffchainActivityModal() {
-  const setSelectedOrder = useUpdateAtom(selectedOrderAtom)
+  const setSelectedOrder = useSetAtom(selectedOrderAtom)
 
   return useCallback(
     (order: { orderHash: string; status: UniswapXOrderStatus }) => setSelectedOrder({ ...order, modalOpen: true }),
@@ -241,7 +240,7 @@ function useSyncedSelectedOrder(): SelectedOrderInfo | undefined {
 
 export function OffchainActivityModal() {
   const syncedSelectedOrder = useSyncedSelectedOrder()
-  const setSelectedOrder = useUpdateAtom(selectedOrderAtom)
+  const setSelectedOrder = useSetAtom(selectedOrderAtom)
 
   const reset = useCallback(() => {
     setSelectedOrder((order) => order && { ...order, modalOpen: false })

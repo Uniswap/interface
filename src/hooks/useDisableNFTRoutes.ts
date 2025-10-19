@@ -1,4 +1,4 @@
-import { useAtomValue } from 'jotai/utils'
+import { useAtomValue } from 'jotai'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
 
 export function useDisableNFTRoutes() {

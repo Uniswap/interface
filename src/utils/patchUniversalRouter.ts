@@ -21,12 +21,9 @@ const originalUniversalRouterAddress = SDK_UNIVERSAL_ROUTER_ADDRESS
  * Falls back to the original SDK implementation for other chains
  */
 export function UNIVERSAL_ROUTER_ADDRESS(chainId: number): string {
-  console.log('[DEBUG] UNIVERSAL_ROUTER_ADDRESS - Looking up address for chainId:', chainId)
-
   // Check if this is a Taiko chain
   if (chainId === TAIKO_MAINNET_CHAIN_ID || chainId === TAIKO_HOODI_CHAIN_ID) {
     const address = TAIKO_UNIVERSAL_ROUTER_ADDRESS[chainId]
-    console.log('[DEBUG] UNIVERSAL_ROUTER_ADDRESS - Taiko chain detected, address:', address)
     if (!address || address === '0x0000000000000000000000000000000000000000') {
       throw new Error(`Universal Router not deployed on Taiko chain ${chainId}`)
     }
@@ -35,7 +32,6 @@ export function UNIVERSAL_ROUTER_ADDRESS(chainId: number): string {
 
   // Fall back to the original SDK implementation for other chains
   const address = originalUniversalRouterAddress(chainId)
-  console.log('[DEBUG] UNIVERSAL_ROUTER_ADDRESS - Using SDK address for chainId', chainId, ':', address)
   return address
 }
 

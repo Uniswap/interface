@@ -56,8 +56,6 @@ export function useUniversalRouterSwapCallback(
   const blockNumber = useBlockNumber()
   const isAutoSlippage = useUserSlippageTolerance()[0] === 'auto'
 
-  console.log('[DEBUG] useUniversalRouterSwapCallback - chainId from useWeb3React:', chainId)
-
   return useCallback(async () => {
     return trace('swap.send', async ({ setTraceData, setTraceStatus, setTraceError }) => {
       try {
@@ -66,12 +64,9 @@ export function useUniversalRouterSwapCallback(
         if (!provider) throw new Error('missing provider')
         if (!trade) throw new Error('missing trade')
 
-        console.log('[DEBUG] useUniversalRouterSwapCallback - Starting swap with chainId:', chainId)
         const connectedChainId = await provider.getSigner().getChainId()
-        console.log('[DEBUG] useUniversalRouterSwapCallback - Provider chainId:', connectedChainId)
 
         if (chainId !== connectedChainId) {
-          console.error('[DEBUG] useUniversalRouterSwapCallback - Chain ID mismatch! Expected:', chainId, 'Got:', connectedChainId)
           throw new WrongChainError()
         }
 
@@ -89,7 +84,6 @@ export function useUniversalRouterSwapCallback(
         })
 
         const routerAddress = UNIVERSAL_ROUTER_ADDRESS(chainId)
-        console.log('[DEBUG] useUniversalRouterSwapCallback - Universal Router address for chainId', chainId, ':', routerAddress)
 
         const tx = {
           from: account,
@@ -98,8 +92,6 @@ export function useUniversalRouterSwapCallback(
           // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
           ...(value && !isZero(value) ? { value: toHex(value) } : {}),
         }
-
-        console.log('[DEBUG] useUniversalRouterSwapCallback - Transaction details:', { from: tx.from, to: tx.to, chainId })
 
         let gasEstimate: BigNumber
         try {

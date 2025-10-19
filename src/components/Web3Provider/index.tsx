@@ -31,8 +31,6 @@ function Updater() {
   const currentPage = getCurrentPageFromLocation(pathname)
   const analyticsContext = useTrace()
 
-  console.log('[DEBUG] Web3Provider - useWeb3React chainId:', chainId)
-
   // Trace RPC calls (for debugging).
   const networkProvider = isSupportedChain(chainId) ? RPC_PROVIDERS[chainId] : undefined
   const shouldTrace = useTraceJsonRpcFlag() === TraceJsonRpcVariant.Enabled
@@ -53,7 +51,6 @@ function Updater() {
   useEffect(() => {
     const chainChanged = previousConnectedChainId && previousConnectedChainId !== chainId
     if (chainChanged) {
-      console.log('[DEBUG] Web3Provider - Chain changed from', previousConnectedChainId, 'to', chainId)
       sendAnalyticsEvent(InterfaceEventName.CHAIN_CHANGED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: account,
@@ -93,7 +90,6 @@ function Updater() {
       user.set(CustomUserProperties.WALLET_TYPE, walletType)
       user.set(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
       if (chainId) {
-        console.log('[DEBUG] Web3Provider - Setting user chain ID:', chainId)
         user.set(CustomUserProperties.CHAIN_ID, chainId)
         user.postInsert(CustomUserProperties.ALL_WALLET_CHAIN_IDS, chainId)
       }

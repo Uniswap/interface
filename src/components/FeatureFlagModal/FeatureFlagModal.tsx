@@ -12,7 +12,7 @@ import { useUniswapXDefaultEnabledFlag } from 'featureFlags/flags/uniswapXDefaul
 import { useUniswapXEthOutputFlag } from 'featureFlags/flags/uniswapXEthOutput'
 import { useUniswapXExactOutputFlag } from 'featureFlags/flags/uniswapXExactOutput'
 import { useUniswapXSyntheticQuoteFlag } from 'featureFlags/flags/uniswapXUseSyntheticQuote'
-import { useUpdateAtom } from 'jotai/utils'
+import { useSetAtom } from 'jotai'
 import { Children, PropsWithChildren, ReactElement, ReactNode, useCallback, useState } from 'react'
 import { X } from 'react-feather'
 import { useModalIsOpen, useToggleFeatureFlags } from 'state/application/hooks'
@@ -164,7 +164,7 @@ function FeatureFlagGroup({ name, children }: PropsWithChildren<{ name: string }
       return values.includes(BaseVariant.Control) && values.includes(BaseVariant.Enabled)
     })
 
-  const setFeatureFlags = useUpdateAtom(featureFlagSettings)
+  const setFeatureFlags = useSetAtom(featureFlagSettings)
   const allEnabled = togglableOptions.every(({ value }) => value === BaseVariant.Enabled)
   const onToggle = useCallback(() => {
     setFeatureFlags((flags) => ({

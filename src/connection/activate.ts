@@ -2,8 +2,7 @@ import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-e
 import { ChainId } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent } from 'analytics'
 import { Connection } from 'connection/types'
-import { atom } from 'jotai'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { atom, useAtomValue, useSetAtom } from 'jotai'
 import { useCallback } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useAppDispatch } from 'state/hooks'
@@ -27,7 +26,7 @@ const activationStateAtom = atom<ActivationState>(IDLE_ACTIVATION_STATE)
 
 function useTryActivation() {
   const dispatch = useAppDispatch()
-  const setActivationState = useUpdateAtom(activationStateAtom)
+  const setActivationState = useSetAtom(activationStateAtom)
   const { pathname } = useLocation()
   const currentPage = getCurrentPageFromLocation(pathname)
 
@@ -41,12 +40,10 @@ function useTryActivation() {
         setActivationState({ status: ActivationStatus.PENDING, connection })
 
         console.debug(`Connection activating: ${connection.getName()}`)
-        console.log('[DEBUG] Connection activate - Requested chainId:', chainId)
         dispatch(updateSelectedWallet({ wallet: undefined }))
         await connection.connector.activate()
 
         console.debug(`Connection activated: ${connection.getName()}`)
-        console.log('[DEBUG] Connection activate - Connection completed')
         dispatch(updateSelectedWallet({ wallet: connection.type }))
 
         // Clears pending connection state
@@ -78,7 +75,7 @@ function useTryActivation() {
 }
 
 function useCancelActivation() {
-  const setActivationState = useUpdateAtom(activationStateAtom)
+  const setActivationState = useSetAtom(activationStateAtom)
   return useCallback(
     () =>
       setActivationState((activationState) => {

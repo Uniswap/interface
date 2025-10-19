@@ -6,7 +6,7 @@ import {
   TokenSortMethod,
 } from 'components/Tokens/state'
 import gql from 'graphql-tag'
-import { useAtomValue } from 'jotai/utils'
+import { useAtomValue } from 'jotai'
 import { useMemo } from 'react'
 
 import {

@@ -1,4 +1,5 @@
-import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { useAtomValue, useSetAtom } from 'jotai'
+import { atomWithStorage } from 'jotai/utils'
 import { createContext, ReactNode, useCallback, useContext } from 'react'
 import { useGate } from 'statsig-react'
 
@@ -41,7 +42,7 @@ function useFeatureFlagsContext(): FeatureFlagsContextType {
 export const featureFlagSettings = atomWithStorage<Record<string, string>>('featureFlags', {})
 
 export function useUpdateFlag() {
-  const setFeatureFlags = useUpdateAtom(featureFlagSettings)
+  const setFeatureFlags = useSetAtom(featureFlagSettings)
 
   return useCallback(
     (featureFlag: string, option: string) => {
