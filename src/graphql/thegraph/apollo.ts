@@ -36,30 +36,30 @@ export const apolloClient = new ApolloClient({
 export const chainToApolloClient: Record<number, ApolloClient<NormalizedCacheObject>> = {
   [ChainId.MAINNET]: new ApolloClient({
     cache: new InMemoryCache(),
-    uri: CHAIN_SUBGRAPH_URL[ChainId.MAINNET],
+    link: new HttpLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.MAINNET] }),
   }),
   [ChainId.ARBITRUM_ONE]: new ApolloClient({
     cache: new InMemoryCache(),
-    uri: CHAIN_SUBGRAPH_URL[ChainId.ARBITRUM_ONE],
+    link: new HttpLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.ARBITRUM_ONE] }),
   }),
   [ChainId.OPTIMISM]: new ApolloClient({
     cache: new InMemoryCache(),
-    uri: CHAIN_SUBGRAPH_URL[ChainId.OPTIMISM],
+    link: new HttpLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.OPTIMISM] }),
   }),
   [ChainId.POLYGON]: new ApolloClient({
     cache: new InMemoryCache(),
-    uri: CHAIN_SUBGRAPH_URL[ChainId.POLYGON],
+    link: new HttpLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.POLYGON] }),
   }),
   [ChainId.CELO]: new ApolloClient({
     cache: new InMemoryCache(),
-    uri: CHAIN_SUBGRAPH_URL[ChainId.CELO],
+    link: new HttpLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.CELO] }),
   }),
   [ChainId.BNB]: new ApolloClient({
     cache: new InMemoryCache(),
-    uri: CHAIN_SUBGRAPH_URL[ChainId.BNB],
+    link: new HttpLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.BNB] }),
   }),
   [ChainId.AVALANCHE]: new ApolloClient({
     cache: new InMemoryCache(),
-    uri: CHAIN_SUBGRAPH_URL[ChainId.AVALANCHE],
+    link: new HttpLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.AVALANCHE] }),
   }),
 }

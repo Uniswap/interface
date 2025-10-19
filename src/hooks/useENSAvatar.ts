@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { hexZeroPad } from '@ethersproject/bytes'
 import { useWeb3React } from '@web3-react/core'
+import { isTaikoChain } from 'config/chains'
 import { NEVER_RELOAD, useMainnetSingleCallResult } from 'lib/hooks/multicall'
 import uriToHttp from 'lib/utils/uriToHttp'
 import { useEffect, useMemo, useState } from 'react'
@@ -20,11 +21,16 @@ export default function useENSAvatar(
   address?: string,
   enforceOwnership = true
 ): { avatar: string | null; loading: boolean } {
+  const { chainId } = useWeb3React()
   const debouncedAddress = useDebounce(address, 200)
+
+  // Skip ENS resolution on Taiko chains (167000, 167012) - Taiko does not support ENS
+  const skipENS = chainId && isTaikoChain(chainId)
+
   const node = useMemo(() => {
-    if (!debouncedAddress || !isAddress(debouncedAddress)) return undefined
+    if (skipENS || !debouncedAddress || !isAddress(debouncedAddress)) return undefined
     return safeNamehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`)
-  }, [debouncedAddress])
+  }, [skipENS, debouncedAddress])
 
   const addressAvatar = useAvatarFromNode(node)
   const ENSName = useENSName(address).ENSName
@@ -39,10 +45,10 @@ export default function useENSAvatar(
   const changed = debouncedAddress !== address
   return useMemo(
     () => ({
-      avatar: changed ? null : http ?? null,
-      loading: changed || addressAvatar.loading || nameAvatar.loading || nftAvatar.loading,
+      avatar: skipENS || changed ? null : http ?? null,
+      loading: skipENS ? false : changed || addressAvatar.loading || nameAvatar.loading || nftAvatar.loading,
     }),
-    [addressAvatar.loading, changed, http, nameAvatar.loading, nftAvatar.loading]
+    [skipENS, addressAvatar.loading, changed, http, nameAvatar.loading, nftAvatar.loading]
   )
 }
 

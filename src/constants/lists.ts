@@ -1,57 +1,56 @@
+// DISABLED: IPFS lists cause CORS errors - kept for compatibility but not used in default lists
 export const UNI_LIST = 'https://gateway.ipfs.io/ipns/tokens.uniswap.org'
 export const UNI_EXTENDED_LIST = 'https://gateway.ipfs.io/ipns/extendedtokens.uniswap.org'
-const UNI_UNSUPPORTED_LIST = 'https://gateway.ipfs.io/ipns/unsupportedtokens.uniswap.org'
-const AAVE_LIST = 'tokenlist.aave.eth'
-const BA_LIST = 'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'
-// TODO(WEB-2282): Re-enable CMC list once we have a better solution for handling large lists.
-// const CMC_ALL_LIST = 'https://s3.coinmarketcap.com/generated/dex/tokens/eth-tokens-all.json'
-const COINGECKO_LIST = 'https://tokens.coingecko.com/uniswap/all.json'
-const COINGECKO_BNB_LIST = 'https://tokens.coingecko.com/binance-smart-chain/all.json'
-const COINGECKO_ARBITRUM_LIST = 'https://tokens.coingecko.com/arbitrum-one/all.json'
-const COINGECKO_OPTIMISM_LIST = 'https://tokens.coingecko.com/optimistic-ethereum/all.json'
-const COINGECKO_CELO_LIST = 'https://tokens.coingecko.com/celo/all.json'
-const COINGECKO_POLYGON_LIST = 'https://tokens.coingecko.com/polygon-pos/all.json'
-const COINGECKO_AVAX_LIST = 'https://tokens.coingecko.com/avalanche/all.json'
+// const UNI_UNSUPPORTED_LIST = 'https://gateway.ipfs.io/ipns/unsupportedtokens.uniswap.org'
+
+// DISABLED: ENS-based lists fail to resolve - not used in default lists
+// const AAVE_LIST = 'tokenlist.aave.eth'
+// const KLEROS_LIST = 't2crtokens.eth'
+// const WRAPPED_LIST = 'wrapped.tokensoft.eth'
+
+// DISABLED: CoinGecko lists return invalid token list format - not used in default lists
+// const COINGECKO_LIST = 'https://tokens.coingecko.com/uniswap/all.json'
+// const COINGECKO_BNB_LIST = 'https://tokens.coingecko.com/binance-smart-chain/all.json'
+// const COINGECKO_ARBITRUM_LIST = 'https://tokens.coingecko.com/arbitrum-one/all.json'
+// const COINGECKO_OPTIMISM_LIST = 'https://tokens.coingecko.com/optimistic-ethereum/all.json'
+// const COINGECKO_CELO_LIST = 'https://tokens.coingecko.com/celo/all.json'
+// const COINGECKO_POLYGON_LIST = 'https://tokens.coingecko.com/polygon-pos/all.json'
+// const COINGECKO_AVAX_LIST = 'https://tokens.coingecko.com/avalanche/all.json'
+
+// DISABLED: BA list for unsupported tokens - not needed for Taiko
+// const BA_LIST = 'https://raw.githubusercontent.com/The-Blockchain-Association/sec-notice-list/master/ba-sec-list.json'
+
+// Working GitHub-based token lists
 const COMPOUND_LIST = 'https://raw.githubusercontent.com/compound-finance/token-list/master/compound.tokenlist.json'
 const GEMINI_LIST = 'https://www.gemini.com/uniswap/manifest.json'
-const KLEROS_LIST = 't2crtokens.eth'
 const SET_LIST = 'https://raw.githubusercontent.com/SetProtocol/uniswap-tokenlist/main/set.tokenlist.json'
-const WRAPPED_LIST = 'wrapped.tokensoft.eth'
 
+// Chain-specific token lists (kept for compatibility, only some used in default lists)
 export const OPTIMISM_LIST = 'https://static.optimism.io/optimism.tokenlist.json'
 export const ARBITRUM_LIST = 'https://bridge.arbitrum.io/token-list-42161.json'
 export const CELO_LIST = 'https://celo-org.github.io/celo-token-list/celo.tokenlist.json'
 export const PLASMA_BNB_LIST = 'https://raw.githubusercontent.com/plasmadlt/plasma-finance-token-list/master/bnb.json'
-export const AVALANCHE_LIST =
-  'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/token_list.json'
 export const BASE_LIST =
   'https://raw.githubusercontent.com/ethereum-optimism/ethereum-optimism.github.io/master/optimism.tokenlist.json'
+// DISABLED: Avalanche list returns invalid token list format - kept for compatibility but not used
+export const AVALANCHE_LIST =
+  'https://raw.githubusercontent.com/ava-labs/avalanche-bridge-resources/main/token_list.json'
 
-export const UNSUPPORTED_LIST_URLS: string[] = [BA_LIST, UNI_UNSUPPORTED_LIST]
+// Empty unsupported list URLs (disabled problematic sources)
+export const UNSUPPORTED_LIST_URLS: string[] = []
 
 // default lists to be 'active' aka searched across
-export const DEFAULT_ACTIVE_LIST_URLS: string[] = [UNI_LIST]
+// Note: Using only reliable GitHub-based lists for now
+export const DEFAULT_ACTIVE_LIST_URLS: string[] = [COMPOUND_LIST]
+
+// Inactive lists - these can be enabled by users if needed
 export const DEFAULT_INACTIVE_LIST_URLS: string[] = [
-  UNI_EXTENDED_LIST,
-  COMPOUND_LIST,
-  AAVE_LIST,
-  //  CMC_ALL_LIST,
-  COINGECKO_LIST,
-  COINGECKO_BNB_LIST,
-  COINGECKO_ARBITRUM_LIST,
-  COINGECKO_OPTIMISM_LIST,
-  COINGECKO_CELO_LIST,
-  COINGECKO_POLYGON_LIST,
-  COINGECKO_AVAX_LIST,
-  KLEROS_LIST,
   GEMINI_LIST,
-  WRAPPED_LIST,
   SET_LIST,
   ARBITRUM_LIST,
   OPTIMISM_LIST,
   CELO_LIST,
   PLASMA_BNB_LIST,
-  AVALANCHE_LIST,
   BASE_LIST,
   ...UNSUPPORTED_LIST_URLS,
 ]

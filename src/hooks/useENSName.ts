@@ -1,3 +1,5 @@
+import { useWeb3React } from '@web3-react/core'
+import { isTaikoChain } from 'config/chains'
 import { NEVER_RELOAD, useMainnetSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo } from 'react'
 import { safeNamehash } from 'utils/safeNamehash'
@@ -13,11 +15,16 @@ import useENSAddress from './useENSAddress'
  * Note this is not the same as looking up an ENS name to find an address.
  */
 export default function useENSName(address?: string): { ENSName: string | null; loading: boolean } {
+  const { chainId } = useWeb3React()
   const debouncedAddress = useDebounce(address, 200)
+
+  // Skip ENS resolution on Taiko chains (167000, 167012) - Taiko does not support ENS
+  const skipENS = chainId && isTaikoChain(chainId)
+
   const ensNodeArgument = useMemo(() => {
-    if (!debouncedAddress || !isAddress(debouncedAddress)) return [undefined]
+    if (skipENS || !debouncedAddress || !isAddress(debouncedAddress)) return [undefined]
     return [safeNamehash(`${debouncedAddress.toLowerCase().substr(2)}.addr.reverse`)]
-  }, [debouncedAddress])
+  }, [skipENS, debouncedAddress])
   const registrarContract = useENSRegistrarContract()
   const resolverAddress = useMainnetSingleCallResult(registrarContract, 'resolver', ensNodeArgument, NEVER_RELOAD)
   const resolverAddressResult = resolverAddress.result?.[0]
@@ -36,9 +43,9 @@ export default function useENSName(address?: string): { ENSName: string | null; 
   const changed = debouncedAddress !== address
   return useMemo(
     () => ({
-      ENSName: changed ? null : checkedName,
-      loading: changed || resolverAddress.loading || nameCallRes.loading,
+      ENSName: skipENS || changed ? null : checkedName,
+      loading: skipENS ? false : changed || resolverAddress.loading || nameCallRes.loading,
     }),
-    [changed, nameCallRes.loading, checkedName, resolverAddress.loading]
+    [skipENS, changed, nameCallRes.loading, checkedName, resolverAddress.loading]
   )
 }
