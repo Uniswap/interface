@@ -119,6 +119,8 @@ export const SwapGlow = styled.div`
 // Mostly copied from `AppBody` but it was getting too hard to maintain backwards compatibility.
 const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
   position: relative;
+  width: 100%;
+  max-width: 480px;
   z-index: ${Z_INDEX.default};
   border: 1px solid ${({ theme, isDark }) => (isDark ? 'rgba(200, 4, 125, 0.3)' : theme.surface3)};
   transition: all 250ms ease;
