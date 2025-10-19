@@ -79,6 +79,11 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
 
   const theme = useTheme()
 
+  // Safety check: don't render if chainInfo is missing
+  if (!chainInfo || !label) {
+    return null
+  }
+
   return (
     <TraceEvent events={[BrowserEvent.onClick]} name={SharedEventName.ELEMENT_CLICKED} element={`${label}-selector`}>
       <Container
@@ -89,7 +94,7 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
         }}
       >
         {logoUrl && <Logo src={logoUrl} alt={label} />}
-        {label && <Label>{label}</Label>}
+        <Label>{label}</Label>
         {disabled && (
           <CaptionText>
             <Trans>Unsupported by your wallet</Trans>

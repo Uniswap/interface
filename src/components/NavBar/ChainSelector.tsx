@@ -8,7 +8,7 @@ import { ConnectionType } from 'connection/types'
 import { WalletConnectV2 } from 'connection/WalletConnectV2'
 import { getChainInfo } from 'constants/chainInfo'
 import { getChainPriority, L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
-import { TAIKO_HOODI_CHAIN_ID, TAIKO_MAINNET_CHAIN_ID } from 'constants/taiko'
+import { getEnabledChainIds } from 'config/chains'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useSelectChain from 'hooks/useSelectChain'
 import useSyncChainQuery from 'hooks/useSyncChainQuery'
@@ -26,9 +26,6 @@ import * as styles from './ChainSelector.css'
 import ChainSelectorRow from './ChainSelectorRow'
 import { NavDropdown } from './NavDropdown'
 
-// Only show Taiko chains in the network selector
-const NETWORK_SELECTOR_CHAINS = [TAIKO_MAINNET_CHAIN_ID, TAIKO_HOODI_CHAIN_ID]
-
 interface ChainSelectorProps {
   leftAlign?: boolean
 }
@@ -37,12 +34,17 @@ function useWalletSupportedChains(): ChainId[] {
   const { connector } = useWeb3React()
   const connectionType = getConnection(connector).type
 
+  // Get only enabled chains from the registry
+  const enabledChains = getEnabledChainIds()
+
   switch (connectionType) {
     case ConnectionType.WALLET_CONNECT_V2:
     case ConnectionType.UNISWAP_WALLET_V2:
-      return getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
+      const wcChains = getSupportedChainIdsFromWalletConnectSession((connector as WalletConnectV2).provider?.session)
+      // Filter WalletConnect chains to only include enabled ones
+      return wcChains.filter(chainId => enabledChains.includes(chainId))
     default:
-      return NETWORK_SELECTOR_CHAINS
+      return enabledChains
   }
 }
 
@@ -57,9 +59,13 @@ export const ChainSelector = ({ leftAlign }: ChainSelectorProps) => {
   const walletSupportsChain = useWalletSupportedChains()
 
   const [supportedChains, unsupportedChains] = useMemo(() => {
-    const { supported, unsupported } = NETWORK_SELECTOR_CHAINS.filter((chain: number) => {
-      return showTestnets || !TESTNET_CHAIN_IDS.includes(chain)
-    })
+    // Get only enabled chains from registry
+    const enabledChains = getEnabledChainIds()
+
+    const { supported, unsupported } = enabledChains
+      .filter((chain: number) => {
+        return showTestnets || !TESTNET_CHAIN_IDS.includes(chain)
+      })
       .sort((a, b) => getChainPriority(a) - getChainPriority(b))
       .reduce(
         (acc, chain) => {
