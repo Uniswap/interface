@@ -15,7 +15,7 @@ const BLOCK_EXPLORER_PREFIXES: { [chainId: number]: string } = {
   [ChainId.AVALANCHE]: 'https://snowtrace.io',
   [ChainId.BASE]: 'https://basescan.org',
   [TAIKO_MAINNET_CHAIN_ID]: 'https://taikoscan.io',
-  [TAIKO_HOODI_CHAIN_ID]: 'https://hekla.taikoscan.io',
+  [TAIKO_HOODI_CHAIN_ID]: 'https://hoodi.taikoscan.io',
 }
 
 export enum ExplorerDataType {
