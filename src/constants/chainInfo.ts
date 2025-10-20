@@ -262,7 +262,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [TAIKO_MAINNET_CHAIN_ID]: {
     networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms(`25m`),
+    blockWaitMsBeforeWarning: ms(`24h`), // Increased to 24 hours to prevent false warnings
     bridge: 'https://bridge.taiko.xyz',
     docs: 'https://docs.taiko.xyz/',
     explorer: 'https://taikoscan.io/',
@@ -278,7 +278,7 @@ const CHAIN_INFO: ChainInfoMap = {
   },
   [TAIKO_HOODI_CHAIN_ID]: {
     networkType: NetworkType.L2,
-    blockWaitMsBeforeWarning: ms(`25m`),
+    blockWaitMsBeforeWarning: ms(`24h`), // Increased to 24 hours to prevent false warnings
     bridge: 'https://bridge.taiko.xyz',
     docs: 'https://docs.taiko.xyz/',
     explorer: 'https://holesky.taikoscan.io/',
