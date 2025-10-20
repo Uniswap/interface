@@ -46,7 +46,7 @@ describe('#getExplorerLink', () => {
   })
   it('taiko hoodi', () => {
     expect(getExplorerLink(TAIKO_HOODI_CHAIN_ID, 'abc', ExplorerDataType.ADDRESS)).toEqual(
-      'https://holesky.taikoscan.io/address/abc'
+      'https://hekla.taikoscan.io/address/abc'
     )
   })
   it('taiko mainnet token', () => {
@@ -56,7 +56,7 @@ describe('#getExplorerLink', () => {
   })
   it('taiko hoodi token', () => {
     expect(getExplorerLink(TAIKO_HOODI_CHAIN_ID, 'abc', ExplorerDataType.TOKEN)).toEqual(
-      'https://holesky.taikoscan.io/token/abc'
+      'https://hekla.taikoscan.io/token/abc'
     )
   })
 })

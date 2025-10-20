@@ -19,7 +19,7 @@ export const TAIKO_HOODI_CHAIN_ID = 167012 as const
  * Taiko Hoodi Testnet Configuration
  *
  * All contracts have been verified and deployed on Taiko Hoodi.
- * Explorer: https://holesky.taikoscan.io/
+ * Explorer: https://hekla.taikoscan.io/
  * RPC: https://rpc.hoodi.taiko.xyz
  */
 export const TAIKO_HOODI_ADDRESSES: ChainAddresses = {
@@ -106,7 +106,7 @@ export const TAIKO_HOODI_METADATA: TaikoChainMetadata = {
   chainId: TAIKO_HOODI_CHAIN_ID,
   name: 'Taiko Hoodi',
   rpcUrl: 'https://rpc.hoodi.taiko.xyz',
-  explorerUrl: 'https://holesky.taikoscan.io/',
+  explorerUrl: 'https://hekla.taikoscan.io/',
   nativeCurrency: {
     name: 'Ether',
     symbol: 'ETH',

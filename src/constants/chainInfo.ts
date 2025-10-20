@@ -281,7 +281,7 @@ const CHAIN_INFO: ChainInfoMap = {
     blockWaitMsBeforeWarning: ms(`25m`),
     bridge: 'https://bridge.taiko.xyz',
     docs: 'https://docs.taiko.xyz/',
-    explorer: 'https://holesky.taikoscan.io/',
+    explorer: 'https://hekla.taikoscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Taiko Hoodi',
     logoUrl: ethereumLogoUrl, // TODO: Replace with Taiko logo when available
