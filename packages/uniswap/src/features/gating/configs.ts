@@ -1,4 +1,5 @@
-import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { GasStrategy } from '@universe/api'
+import type { Locale } from 'uniswap/src/features/language/constants'
 
 /**
  * Dynamic Configs
@@ -22,6 +23,7 @@ export enum DynamicConfigs {
   DatadogIgnoredErrors = 'datadog_ignored_errors',
   EmbeddedWalletConfig = 'embedded_wallet_config',
   ExtensionBiometricUnlock = 'extension_biometric_unlock_config',
+  DeepLinkUrlAllowlist = 'deep_link_url_allowlist',
 
   // Web
   AstroChain = 'astro_chain',
@@ -52,6 +54,8 @@ export enum SwapConfigKey {
   CeloSendMinGasAmount = 'celoSendMinGasAmount',
   MonSwapMinGasAmount = 'monSwapMinGasAmount',
   MonSendMinGasAmount = 'monSendMinGasAmount',
+  SolanaSwapMinGasAmount = 'solanaSwapMinGasAmount',
+  SolanaSendMinGasAmount = 'solanaSendMinGasAmount',
   GenericL2SwapMinGasAmount = 'genericL2SwapMinGasAmount',
   GenericL2SendMinGasAmount = 'genericL2SendMinGasAmount',
 
@@ -92,6 +96,10 @@ export enum ExtensionBiometricUnlockConfigKey {
   EnableOnboardingEnrollment = 'enableOnboardingEnrollment',
   EnableSettingsEnrollment = 'enableSettingsEnrollment',
   EnableUnlocking = 'enableUnlocking',
+}
+
+export enum DeepLinkUrlAllowlistConfigKey {
+  AllowedUrls = 'allowedUrls',
 }
 
 export enum SyncTransactionSubmissionChainIdsConfigKey {
@@ -187,6 +195,7 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.DatadogSessionSampleRate]: DatadogSessionSampleRateKey
   [DynamicConfigs.EmbeddedWalletConfig]: EmbeddedWalletConfigKey
   [DynamicConfigs.ExtensionBiometricUnlock]: ExtensionBiometricUnlockConfigKey
+  [DynamicConfigs.DeepLinkUrlAllowlist]: DeepLinkUrlAllowlistConfigKey
   [DynamicConfigs.SyncTransactionSubmissionChainIds]: SyncTransactionSubmissionChainIdsConfigKey
 
   // Web
@@ -213,4 +222,14 @@ export type UwULinkAllowlistItem = {
 export type UwULinkAllowlist = {
   contracts: UwULinkAllowlistItem[]
   tokenRecipients: UwULinkAllowlistItem[]
+}
+
+export type DeepLinkUrlAllowlistItem = {
+  url: string
+  description?: string
+  openInApp?: boolean // If true, opens in in-app browser; if false, opens in external browser
+}
+
+export type DeepLinkUrlAllowlist = {
+  allowedUrls: DeepLinkUrlAllowlistItem[]
 }

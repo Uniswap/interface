@@ -133,7 +133,7 @@ describe('SendCurrencyInputform', () => {
       </MultichainContext.Provider>,
     )
     expect(screen.getByText('hayden.eth')).toBeVisible()
-    expect(screen.getByText(shortenAddress('0x9984b4b4E408e8D618A879e5315BD30952c89103'))).toBeVisible()
+    expect(screen.getByText(shortenAddress({ address: '0x9984b4b4E408e8D618A879e5315BD30952c89103' }))).toBeVisible()
     expect(container.firstChild).toMatchSnapshot()
   })
 
@@ -148,7 +148,7 @@ describe('SendCurrencyInputform', () => {
       </MultichainContext.Provider>,
     )
     expect(screen.getByText('hayden')).toBeVisible()
-    expect(screen.getByText(shortenAddress('0x9984b4b4E408e8D618A879e5315BD30952c89103'))).toBeVisible()
+    expect(screen.getByText(shortenAddress({ address: '0x9984b4b4E408e8D618A879e5315BD30952c89103' }))).toBeVisible()
     expect(container.firstChild).toMatchSnapshot()
   })
 })

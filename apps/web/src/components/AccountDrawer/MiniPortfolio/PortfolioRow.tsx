@@ -19,7 +19,7 @@ const PortfolioRowWrapper = ({ children, className, ...rest }: FlexProps) => (
 )
 
 export default function PortfolioRow({
-  ['data-testid']: testId,
+  'data-testid': testId,
   left,
   title,
   descriptor,

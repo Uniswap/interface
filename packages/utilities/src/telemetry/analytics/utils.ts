@@ -1,5 +1,5 @@
-import { isInterface } from 'utilities/src/platform'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { isWebApp } from 'utilities/src/platform'
+// biome-ignore lint/style/noRestrictedImports: Platform-specific implementation needs internal types
 import { type TestnetModeConfig } from 'utilities/src/telemetry/analytics/analytics'
 
 export function getProcessedEvent({
@@ -18,7 +18,7 @@ export function getProcessedEvent({
   }
 
   // do not track testnet mode events in the interface
-  if (isInterface) {
+  if (isWebApp) {
     return undefined
   }
 

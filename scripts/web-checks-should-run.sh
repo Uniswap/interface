@@ -2,8 +2,8 @@
 
 # This script controls whether the web quality checks run in Github
 
-# Check if @uniswap/interface is affected by changes
-bun nx show projects --affected --base=HEAD^ --head=HEAD | grep -q "@uniswap/interface"
+# Check if @universe/web is affected by changes
+bun nx show projects --affected --base=HEAD^ --head=HEAD | grep -q "@universe/web"
 
 # grep returns 0 if match found (project is affected), 1 if no match
 exit_status=$?

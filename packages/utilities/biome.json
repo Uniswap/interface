@@ -1,8 +1,3 @@
 {
-  "extends": "//",
-  "formatter": {
-    "includes": [
-      "**"
-    ]
-  }
+  "extends": ["@uniswap/biome-config/utilities"]
 }

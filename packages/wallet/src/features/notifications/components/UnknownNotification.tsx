@@ -1,14 +1,14 @@
 import { AlertTriangleFilled, CheckmarkCircle } from 'ui/src/components/icons'
 import { LogoWithTxStatus } from 'uniswap/src/components/CurrencyLogo/LogoWithTxStatus'
+import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { useENS } from 'uniswap/src/features/ens/useENS'
-import { TransactionNotificationBase } from 'uniswap/src/features/notifications/types'
+import { NOTIFICATION_ICON_SIZE } from 'uniswap/src/features/notifications/constants'
+import { TransactionNotificationBase } from 'uniswap/src/features/notifications/slice/types'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
-import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { formUnknownTxTitle } from 'wallet/src/features/notifications/utils'
 
 export function UnknownTxNotification({

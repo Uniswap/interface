@@ -76,3 +76,11 @@ Object.defineProperty(global, "crypto", {
 jest.mock('utilities/src/device/locales', () => {
   return jest.requireActual('utilities/src/device/locales.native.ts')
 })
+
+// Mock getConfig to use native implementation
+jest.mock('@universe/config', () => {
+  const { getConfig } = jest.requireActual('@universe/config/src/getConfig.native')
+  return {
+    getConfig
+  }
+})

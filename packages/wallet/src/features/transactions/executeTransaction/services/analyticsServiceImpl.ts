@@ -1,10 +1,7 @@
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { SwapTradeBaseProperties, UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
-import {
-  type OnChainTransactionDetails,
-  TransactionOriginType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionDetails, TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger as loggerUtil } from 'utilities/src/logger/logger'
 import type { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'
 
@@ -33,7 +30,7 @@ export function createAnalyticsService(ctx: {
   return {
     trackTransactionEvent,
 
-    trackSwapSubmitted(transaction: OnChainTransactionDetails, analytics?: SwapTradeBaseProperties): void {
+    trackSwapSubmitted(transaction: TransactionDetails, analytics?: SwapTradeBaseProperties): void {
       if (!analytics) {
         if (transaction.transactionOriginType === TransactionOriginType.Internal) {
           ctx.logger.error(new Error('Missing `analytics` for swap'), {

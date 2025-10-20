@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// biome-ignore-all lint/suspicious/noExplicitAny: Generic FlatList types are complex and varied
 // Adds ForwardRef to Animated.FlaList
 // https://github.com/software-mansion/react-native-reanimated/issues/2976
 
@@ -48,7 +48,7 @@ interface ReanimatedFlatlistProps<T> extends FlatListProps<T> {
  */
 export const AnimatedFlatList = forwardRef<Animated.FlatList<any>, ReanimatedFlatlistProps<any>>(
   function _AnimatedFlatList({ itemLayoutAnimation, FlatListComponent = ReanimatedFlatList, ...restProps }, ref) {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    // biome-ignore lint/correctness/useExhaustiveDependencies: itemLayoutAnimation intentionally excluded to avoid recreation
     const cellRenderer = React.useMemo(() => createCellRenderer(itemLayoutAnimation), [])
     return <FlatListComponent ref={ref} {...restProps} CellRendererComponent={cellRenderer} />
   },

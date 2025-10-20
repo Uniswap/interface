@@ -29,6 +29,11 @@ export enum PositionFlowStep {
   DEPOSIT = 2,
 }
 
+export enum RangeAmountInputPriceMode {
+  PRICE = 'price',
+  PERCENTAGE = 'percentage',
+}
+
 export interface PositionState {
   protocolVersion: ProtocolVersion
   fee: FeeData
@@ -114,6 +119,7 @@ export interface PriceRangeState {
   // When these are undefined, LiquidityChartRangeInput will calculate and set reasonable default values.
   minPrice?: string
   maxPrice?: string
+  inputMode?: RangeAmountInputPriceMode
 }
 
 type BasePriceRangeInfo = {

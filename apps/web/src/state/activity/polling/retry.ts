@@ -31,7 +31,7 @@ export function retry<T>(
   const totalAttempts = n
   let completed = false
   let rejectCancelled: (error: Error) => void
-  // eslint-disable-next-line no-async-promise-executor
+  // biome-ignore lint/suspicious/noAsyncPromiseExecutor: We need to use async/await in the executor
   const promise = new Promise<T>(async (resolve, reject) => {
     let currentAttempt = 0
     rejectCancelled = reject

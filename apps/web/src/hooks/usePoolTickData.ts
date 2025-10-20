@@ -3,6 +3,7 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, TICK_SPACINGS, tickToPrice as tickToPriceV3, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { tickToPrice as tickToPriceV4, Pool as V4Pool } from '@uniswap/v4-sdk'
+import { GraphQLApi } from '@universe/api'
 import { getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
 import { poolEnabledProtocolVersion } from 'components/Liquidity/utils/protocolVersion'
 import JSBI from 'jsbi'
@@ -11,15 +12,12 @@ import { useEffect, useMemo, useState } from 'react'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { PositionField } from 'types/position'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import {
-  useAllV3TicksQuery,
-  useAllV4TicksQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import computeSurroundingTicks, { TickProcessed } from 'utils/computeSurroundingTicks'
 
@@ -54,9 +52,9 @@ function usePaginatedTickQuery({
   const { defaultChainId } = useEnabledChains()
   const supportedChainId = useSupportedChainId(chainId)
 
-  const v3Result = useAllV3TicksQuery({
+  const v3Result = GraphQLApi.useAllV3TicksQuery({
     variables: {
-      address: poolId?.toLowerCase() ?? '',
+      address: normalizeAddress(poolId ?? '', AddressStringFormat.Lowercase),
       chain: toGraphQLChain(supportedChainId ?? defaultChainId),
       skip,
       first: MAX_TICK_FETCH_VALUE,
@@ -65,7 +63,7 @@ function usePaginatedTickQuery({
     pollInterval: ms(`30s`),
   })
 
-  const v4Result = useAllV4TicksQuery({
+  const v4Result = GraphQLApi.useAllV4TicksQuery({
     variables: {
       poolId: poolId ?? '',
       chain: toGraphQLChain(supportedChainId ?? defaultChainId),

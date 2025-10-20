@@ -8,6 +8,7 @@ export const ResetPageScrollEffect = memo(function ResetPageScrollEffect() {
   const currentPage = getCurrentPageFromLocation(pathname)
   const [hasChangedOnce, setHasChangedOnce] = useState(false)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Only run when currentPage is changed
   useEffect(() => {
     if (!hasChangedOnce) {
       // avoid setting scroll to top on initial load
@@ -17,7 +18,6 @@ export const ResetPageScrollEffect = memo(function ResetPageScrollEffect() {
       window.scrollTo(0, 0)
     }
     // we don't want this to re-run on change of hasChangedOnce! or else it defeats the point of the fix
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentPage])
 
   return null

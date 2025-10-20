@@ -17,7 +17,7 @@ export default async function getFont(
       throw new Error('Failed to fetch font from ASSETS binding')
     }
     return font.arrayBuffer()
-  } catch (e) {
+  } catch (_e) {
     // Fallback to fetching from the origin if the ASSETS binding is not available.
     const url = origin + '/fonts/Inter-normal.var.ttf'
     const font = await fetch(url)

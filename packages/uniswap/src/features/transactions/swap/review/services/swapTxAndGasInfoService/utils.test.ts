@@ -1,10 +1,8 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import type { ClassicQuoteResponse } from '@universe/api'
+import { FeeType, TradingApi } from '@universe/api'
 import type { providers } from 'ethers/lib/ethers'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
-import type { ClassicQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import type { BridgeQuote, ClassicQuote } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { Routing, TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import type { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/utils'
 import type { TransactionSettingsState } from 'uniswap/src/features/transactions/components/settings/types'
@@ -66,7 +64,7 @@ describe('processWrapResponse (smart contract unwrap fallback)', () => {
       jest.doMock('utilities/src/platform', () => ({
         __esModule: true,
         ...jest.requireActual('utilities/src/platform'),
-        isInterface: true,
+        isWebApp: true,
       }))
 
       const {
@@ -114,8 +112,8 @@ describe('createPrepareSwapRequestParams', () => {
     })
 
     const swapQuoteResponse = {
-      quote: {} as ClassicQuote,
-      routing: Routing.CLASSIC,
+      quote: {} as TradingApi.ClassicQuote,
+      routing: TradingApi.Routing.CLASSIC,
       requestId: '123',
       permitData: { fakePermitField: 'hi' },
     } satisfies ClassicQuoteResponse
@@ -153,9 +151,9 @@ describe('createPrepareSwapRequestParams', () => {
 describe('getSimulationError', () => {
   it('should return error when simulation fails with SIMULATION_ERROR', () => {
     const swapQuote = {
-      txFailureReasons: [TransactionFailureReason.SIMULATION_ERROR],
+      txFailureReasons: [TradingApi.TransactionFailureReason.SIMULATION_ERROR],
       route: [],
-    } as ClassicQuote
+    } as TradingApi.ClassicQuote
 
     const error = getSimulationError({ swapQuote, isRevokeNeeded: false })
 
@@ -164,9 +162,9 @@ describe('getSimulationError', () => {
 
   it('should ignore SIMULATION_ERROR when isRevokeNeeded is true', () => {
     const swapQuote = {
-      txFailureReasons: [TransactionFailureReason.SIMULATION_ERROR],
+      txFailureReasons: [TradingApi.TransactionFailureReason.SIMULATION_ERROR],
       route: [],
-    } as ClassicQuote
+    } as TradingApi.ClassicQuote
 
     const error = getSimulationError({ swapQuote, isRevokeNeeded: true })
 
@@ -174,7 +172,7 @@ describe('getSimulationError', () => {
   })
 
   it('should return null for bridge quote', () => {
-    const swapQuote = {} as BridgeQuote
+    const swapQuote = {} as TradingApi.BridgeQuote
 
     const error = getSimulationError({ swapQuote, isRevokeNeeded: false })
 
@@ -300,7 +298,7 @@ describe('createProcessSwapResponse', () => {
     const swapQuote = {
       gasFee: '1000',
       route: [],
-    } as ClassicQuote
+    } as TradingApi.ClassicQuote
 
     const response = {
       requestId: '123',
@@ -355,9 +353,9 @@ describe('createProcessSwapResponse', () => {
     // Given
     const swapQuote = {
       gasFee: '1000',
-      txFailureReasons: [TransactionFailureReason.SIMULATION_ERROR],
+      txFailureReasons: [TradingApi.TransactionFailureReason.SIMULATION_ERROR],
       route: [],
-    } as ClassicQuote
+    } as TradingApi.ClassicQuote
 
     // When
     const result = processSwapResponse({

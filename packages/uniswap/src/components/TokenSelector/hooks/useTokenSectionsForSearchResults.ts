@@ -1,3 +1,4 @@
+import { GqlResult } from '@universe/api'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
@@ -7,7 +8,6 @@ import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSele
 import { usePortfolioBalancesForAddressById } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
 import { mergeSearchResultsWithBridgingTokens } from 'uniswap/src/components/TokenSelector/utils'
-import { GqlResult } from 'uniswap/src/data/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -64,6 +64,7 @@ export function useTokenSectionsForSearchResults({
     searchQuery: searchFilter,
     chainFilter,
     skip: isBalancesOnlySearch,
+    hideWSOL: true, // Hide WSOL in token selector
   })
 
   const [selectedNetworkResults, otherNetworksSearchResults] = useMemo((): [CurrencyInfo[], CurrencyInfo[]] => {

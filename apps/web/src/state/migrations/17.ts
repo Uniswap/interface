@@ -1,4 +1,5 @@
 import { PersistState } from 'redux-persist'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { tokenAddressOrNativeAddress } from 'uniswap/src/features/search/utils'
 import { isPoolSearchResult, PreV55SearchResult, PreV55SearchResultType } from 'uniswap/src/state/oldTypes'
 
@@ -13,7 +14,7 @@ export type PersistAppStateV17 = {
 function searchResultId(searchResult: PreV55SearchResult): string {
   const { type } = searchResult
   const address = isPoolSearchResult(searchResult) ? searchResult.poolId : searchResult.address
-  const normalizedAddress = address?.toLowerCase() ?? null
+  const normalizedAddress = address ? normalizeTokenAddressForCache(address) : null
 
   switch (type) {
     case PreV55SearchResultType.Token:

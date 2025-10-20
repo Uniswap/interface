@@ -21,7 +21,7 @@ export function ENSAddressOptionItem({ ensAddressOption, onPress }: ENSAddressOp
   // Use `savedPrimaryEnsName` for WalletSearchResults that are stored in the search history
   // so that we don't have to do an additional ENS fetch when loading search history
   const { address, ensName, primaryENSName: savedPrimaryENSName, isRawName } = ensAddressOption
-  const formattedAddress = sanitizeAddressText(shortenAddress(address))
+  const formattedAddress = sanitizeAddressText(shortenAddress({ address }))
 
   // Get the completed name if it's not a raw name
   const completedENSName = isRawName ? ensName : getCompletedENSName(ensName)

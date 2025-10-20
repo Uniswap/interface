@@ -1,14 +1,12 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { logger } from 'utilities/src/logger/logger'
-
-const NATIVE_CURRENCY_DECIMAL = 18
-const NATIVE_CURRENCY_DECIMAL_OFFSET = NATIVE_CURRENCY_DECIMAL - 4
 
 /**
  * Given some token amount, return the max that can be spent of it
@@ -25,7 +23,7 @@ export function useMaxAmountSpend({
   txType?: TransactionType
   isExtraTx?: boolean
 }): Maybe<CurrencyAmount<Currency>> {
-  const minAmountPerTx = useGetMinAmount(currencyAmount?.currency.chainId, txType)
+  const minAmountPerTx = useMinGasAmount(currencyAmount?.currency.chainId, txType)
   const multiplierAsPercent = useLowBalanceWarningGasPercentage()
 
   if (!currencyAmount || !minAmountPerTx) {
@@ -55,94 +53,18 @@ export function useMaxAmountSpend({
   })
 }
 
-function useGetMinAmount(chainId?: UniverseChainId, txType?: TransactionType): JSBI | undefined {
-  const MIN_ETH_FOR_GAS = useMinEthForGas(txType)
-  const MIN_POLYGON_FOR_GAS = useMinPolygonForGas(txType)
-  const MIN_AVALANCHE_FOR_GAS = useMinAvalancheForGas(txType)
-  const MIN_CELO_FOR_GAS = useMinCeloForGas(txType)
-  const MIN_MON_FOR_GAS = useMinMonForGas(txType)
-  const MIN_L2_FOR_GAS = useMinGenericL2ForGas(txType)
+export function useMinGasAmount(chainId?: UniverseChainId, txType?: TransactionType): JSBI | undefined {
+  // Always determine config at the top level to avoid conditional hook calls
+  const gasConfig = chainId ? getChainInfo(chainId).gasConfig : GENERIC_L2_GAS_CONFIG
 
-  if (!chainId) {
-    return undefined
-  }
+  const variant = isSend(txType) ? 'send' : 'swap'
+  const key = gasConfig[variant].configKey
+  const defaultAmount = gasConfig[variant].default
 
-  switch (chainId) {
-    case UniverseChainId.Mainnet:
-      return MIN_ETH_FOR_GAS
-    case UniverseChainId.Sepolia:
-      return MIN_ETH_FOR_GAS
-    case UniverseChainId.Polygon:
-      return MIN_POLYGON_FOR_GAS
-    case UniverseChainId.Avalanche:
-      return MIN_AVALANCHE_FOR_GAS
-    case UniverseChainId.Celo:
-      return MIN_CELO_FOR_GAS
-    case UniverseChainId.MonadTestnet:
-      return MIN_MON_FOR_GAS
-    case UniverseChainId.ArbitrumOne:
-    case UniverseChainId.Optimism:
-    case UniverseChainId.Base:
-    case UniverseChainId.Bnb:
-    case UniverseChainId.Blast:
-    case UniverseChainId.WorldChain:
-    case UniverseChainId.Zora:
-    case UniverseChainId.Zksync:
-    case UniverseChainId.Unichain:
-    case UniverseChainId.UnichainSepolia:
-    case UniverseChainId.Soneium:
-    case UniverseChainId.Solana:
-      return MIN_L2_FOR_GAS
-    default:
-      logger.error(new Error('unhandled chain when getting min gas amount'), {
-        tags: {
-          file: 'useMaxAmountSpend.ts',
-          function: 'getMinAmount',
-        },
-      })
-      return MIN_L2_FOR_GAS
-  }
-}
+  // Always call the hook, but return undefined for unsupported cases
+  const result = useCalculateMinForGas({ key, defaultAmount, chainId })
 
-export function useMinEthForGas(txType?: TransactionType): JSBI {
-  return useCalculateMinForGas(
-    isSend(txType) ? SwapConfigKey.EthSendMinGasAmount : SwapConfigKey.EthSwapMinGasAmount,
-    isSend(txType) ? 20 : 150, // .002 and .015 ETH
-  )
-}
-
-export function useMinPolygonForGas(txType?: TransactionType): JSBI {
-  return useCalculateMinForGas(
-    isSend(txType) ? SwapConfigKey.PolygonSendMinGasAmount : SwapConfigKey.PolygonSwapMinGasAmount,
-    isSend(txType) ? 75 : 600, // .0075 and .06 MATIC
-  )
-}
-
-export function useMinAvalancheForGas(txType?: TransactionType): JSBI {
-  return useCalculateMinForGas(
-    isSend(txType) ? SwapConfigKey.AvalancheSendMinGasAmount : SwapConfigKey.AvalancheSwapMinGasAmount,
-    isSend(txType) ? 25 : 200, // .0025 and .02 AVAX
-  )
-}
-
-export function useMinCeloForGas(txType?: TransactionType): JSBI {
-  return useCalculateMinForGas(
-    isSend(txType) ? SwapConfigKey.CeloSendMinGasAmount : SwapConfigKey.CeloSwapMinGasAmount,
-    isSend(txType) ? 13 : 2000, // .0013 and .2 CELO
-  )
-}
-
-export function useMinMonForGas(txType?: TransactionType): JSBI {
-  return useCalculateMinForGas(
-    isSend(txType) ? SwapConfigKey.MonSendMinGasAmount : SwapConfigKey.MonSwapMinGasAmount,
-    isSend(txType) ? 20 : 150, // .002 and .015 ETH
-  )
-}
-export function useMinGenericL2ForGas(txType?: TransactionType): JSBI {
-  return useCalculateMinForGas(
-    isSend(txType) ? SwapConfigKey.GenericL2SendMinGasAmount : SwapConfigKey.GenericL2SwapMinGasAmount,
-    isSend(txType) ? 1 : 8, // .0001 and .0008 ETH
-  )
+  return chainId ? result : undefined
 }
 
 export function useLowBalanceWarningGasPercentage(): number {
@@ -153,17 +75,20 @@ export function useLowBalanceWarningGasPercentage(): number {
   })
 }
 
-export function useCalculateMinForGas(amount: SwapConfigKey, defaultAmount: number): JSBI {
-  const multiplier = useDynamicConfigValue({
-    config: DynamicConfigs.Swap,
-    key: amount,
-    defaultValue: defaultAmount,
-  })
+export function useCalculateMinForGas(config: {
+  key: SwapConfigKey
+  defaultAmount: number
+  chainId?: UniverseChainId
+}): JSBI {
+  const { key, defaultAmount, chainId } = config
+  const multiplier = useDynamicConfigValue({ config: DynamicConfigs.Swap, key, defaultValue: defaultAmount })
 
-  return JSBI.multiply(
-    JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(NATIVE_CURRENCY_DECIMAL_OFFSET)),
-    JSBI.BigInt(multiplier),
-  )
+  // Get the native currency decimals for the specific chain
+  const decimals = chainId ? getChainInfo(chainId).nativeCurrency.decimals : 18
+  // TODO(SWAP-559): remove arbitrary decimal offset after updating swap config patterns
+  const decimalOffset = decimals - 4
+
+  return JSBI.multiply(JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimalOffset)), JSBI.BigInt(multiplier))
 }
 
 function isSend(transactionType?: TransactionType): boolean {

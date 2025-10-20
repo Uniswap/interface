@@ -57,6 +57,7 @@ export function NavBar(): JSX.Element {
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to ignore isNarrow because of unknown reason
   useEffect(() => {
     if (isNarrow || !exploreButtonLayout?.width || !swapButtonLayout?.width) {
       return
@@ -65,7 +66,6 @@ export function NavBar(): JSX.Element {
     // When the 2 buttons overflow, we set `isNarrow` to true and adjust the design accordingly.
     // To test this, you can use an iPhone Mini set to Spanish.
     setIsNarrow(exploreButtonLayout.width + swapButtonLayout.width + NAV_BAR_GAP + NAV_BAR_MARGIN_SIDES > screenWidth)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exploreButtonLayout?.width, swapButtonLayout?.width, screenWidth])
 
   const onExploreLayout = useCallback((e: LayoutChangeEvent) => setExploreButtonLayout(e.nativeEvent.layout), [])

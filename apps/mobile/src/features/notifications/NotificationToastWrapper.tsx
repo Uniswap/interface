@@ -1,9 +1,9 @@
 import React from 'react'
 import { ScantasticCompleteNotification } from 'src/features/notifications/ScantasticCompleteNotification'
 import { WCNotification } from 'src/features/notifications/WCNotification'
-import { useSelectAddressNotifications } from 'uniswap/src/features/notifications/hooks'
-import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/types'
-import { SharedNotificationToastRouter } from 'wallet/src/features/notifications/components/SharedNotificationToastRouter'
+import { useSelectAddressNotifications } from 'uniswap/src/features/notifications/slice/hooks'
+import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { WalletNotificationToastRouter } from 'wallet/src/features/notifications/components/SharedNotificationToastRouter'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 export function NotificationToastWrapper(): JSX.Element | null {
@@ -28,5 +28,5 @@ function NotificationToastRouter({ notification }: { notification: AppNotificati
       return <ScantasticCompleteNotification notification={notification} />
   }
 
-  return <SharedNotificationToastRouter notification={notification} />
+  return <WalletNotificationToastRouter notification={notification} />
 }

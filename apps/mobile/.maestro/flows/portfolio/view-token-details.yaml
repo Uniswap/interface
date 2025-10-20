@@ -1,0 +1,154 @@
+appId: com.uniswap.mobile.dev
+jsEngine: graaljs
+env:
+  E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
+  DATADOG_API_KEY: ${DATADOG_API_KEY}
+---
+# Initialize Performance Tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/init-tracking.js
+
+# Start Flow Tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/start-flow.js
+    env:
+      FLOW_NAME: 'portfolio-view-token-details'
+
+# Setup: Start app and recover wallet
+- runFlow: ../../shared-flows/start.yaml
+- runFlow: ../../shared-flows/recover-fast.yaml
+
+# Wait for home screen to be ready
+- extendedWaitUntil:
+    visible: 'noop'
+    timeout: 2000
+    optional: true
+
+# --- Test Case: Native Asset (ETH) Details ---
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'TokenBalanceItem_ETH'
+      PHASE: 'start'
+
+- tapOn:
+    id: 'TokenBalanceItem_ETH'
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'TokenBalanceItem_ETH'
+      PHASE: 'end'
+
+- waitForAnimationToEnd
+
+# Verify we're on the token details screen
+- assertVisible:
+    id: ${output.testIds.TokenDetailsHeaderText}
+
+# Assert expected action buttons are shown for a native token
+- assertVisible:
+    id: ${output.testIds.TokenDetailsSwapButton}
+
+# Note: Copy address button is present but disabled for native tokens
+
+# Chain pill checks removed - test wallet doesn't have balance on other chains
+# Could be re-enabled if test wallet has multi-chain balances
+
+- waitForAnimationToEnd
+
+# Go back to portfolio
+- tapOn:
+    id: ${output.testIds.Back}
+- waitForAnimationToEnd
+
+# Wait for portfolio to be ready
+- extendedWaitUntil:
+    visible:
+      id: 'TokenBalanceItem_cbBTC'
+    timeout: 3000
+
+# --- Test Case: Standard Token (cbBTC) Details ---
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'TokenBalanceItem_cbBTC'
+      PHASE: 'start'
+
+# Wait for cbBTC token to be visible (it might need to load)
+- extendedWaitUntil:
+    visible:
+      id: 'TokenBalanceItem_cbBTC'
+    timeout: 5000
+
+- tapOn:
+    id: 'TokenBalanceItem_cbBTC'
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'TokenBalanceItem_cbBTC'
+      PHASE: 'end'
+
+- waitForAnimationToEnd
+
+# Verify we're on the token details screen
+- assertVisible:
+    id: ${output.testIds.TokenDetailsHeaderText}
+
+# Assert expected action buttons are shown for a standard token
+- assertVisible:
+    id: ${output.testIds.TokenDetailsSwapButton}
+
+# Standard tokens have a contract address to copy
+- assertVisible:
+    id: ${output.testIds.TokenDetailsCopyAddressButton}
+
+# Verify copy address functionality
+- tapOn:
+    id: ${output.testIds.TokenDetailsCopyAddressButton}
+
+- waitForAnimationToEnd
+
+# Handle contract address warning modal (may appear on first copy attempt)
+# Modal shows: "Do not send crypto to this address"
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.ContractAddressExplainerModalWarning}
+    timeout: 2000
+    optional: true
+
+# If modal is present, click "I understand" to acknowledge and copy
+- tapOn:
+    id:  ${output.testIds.Confirm}
+    optional: true
+
+- waitForAnimationToEnd
+
+# Check for copy confirmation - may show after modal is dismissed
+# Toast notification might be too quick to catch reliably
+- extendedWaitUntil:
+    visible:
+      text: ".*[Cc]opied.*"
+    timeout: 2000
+    optional: true
+
+# Go back to portfolio
+- tapOn:
+    id: ${output.testIds.Back}
+- waitForAnimationToEnd
+
+# End Flow Tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/end-flow.js
+
+# Upload Metrics (for CI/Maestro Cloud)
+- runScript:
+    file: ../../scripts/performance/upload-metrics.js
+    env:
+      DATADOG_API_KEY: ${DATADOG_API_KEY}
+      ENVIRONMENT: 'maestro_cloud'

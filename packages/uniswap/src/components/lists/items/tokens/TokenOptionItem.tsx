@@ -17,7 +17,7 @@ import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { shortenAddress } from 'utilities/src/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
-import { isInterface, isWeb } from 'utilities/src/platform'
+import { isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export enum TokenContextMenuVariant {
@@ -28,7 +28,7 @@ export enum TokenContextMenuVariant {
 const CONTEXT_MENU_ACTIONS: Record<TokenContextMenuVariant, TokenContextMenuAction[]> = {
   [TokenContextMenuVariant.Search]: [
     TokenContextMenuAction.CopyAddress,
-    ...(isWeb ? [] : [TokenContextMenuAction.Favorite]),
+    ...(isWebPlatform ? [] : [TokenContextMenuAction.Favorite]),
     TokenContextMenuAction.Swap,
     TokenContextMenuAction.Send,
     TokenContextMenuAction.Receive,
@@ -36,7 +36,7 @@ const CONTEXT_MENU_ACTIONS: Record<TokenContextMenuVariant, TokenContextMenuActi
   ],
   [TokenContextMenuVariant.TokenSelector]: [
     TokenContextMenuAction.CopyAddress,
-    ...(isWeb ? [] : [TokenContextMenuAction.Favorite]),
+    ...(isWebPlatform ? [] : [TokenContextMenuAction.Favorite]),
     TokenContextMenuAction.ViewDetails,
   ],
 }
@@ -111,7 +111,7 @@ const LegacyBaseTokenOptionItem = memo(function LegacyBaseTokenOptionItem({
             {!currency.isNative && showTokenAddress && (
               <Flex shrink>
                 <Text color="$neutral3" numberOfLines={1} variant="body3">
-                  {shortenAddress(currency.address)}
+                  {shortenAddress({ address: currency.address })}
                 </Text>
               </Flex>
             )}
@@ -153,7 +153,7 @@ function _LegacyTokenOptionItem(props: LegacyTokenOptionItemProps): JSX.Element 
   const handleShowWarningModal = useCallback((): void => {
     dismissNativeKeyboard()
     setShowWarningModal(true)
-  }, [setShowWarningModal])
+  }, [])
 
   const { value: isContextMenuOpen, setFalse: closeContextMenu, setTrue: openContextMenu } = useBooleanState(false)
   const { hapticFeedback } = useHapticFeedback()
@@ -162,7 +162,7 @@ function _LegacyTokenOptionItem(props: LegacyTokenOptionItemProps): JSX.Element 
     if (showWarnings && shouldShowWarningModalOnPress) {
       // On mobile web we need to wait for the keyboard to hide
       // before showing the modal to avoid height issues
-      if (isKeyboardOpen && isInterface) {
+      if (isKeyboardOpen && isWebApp) {
         const activeElement = document.activeElement as HTMLElement | null
         activeElement?.blur()
         setTimeout(handleShowWarningModal, 700)
@@ -198,8 +198,8 @@ function _LegacyTokenOptionItem(props: LegacyTokenOptionItemProps): JSX.Element 
           openContextMenu()
         }}
       >
-        {isWeb ? (
-          // eslint-disable-next-line react/forbid-elements
+        {isWebPlatform ? (
+          // biome-ignore  lint/correctness/noRestrictedElements: needed here
           <div onContextMenu={openContextMenu}>
             <LegacyBaseTokenOptionItem {...props} />
           </div>
@@ -274,7 +274,7 @@ const BaseTokenOptionItem = memo(function _BaseTokenOptionItem(
           {!currency.isNative && showTokenAddress && (
             <Flex shrink>
               <Text color="$neutral3" numberOfLines={1} variant="body3">
-                {shortenAddress(currency.address)}
+                {shortenAddress({ address: currency.address })}
               </Text>
             </Flex>
           )}
@@ -312,8 +312,8 @@ export const TokenOptionItem = memo(function _TokenOptionItem(
         isOpen={isContextMenuOpen}
         closeMenu={closeContextMenu}
       >
-        {isWeb ? (
-          // eslint-disable-next-line react/forbid-elements
+        {isWebPlatform ? (
+          // biome-ignore  lint/correctness/noRestrictedElements: needed here
           <div onContextMenu={openContextMenu}>
             <BaseTokenOptionItem {...props} />
           </div>

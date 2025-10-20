@@ -43,7 +43,7 @@ test.describe('AuthenticatedHeader unitag and ENS display', () => {
     }
 
     if (walletAddress) {
-      const shortenedAddress = shortenAddress(walletAddress)
+      const shortenedAddress = shortenAddress({ address: walletAddress })
       if (expectedPrimaryText) {
         await expect(page.getByTestId(TestID.AddressDisplayCopyHelper)).toContainText(shortenedAddress)
       } else {

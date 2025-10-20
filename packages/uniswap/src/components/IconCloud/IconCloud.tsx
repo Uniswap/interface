@@ -57,7 +57,7 @@ export function IconCloud<T extends ItemData>({
       // Order by distance from center, ie idx = 0 is closest to center
       .sort((a, b) => Math.abs(a[0] ?? 0 - w / 2) - Math.abs(b[0] ?? 0 - w / 2))
       .map(([x = 0, y = 0], idx: number) => {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // biome-ignore lint/style/noNonNullAssertion: array access is safe here
         const item = data[idx % data.length]!
         const size = randomInt(minItemSize, maxItemSize)
 

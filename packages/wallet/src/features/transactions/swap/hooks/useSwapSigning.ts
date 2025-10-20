@@ -154,7 +154,7 @@ export function useSwapSigning(): UseSwapSigningResult {
         try {
           // Wait for the currently signing transaction to complete
           return await currentlySigning.promise
-        } catch (error) {
+        } catch (_error) {
           // Signing failed or was cancelled
           return undefined
         }

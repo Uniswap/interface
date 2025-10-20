@@ -1,0 +1,65 @@
+{
+  "__comment": "The base tsconfig for all packages. Must be here for NX to keep in sync as packages change",
+  "compilerOptions": {
+    "composite": true,
+    "incremental": true,
+    "noEmit": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
+    "downlevelIteration": true,
+    "inlineSources": false,
+    "strict": true,
+    "preserveSymlinks": false,
+    "preserveConstEnums": true,
+    "removeComments": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "noUncheckedIndexedAccess": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": [
+      "es2022",
+      "dom"
+    ],
+    "baseUrl": ".",
+    "rootDir": ".",
+    "outDir": "./dist/out-tsc",
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "ui/*": [
+        "packages/ui/*"
+      ],
+      "uniswap/*": [
+        "packages/uniswap/*"
+      ],
+      "@universe/api/*": [
+        "packages/api/*"
+      ],
+      "@universe/sessions/*": [
+        "packages/sessions/*"
+      ],
+      "@universe/config/*": [
+        "packages/config/*"
+      ],
+      "utilities/*": [
+        "packages/utilities/*"
+      ],
+      "wallet/*": [
+        "packages/wallet/*"
+      ]
+    }
+  }
+}

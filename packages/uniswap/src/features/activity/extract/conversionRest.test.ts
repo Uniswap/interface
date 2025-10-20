@@ -8,9 +8,10 @@ import {
   SpamCode as RestSpamCode,
   TokenType,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { TradingApi } from '@universe/api'
 import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+
 import extractRestOnChainTransactionDetails from 'uniswap/src/features/activity/extract/extractOnChainTransactionDetails'
 import { parseRestApproveTransaction } from 'uniswap/src/features/activity/parse/parseApproveTransaction'
 import { parseRestLiquidityTransaction } from 'uniswap/src/features/activity/parse/parseLiquidityTransaction'
@@ -956,63 +957,77 @@ describe(parseRestLiquidityTransaction, () => {
 describe(extractRestOnChainTransactionDetails, () => {
   it('Empty transaction', () => {
     const result = extractRestOnChainTransactionDetails(TRANSACTION_BASE)
-    expect(result?.typeInfo.type).toEqual(TransactionType.Unknown)
+    expect(result).toHaveLength(1)
+    expect(result[0]?.typeInfo.type).toEqual(TransactionType.Unknown)
   })
   it('Approve', () => {
-    const txn = extractRestOnChainTransactionDetails(MOCK_ERC20_APPROVE)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.Approve)
+    const txns = extractRestOnChainTransactionDetails(MOCK_ERC20_APPROVE)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Approve)
   })
   it('Send', () => {
-    const txn = extractRestOnChainTransactionDetails(MOCK_ERC20_SEND)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.Send)
+    const txns = extractRestOnChainTransactionDetails(MOCK_ERC20_SEND)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Send)
   })
   it('Receive', () => {
-    const txn = extractRestOnChainTransactionDetails(MOCK_ERC20_RECEIVE)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.Receive)
+    const txns = extractRestOnChainTransactionDetails(MOCK_ERC20_RECEIVE)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Receive)
   })
   it('Swap token', () => {
-    const txn = extractRestOnChainTransactionDetails(MOCK_ERC20_SWAP)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.Swap)
-    expect(txn?.routing).toEqual(Routing.CLASSIC)
+    const txns = extractRestOnChainTransactionDetails(MOCK_ERC20_SWAP)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Swap)
+    expect(txns[0]?.routing).toEqual(TradingApi.Routing.CLASSIC)
   })
   it('UniswapX swap', () => {
-    const txn = extractRestOnChainTransactionDetails(MOCK_UNISWAP_X_SWAP)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.Swap)
-    expect(txn?.routing).toEqual(Routing.DUTCH_V2)
+    const txns = extractRestOnChainTransactionDetails(MOCK_UNISWAP_X_SWAP)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Swap)
+    expect(txns[0]?.routing).toEqual(TradingApi.Routing.DUTCH_V2)
   })
   it('Wrap', () => {
-    const txn = extractRestOnChainTransactionDetails(MOCK_NATIVE_WRAP)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.Wrap)
+    const txns = extractRestOnChainTransactionDetails(MOCK_NATIVE_WRAP)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Wrap)
   })
   it('Mint', () => {
-    const txn = extractRestOnChainTransactionDetails(MOCK_721_MINT)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.NFTMint)
+    const txns = extractRestOnChainTransactionDetails(MOCK_721_MINT)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.NFTMint)
   })
   it('Liquidity Increase', () => {
-    const txn = extractRestOnChainTransactionDetails(MOCK_LIQUIDITY_INCREASE)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.LiquidityIncrease)
+    const txns = extractRestOnChainTransactionDetails(MOCK_LIQUIDITY_INCREASE)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.LiquidityIncrease)
   })
   it('Liquidity Decrease', () => {
-    const txn = extractRestOnChainTransactionDetails(MOCK_LIQUIDITY_DECREASE)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.LiquidityDecrease)
+    const txns = extractRestOnChainTransactionDetails(MOCK_LIQUIDITY_DECREASE)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.LiquidityDecrease)
   })
   it('Create Pool', () => {
-    const txn = extractRestOnChainTransactionDetails(MOCK_CREATE_POOL)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.CreatePool)
+    const txns = extractRestOnChainTransactionDetails(MOCK_CREATE_POOL)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.CreatePool)
   })
   it('Claim', () => {
-    const txn = extractRestOnChainTransactionDetails(MOCK_COLLECT_FEES)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.CollectFees)
+    const txns = extractRestOnChainTransactionDetails(MOCK_COLLECT_FEES)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.CollectFees)
   })
   it('Bridge', () => {
-    const txn = extractRestOnChainTransactionDetails(MOCK_BRIDGE)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.Bridge)
+    const txns = extractRestOnChainTransactionDetails(MOCK_BRIDGE)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Bridge)
   })
   it('Unknown', () => {
-    const txn = extractRestOnChainTransactionDetails({
+    const txns = extractRestOnChainTransactionDetails({
       ...TRANSACTION_BASE,
       label: OnChainTransactionLabel.UNKNOWN,
     } as unknown as OnChainTransaction)
-    expect(txn?.typeInfo.type).toEqual(TransactionType.Unknown)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Unknown)
   })
 })

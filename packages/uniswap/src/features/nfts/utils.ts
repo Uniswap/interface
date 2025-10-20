@@ -1,8 +1,9 @@
-import { NftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { NFTKeyToVisibility } from 'uniswap/src/features/visibility/slice'
 
-export function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] | undefined {
+export function formatNftItems(data: GraphQLApi.NftsTabQuery | undefined): NFTItem[] | undefined {
   const items = data?.nftBalances?.edges.flatMap((item) => item.node)
   if (!items) {
     return undefined
@@ -37,8 +38,8 @@ export function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] | unde
 
 export const getNFTAssetKey = (address: Address, token_id: string): string => {
   // Backend returns both checksummed and non-checksummed addresses
-  // so we need to lowercase it to be able to compare them
-  return `nftItem.${address.toLowerCase()}.${token_id}`
+  // so we need to normalize it to be able to compare them
+  return `nftItem.${normalizeTokenAddressForCache(address)}.${token_id}`
 }
 
 export const getIsNftHidden = ({

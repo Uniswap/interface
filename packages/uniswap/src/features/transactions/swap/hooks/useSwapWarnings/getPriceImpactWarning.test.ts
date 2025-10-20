@@ -4,11 +4,12 @@ import { WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/compon
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { getPriceImpactWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getPriceImpactWarning'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { PercentNumberDecimals } from 'utilities/src/format/types'
 
 describe('getPriceImpactWarning', () => {
   const mockTFunction = i18next.t.bind(i18next)
 
-  const mockFormatPercent = (value: Maybe<string | number>, _maxDecimals?: 2 | 3 | 4): string => {
+  const mockFormatPercent = (value: Maybe<string | number>, _maxDecimals?: PercentNumberDecimals): string => {
     if (value === undefined || value === null) {
       return '-mocked%'
     }

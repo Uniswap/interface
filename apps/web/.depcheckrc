@@ -7,6 +7,10 @@ ignores: [
     '@swc/plugin-styled-components',
     '@typechain/ethers-v5',
     'buffer',
+    'concurrently',
+    'depcheck',
+    'http-server',
+    'source-map-explorer',
     'swc-loader',
     'postinstall-postinstall',
     'process',
@@ -45,6 +49,7 @@ ignores: [
     '@storybook/addon-onboarding',
     '@storybook/blocks',
     '@storybook/preset-create-react-app',
+    '@storybook/test-runner',
     'storybook-addon-pseudo-states',
     'wait-on',
     'detect-package-manager',
@@ -62,6 +67,7 @@ ignores: [
     ## Internal packages / workspaces
     'utilities',
     'ui',
+    '@uniswap/biome-config',
     ## Top level local file paths
     'abis',
     'analytics',

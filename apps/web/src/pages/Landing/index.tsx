@@ -47,6 +47,7 @@ export default function Landing() {
   }, [initConversionTracking, privacySharingOptOut])
 
   // Smoothly redirect to swap page if user connects while on landing page
+  // biome-ignore lint/correctness/useExhaustiveDependencies: account dependency is sufficient for this effect
   useEffect(() => {
     // Skip logic on the first render because prevAccount will always be undefined on the first render
     // and we don't want to redirect on the first render because that mean's we're possibly coming from

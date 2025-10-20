@@ -59,6 +59,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
   const [settingsView, setSettingsView] = useState<PreferencesView>(PreferencesView.SETTINGS)
   const isConversionTrackingEnabled = useFeatureFlag(FeatureFlags.ConversionTracking)
   const dropdownRef = useRef<HTMLDivElement>(null)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +setSettingsView, +dropdownRef
   const changeView = useCallback(
     (view: PreferencesView) => {
       setSettingsView(view)

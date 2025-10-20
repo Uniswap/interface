@@ -1,4 +1,4 @@
-import { meldSupportedCurrencyToCurrencyInfo } from 'appGraphql/data/types'
+import { useMeldSupportedCurrencyToCurrencyInfo } from 'appGraphql/data/types'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
@@ -17,7 +17,9 @@ import {
   FORCountry,
   OffRampTransferDetailsRequest,
 } from 'uniswap/src/features/fiatOnRamp/types'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+// biome-ignore lint/style/noRestrictedImports: Buy hooks need direct SDK imports
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 
 type FiatOnRampCurrencyInfo = {
@@ -72,20 +74,23 @@ export function useFiatOnRampSupportedTokens(
   fiatCurrency: FiatCurrencyInfo,
   countryCode?: string,
 ): FiatOnRampCurrency[] {
+  const isSolanaEnabled = useFeatureFlag(FeatureFlags.Solana)
   const { data: quoteCurrencyOptions } = useFiatOnRampAggregatorSupportedTokensQuery({
     fiatCurrency: fiatCurrency.code,
     countryCode: countryCode ?? 'US',
+    isSolanaEnabled,
   })
+  const { meldSupportedCurrencyToCurrencyInfo } = useMeldSupportedCurrencyToCurrencyInfo()
 
   return useMemo(() => {
     return (
       quoteCurrencyOptions?.supportedTokens.map((currency) => {
         const meldCurrencyCode = currency.cryptoCurrencyCode
-        const currencyInfo = meldSupportedCurrencyToCurrencyInfo(currency)
+        const currencyInfo = meldSupportedCurrencyToCurrencyInfo?.(currency)
         return { currencyInfo, meldCurrencyCode }
       }) ?? []
     )
-  }, [quoteCurrencyOptions?.supportedTokens])
+  }, [quoteCurrencyOptions?.supportedTokens, meldSupportedCurrencyToCurrencyInfo])
 }
 
 export function useOffRampTransferDetailsRequest(): Maybe<OffRampTransferDetailsRequest> {

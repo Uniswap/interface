@@ -1,6 +1,5 @@
 import Column, { AutoColumn } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import Identicon from 'components/Identicon'
 import { useAccount } from 'hooks/useAccount'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -18,6 +17,7 @@ import { capitalize } from 'tsafe'
 import { Flex, Popover, Text, Tooltip, styled as UIStyled } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { shortenAddress } from 'utilities/src/addresses'
 
@@ -138,7 +138,7 @@ const AutocompleteRow = ({
   })
   const { data: ENSName } = useENSName(address)
   const cachedEnsName = ENSName || validatedEnsName
-  const formattedAddress = shortenAddress(address, 8)
+  const formattedAddress = shortenAddress({ address, chars: 8 })
   const shouldShowAddress = !unitag?.username && !cachedEnsName
 
   const boundSelectRecipient = useCallback(
@@ -154,7 +154,7 @@ const AutocompleteRow = ({
   return (
     <StyledAutocompleteRow justify="space-between" padding="8px 0px" onClick={boundSelectRecipient}>
       <Row gap="sm">
-        <Identicon account={address} size={36} />
+        <AccountIcon address={address} size={36} />
         <Column>
           <Row gap="xs">
             {shouldShowAddress ? (
@@ -358,17 +358,19 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
           ) : (
             <StyledConfirmedRecipientRow>
               <StyledConfirmedRecipientDisplayRow gap="md" onClick={editValidatedRecipient}>
-                <Identicon account={recipientData.address} size={36} />
+                <AccountIcon address={recipientData.address} size={36} />
                 <Column>
                   <Row gap="xs">
                     <ThemedText.BodyPrimary lineHeight="24px">
-                      {recipientData.unitag ?? recipientData.ensName ?? shortenAddress(recipientData.address)}
+                      {recipientData.unitag ??
+                        recipientData.ensName ??
+                        shortenAddress({ address: recipientData.address })}
                     </ThemedText.BodyPrimary>
                     {recipientData.unitag && <Unitag size={18} />}
                   </Row>
                   {Boolean(recipientData.ensName) && (
                     <ThemedText.LabelMicro lineHeight="16px">
-                      {shortenAddress(recipientData.address)}
+                      {shortenAddress({ address: recipientData.address })}
                     </ThemedText.LabelMicro>
                   )}
                 </Column>

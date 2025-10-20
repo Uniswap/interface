@@ -1,6 +1,6 @@
-import { ApprovedCheckmarkIcon } from 'nft/components/iconExports'
 import { CSSProperties } from 'react'
 import { Avatar, Flex, styled } from 'ui/src'
+import { Check } from 'ui/src/components/icons/Check'
 import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
@@ -39,7 +39,7 @@ export function CountryListRow({ style, country, selectedCountry, onClick }: Cou
         </Avatar>
         <Text variant="body2">{country.displayName}</Text>
       </Flex>
-      {selectedCountry?.countryCode === country.countryCode && <ApprovedCheckmarkIcon height={24} width={24} />}
+      {selectedCountry?.countryCode === country.countryCode && <Check color="$neutral1" size="$icon.24" />}
     </RowWrapper>
   )
 }

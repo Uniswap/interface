@@ -1,4 +1,5 @@
 import { getProtocolColor } from 'appGraphql/data/util'
+import { GraphQLApi } from '@universe/api'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { StackedAreaSeriesOptions } from 'components/Charts/StackedLineChart/stacked-area-series/options'
@@ -14,7 +15,6 @@ import {
 } from 'lightweight-charts'
 import { useMemo } from 'react'
 import { ColorTokens, useSporeColors } from 'ui/src'
-import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export interface StackedLineData extends WhitespaceData<UTCTimestamp> {
   values: number[]
@@ -99,7 +99,7 @@ class TVLChartModel extends ChartModel<StackedLineData> {
 
 interface LineChartProps {
   height: number
-  sources?: PriceSource[]
+  sources?: GraphQLApi.PriceSource[]
   data: StackedLineData[]
   stale: boolean
 }

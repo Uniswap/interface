@@ -9,7 +9,7 @@ import { Anchor, Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedCopySheets, ExternalLink } from 'ui/src/components/icons'
 import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
 import { useCopyToClipboard } from 'wallet/src/components/copy/useCopyToClipboard'
@@ -93,7 +93,7 @@ export function FallbackEthSendRequestContent({
             <Anchor href={recipientLink} rel="noopener noreferrer" target="_blank" textDecorationLine="none">
               <Flex row alignItems="center" gap="$spacing8">
                 <Text color="$neutral1" variant="body4">
-                  {shortenAddress(toAddress)}
+                  {shortenAddress({ address: toAddress })}
                 </Text>
                 <ExternalLink color="$neutral3" size="$icon.16" />
               </Flex>

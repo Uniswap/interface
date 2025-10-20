@@ -38,6 +38,10 @@ module.exports = {
   ],
   resolver: "<rootDir>/src/test/jest-resolver.js",
   displayName: 'Extension Wallet',
+  testPathIgnorePatterns: [
+    ...preset.testPathIgnorePatterns,
+    '<rootDir>/e2e/',
+  ],
   collectCoverageFrom: [
     'src/app/**/*.{js,ts,tsx}',
     'src/background/**/*.{js,ts,tsx}',

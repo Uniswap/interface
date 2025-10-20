@@ -1,14 +1,17 @@
 import { CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import {
   OffchainOrderLineItem,
   OffchainOrderLineItemType,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainOrderLineItem'
-import { SignatureType } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
-import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 describe('OffchainOrderLineItem', () => {
@@ -31,14 +34,14 @@ describe('OffchainOrderLineItem', () => {
       <OffchainOrderLineItem
         type={OffchainOrderLineItemType.EXPIRY}
         order={{
-          txHash: '0x123',
+          hash: '0x123',
           orderHash: '0x123',
-          offerer: '0xSenderAddress',
+          from: '0xSenderAddress',
           id: 'tx123',
           chainId: 1,
-          type: SignatureType.SIGN_UNISWAPX_ORDER,
-          status: UniswapXOrderStatus.FILLED,
-          swapInfo: {
+          routing: TradingApi.Routing.DUTCH_V2,
+          status: TransactionStatus.Success,
+          typeInfo: {
             isUniswapXOrder: true,
             type: TransactionType.Swap,
             tradeType: 0,
@@ -50,7 +53,8 @@ describe('OffchainOrderLineItem', () => {
             settledOutputCurrencyAmountRaw: '106841079134757921',
           },
           addedTime: 1,
-          expiry: 2,
+          expiry: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
+          transactionOriginType: TransactionOriginType.Internal,
         }}
       />,
     )
@@ -69,14 +73,14 @@ describe('OffchainOrderLineItem', () => {
         type={OffchainOrderLineItemType.TRANSACTION_ID}
         explorerLink="https://etherscan.io/tx/0x123"
         order={{
-          txHash: '0x123',
+          hash: '0x123',
           orderHash: '0x123',
-          offerer: '0xSenderAddress',
+          from: '0xSenderAddress',
           id: 'tx123',
           chainId: 1,
-          type: SignatureType.SIGN_UNISWAPX_ORDER,
-          status: UniswapXOrderStatus.FILLED,
-          swapInfo: {
+          routing: TradingApi.Routing.DUTCH_V2,
+          status: TransactionStatus.Success,
+          typeInfo: {
             isUniswapXOrder: true,
             type: TransactionType.Swap,
             tradeType: 0,
@@ -88,7 +92,7 @@ describe('OffchainOrderLineItem', () => {
             settledOutputCurrencyAmountRaw: '106841079134757921',
           },
           addedTime: 1,
-          expiry: 2,
+          transactionOriginType: TransactionOriginType.Internal,
         }}
       />,
     )

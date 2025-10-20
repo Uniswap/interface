@@ -7,14 +7,17 @@ import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningI
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 export function V4HooksInfo(): JSX.Element {
   const { t } = useTranslation()
   return (
     <WarningInfo
       infoButton={
-        <LearnMoreLink textVariant={isWeb ? 'body4' : undefined} url={uniswapUrls.helpArticleUrls.v4HooksInfo} />
+        <LearnMoreLink
+          textVariant={isWebPlatform ? 'body4' : undefined}
+          url={uniswapUrls.helpArticleUrls.v4HooksInfo}
+        />
       }
       modalProps={{
         caption: t('swap.settings.routingPreference.option.v4.hooks.tooltip'),

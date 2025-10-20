@@ -7,7 +7,7 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { setHideSmallBalances, setHideSpamTokens } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 
 // avoids rendering during animation which makes it laggy
 // set to a bit above the Switch animation "simple" which is 80ms
@@ -45,8 +45,8 @@ export function PortfolioBalanceModal({ isOpen, onClose }: PortfolioBalanceModal
       <Flex
         animation="fast"
         gap="$spacing16"
-        pb={isExtension ? undefined : '$spacing24'}
-        py={isExtension ? '$spacing16' : undefined}
+        pb={isExtensionApp ? undefined : '$spacing24'}
+        py={isExtensionApp ? '$spacing16' : undefined}
         px="$spacing12"
         width="100%"
       >

@@ -9,7 +9,8 @@ import { Lightning } from 'ui/src/components/icons/Lightning'
 import { Wallet } from 'ui/src/components/icons/Wallet'
 import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
 
 const GradientContainer = styled(Flex, {
@@ -53,7 +54,7 @@ const FeatureIcon = styled(Flex, {
   justifyContent: 'center',
 })
 
-export function SolanaPromoModal(): JSX.Element {
+export default function SolanaPromoModal(): JSX.Element {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const isOpen = useAppSelector((state) => state.application.openModal?.name === ModalName.SolanaPromo)
@@ -72,20 +73,6 @@ export function SolanaPromoModal(): JSX.Element {
     <Modal isModalOpen={isOpen} name={ModalName.SolanaPromo} onClose={handleClose} maxWidth={440} padding="$none">
       <Flex p="$spacing24" gap="$spacing24">
         <GradientContainer backgroundImage={`url(${SOLANA_BANNER_LIGHT})`} />
-        <IconButton
-          position="absolute"
-          right="$spacing16"
-          top="$spacing16"
-          size="small"
-          emphasis="secondary"
-          onPress={(e) => {
-            e.stopPropagation()
-            handleClose()
-          }}
-          icon={<X />}
-          p={8}
-          scale={0.8}
-        />
 
         {/* Header */}
         <Flex alignItems="flex-start" gap="$spacing16" pt="$spacing16">
@@ -131,9 +118,27 @@ export function SolanaPromoModal(): JSX.Element {
         </Flex>
 
         {/* Button */}
-        <Button size="large" emphasis="primary" onPress={handleStartSwapping} width="100%" minHeight="$spacing48">
-          {t('solanaPromo.modal.startSwapping.button')}
-        </Button>
+        <Trace logPress element={ElementName.SolanaPromoStartSwappingButton}>
+          <Button size="large" emphasis="primary" onPress={handleStartSwapping} width="100%" minHeight="$spacing48">
+            {t('solanaPromo.modal.startSwapping.button')}
+          </Button>
+        </Trace>
+
+        {/* Close button */}
+        <IconButton
+          position="absolute"
+          right="$spacing16"
+          top="$spacing16"
+          size="small"
+          emphasis="secondary"
+          onPress={(e) => {
+            e.stopPropagation()
+            handleClose()
+          }}
+          icon={<X />}
+          p={8}
+          scale={0.8}
+        />
       </Flex>
     </Modal>
   )

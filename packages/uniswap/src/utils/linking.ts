@@ -1,8 +1,8 @@
+import { GraphQLApi } from '@universe/api'
 import * as WebBrowser from 'expo-web-browser'
 import { colorsLight } from 'ui/src/theme'
 import { NATIVE_TOKEN_PLACEHOLDER } from 'uniswap/src/constants/addresses'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain, toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
@@ -220,9 +220,10 @@ export function getTokenDetailsURL({
   const chainInfo = toGraphQLChain(chain)
 
   const adjustedAddress = isNativeCurrencyAddress(chain, address) ? NATIVE_TOKEN_PLACEHOLDER : address
+  const adjustedInputAddress = isNativeCurrencyAddress(chain, inputAddress) ? NATIVE_TOKEN_PLACEHOLDER : inputAddress
 
-  const chainName = chainUrlParam || String(chainInfo).toLowerCase() || Chain.Ethereum.toLowerCase()
-  const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
+  const chainName = chainUrlParam || String(chainInfo).toLowerCase() || GraphQLApi.Chain.Ethereum.toLowerCase()
+  const inputAddressSuffix = adjustedInputAddress ? `?inputCurrency=${adjustedInputAddress}` : ''
   return `/explore/tokens/${chainName}/${adjustedAddress}${inputAddressSuffix}`
 }
 

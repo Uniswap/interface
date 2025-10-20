@@ -5,14 +5,13 @@ import { ColorTokens, SpecificTokens, Stack, styled, ThemeKeys, usePropsAndStyle
 import { withAnimated } from 'ui/src/components/factories/animated'
 import { DynamicColor } from 'ui/src/hooks/useSporeColors'
 import { IconSizeTokens } from 'ui/src/theme'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 type SvgPropsWithRef = SvgProps & { ref: React.ForwardedRef<Svg>; style?: { color?: string } }
 
 export type IconProps = Omit<Omit<TamaguiIconProps, 'size' | 'width' | 'height'>, 'color'> & {
   size?: IconSizeTokens | number | { width: number; height: number }
   // we need the string & {} to allow strings but not lose the intellisense autocomplete
-  // eslint-disable-next-line @typescript-eslint/ban-types
   color?: (ColorTokens | ThemeKeys | (string & {})) | DynamicColor | null
   Component?: React.FunctionComponent<SvgPropsWithRef>
 }
@@ -47,7 +46,7 @@ export function createIcon({
 }): readonly [GeneratedIcon, GeneratedIcon] {
   const Icon = forwardRef<Svg, GeneratedIconProps>(({ color, hoverColor: hoverColorProp, ...propsIn }, ref) => {
     const [hover, setHover] = useState(false)
-    const renderColor = color ?? defaultFill ?? (isWeb ? 'currentColor' : undefined)
+    const renderColor = color ?? defaultFill ?? (isWebPlatform ? 'currentColor' : undefined)
     const hoverColor = hoverColorProp ?? renderColor
 
     const [props, style] = usePropsAndStyle(
@@ -74,7 +73,7 @@ export function createIcon({
 
     // Only enabled on web because mobile doesn't support hover events
     // It is also optional because it breaks some layouts
-    if (isWeb && hoverColorProp) {
+    if (isWebPlatform && hoverColorProp) {
       return (
         <View onHoverIn={() => setHover(true)} onHoverOut={() => setHover(false)}>
           {comp}
@@ -89,7 +88,7 @@ export function createIcon({
 
   const IconPlain = forwardRef<Svg, IconProps>((props, ref) => {
     return getIcon({
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: Type casting needed for complex SVG prop types
       ...(props as any as SvgPropsWithRef),
       ref,
     })
@@ -100,7 +99,7 @@ export function createIcon({
   const AnimatedIconPlain = withAnimated(IconPlain)
 
   const AnimatedIcon = forwardRef<Svg, IconProps>((props: IconProps, ref) => (
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // biome-ignore lint/suspicious/noExplicitAny: AnimatedIconPlain requires any cast for compatibility
     <Icon ref={ref} {...props} Component={AnimatedIconPlain as any} />
   ))
 

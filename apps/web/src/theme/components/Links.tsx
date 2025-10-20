@@ -60,7 +60,7 @@ export function ExternalLink({
         rest.onClick(event)
       }
     },
-    [rest],
+    [rest.onClick],
   )
   return <StyledLink target={target} rel={rel} href={href} onClick={handleClick} {...rest} />
 }

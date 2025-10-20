@@ -1,6 +1,6 @@
 import { ApolloLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { GQLQueries } from '@universe/api'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { logger } from 'utilities/src/logger/logger'
 import { createOnRampTransactionsAuth, ON_RAMP_AUTH_MAX_LIMIT } from 'wallet/src/data/utils'

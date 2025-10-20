@@ -1,11 +1,11 @@
 import { PublicKey } from '@solana/web3.js'
 import { skipToken, useQuery } from '@tanstack/react-query'
 import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from '@uniswap/sdk-core'
+import { SharedQueryClient } from '@universe/api'
 import { Contract } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { getSolanaParsedTokenAccountsByOwnerQueryOptions } from 'uniswap/src/data/solanaConnection/getSolanaParsedTokenAccountsByOwnerQueryOptions'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -147,11 +147,11 @@ async function getOnChainBalancesFetchSVM(params: BalanceLookupParams): Promise<
     }
 
     // SPL token lookup with caching
-    const tokenAccountsMap = await SharedQueryClient.ensureQueryData(
+    const tokenAccountsMap = await SharedQueryClient.fetchQuery(
       getSolanaParsedTokenAccountsByOwnerQueryOptions({ params: { accountAddress } }),
     )
 
-    return { balance: tokenAccountsMap[currencyAddress]?.tokenAmount }
+    return { balance: tokenAccountsMap[currencyAddress]?.tokenAmount ?? '0' }
   } catch (error) {
     logger.error(error, {
       tags: { file: 'api.ts', function: 'getOnChainBalancesFetchSVM' },
@@ -160,6 +160,10 @@ async function getOnChainBalancesFetchSVM(params: BalanceLookupParams): Promise<
     return { balance: undefined }
   }
 }
+
+// We want this to return fresh data.
+// We only return cached data if it's called multiple times almost at the exact same time.
+const ONCHAIN_BALANCE_CACHE_TIME_MS = 100
 
 /**
  * Equivalent to `useOnChainCurrencyBalance`, to be used when hooks aren't an option.
@@ -187,6 +191,8 @@ export async function fetchOnChainCurrencyBalance({
         currencyIsNative,
         accountAddress,
       }),
+    staleTime: ONCHAIN_BALANCE_CACHE_TIME_MS,
+    gcTime: getPollingIntervalByBlocktime(chainId),
   })
 }
 
@@ -210,7 +216,7 @@ export function useOnChainCurrencyBalance(
     [shouldSkip, accountAddress, currency],
   )
 
-  const { data, error } = useQuery<OnchainBalanceReactQueryResponse>({
+  const { data, error, isLoading } = useQuery<OnchainBalanceReactQueryResponse>({
     queryKey,
     queryFn: shouldSkip
       ? skipToken
@@ -231,10 +237,10 @@ export function useOnChainCurrencyBalance(
   return useMemo(
     () => ({
       balance: getCurrencyAmount({ value: data?.balance, valueType: ValueType.Raw, currency }) ?? undefined,
-      isLoading: !data?.balance,
+      isLoading,
       error,
     }),
-    [data?.balance, currency, error],
+    [data?.balance, currency, isLoading, error],
   )
 }
 

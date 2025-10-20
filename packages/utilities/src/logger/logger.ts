@@ -3,7 +3,7 @@ import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/envir
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { LoggerErrorContext, LogLevel } from 'utilities/src/logger/types'
-import { isInterface, isMobileApp, isWeb } from 'utilities/src/platform'
+import { isMobileApp, isWebApp, isWebPlatform } from 'utilities/src/platform'
 
 // weird temp fix: the web app is complaining about __DEV__ being global
 // i tried declaring it in a variety of places:
@@ -78,16 +78,16 @@ function logMessage(
   ...args: unknown[] // arbitrary extra data - ideally formatted as key value pairs
 ): void {
   // Log to console directly for dev builds or interface for debugging
-  if (__DEV__ || isInterface) {
+  if (__DEV__ || isWebApp) {
     if (isMobileApp && ['log', 'debug', 'warn'].includes(level)) {
       // `log`, `debug`, and `warn` are all logged with `console.log` on mobile
       // because `console.debug` and `console.warn` only support one single argument in Reactotron.
       // Alternatively, we could improve this in the future by removing the Reactotron log plugin and instead
       // manually call `Reactotron.display(...)` here with some custom formatting.
-      // eslint-disable-next-line no-console
+      // biome-ignore lint/suspicious/noConsole: Console logging needed for debugging
       console.log(...formatMessage({ level, fileName, functionName, message }), ...args)
     } else {
-      // eslint-disable-next-line no-console
+      // biome-ignore lint/suspicious/noConsole: Console logging needed for debugging
       console[level](...formatMessage({ level, fileName, functionName, message }), ...args)
     }
   }
@@ -118,8 +118,8 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
   const updatedContext = addErrorExtras(error, captureContext)
 
   // Log to console directly for dev builds or interface for debugging
-  if (__DEV__ || isInterface) {
-    // eslint-disable-next-line no-console
+  if (__DEV__ || isWebApp) {
+    // biome-ignore lint/suspicious/noConsole: Console logging needed for debugging
     console.error(error, captureContext)
   }
 
@@ -185,7 +185,7 @@ function formatMessage({
 }): (string | Record<string, unknown>)[] {
   const t = new Date()
   const timeString = `${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}.${pad(t.getMilliseconds(), 3)}`
-  if (isWeb) {
+  if (isWebPlatform) {
     // Simpler printing for web logging
     return [
       level.toUpperCase(),

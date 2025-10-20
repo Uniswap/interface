@@ -5,7 +5,8 @@ import { UniconProps } from 'ui/src/components/Unicon/types'
 import { IconPaths, Icons } from 'ui/src/components/Unicon/UniconSVGs'
 import { getUniconColors, getUniconsDeterministicHash } from 'ui/src/components/Unicon/utils'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
+import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
 
 // Notes:
 // Add 1 to effectively increase margin between svg and surrounding box, otherwise get a cropping issue
@@ -16,7 +17,7 @@ export const Unicon = memo(_Unicon)
 export function _Unicon({ address, size = 32 }: UniconProps): JSX.Element | null {
   const isDarkMode = useIsDarkMode()
 
-  if (!address || !isAddress(address)) {
+  if (!address || (!isEVMAddressWithChecksum(address) && !isSVMAddress(address))) {
     return null
   }
 

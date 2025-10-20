@@ -2,13 +2,5 @@
 {
   "extends": "./tsconfig.json",
   "references": [],
-  "include": [
-    "src/**/*",
-    ".maestro/scripts/**/*.ts",
-    "__mocks__/**/*",
-    "scripts/**/*",
-    "*.ts",
-    "*.js",
-    "*.d.ts"
-  ]
+  "include": ["src/**/*", ".maestro/scripts/**/*.ts", "__mocks__/**/*", "scripts/**/*", "*.ts", "*.js", "*.d.ts"]
 }

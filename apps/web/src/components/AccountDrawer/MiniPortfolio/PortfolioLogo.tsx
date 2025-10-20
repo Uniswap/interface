@@ -1,6 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
 import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
-import Identicon from 'components/Identicon'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import React, { memo } from 'react'
@@ -8,6 +7,7 @@ import { Flex, useSporeColors } from 'ui/src'
 import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
+import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
 
@@ -42,7 +42,7 @@ function getLogo(
   colors: UseSporeColorsReturn,
 ) {
   if (accountAddress) {
-    return <Identicon account={accountAddress} size={size} />
+    return <AccountIcon address={accountAddress} size={size} />
   }
   if (currencies && currencies.length) {
     return <DoubleCurrencyLogo currencies={currencies} size={size} customIcon={customIcon} />

@@ -13,14 +13,13 @@ import * as fiatCurrencyHooks from 'uniswap/src/features/fiatCurrency/hooks'
 import * as languageHooks from 'uniswap/src/features/language/hooks'
 import * as userSettingsHooks from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName } from 'uniswap/src/features/telemetry/user'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import * as walletHooks from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
 // `any` is the actual type used by `jest.spyOn`
-// eslint-disable-next-line @typescript-eslint/no-explicit-any, max-params
+// eslint-disable-next-line max-params
 function mockFn(module: any, func: string, returnValue: any): jest.SpyInstance<any, unknown[]> {
   return jest.spyOn(module, func).mockImplementation(() => returnValue)
 }

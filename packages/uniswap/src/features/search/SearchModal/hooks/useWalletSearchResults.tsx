@@ -23,7 +23,6 @@ export function useWalletSearchResults(
 } {
   const { defaultChainId } = useEnabledChains()
 
-  // TODO(WALL-7065): Update to support SVM address search
   const validAddress: Address | undefined = useMemo(
     () => getValidAddress({ address: query, platform: Platform.EVM, withEVMChecksum: true, log: false }) ?? undefined,
     [query],

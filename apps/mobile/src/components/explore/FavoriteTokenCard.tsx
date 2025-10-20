@@ -1,5 +1,6 @@
-import React, { memo, useCallback } from 'react'
-import { ViewProps } from 'react-native'
+import { GraphQLApi, isNonPollingRequestInFlight } from '@universe/api'
+import React, { memo, useMemo } from 'react'
+import type { StyleProp, ViewProps, ViewStyle } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
@@ -12,23 +13,24 @@ import { borderRadii, fonts, imageSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import {
-  FavoriteTokenCardQuery,
-  useFavoriteTokenCardQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { isNonPollingRequestInFlight } from 'uniswap/src/data/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { removeFavoriteToken } from 'uniswap/src/features/favorites/slice'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { isIOS } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 import { noop } from 'utilities/src/react/noop'
 
 const ESTIMATED_FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 116
+
+const contextMenuStyle: StyleProp<ViewStyle> = {
+  borderRadius: borderRadii.rounded16,
+}
 
 export type FavoriteTokenCardProps = {
   currencyId: string
@@ -52,7 +54,7 @@ function FavoriteTokenCard({
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
 
-  const { data, loading, networkStatus, startPolling, stopPolling } = useFavoriteTokenCardQuery({
+  const { data, loading, networkStatus, startPolling, stopPolling } = GraphQLApi.useFavoriteTokenCardQuery({
     variables: currencyIdToContractInput(currencyId),
     // Rely on cache for fast favoriting UX, and poll for updates.
     fetchPolicy: 'cache-and-network',
@@ -69,17 +71,20 @@ function FavoriteTokenCard({
   // Coingecko price is more accurate but lacks long tail tokens
   // Uniswap price comes from Uniswap pools, which may be updated less frequently
   const { price, pricePercentChange } = getCoingeckoPrice(token) ?? getUniswapPrice(token)
-  const priceFormatted = convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)
+  const priceFormatted = useMemo(
+    () => convertFiatAmountFormatted(price, NumberType.FiatTokenPrice),
+    [convertFiatAmountFormatted, price],
+  )
 
-  const onRemove = useCallback(() => {
+  const onRemove = useEvent(() => {
     if (currencyId) {
       dispatch(removeFavoriteToken({ currencyId }))
     }
-  }, [currencyId, dispatch])
+  })
 
-  const onEditFavorites = useCallback(() => {
+  const onEditFavorites = useEvent(() => {
     setIsEditing(true)
-  }, [setIsEditing])
+  })
 
   const { menuActions, onContextMenuPress } = useExploreTokenContextMenu({
     chainId,
@@ -89,17 +94,19 @@ function FavoriteTokenCard({
     tokenName: token?.name,
   })
 
-  const onPress = (): void => {
+  const onPress = useEvent(() => {
     if (isEditing || !currencyId) {
       return
     }
     tokenDetailsNavigation.preload(currencyId)
     tokenDetailsNavigation.navigate(currencyId)
-  }
+  })
 
   const shadowProps = useShadowPropsShort()
 
   const priceLoading = isNonPollingRequestInFlight(networkStatus)
+
+  const symbolDisplayText = useMemo(() => getSymbolDisplayText(token?.symbol), [token?.symbol])
 
   if (showLoading) {
     return (
@@ -116,7 +123,7 @@ function FavoriteTokenCard({
     <ContextMenu
       actions={menuActions}
       disabled={isEditing}
-      style={{ borderRadius: borderRadii.rounded16 }}
+      style={contextMenuStyle}
       onPress={onContextMenuPress}
       {...rest}
     >
@@ -127,7 +134,7 @@ function FavoriteTokenCard({
         borderRadius="$rounded16"
         overflow={isIOS ? 'hidden' : 'visible'}
         borderWidth={isDarkMode ? '$none' : '$spacing1'}
-        testID={`token-box-${token?.symbol}`}
+        testID={`${TestID.FavoriteTokenCardPrefix}${token?.symbol}`}
         onLongPress={noop}
         onPress={onPress}
         {...shadowProps}
@@ -143,7 +150,7 @@ function FavoriteTokenCard({
                 symbol={token?.symbol ?? undefined}
                 url={token?.project?.logoUrl ?? undefined}
               />
-              <Text variant="body1">{getSymbolDisplayText(token?.symbol)}</Text>
+              <Text variant="body1">{symbolDisplayText}</Text>
             </Flex>
             <RemoveButton visible={isEditing} onPress={onRemove} />
           </Flex>
@@ -180,7 +187,7 @@ function FavoriteTokenCard({
   )
 }
 
-function getCoingeckoPrice(token?: FavoriteTokenCardQuery['token']): {
+function getCoingeckoPrice(token?: GraphQLApi.FavoriteTokenCardQuery['token']): {
   price: number | undefined
   pricePercentChange: number | undefined
 } | null {
@@ -195,7 +202,7 @@ function getCoingeckoPrice(token?: FavoriteTokenCardQuery['token']): {
   }
 }
 
-function getUniswapPrice(token?: FavoriteTokenCardQuery['token']): {
+function getUniswapPrice(token?: GraphQLApi.FavoriteTokenCardQuery['token']): {
   price: number | undefined
   pricePercentChange: number | undefined
 } {

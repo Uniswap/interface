@@ -1,0 +1,71 @@
+{
+  "files": {
+    "includes": ["!build/**", "!dev/**", "!.storybook/storybook.requires.ts"],
+    "experimentalScannerIgnores": [".storybook/storybook.requires.ts", ".maestro/**", "dev/**"]
+  },
+  "linter": {
+    "includes": ["!jest-setup.js", "!scripts/**", "!ReactotronConfig.ts", "!index.js"],
+    "rules": {
+      "style": {
+        "noRestrictedGlobals": {
+          "level": "error",
+          "options": {
+            "deniedGlobals": {
+              "chrome": null
+            }
+          }
+        },
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "ethers": {
+                "message": "Please import from '@ethersproject/module' directly to support tree-shaking."
+              },
+              "ui/src/components/modal/AdaptiveWebModal": {
+                "message": "Please import Modal from `uniswap/src/components/modals/Modal` instead. Modal uses AdaptiveWebModal under the hood but has extra logic for handling animation, mounting, and dismounting."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "javascript": {
+    "jsxRuntime": "reactClassic"
+  },
+  "overrides": [
+    {
+      "includes": ["**/contentScript/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedGlobals": {
+              "level": "error",
+              "options": {
+                "deniedGlobals": {
+                  "chrome": "Direct `chrome` access is restricted to prevent accidental usage in the wrong context. Use `getChrome()` or `getChromeWithThrow()` instead."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/extensionMigrations.ts", "**/extensionMigrationsTests.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useEnumInitializers": "off",
+            "noNonNullAssertion": "off"
+          },
+          "suspicious": {
+            "noEmptyInterface": "off",
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    }
+  ]
+}

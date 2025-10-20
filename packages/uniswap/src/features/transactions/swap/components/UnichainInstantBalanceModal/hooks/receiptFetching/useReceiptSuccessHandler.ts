@@ -20,7 +20,7 @@ import {
 import { receiptFromEthersReceipt } from 'uniswap/src/features/transactions/utils/receipt'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 interface ReceiptSuccessParams {
   receipt: TransactionReceipt
@@ -82,7 +82,7 @@ export function useReceiptSuccessHandler(): (params: ReceiptSuccessParams) => Pr
           ...transaction,
           receipt: parsedReceipt,
           status: TransactionStatus.Success,
-          ...(isInterface && { isFlashblockTxWithinThreshold }),
+          ...(isWebApp && { isFlashblockTxWithinThreshold }),
         }),
       )
 

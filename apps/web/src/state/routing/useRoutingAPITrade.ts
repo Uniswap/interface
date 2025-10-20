@@ -15,6 +15,7 @@ import {
   SubmittableTrade,
   TradeState,
 } from 'state/routing/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 
 const TRADE_NOT_FOUND = { state: TradeState.NO_ROUTE_FOUND, trade: undefined, currentData: undefined } as const
@@ -107,7 +108,14 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   const isFetching = currentData !== tradeResult || !currentData
 
   return useMemo(() => {
-    if (amountSpecified && otherCurrency && queryArgs === skipToken) {
+    if (currencyIn?.chainId === UniverseChainId.Solana || currencyOut?.chainId === UniverseChainId.Solana) {
+      // Routing API does not support Solana; we should not show any trade (nor a stale EVM trade, because we skip the query if Solana)
+      return {
+        state: TradeState.INVALID,
+        trade: undefined,
+        currentTrade: undefined,
+      }
+    } else if (amountSpecified && otherCurrency && queryArgs === skipToken) {
       return {
         state: TradeState.STALE,
         trade: tradeResult?.trade,
@@ -132,14 +140,15 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
       }
     }
   }, [
+    currencyIn,
+    currencyOut,
     amountSpecified,
+    otherCurrency,
     error,
     isError,
     isFetching,
     queryArgs,
-    tradeResult?.state,
-    tradeResult?.trade,
-    currentData?.trade,
-    otherCurrency,
+    tradeResult,
+    currentData,
   ])
 }

@@ -6,7 +6,7 @@ import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/de
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 jest.mock('utilities/src/platform', () => ({
-  isWeb: true,
+  isWebPlatform: true,
 }))
 
 const MOCK_CURRENCY_ADDRESS = '0x1234567890123456789012345678901234567890'

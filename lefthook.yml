@@ -14,7 +14,7 @@ pre-commit:
         CI: "true"
         FORCE_COLOR: "0"
       run: TERM=dumb bun g:pre-commit-checks
-      
+
     git-secrets:
       run: |
         export TERM=dumb
@@ -25,7 +25,7 @@ pre-commit:
         else
           echo "git-secrets not installed, skipping..."
         fi
-      
+
     trufflehog:
       run: |
         export TERM=dumb
@@ -34,3 +34,12 @@ pre-commit:
         else
           echo "trufflehog not installed, skipping..."
         fi
+
+post-checkout:
+  commands:
+    generate-biome-config:
+      files: git diff --name-only {1} {2}
+      glob: "packages/biome-config/**"
+      run: |
+        echo "Biome config files changed, regenerating config..."
+        bun biome-config prepare

@@ -1,4 +1,4 @@
-import type { NullablePermit } from 'uniswap/src/data/tradingApi/__generated__'
+import { TradingApi } from '@universe/api'
 import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import type { TransactionRequestInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import {
@@ -16,7 +16,7 @@ import { validatePermit } from 'uniswap/src/features/transactions/swap/utils/tra
 export function processUniswapXResponse({
   permitData,
 }: {
-  permitData: NullablePermit | undefined
+  permitData: TradingApi.NullablePermit | undefined
 }): TransactionRequestInfo {
   return {
     gasFeeResult: { value: '0', displayValue: '0', error: null, isLoading: false }, // There is no gas fee for UniswapX swap

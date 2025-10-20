@@ -59,7 +59,7 @@ export default function Updater(): null {
         )
       }
     })
-  }, [dispatch, fetchList, lists, rehydrated])
+  }, [fetchList, lists, rehydrated])
 
   // automatically update lists for every version update
   useEffect(() => {

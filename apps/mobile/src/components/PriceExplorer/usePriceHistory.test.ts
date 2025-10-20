@@ -1,12 +1,8 @@
 import { waitFor } from '@testing-library/react-native'
+import { GraphQLApi } from '@universe/api'
 import { act } from 'react-test-renderer'
 import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { renderHookWithProviders } from 'src/test/render'
-import {
-  HistoryDuration,
-  TimestampedAmount,
-  TokenProject as TokenProjectType,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   getLatestPrice,
   priceHistory,
@@ -20,7 +16,7 @@ import {
 } from 'uniswap/src/test/fixtures'
 import { queryResolvers } from 'uniswap/src/test/utils'
 
-const mockTokenProjectsQuery = (historyPrices: number[]) => (): TokenProjectType[] => {
+const mockTokenProjectsQuery = (historyPrices: number[]) => (): GraphQLApi.TokenProject[] => {
   const history = historyPrices.map((value) => timestampedAmount({ value }))
 
   return [
@@ -35,7 +31,7 @@ const mockTokenProjectsQuery = (historyPrices: number[]) => (): TokenProjectType
   ]
 }
 
-const formatPriceHistory = (history: TimestampedAmount[]): Omit<TimestampedAmount, 'id'>[] =>
+const formatPriceHistory = (history: GraphQLApi.TimestampedAmount[]): Omit<GraphQLApi.TimestampedAmount, 'id'>[] =>
   history.map(({ timestamp, value }) => ({ value, timestamp: timestamp * 1000 }))
 
 describe(useTokenPriceHistory, () => {
@@ -48,7 +44,7 @@ describe(useTokenPriceHistory, () => {
       priceHistory: undefined,
       spot: undefined,
     })
-    expect(result.current.selectedDuration).toBe(HistoryDuration.Day) // default initial duration
+    expect(result.current.selectedDuration).toBe(GraphQLApi.HistoryDuration.Day) // default initial duration
     expect(result.current.numberOfDigits).toEqual({
       left: 0,
       right: 0,
@@ -190,10 +186,10 @@ describe(useTokenPriceHistory, () => {
   })
 
   describe('different durations', () => {
-    const dayPriceHistory = priceHistory({ duration: HistoryDuration.Day })
-    const weekPriceHistory = priceHistory({ duration: HistoryDuration.Week })
-    const monthPriceHistory = priceHistory({ duration: HistoryDuration.Month })
-    const yearPriceHistory = priceHistory({ duration: HistoryDuration.Year })
+    const dayPriceHistory = priceHistory({ duration: GraphQLApi.HistoryDuration.Day })
+    const weekPriceHistory = priceHistory({ duration: GraphQLApi.HistoryDuration.Week })
+    const monthPriceHistory = priceHistory({ duration: GraphQLApi.HistoryDuration.Month })
+    const yearPriceHistory = priceHistory({ duration: GraphQLApi.HistoryDuration.Year })
 
     const dayTokenProject = usdcTokenProject({ priceHistory: dayPriceHistory })
     const weekTokenProject = usdcTokenProject({ priceHistory: weekPriceHistory })
@@ -204,13 +200,13 @@ describe(useTokenPriceHistory, () => {
       // eslint-disable-next-line max-params
       tokenProjects: (parent, args, context, info) => {
         switch (info.variableValues.duration) {
-          case HistoryDuration.Day:
+          case GraphQLApi.HistoryDuration.Day:
             return [dayTokenProject]
-          case HistoryDuration.Week:
+          case GraphQLApi.HistoryDuration.Week:
             return [weekTokenProject]
-          case HistoryDuration.Month:
+          case GraphQLApi.HistoryDuration.Month:
             return [monthTokenProject]
-          case HistoryDuration.Year:
+          case GraphQLApi.HistoryDuration.Year:
             return [yearTokenProject]
           default:
             return [dayTokenProject]
@@ -231,7 +227,7 @@ describe(useTokenPriceHistory, () => {
                 priceHistory: formatPriceHistory(dayPriceHistory),
                 spot: expect.anything(),
               },
-              selectedDuration: HistoryDuration.Day,
+              selectedDuration: GraphQLApi.HistoryDuration.Day,
             }),
           )
         })
@@ -256,7 +252,11 @@ describe(useTokenPriceHistory, () => {
     describe('when duration is set to non-default value (year)', () => {
       it('returns correct price history', async () => {
         const { result } = renderHookWithProviders(
-          () => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1, initialDuration: HistoryDuration.Year }),
+          () =>
+            useTokenPriceHistory({
+              currencyId: SAMPLE_CURRENCY_ID_1,
+              initialDuration: GraphQLApi.HistoryDuration.Year,
+            }),
           { resolvers },
         )
 
@@ -267,7 +267,7 @@ describe(useTokenPriceHistory, () => {
                 priceHistory: formatPriceHistory(yearPriceHistory),
                 spot: expect.anything(),
               },
-              selectedDuration: HistoryDuration.Year,
+              selectedDuration: GraphQLApi.HistoryDuration.Year,
             }),
           )
         })
@@ -275,7 +275,11 @@ describe(useTokenPriceHistory, () => {
 
       it('returns correct spot price', async () => {
         const { result } = renderHookWithProviders(
-          () => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1, initialDuration: HistoryDuration.Year }),
+          () =>
+            useTokenPriceHistory({
+              currencyId: SAMPLE_CURRENCY_ID_1,
+              initialDuration: GraphQLApi.HistoryDuration.Year,
+            }),
           { resolvers },
         )
         await waitFor(() => {
@@ -309,7 +313,7 @@ describe(useTokenPriceHistory, () => {
 
         // Change duration
         await act(() => {
-          result.current.setDuration(HistoryDuration.Week)
+          result.current.setDuration(GraphQLApi.HistoryDuration.Week)
         })
 
         await waitFor(() => {

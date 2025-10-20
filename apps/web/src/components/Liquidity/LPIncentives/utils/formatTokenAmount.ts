@@ -9,7 +9,7 @@ export function formatTokenAmount(amount: string, decimals: number): string {
       return whole
     }
     return `${whole}.${decimal.slice(0, 3)}`
-  } catch (e) {
+  } catch (_e) {
     return '0'
   }
 }

@@ -1,5 +1,5 @@
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
 export const isSignTypedDataRequest = (request: { type: EthMethod }): boolean =>
@@ -12,14 +12,23 @@ export const isSignTypedDataRequest = (request: { type: EthMethod }): boolean =>
  * @param data The transaction data
  * @returns True if this is a self-call with data, false otherwise
  */
-export function isSelfCallWithData({ from, to, data }: { from?: string; to?: string; data?: string }): boolean {
+export function isSelfCallWithData({
+  from,
+  to,
+  data,
+  chainId,
+}: {
+  from?: string
+  to?: string
+  data?: string
+  chainId?: UniverseChainId
+}): boolean {
   return (
     !!from &&
     !!to &&
-    // TODO(WALL-7065): Update to support solana
     areAddressesEqual({
-      addressInput1: { address: from, platform: Platform.EVM },
-      addressInput2: { address: to, platform: Platform.EVM },
+      addressInput1: { address: from, chainId: chainId ?? UniverseChainId.Mainnet },
+      addressInput2: { address: to, chainId: chainId ?? UniverseChainId.Mainnet },
     }) &&
     data !== undefined &&
     data !== '0x'

@@ -1,4 +1,4 @@
-import { TokenProjectsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -7,7 +7,7 @@ import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCur
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 export function tokenProjectToCurrencyInfos(
-  tokenProjects: TokenProjectsQuery['tokenProjects'],
+  tokenProjects: GraphQLApi.TokenProjectsQuery['tokenProjects'],
   chainFilter?: UniverseChainId | null,
 ): CurrencyInfo[] {
   return tokenProjects

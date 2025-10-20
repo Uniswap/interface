@@ -1,8 +1,7 @@
 import { NetworkStatus } from '@apollo/client'
 import { Contract } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { SpamCode } from 'uniswap/src/data/types'
+import { GraphQLApi, SpamCode } from '@universe/api'
 import { FoTPercent } from 'uniswap/src/features/tokens/TokenWarningModal'
 import { CurrencyId } from 'uniswap/src/types/currency'
 
@@ -33,7 +32,7 @@ export enum AttackType {
 export type SafetyInfo = {
   tokenList: TokenList
   attackType?: AttackType
-  protectionResult: ProtectionResult
+  protectionResult: GraphQLApi.ProtectionResult
   blockaidFees?: FoTPercent
 }
 

@@ -1,9 +1,11 @@
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import {
   buildFlashbotsUrl,
   FLASHBOTS_DEFAULT_REFUND_PERCENT,
   FLASHBOTS_SIGNATURE_HEADER,
   SignerInfo,
 } from 'uniswap/src/features/providers/FlashbotsCommon'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import {
   Chain,
   ClientConfig,
@@ -134,7 +136,10 @@ function shouldAuthenticateRequest({
     params[1] === 'pending' &&
     !!signerAddress &&
     typeof params[0] === 'string' &&
-    params[0].toLowerCase() === signerAddress.toLowerCase()
+    areAddressesEqual({
+      addressInput1: { address: params[0], platform: Platform.EVM },
+      addressInput2: { address: signerAddress, platform: Platform.EVM },
+    })
   )
 }
 

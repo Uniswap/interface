@@ -14,7 +14,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import type { SwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/createSwapFormStore'
 import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isMobileApp, isWeb } from 'utilities/src/platform'
+import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 
 export const useMaybeSwapFormStoreBase = (): SwapFormStore | null => useContext(SwapFormStoreContext)
 
@@ -125,9 +125,9 @@ export function WarningModalContent({
       centered
       gap="$spacing12"
       maxWidth={maxWidth}
-      pb={isWeb ? '$none' : '$spacing12'}
+      pb={isWebPlatform ? '$none' : '$spacing12'}
       pt={hideHandlebar ? '$spacing24' : '$spacing12'}
-      px={isWeb ? '$none' : '$spacing24'}
+      px={isWebPlatform ? '$none' : '$spacing24'}
       {...props}
     >
       {showCloseButton && onClose && !closeHeaderComponent && (
@@ -145,7 +145,7 @@ export function WarningModalContent({
         alertHeaderTextColor={alertHeaderTextColor}
       />
       {title && (
-        <Text textAlign="center" variant={isWeb ? 'subheading2' : 'body1'}>
+        <Text textAlign="center" variant={isWebPlatform ? 'subheading2' : 'body1'}>
           {title}
         </Text>
       )}

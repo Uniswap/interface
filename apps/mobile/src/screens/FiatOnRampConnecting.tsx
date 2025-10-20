@@ -22,8 +22,8 @@ import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOn
 import { useFiatOnRampTransactionCreator } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { FiatOffRampEventName, FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { forceFetchFiatOnRampTransactions } from 'uniswap/src/features/transactions/slice'
@@ -160,7 +160,6 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
       navigateToWidget(offRampWidgetData.widgetUrl).catch(() => undefined)
     }
   }, [
-    navigation,
     timeoutElapsed,
     widgetData,
     offRampWidgetData,

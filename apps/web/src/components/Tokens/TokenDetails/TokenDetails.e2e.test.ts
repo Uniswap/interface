@@ -51,6 +51,8 @@ test.describe('Token details', () => {
     await expect(twitterLink).toHaveAttribute('href', new RegExp('x.com/Uniswap'))
 
     // Contract address should be displayed
-    await expect(page.locator('[aria-label="breadcrumb-nav"]').getByText(shortenAddress(UNI_ADDRESS))).toBeVisible()
+    await expect(
+      page.locator('[aria-label="breadcrumb-nav"]').getByText(shortenAddress({ address: UNI_ADDRESS })),
+    ).toBeVisible()
   })
 })

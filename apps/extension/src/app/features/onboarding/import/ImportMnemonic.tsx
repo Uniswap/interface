@@ -76,7 +76,7 @@ export function ImportMnemonic(): JSX.Element {
     return () => {
       window.document.removeEventListener('paste', handlePaste)
     }
-  }, [setMnemonic])
+  }, [])
 
   const handleChange = useCallback(
     (index: number) =>
@@ -92,7 +92,7 @@ export function ImportMnemonic(): JSX.Element {
         newMnemonic[index] = word.trim()
         setMnemonic(newMnemonic)
       },
-    [mnemonic, setMnemonic],
+    [mnemonic],
   )
 
   const handleKeyPress = useCallback(

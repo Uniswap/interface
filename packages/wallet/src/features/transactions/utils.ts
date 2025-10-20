@@ -129,6 +129,11 @@ export function getPercentageError(
   return diff !== undefined && estimated !== undefined && estimated !== 0 ? (diff / estimated) * 100 : undefined
 }
 
+/**
+ * Parses the incoming error from an attempted RPC call and returns a
+ * category. As more distinct patterns are found from the errors, we
+ * should update this function to categorize them.
+ */
 export function getRPCErrorCategory(error: Error): string {
   const message = error.message
   switch (true) {
@@ -140,15 +145,28 @@ export function getRPCErrorCategory(error: Error): string {
     case message.includes('intrinsic gas too low'):
     case message.includes('max fee per gas less than block base fee'):
     case message.includes('transaction underpriced'):
+    case message.includes('replacement fee too low'):
       return 'gas_too_low'
-    case message.includes('insufficient funds for intrinsic transaction cost'):
-      return 'insufficient_gas'
+    case message.includes('overshot'):
+    case message.includes('insufficient funds'):
+      return 'insufficient_funds'
+    case message.includes('Response status: 429'):
     case message.includes('Too Many Requests'):
       return 'rate_limited'
     case message.includes('already known'):
       return 'already_known'
+    case message.includes('could not detect network'):
+      return 'no_network'
     case message.includes('code=TIMEOUT'):
       return 'timeout'
+    case message.includes('Cannot read properties of'):
+    case message.includes('Cannot convert null value to object'):
+    case message.includes('Invalid data value'):
+      return 'invalid_data'
+    case message.includes('in-flight transaction limit reached for delegated accounts'):
+      return 'tx_limit_reached_for_delegated_account'
+    case message.includes('status=502'):
+      return 'bad_gateway'
     default:
       return 'unknown'
   }

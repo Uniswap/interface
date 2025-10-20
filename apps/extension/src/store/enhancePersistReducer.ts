@@ -3,7 +3,7 @@ import { logger } from 'utilities/src/logger/logger'
 
 // We use `any` in a few places in this file because those values truly can be anything, so that's the proper type.
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: PersistPartial type allows any shape for redux-persist compatibility
 type PersistPartial = { _persist: undefined } | any
 
 export function enhancePersistReducer<S, A extends Action = Action>(

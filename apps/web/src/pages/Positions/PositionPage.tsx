@@ -1,10 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
-/* eslint-disable-next-line no-restricted-imports */
 import { Position, PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { WrappedLiquidityPositionRangeChart } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
-import { DropdownSelector } from 'components/DropdownSelector'
+import { Dropdown } from 'components/Dropdowns/Dropdown'
 import { BaseQuoteFiatAmount } from 'components/Liquidity/BaseQuoteFiatAmount'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
 import { LiquidityPositionAmountRows } from 'components/Liquidity/LiquidityPositionAmountRows'
@@ -51,7 +51,6 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { breakpoints } from 'ui/src/theme/breakpoints'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { PollingInterval, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
@@ -94,7 +93,7 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
   }
   try {
     return BigNumber.from(tokenId)
-  } catch (error) {
+  } catch (_error) {
     return undefined
   }
 }
@@ -181,34 +180,36 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
     priceInverted,
   )
 
-  const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<HistoryDuration>(HistoryDuration.Month)
+  const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<GraphQLApi.HistoryDuration>(
+    GraphQLApi.HistoryDuration.Month,
+  )
   const [timePeriodDropdownOpen, setTimePeriodDropdownOpen] = useState(false)
   const [mainViewDropdownOpen, setMainViewDropdownOpen] = useState(false)
   const timePeriodOptions = useMemo(() => {
-    const options: Array<SegmentedControlOption<HistoryDuration> & { verboseDisplay: JSX.Element }> = [
+    const options: Array<SegmentedControlOption<GraphQLApi.HistoryDuration> & { verboseDisplay: JSX.Element }> = [
       [
-        HistoryDuration.Day,
+        GraphQLApi.HistoryDuration.Day,
         t('token.priceExplorer.timeRangeLabel.day'),
         t('token.priceExplorer.timeRangeLabel.day.verbose'),
       ],
       [
-        HistoryDuration.Week,
+        GraphQLApi.HistoryDuration.Week,
         t('token.priceExplorer.timeRangeLabel.week'),
         t('token.priceExplorer.timeRangeLabel.week.verbose'),
       ],
       [
-        HistoryDuration.Month,
+        GraphQLApi.HistoryDuration.Month,
         t('token.priceExplorer.timeRangeLabel.month'),
         t('token.priceExplorer.timeRangeLabel.month.verbose'),
       ],
       [
-        HistoryDuration.Year,
+        GraphQLApi.HistoryDuration.Year,
         t('token.priceExplorer.timeRangeLabel.year'),
         t('token.priceExplorer.timeRangeLabel.year.verbose'),
       ],
-      [HistoryDuration.Max, t('token.priceExplorer.timeRangeLabel.all')],
+      [GraphQLApi.HistoryDuration.Max, t('token.priceExplorer.timeRangeLabel.all')],
     ].map((timePeriod) => ({
-      value: timePeriod[0] as HistoryDuration,
+      value: timePeriod[0] as GraphQLApi.HistoryDuration,
       display: <Text variant="buttonLabel3">{timePeriod[1]}</Text>,
       verboseDisplay: <Text variant="buttonLabel3">{timePeriod[2] ?? timePeriod[1]}</Text>,
     }))
@@ -423,7 +424,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
             </Flex>
             <Flex row alignItems="center" justifyContent="space-between" flexDirection="row-reverse" width="100%">
               {isMobileWeb ? (
-                <DropdownSelector
+                <Dropdown
                   containerStyle={{ width: 'auto' }}
                   menuLabel={
                     <Flex
@@ -471,7 +472,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
                       {p.display}
                     </Flex>
                   ))}
-                </DropdownSelector>
+                </Dropdown>
               ) : (
                 <SegmentedControl
                   options={mainViewOptions}
@@ -483,7 +484,7 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
               )}
               {mainView === 'chart' &&
                 (isMobileWeb ? (
-                  <DropdownSelector
+                  <Dropdown
                     containerStyle={{ width: 'auto' }}
                     menuLabel={
                       <Flex
@@ -532,12 +533,12 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
                         {p.verboseDisplay}
                       </Flex>
                     ))}
-                  </DropdownSelector>
+                  </Dropdown>
                 ) : (
                   <SegmentedControl
                     options={timePeriodOptions.options}
                     selectedOption={timePeriodOptions.selected}
-                    onSelectOption={(option: HistoryDuration) => {
+                    onSelectOption={(option: GraphQLApi.HistoryDuration) => {
                       setSelectedHistoryDuration(option)
                     }}
                   />

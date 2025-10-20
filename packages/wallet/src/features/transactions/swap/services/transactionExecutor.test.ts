@@ -10,7 +10,7 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { ensure0xHex } from 'uniswap/src/utils/hex'
+import { ensure0xHex } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { waitForTransactionConfirmation } from 'wallet/src/features/transactions/swap/confirmation'

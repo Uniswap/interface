@@ -1,10 +1,10 @@
+import { TradingApi } from '@universe/api'
 import { call, put } from 'typed-redux-saga'
-import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { DutchQuoteV2, DutchQuoteV3, PriorityQuote, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
@@ -23,6 +23,7 @@ import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+
 import { waitForTransactionConfirmation } from 'wallet/src/features/transactions/swap/confirmation'
 import { isSignedPermit, SignedPermit } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
 import { getSignerManager } from 'wallet/src/features/wallet/context'
@@ -34,8 +35,8 @@ export const ORDER_STALENESS_THRESHOLD = 45 * ONE_SECOND_MS
 export interface SubmitUniswapXOrderParams {
   // internal id used for tracking transactions before they're submitted
   txId?: string
-  quote: DutchQuoteV2 | DutchQuoteV3 | PriorityQuote
-  routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY
+  quote: TradingApi.DutchQuoteV2 | TradingApi.DutchQuoteV3 | TradingApi.PriorityQuote
+  routing: TradingApi.Routing.DUTCH_V2 | TradingApi.Routing.DUTCH_V3 | TradingApi.Routing.PRIORITY
   permit: ValidatedPermit | SignedPermit
   chainId: UniverseChainId
   account: AccountMeta
@@ -105,7 +106,7 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
         signer,
       })
     }
-    yield* call(submitOrder, { signature, quote, routing })
+    yield* call(TradingApiClient.submitOrder, { signature, quote, routing })
   } catch {
     // In the rare event that submission fails, we update the order status to prompt the user.
     // If the app is closed before this catch block is reached, orderWatcherSaga will handle the failure upon reopening.

@@ -10,10 +10,6 @@ import { render, screen } from 'test-utils/render'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 
-vi.mock('nft/components/iconExports', () => ({
-  ReversedArrowsIcon: () => <div data-testid="reversed-arrows-icon" />,
-}))
-
 describe('PoolDetailsHeader', () => {
   beforeEach(() => {
     store.dispatch(

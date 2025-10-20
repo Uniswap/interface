@@ -1,11 +1,9 @@
 import { useApolloClient } from '@apollo/client'
 import { useQuery } from '@tanstack/react-query'
+import { GraphQLApi } from '@universe/api'
 import { useCallback, useMemo, useState } from 'react'
-import { fetchUnitagsByAddresses } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
-import {
-  SelectWalletScreenDocument,
-  SelectWalletScreenQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -85,6 +83,7 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
 
   const { gqlChains } = useEnabledChains()
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: -refetchCount
   const fetchBalanceAndUnitags = useCallback(async (): Promise<AddressTo<AddressWithBalanceAndName> | undefined> => {
     if (addressesArray.length === 0) {
       return undefined
@@ -96,12 +95,12 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
       includeSpamTokens: false,
     }))
 
-    const fetchBalances = apolloClient.query<SelectWalletScreenQuery>({
-      query: SelectWalletScreenDocument,
+    const fetchBalances = apolloClient.query<GraphQLApi.SelectWalletScreenQuery>({
+      query: GraphQLApi.SelectWalletScreenDocument,
       variables: { ownerAddresses: addressesArray, chains: gqlChains, valueModifiers },
     })
 
-    const fetchUnitags = fetchUnitagsByAddresses({ addresses: addressesArray })
+    const fetchUnitags = UnitagsApiClient.fetchUnitagsByAddresses({ addresses: addressesArray })
 
     const [balancesResponse, unitagsResponse] = await Promise.all([fetchBalances, fetchUnitags])
 
@@ -133,7 +132,6 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
     return dataMap
 
     // We use `refetchCount` as a dependency to manually trigger a refetch when calling the `refetch` function.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [addressesArray, apolloClient, refetchCount, gqlChains])
 
   const {

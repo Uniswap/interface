@@ -55,7 +55,7 @@ function BackupRecoveryPhraseScreenSteps(): JSX.Element {
 
   const showPasswordModal = useCallback((): void => {
     setViewStep(ViewStep.Password)
-  }, [setViewStep])
+  }, [])
 
   const { value: isDisclaimerChecked, toggle: toggleDisclaimer } = useBooleanState(false)
 

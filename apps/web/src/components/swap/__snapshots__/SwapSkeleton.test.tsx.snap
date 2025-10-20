@@ -24,7 +24,7 @@ exports[`SwapSkeleton.tsx > renders a skeleton 1`] = `
   -ms-flex-pack: justify;
   justify-content: space-between;
   padding: 8px;
-  border: 1px solid rgba(34,34,34,0.05);
+  border: 1px solid rgba(19,19,19,0.08);
   border-radius: 16px;
   background-color: #FFFFFF;
 }
@@ -51,7 +51,7 @@ exports[`SwapSkeleton.tsx > renders a skeleton 1`] = `
 }
 
 .c6 {
-  background-color: rgba(34,34,34,0.05);
+  background-color: rgba(19,19,19,0.08);
   height: 36px;
 }
 

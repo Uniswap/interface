@@ -1,12 +1,11 @@
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
 import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
 import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
 import { UniswapMobileWalletConnectorOption } from 'components/WalletModal/UniswapMobileWalletConnectorOption'
 import { WalletConnectorOption } from 'components/WalletModal/WalletConnectorOption'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
-import { useOrderedWalletConnectors } from 'features/wallet/connection/hooks/useOrderedWalletConnectors'
-import { useAtom } from 'jotai'
+import { useOrderedWallets } from 'features/wallet/connection/hooks/useOrderedWalletConnectors'
 import React from 'react'
 import { Trans } from 'react-i18next'
 import { transitions } from 'theme/styles'
@@ -16,9 +15,9 @@ import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 
 export function OtherWalletsModal() {
   const showMoonpayText = useShowMoonpayText()
-  const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
+  const setMenu = useSetMenu()
 
-  const connectors = useOrderedWalletConnectors({ showSecondaryConnectors: true })
+  const wallets = useOrderedWallets({ showSecondaryConnectors: true })
   const recentConnectorId = useRecentConnectorId()
 
   return (
@@ -36,7 +35,7 @@ export function OtherWalletsModal() {
         <BackArrow
           color="$neutral2"
           size={20}
-          onPress={() => setMenu(MenuState.DEFAULT)}
+          onPress={() => setMenu({ variant: MenuStateVariant.MAIN })}
           mr="auto"
           hoverStyle={{ opacity: 0.8 }}
           cursor="pointer"
@@ -59,13 +58,13 @@ export function OtherWalletsModal() {
             {recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID && (
               <>
                 <UniswapMobileWalletConnectorOption />
-                {connectors.length > 0 && <Separator />}
+                {wallets.length > 0 && <Separator />}
               </>
             )}
-            {connectors.map((c, index) => (
-              <React.Fragment key={c.name}>
-                <WalletConnectorOption walletConnectorMeta={c} />
-                {index < connectors.length - 1 && <Separator />}
+            {wallets.map((wallet, index) => (
+              <React.Fragment key={wallet.name}>
+                <WalletConnectorOption wallet={wallet} />
+                {index < wallets.length - 1 && <Separator />}
               </React.Fragment>
             ))}
           </Flex>

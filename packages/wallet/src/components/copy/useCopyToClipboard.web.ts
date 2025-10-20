@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { CopyToClipboardFunction } from 'wallet/src/components/copy/useCopyToClipboard'
 
 /**
@@ -22,7 +22,7 @@ export function useCopyToClipboard(): CopyToClipboardFunction {
             copyType,
           }),
         )
-      } catch (e) {
+      } catch (_e) {
         dispatch(
           pushNotification({
             type: AppNotificationType.CopyFailed,

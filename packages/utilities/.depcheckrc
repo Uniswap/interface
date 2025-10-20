@@ -3,4 +3,5 @@ ignores: [
     ## Internal packages / workspaces
     "tsconfig",
     "utilities",
+    '@uniswap/biome-config',
   ]

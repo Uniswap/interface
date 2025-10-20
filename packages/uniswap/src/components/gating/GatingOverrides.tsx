@@ -25,7 +25,7 @@ import { FeatureFlags, getFeatureFlagName, WALLET_FEATURE_FLAG_NAMES } from 'uni
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { getOverrideAdapter } from 'uniswap/src/features/gating/sdk/statsig'
 import { useEmbeddedWalletBaseUrl } from 'uniswap/src/features/passkey/hooks/useEmbeddedWalletBaseUrl'
-import { isExtension, isMobileApp } from 'utilities/src/platform'
+import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function GatingOverrides(): JSX.Element {
@@ -142,7 +142,7 @@ export function GatingOverrides(): JSX.Element {
             </GatingButton>
 
             <Flex mt="$spacing12" gap="$spacing12">
-              <DynamicConfigGroup title="Biometric Unlock" hidden={!isExtension}>
+              <DynamicConfigGroup title="Biometric Unlock" hidden={!isExtensionApp}>
                 <DynamicConfigDropdownBoolean
                   config={DynamicConfigs.ExtensionBiometricUnlock}
                   configKey={ExtensionBiometricUnlockConfigKey.EnableUnlocking}

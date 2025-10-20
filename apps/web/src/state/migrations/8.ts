@@ -14,7 +14,7 @@ export const migration8 = (state: PersistAppStateV8 | undefined) => {
   }
 
   if (state.user && 'hideAppPromoBanner' in state.user) {
-    delete state.user['hideAppPromoBanner']
+    delete state.user.hideAppPromoBanner
   }
 
   return {

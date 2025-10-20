@@ -149,7 +149,7 @@ export function slidingWindowRangeMatch({
         : BigNumber.from(`0x${hexStringWithoutPrefix.padStart(MAX_HEX_STRING_LENGTH, 'f')}`)
             .fromTwos(TOKEN_AMOUNT_SIGNED_HEX_BITS)
             .abs()
-    } catch (e) {
+    } catch (_e) {
       // skip logs that can't be parsed
       return
     }

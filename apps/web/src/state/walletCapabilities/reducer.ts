@@ -9,7 +9,7 @@ import { GetCapabilitiesStatus, WalletCapabilitiesState } from 'state/walletCapa
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
 import { InterfaceUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
-import { hexToNumber } from 'uniswap/src/utils/hex'
+import { hexToNumber } from 'utilities/src/addresses/hex'
 
 const initialState: WalletCapabilitiesState = {
   getCapabilitiesStatus: GetCapabilitiesStatus.Unknown,

@@ -379,6 +379,21 @@ export const NoTrailingFourDecimalsPercentages: FormatCreator = {
   },
 }
 
+const OneDecimalPercentages: FormatCreator = {
+  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+    return getNumberFormat({
+      name: 'OneDecimalPercentages',
+      locale,
+      props: {
+        notation: 'standard',
+        style: 'percent',
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+      },
+    })
+  },
+}
+
 const TwoDecimalsPercentages: FormatCreator = {
   createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
     return getNumberFormat({
@@ -603,6 +618,11 @@ export const ntfCollectionStatsFormatter: Formatter = {
   defaultFormat: ShorthandOneDecimal,
 }
 
+const percentagesOneDecimalFormatter: Formatter = {
+  rules: [{ upperBound: Infinity, formatter: OneDecimalPercentages }],
+  defaultFormat: OneDecimalPercentages,
+}
+
 const percentagesFormatter: Formatter = {
   rules: [
     { upperBound: 0.01, formatter: TwoDecimalsPercentages },
@@ -654,6 +674,7 @@ export const TYPE_TO_FORMATTER_RULES = {
   [NumberType.NFTTokenFloorPrice]: ntfTokenFloorPriceFormatter,
   [NumberType.NFTCollectionStats]: ntfCollectionStatsFormatter,
   [NumberType.Percentage]: percentagesFormatter,
+  [NumberType.PercentageOneDecimal]: percentagesOneDecimalFormatter,
   [NumberType.PercentageThreeDecimals]: percentagesThreeDecimalsFormatter,
   [NumberType.PercentageFourDecimals]: percentagesFourDecimalsFormatter, // update to use 4 decimals
 }

@@ -1,5 +1,4 @@
-import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
+import { type DiscriminatedQuoteResponse, type GasEstimate } from '@universe/api'
 
 export function getGasEstimate(data: DiscriminatedQuoteResponse | null): GasEstimate | undefined {
   if (!data?.quote || !('gasEstimates' in data.quote) || !data.quote.gasEstimates) {

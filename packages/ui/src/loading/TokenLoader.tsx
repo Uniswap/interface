@@ -1,7 +1,7 @@
 import { Flex } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text'
 import { iconSizes } from 'ui/src/theme'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 interface TokenLoaderProps {
   opacity: number
@@ -24,14 +24,14 @@ export function TokenLoader({ opacity, withPrice = false }: TokenLoaderProps): J
             loading="no-shimmer"
             loadingPlaceholderText="Token Full Name"
             numberOfLines={1}
-            variant={isWeb ? 'body3' : 'body1'}
+            variant={isWebPlatform ? 'body3' : 'body1'}
           />
           <Flex row alignItems="center" gap="$spacing8" minHeight={20}>
             <Text
               loading="no-shimmer"
               loadingPlaceholderText="1,000 TFN"
               numberOfLines={1}
-              variant={isWeb ? 'body4' : 'body2'}
+              variant={isWebPlatform ? 'body4' : 'body2'}
             />
           </Flex>
         </Flex>

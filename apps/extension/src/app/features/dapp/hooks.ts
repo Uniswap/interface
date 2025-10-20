@@ -13,13 +13,14 @@ export function useDappStateUpdated(): boolean {
     return () => {
       dappStore.removeListener(DappStoreEvent.DappStateUpdated, onUpdate)
     }
-  }, [dispatch])
+  }, [])
   return state
 }
 
 export function useDappInfo(dappUrl: string | undefined): DappInfo | undefined {
   const [info, setInfo] = useState<DappInfo>()
   const dappStateUpdated = useDappStateUpdated()
+  // biome-ignore lint/correctness/useExhaustiveDependencies: dappStateUpdated is used to trigger re-render when dapp store changes
   useEffect(() => {
     setInfo(dappStore.getDappInfo(dappUrl))
   }, [dappUrl, dappStateUpdated])
@@ -44,6 +45,7 @@ export function useAllDappConnectionsForActiveAccount(): string[] {
   const dappStateUpdated = useDappStateUpdated()
   const activeAccount = useActiveAccountAddress()
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: dappStateUpdated is used to trigger re-render when dapp store changes
   useEffect(() => {
     setDappUrls(activeAccount ? dappStore.getConnectedDapps(activeAccount) : [])
   }, [activeAccount, dappStateUpdated])

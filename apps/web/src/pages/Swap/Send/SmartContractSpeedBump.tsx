@@ -1,8 +1,8 @@
-import { Dialog } from 'components/Dialog/Dialog'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { SendModalProps } from 'pages/Swap/Send/SendReviewModal'
 import { useTranslation } from 'react-i18next'
 import { useSporeColors } from 'ui/src'
+import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export const SmartContractSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendModalProps) => {

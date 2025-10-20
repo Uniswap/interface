@@ -1,29 +1,40 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { useAccount } from 'hooks/useAccount'
+import { useConnectionStatus } from 'features/accounts/store/hooks'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { useTranslation } from 'react-i18next'
 import { Button, type ButtonProps, useIsShortMobileDevice } from 'ui/src'
+import { MAINNET_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
+import { SOLANA_CHAIN_INFO } from 'uniswap/src/features/chains/svm/info/solana'
+import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
 
 interface BuyFormButtonProps {
   forceDisabled?: boolean
 }
 
 export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
-  const account = useAccount()
+  const isDisconnected = useConnectionStatus('aggregate').isDisconnected
   const accountDrawer = useAccountDrawer()
   const { t } = useTranslation()
   const isShortMobileDevice = useIsShortMobileDevice()
 
   const { buyFormState, derivedBuyFormInfo, setBuyFormState } = useBuyFormContext()
   const { inputAmount, quoteCurrency } = buyFormState
+
   const { notAvailableInThisRegion, quotes, fetchingQuotes, error } = derivedBuyFormInfo
+  const chainId = quoteCurrency?.currencyInfo?.currency.chainId
+  const isMissingPlatformWallet = useIsMissingPlatformWallet(chainId)
 
   const buttonSize: ButtonProps['size'] = isShortMobileDevice ? 'small' : 'large'
 
-  if (!account.isConnected) {
+  if (isDisconnected || isMissingPlatformWallet) {
     return (
       <Button size={buttonSize} variant="branded" emphasis="secondary" fill onPress={accountDrawer.open}>
-        {t('common.connectWallet.button')}
+        {isMissingPlatformWallet
+          ? t('common.connectTo', {
+              platform: chainId && isSVMChain(chainId) ? SOLANA_CHAIN_INFO.name : MAINNET_CHAIN_INFO.name,
+            })
+          : t('common.connectWallet.button')}
       </Button>
     )
   }

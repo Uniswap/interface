@@ -14,6 +14,23 @@ interface Window {
     isTrust?: true
     isLedgerConnect?: true
   }
+  // Binance extension injected properties
+  // Note: These follow the EIP-1193 Ethereum Provider standard
+  BinanceChain?: {
+    request: (args: { method: string; params?: unknown[] }) => Promise<unknown>
+    on?: (event: string, handler: (...args: unknown[]) => void) => void
+    removeListener?: (event: string, handler: (...args: unknown[]) => void) => void
+    isConnected?: () => boolean
+    isTrustWallet?: boolean
+  }
+  binancew3w?: {
+    ethereum?: {
+      request: (args: { method: string; params?: unknown[] }) => Promise<unknown>
+      on?: (event: string, handler: (...args: unknown[]) => void) => void
+      removeListener?: (event: string, handler: (...args: unknown[]) => void) => void
+      isConnected?: () => boolean
+    }
+  }
 }
 
 declare module 'content-hash' {

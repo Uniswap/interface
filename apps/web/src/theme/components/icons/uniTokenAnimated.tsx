@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: styled-components needed for 3D rotation animation
 import styled, { keyframes } from 'styled-components'
 
 const rotateImg = keyframes`

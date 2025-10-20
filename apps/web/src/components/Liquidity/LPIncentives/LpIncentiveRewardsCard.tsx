@@ -34,7 +34,7 @@ import { useGetPoolsRewards } from 'uniswap/src/data/rest/getPoolsRewards'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
-import { HexString } from 'uniswap/src/utils/hex'
+import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { isMobileWeb } from 'utilities/src/platform'
 

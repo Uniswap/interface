@@ -5,6 +5,7 @@ import { Fingerprint } from 'ui/src/components/icons'
 import { getChromeRuntimeWithThrow } from 'utilities/src/chrome/chrome'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
+import { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 import { MAX_REACT_QUERY_CACHE_TIME_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
 type BuiltInBiometricCapabilities = {
@@ -14,7 +15,16 @@ type BuiltInBiometricCapabilities = {
   os: chrome.runtime.PlatformOs
 }
 
-export function builtInBiometricCapabilitiesQuery({ t }: { t: TFunction }) {
+export function builtInBiometricCapabilitiesQuery({
+  t,
+}: {
+  t: TFunction
+}): QueryOptionsResult<
+  BuiltInBiometricCapabilities,
+  Error,
+  BuiltInBiometricCapabilities,
+  [ReactQueryCacheKey.ExtensionBuiltInBiometricCapabilities]
+> {
   return queryOptions({
     queryKey: [ReactQueryCacheKey.ExtensionBuiltInBiometricCapabilities],
     queryFn: async () => await getBuiltInBiometricCapabilities({ t }),

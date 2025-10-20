@@ -1240,6 +1240,8 @@ PODS:
     - Yoga
   - ExpoScreenCapture (7.0.1):
     - ExpoModulesCore
+  - ExpoSecureStore (14.0.1):
+    - ExpoModulesCore
   - ExpoStoreReview (8.0.1):
     - ExpoModulesCore
   - ExpoWebBrowser (14.0.2):
@@ -3438,6 +3440,7 @@ DEPENDENCIES:
   - ExpoLocalization (from `../../../node_modules/expo-localization/ios`)
   - ExpoModulesCore (from `../../../node_modules/expo-modules-core`)
   - ExpoScreenCapture (from `../../../node_modules/expo-screen-capture/ios`)
+  - ExpoSecureStore (from `../../../node_modules/expo-secure-store/ios`)
   - ExpoStoreReview (from `../../../node_modules/expo-store-review/ios`)
   - ExpoWebBrowser (from `../../../node_modules/expo-web-browser/ios`)
   - fast_float (from `../../../node_modules/react-native/third-party-podspecs/fast_float.podspec`)
@@ -3631,6 +3634,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/expo-modules-core"
   ExpoScreenCapture:
     :path: "../../../node_modules/expo-screen-capture/ios"
+  ExpoSecureStore:
+    :path: "../../../node_modules/expo-secure-store/ios"
   ExpoStoreReview:
     :path: "../../../node_modules/expo-store-review/ios"
   ExpoWebBrowser:
@@ -3874,6 +3879,7 @@ SPEC CHECKSUMS:
   ExpoLocalization: e36b911e04d371c6c6624ef818e56229bf51c498
   ExpoModulesCore: 87f0b8b38f9d4c8a983212ba54119f11f3fcb615
   ExpoScreenCapture: 29ab5480e0d2b7849691d17f00a70b279cbe6a65
+  ExpoSecureStore: d006eea5e316283099d46f80a6b10055b89a6008
   ExpoStoreReview: 32f7186925fdecacddf3c1bc9628dd11b10c3ddd
   ExpoWebBrowser: 6890a769e6c9d83da938dceb9a03e764afc3ec9c
   fast_float: 06eeec4fe712a76acc9376682e4808b05ce978b6

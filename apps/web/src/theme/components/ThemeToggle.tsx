@@ -55,7 +55,7 @@ export function SystemThemeUpdater() {
   useEffect(() => {
     addMediaQueryListener(DARKMODE_MEDIA_QUERY, listener)
     return () => removeMediaQueryListener(DARKMODE_MEDIA_QUERY, listener)
-  }, [setSystemTheme, listener])
+  }, [listener])
 
   return null
 }

@@ -1,3 +1,4 @@
+import { GraphQLApi } from '@universe/api'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import useInterval from 'lib/hooks/useInterval'
@@ -13,10 +14,6 @@ import {
 import { statusToTransactionInfoStatus } from 'state/fiatOnRampTransactions/utils'
 import { useAppDispatch } from 'state/hooks'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import {
-  TransactionType,
-  useActivityWebLazyQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FOR_API_HEADERS } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORTransactionRequest } from 'uniswap/src/features/fiatOnRamp/types'
@@ -28,7 +25,7 @@ import { logger } from 'utilities/src/logger/logger'
 export default function Updater(): null {
   const transactions = useFiatOnRampTransactions()
   const dispatch = useAppDispatch()
-  const [, query] = useActivityWebLazyQuery()
+  const [, query] = GraphQLApi.useActivityWebLazyQuery()
 
   // Polls the fiat on-ramp API for new FOR transactions, until Meld returns a valid result for each.
   // Once we find this initial record for a transaction, we start polling the GQL ActivityWeb endpoint
@@ -136,7 +133,7 @@ export default function Updater(): null {
     query.data?.portfolios?.[0]?.assetActivities?.forEach((activity) => {
       if (
         activity?.details.__typename === 'TransactionDetails' &&
-        activity.details.type === TransactionType.OnRamp &&
+        activity.details.type === GraphQLApi.TransactionType.OnRamp &&
         activity.details.assetChanges.length > 0
       ) {
         const assetChange = activity.details.assetChanges[0]

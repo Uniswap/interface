@@ -129,7 +129,7 @@ export function OTPInput(): JSX.Element {
           inputRefs.current[index + 1]?.current?.focus()
         }
       },
-    [characterSequence, setCharacterSequence],
+    [characterSequence],
   )
 
   const handleKeyPress = useCallback(

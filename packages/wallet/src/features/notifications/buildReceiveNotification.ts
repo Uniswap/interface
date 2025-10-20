@@ -3,7 +3,7 @@ import {
   AppNotificationType,
   ReceiveCurrencyTxNotification,
   ReceiveNFTNotification,
-} from 'uniswap/src/features/notifications/types'
+} from 'uniswap/src/features/notifications/slice/types'
 import {
   TransactionDetails,
   TransactionStatus,

@@ -7,7 +7,7 @@ jest.mock('utilities/src/platform', () => ({
 
 describe('env', () => {
   beforeEach(() => {
-    UserAgentMock.isInterface = false
+    UserAgentMock.isWebApp = false
     process.env = {}
   })
 
@@ -35,7 +35,7 @@ describe('env', () => {
     })
 
     it('should return true', () => {
-      UserAgentMock.isInterface = true
+      UserAgentMock.isWebApp = true
       process.env.NODE_ENV = 'development'
       expect(isDevEnv()).toBe(true)
     })
@@ -47,7 +47,7 @@ describe('env', () => {
     })
 
     it('should return true', () => {
-      UserAgentMock.isInterface = true
+      UserAgentMock.isWebApp = true
       process.env.REACT_APP_STAGING = 'true'
       expect(isBetaEnv()).toBe(true)
     })
@@ -59,7 +59,7 @@ describe('env', () => {
     })
 
     it('should return true', () => {
-      UserAgentMock.isInterface = true
+      UserAgentMock.isWebApp = true
       process.env.NODE_ENV = 'production'
       expect(isProdEnv()).toBe(true)
     })

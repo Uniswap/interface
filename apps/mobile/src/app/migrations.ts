@@ -1,5 +1,5 @@
 // Type information currently gets lost after a migration
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// biome-ignore-all lint/suspicious/noExplicitAny: Migration logic requires flexible typing
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable max-lines */
 

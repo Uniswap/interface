@@ -1,6 +1,6 @@
+import { GqlResult } from '@universe/api'
 import { useCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useCurrencies'
 import { USDC, USDT, WBTC } from 'uniswap/src/constants/tokens'
-import { GqlResult } from 'uniswap/src/data/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'

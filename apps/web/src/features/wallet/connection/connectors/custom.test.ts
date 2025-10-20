@@ -1,16 +1,11 @@
-import { renderHook } from '@testing-library/react'
 // Import mocked modules to get references to their functions
-import { connect } from '@wagmi/core'
 import COINBASE_ICON from 'assets/wallets/coinbase-icon.svg'
-import { applyCustomConnectorMeta, useConnectCustomWalletsMap } from 'features/wallet/connection/connectors/custom'
+import { applyCustomConnectorMeta } from 'features/wallet/connection/connectors/custom'
 import type { WalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
 import { COINBASE_WALLET_CONNECTOR, METAMASK_CONNECTOR, UNISWAP_WALLET_CONNECTOR } from 'test-utils/wallets/fixtures'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import PASSKEY_ICON from 'ui/src/assets/icons/passkey.svg'
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-
-const mockConnect = vi.mocked(connect)
 
 // Mock dependencies
 vi.mock('@wagmi/core', () => ({
@@ -49,65 +44,6 @@ vi.mock('utilities/src/react/hooks', () => ({
 describe('custom connectors', () => {
   beforeEach(() => {
     vi.clearAllMocks()
-  })
-
-  describe('useConnectCustomWalletsMap', () => {
-    it('should return a map with custom connector functions', () => {
-      // Act
-      const { result } = renderHook(() => useConnectCustomWalletsMap())
-
-      // Assert
-      expect(result.current).toHaveProperty(CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID)
-      expect(result.current).toHaveProperty(CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID)
-      expect(typeof result.current[CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID]).toBe('function')
-      expect(typeof result.current[CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID]).toBe('function')
-    })
-
-    it('should call connectUniswapWallet when uniswap wallet connect connector is invoked', async () => {
-      // Arrange
-      const { result } = renderHook(() => useConnectCustomWalletsMap())
-      mockConnect.mockResolvedValue({} as any)
-
-      // Act
-      await result.current[CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID]()
-
-      // Assert
-      expect(mockConnect).toHaveBeenCalledWith({}, { connector: { id: 'uniswap-wallet-connect' } })
-    })
-
-    it('should call signInWithPasskeyAsync when embedded wallet connector is invoked', async () => {
-      // Arrange
-      const { result } = renderHook(() => useConnectCustomWalletsMap())
-
-      // Act
-      await result.current[CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID]()
-
-      // Assert
-      expect(mockSignInWithPasskeyAsync).toHaveBeenCalled()
-    })
-
-    it('should handle errors when uniswap wallet connection fails', async () => {
-      // Arrange
-      const { result } = renderHook(() => useConnectCustomWalletsMap())
-      const error = new Error('Connection failed')
-      mockConnect.mockRejectedValue(error)
-
-      // Act & Assert
-      await expect(result.current[CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID]()).rejects.toThrow(
-        'Connection failed',
-      )
-    })
-
-    it('should handle errors when embedded wallet connection fails', async () => {
-      // Arrange
-      mockSignInWithPasskeyAsync.mockRejectedValue(new Error('Passkey sign-in failed'))
-      const { result } = renderHook(() => useConnectCustomWalletsMap())
-
-      // Act & Assert
-      await expect(result.current[CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID]()).rejects.toThrow(
-        'Passkey sign-in failed',
-      )
-    })
   })
 
   describe('applyCustomConnectorMeta', () => {

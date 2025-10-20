@@ -1,6 +1,6 @@
 import { UseQueryResult } from '@tanstack/react-query'
+import { useQueryWithImmediateGarbageCollection } from '@universe/api'
 import { useRef } from 'react'
-import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClients/hooks/useQueryWithImmediateGarbageCollection'
 import { useTradeService } from 'uniswap/src/features/services'
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 import { parseQuoteCurrencies } from 'uniswap/src/features/transactions/swap/hooks/useTrade/parseQuoteCurrencies'

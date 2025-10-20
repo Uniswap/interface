@@ -1,7 +1,7 @@
+import { TradingApi } from '@universe/api'
 import { providers } from 'ethers'
 import { call, delay, put, SagaGenerator, select } from 'typed-redux-saga'
-import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { makeSelectTransaction } from 'uniswap/src/features/transactions/selectors'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
@@ -164,7 +164,7 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
   }
 
   const { tradingApiPollingIntervalMs } = getChainInfo(transaction.chainId)
-  let swapStatus: SwapStatus | undefined
+  let swapStatus: TradingApi.SwapStatus | undefined
   const maxRetries = 10
   const halfMaxRetries = Math.floor(maxRetries / 2)
   const backoffFactor = 1.5 // gentle backoff
@@ -184,7 +184,7 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
 
     yield* delay(currentPollInterval)
 
-    const data = yield* call(fetchSwaps, {
+    const data = yield* call(TradingApiClient.fetchSwaps, {
       txHashes: [txHash],
       chainId,
     })

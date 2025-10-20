@@ -1,5 +1,5 @@
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
-import { HexString } from 'uniswap/src/utils/hex'
+import { HexString } from 'utilities/src/addresses/hex'
 
 export interface SignedTransactionRequest {
   request: ValidatedTransactionRequest

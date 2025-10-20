@@ -1,6 +1,5 @@
 import type { WalletName as SolanaWalletName } from '@solana/wallet-adapter-base'
-import type { CustomConnectorId } from 'features/wallet/connection/connectors/custom'
-import type { Prettify } from 'viem'
+import type { CustomConnectorId } from 'features/wallet/connection/types/CustomConnectorId'
 
 type AtLeastOne<T, K extends keyof T = keyof T> = K extends keyof T
   ? { [P in K]-?: NonNullable<T[P]> } & Partial<Omit<T, K>>
@@ -18,11 +17,7 @@ export type WalletConnectorMeta = {
   customConnectorId?: CustomConnectorId
 }>
 
-export type SolanaWalletConnectorMeta = Prettify<Extract<WalletConnectorMeta, { solana: SolanaConnectorDetails }>>
-export type WagmiWalletConnectorMeta = Prettify<Extract<WalletConnectorMeta, { wagmi: WagmiConnectorDetails }>>
-export type CustomWalletConnectorMeta = Prettify<Extract<WalletConnectorMeta, { customConnectorId: CustomConnectorId }>>
-
-export type WagmiConnectorDetails = {
+type WagmiConnectorDetails = {
   /** The wagmi connector is of this connector, if this connector is linked to a wagmi connector. */
   id: string
   type: string // temporarily kept for backwards analytics compatibility

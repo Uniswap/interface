@@ -8,7 +8,7 @@ import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/f
 import { usePriceDifference } from 'uniswap/src/features/transactions/swap/hooks/usePriceDifference'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 export function SwapFormCurrencyInputPanel(): JSX.Element {
   const { t } = useTranslation()
@@ -73,7 +73,7 @@ export function SwapFormCurrencyInputPanel(): JSX.Element {
       >
         <CurrencyInputPanel
           ref={inputRef}
-          headerLabel={isWeb ? t('common.button.sell') : undefined}
+          headerLabel={isWebPlatform ? t('common.button.sell') : undefined}
           currencyAmount={currencyAmounts[CurrencyField.INPUT]}
           currencyBalance={currencyBalances[CurrencyField.INPUT]}
           currencyField={CurrencyField.INPUT}

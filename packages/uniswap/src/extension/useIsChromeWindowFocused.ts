@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react'
 import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 
 export function useIsChromeWindowFocused(): boolean {
   const [isFocused, setIsFocused] = useState(true)
 
   useEffect(() => {
-    if (!isExtension) {
+    if (!isExtensionApp) {
       return undefined
     }
 

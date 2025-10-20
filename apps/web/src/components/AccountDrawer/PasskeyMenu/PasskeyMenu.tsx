@@ -9,7 +9,6 @@ import { AndroidLogo } from 'components/Icons/AndroidLogo'
 import { AppleLogo } from 'components/Icons/AppleLogo'
 import { useAccount } from 'hooks/useAccount'
 import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
-import { t } from 'i18next'
 import { useCallback, useEffect, useState } from 'react'
 import { LifeBuoy } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -31,6 +30,7 @@ import {
 } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import i18n from 'uniswap/src/i18n'
 import { isMobileWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -71,7 +71,7 @@ function getProviderLabel(provider: AuthenticatorProvider, count?: number) {
       return provider
     }
     default: {
-      return t('common.passkey.count', { number: count })
+      return i18n.t('common.passkey.count', { number: count })
     }
   }
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { createHashRouter, Location, NavigationType, Router } from 'react-router'
+import { createHashRouter, Location, NavigationType } from 'react-router'
 
 interface RouterState {
   historyAction: NavigationType
@@ -76,10 +76,10 @@ type RouterNavigateArgs = Parameters<RouterNavigate>
 // note: useNavigation().navigate() returns void, so making this match that function for easier swapping out
 export const navigate = (to: RouterNavigateArgs[0] | number, opts?: RouterNavigateArgs[1]): void => {
   if (typeof to === 'number') {
-    // eslint-disable-next-line no-void
+    // biome-ignore lint/complexity/noVoid: Router navigation returns Promise<void> requiring explicit void handling
     void getRouter().navigate(to)
     return
   }
-  // eslint-disable-next-line no-void
+  // biome-ignore lint/complexity/noVoid: Router navigation returns Promise<void> requiring explicit void handling
   void getRouter().navigate(to, opts)
 }

@@ -2,7 +2,7 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { Bytes, providers, Signer } from 'ethers'
 import { SignsTypedData } from 'uniswap/src/features/transactions/signing'
-import { HexString } from 'uniswap/src/utils/hex'
+import { HexString } from 'utilities/src/addresses/hex'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
 /**

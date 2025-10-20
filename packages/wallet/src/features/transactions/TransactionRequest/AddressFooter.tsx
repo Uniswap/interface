@@ -5,7 +5,7 @@ import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { ContentRow } from 'uniswap/src/components/transactions/requests/ContentRow'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { isExtension, isMobileApp } from 'utilities/src/platform'
+import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
 
 export function AddressFooter({
   connectedAccountAddress,
@@ -18,7 +18,7 @@ export function AddressFooter({
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const variant = isMobileApp || isExtension ? 'body3' : 'body4'
+  const variant = isMobileApp || isExtensionApp ? 'body3' : 'body4'
 
   const currentAccountAddress = connectedAccountAddress || activeAccountAddress
 

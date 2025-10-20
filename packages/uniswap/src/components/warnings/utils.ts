@@ -1,20 +1,20 @@
+import { GraphQLApi } from '@universe/api'
 import { ColorTokens, GeneratedIcon } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Blocked } from 'ui/src/components/icons/Blocked'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { OctagonExclamation } from 'ui/src/components/icons/OctagonExclamation'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-export function safetyLevelToWarningSeverity(safetyLevel: Maybe<SafetyLevel>): WarningSeverity {
+export function safetyLevelToWarningSeverity(safetyLevel: Maybe<GraphQLApi.SafetyLevel>): WarningSeverity {
   switch (safetyLevel) {
-    case SafetyLevel.Blocked:
+    case GraphQLApi.SafetyLevel.Blocked:
       return WarningSeverity.Blocked
-    case SafetyLevel.Verified:
+    case GraphQLApi.SafetyLevel.Verified:
       return WarningSeverity.None
-    case SafetyLevel.StrongWarning:
+    case GraphQLApi.SafetyLevel.StrongWarning:
       return WarningSeverity.High
-    case SafetyLevel.MediumWarning:
+    case GraphQLApi.SafetyLevel.MediumWarning:
     default:
       return WarningSeverity.Medium
   }

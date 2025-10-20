@@ -7,7 +7,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 type PasskeyManagementModalProps = {
   isOpen: boolean
@@ -38,9 +38,9 @@ export function PasskeyManagementModal({ isOpen, onClose, address }: PasskeyMana
       <Flex
         centered
         gap="$spacing16"
-        pb={isWeb ? '$none' : '$spacing24'}
-        pt={isWeb ? '$spacing20' : '$spacing12'}
-        px={isWeb ? '$none' : '$spacing24'}
+        pb={isWebPlatform ? '$none' : '$spacing24'}
+        pt={isWebPlatform ? '$spacing20' : '$spacing12'}
+        px={isWebPlatform ? '$none' : '$spacing24'}
       >
         <Flex centered borderRadius="$rounded12" p="$spacing12" backgroundColor="$surface3">
           <Passkey color="$neutral1" size="$icon.24" />

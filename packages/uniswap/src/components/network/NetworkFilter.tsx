@@ -14,7 +14,7 @@ import { isMobileApp } from 'utilities/src/platform'
 
 const NETWORK_ICON_SIZE = iconSizes.icon20
 
-interface NetworkFilterProps {
+export interface NetworkFilterProps {
   chainIds: UniverseChainId[]
   selectedChain: UniverseChainId | null
   onPressChain: (chainId: UniverseChainId | null) => void

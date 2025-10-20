@@ -21,7 +21,7 @@ const currentTimestamp = () => new Date().getTime()
 function tryParseOldState<T>(value: string | null, fallback: T): T {
   try {
     return value ? JSON.parse(value) : fallback
-  } catch (e) {
+  } catch (_e) {
     return fallback
   }
 }

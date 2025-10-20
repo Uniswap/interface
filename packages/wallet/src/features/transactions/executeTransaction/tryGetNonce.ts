@@ -70,7 +70,7 @@ export function* tryGetNonce(
 
 export function* getPendingPrivateTxCount(address: Address, chainId: number): SagaIterator<number> {
   const selectAddressTransactions = yield* call(makeSelectAddressTransactions)
-  const pendingTransactions = yield* select(selectAddressTransactions, address)
+  const pendingTransactions = yield* select(selectAddressTransactions, { evmAddress: address, svmAddress: null })
   if (!pendingTransactions) {
     return 0
   }

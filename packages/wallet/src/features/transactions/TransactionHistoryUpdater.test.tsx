@@ -1,6 +1,6 @@
+import { GraphQLApi } from '@universe/api'
 import dayjs from 'dayjs'
 import MockDate from 'mockdate'
-import { AssetActivity } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { erc20RecentReceiveAssetActivity, erc20StaleReceiveAssetActivity, portfolio } from 'uniswap/src/test/fixtures'
@@ -62,7 +62,7 @@ const assetActivities = [
     id: faker.datatype.uuid(),
     timestamp: past.add(1, 'day').unix(),
   },
-] as AssetActivity[]
+] as GraphQLApi.AssetActivity[]
 
 const assetActivities2 = [
   {
@@ -77,7 +77,7 @@ const assetActivities2 = [
     id: faker.datatype.uuid(),
     timestamp: past.add(2, 'day').unix(),
   },
-] as AssetActivity[]
+] as GraphQLApi.AssetActivity[]
 
 const portfolios = [
   portfolio({ ownerAddress: account1.address, assetActivities }),

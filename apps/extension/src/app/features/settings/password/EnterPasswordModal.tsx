@@ -14,11 +14,13 @@ export function EnterPasswordModal({
   onNext,
   onClose,
   shouldReturnPassword = false,
+  hideBiometrics = false,
 }: {
   isOpen: boolean
   onNext: (password?: string) => void
   onClose: () => void
   shouldReturnPassword?: boolean
+  hideBiometrics?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -81,14 +83,15 @@ export function EnterPasswordModal({
           onToggleHideInput={setHideInput}
           {...(showPasswordError && { borderColor: '$statusCritical' })}
           onPressBiometricUnlock={onPressReauthenticateWithBiometricCredential}
+          hideBiometrics={hideBiometrics}
         />
 
-        <Text color="$statusCritical" minHeight="$spacing24" textAlign="center" variant="body2">
+        <Text color="$statusCritical" minHeight="$spacing20" textAlign="center" variant="body3">
           {showPasswordError ? t('extension.passwordPrompt.error.wrongPassword') : ''}
         </Text>
 
         <Flex row width="100%">
-          <Button isDisabled={!password.length} emphasis="primary" onPress={checkPassword}>
+          <Button size="medium" isDisabled={!password.length} emphasis="primary" onPress={checkPassword}>
             {t('common.button.continue')}
           </Button>
         </Flex>

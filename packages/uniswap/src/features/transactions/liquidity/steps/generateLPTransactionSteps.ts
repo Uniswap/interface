@@ -90,7 +90,7 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
       case 'decrease':
         return orderDecreaseLiquiditySteps({
           approvalPositionToken,
-          decreasePosition: createDecreasePositionStep(txContext.txRequest),
+          decreasePosition: createDecreasePositionStep(txContext.txRequest, txContext.sqrtRatioX96),
         })
       case 'migrate':
         if (txContext.unsigned) {
@@ -139,7 +139,7 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
             permit: undefined,
             token0PermitTransaction: token0PermitTransactionStep,
             token1PermitTransaction: token1PermitTransactionStep,
-            increasePosition: createIncreasePositionStep(txContext.txRequest),
+            increasePosition: createIncreasePositionStep(txContext.txRequest, txContext.sqrtRatioX96),
           })
         }
     }

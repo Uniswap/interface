@@ -1,16 +1,12 @@
-import { QueryFunction, QueryKey, skipToken, UseQueryResult, useQuery } from '@tanstack/react-query'
+import { type QueryFunction, type QueryKey, skipToken, type UseQueryResult, useQuery } from '@tanstack/react-query'
+import { type TradingApi, type UseQueryApiHelperHookArgs } from '@universe/api'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { checkWalletDelegation } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
-import {
-  WalletCheckDelegationRequestBody,
-  WalletCheckDelegationResponseBody,
-} from 'uniswap/src/data/tradingApi/__generated__'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export type WalletCheckDelegationParams = {
-  walletAddresses: WalletCheckDelegationRequestBody['walletAddresses']
-  chainIds: WalletCheckDelegationRequestBody['chainIds']
+  walletAddresses: TradingApi.WalletCheckDelegationRequestBody['walletAddresses']
+  chainIds: TradingApi.WalletCheckDelegationRequestBody['chainIds']
 }
 
 export function useWalletCheckDelegationQuery({
@@ -18,11 +14,11 @@ export function useWalletCheckDelegationQuery({
   ...rest
 }: UseQueryApiHelperHookArgs<
   WalletCheckDelegationParams,
-  WalletCheckDelegationResponseBody
->): UseQueryResult<WalletCheckDelegationResponseBody> {
+  TradingApi.WalletCheckDelegationResponseBody
+>): UseQueryResult<TradingApi.WalletCheckDelegationResponseBody> {
   const queryKey = walletCheckDelegationQueryKey(params)
 
-  return useQuery<WalletCheckDelegationResponseBody>({
+  return useQuery<TradingApi.WalletCheckDelegationResponseBody>({
     queryKey,
     queryFn: params ? walletCheckDelegationQueryFn(params) : skipToken,
     ...rest,
@@ -35,6 +31,6 @@ const walletCheckDelegationQueryKey = (params?: WalletCheckDelegationParams): Qu
 
 const walletCheckDelegationQueryFn = (
   params: WalletCheckDelegationParams,
-): QueryFunction<WalletCheckDelegationResponseBody, QueryKey, never> | undefined => {
+): QueryFunction<TradingApi.WalletCheckDelegationResponseBody, QueryKey, never> | undefined => {
   return async (): ReturnType<typeof checkWalletDelegation> => await checkWalletDelegation(params)
 }

@@ -17,6 +17,7 @@
     "@ethersproject/providers": "5.7.2",
     "@react-native-community/netinfo": "11.4.1",
     "@react-navigation/core": "7.9.2",
+    "@solana/web3.js": "1.92.0",
     "@tanstack/react-query": "5.77.2",
     "@uniswap/analytics": "1.7.2",
     "@uniswap/analytics-events": "2.43.0",
@@ -50,16 +51,18 @@
   "main": "src/index.ts",
   "private": true,
   "scripts": {
-    "build": "tsc -b",
-    "check:deps:usage": "depcheck && bun run check-promise-version",
-    "check-promise-version": "../../scripts/check-promise-version.sh",
-    "format": "biome check . --linter-enabled=false",
-    "lint": "eslint . --ext ts,tsx --max-warnings=0",
-    "lint:fix": "eslint . --ext ts,tsx --fix",
-    "test": "jest",
-    "typecheck": "tsc -b"
+    "build": "nx build utilities",
+    "check:deps:usage": "nx check:deps:usage utilities",
+    "check-promise-version": "nx check-promise-version utilities",
+    "lint:biome": "nx lint:biome utilities",
+    "lint:biome:fix": "nx lint:biome:fix utilities",
+    "lint": "nx lint utilities",
+    "lint:fix": "nx lint:fix utilities",
+    "test": "nx test utilities",
+    "typecheck": "nx typecheck utilities"
   },
-  "sideEffects": [
-    "*.css"
-  ]
+  "nx": {
+    "includedScripts": []
+  },
+  "sideEffects": ["*.css"]
 }

@@ -7,14 +7,14 @@ import { Flex, FlexProps } from 'ui/src/components/layout'
 import { useScrollbarStyles } from 'ui/src/styles/ScrollbarStyles'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import { useShadowPropsShort } from 'ui/src/theme/shadows'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 export const ADAPTIVE_MODAL_ANIMATION_DURATION = 200
 
 export function ModalCloseIcon(props: CloseIconProps): JSX.Element {
   // hide close icon on bottom sheet on interface
   const sm = useMedia().sm
-  const hideCloseIcon = isInterface && sm
+  const hideCloseIcon = isWebApp && sm
   return hideCloseIcon ? <></> : <CloseIconWithHover {...props} />
 }
 
@@ -83,7 +83,7 @@ export function WebBottomSheet({
   const sheetHeightStyles: FlexProps = {
     flex: 1,
     height: rest.$sm?.['$platform-web']?.height as DimensionValue,
-    maxHeight: isInterface
+    maxHeight: isWebApp
       ? `calc(100vh - ${INTERFACE_NAV_HEIGHT}px)`
       : ((rest.$sm?.['$platform-web']?.maxHeight ?? '100dvh') as DimensionValue),
   }

@@ -30,7 +30,7 @@ export function UnitagOptionItem({ unitagOption, onPress }: UnitagOptionItemProp
       }
       subtitle={
         <Text color="$neutral2" variant="body2">
-          {sanitizeAddressText(shortenAddress(address))}
+          {sanitizeAddressText(shortenAddress({ address }))}
         </Text>
       }
       onPress={onPress}

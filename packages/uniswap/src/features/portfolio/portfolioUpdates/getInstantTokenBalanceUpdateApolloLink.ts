@@ -1,18 +1,10 @@
 import { ApolloCache, ApolloLink, NormalizedCacheObject } from '@apollo/client'
 import { asyncMap, Reference } from '@apollo/client/utilities'
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore'
+import { GQLQueries, GraphQLApi } from '@universe/api'
 import { Buffer } from 'buffer'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import {
-  Amount,
-  Currency,
-  Portfolio,
-  TokenBalance,
-  TokenBalancePartsFragmentDoc,
-  TokenDocument,
-  TokenQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { fetchOnChainBalances } from 'uniswap/src/features/portfolio/portfolioUpdates/fetchOnChainBalances'
@@ -62,7 +54,7 @@ export function getInstantTokenBalanceUpdateApolloLink({ reduxStore }: { reduxSt
           return response
         }
 
-        const data = response.data as Maybe<{ portfolios: Array<Portfolio> }>
+        const data = response.data as Maybe<{ portfolios: Array<GraphQLApi.Portfolio> }>
         const tokenBalances = data?.portfolios[0]?.tokenBalances
 
         if (!tokenBalances) {
@@ -104,7 +96,7 @@ export function getInstantTokenBalanceUpdateApolloLink({ reduxStore }: { reduxSt
           }
 
           const tokenAddress = tokenBalance.token?.address ?? getNativeAddress(chainId)
-          const currencyId = buildCurrencyId(chainId, tokenAddress).toLowerCase()
+          const currencyId = normalizeCurrencyIdForMapLookup(buildCurrencyId(chainId, tokenAddress))
 
           const tokenBalanceOverride = tokenBalanceOverrides[currencyId]
 
@@ -238,8 +230,8 @@ export function createTokenBalanceRef({
   onchainBalanceQuantity: number
   denominatedValue: { value: number; currency: string } | null
 }): Reference | null {
-  const token = apolloCache.readQuery<TokenQuery>({
-    query: TokenDocument,
+  const token = apolloCache.readQuery<GraphQLApi.TokenQuery>({
+    query: GraphQLApi.TokenDocument,
     variables: currencyIdToContractInput(currencyId),
   })?.token
 
@@ -251,7 +243,7 @@ export function createTokenBalanceRef({
   }
 
   // This must match our graphql backend ID generation.
-  const tokenBalanceId = generateEntityId('TokenBalance', [ownerAddress, token.id, Currency.Usd])
+  const tokenBalanceId = generateEntityId('TokenBalance', [ownerAddress, token.id, GraphQLApi.Currency.Usd])
 
   logger.debug(
     'getInstantTokenBalanceUpdateApolloLink.ts',
@@ -265,12 +257,12 @@ export function createTokenBalanceRef({
 
   const newTokenBalanceRef = apolloCache.writeFragment({
     data: {
-      __typename: 'TokenBalance' satisfies TokenBalance['__typename'],
+      __typename: 'TokenBalance' satisfies GraphQLApi.TokenBalance['__typename'],
       id: tokenBalanceId,
       quantity: onchainBalanceQuantity,
       denominatedValue: denominatedValue
         ? {
-            __typename: 'Amount' satisfies Amount['__typename'],
+            __typename: 'Amount' satisfies GraphQLApi.Amount['__typename'],
             value: denominatedValue.value,
             currency: denominatedValue.currency,
           }
@@ -281,7 +273,7 @@ export function createTokenBalanceRef({
         relativeChange24: null,
       },
     },
-    fragment: TokenBalancePartsFragmentDoc,
+    fragment: GraphQLApi.TokenBalancePartsFragmentDoc,
     fragmentName: 'TokenBalanceParts',
   })
 
@@ -308,7 +300,7 @@ function createTokenBalance({
   currencyId,
   onchainBalanceQuantity,
   denominatedValue,
-}: Parameters<typeof createTokenBalanceRef>[0]): TokenBalance | null {
+}: Parameters<typeof createTokenBalanceRef>[0]): GraphQLApi.TokenBalance | null {
   const newTokenBalanceRef = createTokenBalanceRef({
     apolloCache,
     ownerAddress,
@@ -321,9 +313,9 @@ function createTokenBalance({
     return null
   }
 
-  const newTokenBalance = apolloCache.readFragment<TokenBalance>({
+  const newTokenBalance = apolloCache.readFragment<GraphQLApi.TokenBalance>({
     id: apolloCache.identify(newTokenBalanceRef),
-    fragment: TokenBalancePartsFragmentDoc,
+    fragment: GraphQLApi.TokenBalancePartsFragmentDoc,
     fragmentName: 'TokenBalanceParts',
   })
 

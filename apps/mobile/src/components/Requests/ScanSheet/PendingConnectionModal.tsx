@@ -22,8 +22,8 @@ import {
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { DappRequestType, WalletConnectEvent, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
@@ -149,7 +149,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         await returnToPreviousApp()
         setDidOpenFromDeepLink(false)
       }
-    } catch (error) {
+    } catch (_error) {
       setIsConnecting(false)
     } finally {
       setIsConnecting(false)

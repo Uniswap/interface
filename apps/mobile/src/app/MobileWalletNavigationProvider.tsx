@@ -7,6 +7,7 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { closeAllModals, closeModal, openModal } from 'src/features/modals/modalSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
+import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { NavigateToNftItemArgs } from 'uniswap/src/contexts/UniswapContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
@@ -14,6 +15,8 @@ import {
   useFiatOnRampAggregatorGetCountryQuery,
 } from 'uniswap/src/features/fiatOnRamp/api'
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
@@ -24,7 +27,6 @@ import { getTokenUrl } from 'uniswap/src/utils/linking'
 import { closeKeyboardBeforeCallback } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { logger } from 'utilities/src/logger/logger'
 import { noop } from 'utilities/src/react/noop'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
   getNavigateToSendFlowArgsInitialState,
   getNavigateToSwapFlowArgsInitialState,
@@ -40,7 +42,7 @@ import {
 
 export function MobileWalletNavigationProvider({ children }: PropsWithChildren): JSX.Element {
   const handleShareToken = useHandleShareToken()
-  const navigateToAccountActivityList = useNavigateToHomepageTab(HomeScreenTabIndex.Activity)
+  const navigateToAccountActivityList = useNavigateToActivity()
   const navigateToAccountTokenList = useNavigateToHomepageTab(HomeScreenTabIndex.Tokens)
   const navigateToBuyOrReceiveWithEmptyWallet = useNavigateToBuyOrReceiveWithEmptyWallet()
   const navigateToNftCollection = useNavigateToNftCollection()
@@ -98,6 +100,25 @@ function useHandleShareToken(): (args: ShareTokenArgs) => Promise<void> {
       })
     }
   }, [])
+}
+
+function useNavigateToActivity(): () => void {
+  const { navigate } = useAppStackNavigation()
+  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
+
+  const navigateToActivityTab = useNavigateToHomepageTab(HomeScreenTabIndex.Activity)
+
+  const navigateToActivityScreen = useCallback((): void => {
+    navigate(MobileScreens.Activity)
+  }, [navigate])
+
+  return useCallback((): void => {
+    if (isBottomTabsEnabled) {
+      navigateToActivityScreen()
+    } else {
+      navigateToActivityTab()
+    }
+  }, [navigateToActivityTab, isBottomTabsEnabled, navigateToActivityScreen])
 }
 
 function useNavigateToHomepageTab(tab: HomeScreenTabIndex): () => void {
@@ -224,29 +245,50 @@ function useNavigateToTokenDetails(): (currencyId: string) => void {
   const appNavigation = useAppStackNavigation()
   const { onClose } = useReactNavigationModal()
   const dispatch = useDispatch()
+  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
 
   return useCallback(
     (currencyId: string): void => {
+      const currentNavRouteName = navigationRef.getCurrentRoute()?.name
       const isExploreNavigationActuallyFocused = Boolean(
-        navigationRef.getCurrentRoute()?.name === ModalName.Explore &&
-          exploreNavigationRef.current &&
-          exploreNavigationRef.isFocused(),
+        currentNavRouteName === ModalName.Explore && exploreNavigationRef.current && exploreNavigationRef.isFocused(),
       )
 
       closeKeyboardBeforeCallback(() => {
+        const route = navigationRef.getCurrentRoute()
+        const isSwap = route?.name === ModalName.Swap
+
         dispatch(closeAllModals())
-        if (isExploreNavigationActuallyFocused) {
-          exploreNavigationRef.navigate(MobileScreens.TokenDetails, { currencyId })
-        } else {
+
+        if (!isBottomTabsEnabled) {
+          if (isExploreNavigationActuallyFocused) {
+            exploreNavigationRef.navigate(MobileScreens.TokenDetails, { currencyId })
+            return
+          }
+
           onClose()
           appNavigation.reset({
             index: 1,
             routes: [{ name: MobileScreens.Home }, { name: MobileScreens.TokenDetails, params: { currencyId } }],
           })
+          return
         }
+
+        // Always call `onClose`
+        onClose()
+
+        if (isSwap) {
+          appNavigation.reset({
+            index: 1,
+            routes: [{ name: MobileScreens.Home }, { name: MobileScreens.TokenDetails, params: { currencyId } }],
+          })
+          return
+        }
+
+        appNavigation.navigate(MobileScreens.TokenDetails, { currencyId })
       })
     },
-    [appNavigation, dispatch, onClose],
+    [appNavigation, dispatch, onClose, isBottomTabsEnabled],
   )
 }
 

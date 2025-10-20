@@ -129,7 +129,7 @@ export function TokenDescription() {
           >
             <TokenInfoButton onPress={copy}>
               <Copy width="18px" height="18px" color={neutral1} />
-              {shortenAddress(currency.address)}
+              {shortenAddress({ address: currency.address })}
             </TokenInfoButton>
           </MouseoverTooltip>
         )}

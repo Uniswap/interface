@@ -15,7 +15,7 @@ import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 export function CancelConfirmationView({
   authTrigger,
@@ -72,9 +72,9 @@ export function CancelConfirmationView({
       backgroundColor="$surface1"
       borderRadius="$rounded20"
       gap="$spacing16"
-      mt={isWeb ? '$spacing16' : '$none'}
-      px={isWeb ? '$none' : '$spacing24'}
-      py={isWeb ? '$none' : '$spacing12'}
+      mt={isWebPlatform ? '$spacing16' : '$none'}
+      px={isWebPlatform ? '$none' : '$spacing24'}
+      py={isWebPlatform ? '$none' : '$spacing12'}
     >
       <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
         <SlashCircle color="$neutral2" size="$icon.20" />

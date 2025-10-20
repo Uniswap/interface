@@ -1,3 +1,3 @@
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
-export const INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT = isWeb ? 'body4' : 'body3'
+export const INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT = isWebPlatform ? 'body4' : 'body3'

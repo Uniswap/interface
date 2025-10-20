@@ -1,6 +1,6 @@
+import { TradingApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useTradingApiSwappableTokensQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
-import { ChainId } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import {
@@ -14,7 +14,7 @@ export function useNumBridgingChains(): number {
   const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({
     params: {
       tokenIn: NATIVE_ADDRESS_FOR_TRADING_API,
-      tokenInChainId: ChainId._1,
+      tokenInChainId: TradingApi.ChainId._1,
     },
   })
 
@@ -28,7 +28,7 @@ export function useIsBridgingChain(chainId: UniverseChainId): boolean {
   const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({
     params: {
       tokenIn: NATIVE_ADDRESS_FOR_TRADING_API,
-      tokenInChainId: ChainId._1,
+      tokenInChainId: TradingApi.ChainId._1,
     },
   })
 
@@ -42,7 +42,7 @@ export function useBridgingSupportedChainIds(): UniverseChainId[] {
   const { data: bridgingTokens } = useTradingApiSwappableTokensQuery({
     params: {
       tokenIn: NATIVE_ADDRESS_FOR_TRADING_API,
-      tokenInChainId: ChainId._1,
+      tokenInChainId: TradingApi.ChainId._1,
     },
   })
 

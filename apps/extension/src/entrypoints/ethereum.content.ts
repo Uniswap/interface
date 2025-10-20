@@ -8,6 +8,7 @@ import {
 import { WindowEthereumProxy } from 'src/contentScript/WindowEthereumProxy'
 import { logger } from 'utilities/src/logger/logger'
 import { v4 as uuid } from 'uuid'
+import { defineContentScript } from 'wxt/utils/define-content-script'
 
 declare global {
   interface Window {
@@ -18,6 +19,10 @@ declare global {
 }
 
 function makeEthereum(): void {
+  // Guard against running in Node environment during WXT prepare
+  if (typeof window === 'undefined') {
+    return
+  }
   // TODO(xtine): Get this working by importing the svg file directly. The svg text comes from packages/ui/src/assets/icons/uniswap-logo.svg
   const UNISWAP_LOGO = `data:image/svg+xml,${encodeURIComponent(`<svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg">
 <rect width="96" height="96" rx="18" fill="#FEF4FF"/>
@@ -145,4 +150,16 @@ function makeEthereum(): void {
   }
 }
 
-makeEthereum()
+// eslint-disable-next-line import/no-unused-modules
+export default defineContentScript({
+  matches:
+    __DEV__ || process.env.BUILD_ENV === 'dev'
+      ? ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*']
+      : ['https://*/*'],
+  runAt: 'document_start',
+  // TODO(INFRA-1010): not supported by firefox
+  world: 'MAIN',
+  main() {
+    makeEthereum()
+  },
+})

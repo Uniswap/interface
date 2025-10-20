@@ -6,37 +6,55 @@ import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
 import { zIndexes } from 'ui/src/theme'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
-import { RouterLabel } from 'uniswap/src/components/RouterLabel/RouterLabel'
 import { RoutingDiagram } from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
+import { RoutingLabel } from 'uniswap/src/components/RoutingDiagram/RoutingLabel'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
 import type { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/components/AcrossRoutingInfo'
 import {
   BestRouteTooltip,
   BestRouteUniswapXTooltip,
 } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormTooltips/BestRouteTooltip'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
-import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
-import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { openUri } from 'uniswap/src/utils/linking'
 import { useRoutingEntries } from 'uniswap/src/utils/routingDiagram/routingRegistry'
 import { NumberType } from 'utilities/src/format/types'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 export function RoutingInfo({
+  trade,
   chainId,
   gasFee,
 }: PropsWithChildren<{
+  trade: Trade
+  chainId: UniverseChainId
+  gasFee: GasFeeResult
+}>): JSX.Element | null {
+  if (isBridge(trade)) {
+    return <AcrossRoutingInfo />
+  }
+
+  return <RoutingInfoInternal trade={trade} chainId={chainId} gasFee={gasFee} />
+}
+
+function RoutingInfoInternal({
+  trade,
+  chainId,
+  gasFee,
+}: PropsWithChildren<{
+  trade: Trade
   chainId: UniverseChainId
   gasFee: GasFeeResult
 }>): JSX.Element | null {
   const priceUxEnabled = usePriceUXEnabled()
   const { t } = useTranslation()
-  const trade = useSwapTxStore((s) => s.trade)
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const { value: gasFeeUSD } = useUSDValueOfGasFee(chainId, gasFee.displayValue ?? undefined)
   const gasFeeFormatted =
@@ -45,15 +63,11 @@ export function RoutingInfo({
   const routes = useRoutingEntries({ trade })
 
   const v4SwapEnabled = useV4SwapEnabled(chainId)
-  const isMaybeV4 = trade && v4SwapEnabled && isClassic(trade)
+  const isMaybeV4 = v4SwapEnabled && isClassic(trade)
 
   const caption = useMemo(() => {
-    if (!trade) {
-      return null
-    }
-
-    const textVariant = isWeb ? 'body4' : 'body2'
-    const textAlign = isWeb ? 'left' : 'center'
+    const textVariant = isWebPlatform ? 'body4' : 'body2'
+    const textAlign = isWebPlatform ? 'left' : 'center'
 
     if (isUniswapX(trade)) {
       return (
@@ -75,7 +89,7 @@ export function RoutingInfo({
     if (routes) {
       return (
         <Flex gap="$spacing12">
-          {isWeb && (
+          {isWebPlatform && (
             <RoutingDiagram
               routes={routes}
               currencyIn={trade.inputAmount.currency}
@@ -93,9 +107,6 @@ export function RoutingInfo({
   }, [t, trade, routes, gasFeeFormatted])
 
   const InfoButton = useMemo(() => {
-    if (!trade) {
-      return null
-    }
     if (!isMaybeV4 && !isUniswapX(trade)) {
       return null
     }
@@ -108,7 +119,7 @@ export function RoutingInfo({
           await openUri({ uri: helpCenterUrl })
         }}
       >
-        <Text color="$accent1" variant={isWeb ? 'body4' : 'buttonLabel2'}>
+        <Text color="$accent1" variant={isWebPlatform ? 'body4' : 'buttonLabel2'}>
           {t('common.button.learn')}
         </Text>
       </TouchableArea>
@@ -129,18 +140,17 @@ export function RoutingInfo({
           zIndex: zIndexes.popover,
         }}
         tooltipProps={{
-          text:
-            priceUxEnabled && trade ? (
-              isUniswapX(trade) ? (
-                <BestRouteUniswapXTooltip />
-              ) : routes ? (
-                <BestRouteTooltip />
-              ) : (
-                caption
-              )
+          text: priceUxEnabled ? (
+            isUniswapX(trade) ? (
+              <BestRouteUniswapXTooltip />
+            ) : routes ? (
+              <BestRouteTooltip />
             ) : (
               caption
-            ),
+            )
+          ) : (
+            caption
+          ),
           placement: 'top',
           maxWidth: priceUxEnabled ? 300 : routes ? 400 : undefined,
         }}
@@ -153,9 +163,7 @@ export function RoutingInfo({
         </Flex>
       </WarningInfo>
       <Flex row shrink justifyContent="flex-end">
-        <Text adjustsFontSizeToFit color="$neutral1" variant="body3">
-          <RouterLabel />
-        </Text>
+        <RoutingLabel trade={trade} />
       </Flex>
     </Flex>
   )

@@ -6,7 +6,7 @@ import {
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 export function useSwapOnPrevious(): {
   onPrev: () => void
@@ -29,7 +29,7 @@ export function useSwapOnPrevious(): {
       updateSwapForm({ focusOnCurrencyField: ctxExactCurrencyField })
     }
     // On interface, closing the review modal should cancel the transaction flow saga and remove submitting UI.
-    if (isInterface) {
+    if (isWebApp) {
       updateSwapForm({ isSubmitting: false })
       dispatch(interruptTransactionFlow())
     }

@@ -1,4 +1,5 @@
 import { TimePeriod, toHistoryDuration } from 'appGraphql/data/util'
+import { GraphQLApi } from '@universe/api'
 import { refitChartContentAtom } from 'components/Charts/ChartModel'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { PriceChart, PriceChartData } from 'components/Charts/PriceChart'
@@ -26,7 +27,6 @@ import { useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { ThemeProvider } from 'theme'
 import { Flex, SegmentedControl, SegmentedControlOption, styled, useMedia } from 'ui/src'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export const TDP_CHART_HEIGHT_PX = 356
 const TDP_CHART_SELECTOR_OPTIONS = [ChartType.PRICE, ChartType.VOLUME, ChartType.TVL] as const
@@ -70,7 +70,10 @@ export type TDPChartState = {
 const InvalidChartMessage = () => <Trans i18nKey="chart.error.tokens" />
 
 /** Exported to `TDPContext` to fire queries on pageload. `TDPChartState` should be accessed through `useTDPContext` rather than this hook. */
-export function useCreateTDPChartState(tokenDBAddress: string | undefined, currencyChainName: Chain): TDPChartState {
+export function useCreateTDPChartState(
+  tokenDBAddress: string | undefined,
+  currencyChainName: GraphQLApi.Chain,
+): TDPChartState {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
 
   const [chartType, setChartType] = useState<TokenDetailsChartType>(ChartType.PRICE)

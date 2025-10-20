@@ -1,3 +1,5 @@
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { SwapRedirectFn } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
@@ -5,7 +7,6 @@ import { TransactionScreen } from 'uniswap/src/features/transactions/components/
 import type { WarningService } from 'uniswap/src/features/transactions/swap/services/warningService'
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import type { logger } from 'utilities/src/logger/logger'
@@ -43,8 +44,8 @@ export function createPrepareSwap(
 
 interface GetActionContext {
   swapRedirectCallback?: SwapRedirectFn
-  activeAccount?: AccountDetails
-  onConnectWallet?: () => void
+  isConnected: boolean
+  onConnectWallet?: (platform?: Platform) => void
   isViewOnlyWallet: boolean
   isInterfaceWrap: boolean
   currencies: DerivedSwapInfo['currencies']
@@ -75,9 +76,13 @@ type LowBalanceActionPayload = {
   location: 'swap' | 'send'
 }
 
+type ConnectWalletActionPayload = {
+  platform?: Platform
+}
+
 type ReviewAction =
   | { type: typeof ReviewActionType.REDIRECT; payload: RedirectActionPayload }
-  | { type: typeof ReviewActionType.CONNECT_WALLET }
+  | { type: typeof ReviewActionType.CONNECT_WALLET; payload: ConnectWalletActionPayload }
   | { type: typeof ReviewActionType.SHOW_VIEW_ONLY }
   | { type: typeof ReviewActionType.INTERFACE_WRAP }
   | { type: typeof ReviewActionType.SHOW_TOKEN_WARNING }
@@ -94,7 +99,7 @@ type CallbackArgs = Record<
 function createGetAction(ctx: GetActionContext): (args: CallbackArgs) => ReviewAction {
   const {
     swapRedirectCallback,
-    activeAccount,
+    isConnected,
     onConnectWallet,
     isViewOnlyWallet,
     isInterfaceWrap,
@@ -120,8 +125,8 @@ function createGetAction(ctx: GetActionContext): (args: CallbackArgs) => ReviewA
         type: ReviewActionType.REDIRECT,
         payload: redirectPayload,
       }
-    } else if (!activeAccount && onConnectWallet) {
-      return { type: ReviewActionType.CONNECT_WALLET }
+    } else if (!isConnected && onConnectWallet) {
+      return { type: ReviewActionType.CONNECT_WALLET, payload: { platform: chainIdToPlatform(chainId) } }
     } else if (isViewOnlyWallet) {
       return { type: ReviewActionType.SHOW_VIEW_ONLY }
     } else if (isInterfaceWrap) {
@@ -152,7 +157,7 @@ interface HandleEventActionContext {
   handleShowMaxNativeTransferModal: () => void
   handleShowBridgedAssetModal: () => void
   swapRedirectCallback?: SwapRedirectFn
-  onConnectWallet?: () => void
+  onConnectWallet?: (platform?: Platform) => void
   onInterfaceWrap?: () => void
   updateSwapForm: (newState: Partial<SwapFormState>) => void
   setScreen: (screen: TransactionScreen) => void
@@ -177,7 +182,7 @@ function createHandleEventAction(ctx: HandleEventActionContext): (action: Review
         swapRedirectCallback?.(action.payload)
         break
       case ReviewActionType.CONNECT_WALLET:
-        onConnectWallet?.()
+        onConnectWallet?.(action.payload.platform)
         break
       case ReviewActionType.SHOW_VIEW_ONLY:
         handleShowViewOnlyModal()

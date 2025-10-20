@@ -1,24 +1,21 @@
 {
   "extends": "../../config/tsconfig/app.json",
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.json",
-    "src/**/*.mts"
-  ],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.json", "src/**/*.mts"],
   "references": [
+    {
+      "path": "../utilities"
+    },
     {
       "path": "../ui"
     },
     {
-      "path": "../utilities"
+      "path": "../api"
     },
+    {
+      "path": "../config"
+    }
   ],
   "compilerOptions": {
-    "types": [
-      "chrome",
-      "jest"
-    ]
+    "types": ["chrome", "jest"]
   }
 }

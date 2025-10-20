@@ -6,7 +6,7 @@ import { useDismissedBridgedAssetWarnings } from 'uniswap/src/features/tokens/sl
 
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 export function useNeedsBridgedAssetWarning(
   derivedSwapInfo: DerivedSwapInfo,
@@ -63,7 +63,7 @@ export function useNeedsBridgedAssetWarning(
     outputTokenWarningPreviouslyDismissed,
   ])
 
-  if (!isInterface) {
+  if (!isWebApp) {
     return {
       needsBridgedAssetWarning: false,
       currenciesWithBridgingWarnings: [],

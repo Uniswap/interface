@@ -12,6 +12,7 @@ import {
   mergeFeeTiers,
 } from 'components/Liquidity/utils/feeTiers'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { PercentNumberDecimals } from 'utilities/src/format/types'
 import { describe, expect, it } from 'vitest'
 
 describe('calculateTickSpacingFromFeeAmount', () => {
@@ -44,7 +45,8 @@ describe('getFeeTierKey', () => {
 })
 
 describe('mergeFeeTiers', () => {
-  const formatPercent = (percent: string | number | undefined, _maxDecimals?: 2 | 3 | 4) => `${Number(percent) * 100}%`
+  const formatPercent = (percent: string | number | undefined, _maxDecimals?: PercentNumberDecimals) =>
+    `${Number(percent) * 100}%`
   const formattedDynamicFeeTier = 'dynamic'
   const staticFee = { feeAmount: 100, isDynamic: false, tickSpacing: 60 }
   const dynamicFee = { feeAmount: 100, isDynamic: true, tickSpacing: 60 }
@@ -337,7 +339,7 @@ describe('getDefaultFeeTiersWithData', () => {
     // Should return top 8 by TVL, sorted descending
     const sortedTiers = Object.entries(v4FeeTierData)
       .sort((a, b) => parseFloat(b[1].tvl) - parseFloat(a[1].tvl))
-      .slice(0, 8)
+      .slice(0, 4)
       .map(([feeAmount]) => Number(feeAmount))
     expect(result.map((f) => f.tier)).toEqual(sortedTiers)
   })

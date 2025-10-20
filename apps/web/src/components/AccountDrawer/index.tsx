@@ -1,7 +1,7 @@
 import DefaultMenu from 'components/AccountDrawer/DefaultMenu'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Web3StatusRef } from 'components/Web3Status'
-import { useAccount } from 'hooks/useAccount'
+import { WebNotificationToastWrapper } from 'features/notifications/WebNotificationToastWrapper'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useIsUniswapExtensionConnected } from 'hooks/useIsUniswapExtensionConnected'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -22,6 +22,8 @@ import {
   WebBottomSheet,
 } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
+import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -202,7 +204,8 @@ function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
   const accountDrawer = useAccountDrawer()
   const isUniExtensionConnected = useIsUniswapExtensionConnected()
   const media = useMedia()
-  const isAccountConnected = useAccount().isConnected
+  const { isConnected } = useConnectionStatus()
+  const isSolanaConnected = useConnectionStatus(Platform.SVM).isConnected
 
   if (media.md) {
     return (
@@ -210,7 +213,7 @@ function Drawer({ children }: { children: JSX.Element | JSX.Element[] }) {
         {children}
       </WebBottomSheet>
     )
-  } else if (!isUniExtensionConnected && isAccountConnected) {
+  } else if ((!isUniExtensionConnected && isConnected) || (isUniExtensionConnected && isSolanaConnected)) {
     return (
       <Container data-testid={TestID.AccountDrawer}>
         <AccountSideDrawer isOpen={accountDrawer.isOpen} onClose={accountDrawer.close}>
@@ -252,6 +255,7 @@ function AccountDrawer() {
 
   return (
     <Drawer>
+      <WebNotificationToastWrapper />
       <DefaultMenu />
     </Drawer>
   )

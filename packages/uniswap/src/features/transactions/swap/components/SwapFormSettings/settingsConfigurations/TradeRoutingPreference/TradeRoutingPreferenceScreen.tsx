@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import type { TFunction } from 'i18next'
 import type { ReactNode } from 'react'
 import { useCallback, useState } from 'react'
@@ -15,7 +16,7 @@ import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
-import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
+
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -36,7 +37,7 @@ import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactio
 import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { DEFAULT_PROTOCOL_OPTIONS } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isExtension, isInterface, isMobileApp, isMobileWeb, isWeb } from 'utilities/src/platform'
+import { isExtensionApp, isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function TradeRoutingPreferenceScreen(): JSX.Element {
@@ -67,11 +68,11 @@ export function TradeRoutingPreferenceScreen(): JSX.Element {
   const onlyOneProtocolSelected = selectedProtocols.length === 1 && !isV4HookPoolsEnabled
 
   const classicProtocolsCount = selectedProtocols.filter((p) => {
-    if (!v4SwapEnabled && p === ProtocolItems.V4) {
+    if (!v4SwapEnabled && p === TradingApi.ProtocolItems.V4) {
       return false
     }
 
-    return p !== ProtocolItems.UNISWAPX_V2
+    return p !== TradingApi.ProtocolItems.UNISWAPX_V2
   }).length
 
   // Prevent the user from deselecting all on-chain protocols (AKA only selecting UniswapX)
@@ -119,24 +120,24 @@ export function TradeRoutingPreferenceScreen(): JSX.Element {
             active={
               isUniswapXSupported === false
                 ? false
-                : uniswapXEnabled && selectedProtocols.includes(ProtocolItems.UNISWAPX_V2)
+                : uniswapXEnabled && selectedProtocols.includes(TradingApi.ProtocolItems.UNISWAPX_V2)
             }
             elementName={ElementName.SwapRoutingPreferenceUniswapX}
-            title={getProtocolTitle(ProtocolItems.UNISWAPX_V2)}
+            title={getProtocolTitle(TradingApi.ProtocolItems.UNISWAPX_V2)}
             cantDisable={onlyOneProtocolSelected}
             disabled={isUniswapXSupported === false || !uniswapXEnabled}
             description={!uniswapXEnabled ? restrictionDescription : undefined}
-            onSelect={() => toggleProtocol(ProtocolItems.UNISWAPX_V2)}
+            onSelect={() => toggleProtocol(TradingApi.ProtocolItems.UNISWAPX_V2)}
           />
         )}
         <OptionRow
-          active={v4SwapEnabled && selectedProtocols.includes(ProtocolItems.V4)}
+          active={v4SwapEnabled && selectedProtocols.includes(TradingApi.ProtocolItems.V4)}
           elementName={ElementName.SwapRoutingPreferenceV4}
-          title={getProtocolTitle(ProtocolItems.V4)}
+          title={getProtocolTitle(TradingApi.ProtocolItems.V4)}
           cantDisable={onlyOneClassicProtocolSelected}
           disabled={!v4SwapEnabled}
           description={!v4SwapEnabled ? restrictionDescription : undefined}
-          onSelect={() => toggleProtocol(ProtocolItems.V4)}
+          onSelect={() => toggleProtocol(TradingApi.ProtocolItems.V4)}
         />
         <OptionRow
           active={isV4HookPoolsEnabled}
@@ -147,18 +148,18 @@ export function TradeRoutingPreferenceScreen(): JSX.Element {
           onSelect={toggleV4Hooks}
         />
         <OptionRow
-          active={selectedProtocols.includes(ProtocolItems.V3)}
+          active={selectedProtocols.includes(TradingApi.ProtocolItems.V3)}
           elementName={ElementName.SwapRoutingPreferenceV3}
-          title={getProtocolTitle(ProtocolItems.V3)}
+          title={getProtocolTitle(TradingApi.ProtocolItems.V3)}
           cantDisable={onlyOneClassicProtocolSelected}
-          onSelect={() => toggleProtocol(ProtocolItems.V3)}
+          onSelect={() => toggleProtocol(TradingApi.ProtocolItems.V3)}
         />
         <OptionRow
-          active={selectedProtocols.includes(ProtocolItems.V2)}
+          active={selectedProtocols.includes(TradingApi.ProtocolItems.V2)}
           elementName={ElementName.SwapRoutingPreferenceV2}
-          title={getProtocolTitle(ProtocolItems.V2)}
+          title={getProtocolTitle(TradingApi.ProtocolItems.V2)}
           cantDisable={onlyOneClassicProtocolSelected}
-          onSelect={() => toggleProtocol(ProtocolItems.V2)}
+          onSelect={() => toggleProtocol(TradingApi.ProtocolItems.V2)}
         />
       </HeightAnimator>
     </Flex>
@@ -172,17 +173,17 @@ function createGetProtocolTitle(ctx: {
   const { isUniswapXSupported, t } = ctx
   return (preference: FrontendSupportedProtocol) => {
     switch (preference) {
-      case ProtocolItems.UNISWAPX_V2: {
+      case TradingApi.ProtocolItems.UNISWAPX_V2: {
         if (isUniswapXSupported === false) {
           return <UniswapXTitleInfoTooltip />
         }
         return <UniswapXInfo tooltipTrigger={<UniswapXInfoTooltipTrigger />} />
       }
-      case ProtocolItems.V2:
+      case TradingApi.ProtocolItems.V2:
         return t('swap.settings.routingPreference.option.v2.title')
-      case ProtocolItems.V3:
+      case TradingApi.ProtocolItems.V3:
         return t('swap.settings.routingPreference.option.v3.title')
-      case ProtocolItems.V4:
+      case TradingApi.ProtocolItems.V4:
         return t('swap.settings.routingPreference.option.v4.title')
       default:
         return <></>
@@ -193,7 +194,7 @@ function createGetProtocolTitle(ctx: {
 function UniswapXTitleInfoTooltip(): JSX.Element {
   const [forceCloseTooltip, setForceCloseTooltip] = useState(undefined as undefined | true)
   const [showModal, setShowModal] = useState(false)
-  if (isWeb) {
+  if (isWebPlatform) {
     return (
       <InfoTooltip
         text={<UniswapXInfoTooltipText onPress={() => setForceCloseTooltip(true)} />}
@@ -363,7 +364,7 @@ const UniswapXNotSupportedDescription = (): JSX.Element => {
     </Flex>
   )
 
-  if (isWeb) {
+  if (isWebPlatform) {
     return (
       <InfoTooltip
         open={forceCloseTooltip === undefined ? undefined : !forceCloseTooltip}
@@ -394,7 +395,7 @@ function UniswapXInfoTooltipText(props?: { onPress?: () => void }): JSX.Element 
   const handleHideTransactionSettingsModal = useModalHide(TransactionSettingsModalId.TransactionSettings)
 
   const onPress = useEvent(() => {
-    if (isExtension) {
+    if (isExtensionApp) {
       openUri({ uri: uniswapUrls.helpArticleUrls.multichainDelegation }).catch(() => {})
     } else {
       handleOnPressUniswapXUnsupported?.()
@@ -403,7 +404,7 @@ function UniswapXInfoTooltipText(props?: { onPress?: () => void }): JSX.Element 
     props?.onPress?.()
   })
 
-  const body = isExtension ? t('uniswapx.description.unsupported') : t('wallet.mismatch.popup.description')
+  const body = isExtensionApp ? t('uniswapx.description.unsupported') : t('wallet.mismatch.popup.description')
 
   return (
     <TouchableArea onPress={onPress}>
@@ -412,7 +413,7 @@ function UniswapXInfoTooltipText(props?: { onPress?: () => void }): JSX.Element 
           {body}
         </Text>
         <Text color="$accent1" variant="body3">
-          {isInterface ? t('common.button.viewDetails') : t('common.button.learn')}
+          {isWebApp ? t('common.button.viewDetails') : t('common.button.learn')}
         </Text>
       </Flex>
     </TouchableArea>
@@ -468,7 +469,7 @@ function UniswapXInfoModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       }}
     >
       <LearnMoreLink
-        textVariant={isWeb ? 'body4' : 'buttonLabel3'}
+        textVariant={isWebPlatform ? 'body4' : 'buttonLabel3'}
         url={uniswapUrls.helpArticleUrls.multichainDelegation}
       />
     </WarningModal>

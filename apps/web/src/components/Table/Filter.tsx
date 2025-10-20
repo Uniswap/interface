@@ -1,7 +1,7 @@
+import { Portal } from 'components/Popups/Portal'
 import { DropdownIcon } from 'components/Table/icons'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import deprecatedStyled from 'lib/styled-components'
-import { Portal } from 'nft/components/common/Portal'
 import { RefObject, useCallback, useRef } from 'react'
 import { Checkbox, Flex, styled, Text, useMedia } from 'ui/src'
 

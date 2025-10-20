@@ -1,5 +1,6 @@
 import { ComponentProps, ReactNode } from 'react'
 import { Popover } from 'tamagui'
+// biome-ignore lint/style/noRestrictedImports: needed here
 import { WebBottomSheet } from 'ui/src/components/modal/AdaptiveWebModal'
 
 type AdaptiveWebPopoverContentProps = Omit<ComponentProps<typeof Popover.Content>, 'children'> & {

@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { Locale } from 'expo-localization'
 import { getDeviceLocales } from 'utilities/src/device/locales.native'
 

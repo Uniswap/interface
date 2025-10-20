@@ -97,7 +97,7 @@ export function usePositionTokenURI({
         loading: false,
         result: json,
       }
-    } catch (error) {
+    } catch (_error) {
       return { valid: false, loading: false }
     }
   }, [error, isLoading, data, tokenId])

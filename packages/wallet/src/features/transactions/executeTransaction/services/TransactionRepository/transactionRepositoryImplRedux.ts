@@ -114,7 +114,7 @@ function createSagaTransactionRepository(ctx: TransactionRepositoryReduxContext)
   const getPendingPrivateTransactionCount: SagaTransactionRepository['getPendingPrivateTransactionCount'] = (input) => {
     // Return a select effect that will get and filter transactions
     return select((state: UniswapState) => {
-      const pendingTransactions = selectAddressTransactions(state, input.address)
+      const pendingTransactions = selectAddressTransactions(state, { evmAddress: input.address, svmAddress: null })
 
       if (!pendingTransactions) {
         return 0
@@ -137,7 +137,7 @@ function createSagaTransactionRepository(ctx: TransactionRepositoryReduxContext)
   const getTransactionsByAddress: SagaTransactionRepository['getTransactionsByAddress'] = (input) => {
     // Return a select effect
     return select((state: UniswapState) => {
-      const transactions = selectAddressTransactions(state, input.address)
+      const transactions = selectAddressTransactions(state, { evmAddress: input.address, svmAddress: null })
 
       if (!transactions) {
         return undefined

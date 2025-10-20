@@ -5,7 +5,7 @@ import { Settings } from 'ui/src/components/icons/Settings'
 import type { IconSizeTokens } from 'ui/src/theme'
 import { TransactionSettingsModalId } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/createTransactionSettingsModalStore'
 import { useModalVisibility } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/useTransactionSettingsModalStore'
-import { isInterface, isWeb } from 'utilities/src/platform'
+import { isWebApp, isWebPlatform } from 'utilities/src/platform'
 
 type TransactionSettingsButtonProps = {
   Tooltip?: React.ReactNode
@@ -26,7 +26,7 @@ export const TransactionSettingsButton = memo(
   }: Omit<TransactionSettingsButtonProps, 'Tooltip'>): JSX.Element => {
     const IconComponent = CustomIconComponent ?? Settings
 
-    const iconSize = iconSizeProp ?? (isWeb ? '$icon.20' : '$icon.24')
+    const iconSize = iconSizeProp ?? (isWebPlatform ? '$icon.20' : '$icon.24')
 
     return (
       <Flex
@@ -37,7 +37,7 @@ export const TransactionSettingsButton = memo(
         gap="$spacing4"
         px={IconLabel ? '$spacing8' : '$spacing4'}
         py="$spacing4"
-        height={isInterface ? '$spacing32' : 'auto'}
+        height={isWebApp ? '$spacing32' : 'auto'}
       >
         {IconLabel}
         <IconComponent color={contentColor} size={iconSize} />
@@ -55,7 +55,7 @@ export const TransactionSettingsButtonWithTooltip = memo(
     backgroundColor,
     CustomIconComponent,
   }: TransactionSettingsButtonProps): JSX.Element => {
-    const iconSize = iconSizeProp ?? (isWeb ? '$icon.20' : '$icon.24')
+    const iconSize = iconSizeProp ?? (isWebPlatform ? '$icon.20' : '$icon.24')
     const isTransactionSettingsModalVisible = useModalVisibility(TransactionSettingsModalId.TransactionSettings)
 
     const button = (

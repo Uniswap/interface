@@ -14,7 +14,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePrevious } from 'utilities/src/react/hooks'
 import { showSwitchNetworkNotification } from 'utils/showSwitchNetworkNotification'
 

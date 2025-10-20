@@ -11,7 +11,7 @@ import { SwapFormScreen } from 'uniswap/src/features/transactions/swap/form/Swap
 import { useIsUnichainFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { SwapReviewScreen } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewScreen'
 import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 export function CurrentScreen({
   settings,
@@ -39,7 +39,7 @@ export function CurrentScreen({
         */}
       <Modal
         height="auto"
-        alignment={isInterface ? 'center' : 'top'}
+        alignment={isWebApp ? 'center' : 'top'}
         isModalOpen={screen === TransactionScreen.Review}
         name={ModalName.SwapReview}
         padding="$spacing12"

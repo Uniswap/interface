@@ -1,10 +1,8 @@
 /* eslint-disable max-lines */
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { GasEstimate, GraphQLApi, TradingApi } from '@universe/api'
 import { providers } from 'ethers/lib/ethers'
-import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Routing, TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappRequestInfo, EthTransaction } from 'uniswap/src/types/walletConnect'
@@ -21,7 +19,7 @@ export interface TransactionId {
 }
 
 export type TransactionListQueryResponse = NonNullable<
-  NonNullable<NonNullable<TransactionListQuery['portfolios']>[0]>['assetActivities']
+  NonNullable<NonNullable<GraphQLApi.TransactionListQuery['portfolios']>[0]>['assetActivities']
 >[0]
 
 /**
@@ -85,7 +83,11 @@ export type TransactionNetworkFee = {
 
 // Transaction type extensions that can be combined with any base type
 export interface UniswapXOrderExtension {
-  routing: Routing.DUTCH_V3 | Routing.DUTCH_V2 | Routing.DUTCH_LIMIT | Routing.PRIORITY
+  routing:
+    | TradingApi.Routing.DUTCH_V3
+    | TradingApi.Routing.DUTCH_V2
+    | TradingApi.Routing.DUTCH_LIMIT
+    | TradingApi.Routing.PRIORITY
 
   // Note: `orderHash` is an off-chain value used to track orders before they're filled on-chain.
   // UniswapX orders will also have a transaction `hash` if they become filled.
@@ -94,24 +96,31 @@ export interface UniswapXOrderExtension {
 
   // Used to track status of the order before it is submitted
   queueStatus?: QueuedOrderStatus
+
+  // Contains the serialized/encoded UniswapX order data that gets submitted to the UniswapX system for execution.
+  encodedOrder?: string
+
+  // The Unix timestamp when the UniswapX order expires and can no longer be filled
+  // TODO(PORT-344): Unify `expiry` field with wallet
+  expiry?: number
 }
 
 export interface ClassicTransactionExtension {
-  routing: Routing.CLASSIC
+  routing: TradingApi.Routing.CLASSIC
 
   // Info for submitting the tx
   options: TransactionOptions
 }
 
 export interface SolanaTransactionExtension {
-  routing: Routing.JUPITER
+  routing: TradingApi.Routing.JUPITER
 
   // Info for submitting the tx
   options: TransactionOptions
 }
 
 export interface BridgeTransactionExtension {
-  routing: Routing.BRIDGE
+  routing: TradingApi.Routing.BRIDGE
 
   // Info for submitting the tx
   options: TransactionOptions
@@ -339,7 +348,7 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   routeString?: string
   gasUseEstimate?: string
   protocol?: Protocol
-  simulationFailureReasons?: TransactionFailureReason[]
+  simulationFailureReasons?: TradingApi.TransactionFailureReason[]
 
   /**
    * @deprecated This is used on interface only and will be deleted soon as part of WALL-7143
@@ -529,6 +538,14 @@ export type CollectFeesTransactionInfo = Optional<
   LiquidityTransactionInfoBase<TransactionType.CollectFees>,
   'currency1AmountRaw' | 'currency1Id'
 >
+
+export type LiquidityTransactionBaseInfos =
+  | LiquidityIncreaseTransactionInfo
+  | LiquidityDecreaseTransactionInfo
+  | CreatePairTransactionInfo
+  | CreatePoolTransactionInfo
+  | MigrateV3LiquidityToV4TransactionInfo
+  | CollectFeesTransactionInfo
 
 export interface LpIncentivesClaimTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.LPIncentivesClaimRewards

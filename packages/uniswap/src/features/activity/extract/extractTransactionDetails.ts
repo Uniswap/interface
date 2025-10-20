@@ -1,6 +1,4 @@
-import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { SpamCode } from 'uniswap/src/data/types'
+import { GraphQLApi, SpamCode, TradingApi } from '@universe/api'
 import parseApproveTransaction from 'uniswap/src/features/activity/parse/parseApproveTransaction'
 import parseBridgingTransaction from 'uniswap/src/features/activity/parse/parseBridgingTransaction'
 import parseNFTMintTransaction from 'uniswap/src/features/activity/parse/parseMintTransaction'
@@ -12,13 +10,15 @@ import { remoteTxStatusToLocalTxStatus } from 'uniswap/src/features/activity/uti
 import { DEFAULT_NATIVE_ADDRESS_LEGACY } from 'uniswap/src/features/chains/evm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import {
+import type {
   TransactionDetails,
-  TransactionDetailsType,
   TransactionListQueryResponse,
+  TransactionTypeInfo,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionDetailsType,
   TransactionOriginType,
   TransactionType,
-  TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 /**
@@ -37,26 +37,26 @@ export default function extractTransactionDetails(
 
   let typeInfo: TransactionTypeInfo | undefined
   switch (transaction.details.type) {
-    case RemoteTransactionType.Approve:
+    case GraphQLApi.TransactionType.Approve:
       typeInfo = parseApproveTransaction(transaction)
       break
-    case RemoteTransactionType.Send:
+    case GraphQLApi.TransactionType.Send:
       typeInfo = parseSendTransaction(transaction)
       break
-    case RemoteTransactionType.Receive:
+    case GraphQLApi.TransactionType.Receive:
       typeInfo = parseReceiveTransaction(transaction)
       break
-    case RemoteTransactionType.Bridging:
+    case GraphQLApi.TransactionType.Bridging:
       typeInfo = parseBridgingTransaction(transaction)
       break
-    case RemoteTransactionType.Swap:
-    case RemoteTransactionType.SwapOrder:
+    case GraphQLApi.TransactionType.Swap:
+    case GraphQLApi.TransactionType.SwapOrder:
       typeInfo = parseTradeTransaction(transaction)
       break
-    case RemoteTransactionType.Mint:
+    case GraphQLApi.TransactionType.Mint:
       typeInfo = parseNFTMintTransaction(transaction)
       break
-    case RemoteTransactionType.OnRamp:
+    case GraphQLApi.TransactionType.OnRamp:
       typeInfo = parseOnRampTransaction(transaction)
       break
   }
@@ -105,7 +105,10 @@ export default function extractTransactionDetails(
       : undefined
 
   return {
-    routing: transaction.details.type === RemoteTransactionType.SwapOrder ? Routing.DUTCH_V2 : Routing.CLASSIC,
+    routing:
+      transaction.details.type === GraphQLApi.TransactionType.SwapOrder
+        ? TradingApi.Routing.DUTCH_V2
+        : TradingApi.Routing.CLASSIC,
     id: transaction.details.hash,
     // TODO: WALL-4919: Remove hardcoded Mainnet
     // fallback to mainnet, although this should never happen

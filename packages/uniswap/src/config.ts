@@ -1,3 +1,3 @@
-import { getConfig } from 'uniswap/src/utils/getConfig'
+import { getConfig } from '@universe/config'
 
 export const config = getConfig()

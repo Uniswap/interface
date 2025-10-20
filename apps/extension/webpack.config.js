@@ -175,11 +175,11 @@ module.exports = (env) => {
     entry: {
       background: './src/entrypoints/background.ts',
       onboarding: './src/entrypoints/onboarding/main.tsx',
-      loadSidebar: './src/entrypoints/sidebar/loadSidebar.ts',
-      sidebar: './src/entrypoints/sidebar/main.tsx',
+      loadSidebar: './src/entrypoints/sidepanel/loadSidebar.ts',
+      sidebar: './src/entrypoints/sidepanel/main.tsx',
       injected: './src/entrypoints/injected.content.ts',
       ethereum: './src/entrypoints/ethereum.content.ts',
-      popup: './src/entrypoints/popup/main.tsx',
+      popup: './src/entrypoints/fallback-popup/main.tsx',
       unitagClaim: './src/entrypoints/unitagClaim/main.tsx',
     },
     output: {
@@ -199,6 +199,15 @@ module.exports = (env) => {
           resolve: {
             fullySpecified: false, // disable the behaviour
           },
+        },
+        // Add immediate execution calls to entry point files
+        {
+          test: /\/(background|injected\.content|ethereum\.content)\.ts$/,
+          use: [
+            {
+              loader: path.resolve(__dirname, 'webpack-plugins/immediate-execution-loader.js'),
+            },
+          ],
         },
         {
           oneOf: [
@@ -283,7 +292,7 @@ module.exports = (env) => {
         'react-native-vector-icons$': 'react-native-vector-icons/dist',
         src: path.resolve(__dirname, 'src'), // absolute imports in apps/web
         'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
-        'expo-blur': require.resolve('./__mocks__/expo-blur.js'),
+        'expo-blur': require.resolve('./__mocks__/expo-blur.jsx'),
         'react-router': path.resolve(
           __dirname,
           isProduction
@@ -334,25 +343,39 @@ module.exports = (env) => {
             from: 'src/manifest.json',
             force: true,
             transform(content) {
-              return Buffer.from(
-                JSON.stringify(
+              const transformedManifest = {
+                ...manifest,
+                description: EXTENSION_DESCRIPTION,
+                version: EXTENSION_VERSION,
+                name: EXTENSION_NAME_POSTFIX ? manifest.name + ' ' + EXTENSION_NAME_POSTFIX : manifest.name,
+                externally_connectable: {
+                  ...manifest.externally_connectable,
+                  matches:
+                    BUILD_ENV === 'prod'
+                      ? ['https://app.uniswap.org/*']
+                      : ['https://app.uniswap.org/*', 'https://ew.unihq.org/*', 'https://*.ew.unihq.org/*'],
+                },
+                // Ensure content scripts are registered in the webpack build (WXT handles this automatically).
+                // These mirror the matches/runAt used in the TS entrypoints.
+                content_scripts: [
                   {
-                    ...manifest,
-                    description: EXTENSION_DESCRIPTION,
-                    version: EXTENSION_VERSION,
-                    name: EXTENSION_NAME_POSTFIX ? manifest.name + ' ' + EXTENSION_NAME_POSTFIX : manifest.name,
-                    externally_connectable: {
-                      ...manifest.externally_connectable,
-                      matches:
-                        BUILD_ENV === 'prod'
-                          ? ['https://app.uniswap.org/*']
-                          : ['https://app.uniswap.org/*', 'https://ew.unihq.org/*', 'https://*.ew.unihq.org/*'],
-                    },
+                    id: 'injected',
+                    matches: ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*'],
+                    js: ['injected.js'],
+                    run_at: 'document_start',
                   },
-                  null,
-                  2,
-                ),
-              )
+                  {
+                    id: 'ethereum',
+                    matches: ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*'],
+                    js: ['ethereum.js'],
+                    run_at: 'document_start',
+                    // Ethereum provider must run in the MAIN world to attach to window.ethereum
+                    world: 'MAIN',
+                  },
+                ],
+              }
+
+              return Buffer.from(JSON.stringify(transformedManifest, null, 2))
             },
           },
           {
@@ -371,24 +394,36 @@ module.exports = (env) => {
             force: true,
           },
           {
-            from: 'src/entrypoints/sidebar/index.html',
-            to: 'sidebar.html',
+            from: 'src/entrypoints/sidepanel/index.html',
+            to: 'sidepanel.html',
             force: true,
+            transform(content) {
+              return content.toString().replace('src="loadSidebar.ts"', 'src="loadSidebar.js"')
+            },
           },
           {
-            from: 'src/entrypoints/popup/index.html',
-            to: 'popup.html',
+            from: 'src/entrypoints/fallback-popup/index.html',
+            to: 'fallback-popup.html',
             force: true,
+            transform(content) {
+              return content.toString().replace('src="main.tsx"', 'src="popup.js"')
+            },
           },
           {
             from: 'src/entrypoints/onboarding/index.html',
             to: 'onboarding.html',
             force: true,
+            transform(content) {
+              return content.toString().replace('src="main.tsx"', 'src="onboarding.js"')
+            },
           },
           {
             from: 'src/entrypoints/unitagClaim/index.html',
             to: 'unitagClaim.html',
             force: true,
+            transform(content) {
+              return content.toString().replace('src="main.tsx"', 'src="unitagClaim.js"')
+            },
           },
         ],
       }),

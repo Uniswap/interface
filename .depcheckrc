@@ -3,6 +3,7 @@ ignores: [
     '@graphql-codegen/*',
     '@commitlint/*',
     '@uniswap/eslint-config',
+    '@uniswap/biome-config',
     'i18next',
     'moti',
     'wrangler',
@@ -14,6 +15,11 @@ ignores: [
     'semver',
     'typanion',
     '@biomejs/biome',
+    "@nx/js",
+    "@nx/workspace",
+    "@swc/helpers",
     # needed for ci
     'dd-trace',
+    # depcheck flags itself as unused
+    'depcheck',
   ]

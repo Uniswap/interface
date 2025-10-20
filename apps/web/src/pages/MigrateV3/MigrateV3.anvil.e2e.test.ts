@@ -8,6 +8,8 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 const test = getTest({ withAnvil: true })
 
+const ANIMATION_DELAY = 300
+
 test.describe('Migrate V3', () => {
   test('should migrate from v3 to v4', async ({ page, anvil }) => {
     const expectSingleTransaction = createExpectSingleTransaction({
@@ -34,6 +36,7 @@ test.describe('Migrate V3', () => {
 
     await expectSingleTransaction(async () => {
       await page.getByRole('button', { name: 'Continue' }).click()
+      await page.waitForTimeout(ANIMATION_DELAY)
       await page.getByRole('button', { name: 'Continue' }).click()
       await page.getByRole('button', { name: 'Migrate' }).click()
       await expect(page.getByText('Migrating liquidity')).toBeVisible()
@@ -54,7 +57,7 @@ test.describe('Migrate V3', () => {
         try {
           data.migrate.gasLimit = DEFAULT_TEST_GAS_LIMIT
           return data
-        } catch (error) {
+        } catch (_error) {
           return data
         }
       },
@@ -69,6 +72,7 @@ test.describe('Migrate V3', () => {
 
     await expectSingleTransaction(async () => {
       await page.getByRole('button', { name: 'Continue' }).click()
+      await page.waitForTimeout(ANIMATION_DELAY)
       await page.getByRole('button', { name: 'Continue' }).click()
       await page.getByRole('button', { name: 'Migrate' }).click()
       await expect(page.getByText('Migrating liquidity')).toBeVisible()

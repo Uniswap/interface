@@ -3,6 +3,7 @@
  * Please order alphabetically to reduce merge conflicts.
  */
 export enum ReactQueryCacheKey {
+  ActivityScreenRefresh = 'ActivityScreenRefresh',
   BalanceAndUnitags = 'BalanceAndUnitags',
   CameraPermission = 'CameraPermission',
   CancelTransactionRequest = 'CancelTransactionRequest',
@@ -16,6 +17,7 @@ export enum ReactQueryCacheKey {
   GetPortfolio = 'GetPortfolio',
   IsErc20ContractAddress = 'IsErc20ContractAddress',
   IsSmartContractAddress = 'IsSmartContractAddress',
+  LimitOrdersByHash = 'LimitOrdersByHash',
   ListTransactions = 'ListTransactions',
   LocalActivities = 'localActivities',
   MismatchAccountBulk = 'MismatchAccountBulk',

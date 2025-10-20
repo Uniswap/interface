@@ -11,8 +11,8 @@ import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled, Faceid, Laptop, LinkBrokenHorizontal, Wifi } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
@@ -92,7 +92,7 @@ export function ScantasticModal({ route }: AppStackScreenProp<typeof ModalName.S
     }, ONE_SECOND_MS)
 
     return () => clearInterval(interval)
-  }, [expirationTimestamp, t])
+  }, [expirationTimestamp])
 
   const onEncryptSeedphrase = async (): Promise<void> => {
     setError('')

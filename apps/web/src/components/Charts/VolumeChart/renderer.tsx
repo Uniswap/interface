@@ -3,6 +3,7 @@
  * Modifications are called out with comments.
  */
 
+import { GraphQLApi } from '@universe/api'
 import { roundRect } from 'components/Charts/utils'
 import {
   ColumnPosition,
@@ -20,7 +21,6 @@ import {
   Time,
   UTCTimestamp,
 } from 'lightweight-charts'
-import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 // Modification: custom implementations of lw-chart's histogram data types
 export interface SingleHistogramData extends CustomData {
@@ -29,7 +29,7 @@ export interface SingleHistogramData extends CustomData {
 }
 
 export interface StackedHistogramData extends CustomData {
-  values: Record<PriceSource, number | undefined>
+  values: Record<GraphQLApi.PriceSource, number | undefined>
   time: UTCTimestamp
 }
 

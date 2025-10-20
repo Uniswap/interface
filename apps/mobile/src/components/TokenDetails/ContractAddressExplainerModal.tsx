@@ -5,6 +5,7 @@ import { WarningModal } from 'uniswap/src/components/modals/WarningModal/Warning
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function ContractAddressExplainerModal({
   onAcknowledge,
@@ -20,7 +21,12 @@ export function ContractAddressExplainerModal({
       title={t('token.safety.warning.copyContractAddress.title')}
       captionComponent={
         <>
-          <Text variant="body3" color="$neutral2" textAlign="center">
+          <Text
+            testID={TestID.ContractAddressExplainerModalWarning}
+            variant="body3"
+            color="$neutral2"
+            textAlign="center"
+          >
             {t('token.safety.warning.copyContractAddress.message')}
           </Text>
           <LearnMoreLink

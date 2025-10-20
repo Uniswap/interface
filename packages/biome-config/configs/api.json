@@ -1,0 +1,16 @@
+{
+  "overrides": [
+    {
+      "includes": [".eslintrc.js", "codegen.ts", "scripts/**", "src/**/__generated__/**"],
+      "linter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": ["src/clients/trading/api.json"],
+      "formatter": {
+        "enabled": false
+      }
+    }
+  ]
+}

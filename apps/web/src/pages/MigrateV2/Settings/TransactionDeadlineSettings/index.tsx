@@ -52,7 +52,7 @@ export default function TransactionDeadlineSettings() {
       } else {
         setDeadline(parsed)
       }
-    } catch (error) {
+    } catch (_error) {
       setDeadlineError(DeadlineError.InvalidInput)
     }
   }

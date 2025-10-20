@@ -14,7 +14,7 @@ import { ACCOUNT, preloadedWalletPackageState, signerMnemonicAccount } from 'wal
 
 const preloadedState = preloadedWalletPackageState({ account: ACCOUNT })
 const address = ACCOUNT.address
-const shortenedAddress = sanitizeAddressText(shortenAddress(address))!
+const shortenedAddress = sanitizeAddressText(shortenAddress({ address }))!
 const navigate = jest.fn()
 
 describe(AccountHeader, () => {

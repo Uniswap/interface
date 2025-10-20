@@ -128,7 +128,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
           navigation,
           screen: OnboardingScreens.RestoreCloudBackupPassword,
         })
-      } catch (error) {
+      } catch (_error) {
         setIsLoading(false)
         dispatch(incrementPasswordAttempts())
         const updatedLockoutEndTime = calculateLockoutEndTime(passwordAttemptCount + 1)

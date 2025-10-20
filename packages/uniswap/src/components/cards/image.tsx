@@ -1,17 +1,17 @@
 import { Image } from 'ui/src'
-import { isExtension, isInterface } from 'utilities/src/platform'
+import { isExtensionApp, isWebApp } from 'utilities/src/platform'
 
 // This assumes a singular graphic size for cards.
 // Please make sure design is aware of this and that the graphic works in small and large cards!
 export const CardImageGraphicSizeInfo = {
   containerWidth: 32,
-  ratio: isInterface ? 0.16 : isExtension ? 0.18 : 0.25,
-  topOffsetRatio: isInterface ? 0.51 : 0.24,
+  ratio: isWebApp ? 0.16 : isExtensionApp ? 0.18 : 0.25,
+  topOffsetRatio: isWebApp ? 0.51 : 0.24,
   width: 202,
   height: 624,
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: legacy code requires any for compatibility
 export function CardImage({ uri }: { uri: any }): JSX.Element | null {
   return (
     <Image

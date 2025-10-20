@@ -17,6 +17,7 @@ export type NftsListProps = Omit<
     errorStateStyle?: StyleProp<ViewStyle | CSSProperties | (ViewStyle & CSSProperties)>
     emptyStateStyle?: StyleProp<ViewStyle | CSSProperties | (ViewStyle & CSSProperties)>
     skip?: boolean
+    customEmptyState?: JSX.Element
   },
   'renderItem' | 'data'
 >

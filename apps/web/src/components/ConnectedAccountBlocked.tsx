@@ -1,5 +1,5 @@
 import Column from 'components/deprecated/Column'
-import { useAccount } from 'hooks/useAccount'
+import { useModalInitialState } from 'hooks/useModalInitialState'
 import { ModalState } from 'hooks/useModalState'
 import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
@@ -18,18 +18,20 @@ const ContentWrapper = styled(Column)`
   font-size: 12px;
 `
 
-export default function ConnectedAccountBlocked(props: ModalState) {
-  const account = useAccount()
+export default function ConnectedAccountBlocked({ isOpen, closeModal }: ModalState) {
   const theme = useTheme()
+
+  const blockedAddress = useModalInitialState(ModalName.BlockedAccount)?.blockedAddress
+
   return (
-    <Modal name={ModalName.AccountBlocked} isModalOpen={props.isOpen} onClose={props.closeModal} padding={0}>
+    <Modal name={ModalName.AccountBlocked} isModalOpen={isOpen} onClose={closeModal} padding={0}>
       <ContentWrapper>
         <Slash size="22px" color={theme.neutral2} />
         <ThemedText.DeprecatedLargeHeader lineHeight={2} marginBottom={1} marginTop={1}>
           <Trans i18nKey="common.blockedAddress" />
         </ThemedText.DeprecatedLargeHeader>
         <Text color="$neutral2" fontSize={14} mb={12}>
-          {account.address}
+          {blockedAddress}
         </Text>
         <ThemedText.DeprecatedMain fontSize={12} marginBottom={12}>
           <Trans
@@ -43,13 +45,7 @@ export default function ConnectedAccountBlocked(props: ModalState) {
             components={{
               emailAddress: (
                 <Flex mt={12} alignItems="center">
-                  <CopyHelper
-                    toCopy="compliance@uniswap.org"
-                    fontSize={14}
-                    iconSize={16}
-                    color={theme.accent1}
-                    iconPosition="right"
-                  >
+                  <CopyHelper toCopy="compliance@uniswap.org" iconSize={16} color="$accent1" iconPosition="right">
                     compliance@uniswap.org
                   </CopyHelper>
                 </Flex>

@@ -1,5 +1,6 @@
 import { getScantasticQueryParams } from 'src/components/Requests/ScanSheet/util'
 import { UNISWAP_URL_SCHEME_UWU_LINK } from 'src/components/Requests/Uwulink/utils'
+import { getInAppBrowserAllowlist } from 'src/features/deepLinking/configUtils'
 import {
   UNISWAP_URL_SCHEME,
   UNISWAP_URL_SCHEME_SCANTASTIC,
@@ -7,6 +8,7 @@ import {
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/constants'
 import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
+import { DeepLinkUrlAllowlist } from 'uniswap/src/features/gating/configs'
 import { isCurrencyIdValid } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -27,6 +29,7 @@ export enum DeepLinkAction {
   SkipNonWalletConnect = 'skipNonWalletConnect',
   UniversalWalletConnectLink = 'universalWalletConnectLink',
   WalletConnect = 'walletConnect',
+  InAppBrowser = 'inAppBrowser',
   Error = 'error',
   Unknown = 'unknown',
   TokenDetails = 'tokenDetails',
@@ -94,12 +97,63 @@ export type DeepLinkActionResult =
   | { action: DeepLinkAction.SkipNonWalletConnect; data: BasePayload }
   | { action: DeepLinkAction.UniversalWalletConnectLink; data: PayloadWithWcUri }
   | { action: DeepLinkAction.WalletConnect; data: BasePayload & { wcUri: string } }
+  | { action: DeepLinkAction.InAppBrowser; data: BasePayload & { targetUrl: string; openInApp: boolean } }
   | { action: DeepLinkAction.TokenDetails; data: BasePayload & { currencyId: string } }
   | { action: DeepLinkAction.FiatOnRampScreen; data: PayloadWithFiatOnRampParams }
   | { action: DeepLinkAction.Error; data: BasePayload }
   | { action: DeepLinkAction.Unknown; data: BasePayload }
 
 type DeepLinkHandler = (url: URL, data: BasePayload) => DeepLinkActionResult
+
+/**
+ * Checks if a URL is allowlisted for browser opening and returns the configuration.
+ * This function should be called with the dynamic config value.
+ *
+ * @param urlString - The URL to check.
+ * @param allowList - Allowlist from dynamic config.
+ * @returns Object with isAllowed and openInApp flags, or null if not allowlisted.
+ */
+function getUrlAllowlistConfig(
+  urlString: string,
+  allowList: DeepLinkUrlAllowlist,
+): { isAllowed: boolean; openInApp: boolean } {
+  try {
+    const url = new URL(urlString)
+
+    // Only allow HTTPS protocol
+    if (url.protocol !== 'https:') {
+      return { isAllowed: false, openInApp: false }
+    }
+
+    const urlToCheck = `${url.protocol}//${url.hostname}${url.pathname}`
+
+    for (const allowedItem of allowList.allowedUrls) {
+      const allowedUrl = typeof allowedItem === 'string' ? allowedItem : allowedItem.url
+      const openInApp = typeof allowedItem === 'string' ? true : (allowedItem.openInApp ?? true) // Default to in-app
+
+      try {
+        // Support both exact matches and hostname matches
+        if (allowedUrl === urlString || allowedUrl === urlToCheck) {
+          return { isAllowed: true, openInApp }
+        }
+
+        // Support hostname-only matches (e.g., "example.com" matches "https://example.com/any/path")
+        // Always use HTTPS for allowed URL validation
+        const allowedUrlObj = new URL(allowedUrl.startsWith('https://') ? allowedUrl : `https://${allowedUrl}`)
+        if (url.hostname === allowedUrlObj.hostname) {
+          return { isAllowed: true, openInApp }
+        }
+      } catch {
+        // If allowedUrl is not a valid URL, reject it for security
+        continue
+      }
+    }
+
+    return { isAllowed: false, openInApp: false }
+  } catch {
+    return { isAllowed: false, openInApp: false }
+  }
+}
 
 /**
  * Parses a deep link URL and returns the action to be taken as well as
@@ -234,6 +288,29 @@ export function parseDeepLinkUrl(urlString: string): DeepLinkActionResult {
   if (urlString.startsWith(WALLETCONNECT_URI_SCHEME)) {
     const wcUri = decodeURIComponent(urlString)
     return { action: DeepLinkAction.WalletConnect, data: { ...data, wcUri } }
+  }
+
+  // Check if URL is allowlisted for browser opening
+  const inAppBrowserAllowlist = getInAppBrowserAllowlist()
+
+  // Always perform allowlist check for consistent behavior and logging
+  const allowlistConfig = getUrlAllowlistConfig(urlString, inAppBrowserAllowlist)
+  if (allowlistConfig.isAllowed) {
+    return {
+      action: DeepLinkAction.InAppBrowser,
+      data: { ...data, targetUrl: urlString, openInApp: allowlistConfig.openInApp },
+    }
+  }
+
+  // Log appropriate message based on allowlist state
+  if (inAppBrowserAllowlist.allowedUrls.length === 0) {
+    logger.error(`No allowlist configured for browser opening, rejecting URL: ${urlString}`, {
+      tags: { file: 'deepLinkUtils', function: 'parseDeepLinkUrl' },
+    })
+  } else {
+    logger.error(`URL not allowlisted for browser opening: ${urlString}`, {
+      tags: { file: 'deepLinkUtils', function: 'parseDeepLinkUrl' },
+    })
   }
 
   logger.error(`Unknown deep link action for url=${urlString}`, {

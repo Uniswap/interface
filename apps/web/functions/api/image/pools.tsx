@@ -1,5 +1,6 @@
-/* eslint-disable react/forbid-elements */
+// biome-ignore-all lint/correctness/noRestrictedElements: ignoring for the whole file
 
+import { GraphQLApi } from '@universe/api'
 import { ImageResponse } from '@vercel/og'
 import { WATERMARK_URL } from 'functions/constants'
 import getFont from 'functions/utils/getFont'
@@ -7,7 +8,6 @@ import getNetworkLogoUrl from 'functions/utils/getNetworkLogoURL'
 import getPool from 'functions/utils/getPool'
 import { getRequest } from 'functions/utils/getRequest'
 import { Context } from 'hono'
-import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 function UnknownTokenImage({ symbol }: { symbol?: string }) {
   const ticker = symbol?.slice(0, 3)
@@ -150,7 +150,7 @@ export async function poolImageHandler(c: Context) {
               tokenSymbol0={data.poolData?.token0Symbol}
               tokenSymbol1={data.poolData?.token1Symbol}
             >
-              {networkLogo != '' && (
+              {networkLogo !== '' && (
                 <img
                   src={networkLogo}
                   width="48px"
@@ -174,7 +174,7 @@ export async function poolImageHandler(c: Context) {
                 >
                   {data.name}
                 </div>
-                {data.poolData?.protocolVersion === ProtocolVersion.V2 && (
+                {data.poolData?.protocolVersion === GraphQLApi.ProtocolVersion.V2 && (
                   <div
                     style={{
                       fontFamily: 'Inter',

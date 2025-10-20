@@ -19,7 +19,7 @@ import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapT
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 const KEEP_OPEN_MSG_DELAY = 3 * ONE_SECOND_MS
@@ -88,7 +88,7 @@ export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }:
       // this has side effects for the balance logic as well
       return <FlashblocksConfirmButton size={size} />
     }
-    case isInterface && isSubmitting: {
+    case isWebApp && isSubmitting: {
       return (
         <Button loading shouldAnimateBetweenLoadingStates={false} size={size}>
           <ConfirmInWalletText passkeyAuthStatus={passkeyAuthStatus} />
@@ -245,10 +245,10 @@ const getSwapAction = ({
     swapTxContext && isClassic(swapTxContext) ? swapTxContext.permit?.method === PermitMethod.Transaction : false
   const hasApproveTx = Boolean(swapTxContext?.approveTxRequest)
 
-  if (isInterface && (hasPermitTx || hasApproveTx)) {
+  if (isWebApp && (hasPermitTx || hasApproveTx)) {
     return SwapAction.ApproveAndSwap
   }
-  if (isInterface && swapTxContext && isClassic(swapTxContext) && swapTxContext.unsigned) {
+  if (isWebApp && swapTxContext && isClassic(swapTxContext) && swapTxContext.unsigned) {
     return SwapAction.SignAndSwap
   }
   if (warning?.severity === WarningSeverity.High) {

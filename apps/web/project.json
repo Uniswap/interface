@@ -1,0 +1,287 @@
+{
+  "root": "apps/web",
+  "sourceRoot": "apps/web/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "nx:noop",
+      "dependsOn": ["prepare", "^build", "build:production"]
+    },
+    "wait-for-webserver": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "wait-on http://localhost:3000 --timeout 60000"
+      }
+    },
+    "e2e": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx playwright:test web",
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["anvil:base", "preview", "wait-for-webserver"]
+    },
+    "e2e:anvil": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx playwright:test:anvil web",
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["anvil:base", "preview", "wait-for-webserver"]
+    },
+    "e2e:no-anvil": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "nx playwright:test:no-anvil web",
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["preview", "wait-for-webserver"]
+    },
+    "prepare": {
+      "command": "bun ajv",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "ajv": {
+      "command": "bun run scripts/compile-ajv-validators.js",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "graphql:generate": {
+      "command": "echo 'GraphQL generation handled by uniswap package'",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "anvil:mainnet": {
+      "command": "dotenv -- bash -c 'RUST_LOG=debug anvil --print-traces --fork-url https://${REACT_APP_QUICKNODE_ENDPOINT_NAME}.quiknode.pro/${REACT_APP_QUICKNODE_ENDPOINT_TOKEN} --hardfork prague --no-rate-limit'",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "continuous": true
+    },
+    "anvil:base": {
+      "command": "dotenv -- bash -c 'RUST_LOG=debug anvil --print-traces --fork-url https://${REACT_APP_QUICKNODE_ENDPOINT_NAME}.base-mainnet.quiknode.pro/${REACT_APP_QUICKNODE_ENDPOINT_TOKEN} --hardfork prague --port 8546'",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "continuous": true
+    },
+    "check:deps:usage": {
+      "command": "depcheck",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "check:circular": {
+      "command": "concurrently \"../../scripts/check-circular-imports.sh ./src/pages/App.tsx 2\" \"../../scripts/check-circular-imports.sh ./src/setupTests.ts 0\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "sitemap:generate": {
+      "command": "bun run scripts/generate-sitemap.js",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": ["sourceFiles"],
+      "outputs": [
+        "{projectRoot}/public/sitemap.xml",
+        "{projectRoot}/public/app-sitemap.xml",
+        "{projectRoot}/public/tokens-sitemap.xml",
+        "{projectRoot}/public/pools-sitemap.xml",
+        "{projectRoot}/public/nfts-sitemap.xml"
+      ]
+    },
+    "start": {
+      "command": "ROLLDOWN_OPTIONS_VALIDATION=loose vite dev",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "continuous": true
+    },
+    "dev": {
+      "command": "ROLLDOWN_OPTIONS_VALIDATION=loose vite dev",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build:production": {
+      "command": "CLOUDFLARE_ENV=production ROLLDOWN_OPTIONS_VALIDATION=loose vite build",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "defaultConfiguration": "production",
+      "inputs": ["default", "^production", "!{projectRoot}/build"]
+    },
+    "build:staging": {
+      "command": "CLOUDFLARE_ENV=staging ROLLDOWN_OPTIONS_VALIDATION=loose vite build --mode staging",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "defaultConfiguration": "staging"
+    },
+    "preview": {
+      "command": "ROLLDOWN_OPTIONS_VALIDATION=loose vite preview --port 3000",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "continuous": true,
+      "dependsOn": ["build:production"]
+    },
+    "analyze": {
+      "command": "source-map-explorer 'build/assets/*.js' --no-border-checks --gzip",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint": {
+      "executor": "nx:noop",
+      "dependsOn": ["check:circular", "check:deps:usage", "lint:eslint", "lint:biome", "typecheck", "typecheck:cloud"]
+    },
+    "lint:fix": {},
+    "lint:biome": {},
+    "lint:biome:fix": {},
+    "lint:eslint": {
+      "command": "NODE_OPTIONS=--max_old_space_size=8192 eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ --max-warnings=0 .",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint:eslint:fix": {
+      "command": "eslint --ignore-path .gitignore --cache --cache-location node_modules/.cache/eslint/ . --fix",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "playwright:test": {
+      "command": "playwright test",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "playwright:test:anvil": {
+      "command": "playwright test --grep '\\.anvil\\.'",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "playwright:test:no-anvil": {
+      "command": "playwright test --grep-invert '\\.anvil\\.'",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "typecheck": {
+      "dependsOn": ["^typecheck", "typecheck:cloud"]
+    },
+    "typecheck:cloud": {
+      "command": "tsc -p functions/tsconfig.json",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "dependsOn": ["^typecheck"],
+      "inputs": ["{projectRoot}/functions/**/*.ts"]
+    },
+    "find:unused": {
+      "command": "bash scripts/delete-unused-assets.sh",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test": {
+      "command": "NODE_OPTIONS='--no-deprecation' vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:set1": {
+      "command": "NODE_OPTIONS='--no-deprecation' vitest run src/components",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:set2": {
+      "command": "NODE_OPTIONS='--no-deprecation' vitest run src/pages src/state",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:set3": {
+      "command": "NODE_OPTIONS='--no-deprecation' vitest run src/hooks src/nft src/utils",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:set4": {
+      "command": "NODE_OPTIONS='--no-deprecation' vitest run src --exclude 'src/components/**' --exclude 'src/pages/**' --exclude 'src/state/**' --exclude 'src/hooks/**' --exclude 'src/nft/**' --exclude 'src/utils/**'",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:watch": {
+      "command": "NODE_OPTIONS='--no-deprecation' vitest watch",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:bundle": {
+      "command": "bun run -r esbuild-register ./src/test-utils/bundle-size-test.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "snapshots": {
+      "command": "NODE_OPTIONS='--no-deprecation' vitest run -u",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:cloud": {
+      "command": "NODE_OPTIONS='--no-deprecation' vitest run functions --config functions/vitest.config.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "deduplicate": {
+      "command": "echo 'Bun automatically deduplicates dependencies'",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "storybook:run": {
+      "command": "storybook dev -p 6006",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "storybook:run:with-tests": {
+      "command": "concurrently -s second -n \"SB RUN,SB TEST WATCH\" -c \"magenta,blue\" \"bun run storybook:run --quiet\" \"wait-on tcp:127.0.0.1:6006 -t 600000 && bun run storybook:test --watch\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "storybook:build": {
+      "command": "storybook build",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "storybook:test": {
+      "command": "test-storybook --excludeTags=\"no-tests\" --testTimeout 60000",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "storybook:test:standalone": {
+      "command": "concurrently -k -s first -n \"SB BUILD,SB TEST\" -c \"magenta,blue\" \"bun run storybook:build && http-server storybook-static --port 6006 --silent\" \"wait-on --timeout 600000 tcp:127.0.0.1:6006 && bun run storybook:test --maxWorkers=2\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

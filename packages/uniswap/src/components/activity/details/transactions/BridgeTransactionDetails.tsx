@@ -1,7 +1,7 @@
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { iconSizes, validColor } from 'ui/src/theme'
-import { ValueText } from 'uniswap/src/components/activity/details/transactions/SwapTransactionDetails'
+import { ValueText } from 'uniswap/src/components/activity/details/transactions/utilityComponents'
 import { useFormattedCurrencyAmountAndUSDValue } from 'uniswap/src/components/activity/hooks/useFormattedCurrencyAmountAndUSDValue'
 import { useTokenDetailsNavigation } from 'uniswap/src/components/activity/hooks/useTokenDetailsNavigation'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'

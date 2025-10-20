@@ -1,5 +1,5 @@
+import { GraphQLApi } from '@universe/api'
 import { PersistState } from 'redux-persist'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { PreV55SearchResult, PreV55SearchResultType, TokenSearchResult } from 'uniswap/src/state/oldTypes'
 
 export type PersistAppStateV15 = {
@@ -11,7 +11,7 @@ const recentSearchAtomName = 'recentlySearchedAssetsV3'
 type TokenSearchResultWeb = Omit<TokenSearchResult, 'type'> & {
   type: PreV55SearchResultType.Token | PreV55SearchResultType.NFTCollection
   address: string
-  chain: Chain
+  chain: GraphQLApi.Chain
   isNft?: boolean
   isToken?: boolean
   isNative?: boolean

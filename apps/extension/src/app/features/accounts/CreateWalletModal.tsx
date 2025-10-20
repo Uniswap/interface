@@ -57,7 +57,7 @@ export function CreateWalletModal({
           </Flex>
           {onboardingAccountAddress && (
             <Text color="$neutral3" variant="body3">
-              {shortenAddress(onboardingAccountAddress)}
+              {shortenAddress({ address: onboardingAccountAddress })}
             </Text>
           )}
         </Flex>

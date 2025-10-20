@@ -20,7 +20,7 @@ export function AddressButton({ address, chainId, ...rest }: AddressButtonProps)
   return (
     <LinkButton
       iconColor="$neutral3"
-      label={name || shortenAddress(address)}
+      label={name || shortenAddress({ address })}
       size={iconSizes.icon16}
       textVariant="body3"
       url={getExplorerLink({ chainId: supportedChainId, data: address, type: ExplorerDataType.ADDRESS })}

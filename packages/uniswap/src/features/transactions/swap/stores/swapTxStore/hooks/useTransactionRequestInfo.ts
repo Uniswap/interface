@@ -1,7 +1,8 @@
+import { TradingApi } from '@universe/api'
 import { useEffect, useMemo, useRef } from 'react'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
-import type { NullablePermit } from 'uniswap/src/data/tradingApi/__generated__'
+
 import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
@@ -20,7 +21,7 @@ import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/typ
 import type { TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isBridge, isClassic, isUniswapX, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
@@ -37,7 +38,7 @@ function useSwapTransactionRequestInfo({
 
   const permitData = derivedSwapInfo.trade.trade?.quote.permitData
   // On interface, we do not fetch signature until after swap is clicked, as it requires user interaction.
-  const { data: signature } = usePermit2SignatureWithData({ permitData, skip: isInterface })
+  const { data: signature } = usePermit2SignatureWithData({ permitData, skip: isWebApp })
 
   const swapQuoteResponse = useMemo(() => {
     const quote = derivedSwapInfo.trade.trade?.quote
@@ -162,7 +163,7 @@ function useSwapTransactionRequestInfo({
   return result
 }
 
-function useUniswapXTransactionRequestInfo(permitData: NullablePermit | undefined): TransactionRequestInfo {
+function useUniswapXTransactionRequestInfo(permitData: TradingApi.NullablePermit | undefined): TransactionRequestInfo {
   return useMemo(
     () =>
       processUniswapXResponse({

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: needed here
 import { AdaptiveWebModal, WebModalWithBottomAttachment } from 'ui/src/components/modal/AdaptiveWebModal'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 import type { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isExtension, isInterface } from 'utilities/src/platform'
+import { isExtensionApp, isWebApp } from 'utilities/src/platform'
 
 const ANIMATION_MS = 200
 
@@ -64,9 +64,9 @@ export function Modal({
         <ModalComponent
           position={position}
           bottomAttachment={bottomAttachment}
-          shadowOpacity={isExtension ? 0 : undefined}
-          borderWidth={isExtension ? 0 : undefined}
-          adaptToSheet={isInterface}
+          shadowOpacity={isExtensionApp ? 0 : undefined}
+          borderWidth={isExtensionApp ? 0 : undefined}
+          adaptToSheet={isWebApp}
           alignment={alignment}
           backgroundColor={backgroundColor}
           height={height ?? (fullScreen ? '100%' : undefined)}
@@ -80,7 +80,7 @@ export function Modal({
           hideHandlebar={hideHandlebar}
           $sm={{
             p: padding ?? '$spacing12',
-            ...(isInterface && {
+            ...(isWebApp && {
               '$platform-web': {
                 height: height ?? 'max-content',
                 maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,

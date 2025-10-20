@@ -3,7 +3,6 @@ import { PropsWithChildren, ReactNode } from 'react'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Locale } from 'uniswap/src/features/language/constants'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import {
   addFiatSymbolToNumber,
   formatCurrencyAmount,

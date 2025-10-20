@@ -1,7 +1,7 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { ETH_LOGO, ETHEREUM_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
-import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   DEFAULT_MS_BEFORE_WARNING,
   DEFAULT_NATIVE_ADDRESS_LEGACY,
@@ -16,11 +16,12 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
+import { SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildDAI, buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
 import { isPlaywrightEnv } from 'utilities/src/environment/env'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { mainnet, sepolia } from 'wagmi/chains'
 
@@ -40,12 +41,12 @@ export const MAINNET_CHAIN_INFO = {
   platform: Platform.EVM,
   assetRepoNetworkName: 'ethereum',
   backendChain: {
-    chain: BackendChainId.Ethereum as GqlChainId,
+    chain: GraphQLApi.Chain.Ethereum as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 1,
-  blockWaitMsBeforeWarning: isInterface ? DEFAULT_MS_BEFORE_WARNING : ONE_MINUTE_MS,
+  blockWaitMsBeforeWarning: isWebApp ? DEFAULT_MS_BEFORE_WARNING : ONE_MINUTE_MS,
   bridge: undefined,
   docs: 'https://docs.uniswap.org/',
   elementName: ElementName.ChainEthereum,
@@ -98,6 +99,16 @@ export const MAINNET_CHAIN_INFO = {
     decimals: 18,
     address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
   },
+  gasConfig: {
+    send: {
+      configKey: SwapConfigKey.EthSendMinGasAmount,
+      default: 20, // .002 ETH
+    },
+    swap: {
+      configKey: SwapConfigKey.EthSwapMinGasAmount,
+      default: 150, // .015 ETH
+    },
+  },
   tradingApiPollingIntervalMs: 500,
 } as const satisfies UniverseChainInfo
 
@@ -113,7 +124,7 @@ export const SEPOLIA_CHAIN_INFO = {
   platform: Platform.EVM,
   assetRepoNetworkName: undefined,
   backendChain: {
-    chain: BackendChainId.EthereumSepolia as GqlChainId,
+    chain: GraphQLApi.Chain.EthereumSepolia as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },
@@ -169,6 +180,16 @@ export const SEPOLIA_CHAIN_INFO = {
     symbol: 'WETH',
     decimals: 18,
     address: '0xfff9976782d46cc05630d1f6ebab18b2324d6b14',
+  },
+  gasConfig: {
+    send: {
+      configKey: SwapConfigKey.EthSendMinGasAmount,
+      default: 20, // .002 ETH
+    },
+    swap: {
+      configKey: SwapConfigKey.EthSwapMinGasAmount,
+      default: 150, // .015 ETH
+    },
   },
   tradingApiPollingIntervalMs: 500,
 } as const satisfies UniverseChainInfo

@@ -1,6 +1,7 @@
 import Fuse from 'fuse.js'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isWSOL } from 'uniswap/src/utils/isWSOL'
 
 const searchOptions: Fuse.IFuseOptions<TokenOption> = {
   includeMatches: true,
@@ -61,21 +62,30 @@ const getNameSearchPattern = (
  * @param tokenOptions list of `TokenOption`s to filter
  * @param chainFilter chain id to keep
  * @param searchFilter filter to apply to currency adddress, name, and symbol
+ * @param hideWSOL whether to filter out WSOL tokens
  */
 export function filter({
   tokenOptions,
   chainFilter,
   searchFilter,
+  hideWSOL = false,
 }: {
   tokenOptions: TokenOption[] | null
   chainFilter: UniverseChainId | null
   searchFilter?: string
+  hideWSOL?: boolean
 }): TokenOption[] {
   if (!tokenOptions || !tokenOptions.length) {
     return []
   }
+
+  // Filter out WSOL from Solana results when hideWSOL is true
+  const filteredTokens = hideWSOL
+    ? tokenOptions.filter((option) => !isWSOL(option.currencyInfo.currency))
+    : tokenOptions
+
   if (!chainFilter && !searchFilter) {
-    return tokenOptions
+    return filteredTokens
   }
 
   const andPatterns: Fuse.Expression[] = []
@@ -114,7 +124,7 @@ export function filter({
     ],
   }
 
-  const fuse = new Fuse(tokenOptions, searchOptions)
+  const fuse = new Fuse(filteredTokens, searchOptions)
 
   const r = fuse.search(searchPattern)
   return r.map((result) => result.item)

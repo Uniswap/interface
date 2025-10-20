@@ -1,8 +1,8 @@
-import { Dialog } from 'components/Dialog/Dialog'
 import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
+import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export const DynamicFeeTierSpeedbump = () => {

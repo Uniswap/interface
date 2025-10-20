@@ -2,7 +2,7 @@ import { styled, YStack, type YStackProps } from 'tamagui'
 import { FOCUS_SCALE } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/constants'
 import { withCommonPressStyle } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/utils'
 import { isTestEnv } from 'utilities/src/environment/env'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 type TouchableAreaVariant = 'unstyled' | 'none' | 'outlined' | 'filled' | 'raised' | 'floating'
 
@@ -134,18 +134,18 @@ export const TouchableAreaFrame = styled(YStack, {
           '$theme-dark': {
             boxShadow: disabled
               ? undefined
-              : isWeb
+              : isWebPlatform
                 ? `0px 1px 6px 2px rgba(0, 0, 0, 0.54), 0px 1px 2px 0px rgba(0, 0, 0, 0.40)`
                 : undefined,
-            shadowColor: disabled ? undefined : isWeb ? 'rgba(0, 0, 0, 0.40)' : undefined,
+            shadowColor: disabled ? undefined : isWebPlatform ? 'rgba(0, 0, 0, 0.40)' : undefined,
           },
           '$theme-light': {
             boxShadow: disabled
               ? undefined
-              : isWeb
+              : isWebPlatform
                 ? `0px 1px 6px 2px rgba(0, 0, 0, 0.03), 0px 1px 2px 0px rgba(0, 0, 0, 0.02)`
                 : undefined,
-            shadowColor: disabled ? undefined : isWeb ? 'rgba(0, 0, 0, 0.02)' : undefined,
+            shadowColor: disabled ? undefined : isWebPlatform ? 'rgba(0, 0, 0, 0.02)' : undefined,
           },
           '$platform-native': disabled
             ? {}

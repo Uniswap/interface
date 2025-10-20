@@ -13,6 +13,7 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
       "marginRight": 8,
     }
   }
+  testID="favorite-token-header"
 >
   <Text
     allowFontScaling={true}
@@ -114,6 +115,7 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
       "marginRight": 8,
     }
   }
+  testID="favorite-token-header"
 >
   <Text
     allowFontScaling={true}

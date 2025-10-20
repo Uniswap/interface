@@ -3,6 +3,8 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { PositionField } from 'types/position'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 
 export function getCurrencyForProtocol(
@@ -74,6 +76,10 @@ export function getTokenOrZeroAddress(currency: Maybe<Currency>): string | undef
 export function getTokenOrZeroAddress(currency: Maybe<Currency>): string | undefined {
   if (!currency) {
     return undefined
+  }
+
+  if (currency.isNative && currency.chainId === UniverseChainId.Celo) {
+    return getChainInfo(UniverseChainId.Celo).nativeCurrency.address
   }
 
   return currency.isToken ? currency.address : ZERO_ADDRESS

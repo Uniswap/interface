@@ -1,17 +1,10 @@
-import { UseFragmentResult, useFragment } from '@apollo/client'
 import {
-  Token,
-  TokenBasicInfoPartsFragment,
-  TokenBasicInfoPartsFragmentDoc,
-  TokenBasicProjectPartsFragment,
-  TokenBasicProjectPartsFragmentDoc,
-  TokenMarketPartsFragment,
-  TokenMarketPartsFragmentDoc,
-  TokenProjectMarketsPartsFragment,
-  TokenProjectMarketsPartsFragmentDoc,
-  TokenProjectUrlsPartsFragment,
-  TokenProjectUrlsPartsFragmentDoc,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+  useTokenBasicInfoPartsFragment as useTokenBasicInfoPartsFragmentFromApi,
+  useTokenBasicProjectPartsFragment as useTokenBasicProjectPartsFragmentFromApi,
+  useTokenMarketPartsFragment as useTokenMarketPartsFragmentFromApi,
+  useTokenProjectMarketsPartsFragment as useTokenProjectMarketsPartsFragmentFromApi,
+  useTokenProjectUrlsPartsFragment as useTokenProjectUrlsPartsFragmentFromApi,
+} from '@universe/api'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToChain, currencyIdToGraphQLAddress } from 'uniswap/src/utils/currencyId'
 
@@ -37,73 +30,38 @@ export function useTokenBasicInfoPartsFragment({
   currencyId,
 }: {
   currencyId: string
-}): UseFragmentResult<TokenBasicInfoPartsFragment> {
-  return useFragment<TokenBasicInfoPartsFragment>({
-    fragment: TokenBasicInfoPartsFragmentDoc,
-    fragmentName: 'TokenBasicInfoParts',
-    from: {
-      __typename: 'Token' satisfies Token['__typename'],
-      ...currencyIdToGraphQLTokenVariables(currencyId),
-    },
-  })
+}): ReturnType<typeof useTokenBasicInfoPartsFragmentFromApi> {
+  return useTokenBasicInfoPartsFragmentFromApi(currencyIdToGraphQLTokenVariables(currencyId))
 }
 
 export function useTokenMarketPartsFragment({
   currencyId,
 }: {
   currencyId: string
-}): UseFragmentResult<TokenMarketPartsFragment> {
-  return useFragment<TokenMarketPartsFragment>({
-    fragment: TokenMarketPartsFragmentDoc,
-    fragmentName: 'TokenMarketParts',
-    from: {
-      __typename: 'Token' satisfies Token['__typename'],
-      ...currencyIdToGraphQLTokenVariables(currencyId),
-    },
-  })
+}): ReturnType<typeof useTokenMarketPartsFragmentFromApi> {
+  return useTokenMarketPartsFragmentFromApi(currencyIdToGraphQLTokenVariables(currencyId))
 }
 
 export function useTokenBasicProjectPartsFragment({
   currencyId,
 }: {
   currencyId: string
-}): UseFragmentResult<TokenBasicProjectPartsFragment> {
-  return useFragment<TokenBasicProjectPartsFragment>({
-    fragment: TokenBasicProjectPartsFragmentDoc,
-    fragmentName: 'TokenBasicProjectParts',
-    from: {
-      __typename: 'Token' satisfies Token['__typename'],
-      ...currencyIdToGraphQLTokenVariables(currencyId),
-    },
-  })
+}): ReturnType<typeof useTokenBasicProjectPartsFragmentFromApi> {
+  return useTokenBasicProjectPartsFragmentFromApi(currencyIdToGraphQLTokenVariables(currencyId))
 }
 
 export function useTokenProjectUrlsPartsFragment({
   currencyId,
 }: {
   currencyId: string
-}): UseFragmentResult<TokenProjectUrlsPartsFragment> {
-  return useFragment<TokenProjectUrlsPartsFragment>({
-    fragment: TokenProjectUrlsPartsFragmentDoc,
-    fragmentName: 'TokenProjectUrlsParts',
-    from: {
-      __typename: 'Token' satisfies Token['__typename'],
-      ...currencyIdToGraphQLTokenVariables(currencyId),
-    },
-  })
+}): ReturnType<typeof useTokenProjectUrlsPartsFragmentFromApi> {
+  return useTokenProjectUrlsPartsFragmentFromApi(currencyIdToGraphQLTokenVariables(currencyId))
 }
 
 export function useTokenProjectMarketsPartsFragment({
   currencyId,
 }: {
   currencyId: string
-}): UseFragmentResult<TokenProjectMarketsPartsFragment> {
-  return useFragment<TokenProjectMarketsPartsFragment>({
-    fragment: TokenProjectMarketsPartsFragmentDoc,
-    fragmentName: 'TokenProjectMarketsParts',
-    from: {
-      __typename: 'Token' satisfies Token['__typename'],
-      ...currencyIdToGraphQLTokenVariables(currencyId),
-    },
-  })
+}): ReturnType<typeof useTokenProjectMarketsPartsFragmentFromApi> {
+  return useTokenProjectMarketsPartsFragmentFromApi(currencyIdToGraphQLTokenVariables(currencyId))
 }

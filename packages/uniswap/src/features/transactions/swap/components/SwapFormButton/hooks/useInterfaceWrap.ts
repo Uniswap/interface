@@ -9,7 +9,7 @@ import { isJupiter, isUniswapX } from 'uniswap/src/features/transactions/swap/ut
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 // TODO(WEB-5012): Align interface wrap UX into SwapReviewScreen
 export function useInterfaceWrap(): {
@@ -39,7 +39,7 @@ export function useInterfaceWrap(): {
     }
   })
 
-  const isInterfaceWrap = isInterface && wrapType !== WrapType.NotApplicable
+  const isInterfaceWrap = isWebApp && wrapType !== WrapType.NotApplicable
 
   const onInterfaceWrap = useMemo(() => {
     const inputCurrencyAmount = currencyAmounts[CurrencyField.INPUT]

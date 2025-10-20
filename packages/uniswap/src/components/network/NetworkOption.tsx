@@ -7,10 +7,10 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 const NETWORK_OPTION_ICON_SIZE = iconSizes.icon24
-const OPTION_GAP = isWeb ? '$spacing8' : '$spacing6'
+const OPTION_GAP = isWebPlatform ? '$spacing8' : '$spacing6'
 
 const NETWORK_OPTION_HOVER_STYLE = {
   backgroundColor: '$surface2',
