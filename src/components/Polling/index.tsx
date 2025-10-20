@@ -115,6 +115,28 @@ export default function Polling() {
 
   const warning = Boolean(!!blockTime && machineTime - blockTime.mul(1000).toNumber() > waitMsBeforeWarning)
 
+  // Debug logging to understand the warning trigger
+  useEffect(() => {
+    if (blockTime && chainId) {
+      const blockTimeMs = blockTime.mul(1000).toNumber()
+      const timeDiff = machineTime - blockTimeMs
+      const blockTimeDate = new Date(blockTimeMs)
+      const machineTimeDate = new Date(machineTime)
+
+      console.log('[Polling Debug]', {
+        chainId,
+        blockNumber: blockNumber?.toString(),
+        blockTime: blockTimeDate.toISOString(),
+        machineTime: machineTimeDate.toISOString(),
+        timeDiffMs: timeDiff,
+        timeDiffMinutes: (timeDiff / 1000 / 60).toFixed(2),
+        waitMsBeforeWarning,
+        waitMinutesBeforeWarning: (waitMsBeforeWarning / 1000 / 60).toFixed(2),
+        warning
+      })
+    }
+  }, [blockTime, machineTime, chainId, blockNumber, waitMsBeforeWarning, warning])
+
   useEffect(
     () => {
       if (!blockNumber) {
