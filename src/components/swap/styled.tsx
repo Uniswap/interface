@@ -136,12 +136,12 @@ const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
   width: 100%;
   max-width: 480px;
   z-index: ${Z_INDEX.default};
-  border: 1px solid ${({ theme, isDark }) => (isDark ? 'rgba(140, 82, 255, 0.3)' : theme.surface3)};
+  border: 1px solid ${({ theme, isDark }) => (isDark ? 'rgba(232, 24, 153, 0.3)' : theme.surface3)};
   transition: all 250ms ease;
   border-radius: 24px;
   box-shadow: ${({ isDark }) =>
     isDark
-      ? '0 0 40px rgba(140, 82, 255, 0.2), 0 0 80px rgba(160, 120, 255, 0.15)'
+      ? '0 0 40px rgba(232, 24, 153, 0.2), 0 0 80px rgba(252, 114, 255, 0.15)'
       : '0 4px 12px rgba(0, 0, 0, 0.05)'};
 
   &:before {
@@ -153,16 +153,16 @@ const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
     filter: blur(50px);
     background: ${({ isDark }) =>
       isDark
-        ? 'radial-gradient(circle at center, rgba(140, 82, 255, 0.15), rgba(160, 120, 255, 0.08))'
-        : 'rgba(160, 120, 255, 0.075)'};
+        ? 'radial-gradient(circle at center, rgba(232, 24, 153, 0.15), rgba(252, 114, 255, 0.08))'
+        : 'rgba(252, 114, 255, 0.075)'};
     z-index: -2;
   }
 
   &:hover {
-    border: 1px solid ${({ theme, isDark }) => (isDark ? 'rgba(140, 82, 255, 0.5)' : theme.surface3)};
+    border: 1px solid ${({ theme, isDark }) => (isDark ? 'rgba(232, 24, 153, 0.5)' : theme.surface3)};
     box-shadow: ${({ isDark }) =>
       isDark
-        ? '0 0 50px rgba(140, 82, 255, 0.25), 0 0 100px rgba(160, 120, 255, 0.2)'
+        ? '0 0 50px rgba(232, 24, 153, 0.25), 0 0 100px rgba(252, 114, 255, 0.2)'
         : '0 4px 16px rgba(0, 0, 0, 0.08)'};
   }
 `
