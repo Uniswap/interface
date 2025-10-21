@@ -6,6 +6,7 @@ import { Z_INDEX } from 'theme/zIndex'
 
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
 import { AutoColumn } from '../Column'
+import meshSrc from '../About/images/Mesh.png'
 
 export const PageWrapper = styled.div`
   position: relative;
@@ -68,17 +69,8 @@ export const SwapGlowContainer = styled.div`
 export const SwapGlow = styled.div`
   position: absolute;
   top: 100px;
-  background: radial-gradient(
-    circle at center,
-    rgba(140, 82, 255, 0.35) 0%,
-    rgba(150, 100, 255, 0.28) 20%,
-    rgba(160, 120, 255, 0.22) 35%,
-    rgba(170, 140, 255, 0.16) 50%,
-    rgba(180, 160, 255, 0.10) 65%,
-    rgba(190, 180, 255, 0.05) 80%,
-    rgba(200, 200, 255, 0.02) 92%,
-    rgba(210, 210, 255, 0) 100%
-  );
+  background: url(${meshSrc}), radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);
+  background-blend-mode: normal;
   filter: blur(150px);
   border-radius: 50%;
   max-width: 700px;
