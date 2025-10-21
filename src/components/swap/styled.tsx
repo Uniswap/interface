@@ -83,7 +83,7 @@ export const SwapGlow = styled.div`
     content: '';
     position: absolute;
     inset: 0;
-    background: radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);
+    background: radial-gradient(101.8% 4091.31% at 0% 0%, #E81899 0%, #FC72FF 100%);
     border-radius: 50%;
     filter: blur(150px);
     opacity: 0.7;
