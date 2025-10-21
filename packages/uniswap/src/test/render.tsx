@@ -1,4 +1,4 @@
-/* biome-ignore-all lint/suspicious/noExplicitAny: legacy code needs review */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { InMemoryCache, Resolvers } from '@apollo/client'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
@@ -42,7 +42,6 @@ export const mockUniswapContext = {
   useProviderHook: jest.fn(),
   useWalletDisplayName: jest.fn(),
   onConnectWallet: jest.fn(),
-  useAccountsStoreContextHook: jest.fn(),
 }
 
 // This type extends the default options for render from RTL, as well

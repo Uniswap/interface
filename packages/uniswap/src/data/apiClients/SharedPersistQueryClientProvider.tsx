@@ -1,7 +1,7 @@
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { SharedQueryClient } from '@universe/api'
 import { PropsWithChildren } from 'react'
 import { createPersister } from 'uniswap/src/data/apiClients/createPersister'
+import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { sharedDehydrateOptions } from 'uniswap/src/data/apiClients/sharedDehydrateOptions'
 import { MAX_REACT_QUERY_CACHE_TIME_MS } from 'utilities/src/time/time'
 

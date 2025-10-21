@@ -79,7 +79,7 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                 "backgroundColor": {
                   "dynamic": {
                     "dark": "rgba(255,255,255,0.12)",
-                    "light": "rgba(19, 19, 19, 0.08)",
+                    "light": "rgba(34,34,34,0.05)",
                   },
                 },
                 "borderBottomLeftRadius": 8,
@@ -249,16 +249,16 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                 style={
                   {
                     "backgroundColor": "#FFFFFF",
-                    "borderBottomColor": "rgba(19, 19, 19, 0.08)",
+                    "borderBottomColor": "rgba(34,34,34,0.05)",
                     "borderBottomLeftRadius": 20,
                     "borderBottomRightRadius": 20,
                     "borderBottomWidth": 1,
-                    "borderLeftColor": "rgba(19, 19, 19, 0.08)",
+                    "borderLeftColor": "rgba(34,34,34,0.05)",
                     "borderLeftWidth": 1,
-                    "borderRightColor": "rgba(19, 19, 19, 0.08)",
+                    "borderRightColor": "rgba(34,34,34,0.05)",
                     "borderRightWidth": 1,
                     "borderStyle": "solid",
-                    "borderTopColor": "rgba(19, 19, 19, 0.08)",
+                    "borderTopColor": "rgba(34,34,34,0.05)",
                     "borderTopLeftRadius": 20,
                     "borderTopRightRadius": 20,
                     "borderTopWidth": 1,
@@ -268,12 +268,12 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                     "paddingLeft": 16,
                     "paddingRight": 16,
                     "paddingTop": 16,
-                    "shadowColor": "rgb(19,19,19)",
+                    "shadowColor": "rgb(34,34,34)",
                     "shadowOffset": {
                       "height": 0,
                       "width": 0,
                     },
-                    "shadowOpacity": 0.0784313725490196,
+                    "shadowOpacity": 0.050980392156862744,
                     "shadowRadius": 4,
                     "transform": [
                       {
@@ -339,33 +339,11 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                         "borderTopRightRadius": 999999,
                         "borderTopWidth": 0,
                         "flexDirection": "column",
-                        "height": 36,
                         "position": "relative",
-                        "width": 36,
                       }
                     }
                     testID="account-icon"
-                  >
-                    <View
-                      collapsable={false}
-                      forwardedRef={[Function]}
-                      jestAnimatedStyle={
-                        {
-                          "value": {
-                            "opacity": 0,
-                          },
-                        }
-                      }
-                      onBlur={[Function]}
-                      onFocus={[Function]}
-                      style={
-                        {
-                          "flexDirection": "column",
-                          "opacity": 0,
-                        }
-                      }
-                    />
-                  </View>
+                  />
                   <View
                     onBlur={[Function]}
                     onFocus={[Function]}
@@ -566,16 +544,16 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                 style={
                   {
                     "backgroundColor": "#FFFFFF",
-                    "borderBottomColor": "rgba(19, 19, 19, 0.08)",
+                    "borderBottomColor": "rgba(34,34,34,0.05)",
                     "borderBottomLeftRadius": 20,
                     "borderBottomRightRadius": 20,
                     "borderBottomWidth": 1,
-                    "borderLeftColor": "rgba(19, 19, 19, 0.08)",
+                    "borderLeftColor": "rgba(34,34,34,0.05)",
                     "borderLeftWidth": 1,
-                    "borderRightColor": "rgba(19, 19, 19, 0.08)",
+                    "borderRightColor": "rgba(34,34,34,0.05)",
                     "borderRightWidth": 1,
                     "borderStyle": "solid",
-                    "borderTopColor": "rgba(19, 19, 19, 0.08)",
+                    "borderTopColor": "rgba(34,34,34,0.05)",
                     "borderTopLeftRadius": 20,
                     "borderTopRightRadius": 20,
                     "borderTopWidth": 1,
@@ -585,12 +563,12 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                     "paddingLeft": 16,
                     "paddingRight": 16,
                     "paddingTop": 16,
-                    "shadowColor": "rgb(19,19,19)",
+                    "shadowColor": "rgb(34,34,34)",
                     "shadowOffset": {
                       "height": 0,
                       "width": 0,
                     },
-                    "shadowOpacity": 0.0784313725490196,
+                    "shadowOpacity": 0.050980392156862744,
                     "shadowRadius": 4,
                     "transform": [
                       {
@@ -656,33 +634,11 @@ exports[`RestoreCloudBackupScreen renders correctly 1`] = `
                         "borderTopRightRadius": 999999,
                         "borderTopWidth": 0,
                         "flexDirection": "column",
-                        "height": 36,
                         "position": "relative",
-                        "width": 36,
                       }
                     }
                     testID="account-icon"
-                  >
-                    <View
-                      collapsable={false}
-                      forwardedRef={[Function]}
-                      jestAnimatedStyle={
-                        {
-                          "value": {
-                            "opacity": 0,
-                          },
-                        }
-                      }
-                      onBlur={[Function]}
-                      onFocus={[Function]}
-                      style={
-                        {
-                          "flexDirection": "column",
-                          "opacity": 0,
-                        }
-                      }
-                    />
-                  </View>
+                  />
                   <View
                     onBlur={[Function]}
                     onFocus={[Function]}

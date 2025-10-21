@@ -47,28 +47,17 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 const ROW_HEIGHT_DESKTOP = 56
 const ROW_HEIGHT_MOBILE_WEB = 48
 
-interface TableCellProps<T extends RowData> {
-  cell: Cell<T, unknown>
-  colors: UseSporeColorsReturn
-}
-
-function TableCellComponent<T extends RowData>({ cell, colors }: TableCellProps<T>): JSX.Element {
+const TableCell = memo(({ cell, colors }: { cell: Cell<RowData, unknown>; colors: UseSporeColorsReturn }) => {
   return (
     <CellContainer style={getCommonPinningStyles(cell.column, colors)}>
       {flexRender(cell.column.columnDef.cell, cell.getContext())}
     </CellContainer>
   )
-}
+})
 
-const TableCell = memo(TableCellComponent) as typeof TableCellComponent
+TableCell.displayName = 'TableCell'
 
-interface TableRowProps<T extends RowData> {
-  row: Row<T>
-  v2: boolean
-  rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
-}
-
-function TableRowComponent<T extends RowData>({ row, v2 = true, rowWrapper }: TableRowProps<T>): JSX.Element {
+const TableRow = ({ row }: { row: Row<RowData> }) => {
   const analyticsContext = useTrace()
   const rowOriginal = row.original as {
     linkState: LinkProps['state']
@@ -88,9 +77,9 @@ function TableRowComponent<T extends RowData>({ row, v2 = true, rowWrapper }: Ta
   )
   const cells = row
     .getVisibleCells()
-    .map((cell: Cell<T, unknown>) => <TableCell<T> key={cell.id} cell={cell} colors={colors} />)
+    .map((cell: Cell<RowData, any>) => <TableCell key={cell.id} cell={cell} colors={colors} />)
 
-  const rowContent = (
+  return (
     <Trace
       logPress
       element={rowOriginal.analytics?.elementName}
@@ -99,38 +88,26 @@ function TableRowComponent<T extends RowData>({ row, v2 = true, rowWrapper }: Ta
         ...analyticsContext,
       }}
     >
-      <Flex group>
-        {'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
-          <TableRowLink to={rowOriginal.link} state={linkState} data-testid={rowTestId}>
-            <DataRow height={rowHeight} v2={v2}>
-              {cells}
-            </DataRow>
-          </TableRowLink>
-        ) : (
-          <DataRow height={rowHeight} data-testid={rowTestId} v2={v2}>
-            {cells}
-          </DataRow>
-        )}
-      </Flex>
+      {'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
+        <TableRowLink to={rowOriginal.link} state={linkState} data-testid={rowTestId}>
+          <DataRow height={rowHeight}>{cells}</DataRow>
+        </TableRowLink>
+      ) : (
+        <DataRow height={rowHeight} data-testid={rowTestId}>
+          {cells}
+        </DataRow>
+      )}
     </Trace>
   )
-  return rowWrapper ? rowWrapper(row, rowContent) : rowContent
 }
-
-const TableRow = memo(TableRowComponent) as typeof TableRowComponent
 
 type TableBodyProps<T extends RowData = unknown> = {
   table: TanstackTable<T>
   loading?: boolean
   error?: ApolloError | boolean
-  v2: boolean
-  rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
 }
 
-function TableBodyInner<T extends RowData>(
-  { table, loading, error, v2 = true, rowWrapper }: TableBodyProps<T>,
-  ref: React.Ref<HTMLDivElement>,
-) {
+const TableBody = forwardRef<HTMLDivElement, TableBodyProps<RowData>>(({ table, loading, error }, ref) => {
   const rows = table.getRowModel().rows
   const { width: tableWidth } = useTableSize()
   const skeletonRowHeight = useMemo(
@@ -142,10 +119,10 @@ function TableBodyInner<T extends RowData>(
     return (
       <>
         {Array.from({ length: 20 }, (_, rowIndex) => (
-          <DataRow key={`skeleton-row-${rowIndex}`} height={skeletonRowHeight} v2={v2}>
+          <DataRow key={`skeleton-row-${rowIndex}`} height={skeletonRowHeight}>
             {table.getAllColumns().map((column, columnIndex) => (
               <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>
-                {flexRender(column.columnDef.cell, {} as CellContext<T, any>)}
+                {flexRender(column.columnDef.cell, {} as CellContext<RowData, any>)}
               </CellContainer>
             ))}
           </DataRow>
@@ -173,15 +150,13 @@ function TableBodyInner<T extends RowData>(
   return (
     <Flex ref={ref} position="relative">
       {rows.map((row) => (
-        <TableRow<T> key={row.id} row={row} v2={v2} rowWrapper={rowWrapper} />
+        <TableRow key={row.id} row={row} />
       ))}
     </Flex>
   )
-}
+})
 
-const TableBody = forwardRef(TableBodyInner) as unknown as <T extends RowData>(
-  p: TableBodyProps<T> & { ref?: React.Ref<HTMLDivElement> },
-) => JSX.Element
+TableBody.displayName = 'TableBody'
 
 export function Table<T extends RowData>({
   columns,
@@ -193,9 +168,6 @@ export function Table<T extends RowData>({
   maxHeight,
   defaultPinnedColumns = [],
   forcePinning = false,
-  v2 = true,
-  getRowId,
-  rowWrapper,
 }: {
   columns: ColumnDef<T, any>[]
   data: T[]
@@ -206,9 +178,6 @@ export function Table<T extends RowData>({
   maxHeight?: number
   defaultPinnedColumns?: string[]
   forcePinning?: boolean
-  v2: boolean
-  getRowId?: (originalRow: T, index: number, parent?: Row<T>) => string
-  rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
 }) {
   const [loadingMore, setLoadingMore] = useState(false)
   const [showScrollRightButton, setShowScrollRightButton] = useState(false)
@@ -231,7 +200,6 @@ export function Table<T extends RowData>({
 
   const { parentRef, width, height, top, left } = useParentSize()
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to run it also when loadMore, loadingMore are changed
   useEffect(() => {
     const scrollableElement = maxHeight ? tableBodyRef.current : window
     if (scrollableElement === null) {
@@ -253,9 +221,8 @@ export function Table<T extends RowData>({
     }
     scrollableElement.addEventListener('scroll', updateScrollPosition)
     return () => scrollableElement.removeEventListener('scroll', updateScrollPosition)
-  }, [loadMore, maxHeight, loadingMore])
+  }, [loadMore, maxHeight, loadingMore, tableBodyRef])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to run it also when distanceFromTop, loading are changed
   useEffect(() => {
     if (distanceToBottom < LOAD_MORE_BOTTOM_OFFSET && !loadingMore && loadMore && canLoadMore.current && !error) {
       setLoadingMore(true)
@@ -282,9 +249,8 @@ export function Table<T extends RowData>({
     data,
     state: { columnPinning: { left: pinnedColumns } },
     getCoreRowModel: getCoreRowModel(),
-    getRowId,
   })
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to run it also when table is changed
+
   useEffect(() => {
     const resizeHandler = () => {
       if (!defaultPinnedColumns.length) {
@@ -327,7 +293,7 @@ export function Table<T extends RowData>({
     return () => {
       container.removeEventListener('scroll', horizontalScrollHandler)
     }
-  }, [loading, showScrollLeftButton, showScrollRightButton])
+  }, [loading, showScrollLeftButton, showScrollRightButton, tableBodyRef])
 
   const headerHeight = useMemo(() => {
     const header = document.getElementById('AppHeader')
@@ -416,7 +382,7 @@ export function Table<T extends RowData>({
               </>
             )}
             <ScrollSyncPane group="table-sync">
-              <HeaderRow dimmed={!!error} v2={v2}>
+              <HeaderRow dimmed={!!error}>
                 {table.getFlatHeaders().map((header) => (
                   <CellContainer key={header.id} style={getCommonPinningStyles(header.column, colors)}>
                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -427,12 +393,10 @@ export function Table<T extends RowData>({
           </TableHead>
           {hasPinnedColumns && <TableScrollMask zIndex={zIndexes.default} borderBottomRightRadius="$rounded20" />}
           <ScrollSyncPane group="table-sync">
-            <TableBodyContainer maxHeight={maxHeight ? maxHeight - headerHeight : 'unset'} v2={v2}>
+            <TableBodyContainer maxHeight={maxHeight ? maxHeight - headerHeight : 'unset'}>
               <TableBody
                 loading={loading}
                 error={error}
-                v2={v2}
-                rowWrapper={rowWrapper}
                 // @ts-ignore
                 table={table}
                 ref={tableBodyRef}

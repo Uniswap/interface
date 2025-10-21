@@ -2,7 +2,7 @@
 
 exports[`disable nft on searchbar > should render searchbar on larger screen 1`] = `
 .c1 {
-  background-color: rgba(19,19,19,0.08);
+  background-color: rgba(34,34,34,0.05);
   color: rgba(19,19,19,0.63);
   padding: 0px 8px;
   width: 20px;

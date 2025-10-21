@@ -1,4 +1,3 @@
-import { CustomRankingType, RankingType } from '@universe/api'
 import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getTokensOrderByMenuLabel, getTokensOrderBySelectedLabel } from 'src/features/explore/utils'
@@ -6,9 +5,9 @@ import { Flex, Text } from 'ui/src'
 import { Chart, ChartPie, ChartPyramid, CheckCircleFilled, TrendDown, TrendUp } from 'ui/src/components/icons'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
+import { CustomRankingType, RankingType } from 'uniswap/src/data/types'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
 import { ExploreOrderBy } from 'wallet/src/features/wallet/types'
 
@@ -19,17 +18,10 @@ interface FilterGroupProps {
   onOrderByChange: (orderBy: ExploreOrderBy) => void
 }
 
-interface MenuAction {
-  title: string
-  orderBy: ExploreOrderBy
-  icon: JSX.Element
-  active: boolean
-}
-
 function _SortButton({ orderBy, onOrderByChange }: FilterGroupProps): JSX.Element {
   const { t } = useTranslation()
 
-  const menuActions = useMemo<MenuAction[]>(() => {
+  const menuActions = useMemo(() => {
     return [
       {
         title: getTokensOrderByMenuLabel(RankingType.Volume, t),
@@ -64,27 +56,23 @@ function _SortButton({ orderBy, onOrderByChange }: FilterGroupProps): JSX.Elemen
     ]
   }, [t, orderBy])
 
-  const MenuItem = useCallback(
-    ({ label, icon, active, testID }: { label: string; icon: JSX.Element; active: boolean; testID?: string }) => {
-      return (
-        <Flex
-          grow
-          row
-          alignItems="center"
-          gap="$spacing8"
-          minWidth={MIN_MENU_ITEM_WIDTH}
-          py="$spacing8"
-          style={{ padding: 5 }}
-          testID={testID}
-        >
-          {icon}
-          <Text>{label}</Text>
-          {active && <CheckCircleFilled color="$neutral1" size="$icon.16" />}
-        </Flex>
-      )
-    },
-    [],
-  )
+  const MenuItem = useCallback(({ label, icon, active }: { label: string; icon: JSX.Element; active: boolean }) => {
+    return (
+      <Flex
+        grow
+        row
+        alignItems="center"
+        gap="$spacing8"
+        minWidth={MIN_MENU_ITEM_WIDTH}
+        py="$spacing8"
+        style={{ padding: 5 }}
+      >
+        {icon}
+        <Text>{label}</Text>
+        {active && <CheckCircleFilled color="$neutral1" size="$icon.16" />}
+      </Flex>
+    )
+  }, [])
 
   const handleOrderByChange = useCallback(
     (newOrderBy: ExploreOrderBy) => {
@@ -110,9 +98,7 @@ function _SortButton({ orderBy, onOrderByChange }: FilterGroupProps): JSX.Elemen
           }
           handleOrderByChange(selectedMenuAction.orderBy)
         },
-        render: () => (
-          <MenuItem active={option.active} icon={option.icon} label={option.title} testID={option.orderBy} />
-        ),
+        render: () => <MenuItem active={option.active} icon={option.icon} label={option.title} />,
       }
     })
   }, [MenuItem, menuActions, handleOrderByChange])
@@ -126,7 +112,6 @@ function _SortButton({ orderBy, onOrderByChange }: FilterGroupProps): JSX.Elemen
       gap="$spacing4"
       pl="$spacing12"
       pr="$spacing8"
-      testID={TestID.ExploreSortButton}
     >
       <ActionSheetDropdown showArrow options={options} styles={{ alignment: 'right' }}>
         <Text ellipse color="$neutral2" flexShrink={1} numberOfLines={1} variant="buttonLabel3">

@@ -85,7 +85,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
   const { tokenWarningDismissed: bridgedAssetTokenWarningDismissed } = useDismissedBridgedAssetWarnings(
     currencyInfo.currency,
   )
-  const shouldShowBridgedAssetWarningModalOnPress = showWarnings && isBridgedAsset && !bridgedAssetTokenWarningDismissed
+  const shouldShowBridgedAssetWarningModalOnPress = isBridgedAsset && !bridgedAssetTokenWarningDismissed
   const hasWarningModals = shouldShowWarningModalOnPress || shouldShowBridgedAssetWarningModalOnPress
 
   const setWarningModalVisible = useCallback(
@@ -99,7 +99,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
       // Handle bridged asset warning modal visibility
       setShowBridgedAssetWarningModal(visible)
     },
-    [shouldShowWarningModalOnPress],
+    [shouldShowWarningModalOnPress, setShowWarningModal, setShowBridgedAssetWarningModal],
   )
 
   const onAcceptTokenWarning = useCallback(() => {

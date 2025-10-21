@@ -11,7 +11,7 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
+import { isMobileApp, isWeb } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { ActiveNetworkExpando } from 'wallet/src/features/smartWallet/ActiveNetworkExpando/ActiveNetworkExpando'
 import { useEnabledActiveNetworkDelegations } from 'wallet/src/features/smartWallet/hooks/useEnabledActiveNetworkDelegations'
@@ -41,7 +41,6 @@ export function SmartWalletDisableModal({
     setFalse: collapseActiveNetworks,
   } = useBooleanState(false)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: -wallet
   useEffect(() => {
     collapseActiveNetworks()
   }, [collapseActiveNetworks, wallet])
@@ -68,7 +67,7 @@ export function SmartWalletDisableModal({
         mb={isMobileApp ? '$spacing36' : undefined}
         pt={isMobileApp ? '$none' : undefined}
         maxHeight="100%"
-        {...(isWebPlatform && { flex: 1, overflowY: 'hidden' })}
+        {...(isWeb && { flex: 1, overflowY: 'hidden' })}
       >
         <Flex row alignItems="center" gap="$spacing12">
           <AccountIcon address={walletAddress} size={iconSizes.icon40} />
@@ -88,7 +87,7 @@ export function SmartWalletDisableModal({
               infoButton={
                 <LearnMoreLink
                   textVariant="buttonLabel4"
-                  textColor={isWebPlatform ? '$accent1' : '$accent3'}
+                  textColor={isWeb ? '$accent1' : '$accent3'}
                   url={uniswapUrls.helpArticleUrls.multichainDelegation}
                 />
               }

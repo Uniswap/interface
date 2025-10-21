@@ -44,7 +44,6 @@
     "@testing-library/react-native": "13.0.0",
     "@types/chrome": "0.0.304",
     "@types/qrcode": "1.5.5",
-    "@uniswap/biome-config": "workspace:^",
     "@uniswap/eslint-config": "workspace:^",
     "camelcase": "6.3.0",
     "cheerio": "1.0.0-rc.12",
@@ -56,25 +55,26 @@
     "typescript": "5.3.3",
     "uppercamelcase": "3.0.0"
   },
-  "files": ["types", "dist"],
+  "files": [
+    "types",
+    "dist"
+  ],
   "main": "./src/index.ts",
   "module:jsx": "src",
   "private": true,
   "scripts": {
-    "build:icons": "nx build:icons ui",
-    "build:icons:missing": "nx build:icons:missing ui",
-    "check:deps:usage": "nx check:deps:usage ui",
-    "lint": "nx lint ui",
-    "lint:fix": "nx lint:fix ui",
-    "lint:biome": "nx lint:biome ui",
-    "lint:biome:fix": "nx lint:biome:fix ui",
-    "test": "nx test ui",
-    "typecheck": "nx typecheck ui",
-    "watch": "nx watch ui"
+    "build:icons": "bunx tsx ./src/scripts/componentize-icons.ts && biome check --write --unsafe",
+    "build:icons:missing": "bun run build:icons --skip-existing",
+    "check:deps:usage": "depcheck",
+    "lint": "eslint src --max-warnings=0",
+    "format": "biome check . --linter-enabled=false",
+    "lint:fix": "eslint src --fix",
+    "test": "jest && echo 'ignoring'",
+    "typecheck": "tsc -b",
+    "watch": "bun run build --watch"
   },
-  "nx": {
-    "includedScripts": []
-  },
-  "sideEffects": ["*.css"],
+  "sideEffects": [
+    "*.css"
+  ],
   "types": "./types/index"
 }

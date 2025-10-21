@@ -11,7 +11,6 @@ import {
 import { useDebouncedSwapFormAmounts } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/hooks/useDebouncedSwapFormAmounts'
 import { useDefaultSwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/hooks/useDefaultSwapFormState'
 import { useDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/hooks/useDerivedSwapInfo'
-import { useFreezeWhileSubmitting } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/hooks/useFreezeWhileSubmitting'
 import { useOpenOutputSelectorOnPrefilledStateChange } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/hooks/useOpenOutputSelectorOnPrefilledStateChange'
 import { useUpdateSwapFormFromPrefilledCurrencies } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/hooks/useUpdateSwapFormFromPrefilledCurrencies'
 import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
@@ -136,7 +135,6 @@ function SwapFormStoreContextProviderBase({
     input,
     isMax,
     isSelectingCurrencyFieldPrefilled,
-    isSubmitting,
     output,
     selectingCurrencyField,
     txId,
@@ -153,7 +151,6 @@ function SwapFormStoreContextProviderBase({
       input: s.input,
       isMax: s.isMax,
       isSelectingCurrencyFieldPrefilled: s.isSelectingCurrencyFieldPrefilled,
-      isSubmitting: s.isSubmitting,
       output: s.output,
       selectingCurrencyField: s.selectingCurrencyField,
       txId: s.txId,
@@ -181,7 +178,7 @@ function SwapFormStoreContextProviderBase({
     setSwapForm: setSwapFormState,
   })
 
-  const latestDerivedSwapInfo = useCalculatedInitialDerivedSwapInfo({
+  const derivedSwapInfo = useCalculatedInitialDerivedSwapInfo({
     exactAmountFiat,
     exactAmountToken,
     exactCurrencyField,
@@ -191,9 +188,6 @@ function SwapFormStoreContextProviderBase({
     selectingCurrencyField,
     txId,
   })
-
-  // This prevents the swap form from displaying a new trade while an old one is still being submitted.
-  const derivedSwapInfo = useFreezeWhileSubmitting(latestDerivedSwapInfo, isSubmitting)
 
   const inputAmount = derivedSwapInfo.currencyAmounts[CurrencyField.INPUT]
   const inputBalanceAmount = derivedSwapInfo.currencyBalances[CurrencyField.INPUT]

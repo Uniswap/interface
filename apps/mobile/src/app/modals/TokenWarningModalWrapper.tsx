@@ -40,8 +40,9 @@ export function TokenWarningModalWrapper({
   const tokenList = currencyInfo.safetyInfo?.tokenList
   const isBlocked = tokenList === TokenList.Blocked
 
-  // If token is verified or warning was dismissed and not blocked, skip warning and proceed to next step.
+  // If token is verified or warning was dismissed and not blocked, skip warning and proceed to SwapFlow
   if (!isBlocked && (tokenList === TokenList.Default || tokenWarningDismissed)) {
+    onClose()
     onAcknowledge?.()
     return null
   }
@@ -52,7 +53,14 @@ export function TokenWarningModalWrapper({
       currencyInfo0={currencyInfo}
       isInfoOnlyWarning={isBlocked}
       closeModalOnly={onClose}
-      onAcknowledge={isBlocked ? onClose : (): void => onAcknowledge?.()}
+      onAcknowledge={
+        isBlocked
+          ? onClose
+          : (): void => {
+              onClose()
+              onAcknowledge?.()
+            }
+      }
     />
   )
 }

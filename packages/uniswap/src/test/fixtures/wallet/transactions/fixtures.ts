@@ -1,10 +1,8 @@
 import { TransactionRequest } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
-import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { ALL_EVM_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
@@ -28,7 +26,6 @@ import {
   TransactionReceipt,
   TransactionStatus,
   TransactionType,
-  UniswapXOrderDetails,
   UnknownTransactionInfo,
   WCConfirmInfo,
   WrapTransactionInfo,
@@ -36,7 +33,6 @@ import {
 import { dappInfoWC } from 'uniswap/src/test/fixtures/wallet/walletConnect'
 import { faker } from 'uniswap/src/test/shared'
 import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
-import { currencyId } from 'uniswap/src/utils/currencyId'
 
 export const transactionId = createFixture<TransactionId>()(() => ({
   id: faker.datatype.uuid(),
@@ -144,7 +140,7 @@ export const transactionOptions = createFixture<TransactionOptions>()(() => ({
 
 export const transactionDetails = createFixture<ClassicTransactionDetails>()(() => ({
   ...transactionId(),
-  routing: TradingApi.Routing.CLASSIC,
+  routing: Routing.CLASSIC,
   from: faker.finance.ethereumAddress(),
   typeInfo: approveTransactionInfo(),
   status: randomEnumValue(TransactionStatus),
@@ -175,31 +171,3 @@ export const finalizedTransactionAction = createFixture<ReturnType<typeof finali
   payload: finalizedTransactionDetails(),
   type: 'transactions/finalizeTransaction',
 }))
-
-export const uniswapXOrderDetails = createFixture<UniswapXOrderDetails>()(() => {
-  const outputCurrency = USDC_MAINNET
-
-  return {
-    routing: TradingApi.Routing.DUTCH_V2,
-    orderHash: faker.datatype.uuid(),
-    status: TransactionStatus.Pending,
-    typeInfo: {
-      isUniswapXOrder: true,
-      type: TransactionType.Swap,
-      tradeType: TradeType.EXACT_INPUT,
-      inputCurrencyId: currencyId(DAI),
-      outputCurrencyId: currencyId(outputCurrency),
-      inputCurrencyAmountRaw: '252074033564766400000',
-      expectedOutputCurrencyAmountRaw: '106841079134757921',
-      minimumOutputCurrencyAmountRaw: '106841079134757921',
-      settledOutputCurrencyAmountRaw: '106841079134757921',
-    },
-    encodedOrder: faker.datatype.uuid(),
-    id: faker.datatype.uuid(),
-    addedTime: faker.date.recent().getTime(),
-    chainId: UniverseChainId.Mainnet,
-    expiry: faker.date.future().getTime(),
-    from: faker.finance.ethereumAddress(),
-    transactionOriginType: TransactionOriginType.Internal,
-  }
-})

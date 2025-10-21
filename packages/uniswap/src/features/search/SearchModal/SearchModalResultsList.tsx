@@ -1,5 +1,3 @@
-import { ContentStyle } from '@shopify/flash-list'
-import { GqlResult, GraphQLApi } from '@universe/api'
 import { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNftSearchResultsToNftCollectionOptions } from 'uniswap/src/components/lists/items/nfts/useNftSearchResultsToNftCollectionOptions'
@@ -9,6 +7,8 @@ import { NoResultsFound } from 'uniswap/src/components/lists/NoResultsFound'
 import { OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { useCurrencyInfosToTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
+import { useCollectionSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSearchPools } from 'uniswap/src/features/dataApi/searchPools'
 import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
@@ -18,7 +18,7 @@ import { useWalletSearchResults } from 'uniswap/src/features/search/SearchModal/
 import { SearchModalList, SearchModalListProps } from 'uniswap/src/features/search/SearchModal/SearchModalList'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { isWebPlatform } from 'utilities/src/platform'
+import { isWeb } from 'utilities/src/platform'
 import { noop } from 'utilities/src/react/noop'
 
 function useSectionsForSearchResults({
@@ -32,8 +32,7 @@ function useSectionsForSearchResults({
   activeTab: SearchTab
   shouldPrioritizePools: boolean
 }): GqlResult<OnchainItemSection<SearchModalOption>[]> {
-  const skipPoolSearchQuery =
-    !isWebPlatform || !searchFilter || (activeTab !== SearchTab.Pools && activeTab !== SearchTab.All)
+  const skipPoolSearchQuery = !isWeb || !searchFilter || (activeTab !== SearchTab.Pools && activeTab !== SearchTab.All)
   const {
     data: searchResultPools,
     error: searchPoolsError,
@@ -70,7 +69,7 @@ function useSectionsForSearchResults({
     options: isPoolAddressSearch ? [] : tokenSearchResults, // do not display tokens if pool address search (to avoid displaying V2 liquidity tokens in results)
   })
 
-  const skipWalletSearchQuery = isWebPlatform || (activeTab !== SearchTab.Wallets && activeTab !== SearchTab.All)
+  const skipWalletSearchQuery = isWeb || (activeTab !== SearchTab.Wallets && activeTab !== SearchTab.All)
   const { wallets: walletSearchOptions, loading: walletSearchResultsLoading } = useWalletSearchResults(
     skipWalletSearchQuery ? '' : (searchFilter ?? ''), // skip wallet search queries on web
     chainFilter,
@@ -80,13 +79,13 @@ function useSectionsForSearchResults({
     options: walletSearchOptions,
   })
 
-  const skipNftSearchQuery = isWebPlatform || (activeTab !== SearchTab.NFTCollections && activeTab !== SearchTab.All)
+  const skipNftSearchQuery = isWeb || (activeTab !== SearchTab.NFTCollections && activeTab !== SearchTab.All)
   const {
     data: nftSearchResultsData,
     loading: searchNftResultsLoading,
     error: searchNftResultsError,
     refetch: refetchSearchNftResults,
-  } = GraphQLApi.useCollectionSearchQuery({ variables: { query: searchFilter ?? '' }, skip: skipNftSearchQuery })
+  } = useCollectionSearchQuery({ variables: { query: searchFilter ?? '' }, skip: skipNftSearchQuery })
   const nftCollectionOptions = useNftSearchResultsToNftCollectionOptions(nftSearchResultsData, chainFilter)
   const nftCollectionSearchResultsSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.NFTCollections,
@@ -105,7 +104,7 @@ function useSectionsForSearchResults({
     let sections: OnchainItemSection<SearchModalOption>[] = []
     switch (activeTab) {
       case SearchTab.All:
-        if (isWebPlatform) {
+        if (isWeb) {
           sections = shouldPrioritizePools
             ? [...(poolSearchResultsSection ?? []), ...(tokenSearchResultsSection ?? [])]
             : [...(tokenSearchResultsSection ?? []), ...(poolSearchResultsSection ?? [])]
@@ -183,8 +182,6 @@ interface SearchModalResultsListProps {
   debouncedParsedSearchFilter: string | null
   activeTab: SearchTab
   onSelect?: SearchModalListProps['onSelect']
-  renderedInModal?: boolean
-  contentContainerStyle?: ContentStyle
 }
 
 function _SearchModalResultsList({
@@ -195,8 +192,6 @@ function _SearchModalResultsList({
   debouncedParsedSearchFilter,
   activeTab,
   onSelect,
-  renderedInModal,
-  contentContainerStyle,
 }: SearchModalResultsListProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -233,8 +228,6 @@ function _SearchModalResultsList({
         searchChainFilter: chainFilter,
         searchTabFilter: activeTab,
       }}
-      renderedInModal={renderedInModal}
-      contentContainerStyle={contentContainerStyle}
       onSelect={onSelect}
     />
   )

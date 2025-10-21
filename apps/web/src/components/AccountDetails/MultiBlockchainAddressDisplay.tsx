@@ -1,7 +1,4 @@
-import StatusIcon from 'components/StatusIcon'
-import { useAccountsStore, useActiveAddresses } from 'features/accounts/store/hooks'
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components/CopyHelper'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text } from 'ui/src'
@@ -11,22 +8,23 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { MAINNET_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { SOLANA_CHAIN_INFO } from 'uniswap/src/features/chains/svm/info/solana'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useENSName } from 'uniswap/src/features/ens/api'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { Wallet } from 'uniswap/src/features/wallet/types/Wallet'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { shortenAddress } from 'utilities/src/addresses'
+import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
 
 function AddressDisplay({
   unitag,
   ensName,
-  shortenedAddress,
+  shortenedEvmAddress,
+  shortenedSvmAddress,
 }: {
   unitag?: string
   ensName?: string
-  shortenedAddress?: string
+  shortenedEvmAddress?: string
+  shortenedSvmAddress?: string
 }) {
   return (
     <Flex row gap="$spacing2" alignItems="center" data-testid={TestID.AddressDisplay}>
@@ -37,163 +35,108 @@ function AddressDisplay({
         $xxl={{ maxWidth: '180px' }}
         {...EllipsisTamaguiStyle}
       >
-        {unitag ?? ensName ?? shortenedAddress}
+        {unitag ?? ensName ?? (shortenedEvmAddress || shortenedSvmAddress)}
       </Text>
       {unitag && <Unitag size={18} />}
     </Flex>
   )
 }
 
-function PrimaryAddressDisplay({
-  unitag,
-  ensName,
-  primaryAddress,
-  isMultipleAddresses,
-}: {
-  unitag?: string
-  ensName?: string
-  primaryAddress: string
-  isMultipleAddresses: boolean
-}) {
-  const { t } = useTranslation()
-  const shortenedPrimaryAddress = shortenAddress({ address: primaryAddress })
-
-  if (ensName ?? unitag) {
-    return (
-      <Flex>
-        <AddressDisplay unitag={unitag} ensName={ensName ?? undefined} shortenedAddress={shortenedPrimaryAddress} />
-        {isMultipleAddresses ? (
-          <Text variant="body3" color="$neutral3">
-            {shortenedPrimaryAddress} {t('common.plusMore', { number: 1 })}
-          </Text>
-        ) : (
-          <CopyHelper iconSize={iconSizes.icon12} iconPosition="right" toCopy={primaryAddress}>
-            <Text variant="body3" color="$neutral3">
-              {shortenedPrimaryAddress}
-            </Text>
-          </CopyHelper>
-        )}
-      </Flex>
-    )
-  }
-
-  return isMultipleAddresses ? (
-    <Flex>
-      <AddressDisplay shortenedAddress={shortenedPrimaryAddress} />
-      <Text variant="body3" color="$neutral3">
-        {t('common.plusMore', { number: 1 })}
-      </Text>
-    </Flex>
-  ) : (
-    <CopyHelper iconSize={iconSizes.icon12} iconPosition="right" toCopy={primaryAddress}>
-      <AddressDisplay shortenedAddress={shortenedPrimaryAddress} />
-    </CopyHelper>
-  )
-}
-
-type AccountItem = {
-  platform: Platform
+type AddressItem = {
+  image: JSX.Element | null
   address: string
+  fullAddress: string
   label: string
 }
 
-function TooltipAccountRow({ account }: { account: AccountItem }) {
-  const { t } = useTranslation()
-
-  const { chains: evmChains } = useEnabledChains({ platform: Platform.EVM })
-  const numberOfSupportedEVMChains = evmChains.length
-
-  const multipleWalletsConnected = useAccountsStore((state) => {
-    const evmWalletId = state.activeConnectors.evm?.session?.walletId
-    const svmWalletId = state.activeConnectors.svm?.session?.walletId
-    return Boolean(evmWalletId && svmWalletId && evmWalletId !== svmWalletId)
-  })
-
+function TooltipAddressRow({ address }: { address: AddressItem }) {
   return (
-    <Flex row alignItems="center" justifyContent="space-between" gap="$spacing24">
-      <Flex row gap="$spacing8">
-        <StatusIcon address={account.address} size={28} showMiniIcons={multipleWalletsConnected} />
-        <Flex>
-          <Flex row alignItems="center" gap="$spacing6">
-            <Text variant="body4" color="$neutral1">
-              {shortenAddress({ address: account.address })}
-            </Text>
-            <NetworkLogo
-              chainId={account.platform === Platform.SVM ? UniverseChainId.Solana : UniverseChainId.Mainnet}
-              size={iconSizes.icon12}
-            />
-          </Flex>
-          <Text variant="body4" color="$neutral2">
-            {account.platform === Platform.SVM
-              ? SOLANA_CHAIN_INFO.name
-              : MAINNET_CHAIN_INFO.name +
-                ` +${numberOfSupportedEVMChains - 1} ${t('extension.connection.networks').toLowerCase()}`}
-          </Text>
-        </Flex>
+    <Flex row alignItems="center" justifyContent="space-between" gap="$spacing20">
+      <Flex row gap="$spacing8" alignItems="flex-start">
+        {address.image}
+        <Text variant="body3">{address.label}</Text>
       </Flex>
-      <CopyHelper alwaysShowIcon iconSize={iconSizes.icon16} iconPosition="right" toCopy={account.address}>
-        <></>
+      <CopyHelper alwaysShowIcon iconSize={iconSizes.icon12} iconPosition="right" toCopy={address.fullAddress}>
+        <Text variant="body4">{address.address}</Text>
       </CopyHelper>
     </Flex>
   )
 }
 
-export function MultiBlockchainAddressDisplay() {
-  const activeAddresses = useActiveAddresses()
-  const evmAddress = activeAddresses.evmAddress
-  const { data: ensName } = useENSName(evmAddress)
+export function MultiBlockchainAddressDisplay({
+  wallet,
+  enableCopyAddress,
+}: {
+  wallet: Wallet
+  enableCopyAddress?: boolean
+}) {
+  const evmAddress = wallet.evmAccount?.address
+  const { data: ENSName } = useENSName(evmAddress)
   const { data: unitagData } = useUnitagsAddressQuery({
     params: evmAddress ? { address: evmAddress } : undefined,
   })
   const unitag = unitagData?.username
+  const shortenedEvmAddress = shortenAddress(evmAddress)
 
-  const svmAddress = activeAddresses.svmAddress
+  const svmAddress = wallet.svmAccount?.address
+  // TODO(WEB-8155): update shortenAddress to also take Solana addresses
+  const shortenedSvmAddress = ellipseMiddle({ str: svmAddress ?? '', charsStart: 6, charsEnd: 6 })
 
   const primaryAddress = evmAddress ?? svmAddress
+  if (!primaryAddress) {
+    throw new Error('No addresses to display')
+  }
 
-  const accounts: AccountItem[] = useMemo(() => {
-    const accountsList: AccountItem[] = []
+  const addresses: AddressItem[] = useMemo(() => {
+    const addressList: AddressItem[] = []
     if (evmAddress) {
-      accountsList.push({
-        address: evmAddress,
+      addressList.push({
+        image: <NetworkLogo chainId={null} size={20} />,
+        address: shortenedEvmAddress,
+        fullAddress: evmAddress,
         label: MAINNET_CHAIN_INFO.name,
-        platform: Platform.EVM,
       })
     }
     if (svmAddress) {
-      accountsList.push({
-        address: svmAddress,
+      addressList.push({
+        image: <NetworkLogo chainId={UniverseChainId.Solana} size={20} />,
+        address: shortenedSvmAddress,
+        fullAddress: svmAddress,
         label: SOLANA_CHAIN_INFO.name,
-        platform: Platform.SVM,
       })
     }
-    return accountsList
-  }, [evmAddress, svmAddress])
-
-  if (!primaryAddress) {
-    return null
-  }
-
-  const isMultipleAddresses = accounts.length > 1
+    return addressList
+  }, [evmAddress, svmAddress, shortenedEvmAddress, shortenedSvmAddress])
 
   return (
     <InfoTooltip
-      enabled={isMultipleAddresses}
+      enabled={addresses.length > 1}
       maxWidth={400}
       text={
-        <Flex gap="$spacing16">
-          {accounts.map((account, i) => (
-            <TooltipAccountRow key={i} account={account} />
+        <Flex flexDirection="column" gap="$spacing12">
+          {addresses.map((address, i) => (
+            <TooltipAddressRow key={i} address={address} />
           ))}
         </Flex>
       }
       trigger={
-        <PrimaryAddressDisplay
-          unitag={unitag}
-          ensName={ensName ?? undefined}
-          primaryAddress={primaryAddress}
-          isMultipleAddresses={isMultipleAddresses}
-        />
+        enableCopyAddress ? (
+          <CopyHelper iconSize={iconSizes.icon12} iconPosition="right" toCopy={primaryAddress}>
+            <AddressDisplay
+              unitag={unitag}
+              ensName={ENSName ?? undefined}
+              shortenedEvmAddress={shortenedEvmAddress}
+              shortenedSvmAddress={shortenedSvmAddress}
+            />
+          </CopyHelper>
+        ) : (
+          <AddressDisplay
+            unitag={unitag}
+            ensName={ENSName ?? undefined}
+            shortenedEvmAddress={shortenedEvmAddress}
+            shortenedSvmAddress={shortenedSvmAddress}
+          />
+        )
       }
     />
   )

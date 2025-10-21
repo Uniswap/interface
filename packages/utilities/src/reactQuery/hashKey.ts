@@ -42,7 +42,7 @@ export function normalizeArrays<T>(value: T): T {
   if (typeof value === 'object' && value.constructor === Object) {
     const normalized: Record<string, unknown> = {}
     for (const key in value) {
-      if (Object.hasOwn(value, key)) {
+      if (Object.prototype.hasOwnProperty.call(value, key)) {
         normalized[key] = normalizeArrays((value as Record<string, unknown>)[key])
       }
     }

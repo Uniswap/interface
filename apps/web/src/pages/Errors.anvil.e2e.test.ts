@@ -4,8 +4,7 @@ import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
-import { HexString } from 'utilities/src/addresses/hex'
+import { HexString } from 'uniswap/src/utils/hex'
 
 const test = getTest({ withAnvil: true })
 
@@ -66,7 +65,7 @@ test.describe('Errors', () => {
       const poolContent = await anvil.getTxpoolContent()
       const currentTransaction = Object.entries(
         // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        poolContent.pending[normalizeAddress(TEST_WALLET_ADDRESS, AddressStringFormat.Lowercase) as HexString] ?? {},
+        poolContent.pending[TEST_WALLET_ADDRESS.toLowerCase() as HexString] ?? {},
       )[0]
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

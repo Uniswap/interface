@@ -8,11 +8,9 @@ import JSBI from 'jsbi'
 import { useEffect, useState } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { UNI } from 'uniswap/src/constants/tokens'
-import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 import { assume0xAddress } from 'utils/wagmi'
@@ -95,7 +93,7 @@ function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData
 const FETCH_CLAIM_PROMISES: { [key: string]: Promise<UserClaimData> } = {}
 // returns the claim for the given address, or null if not valid
 function fetchClaim(account: string): Promise<UserClaimData> {
-  const formatted = getValidAddress({ address: account, platform: Platform.EVM, withEVMChecksum: true })
+  const formatted = isAddress(account)
   if (!formatted) {
     return Promise.reject(new Error('Invalid address'))
   }
@@ -105,14 +103,12 @@ function fetchClaim(account: string): Promise<UserClaimData> {
     FETCH_CLAIM_PROMISES[account] ??
     (FETCH_CLAIM_PROMISES[account] = fetchClaimMapping()
       .then((mapping) => {
-        const sorted = Object.keys(mapping).sort((a, b) =>
-          normalizeTokenAddressForCache(a) < normalizeTokenAddressForCache(b) ? -1 : 1,
-        )
+        const sorted = Object.keys(mapping).sort((a, b) => (a.toLowerCase() < b.toLowerCase() ? -1 : 1))
 
         for (const startingAddress of sorted) {
           const lastAddress = mapping[startingAddress]
-          if (normalizeTokenAddressForCache(startingAddress) <= normalizeTokenAddressForCache(formatted)) {
-            if (normalizeTokenAddressForCache(formatted) <= normalizeTokenAddressForCache(lastAddress)) {
+          if (startingAddress.toLowerCase() <= formatted.toLowerCase()) {
+            if (formatted.toLowerCase() <= lastAddress.toLowerCase()) {
               return startingAddress
             }
           } else {
@@ -222,7 +218,7 @@ export function useClaimCallback(address: string | null | undefined): {
 
     const args = [claimData.index, address, claimData.amount, claimData.proof]
 
-    return distributorContract.estimateGas.claim(...args, {}).then((estimatedGasLimit) => {
+    return distributorContract.estimateGas['claim'](...args, {}).then((estimatedGasLimit) => {
       return distributorContract
         .claim(...args, { value: null, gasLimit: calculateGasMargin(estimatedGasLimit) })
         .then((response: TransactionResponse) => {

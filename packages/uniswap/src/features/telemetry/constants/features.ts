@@ -32,7 +32,6 @@ export enum FiatOnRampEventName {
 
 export enum SwapEventName {
   SwapAutorouterVisualizationExpanded = 'Swap Autorouter Visualization Expanded',
-  SwapBlocked = 'Swap Blocked',
   SwapDetailsExpanded = 'Swap Details Expanded',
   SwapError = 'Swap Error',
   SwapEstimateGasCallFailed = 'Swap Estimate Gas Call Failed',
@@ -46,19 +45,11 @@ export enum SwapEventName {
   SwapPriceUpdateAcknowledged = 'Swap Price Update Acknowledged',
   SwapQuoteFetch = 'Swap Quote Fetch',
   SwapQuoteReceived = 'Swap Quote Received',
-  SwapQuoteFailed = 'Swap Quote Failed',
   SwapSigned = 'Swap Signed',
   SwapSubmittedButtonClicked = 'Swap Submit Button Clicked',
   SwapTokensReversed = 'Swap Tokens Reversed',
   SwapTransactionCompleted = 'Swap Transaction Completed',
   SwapTransactionFailed = 'Swap Transaction Failed',
-}
-
-export enum SwapBlockedCategory {
-  JupiterUnactionableQuote = 'Jupiter Unactionable Quote',
-  QuoteSimulationFailure = 'EVM Quote Simulation Failure',
-  CalldataFetchFailure = 'EVM Calldata Fetch Failure',
-  CalldataSimulationFailure = 'EVM Calldata Simulation Failure',
 }
 
 export enum LiquidityEventName {
@@ -68,5 +59,4 @@ export enum LiquidityEventName {
   RemoveLiquiditySubmitted = 'Remove Liquidity Submitted',
   SelectLiquidityPoolFeeTier = 'Select Liquidity Pool Fee Tier',
   TransactionModifiedInWallet = 'Transaction Modified in Wallet',
-  PriceDiscrepancyChecked = 'Price Discrepancy Checked',
 }

@@ -1,6 +1,7 @@
 import { getTokenDetailsURL } from 'appGraphql/data/util'
 import { Currency } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import { useAccount } from 'hooks/useAccount'
 import { useModalState } from 'hooks/useModalState'
 import { useAtom } from 'jotai'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
@@ -10,9 +11,8 @@ import { useNavigate } from 'react-router'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
-import { getBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
+import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import { WormholeModalAtom } from 'uniswap/src/components/BridgedAsset/WormholeModal'
-import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -165,15 +165,15 @@ function BridgedAssetWithdrawButton(): JSX.Element | null {
     }
   })
 
-  const bridgedAsset = getBridgedAsset(currencyInfo)
-  if (!bridgedAsset) {
+  const isBridgedAsset = currencyInfo && checkIsBridgedAsset(currencyInfo)
+  if (!isBridgedAsset) {
     return null
   }
   return (
     <TouchableArea onPress={handlePress} hoverStyle={{ opacity: 0.8 }}>
       <Flex row gap="$spacing8">
         <Text variant="buttonLabel3" color="$neutral2">
-          {t('bridgedAsset.wormhole.withdrawToNativeChain', { nativeChainName: bridgedAsset.nativeChain })}
+          {t('bridgedAsset.wormhole.withdrawToHyperEVM')}
         </Text>
         <ExternalLink color="$neutral3" size="$icon.16" />
       </Flex>
@@ -182,7 +182,7 @@ function BridgedAssetWithdrawButton(): JSX.Element | null {
 }
 
 export default function BalanceSummary() {
-  const { isDisconnected } = useConnectionStatus()
+  const account = useAccount()
   const { currencyChain, multiChainMap } = useTDPContext()
 
   const pageChainBalance = multiChainMap[currencyChain]?.balance
@@ -199,7 +199,7 @@ export default function BalanceSummary() {
   })
   const hasBalances = pageChainBalance || Boolean(otherChainBalances.length)
 
-  if (isDisconnected || !hasBalances) {
+  if (!account.isConnected || !hasBalances) {
     return null
   }
   return (

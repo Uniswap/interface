@@ -1,9 +1,9 @@
 import { put, select, takeLatest } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { STALE_TRANSACTION_TIME_MS } from 'uniswap/src/features/notifications/constants'
-import { makeSelectAddressNotifications } from 'uniswap/src/features/notifications/slice/selectors'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { makeSelectAddressNotifications } from 'uniswap/src/features/notifications/selectors'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/utils/getAmountsFromTrade'
 import {

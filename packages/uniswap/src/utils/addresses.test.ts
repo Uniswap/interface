@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
 import { getValidAddress } from 'uniswap/src/utils/addresses'

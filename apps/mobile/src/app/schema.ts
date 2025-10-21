@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import { RankingType } from '@universe/api'
+import { RankingType } from 'uniswap/src/data/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -115,7 +115,7 @@ export const v4Schema = {
   ...v3Schema,
 }
 
-// biome-ignore lint/correctness/noUnusedVariables: Destructuring for schema migration
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { balances, ...restV4Schema } = v4Schema
 delete restV4Schema.favorites.followedAddresses
 
@@ -207,7 +207,7 @@ export const v29Schema = { ...v28Schema }
 
 const v30Schema = { ...v29Schema }
 
-// biome-ignore lint/correctness/noUnusedVariables: Destructuring for schema migration
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { tokenLists, ...v31SchemaIntermediate } = { ...v30Schema }
 export const v31Schema = v31SchemaIntermediate
 
@@ -267,7 +267,7 @@ delete v38SchemaIntermediate.experiments
 
 export const v39Schema = { ...v38SchemaIntermediate }
 
-// biome-ignore lint/correctness/noUnusedVariables: walletConnect removed in schema migration
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const { walletConnect, ...v39SchemaIntermediate } = { ...v39Schema }
 
 export const v40Schema = { ...v39SchemaIntermediate }
@@ -363,7 +363,7 @@ export const v51Schema = {
   ...v50Schema,
   modals: {
     ...v50Schema.modals,
-    'language-selector': {
+    ['language-selector']: {
       isOpen: false,
       initialState: undefined,
     },
@@ -386,7 +386,7 @@ export const v52Schema = {
 const v53SchemaIntermediate = {
   ...v52Schema,
   languageSettings: { currentLanguage: Language.English },
-  modals: { ...v52Schema.modals, 'language-selector': undefined },
+  modals: { ...v52Schema.modals, ['language-selector']: undefined },
 }
 delete v53SchemaIntermediate.modals['language-selector']
 

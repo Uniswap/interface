@@ -1,10 +1,10 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import { Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { GQLQueries, SharedQueryClient } from '@universe/api'
 import { call, delay } from 'typed-redux-saga'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
+import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
+import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
 import { getCurrenciesWithExpectedUpdates } from 'uniswap/src/features/portfolio/portfolioUpdates/getCurrenciesWithExpectedUpdates'
 import {
@@ -67,7 +67,7 @@ export function mergeOnChainBalances(
     const tokenAddress = balance.token.address
     const address = isNativeCurrencyAddress(chainId, tokenAddress) ? getNativeAddress(chainId) : tokenAddress
 
-    const currencyId = normalizeCurrencyIdForMapLookup(buildCurrencyId(chainId, address))
+    const currencyId = buildCurrencyId(chainId, address).toLowerCase()
     const onchainBalance = onchainBalancesByCurrencyId.get(currencyId)
 
     if (balance.amount && onchainBalance?.amount?.amount !== undefined) {

@@ -1,5 +1,4 @@
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
-import { GraphQLApi } from '@universe/api'
 import { ForwardedRef, forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, LayoutRectangle, RefreshControl } from 'react-native'
@@ -13,6 +12,11 @@ import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { AnimatePresence, Flex, LinearGradient, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { SwirlyArrowDown } from 'ui/src/components/icons'
 import { spacing, zIndexes } from 'ui/src/theme'
+import {
+  Chain,
+  HomeScreenTokensQuery,
+  useHomeScreenTokensQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { DynamicConfigs, HomeScreenExploreTokensConfigKey } from 'uniswap/src/features/gating/configs'
@@ -41,8 +45,8 @@ export const HomeExploreTab = memo(
     const ethChainId = useDynamicConfigValue({
       config: DynamicConfigs.HomeScreenExploreTokens,
       key: HomeScreenExploreTokensConfigKey.EthChainId,
-      defaultValue: GraphQLApi.Chain.Ethereum,
-      customTypeGuard: (x): x is GraphQLApi.Chain => Object.values(GraphQLApi.Chain).includes(x as GraphQLApi.Chain),
+      defaultValue: Chain.Ethereum,
+      customTypeGuard: (x): x is Chain => Object.values(Chain).includes(x as Chain),
     })
 
     const recommendedTokens = useDynamicConfigValue({
@@ -54,9 +58,7 @@ export const HomeExploreTab = memo(
 
     const { onContentSizeChange } = useAdaptiveFooter(containerProps?.contentContainerStyle)
 
-    const { data } = GraphQLApi.useHomeScreenTokensQuery({
-      variables: { contracts: recommendedTokens, chain: ethChainId },
-    })
+    const { data } = useHomeScreenTokensQuery({ variables: { contracts: recommendedTokens, chain: ethChainId } })
     const tokenDataList = useMemo(
       () =>
         [data?.eth, ...(data?.tokens ?? [])]
@@ -65,7 +67,7 @@ export const HomeExploreTab = memo(
       [data],
     )
 
-    // biome-ignore lint/correctness/useExhaustiveDependencies: fiat currency causes price layout width to change but does not change token data
+    // Used because fiat currency causes price layout width to change but does not change token data
     useEffect(() => {
       setMaxTokenPriceWrapperWidth(0)
     }, [appFiatCurrency])
@@ -132,7 +134,7 @@ export const HomeExploreTab = memo(
           mt={-spacing.spacing12}
         >
           <AnimatedFlatList
-            // biome-ignore lint/suspicious/noExplicitAny: FlatList ref type is complex with animated wrapper
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             ref={ref as ForwardedRef<Animated.FlatList<any>>}
             ListFooterComponent={FooterElement}
             data={tokenDataList}
@@ -181,7 +183,7 @@ function FooterElement(): JSX.Element {
 }
 
 function gqlTokenToTokenItemData(
-  token: GraphQLApi.Maybe<NonNullable<NonNullable<GraphQLApi.HomeScreenTokensQuery['tokens']>[0]>>,
+  token: Maybe<NonNullable<NonNullable<HomeScreenTokensQuery['tokens']>[0]>>,
 ): TokenItemData | null {
   if (!token || !token.project) {
     return null

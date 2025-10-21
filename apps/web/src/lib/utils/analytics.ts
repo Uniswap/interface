@@ -1,8 +1,8 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { InterfaceTrade, OffchainOrderType, QuoteMethod, SubmittableTrade } from 'state/routing/types'
 import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { getRouteAnalyticsData, tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
 import {
@@ -55,12 +55,12 @@ function getEstimatedNetworkFee(trade: InterfaceTrade) {
   return undefined
 }
 
-function tradeRoutingToOffchainOrderType(routing: TradingApi.Routing): OffchainOrderType | undefined {
+function tradeRoutingToOffchainOrderType(routing: Routing): OffchainOrderType | undefined {
   switch (routing) {
-    case TradingApi.Routing.DUTCH_V2:
+    case Routing.DUTCH_V2:
       return OffchainOrderType.DUTCH_V2_AUCTION
-    case TradingApi.Routing.DUTCH_LIMIT:
-    case TradingApi.Routing.LIMIT_ORDER:
+    case Routing.DUTCH_LIMIT:
+    case Routing.LIMIT_ORDER:
       return OffchainOrderType.LIMIT_ORDER
     default:
       return undefined

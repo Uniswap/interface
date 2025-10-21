@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux'
 import { createHashRouter, RouterProvider } from 'react-router'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorElement } from 'src/app/components/ErrorElement'
-import { useTraceSidebarDappUrl } from 'src/app/components/Trace/useTraceSidebarDappUrl'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
 import { DatadogAppNameTag } from 'src/app/datadog'
 import { AccountSwitcherScreen } from 'src/app/features/accounts/AccountSwitcherScreen'
@@ -18,6 +17,7 @@ import { SendFlow } from 'src/app/features/send/SendFlow'
 import { BackupRecoveryPhraseScreen } from 'src/app/features/settings/BackupRecoveryPhrase/BackupRecoveryPhraseScreen'
 import { DeviceAccessScreen } from 'src/app/features/settings/DeviceAccessScreen'
 import { DevMenuScreen } from 'src/app/features/settings/DevMenuScreen'
+import { SettingsChangePasswordScreen } from 'src/app/features/settings/password/SettingsChangePasswordScreen'
 import { SettingsManageConnectionsScreen } from 'src/app/features/settings/SettingsManageConnectionsScreen/SettingsManageConnectionsScreen'
 import { RemoveRecoveryPhraseVerify } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseVerify'
 import { RemoveRecoveryPhraseWallets } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseWallets'
@@ -69,6 +69,10 @@ const router = createHashRouter([
           {
             path: '',
             element: <SettingsScreen />,
+          },
+          {
+            path: SettingsRoutes.ChangePassword,
+            element: <SettingsChangePasswordScreen />,
           },
           {
             path: SettingsRoutes.DeviceAccess,
@@ -133,13 +137,13 @@ function useDappRequestPortListener(): void {
   const [currentPortChannel, setCurrentPortChannel] = useState<DappBackgroundPortChannel | undefined>()
   const [windowId, setWindowId] = useState<string | undefined>()
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Only run on component mount for initial setup, disconnect cleanup is managed separately
   useEffect(() => {
     chrome.windows.getCurrent((window) => {
       setWindowId(window.id?.toString())
     })
 
     return () => currentPortChannel?.port.disconnect()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -221,17 +225,6 @@ router.subscribe((state) => {
 
 setRouter(router)
 
-function SidebarContent(): JSX.Element {
-  useTraceSidebarDappUrl()
-
-  return (
-    <>
-      <PrimaryAppInstanceDebuggerLazy />
-      <RouterProvider router={router} />
-    </>
-  )
-}
-
 export default function SidebarApp(): JSX.Element {
   // initialize analytics on load
   useEffect(() => {
@@ -252,7 +245,8 @@ export default function SidebarApp(): JSX.Element {
     <PersistGate persistor={getReduxPersistor()}>
       <BaseAppContainer appName={DatadogAppNameTag.Sidebar}>
         <DappContextProvider>
-          <SidebarContent />
+          <PrimaryAppInstanceDebuggerLazy />
+          <RouterProvider router={router} />
         </DappContextProvider>
       </BaseAppContainer>
     </PersistGate>

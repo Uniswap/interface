@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useDeviceInsets } from 'ui/src/hooks/useDeviceInsets'
 import { useTestnetModeBannerHeight } from 'uniswap/src/features/settings/hooks'
 

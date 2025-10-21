@@ -7,7 +7,4 @@ export const dismissedWarningTokensSelector = (state: UniswapState): SerializedT
   state.tokens.dismissedTokenWarnings
 
 export const dismissedBridgedAssetWarningsSelector = (state: UniswapState): SerializedTokenMap =>
-  state.tokens.dismissedBridgedAssetWarnings
-
-export const dismissedCompatibleAddressWarningsSelector = (state: UniswapState): SerializedTokenMap =>
-  state.tokens.dismissedCompatibleAddressWarnings
+  state.bridgedAssets.dismissedTokenWarnings

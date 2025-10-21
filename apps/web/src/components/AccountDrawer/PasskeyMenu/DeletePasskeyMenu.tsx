@@ -1,7 +1,7 @@
 import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { GenericPasskeyMenuModal, PasskeyMenuModalState } from 'components/AccountDrawer/PasskeyMenu/PasskeyMenuModal'
-import StatusIcon from 'components/StatusIcon'
+import StatusIcon from 'components/Identicon/StatusIcon'
 import { useDisconnect } from 'hooks/useDisconnect'
 import { usePasskeyAuthWithHelpModal } from 'hooks/usePasskeyAuthWithHelpModal'
 import { Dispatch, SetStateAction, useState } from 'react'
@@ -94,7 +94,7 @@ export function DeletePasskeyMenu({
             borderStyle="solid"
           >
             <StatusIcon size={24} showMiniIcons={false} />
-            <AddressDisplay address={evmAddress} />
+            <AddressDisplay enableCopyAddress={false} address={evmAddress} />
             <Text variant="body3" color="$statusCritical" ml="auto" mr="0">
               {convertFiatAmountFormatted(balanceUSD, NumberType.FiatTokenPrice)}
             </Text>

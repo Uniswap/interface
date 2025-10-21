@@ -1,4 +1,3 @@
-import { GqlResult } from '@universe/api'
 import { useMemo } from 'react'
 import { TokenOption } from 'uniswap/src/components/lists/items/types'
 import { useCommonTokensOptions } from 'uniswap/src/components/TokenSelector/hooks/useCommonTokensOptions'
@@ -8,6 +7,7 @@ import {
   useCurrencyInfosToTokenOptions,
 } from 'uniswap/src/components/TokenSelector/hooks/useCurrencyInfosToTokenOptions'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
+import { GqlResult } from 'uniswap/src/data/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 

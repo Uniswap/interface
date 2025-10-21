@@ -136,7 +136,7 @@ function getResult(payload: {
   result?: unknown
 }): unknown {
   if (payload.error) {
-    // biome-ignore lint/suspicious/noExplicitAny: legacy code requires any for compatibility
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const error: any = new Error(payload.error.message)
     error.code = payload.error.code
     error.data = payload.error.data

@@ -1,9 +1,18 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "vcs": { "enabled": true, "clientKind": "git", "useIgnoreFile": true },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
   "files": {
     "ignoreUnknown": false,
-    "includes": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx"],
+    "includes": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.js",
+      "**/*.jsx"
+    ],
     "experimentalScannerIgnores": [
       "*.tsbuildinfo",
       "__generated__/**",
@@ -62,6 +71,7 @@
       "!**/*.graphql",
       "!**/*.html",
       "!**/*.inc",
+      "!**/*.json",
       "!**/*.jsonc",
       "!**/*.md",
       "!**/*.yml",
@@ -82,7 +92,6 @@
     "enabled": false
   },
   "javascript": {
-    "jsxRuntime": "reactClassic",
     "formatter": {
       "jsxQuoteStyle": "double",
       "quoteProperties": "asNeeded",
@@ -93,31 +102,27 @@
       "quoteStyle": "single",
       "attributePosition": "auto",
       "bracketSpacing": true
-    },
-    "globals": [
-      "setImmediate",
-      "WebSocket",
-      "requestAnimationFrame",
-      "Blob",
-      "Set",
-      "requestIdleCallback",
-      "Map",
-      "clearImmediate",
-      "Promise",
-      "__DEV__",
-      "File",
-      "queueMicrotask"
-    ]
+    }
   },
-  "json": { "formatter": { "trailingCommas": "none" } },
-  "html": { "formatter": { "selfCloseVoidElements": "always" } },
+  "json": {
+    "formatter": {
+      "trailingCommas": "none"
+    }
+  },
+  "html": {
+    "formatter": {
+      "selfCloseVoidElements": "always"
+    }
+  },
   "assist": {
     "enabled": true,
     "actions": {
       "source": {
         "organizeImports": {
           "level": "on",
-          "options": { "groups": [], "identifierOrder": "natural" }
+          "options": {
+            "identifierOrder": "natural"
+          }
         }
       }
     }

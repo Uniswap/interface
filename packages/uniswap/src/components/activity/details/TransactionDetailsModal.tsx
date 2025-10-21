@@ -1,6 +1,5 @@
-import { TradingApi } from '@universe/api'
 import dayjs from 'dayjs'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Separator, Text, TouchableArea } from 'ui/src'
 import { AnglesDownUp } from 'ui/src/components/icons/AnglesDownUp'
@@ -11,7 +10,6 @@ import { TransactionDetailsHeaderLogo } from 'uniswap/src/components/activity/de
 import { TransactionDetailsInfoRows } from 'uniswap/src/components/activity/details/TransactionDetailsInfoRows'
 import { ApproveTransactionDetails } from 'uniswap/src/components/activity/details/transactions/ApproveTransactionDetails'
 import { BridgeTransactionDetails } from 'uniswap/src/components/activity/details/transactions/BridgeTransactionDetails'
-import { LiquidityTransactionDetails } from 'uniswap/src/components/activity/details/transactions/LiquidityTransactionDetails'
 import { NftTransactionDetails } from 'uniswap/src/components/activity/details/transactions/NftTransactionDetails'
 import { OffRampPendingSupportCard } from 'uniswap/src/components/activity/details/transactions/OffRampPendingSupportCard'
 import { OffRampTransactionDetails } from 'uniswap/src/components/activity/details/transactions/OffRampTransactionDetails'
@@ -28,6 +26,7 @@ import {
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useTransactionActions } from 'uniswap/src/features/activity/hooks/useTransactionActions'
@@ -42,7 +41,7 @@ import {
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
-import { isExtensionApp, isWebPlatform } from 'utilities/src/platform'
+import { isExtension, isWeb } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 type TransactionDetailsModalProps = {
@@ -72,8 +71,8 @@ export function TransactionDetailsHeader({
         </Flex>
         <Flex flexDirection="column" flexShrink={1}>
           <Flex centered row gap="$spacing4" justifyContent="flex-start">
-            {(transactionDetails.routing === TradingApi.Routing.DUTCH_V2 ||
-              transactionDetails.routing === TradingApi.Routing.DUTCH_LIMIT) && <UniswapX size="$icon.16" />}
+            {(transactionDetails.routing === Routing.DUTCH_V2 ||
+              transactionDetails.routing === Routing.DUTCH_LIMIT) && <UniswapX size="$icon.16" />}
             <Text variant="body2">{title}</Text>
           </Flex>
           <Text color="$neutral2" variant="body4">
@@ -106,11 +105,9 @@ export function TransactionDetailsContent({
 }): JSX.Element | null {
   const { typeInfo } = transactionDetails
 
-  // eslint-disable-next-line complexity
   const getContentComponent = (): JSX.Element | null => {
     switch (typeInfo.type) {
       case TransactionType.Approve:
-      case TransactionType.Permit2Approve:
         return (
           <ApproveTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
         )
@@ -140,13 +137,6 @@ export function TransactionDetailsContent({
         return (
           <OffRampTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
         )
-      case TransactionType.LiquidityDecrease:
-      case TransactionType.LiquidityIncrease:
-      case TransactionType.CollectFees:
-      case TransactionType.CreatePair:
-      case TransactionType.CreatePool:
-      case TransactionType.MigrateLiquidityV3ToV4:
-        return <LiquidityTransactionDetails typeInfo={typeInfo} onClose={onClose} />
       default:
         return null
     }
@@ -205,7 +195,7 @@ export function TransactionDetailsModal({
       </Flex>,
     )
   }
-  if (isWebPlatform) {
+  if (isWeb) {
     buttons.push(
       <Flex key="close" row>
         <Button emphasis="secondary" onPress={onClose}>
@@ -219,23 +209,19 @@ export function TransactionDetailsModal({
   const isTransactionStale = dayjs().diff(dayjs(addedTime), 'minute') >= OFFRAMP_PENDING_STALE_TIME_IN_MINUTES
   const showOffRampPendingCard = isOffRampSaleTransactionInfo(typeInfo) && status === 'pending' && isTransactionStale
 
-  const detailsContent = useMemo((): JSX.Element | null => {
-    return <TransactionDetailsContent transactionDetails={transactionDetails} onClose={onClose} />
-  }, [transactionDetails, onClose])
-
   return (
     <>
       <Modal
         isDismissible
-        alignment={isExtensionApp ? 'top' : 'center'}
+        alignment={isExtension ? 'top' : 'center'}
         name={ModalName.TransactionDetails}
         onClose={onClose}
       >
-        <Flex gap="$spacing12" pb={isWebPlatform ? '$none' : '$spacing12'} px={isWebPlatform ? '$none' : '$spacing24'}>
+        <Flex gap="$spacing12" pb={isWeb ? '$none' : '$spacing12'} px={isWeb ? '$none' : '$spacing24'}>
           <TransactionDetailsHeader transactionActions={menuItems} transactionDetails={transactionDetails} />
           {!hideTopSeparator && <Separator />}
-          {detailsContent}
-          {!hideBottomSeparator && detailsContent !== null && hasMoreInfoRows && (
+          <TransactionDetailsContent transactionDetails={transactionDetails} onClose={onClose} />
+          {!hideBottomSeparator && hasMoreInfoRows && (
             <ShowMoreSeparator isShowingMore={isShowingMore} setIsShowingMore={setIsShowingMore} />
           )}
           {!hideBottomSeparator && !hasMoreInfoRows && <Separator />}

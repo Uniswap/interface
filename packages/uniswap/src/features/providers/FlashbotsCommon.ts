@@ -1,5 +1,5 @@
 import { Signer } from '@ethersproject/abstract-signer'
-import { HexString } from 'utilities/src/addresses/hex'
+import { HexString } from 'uniswap/src/utils/hex'
 import { sleep } from 'utilities/src/time/timing'
 import { z } from 'zod'
 
@@ -25,10 +25,10 @@ export const FlashbotsReceiptSchema = z.object({
   transaction: z.object({
     from: z.string(),
     to: z.string(),
-    gasLimit: z.union([z.string(), z.number()]).transform((val) => String(val)),
+    gasLimit: z.string(),
     maxFeePerGas: z.string(),
     maxPriorityFeePerGas: z.string(),
-    nonce: z.union([z.string(), z.number()]).transform((val) => String(val)),
+    nonce: z.string(),
     value: z.string(),
   }),
   fastMode: z.boolean(),

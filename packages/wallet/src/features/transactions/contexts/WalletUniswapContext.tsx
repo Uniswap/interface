@@ -2,7 +2,7 @@ import { ethers } from 'ethers'
 import React, { PropsWithChildren, useCallback, useEffect, useState } from 'react'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { getDelegationService } from 'uniswap/src/domains/services'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { useEnabledChainsWithConnector } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -20,7 +20,6 @@ import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/tr
 import { getLogger, logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { useAccountsStoreContext } from 'wallet/src/features/accounts/store/provider'
 import {
   useGetSwapDelegationInfoForActiveAccount,
   WalletDelegationProvider,
@@ -106,7 +105,6 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
 
   const getCanSignPermits = useGetCanSignPermits()
   const getSwapDelegationInfo = useGetSwapDelegationInfoForActiveAccount()
-  const getCanPayGasInAnyToken = useCallback(() => false, [])
 
   return (
     <UniswapProvider
@@ -127,8 +125,6 @@ function WalletUniswapProviderInner({ children }: PropsWithChildren): JSX.Elemen
       getIsUniswapXSupported={getIsUniswapXSupported}
       getCanSignPermits={getCanSignPermits}
       getSwapDelegationInfo={getSwapDelegationInfo}
-      useAccountsStoreContextHook={useAccountsStoreContext}
-      getCanPayGasInAnyToken={getCanPayGasInAnyToken}
       onSwapChainsChanged={showSwapNetworkNotification}
     >
       {children}
@@ -145,7 +141,7 @@ const MismatchContextWrapper = React.memo(function MismatchContextWrapper({
   children,
 }: PropsWithChildren): JSX.Element {
   const account = useActiveAccount() ?? undefined
-  const { defaultChainId, chains, isTestnetModeEnabled } = useEnabledChains()
+  const { defaultChainId, chains, isTestnetModeEnabled } = useEnabledChainsWithConnector()
   const mismatchCallback = useMismatchCallback()
   return (
     <MismatchContextProvider

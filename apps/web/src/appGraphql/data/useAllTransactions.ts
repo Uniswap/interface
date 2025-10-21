@@ -1,8 +1,13 @@
-import { GraphQLApi } from '@universe/api'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useCallback, useMemo, useRef } from 'react'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import {
+  Chain,
+  PoolTransactionType,
+  PoolTxFragment,
+  useV2TransactionsQuery,
+  useV3TransactionsQuery,
+  useV4TransactionsQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import i18n from 'uniswap/src/i18n'
 
 export enum TransactionType {
@@ -25,46 +30,45 @@ export const getTransactionTypeTranslation = (type: TransactionType): string => 
 }
 
 export const BETypeToTransactionType: { [key: string]: TransactionType } = {
-  [GraphQLApi.PoolTransactionType.Swap]: TransactionType.SWAP,
-  [GraphQLApi.PoolTransactionType.Remove]: TransactionType.REMOVE,
-  [GraphQLApi.PoolTransactionType.Add]: TransactionType.ADD,
+  [PoolTransactionType.Swap]: TransactionType.SWAP,
+  [PoolTransactionType.Remove]: TransactionType.REMOVE,
+  [PoolTransactionType.Add]: TransactionType.ADD,
 }
 
 const ALL_TX_DEFAULT_QUERY_SIZE = 20
 
 export function useAllTransactions(
-  chain: GraphQLApi.Chain,
+  chain: Chain,
   filter: TransactionType[] = [TransactionType.SWAP, TransactionType.ADD, TransactionType.REMOVE],
 ) {
   const isWindowVisible = useIsWindowVisible()
-  const skipTransactionsQueries = !isWindowVisible || fromGraphQLChain(chain) === UniverseChainId.Solana
 
   const {
     data: dataV4,
     loading: loadingV4,
     error: errorV4,
     fetchMore: fetchMoreV4,
-  } = GraphQLApi.useV4TransactionsQuery({
+  } = useV4TransactionsQuery({
     variables: { chain, first: ALL_TX_DEFAULT_QUERY_SIZE },
-    skip: skipTransactionsQueries,
+    skip: !isWindowVisible,
   })
   const {
     data: dataV3,
     loading: loadingV3,
     error: errorV3,
     fetchMore: fetchMoreV3,
-  } = GraphQLApi.useV3TransactionsQuery({
+  } = useV3TransactionsQuery({
     variables: { chain, first: ALL_TX_DEFAULT_QUERY_SIZE },
-    skip: skipTransactionsQueries,
+    skip: !isWindowVisible,
   })
   const {
     data: dataV2,
     loading: loadingV2,
     error: errorV2,
     fetchMore: fetchMoreV2,
-  } = GraphQLApi.useV2TransactionsQuery({
+  } = useV2TransactionsQuery({
     variables: { chain, first: ALL_TX_DEFAULT_QUERY_SIZE },
-    skip: skipTransactionsQueries,
+    skip: !isWindowVisible,
   })
 
   const loadingMoreV4 = useRef(false)
@@ -133,13 +137,13 @@ export function useAllTransactions(
   )
 
   const filterTransaction = useCallback(
-    (tx: GraphQLApi.PoolTxFragment | undefined): tx is GraphQLApi.PoolTxFragment => {
+    (tx: PoolTxFragment | undefined): tx is PoolTxFragment => {
       return !!tx?.type && filter.includes(BETypeToTransactionType[tx.type])
     },
     [filter],
   )
 
-  const transactions: GraphQLApi.PoolTxFragment[] = useMemo(() => {
+  const transactions: PoolTxFragment[] = useMemo(() => {
     return [...(dataV4?.v4Transactions ?? []), ...(dataV3?.v3Transactions ?? []), ...(dataV2?.v2Transactions ?? [])]
       .filter(filterTransaction)
       .sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0))

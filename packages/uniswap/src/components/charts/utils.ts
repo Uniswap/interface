@@ -1,4 +1,4 @@
-import { GraphQLApi } from '@universe/api'
+import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 const STABLECOIN_VARIANCE_PERCENT_THRESHOLD = 0.5
 
@@ -16,14 +16,14 @@ export function isLowVarianceRange({
 }: {
   min: number
   max: number
-  duration?: GraphQLApi.HistoryDuration
+  duration?: HistoryDuration
 }): boolean {
   if (min <= 0) {
     return false
   }
 
   // Always return false for 1H time windows
-  if (duration === GraphQLApi.HistoryDuration.Hour) {
+  if (duration === HistoryDuration.Hour) {
     return false
   }
 

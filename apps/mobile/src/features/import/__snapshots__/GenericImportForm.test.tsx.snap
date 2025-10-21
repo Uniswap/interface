@@ -23,7 +23,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         "borderBottomColor": {
           "dynamic": {
             "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(19, 19, 19, 0.08)",
+            "light": "rgba(34,34,34,0.05)",
           },
         },
         "borderBottomLeftRadius": 20,
@@ -32,14 +32,14 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         "borderLeftColor": {
           "dynamic": {
             "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(19, 19, 19, 0.08)",
+            "light": "rgba(34,34,34,0.05)",
           },
         },
         "borderLeftWidth": 1,
         "borderRightColor": {
           "dynamic": {
             "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(19, 19, 19, 0.08)",
+            "light": "rgba(34,34,34,0.05)",
           },
         },
         "borderRightWidth": 1,
@@ -47,7 +47,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         "borderTopColor": {
           "dynamic": {
             "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(19, 19, 19, 0.08)",
+            "light": "rgba(34,34,34,0.05)",
           },
         },
         "borderTopLeftRadius": 20,

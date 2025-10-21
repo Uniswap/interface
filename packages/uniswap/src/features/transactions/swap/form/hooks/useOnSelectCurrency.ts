@@ -1,10 +1,9 @@
 import type { QueryClient } from '@tanstack/react-query'
 import { useQueryClient } from '@tanstack/react-query'
 import type { Currency } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
 import { useMemo } from 'react'
 import { getSwappableTokensQueryData } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
-
+import type { ChainId, GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
 import type { TradeableAsset } from 'uniswap/src/entities/assets'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects/tokenProjects'
@@ -32,12 +31,12 @@ export function useOnSelectCurrency({
 }): ({
   currency,
   field,
-  allowCrossChainPair,
+  forceIsBridgePair,
   isPreselectedAsset,
 }: {
   currency: Currency
   field: CurrencyField
-  allowCrossChainPair: boolean
+  forceIsBridgePair: boolean
   isPreselectedAsset: boolean
 }) => void {
   const { onCurrencyChange } = useTransactionModalContext()
@@ -63,12 +62,12 @@ export function useOnSelectCurrency({
     ({
       currency,
       field,
-      allowCrossChainPair,
+      forceIsBridgePair,
       isPreselectedAsset,
     }: {
       currency: Currency
       field: CurrencyField
-      allowCrossChainPair: boolean
+      forceIsBridgePair: boolean
       isPreselectedAsset: boolean
     }) => {
       const tradeableAsset: TradeableAsset = {
@@ -89,7 +88,8 @@ export function useOnSelectCurrency({
       const otherFieldTokenProjects = otherField === CurrencyField.INPUT ? inputTokenProjects : outputTokenProjects
 
       const isBridgePair =
-        allowCrossChainPair ||
+        // `forceIsBridgePair` means the user explicitly selected a bridge pair.
+        forceIsBridgePair ||
         (otherFieldTradeableAsset
           ? checkIsBridgePair({
               queryClient,
@@ -225,9 +225,9 @@ function hasMatchingBridgeToken({
   tokenAddress,
   tokenChainId,
 }: {
-  bridgePairs: TradingApi.GetSwappableTokensResponse
+  bridgePairs: GetSwappableTokensResponse
   tokenAddress: Address
-  tokenChainId: TradingApi.ChainId
+  tokenChainId: ChainId
 }): boolean {
   const tokenUniverseChainId = tradingApiToUniverseChainId(tokenChainId)
   return !!bridgePairs.tokens.find((token) => {

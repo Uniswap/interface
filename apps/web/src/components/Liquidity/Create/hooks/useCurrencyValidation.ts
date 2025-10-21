@@ -32,34 +32,14 @@ export function useCurrencyValidation({
   })
 
   const loading = loadingA || loadingB
-  const defaultAAddress = defaultInitialToken.isNative ? NATIVE_CHAIN_ID : defaultInitialToken.address
 
-  if (!loading && !currencyALoaded) {
-    // If no currencies are loaded, return the default initial token
-    if (!currencyBLoaded) {
-      return {
-        currencyAddressA: defaultAAddress,
-        currencyAddressB: undefined,
-        currencyALoaded: defaultInitialToken,
-        currencyBLoaded: undefined,
-        loadingA,
-        loadingB,
-        loading: false,
-      }
-    }
-
-    // If currencyB is loaded, and it's not the default initial token, return currencyB
-    // and the default initial token
-    if (!currencyBLoaded.equals(defaultInitialToken)) {
-      return {
-        currencyAddressA: defaultAAddress,
-        currencyAddressB,
-        currencyALoaded: defaultInitialToken,
-        currencyBLoaded,
-        loadingA,
-        loadingB,
-        loading: false,
-      }
+  if (!loading && !currencyALoaded && !currencyBLoaded) {
+    return {
+      currencyAddressA: defaultInitialToken.isNative ? NATIVE_CHAIN_ID : defaultInitialToken.address,
+      currencyAddressB: undefined,
+      currencyALoaded: defaultInitialToken,
+      currencyBLoaded: undefined,
+      loading: false,
     }
   }
 
@@ -68,8 +48,6 @@ export function useCurrencyValidation({
     currencyAddressB,
     currencyALoaded,
     currencyBLoaded,
-    loadingA,
-    loadingB,
-    loading,
+    loading: loadingA || loadingB,
   }
 }

@@ -3,7 +3,6 @@ import {
   BiometricUnlockStorage,
   BiometricUnlockStorageData,
 } from 'src/app/features/biometricUnlock/BiometricUnlockStorage'
-import { encryptPasswordWithBiometricData } from 'src/app/features/biometricUnlock/biometricAuthUtils'
 import { biometricUnlockCredentialQuery } from 'src/app/features/biometricUnlock/biometricUnlockCredentialQuery'
 import { startNavigatorCredentialRequest } from 'src/app/features/biometricUnlock/useNavigatorCredentialAbortSignal'
 import { assertPublicKeyCredential } from 'src/app/features/biometricUnlock/utils/assertPublicKeyCredential'
@@ -11,6 +10,7 @@ import { isUserVerifyingPlatformAuthenticatorAvailable } from 'src/app/utils/dev
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import {
+  addEncryptedCiphertextToSecretPayload,
   createEmptySecretPayload,
   generateNew256BitRandomBuffer,
   getEncryptionKeyFromBuffer,
@@ -74,11 +74,14 @@ async function createCredentialAndEncryptPassword({
     abortSignal,
   })
 
-  return await encryptPasswordWithBiometricData({
-    password,
+  const secretPayloadWithCiphertext = await addEncryptedCiphertextToSecretPayload({
+    secretPayload,
+    plaintext: password,
     encryptionKey,
-    credentialId,
+    additionalData: credentialId, // Use credential ID as additional authenticated data
   })
+
+  return { credentialId, secretPayload: secretPayloadWithCiphertext }
 }
 
 async function assertIsUserVerifyingPlatformAuthenticatorAvailable(): Promise<void> {

@@ -1,5 +1,5 @@
 import { ChainCapabilities, GetCapabilitiesResult } from 'state/walletCapabilities/lib/types'
-import { ensure0xHex, type HexString, isValidHexString, numberToHex } from 'utilities/src/addresses/hex'
+import { ensure0xHex, type HexString, isValidHexString, numberToHex } from 'uniswap/src/utils/hex'
 
 /**
  * Validates and normalizes wallet getCapabilities data structure

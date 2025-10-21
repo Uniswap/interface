@@ -1,6 +1,6 @@
-import { TradingApi } from '@universe/api'
 import { call, delay, SagaGenerator, select } from 'typed-redux-saga'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
 import { makeSelectTransaction } from 'uniswap/src/features/transactions/selectors'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
@@ -29,7 +29,7 @@ export function* waitForBridgingStatus(transaction: TransactionDetails): SagaGen
     return TransactionStatus.Unknown
   }
 
-  let swapStatus: TradingApi.SwapStatus | undefined
+  let swapStatus: SwapStatus | undefined
   const initialPollIntervalMs = 500
   const maxRetries = 10 // 500 ms, 1 second, 2 seconds...
   const backoffFactor = 2 // Each retry will double the wait time
@@ -44,7 +44,7 @@ export function* waitForBridgingStatus(transaction: TransactionDetails): SagaGen
     })
     yield* delay(currentPollInterval)
 
-    const data = yield* call(TradingApiClient.fetchSwaps, {
+    const data = yield* call(fetchSwaps, {
       txHashes: [txHash],
       chainId,
     })

@@ -1,6 +1,10 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
+import {
+  CreateLPPositionRequest,
+  IncreaseLPPositionRequest,
+  MigrateLPPositionRequest,
+} from 'uniswap/src/data/tradingApi/__generated__'
 import { PermitTransaction, PermitTypedData } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 
@@ -57,25 +61,22 @@ interface BaseLiquidityTxAndGasInfo {
 export interface IncreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Increase
   unsigned: boolean
-  increasePositionRequestArgs: TradingApi.IncreaseLPPositionRequest | undefined
-  sqrtRatioX96: string | undefined
+  increasePositionRequestArgs: IncreaseLPPositionRequest | undefined
 }
 
 export interface DecreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Decrease
-  sqrtRatioX96: string | undefined
 }
 
 export interface CreatePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Create
   unsigned: boolean
-  createPositionRequestArgs: TradingApi.CreateLPPositionRequest | undefined
-  sqrtRatioX96: string | undefined
+  createPositionRequestArgs: CreateLPPositionRequest | undefined
 }
 
 export interface MigrateV3PositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Migrate
-  migratePositionRequestArgs: TradingApi.MigrateLPPositionRequest | undefined
+  migratePositionRequestArgs: MigrateLPPositionRequest | undefined
 }
 
 export interface CollectFeesTxAndGasInfo {
@@ -96,7 +97,6 @@ export type ValidatedIncreasePositionTxAndGasInfo = Required<IncreasePositionTxA
         unsigned: false
         permit: PermitTransaction | undefined
         txRequest: ValidatedTransactionRequest
-        sqrtRatioX96: string | undefined
       }
   )
 
@@ -115,7 +115,6 @@ export type ValidatedCreatePositionTxAndGasInfo = Required<CreatePositionTxAndGa
         unsigned: false
         permit: PermitTransaction | undefined
         txRequest: ValidatedTransactionRequest
-        sqrtRatioX96: string | undefined
       }
   )
 

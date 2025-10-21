@@ -1,4 +1,4 @@
-/* biome-ignore-all lint/suspicious/noExplicitAny: legacy code needs review */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import {
@@ -145,22 +145,4 @@ export function migrateSearchHistory(state: any): any {
   }
 
   return newState
-}
-
-// Mobile: 94
-// Extension: 28
-// Web: 57
-// Ensure new token warning maps exist in persisted state after introducing them
-export function addDismissedBridgedAndCompatibleWarnings(state: any): any {
-  if (!state?.tokens) {
-    return state
-  }
-  return {
-    ...state,
-    tokens: {
-      ...state.tokens,
-      dismissedBridgedAssetWarnings: state.tokens.dismissedBridgedAssetWarnings ?? {},
-      dismissedCompatibleAddressWarnings: state.tokens.dismissedCompatibleAddressWarnings ?? {},
-    },
-  }
 }

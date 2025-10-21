@@ -1,5 +1,5 @@
 import { OnChainTransaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { SpamCode } from '@universe/api'
+import { SpamCode } from 'uniswap/src/data/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import {
   AssetCase,

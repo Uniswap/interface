@@ -1,9 +1,7 @@
 import { renderHook } from '@testing-library/react'
 // Import mocked modules to get references to their functions
 import { Connector, CreateConnectorFn, connect, getConnectors } from '@wagmi/core'
-import { activateWagmiConnector } from 'features/wallet/connection/connectors/wagmi'
-import { AccessPattern, ConnectorStatus } from 'uniswap/src/features/accounts/store/types/Connector'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { connectWagmiWallet, useWagmiWalletConnectors } from 'features/wallet/connection/connectors/wagmi'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { useConnectors } from 'wagmi'
 
@@ -30,6 +28,143 @@ describe('Wagmi connectors', () => {
     vi.clearAllMocks()
   })
 
+  describe('useWagmiWalletConnectors', () => {
+    it('should return wagmi wallet connectors from useConnectors hook', () => {
+      // Arrange
+      const mockConnectors = [
+        { id: 'metamask', name: 'MetaMask', icon: 'metamask.svg', type: 'injected' },
+        { id: 'coinbase', name: 'Coinbase Wallet', icon: 'coinbase.svg', type: 'coinbaseWallet' },
+      ] as unknown as Connector<CreateConnectorFn>[]
+      mockUseConnectors.mockReturnValue(mockConnectors)
+
+      // Act
+      const { result } = renderHook(() => useWagmiWalletConnectors())
+
+      // Assert
+      expect(result.current).toHaveLength(2)
+      expect(result.current[0]).toEqual({
+        wagmi: { id: 'metamask', type: 'injected' },
+        name: 'MetaMask',
+        icon: 'metamask.svg',
+        isInjected: true,
+        analyticsWalletType: 'Browser Extension',
+      })
+      expect(result.current[1]).toEqual({
+        wagmi: { id: 'coinbase', type: 'coinbaseWallet' },
+        name: 'Coinbase Wallet',
+        icon: 'coinbase.svg',
+        isInjected: false,
+        analyticsWalletType: 'Coinbase Wallet',
+      })
+    })
+
+    it('should handle empty connectors array', () => {
+      // Arrange
+      mockUseConnectors.mockReturnValue([])
+
+      // Act
+      const { result } = renderHook(() => useWagmiWalletConnectors())
+
+      // Assert
+      expect(result.current).toHaveLength(0)
+    })
+
+    it('should handle EIP-6963 and legacy injected connectors, only returning EIP-6963 injected connectors', () => {
+      // Arrange
+      const mockConnectors = [
+        { id: 'io.metamask', name: 'MetaMask', icon: 'metamask.svg', type: 'injected' }, // EIP-6963 injected
+        { id: 'coinbase', name: 'Coinbase Wallet', icon: 'coinbase.svg', type: 'coinbaseWallet' },
+      ] as unknown as Connector[]
+      mockUseConnectors.mockReturnValue(mockConnectors)
+
+      // Act
+      const { result } = renderHook(() => useWagmiWalletConnectors())
+
+      // Assert
+      expect(result.current).toHaveLength(2)
+      expect(result.current[0]).toEqual({
+        wagmi: { id: 'io.metamask', type: 'injected' },
+        name: 'MetaMask',
+        icon: 'metamask.svg',
+        isInjected: true,
+        analyticsWalletType: 'Browser Extension',
+      })
+      expect(result.current[1]).toEqual({
+        wagmi: { id: 'coinbase', type: 'coinbaseWallet' },
+        name: 'Coinbase Wallet',
+        icon: 'coinbase.svg',
+        isInjected: false,
+        analyticsWalletType: 'Coinbase Wallet',
+      })
+    })
+
+    it('should handle connectors without icon', () => {
+      // Arrange
+      const mockConnectors = [
+        { id: 'metamask', name: 'MetaMask', type: 'injected' },
+        { id: 'coinbase', name: 'Coinbase Wallet', icon: 'coinbase.svg', type: 'coinbaseWallet' },
+      ] as unknown as Connector[]
+      mockUseConnectors.mockReturnValue(mockConnectors)
+
+      // Act
+      const { result } = renderHook(() => useWagmiWalletConnectors())
+
+      // Assert
+      expect(result.current).toHaveLength(2)
+      expect(result.current[0]).toEqual({
+        wagmi: { id: 'metamask', type: 'injected' },
+        name: 'MetaMask',
+        icon: undefined,
+        isInjected: true,
+        analyticsWalletType: 'Browser Extension',
+      })
+      expect(result.current[1]).toEqual({
+        wagmi: { id: 'coinbase', type: 'coinbaseWallet' },
+        name: 'Coinbase Wallet',
+        icon: 'coinbase.svg',
+        isInjected: false,
+        analyticsWalletType: 'Coinbase Wallet',
+      })
+    })
+
+    it('should memoize result based on connectors', () => {
+      // Arrange
+      const mockConnectors = [
+        { id: 'metamask', name: 'MetaMask', icon: 'metamask.svg', type: 'injected' },
+      ] as unknown as Connector[]
+      mockUseConnectors.mockReturnValue(mockConnectors)
+
+      // Act
+      const { result, rerender } = renderHook(() => useWagmiWalletConnectors())
+
+      // Assert
+      const firstResult = result.current
+      rerender()
+      expect(result.current).toBe(firstResult) // Should be memoized
+    })
+
+    it('should handle single connector', () => {
+      // Arrange
+      const mockConnectors = [
+        { id: 'metamask', name: 'MetaMask', icon: 'metamask.svg', type: 'injected' },
+      ] as unknown as Connector[]
+      mockUseConnectors.mockReturnValue(mockConnectors)
+
+      // Act
+      const { result } = renderHook(() => useWagmiWalletConnectors())
+
+      // Assert
+      expect(result.current).toHaveLength(1)
+      expect(result.current[0]).toEqual({
+        wagmi: { id: 'metamask', type: 'injected' },
+        name: 'MetaMask',
+        icon: 'metamask.svg',
+        isInjected: true,
+        analyticsWalletType: 'Browser Extension',
+      })
+    })
+  })
+
   describe('connectWagmiWallet', () => {
     it('should connect to wagmi wallet successfully', async () => {
       // Arrange
@@ -38,13 +173,7 @@ describe('Wagmi connectors', () => {
       mockConnect.mockResolvedValue({} as any)
 
       // Act
-      await activateWagmiConnector({
-        id: 'wagmiConnectorId_metamask',
-        externalLibraryId: 'metamask',
-        status: ConnectorStatus.Disconnected,
-        access: AccessPattern.Injected,
-        platform: Platform.EVM,
-      })
+      await connectWagmiWallet({ wagmi: { id: 'metamask', type: 'injected' } })
 
       // Assert
       expect(mockGetConnectors).toHaveBeenCalledWith({})
@@ -56,15 +185,9 @@ describe('Wagmi connectors', () => {
       mockGetConnectors.mockReturnValue([])
 
       // Act & Assert
-      await expect(
-        activateWagmiConnector({
-          id: 'unknown',
-          externalLibraryId: 'unknown',
-          status: ConnectorStatus.Disconnected,
-          access: AccessPattern.Injected,
-          platform: Platform.EVM,
-        }),
-      ).rejects.toThrow('Wagmi connector not found for id unknown')
+      await expect(connectWagmiWallet({ wagmi: { id: 'unknown', type: 'unknown' } })).rejects.toThrow(
+        'Wagmi connector not found for id unknown',
+      )
       expect(mockConnect).not.toHaveBeenCalled()
     })
 
@@ -76,15 +199,9 @@ describe('Wagmi connectors', () => {
       mockConnect.mockRejectedValue(error)
 
       // Act & Assert
-      await expect(
-        activateWagmiConnector({
-          id: 'wagmiConnectorId_metamask',
-          externalLibraryId: 'metamask',
-          status: ConnectorStatus.Disconnected,
-          access: AccessPattern.Injected,
-          platform: Platform.EVM,
-        }),
-      ).rejects.toThrow('Connection failed')
+      await expect(connectWagmiWallet({ wagmi: { id: 'metamask', type: 'injected' } })).rejects.toThrow(
+        'Connection failed',
+      )
       expect(mockGetConnectors).toHaveBeenCalledWith({})
     })
 
@@ -95,13 +212,7 @@ describe('Wagmi connectors', () => {
       mockConnect.mockResolvedValue({} as any)
 
       // Act
-      await activateWagmiConnector({
-        id: 'wagmiConnectorId_coinbase',
-        externalLibraryId: 'coinbase',
-        status: ConnectorStatus.Disconnected,
-        access: AccessPattern.Injected,
-        platform: Platform.EVM,
-      })
+      await connectWagmiWallet({ wagmi: { id: 'coinbase', type: 'coinbaseWallet' } })
 
       // Assert
       expect(mockGetConnectors).toHaveBeenCalledWith({})
@@ -119,17 +230,30 @@ describe('Wagmi connectors', () => {
       mockConnect.mockResolvedValue({} as any)
 
       // Act
-      await activateWagmiConnector({
-        id: 'wagmiConnectorId_coinbase',
-        externalLibraryId: 'coinbase',
-        status: ConnectorStatus.Disconnected,
-        access: AccessPattern.Injected,
-        platform: Platform.EVM,
-      })
+      await connectWagmiWallet({ wagmi: { id: 'coinbase', type: 'coinbaseWallet' } })
 
       // Assert
       expect(mockGetConnectors).toHaveBeenCalledWith({})
       expect(mockConnect).toHaveBeenCalledWith({}, { connector: mockConnectors[1] })
+    })
+
+    it('should preserve connector properties when connecting', async () => {
+      // Arrange
+      const mockConnector = {
+        id: 'metamask',
+        name: 'MetaMask',
+        icon: 'metamask.svg',
+        type: 'injected',
+        ready: true,
+      } as unknown as Connector
+      mockGetConnectors.mockReturnValue([mockConnector])
+      mockConnect.mockResolvedValue({} as any)
+
+      // Act
+      await connectWagmiWallet({ wagmi: { id: 'metamask', type: 'injected' } })
+
+      // Assert
+      expect(mockConnect).toHaveBeenCalledWith({}, { connector: mockConnector })
     })
 
     it('should handle getConnectors errors', async () => {
@@ -140,15 +264,9 @@ describe('Wagmi connectors', () => {
       })
 
       // Act & Assert
-      await expect(
-        activateWagmiConnector({
-          id: 'wagmiConnectorId_metamask',
-          externalLibraryId: 'metamask',
-          status: ConnectorStatus.Disconnected,
-          access: AccessPattern.Injected,
-          platform: Platform.EVM,
-        }),
-      ).rejects.toThrow('Failed to get connectors')
+      await expect(connectWagmiWallet({ wagmi: { id: 'metamask', type: 'injected' } })).rejects.toThrow(
+        'Failed to get connectors',
+      )
       expect(mockConnect).not.toHaveBeenCalled()
     })
   })

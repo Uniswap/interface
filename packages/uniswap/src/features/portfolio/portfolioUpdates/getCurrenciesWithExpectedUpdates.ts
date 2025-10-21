@@ -1,4 +1,3 @@
-import { normalizeCurrencyIdForMapLookup, normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { buildCurrencyId, buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -16,13 +15,11 @@ export function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails
   switch (transaction.typeInfo?.type) {
     case TransactionType.Swap:
     case TransactionType.Bridge:
-      currenciesWithBalToUpdate.add(normalizeCurrencyIdForMapLookup(transaction.typeInfo.inputCurrencyId))
-      currenciesWithBalToUpdate.add(normalizeCurrencyIdForMapLookup(transaction.typeInfo.outputCurrencyId))
+      currenciesWithBalToUpdate.add(transaction.typeInfo.inputCurrencyId.toLowerCase())
+      currenciesWithBalToUpdate.add(transaction.typeInfo.outputCurrencyId.toLowerCase())
       break
     case TransactionType.Send:
-      currenciesWithBalToUpdate.add(
-        buildCurrencyId(txChainId, normalizeTokenAddressForCache(transaction.typeInfo.tokenAddress)),
-      )
+      currenciesWithBalToUpdate.add(buildCurrencyId(txChainId, transaction.typeInfo.tokenAddress).toLowerCase())
       break
     case TransactionType.Wrap:
       currenciesWithBalToUpdate.add(buildWrappedNativeCurrencyId(txChainId))
@@ -31,7 +28,7 @@ export function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails
     case TransactionType.OnRampTransfer:
     case TransactionType.OffRampSale:
       currenciesWithBalToUpdate.add(
-        buildCurrencyId(txChainId, normalizeTokenAddressForCache(transaction.typeInfo.destinationTokenAddress)),
+        buildCurrencyId(txChainId, transaction.typeInfo.destinationTokenAddress).toLowerCase(),
       )
       break
     default:

@@ -88,7 +88,7 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
           style={{ padding: spacing.spacing8 }}
           testID={TestID.TokenDetailsMoreButton}
         >
-          <Ellipsis color="$neutral2" size="$icon.16" />
+          <Ellipsis color="neutral2" size="$icon.16" />
         </Flex>
       </ContextMenu>
       <TokenDetailsFavoriteButton currencyId={currencyId} tokenName={currencyInfo?.currency.name} />

@@ -18,7 +18,15 @@ import { isLoadingItem, isSectionHeader, LoadingItem, SectionHeader } from 'unis
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export type ActivityItem = TransactionDetails | SectionHeader | LoadingItem
-export type ActivityItemRenderer = ({ item, index }: { item: ActivityItem; index: number }) => JSX.Element
+export type ActivityItemRenderer = ({
+  item,
+  index,
+  customDetailsModalOpen,
+}: {
+  item: ActivityItem
+  index: number
+  customDetailsModalOpen?: () => void
+}) => JSX.Element
 
 export function generateActivityItemRenderer({
   loadingItem,
@@ -32,7 +40,15 @@ export function generateActivityItemRenderer({
   authTrigger: ((args: { successCallback: () => void; failureCallback: () => void }) => Promise<void>) | undefined
 }): ActivityItemRenderer {
   // eslint-disable-next-line complexity
-  return function ActivityItemComponent({ item, index }: { item: ActivityItem; index: number }): JSX.Element {
+  return function ActivityItemComponent({
+    item,
+    index,
+    customDetailsModalOpen,
+  }: {
+    item: ActivityItem
+    index: number
+    customDetailsModalOpen?: () => void
+  }): JSX.Element {
     // if it's a loading item, render the loading placeholder
     if (isLoadingItem(item)) {
       return loadingItem
@@ -99,6 +115,7 @@ export function generateActivityItemRenderer({
       transaction: item,
       swapCallbacks,
       index,
+      customDetailsModalOpen,
     })
   }
 }

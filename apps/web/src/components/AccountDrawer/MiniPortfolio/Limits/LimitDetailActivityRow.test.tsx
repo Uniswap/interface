@@ -1,17 +1,14 @@
 import 'test-utils/tokens/mocks'
 
 import { WETH9 } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { LimitDetailActivityRow } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitDetailActivityRow'
+import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
+import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import {
-  TransactionOriginType,
-  TransactionStatus,
-  TransactionType,
-  UniswapXOrderDetails,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 vi.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', async () => {
@@ -23,10 +20,10 @@ vi.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', async () => {
 })
 
 const mockOrderDetails: UniswapXOrderDetails = {
-  routing: TradingApi.Routing.DUTCH_LIMIT,
+  type: SignatureType.SIGN_LIMIT,
   orderHash: '0x1234',
-  status: TransactionStatus.Pending,
-  typeInfo: {
+  status: UniswapXOrderStatus.OPEN,
+  swapInfo: {
     isUniswapXOrder: true,
     type: TransactionType.Swap,
     tradeType: 0,
@@ -42,15 +39,29 @@ const mockOrderDetails: UniswapXOrderDetails = {
   addedTime: 3,
   chainId: UniverseChainId.Mainnet,
   expiry: 4,
-  from: '0x1234',
-  transactionOriginType: TransactionOriginType.Internal,
+  offerer: '0x1234',
+}
+
+const mockOrder: Activity = {
+  id: '0x123',
+  hash: '0x123',
+  chainId: UniverseChainId.Mainnet,
+  status: TransactionStatus.Pending,
+  timestamp: 1,
+  title: 'Limit pending',
+  from: '0x456',
+  offchainOrderDetails: mockOrderDetails,
+  currencies: [DAI, WETH9[UniverseChainId.Mainnet]],
 }
 
 describe('LimitDetailActivityRow', () => {
-  it('should not render with invalid order details', () => {
-    const invalidOrder = { ...mockOrderDetails, typeInfo: undefined } as any
+  it('should not render with no offchain order details', () => {
     const { container } = render(
-      <LimitDetailActivityRow order={invalidOrder} onToggleSelect={vi.fn()} selected={false} />,
+      <LimitDetailActivityRow
+        order={{ ...mockOrder, offchainOrderDetails: undefined }}
+        onToggleSelect={vi.fn()}
+        selected={false}
+      />,
     )
     expect(container.firstChild?.firstChild?.firstChild).toBeNull()
   })
@@ -60,9 +71,7 @@ describe('LimitDetailActivityRow', () => {
     // This is from tamagui's Checkbox component`
     vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    const { container } = render(
-      <LimitDetailActivityRow onToggleSelect={vi.fn()} selected={false} order={mockOrderDetails} />,
-    )
+    const { container } = render(<LimitDetailActivityRow onToggleSelect={vi.fn()} selected={false} order={mockOrder} />)
     expect(container.firstChild).toMatchSnapshot()
     expect(screen.getByText('when 0.00042 WETH/DAI')).toBeInTheDocument()
   })

@@ -15,20 +15,18 @@ import { ContextMenu, ContextMenuProps, MenuOptionItem } from 'uniswap/src/compo
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSelectHasTokenFavorited } from 'uniswap/src/features/favorites/useSelectHasTokenFavorited'
 import { useToggleFavoriteCallback } from 'uniswap/src/features/favorites/useToggleFavoriteCallback'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { currencyAddress, currencyId, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { getTokenDetailsURL } from 'uniswap/src/utils/linking'
-import { isWebPlatform } from 'utilities/src/platform'
+import { isWeb } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const COPY_CLOSE_DELAY = 400
@@ -65,7 +63,7 @@ function _TokenOptionItemContextMenu({
   actions,
 }: TokenOptionItemContextMenuProps): JSX.Element {
   const { t } = useTranslation()
-  const evmAddress = useActiveAddress(Platform.EVM)
+  const account = useWallet().evmAccount
   const { navigateToTokenDetails, navigateToSwapFlow, navigateToSendFlow, navigateToReceive, handleShareToken } =
     useUniswapContext()
   const dispatch = useDispatch()
@@ -90,7 +88,7 @@ function _TokenOptionItemContextMenu({
 
   const onCopyAddress = useCallback(async (): Promise<void> => {
     await setClipboard(currencyAddress(currency))
-    if (!isWebPlatform) {
+    if (!isWeb) {
       dispatch(
         pushNotification({
           type: AppNotificationType.Copied,
@@ -132,7 +130,7 @@ function _TokenOptionItemContextMenu({
   }, [closeMenu, navigateToReceive])
 
   const onShare = useCallback(async () => {
-    if (isWebPlatform) {
+    if (isWeb) {
       const url =
         UNISWAP_WEB_URL +
         getTokenDetailsURL({
@@ -154,10 +152,8 @@ function _TokenOptionItemContextMenu({
   const dropdownOptions: MenuOptionItem[] = useMemo(() => {
     const options: MenuOptionItem[] = []
 
-    const isSolanaToken = currencyIdToChain(id) === UniverseChainId.Solana
-
     if (actions.includes(TokenContextMenuAction.CopyAddress)) {
-      if (isWebPlatform) {
+      if (isWeb) {
         // onCopyAddress does not trigger a toast on web, so we display success in-line instead
         options.push({
           onPress: onCopyAddress,
@@ -199,8 +195,7 @@ function _TokenOptionItemContextMenu({
       })
     }
 
-    // Only add Send action for non-Solana tokens
-    if (actions.includes(TokenContextMenuAction.Send) && !isSolanaToken) {
+    if (actions.includes(TokenContextMenuAction.Send)) {
       options.push({
         onPress: onNavigateToSend,
         label: t('common.button.send'),
@@ -209,7 +204,7 @@ function _TokenOptionItemContextMenu({
       })
     }
 
-    if (evmAddress && actions.includes(TokenContextMenuAction.Receive)) {
+    if (account && actions.includes(TokenContextMenuAction.Receive)) {
       options.push({
         onPress: onNavigateToReceive,
         label: t('common.button.receive'),
@@ -239,9 +234,8 @@ function _TokenOptionItemContextMenu({
 
     return options
   }, [
-    id,
     actions,
-    evmAddress,
+    account,
     onCopyAddress,
     currency.isNative,
     copiedAddress,

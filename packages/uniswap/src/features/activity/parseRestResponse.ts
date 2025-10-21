@@ -1,5 +1,5 @@
 import { ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { GraphQLApi } from '@universe/api'
+import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { extractOnRampTransactionDetails } from 'uniswap/src/features/activity/extract/extractFiatOnRampTransactionDetails'
 import extractRestOnChainTransactionDetails from 'uniswap/src/features/activity/extract/extractOnChainTransactionDetails'
 import extractRestFiatOnRampDetails from 'uniswap/src/features/activity/extract/extractRestFiatOnRampDetails'
@@ -33,7 +33,7 @@ export function parseDataResponseToTransactionDetails({
   nftVisibility,
   tokenVisibilityOverrides,
 }: {
-  data: GraphQLApi.TransactionListQuery
+  data: TransactionListQuery
   hideSpamTokens: boolean
   nftVisibility?: NFTKeyToVisibility
   tokenVisibilityOverrides?: CurrencyIdToVisibility
@@ -82,16 +82,13 @@ export function parseRestResponseToTransactionDetails({
   return data.transactions.reduce((accum: TransactionDetails[], transaction) => {
     switch (transaction.transaction.case) {
       case RestTransactionType.OnChain: {
-        const parsedTransactions = extractRestOnChainTransactionDetails(transaction.transaction.value)
-        // Handle array of transactions (e.g., EXECUTE label can return multiple)
-        for (const parsed of parsedTransactions) {
-          const isSpam = parsed.typeInfo.isSpam
-          const currencyId = extractCurrencyIdFromTx(parsed)
-          const spamOverride = currencyId ? tokenVisibilityOverrides?.[currencyId]?.isVisible : false
-          const isNFTSpam = isNftTransactionHidden({ parsed, nftVisibility, isSpam })
-          if (!(hideSpamTokens && isSpam && !spamOverride) && !isNFTSpam) {
-            accum.push(parsed)
-          }
+        const parsed = extractRestOnChainTransactionDetails(transaction.transaction.value)
+        const isSpam = parsed?.typeInfo.isSpam
+        const currencyId = extractCurrencyIdFromTx(parsed)
+        const spamOverride = currencyId ? tokenVisibilityOverrides?.[currencyId]?.isVisible : false
+        const isNFTSpam = isNftTransactionHidden({ parsed, nftVisibility, isSpam })
+        if (parsed && !(hideSpamTokens && isSpam && !spamOverride) && !isNFTSpam) {
+          accum.push(parsed)
         }
         break
       }

@@ -5,7 +5,7 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { InfoTooltip } from 'uniswap/src/components/tooltip/InfoTooltip'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isWebPlatform } from 'utilities/src/platform'
+import { isWeb } from 'utilities/src/platform'
 
 interface MaxBalanceInfoModalProps {
   isMax: boolean
@@ -26,7 +26,7 @@ export function MaxBalanceInfoModal({
 }: PropsWithChildren<MaxBalanceInfoModalProps>): JSX.Element {
   const { t } = useTranslation()
 
-  if (isWebPlatform) {
+  if (isWeb) {
     if (!isTooltipEnabled) {
       return <>{children}</>
     }

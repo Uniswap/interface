@@ -1,17 +1,14 @@
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
-import { createAccountsStoreGetters } from 'features/accounts/store/getters'
-import { useAccountsStore } from 'features/accounts/store/hooks'
-import { ExternalWallet } from 'features/accounts/store/types'
-import { useOrderedWallets } from 'features/wallet/connection/hooks/useOrderedWalletConnectors'
+import { useOrderedWalletConnectors } from 'features/wallet/connection/hooks/useOrderedWalletConnectors'
+import { useWalletConnectors } from 'features/wallet/connection/hooks/useWalletConnectors'
+import { WalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
 import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 
-// biome-ignore lint/suspicious/noVar: Testing variable hoisting behavior requires var
+// eslint-disable-next-line no-var
 var mockIsMobileWeb = false
 vi.mock('utilities/src/platform', async () => {
   const actual = await vi.importActual('utilities/src/platform')
@@ -23,11 +20,8 @@ vi.mock('utilities/src/platform', async () => {
   }
 })
 
-vi.mock('features/accounts/store/hooks', () => ({
-  useAccountsStore: vi.fn(),
-  useActiveAddresses: vi.fn(() => ({ evmAddress: undefined, svmAddress: undefined })),
-  useActiveWallet: vi.fn(() => undefined),
-  useConnectionStatus: vi.fn(() => ({ isConnected: false, isConnecting: false, isDisconnected: true })),
+vi.mock('features/wallet/connection/hooks/useWalletConnectors', () => ({
+  useWalletConnectors: vi.fn(),
 }))
 
 vi.mock('components/Web3Provider/constants', async () => {
@@ -43,133 +37,66 @@ vi.mock('uniswap/src/features/gating/hooks', () => ({
   getFeatureFlag: vi.fn(),
 }))
 
-const createExternalWallet = (overrides: Partial<ExternalWallet> = {}): ExternalWallet => ({
-  id: 'test-wallet-id',
+const createWagmiWalletConnector = (overrides: Partial<WalletConnectorMeta> = {}): WalletConnectorMeta => ({
   name: 'Test Wallet',
-  connectorIds: {
-    [Platform.EVM]: 'test-connector-id',
-  },
+  icon: 'test-icon',
+  isInjected: false,
+  wagmi: { id: 'test-connector-id', type: 'injected' },
   analyticsWalletType: 'Browser Extension',
-  signingCapability: SigningCapability.Interactive,
-  addresses: {},
   ...overrides,
 })
 
-const createEmbeddedWallet = (overrides: Partial<ExternalWallet> = {}): ExternalWallet => ({
-  id: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
-  name: 'Embedded Wallet',
-  connectorIds: {
-    [Platform.EVM]: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
-  },
+const createCustomWalletConnector = (overrides: Partial<WalletConnectorMeta> = {}): WalletConnectorMeta => ({
+  name: 'Test Custom Wallet',
+  icon: 'test-icon',
+  isInjected: false,
+  customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
   analyticsWalletType: 'Passkey',
-  signingCapability: SigningCapability.Interactive,
-  addresses: {},
   ...overrides,
 })
 
-const createMockAccountsState = (wallets: ExternalWallet[]) => {
-  const walletsMap = wallets.reduce(
-    (acc, wallet) => {
-      acc[wallet.id] = wallet
-      return acc
-    },
-    {} as Record<string, ExternalWallet>,
-  )
-
-  const connectorsMap = wallets.reduce(
-    (acc, wallet) => {
-      const evmConnectorId = wallet.connectorIds[Platform.EVM]
-      if (evmConnectorId) {
-        acc[evmConnectorId] = {
-          id: evmConnectorId,
-          platform: Platform.EVM,
-          access:
-            wallet.id === CONNECTION_PROVIDER_IDS.METAMASK_RDNS ||
-            wallet.id === CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID ||
-            wallet.id === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS ||
-            wallet.id === CONNECTION_PROVIDER_IDS.COINBASE_RDNS ||
-            wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS
-              ? 'Injected'
-              : 'SDK',
-          externalLibraryId: wallet.id,
-        }
-      }
-      return acc
-    },
-    {} as Record<string, any>,
-  )
-
-  const mockData = {
-    wallets: walletsMap,
-    connectors: connectorsMap,
-    activeConnectors: {},
-    accounts: {},
-    connectionQueryIsPending: false,
-  }
-
-  // Add getter functions to the mock state
-  const getters = createAccountsStoreGetters(() => mockData)
-
-  return {
-    ...mockData,
-    ...getters,
-  } as any
-}
-
-const DEFAULT_WALLETS: ExternalWallet[] = [
-  createExternalWallet({
-    id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS,
+const DEFAULT_CONNECTORS: WalletConnectorMeta[] = [
+  createWagmiWalletConnector({
     name: 'MetaMask',
-    connectorIds: {
-      [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.METAMASK_RDNS}`,
-    },
-    analyticsWalletType: 'Browser Extension',
+    wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' },
+    isInjected: true,
   }),
-  createExternalWallet({
-    id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
+  createWagmiWalletConnector({
     name: 'WalletConnect',
-    connectorIds: {
-      [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID}`,
-    },
+    wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' },
+    isInjected: false,
     analyticsWalletType: 'Wallet Connect',
   }),
-  createExternalWallet({
-    id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID,
+  createWagmiWalletConnector({
     name: 'Coinbase Wallet',
-    connectorIds: {
-      [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID}`,
-    },
+    wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' },
+    isInjected: false,
     analyticsWalletType: 'Coinbase Wallet',
   }),
-  createExternalWallet({
-    id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID,
+  createWagmiWalletConnector({
     name: 'Binance Wallet',
-    connectorIds: {
-      [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID}`,
-    },
+    wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' },
+    isInjected: false,
     analyticsWalletType: 'binance',
   }),
-  createExternalWallet({
-    id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID,
+  createWagmiWalletConnector({
     name: 'Porto',
-    connectorIds: {
-      [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID}`,
-    },
+    wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' },
+    isInjected: true,
     analyticsWalletType: 'Porto',
   }),
-  createEmbeddedWallet({
+  createCustomWalletConnector({
     name: 'Embedded Wallet',
+    customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
+    isInjected: false,
     analyticsWalletType: 'Passkey',
   }),
 ]
 
-describe('useOrderedWallets', () => {
+describe('useOrderedWalletConnectors', () => {
   beforeEach(() => {
     mockIsMobileWeb = false
-    mocked(useAccountsStore).mockImplementation((selector) => {
-      const mockState = createMockAccountsState(DEFAULT_WALLETS)
-      return selector(mockState)
-    })
+    mocked(useWalletConnectors).mockReturnValue(DEFAULT_CONNECTORS)
     mocked(useFeatureFlag).mockImplementation((flag) => {
       if (flag === FeatureFlags.EmbeddedWallet) {
         return false
@@ -185,315 +112,284 @@ describe('useOrderedWallets', () => {
     mocked(useRecentConnectorId).mockReturnValue(undefined)
   })
 
-  it('should return ordered wallets', () => {
-    const { result } = renderHook(() => useOrderedWallets({ showSecondaryConnectors: false }))
+  it('should return ordered connectors', () => {
+    const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: false }))
 
-    // The new behavior returns injected wallets first, then mobile wallets
-    const expectedWalletIds = [
-      CONNECTION_PROVIDER_IDS.METAMASK_RDNS, // Injected wallet
-      CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
-      CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID,
-      CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID,
-      CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID,
+    const expectedConnectors = [
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' } },
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' } },
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' } },
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' } },
     ]
 
-    result.current.forEach((wallet, index) => {
-      expect(wallet.id).toEqual(expectedWalletIds[index])
+    result.current.forEach((connector, index) => {
+      expect(connector.wagmi?.id).toEqual(expectedConnectors[index].wagmi.id)
+      expect(connector.wagmi?.type).toEqual(expectedConnectors[index].wagmi.type)
     })
-    expect(result.current.length).toEqual(expectedWalletIds.length)
+    expect(result.current.length).toEqual(expectedConnectors.length)
   })
 
-  it('should place the most recent wallet at the top of the list', () => {
-    mocked(useRecentConnectorId).mockReturnValue(CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID)
-    const { result } = renderHook(() => useOrderedWallets({ showSecondaryConnectors: false }))
-
-    const expectedWalletIds = [
-      CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, // Recent wallet moved to top
-      CONNECTION_PROVIDER_IDS.METAMASK_RDNS, // Injected wallet
-      CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID,
-      CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID,
-      CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID,
-    ]
-
-    result.current.forEach((wallet, index) => {
-      expect(wallet.id).toEqual(expectedWalletIds[index])
-    })
-    expect(result.current.length).toEqual(expectedWalletIds.length)
-  })
-
-  it('should return only injected wallets for in-wallet browsers', () => {
-    mockIsMobileWeb = true
-    const { result } = renderHook(() => useOrderedWallets({ showSecondaryConnectors: false }))
-    // When mobile web and only one injected wallet, should return only injected wallets
-    expect(result.current.length).toEqual(1)
-    expect(result.current[0].id).toEqual(CONNECTION_PROVIDER_IDS.METAMASK_RDNS)
-  })
-
-  it('should return only the Coinbase wallet in the Coinbase Wallet', () => {
-    mockIsMobileWeb = true
-    const coinbaseWallets = [
-      ...DEFAULT_WALLETS,
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.COINBASE_RDNS,
-        name: 'Coinbase Injected',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.COINBASE_RDNS}`,
-        },
-        analyticsWalletType: 'Coinbase Wallet',
-      }),
-    ]
-    mocked(useAccountsStore).mockImplementation((selector) => {
-      const mockState = createMockAccountsState(coinbaseWallets)
-      return selector(mockState)
-    })
-    const { result } = renderHook(() => useOrderedWallets({ showSecondaryConnectors: false }))
-    expect(result.current.length).toEqual(1)
-    expect(result.current[0].id).toEqual(CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID)
-  })
-
-  it('should handle Binance injected wallet without throwing error', () => {
-    mockIsMobileWeb = true
-    const binanceWallets = [
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS,
-        name: 'MetaMask',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.METAMASK_RDNS}`,
-        },
-        analyticsWalletType: 'Browser Extension',
-      }),
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
+  it('should throw an error if expected connectors are missing', () => {
+    mocked(useWalletConnectors).mockReturnValue([
+      createWagmiWalletConnector({
         name: 'WalletConnect',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID}`,
-        },
+        wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' },
+        isInjected: false,
         analyticsWalletType: 'Wallet Connect',
       }),
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID,
-        name: 'Coinbase Wallet',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID}`,
-        },
-        analyticsWalletType: 'Coinbase Wallet',
-      }),
-      createEmbeddedWallet({
-        name: 'Embedded Wallet',
-        analyticsWalletType: 'Passkey',
-      }),
-      // Add Binance injected wallet to simulate Binance browser
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS,
-        name: 'Binance Injected',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS}`,
-        },
-        analyticsWalletType: 'binance',
-      }),
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID,
-        name: 'Porto',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID}`,
-        },
-        analyticsWalletType: 'Porto',
-      }),
-    ]
-    mocked(useAccountsStore).mockImplementation((selector) => {
-      const mockState = createMockAccountsState(binanceWallets)
-      return selector(mockState)
-    })
-
-    // Should not throw error and should include multiple wallets
-    const { result } = renderHook(() => useOrderedWallets({ showSecondaryConnectors: false }))
-
-    // Should include injected wallets (MetaMask, Binance) and mobile wallets
-    expect(result.current.length).toBeGreaterThan(1)
-
-    // Should include Binance injected wallet
-    const binanceInjectedWallet = result.current.find((w) => w.id === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS)
-    expect(binanceInjectedWallet).toBeDefined()
-
-    // Should include other wallets like MetaMask
-    const metamaskWallet = result.current.find((w) => w.id === CONNECTION_PROVIDER_IDS.METAMASK_RDNS)
-    expect(metamaskWallet).toBeDefined()
+    ])
+    vi.spyOn(console, 'error').mockImplementation(() => undefined)
+    const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: false }))
+    expect(result.error?.message).toEqual('Expected connector coinbaseWalletSDK missing from connectors array.')
   })
 
-  it('should include other wallets alongside Binance injected on desktop', () => {
+  it('should place the most recent connector at the top of the list', () => {
+    mocked(useRecentConnectorId).mockReturnValue(CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID)
+    const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: false }))
+
+    const expectedConnectors = [
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' } },
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' } },
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' } },
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' } },
+    ]
+
+    result.current.forEach((connector, index) => {
+      expect(connector.wagmi?.id).toEqual(expectedConnectors[index].wagmi.id)
+      expect(connector.wagmi?.type).toEqual(expectedConnectors[index].wagmi.type)
+    })
+    expect(result.current.length).toEqual(expectedConnectors.length)
+  })
+
+  it('should return only injected connectors for in-wallet browsers', () => {
+    mockIsMobileWeb = true
+    const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: false }))
+    expect(result.current.length).toEqual(1)
+    expect(result.current[0].wagmi?.id).toEqual(CONNECTION_PROVIDER_IDS.METAMASK_RDNS)
+  })
+
+  it('should return only the Coinbase connector in the Coinbase Wallet', () => {
+    mockIsMobileWeb = true
+    mocked(useWalletConnectors).mockReturnValue([
+      ...DEFAULT_CONNECTORS,
+      createWagmiWalletConnector({
+        name: 'Coinbase Injected',
+        wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_RDNS, type: 'injected' },
+        isInjected: true,
+      }),
+    ])
+    const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: false }))
+    expect(result.current.length).toEqual(1)
+    expect(result.current[0].wagmi?.id).toEqual(CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID)
+  })
+
+  it('should handle Binance injected connector without throwing error', () => {
+    mockIsMobileWeb = true
+    mocked(useWalletConnectors).mockReturnValue([
+      // Include all default connectors except Binance SDK to simulate the scenario
+      createWagmiWalletConnector({
+        name: 'MetaMask',
+        wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' },
+        isInjected: true,
+      }),
+      createWagmiWalletConnector({
+        name: 'WalletConnect',
+        wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' },
+        isInjected: false,
+        analyticsWalletType: 'Wallet Connect',
+      }),
+      createWagmiWalletConnector({
+        name: 'Coinbase Wallet',
+        wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' },
+        isInjected: false,
+        analyticsWalletType: 'Coinbase Wallet',
+      }),
+      createCustomWalletConnector({
+        name: 'Embedded Wallet',
+        customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
+        isInjected: false,
+        analyticsWalletType: 'Passkey',
+      }),
+      // Add Binance injected connector to simulate Binance browser
+      createWagmiWalletConnector({
+        name: 'Binance Injected',
+        wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS, type: 'injected' },
+        isInjected: true,
+      }),
+      createWagmiWalletConnector({
+        name: 'Porto',
+        wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' },
+        isInjected: true,
+        analyticsWalletType: 'Porto',
+      }),
+    ])
+
+    // Should not throw error and should include multiple connectors
+    const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: false }))
+
+    // Should include injected connectors (MetaMask, Binance) and mobile connectors
+    expect(result.current.length).toBeGreaterThan(1)
+
+    // Should include Binance injected connector
+    const binanceInjectedConnector = result.current.find(
+      (c) => c.wagmi?.id === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS,
+    )
+    expect(binanceInjectedConnector).toBeDefined()
+
+    // Should include other connectors like MetaMask
+    const metamaskConnector = result.current.find((c) => c.wagmi?.id === CONNECTION_PROVIDER_IDS.METAMASK_RDNS)
+    expect(metamaskConnector).toBeDefined()
+  })
+
+  it('should include other connectors alongside Binance injected on desktop', () => {
     // Desktop scenario with Binance browser (need to mock mobile web to trigger Binance browser detection)
     mockIsMobileWeb = true // This makes isBinanceWalletBrowser return true
-    const binanceWallets = [
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS,
+    mocked(useWalletConnectors).mockReturnValue([
+      // Include all default connectors except Binance SDK to simulate the scenario
+      createWagmiWalletConnector({
         name: 'MetaMask',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.METAMASK_RDNS}`,
-        },
-        analyticsWalletType: 'Browser Extension',
+        wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' },
+        isInjected: true,
       }),
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
+      createWagmiWalletConnector({
         name: 'WalletConnect',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID}`,
-        },
+        wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' },
+        isInjected: false,
         analyticsWalletType: 'Wallet Connect',
       }),
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID,
+      createWagmiWalletConnector({
         name: 'Coinbase Wallet',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID}`,
-        },
+        wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' },
+        isInjected: false,
         analyticsWalletType: 'Coinbase Wallet',
       }),
-      createEmbeddedWallet({
+      createCustomWalletConnector({
         name: 'Embedded Wallet',
+        customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
+        isInjected: false,
         analyticsWalletType: 'Passkey',
       }),
-      // Add Binance injected wallet to simulate Binance browser
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS,
+      // Add Binance injected connector to simulate Binance browser
+      createWagmiWalletConnector({
         name: 'Binance Injected',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS}`,
-        },
-        analyticsWalletType: 'binance',
+        wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS, type: 'injected' },
+        isInjected: true,
       }),
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID,
+      createWagmiWalletConnector({
         name: 'Porto',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID}`,
-        },
+        wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' },
+        isInjected: true,
         analyticsWalletType: 'Porto',
       }),
-    ]
-    mocked(useAccountsStore).mockImplementation((selector) => {
-      const mockState = createMockAccountsState(binanceWallets)
-      return selector(mockState)
-    })
+    ])
 
-    const { result } = renderHook(() => useOrderedWallets({ showSecondaryConnectors: false }))
+    const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: false }))
 
-    // Should include injected wallets (MetaMask, Binance) and mobile wallets
+    // Should include injected connectors (MetaMask, Binance) and mobile connectors
     expect(result.current.length).toBeGreaterThan(1)
 
-    // Should include Binance injected wallet
-    const binanceInjectedWallet = result.current.find((w) => w.id === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS)
-    expect(binanceInjectedWallet).toBeDefined()
+    // Should include Binance injected connector
+    const binanceInjectedConnector = result.current.find(
+      (c) => c.wagmi?.id === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS,
+    )
+    expect(binanceInjectedConnector).toBeDefined()
 
-    // Should include other wallets like MetaMask
-    const metamaskWallet = result.current.find((w) => w.id === CONNECTION_PROVIDER_IDS.METAMASK_RDNS)
-    expect(metamaskWallet).toBeDefined()
+    // Should include other connectors like MetaMask
+    const metamaskConnector = result.current.find((c) => c.wagmi?.id === CONNECTION_PROVIDER_IDS.METAMASK_RDNS)
+    expect(metamaskConnector).toBeDefined()
 
-    // Should include mobile wallets like WalletConnect
-    const walletConnectWallet = result.current.find((w) => w.id === CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID)
-    expect(walletConnectWallet).toBeDefined()
+    // Should include mobile connectors like WalletConnect
+    const walletConnectConnector = result.current.find(
+      (c) => c.wagmi?.id === CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
+    )
+    expect(walletConnectConnector).toBeDefined()
   })
 
-  it('should handle Binance injected wallet in secondary view', () => {
+  it('should handle Binance injected connector in secondary view', () => {
     // Need mobile web to trigger Binance browser detection
     mockIsMobileWeb = true
-    const binanceWallets = [
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS,
+    mocked(useWalletConnectors).mockReturnValue([
+      // Include all default connectors except Binance SDK
+      createWagmiWalletConnector({
         name: 'MetaMask',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.METAMASK_RDNS}`,
-        },
-        analyticsWalletType: 'Browser Extension',
+        wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' },
+        isInjected: true,
       }),
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
+      createWagmiWalletConnector({
         name: 'WalletConnect',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID}`,
-        },
+        wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' },
+        isInjected: false,
         analyticsWalletType: 'Wallet Connect',
       }),
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID,
+      createWagmiWalletConnector({
         name: 'Coinbase Wallet',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID}`,
-        },
+        wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' },
+        isInjected: false,
         analyticsWalletType: 'Coinbase Wallet',
       }),
-      createEmbeddedWallet({
+      createCustomWalletConnector({
         name: 'Embedded Wallet',
+        customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
+        isInjected: false,
         analyticsWalletType: 'Passkey',
       }),
-      // Add Binance injected wallet to simulate Binance browser
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS,
+      // Add Binance injected connector to simulate Binance browser
+      createWagmiWalletConnector({
         name: 'Binance Injected',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS}`,
-        },
-        analyticsWalletType: 'binance',
+        wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_RDNS, type: 'injected' },
+        isInjected: true,
       }),
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID,
+      createWagmiWalletConnector({
         name: 'Porto',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID}`,
-        },
+        wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' },
+        isInjected: true,
         analyticsWalletType: 'Porto',
       }),
-    ]
-    mocked(useAccountsStore).mockImplementation((selector) => {
-      const mockState = createMockAccountsState(binanceWallets)
-      return selector(mockState)
-    })
+    ])
 
-    const { result } = renderHook(() => useOrderedWallets({ showSecondaryConnectors: true }))
+    const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: true }))
 
     // Should include WalletConnect and Coinbase (but not Binance SDK since it doesn't exist)
-    const expectedWalletIds = [
-      CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
-      CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID,
-      CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID,
+    const expectedConnectors = [
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' } },
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' } },
     ]
 
-    expectedWalletIds.forEach((expectedId, index) => {
-      expect(result.current[index].id).toEqual(expectedId)
+    expectedConnectors.forEach((expected, index) => {
+      expect(result.current[index].wagmi?.id).toEqual(expected.wagmi.id)
+      expect(result.current[index].wagmi?.type).toEqual(expected.wagmi.type)
     })
 
-    expect(result.current.length).toEqual(expectedWalletIds.length)
+    expect(result.current.length).toEqual(expectedConnectors.length)
   })
 
   it('should not return uniswap connections when embedded wallet is disabled', () => {
-    const walletsWithUniswap = [
-      ...DEFAULT_WALLETS,
-      createExternalWallet({
-        id: CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS,
+    mocked(useWalletConnectors).mockReturnValue([
+      ...DEFAULT_CONNECTORS,
+      createWagmiWalletConnector({
         name: 'Uniswap Extension',
-        connectorIds: {
-          [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS}`,
-        },
-        analyticsWalletType: 'Browser Extension',
+        wagmi: { id: CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS, type: 'injected' },
+        isInjected: true,
       }),
-    ]
-    mocked(useAccountsStore).mockImplementation((selector) => {
-      const mockState = createMockAccountsState(walletsWithUniswap)
-      return selector(mockState)
-    })
-    const { result } = renderHook(() => useOrderedWallets({ showSecondaryConnectors: false }))
+    ])
+    const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: false }))
 
-    const expectedWalletIds = [
-      CONNECTION_PROVIDER_IDS.METAMASK_RDNS, // Injected wallet
-      CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
-      CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID,
-      CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID,
-      CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID,
+    const expectedConnectors = [
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' } },
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' } },
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' } },
+      { wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' } },
     ]
 
-    result.current.forEach((wallet, index) => {
-      expect(wallet.id).toEqual(expectedWalletIds[index])
+    result.current.forEach((connector, index) => {
+      expect(connector.wagmi?.id).toEqual(expectedConnectors[index].wagmi.id)
+      expect(connector.wagmi?.type).toEqual(expectedConnectors[index].wagmi.type)
     })
-    expect(result.current.length).toEqual(expectedWalletIds.length)
+    expect(result.current.length).toEqual(expectedConnectors.length)
   })
 
   describe('with embedded wallet enabled', () => {
@@ -512,34 +408,36 @@ describe('useOrderedWallets', () => {
       })
     })
 
-    it('should show embedded wallet in primary view', () => {
-      const { result } = renderHook(() => useOrderedWallets({ showSecondaryConnectors: false }))
+    it('should show embedded wallet connector in primary view', () => {
+      const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: false }))
 
-      const expectedWalletIds = [
-        CONNECTION_PROVIDER_IDS.METAMASK_RDNS, // Injected wallet
-        CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
+      const expectedConnectors = [
+        { wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' } },
+        { customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID },
       ]
 
-      result.current.forEach((wallet, index) => {
-        expect(wallet.id).toEqual(expectedWalletIds[index])
+      result.current.forEach((connector, index) => {
+        const expectedId = expectedConnectors[index].customConnectorId ?? expectedConnectors[index].wagmi?.id
+        expect(connector.customConnectorId ?? connector.wagmi?.id).toEqual(expectedId)
       })
-      expect(result.current.length).toEqual(expectedWalletIds.length)
+      expect(result.current.length).toEqual(expectedConnectors.length)
     })
 
-    it('should include recent mobile wallets in primary view', () => {
+    it('should include recent mobile connectors in primary view', () => {
       mocked(useRecentConnectorId).mockReturnValue(CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID)
-      const { result } = renderHook(() => useOrderedWallets({ showSecondaryConnectors: false }))
+      const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: false }))
 
-      const expectedWalletIds = [
-        CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, // Recent wallet moved to top
-        CONNECTION_PROVIDER_IDS.METAMASK_RDNS, // Injected wallet
-        CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
+      const expectedConnectors = [
+        { wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' } },
+        { wagmi: { id: CONNECTION_PROVIDER_IDS.METAMASK_RDNS, type: 'injected' } },
+        { customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID },
       ]
 
-      result.current.forEach((wallet, index) => {
-        expect(wallet.id).toEqual(expectedWalletIds[index])
+      result.current.forEach((connector, index) => {
+        const expectedId = expectedConnectors[index].customConnectorId ?? expectedConnectors[index].wagmi?.id
+        expect(connector.customConnectorId ?? connector.wagmi?.id).toEqual(expectedId)
       })
-      expect(result.current.length).toEqual(expectedWalletIds.length)
+      expect(result.current.length).toEqual(expectedConnectors.length)
     })
   })
 
@@ -559,96 +457,84 @@ describe('useOrderedWallets', () => {
       })
     })
 
-    it('should show mobile wallets and filter out recent wallet', () => {
+    it('should show mobile connectors and filter out recent connector', () => {
       mocked(useRecentConnectorId).mockReturnValue(CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID)
-      const { result } = renderHook(() => useOrderedWallets({ showSecondaryConnectors: true }))
+      const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: true }))
 
-      const expectedWalletIds = [
-        CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID,
-        CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID,
-        CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID,
+      const expectedConnectors = [
+        { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
+        { wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' } },
+        { wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' } },
       ]
 
-      result.current.forEach((wallet, index) => {
-        expect(wallet.id).toEqual(expectedWalletIds[index])
+      result.current.forEach((connector, index) => {
+        expect(connector.wagmi?.id).toEqual(expectedConnectors[index].wagmi.id)
+        expect(connector.wagmi?.type).toEqual(expectedConnectors[index].wagmi.type)
       })
-      expect(result.current.length).toEqual(expectedWalletIds.length)
+      expect(result.current.length).toEqual(expectedConnectors.length)
     })
 
-    it('should show all mobile wallets when no recent wallet', () => {
-      const { result } = renderHook(() => useOrderedWallets({ showSecondaryConnectors: true }))
+    it('should show all mobile connectors when no recent connector', () => {
+      const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: true }))
 
-      const expectedWalletIds = [
-        CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
-        CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID,
-        CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID,
-        CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID,
+      const expectedConnectors = [
+        { wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' } },
+        { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
+        { wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' } },
+        { wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' } },
       ]
 
-      result.current.forEach((wallet, index) => {
-        expect(wallet.id).toEqual(expectedWalletIds[index])
+      result.current.forEach((connector, index) => {
+        expect(connector.wagmi?.id).toEqual(expectedConnectors[index].wagmi.id)
+        expect(connector.wagmi?.type).toEqual(expectedConnectors[index].wagmi.type)
       })
-      expect(result.current.length).toEqual(expectedWalletIds.length)
+      expect(result.current.length).toEqual(expectedConnectors.length)
     })
 
-    it('should show embedded wallet on mobile when enabled', () => {
+    it('should show embedded wallet connector on mobile when enabled', () => {
       mockIsMobileWeb = true
-      const mobileWallets = [
-        createExternalWallet({
-          id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
+      mocked(useWalletConnectors).mockReturnValue([
+        createWagmiWalletConnector({
           name: 'WalletConnect',
-          connectorIds: {
-            [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID}`,
-          },
-          analyticsWalletType: 'Wallet Connect',
+          wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' },
+          isInjected: false,
         }),
-        createExternalWallet({
-          id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID,
+        createWagmiWalletConnector({
           name: 'Coinbase Wallet',
-          connectorIds: {
-            [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID}`,
-          },
-          analyticsWalletType: 'Coinbase Wallet',
+          wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' },
+          isInjected: false,
         }),
-        createEmbeddedWallet({
+        createCustomWalletConnector({
           name: 'Embedded Wallet',
-          analyticsWalletType: 'Passkey',
+          customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
+          isInjected: false,
         }),
-        createExternalWallet({
-          id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID,
+        createWagmiWalletConnector({
           name: 'Binance Wallet',
-          connectorIds: {
-            [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID}`,
-          },
-          analyticsWalletType: 'binance',
+          wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' },
+          isInjected: false,
         }),
-        createExternalWallet({
-          id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID,
+        createWagmiWalletConnector({
           name: 'Porto',
-          connectorIds: {
-            [Platform.EVM]: `WagmiConnector_${CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID}`,
-          },
-          analyticsWalletType: 'Porto',
+          wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' },
+          isInjected: true,
         }),
-      ]
-      mocked(useAccountsStore).mockImplementation((selector) => {
-        const mockState = createMockAccountsState(mobileWallets)
-        return selector(mockState)
-      })
-      const { result } = renderHook(() => useOrderedWallets({ showSecondaryConnectors: true }))
+      ])
+      const { result } = renderHook(() => useOrderedWalletConnectors({ showSecondaryConnectors: true }))
 
-      const expectedWalletIds = [
-        CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID,
-        CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID,
-        CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID,
-        CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID,
-        CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID,
+      const expectedConnectors = [
+        { customConnectorId: CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID },
+        { wagmi: { id: CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID, type: 'walletConnect' } },
+        { wagmi: { id: CONNECTION_PROVIDER_IDS.COINBASE_SDK_CONNECTOR_ID, type: 'coinbaseWallet' } },
+        { wagmi: { id: CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID, type: 'binance' } },
+        { wagmi: { id: CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID, type: 'porto' } },
       ]
 
-      result.current.forEach((wallet, index) => {
-        expect(wallet.id).toEqual(expectedWalletIds[index])
+      result.current.forEach((connector, index) => {
+        const expectedId = expectedConnectors[index].customConnectorId ?? expectedConnectors[index].wagmi?.id
+        expect(connector.customConnectorId ?? connector.wagmi?.id).toEqual(expectedId)
       })
-      expect(result.current.length).toEqual(expectedWalletIds.length)
+      expect(result.current.length).toEqual(expectedConnectors.length)
     })
   })
 })

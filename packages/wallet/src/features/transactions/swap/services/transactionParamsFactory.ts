@@ -1,6 +1,7 @@
 import { permit2Address } from '@uniswap/permit2-sdk'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { GasEstimate, TradingApi } from '@universe/api'
+import { DutchQuoteV2, DutchQuoteV3, PriorityQuote, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { tradeToTransactionInfo } from 'uniswap/src/features/transactions/swap/utils/trade'
 import {
@@ -14,7 +15,7 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { SubmitTransactionParamsWithTypeInfo } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
+import { SubmitTransactionParams } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { SubmitUniswapXOrderParams } from 'wallet/src/features/transactions/swap/submitOrderSaga'
 import { SignedPermit } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
@@ -48,8 +49,8 @@ export interface WrapTransactionData {
 
 export interface UniswapXOrderTransactionData {
   signedPermit: SignedPermit
-  quote: TradingApi.DutchQuoteV2 | TradingApi.DutchQuoteV3 | TradingApi.PriorityQuote
-  routing: TradingApi.Routing.DUTCH_V2 | TradingApi.Routing.DUTCH_V3 | TradingApi.Routing.PRIORITY
+  quote: DutchQuoteV2 | DutchQuoteV3 | PriorityQuote
+  routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY
   swapTxContext: ValidatedSwapTxContext
   transactedUSDValue?: number
   approveTxHash?: string
@@ -77,10 +78,10 @@ interface SubmitTransactionParamsInput {
  * Interface for creating transaction execution parameters for different transaction types
  */
 export interface TransactionParamsFactory {
-  createApprovalParams(data: ApprovalTransactionData): SubmitTransactionParamsWithTypeInfo
-  createPermitParams(data: PermitTransactionData): SubmitTransactionParamsWithTypeInfo
-  createSwapParams(data: SwapTransactionData): SubmitTransactionParamsWithTypeInfo
-  createWrapParams(data: WrapTransactionData): SubmitTransactionParamsWithTypeInfo
+  createApprovalParams(data: ApprovalTransactionData): SubmitTransactionParams
+  createPermitParams(data: PermitTransactionData): SubmitTransactionParams
+  createSwapParams(data: SwapTransactionData): SubmitTransactionParams
+  createWrapParams(data: WrapTransactionData): SubmitTransactionParams
   createUniswapXOrderParams(data: UniswapXOrderTransactionData): SubmitUniswapXOrderParams
 }
 
@@ -96,7 +97,7 @@ export function createTransactionParamsFactory(context: BaseTransactionContext):
     options,
     typeInfo,
     txId,
-  }: SubmitTransactionParamsInput): SubmitTransactionParamsWithTypeInfo {
+  }: SubmitTransactionParamsInput): SubmitTransactionParams {
     return {
       txId,
       chainId: context.chainId,
@@ -109,7 +110,7 @@ export function createTransactionParamsFactory(context: BaseTransactionContext):
     }
   }
 
-  function createApprovalParams(data: ApprovalTransactionData): SubmitTransactionParamsWithTypeInfo {
+  function createApprovalParams(data: ApprovalTransactionData): SubmitTransactionParams {
     const typeInfo: ApproveTransactionInfo = {
       type: TransactionType.Approve,
       tokenAddress: data.signedTx.request.to,
@@ -131,7 +132,7 @@ export function createTransactionParamsFactory(context: BaseTransactionContext):
     })
   }
 
-  function createPermitParams(data: PermitTransactionData): SubmitTransactionParamsWithTypeInfo {
+  function createPermitParams(data: PermitTransactionData): SubmitTransactionParams {
     const typeInfo: Permit2ApproveTransactionInfo = {
       type: TransactionType.Permit2Approve,
       spender: data.signedTx.request.to,
@@ -150,7 +151,7 @@ export function createTransactionParamsFactory(context: BaseTransactionContext):
     })
   }
 
-  function createSwapParams(data: SwapTransactionData): SubmitTransactionParamsWithTypeInfo {
+  function createSwapParams(data: SwapTransactionData): SubmitTransactionParams {
     const { signedTx, swapTxContext, transactedUSDValue } = data
     const gasFeeEstimation = swapTxContext.gasFeeEstimation
 
@@ -176,7 +177,7 @@ export function createTransactionParamsFactory(context: BaseTransactionContext):
     })
   }
 
-  function createWrapParams(data: WrapTransactionData): SubmitTransactionParamsWithTypeInfo {
+  function createWrapParams(data: WrapTransactionData): SubmitTransactionParams {
     const { inputCurrencyAmount, signedTx, gasEstimate } = data
 
     const typeInfo: WrapTransactionInfo = {

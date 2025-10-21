@@ -7,7 +7,7 @@ import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { ExtensionUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
-// biome-ignore lint/style/noRestrictedImports: Direct analytics import required for user property tracking
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useGatingUserPropertyUsernames } from 'wallet/src/features/gating/userPropertyHooks'
 import {

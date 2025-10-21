@@ -3,15 +3,18 @@ import {
   CancelOrdersDialog,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import { useCancelMultipleOrdersCallback } from 'components/AccountDrawer/MiniPortfolio/Activity/utils/cancel'
+import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
+import {
+  isLimitCancellable,
+  useCancelMultipleOrdersCallback,
+} from 'components/AccountDrawer/MiniPortfolio/Activity/utils'
 import { LimitDetailActivityRow } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitDetailActivityRow'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { useCallback, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { UniswapXOrderDetails } from 'state/signatures/types'
 import { Button, Flex } from 'ui/src'
-import { UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { isLimitCancellable } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 
 export function LimitsMenu({ onClose, account }: { account: string; onClose: () => void }) {
   const { t } = useTranslation()
@@ -26,14 +29,14 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
 
   const cancelOrders = useCancelMultipleOrdersCallback(selectedOrders)
 
-  const toggleOrderSelection = (order: UniswapXOrderDetails) => {
+  const toggleOrderSelection = (order: Activity) => {
     setSelectedOrdersById((prevSelectedOrders) => {
       const newSelectedOrders = { ...prevSelectedOrders }
       const orderKey = order.id
       if (orderKey in prevSelectedOrders) {
         delete newSelectedOrders[orderKey]
-      } else {
-        newSelectedOrders[orderKey] = order
+      } else if (order.offchainOrderDetails) {
+        newSelectedOrders[orderKey] = order.offchainOrderDetails
       }
       return newSelectedOrders
     })

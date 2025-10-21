@@ -12,29 +12,33 @@ import {
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { Route as V4RouteSDK } from '@uniswap/v4-sdk'
-import type {
-  BridgeQuoteResponse,
-  ChainedQuoteResponse,
-  ClassicQuoteResponse,
-  DutchQuoteResponse,
-  DutchV3QuoteResponse,
-  GasEstimate,
-  PriorityQuoteResponse,
-  UnwrapQuoteResponse,
-  WrapQuoteResponse,
-} from '@universe/api'
-import { TradingApi } from '@universe/api'
 import { BigNumber, providers } from 'ethers/lib/ethers'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
+import {
+  BridgeQuoteResponse,
+  ClassicQuoteResponse,
+  DutchQuoteResponse,
+  DutchV3QuoteResponse,
+  PriorityQuoteResponse,
+  WrapQuoteResponse,
+} from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import {
+  ClassicInput,
+  ClassicOutput,
+  DutchOrderInfoV2,
+  DutchOrderInfoV3,
+  PriorityOrderInfo,
+  QuoteResponse,
+  Routing,
+} from 'uniswap/src/data/tradingApi/__generated__/index'
+import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { BlockingTradeError } from 'uniswap/src/features/transactions/swap/types/BlockingTradeError'
-import { getTradingApiSwapFee } from 'uniswap/src/features/transactions/swap/types/getTradingApiSwapFee'
+import { getSwapFee } from 'uniswap/src/features/transactions/swap/types/getSwapFee'
 import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
-import { CurrencyField } from 'uniswap/src/types/currency'
 
 type QuoteResponseWithAggregatedOutputs =
   | ClassicQuoteResponse
@@ -105,7 +109,7 @@ function getQuoteOutputAmountUserWillReceive<T extends QuoteResponseWithAggregat
 
 export type UniswapXTrade = UniswapXV2Trade | UniswapXV3Trade | PriorityOrderTrade
 export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, TradeType> {
-  readonly routing = TradingApi.Routing.DUTCH_V2
+  readonly routing = Routing.DUTCH_V2
   readonly quote: DutchQuoteResponse
   readonly slippageTolerance: number
   readonly swapFee?: SwapFee
@@ -113,8 +117,6 @@ export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, Trade
 
   readonly maxAmountIn: CurrencyAmount<Currency>
   readonly minAmountOut: CurrencyAmount<Currency>
-
-  readonly blockingError?: BlockingTradeError
 
   constructor({
     quote,
@@ -131,7 +133,7 @@ export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, Trade
     super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType })
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
-    this.swapFee = getTradingApiSwapFee(quote)
+    this.swapFee = getSwapFee(quote)
 
     // TODO(SWAP-235): Cleanup redundancy
     this.maxAmountIn = this.maximumAmountIn()
@@ -174,7 +176,7 @@ export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, Trade
 }
 
 export class UniswapXV3Trade extends V3DutchOrderTrade<Currency, Currency, TradeType> {
-  readonly routing = TradingApi.Routing.DUTCH_V3
+  readonly routing = Routing.DUTCH_V3
   readonly quote: DutchV3QuoteResponse
   readonly slippageTolerance: number
   readonly swapFee?: SwapFee
@@ -182,8 +184,6 @@ export class UniswapXV3Trade extends V3DutchOrderTrade<Currency, Currency, Trade
 
   readonly maxAmountIn: CurrencyAmount<Currency>
   readonly minAmountOut: CurrencyAmount<Currency>
-
-  readonly blockingError?: BlockingTradeError
 
   constructor({
     quote,
@@ -204,7 +204,7 @@ export class UniswapXV3Trade extends V3DutchOrderTrade<Currency, Currency, Trade
 
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
-    this.swapFee = getTradingApiSwapFee(quote)
+    this.swapFee = getSwapFee(quote)
 
     // TODO(SWAP-235): Cleanup redundancy
     this.maxAmountIn = this.maximumAmountIn()
@@ -247,7 +247,7 @@ export class UniswapXV3Trade extends V3DutchOrderTrade<Currency, Currency, Trade
 }
 
 export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, TradeType> {
-  readonly routing = TradingApi.Routing.PRIORITY
+  readonly routing = Routing.PRIORITY
   readonly quote: PriorityQuoteResponse
   readonly slippageTolerance: number
   readonly swapFee?: SwapFee
@@ -255,8 +255,6 @@ export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, 
 
   readonly maxAmountIn: CurrencyAmount<Currency>
   readonly minAmountOut: CurrencyAmount<Currency>
-
-  readonly blockingError?: BlockingTradeError
 
   constructor({
     quote,
@@ -277,7 +275,7 @@ export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, 
 
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
-    this.swapFee = getTradingApiSwapFee(quote)
+    this.swapFee = getSwapFee(quote)
 
     // TODO(SWAP-235): Cleanup redundancy
     this.maxAmountIn = this.maximumAmountIn()
@@ -326,7 +324,7 @@ export class ClassicTrade<
   TTradeType extends TradeType = TradeType,
 > extends RouterSDKTrade<TInput, TOutput, TTradeType> {
   readonly quote: ClassicQuoteResponse
-  readonly routing = TradingApi.Routing.CLASSIC
+  readonly routing = Routing.CLASSIC
   readonly deadline: number
   readonly slippageTolerance: number
   readonly swapFee?: SwapFee
@@ -334,8 +332,6 @@ export class ClassicTrade<
 
   readonly maxAmountIn: CurrencyAmount<Currency>
   readonly minAmountOut: CurrencyAmount<Currency>
-
-  readonly blockingError?: BlockingTradeError
 
   constructor({
     quote,
@@ -370,7 +366,7 @@ export class ClassicTrade<
     this.quote = quote
     this.deadline = deadline
     this.slippageTolerance = quote.quote.slippage ?? MAX_AUTO_SLIPPAGE_TOLERANCE
-    this.swapFee = getTradingApiSwapFee(quote)
+    this.swapFee = getSwapFee(quote)
 
     const slippageTolerancePercent = slippageToleranceToPercent(this.slippageTolerance)
     // TODO(SWAP-235): Cleanup redundancy
@@ -417,14 +413,7 @@ export type Trade<
   TInput extends Currency = Currency,
   TOutput extends Currency = Currency,
   TTradeType extends TradeType = TradeType,
-> =
-  | ClassicTrade<TInput, TOutput, TTradeType>
-  | UniswapXTrade
-  | BridgeTrade
-  | WrapTrade
-  | UnwrapTrade
-  | SolanaTrade
-  | ChainedActionTrade
+> = ClassicTrade<TInput, TOutput, TTradeType> | UniswapXTrade | BridgeTrade | WrapTrade | UnwrapTrade | SolanaTrade
 
 export type TradeWithSlippage = Exclude<Trade, BridgeTrade>
 
@@ -456,13 +445,7 @@ export interface UseTradeArgs {
   isV4HookPoolsEnabled?: boolean
 }
 
-export type SwapFee = {
-  recipient?: string
-  percent: Percent
-  amount: string
-  /** Indicates if the fee is taken from the input or output token. */
-  feeField: CurrencyField
-}
+export type SwapFee = { recipient?: string; percent: Percent; amount: string }
 
 export type SwapFeeInfo = {
   noFeeCharged: boolean
@@ -503,7 +486,7 @@ export type TokenApprovalInfo =
     }
 
 // Converts from BE type to SDK type
-function transformToV2DutchOrderInfo(orderInfo: TradingApi.DutchOrderInfoV2): UnsignedV2DutchOrderInfo {
+function transformToV2DutchOrderInfo(orderInfo: DutchOrderInfoV2): UnsignedV2DutchOrderInfo {
   return {
     ...orderInfo,
     nonce: BigNumber.from(orderInfo.nonce),
@@ -524,7 +507,7 @@ function transformToV2DutchOrderInfo(orderInfo: TradingApi.DutchOrderInfoV2): Un
   }
 }
 
-function transformToV3DutchOrderInfo(orderInfo: TradingApi.DutchOrderInfoV3): UnsignedV3DutchOrderInfo {
+function transformToV3DutchOrderInfo(orderInfo: DutchOrderInfoV3): UnsignedV3DutchOrderInfo {
   return {
     ...orderInfo,
     startingBaseFee: BigNumber.from(0),
@@ -556,7 +539,7 @@ function transformToV3DutchOrderInfo(orderInfo: TradingApi.DutchOrderInfoV3): Un
   }
 }
 
-function transformToPriorityOrderInfo(orderInfo: TradingApi.PriorityOrderInfo): UnsignedPriorityOrderInfo {
+function transformToPriorityOrderInfo(orderInfo: PriorityOrderInfo): UnsignedPriorityOrderInfo {
   return {
     ...orderInfo,
     nonce: BigNumber.from(orderInfo.nonce),
@@ -578,14 +561,12 @@ function transformToPriorityOrderInfo(orderInfo: TradingApi.PriorityOrderInfo): 
   }
 }
 
-export type ValidatedIndicativeQuoteResponse = TradingApi.QuoteResponse & {
-  input: Required<TradingApi.ClassicInput>
-  output: Required<TradingApi.ClassicOutput>
+export type ValidatedIndicativeQuoteResponse = QuoteResponse & {
+  input: Required<ClassicInput>
+  output: Required<ClassicOutput>
 }
 
-export function validateIndicativeQuoteResponse(
-  response: TradingApi.QuoteResponse,
-): ValidatedIndicativeQuoteResponse | undefined {
+export function validateIndicativeQuoteResponse(response: QuoteResponse): ValidatedIndicativeQuoteResponse | undefined {
   if ('input' in response.quote && 'output' in response.quote) {
     const input = response.quote.input
     const output = response.quote.output
@@ -665,7 +646,7 @@ export class BridgeTrade {
   readonly executionPrice: Price<Currency, Currency>
 
   readonly tradeType: TradeType
-  readonly routing = TradingApi.Routing.BRIDGE
+  readonly routing = Routing.BRIDGE
   readonly indicative = false
   readonly swapFee?: SwapFee
   readonly inputTax: Percent = ZERO_PERCENT
@@ -675,8 +656,6 @@ export class BridgeTrade {
   readonly priceImpact: undefined
   readonly deadline: undefined
 
-  readonly blockingError?: BlockingTradeError
-
   constructor({
     quote,
     currencyIn,
@@ -684,7 +663,7 @@ export class BridgeTrade {
     tradeType,
   }: { quote: BridgeQuoteResponse; currencyIn: Currency; currencyOut: Currency; tradeType: TradeType }) {
     this.quote = quote
-    this.swapFee = getTradingApiSwapFee(quote)
+    this.swapFee = getSwapFee(quote)
 
     const quoteInputAmount = quote.quote.input?.amount
     const quoteOutputAmount = quote.quote.output?.amount
@@ -733,16 +712,13 @@ export class BridgeTrade {
   }
 }
 
-abstract class BaseWrapTrade<
-  TWrapType extends TradingApi.Routing.WRAP | TradingApi.Routing.UNWRAP,
-  TQuoteResponse extends TWrapType extends TradingApi.Routing.WRAP ? WrapQuoteResponse : UnwrapQuoteResponse,
-> {
+abstract class BaseWrapTrade<TWrapType extends Routing.WRAP | Routing.UNWRAP> {
   inputAmount: CurrencyAmount<Currency>
   outputAmount: CurrencyAmount<Currency>
   maxAmountIn: CurrencyAmount<Currency>
   minAmountOut: CurrencyAmount<Currency>
   executionPrice: Price<Currency, Currency>
-  quote: TQuoteResponse
+  quote: WrapQuoteResponse<TWrapType>
   tradeType: TradeType
   abstract routing: TWrapType
   readonly indicative = false
@@ -752,20 +728,12 @@ abstract class BaseWrapTrade<
   readonly slippageTolerance = 0
   readonly priceImpact: undefined
   readonly deadline: undefined
-
-  readonly blockingError?: BlockingTradeError
-
   constructor({
     quote,
     currencyIn,
     currencyOut,
     tradeType,
-  }: {
-    quote: TQuoteResponse
-    currencyIn: Currency
-    currencyOut: Currency
-    tradeType: TradeType
-  }) {
+  }: { quote: WrapQuoteResponse<TWrapType>; currencyIn: Currency; currencyOut: Currency; tradeType: TradeType }) {
     this.quote = quote
     const quoteInputAmount = quote.quote.input?.amount
     const quoteOutputAmount = quote.quote.output?.amount
@@ -798,111 +766,10 @@ abstract class BaseWrapTrade<
   }
 }
 
-export class WrapTrade extends BaseWrapTrade<TradingApi.Routing.WRAP, WrapQuoteResponse> {
-  readonly routing = TradingApi.Routing.WRAP
-
-  constructor({
-    quote,
-    currencyIn,
-    currencyOut,
-    tradeType,
-  }: {
-    quote: WrapQuoteResponse
-    currencyIn: Currency
-    currencyOut: Currency
-    tradeType: TradeType
-  }) {
-    super({ quote, currencyIn, currencyOut, tradeType })
-  }
+export class WrapTrade extends BaseWrapTrade<Routing.WRAP> {
+  readonly routing = Routing.WRAP
 }
 
-export class UnwrapTrade extends BaseWrapTrade<TradingApi.Routing.UNWRAP, UnwrapQuoteResponse> {
-  readonly routing = TradingApi.Routing.UNWRAP
-
-  constructor({
-    quote,
-    currencyIn,
-    currencyOut,
-    tradeType,
-  }: {
-    quote: UnwrapQuoteResponse
-    currencyIn: Currency
-    currencyOut: Currency
-    tradeType: TradeType
-  }) {
-    super({ quote, currencyIn, currencyOut, tradeType })
-  }
-}
-
-// TODO: SWAP-458 - Subject to change.
-export class ChainedActionTrade {
-  readonly routing = TradingApi.Routing.CHAINED
-  quote: ChainedQuoteResponse
-  inputAmount: CurrencyAmount<Currency>
-  outputAmount: CurrencyAmount<Currency>
-  executionPrice: Price<Currency, Currency>
-  swapFee: undefined
-  readonly inputTax: Percent = ZERO_PERCENT
-  readonly outputTax: Percent = ZERO_PERCENT
-  slippageTolerance: number
-  readonly indicative = false
-  readonly tradeType: TradeType = TradeType.EXACT_INPUT
-  readonly deadline: undefined
-
-  // depends on trade type. since exact input, max amount in is the input amount
-  readonly maxAmountIn: CurrencyAmount<Currency>
-
-  // worst case scenario is the output amount
-  readonly minAmountOut: CurrencyAmount<Currency>
-
-  readonly blockingError?: BlockingTradeError
-
-  constructor({
-    quote,
-    currencyIn,
-    currencyOut,
-  }: { quote: ChainedQuoteResponse; currencyIn: Currency; currencyOut: Currency; slippageTolerance?: number }) {
-    this.quote = quote
-
-    const inputAmount = getCurrencyAmount({
-      value: this.quote.quote.input?.amount,
-      valueType: ValueType.Raw,
-      currency: currencyIn,
-    })
-    const outputAmount = getCurrencyAmount({
-      value: this.quote.quote.output?.amount,
-      valueType: ValueType.Raw,
-      currency: currencyOut,
-    })
-
-    if (!inputAmount || !outputAmount) {
-      throw new Error('Error parsing indicative quote currency amounts')
-    }
-    this.inputAmount = inputAmount
-    this.outputAmount = outputAmount
-    this.executionPrice = new Price(currencyIn, currencyOut, inputAmount.quotient, outputAmount.quotient)
-
-    this.slippageTolerance = this.quote.quote.slippage ?? 0
-    this.maxAmountIn = inputAmount
-    this.minAmountOut = outputAmount
-  }
-
-  public get quoteOutputAmount(): CurrencyAmount<Currency> {
-    return this.outputAmount
-  }
-
-  public get quoteOutputAmountUserWillReceive(): CurrencyAmount<Currency> {
-    return this.outputAmount
-  }
-
-  worstExecutionPrice(_threshold: Percent): Price<Currency, Currency> {
-    return this.executionPrice
-  }
-
-  maximumAmountIn(_slippageTolerance: Percent, _amountIn?: CurrencyAmount<Currency>): CurrencyAmount<Currency> {
-    return this.inputAmount
-  }
-  minimumAmountOut(_slippageTolerance: Percent, _amountOut?: CurrencyAmount<Currency>): CurrencyAmount<Currency> {
-    return this.outputAmount
-  }
+export class UnwrapTrade extends BaseWrapTrade<Routing.UNWRAP> {
+  readonly routing = Routing.UNWRAP
 }

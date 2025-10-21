@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { BigNumber } from '@ethersproject/bignumber'
 import { toIncludeSameMembers } from 'jest-extended'
 import mockdate from 'mockdate'
@@ -104,13 +105,12 @@ import { initialModalsState } from 'src/features/modals/modalSlice'
 import { initialPushNotificationsState } from 'src/features/notifications/slice'
 import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
-import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
-import { initialNotificationsState } from 'uniswap/src/features/notifications/slice/slice'
+import { initialNotificationsState } from 'uniswap/src/features/notifications/slice'
 import { initialSearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
 import { initialUserSettingsState } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -122,6 +122,7 @@ import { testMigrateSearchHistory, testRemoveTHBFromCurrency } from 'uniswap/src
 import { transactionDetails } from 'uniswap/src/test/fixtures'
 import { DappRequestType } from 'uniswap/src/types/walletConnect'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
+import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBatchedTransactionsState } from 'wallet/src/features/batchedTransactions/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
@@ -882,7 +883,7 @@ describe('Redux state migrations', () => {
       ...v19Schema,
       notifications: {
         ...v19Schema.notifications,
-        lastTxNotificationUpdate: { 1: 122342134 },
+        lastTxNotificationUpdate: { [1]: 122342134 },
       },
     }
 
@@ -1028,7 +1029,7 @@ describe('Redux state migrations', () => {
           '0': { ...oldFiatOnRampTxDetails, status: TransactionStatus.Failed },
         },
       },
-      '0xshadowySuperCoder': {
+      ['0xshadowySuperCoder']: {
         [UniverseChainId.ArbitrumOne]: {
           '0': oldFiatOnRampTxDetails,
           '1': txDetailsConfirmed,
@@ -1039,7 +1040,7 @@ describe('Redux state migrations', () => {
           '2': txDetailsConfirmed,
         },
       },
-      '0xdeleteMe': {
+      ['0xdeleteMe']: {
         [UniverseChainId.Mainnet]: {
           '0': { ...oldFiatOnRampTxDetails, status: TransactionStatus.Failed },
         },
@@ -1370,9 +1371,9 @@ describe('Redux state migrations', () => {
     const nftKey3 = '0xNFTKey3'
     const nftKey4 = '0xNFTKey4'
 
-    const currency1ToVisibility = { '0xCurrency1': { isVisible: true } }
-    const currency2ToVisibility = { '0xCurrency2': { isVisible: false } }
-    const currency3ToVisibility = { '0xCurrency3': { isVisible: false } }
+    const currency1ToVisibility = { ['0xCurrency1']: { isVisible: true } }
+    const currency2ToVisibility = { ['0xCurrency2']: { isVisible: false } }
+    const currency3ToVisibility = { ['0xCurrency3']: { isVisible: false } }
     const nft1ToVisibility = { [nftKey1]: { isSpamIgnored: true } }
     const nft2ToVisibility = { [nftKey2]: { isHidden: true } }
     const nft3ToVisibility = { [nftKey3]: { isSpamIgnored: false, isHidden: false } }
@@ -1734,51 +1735,22 @@ describe('Redux state migrations', () => {
   })
 
   it('migrates from v91 to v92', () => {
-    const androidCloudBackupEmail = 'test@test.com'
-
-    const { cloudBackup: _oldCloudBackup, ...v91WithoutCloudBackup } = v91Schema
-
-    const v91WithoutCloudBackupSlice = {
-      ...v91WithoutCloudBackup,
+    const v91Stub = {
+      ...v91Schema,
       wallet: {
         ...v91Schema.wallet,
         activeAccountAddress: '0xabc',
       },
-    }
-
-    const v91WithCloudBackup = {
-      ...v91WithoutCloudBackupSlice,
       cloudBackup: {
-        backupsFound: [{ mnemonicId: '0xabc', email: androidCloudBackupEmail }],
-      },
-      wallet: {
-        ...v91Schema.wallet,
-        activeAccountAddress: '0xabc',
+        backupsFound: [{ mnemonicId: '0xabc', email: 'test@test.com' }],
       },
     }
-
-    const v91WithDifferentActiveAccountAddress = {
-      ...v91WithoutCloudBackupSlice,
-      cloudBackup: {
-        backupsFound: [{ mnemonicId: '0xdef', email: androidCloudBackupEmail }],
-      },
-      wallet: {
-        ...v91Schema.wallet,
-        activeAccountAddress: '0xabc',
-      },
-    }
-
-    const v92 = migrations[92](v91WithCloudBackup)
+    const activeAccountAddress = v91Stub.wallet.activeAccountAddress
+    const backups = v91Stub.cloudBackup.backupsFound
+    const androidCloudBackupEmail = backups.find((backup) => backup.mnemonicId === activeAccountAddress)?.email
+    const v92 = migrations[92](v91Stub)
     expect(v92.cloudBackup).toBeUndefined()
     expect(v92.wallet.androidCloudBackupEmail).toBe(androidCloudBackupEmail)
-
-    const v92WithoutCloudBackup = migrations[92](v91WithoutCloudBackupSlice)
-    expect(v92WithoutCloudBackup.cloudBackup).toBeUndefined()
-    expect(v92WithoutCloudBackup.wallet.androidCloudBackupEmail).toBe(undefined)
-
-    const v92WithDifferentActiveAccountAddress = migrations[92](v91WithDifferentActiveAccountAddress)
-    expect(v92WithDifferentActiveAccountAddress.cloudBackup).toBeUndefined()
-    expect(v92WithDifferentActiveAccountAddress.wallet.androidCloudBackupEmail).toBe(androidCloudBackupEmail)
   })
 
   it('migrates from v92 to v93', () => {

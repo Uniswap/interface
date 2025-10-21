@@ -1,14 +1,11 @@
-import type { PrepareAndSignDappTransactionParams } from 'src/app/features/dappRequests/types/preSignedDappTransaction'
+import { PrepareAndSignDappTransactionParams } from 'src/app/features/dappRequests/types/preSignedDappTransaction'
 import { call } from 'typed-redux-saga'
 import {
   handleTransactionPreparationError,
   prepareTransactionServices,
   signSingleTransaction,
 } from 'wallet/src/features/transactions/shared/baseTransactionPreparationSaga'
-import {
-  DelegationType,
-  type TransactionSagaDependencies,
-} from 'wallet/src/features/transactions/types/transactionSagaDependencies'
+import { TransactionSagaDependencies } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 
 /**
  * Factory function that creates a prepare and sign dapp transaction saga with injected dependencies
@@ -23,7 +20,7 @@ export function createPrepareAndSignDappTransactionSaga(dependencies: Transactio
         account,
         chainId,
         submitViaPrivateRpc: false,
-        delegationType: DelegationType.Auto,
+        includesDelegation: false,
         request,
       })
 

@@ -1,8 +1,8 @@
 import { QueryKey, queryOptions, UseQueryResult, useQuery, useQueryClient } from '@tanstack/react-query'
-import { TradingApi } from '@universe/api'
 import React, { useContext, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { checkWalletDelegation } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { WalletCheckDelegationResponseBody } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -197,8 +197,8 @@ export function getWalletDelegationQueryKey(accountAddresses: Address[], chainId
 export function createDelegationQueryOptions(input: {
   accountAddresses: Address[]
   chainIds: UniverseChainId[]
-}): ReturnType<typeof queryOptions<TradingApi.WalletCheckDelegationResponseBody, Error, DelegationDetailsByAccount>> {
-  return queryOptions<TradingApi.WalletCheckDelegationResponseBody, Error, DelegationDetailsByAccount>({
+}): ReturnType<typeof queryOptions<WalletCheckDelegationResponseBody, Error, DelegationDetailsByAccount>> {
+  return queryOptions<WalletCheckDelegationResponseBody, Error, DelegationDetailsByAccount>({
     queryKey: getWalletDelegationQueryKey(input.accountAddresses, input.chainIds),
     queryFn: () =>
       checkWalletDelegation({

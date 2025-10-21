@@ -5,14 +5,12 @@
   "targetDefaults": {
     "prepare": {
       "inputs": [
-        "default",
         "dependencies"
       ],
       "cache": true
     },
     "build": {
       "dependsOn": [
-        "prepare",
         "^build"
       ],
       "inputs": [
@@ -30,7 +28,8 @@
     },
     "build:production": {
       "dependsOn": [
-        "prepare"
+        "prepare",
+        "build"
       ],
       "inputs": [
         "dependencies",
@@ -42,75 +41,30 @@
       "cache": true
     },
     "typecheck": {
-      "command": "tsc -b",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
       "dependsOn": [
         "prepare",
-        "^typecheck"
+        "^typecheck",
+        "^build"
       ],
       "inputs": [
-        "{projectRoot}/package.json",
-        "{workspaceRoot}/config/tsconfig/app.json",
-        "{workspaceRoot}/tsconfig.base.json",
-        "{projectRoot}/tsconfig.json",
-        "{projectRoot}/src/**/*.ts",
-        "{projectRoot}/src/**/*.tsx",
-        "{projectRoot}/src/**/*.json",
-        "!{projectRoot}/src/**/*.spec.ts",
-        "!{projectRoot}/src/**/*.spec.tsx",
-        "!{projectRoot}/src/**/*.test.ts",
-        "!{projectRoot}/src/**/*.test.tsx",
-        {
-          "dependentTasksOutputFiles": "**/*.d.ts"
-        }
+        "sourceFiles"
       ],
       "outputs": [],
       "cache": true
     },
-    "lint:biome": {
-      "command": "biome check --error-on-warnings .",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "dependsOn": ["@uniswap/biome-config:prepare"]
-    },
-    "lint:biome:fix": {
-      "command": "biome check . --write --unsafe",
-      "options": {
-        "cwd": "{projectRoot}"
-      },
-      "dependsOn": ["@uniswap/biome-config:prepare"]
-    },
-    "lint:eslint": {
-      "command": "eslint . --ext ts,tsx --max-warnings=0",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
-    "lint:eslint:fix": {
-      "command": "eslint . --ext ts,tsx --fix",
-      "options": {
-        "cwd": "{projectRoot}"
-      }
-    },
     "lint": {
-      "executor": "nx:noop",
       "dependsOn": [
-        "typecheck",
-        "check:circular",
-        "lint:eslint",
-        "lint:biome"
+        "typecheck"
       ],
       "inputs": [
-        "default"
+        "sourceFiles"
       ],
       "cache": true
     },
     "lint:fix": {
-      "executor": "nx:noop",
-      "dependsOn": ["lint:biome:fix", "lint:eslint:fix"],
+      "dependsOn": [
+        "typecheck"
+      ],
       "cache": false
     },
     "test": {
@@ -119,9 +73,10 @@
       ],
       "inputs": [
         "sourceFiles",
-        "^production",
-        "{projectRoot}/**/*.test.*",
-        "{projectRoot}/**/*.spec.*"
+        "{projectRoot}/**/*.test.ts",
+        "{projectRoot}/**/*.test.tsx",
+        "{projectRoot}/**/*.spec.ts",
+        "{projectRoot}/**/*.spec.tsx"
       ],
       "cache": true
     },
@@ -131,7 +86,6 @@
       ],
       "inputs": [
         "sourceFiles",
-        "^production",
         "{projectRoot}/**/*.test.*",
         "{projectRoot}/**/*.spec.*"
       ],
@@ -143,7 +97,6 @@
       ],
       "inputs": [
         "sourceFiles",
-        "^production",
         "{projectRoot}/**/*.test.*",
         "{projectRoot}/**/*.spec.*"
       ],
@@ -155,7 +108,6 @@
       ],
       "inputs": [
         "sourceFiles",
-        "^production",
         "{projectRoot}/**/*.test.*",
         "{projectRoot}/**/*.spec.*"
       ],
@@ -167,17 +119,16 @@
       ],
       "inputs": [
         "sourceFiles",
-        "^production",
         "{projectRoot}/**/*.test.*",
         "{projectRoot}/**/*.spec.*"
       ],
       "cache": true
     },
     "format": {
-      "cache": true,
       "inputs": [
-        "default"
-      ]
+        "sourceFiles"
+      ],
+      "cache": true
     },
     "start": {
       "dependsOn": [
@@ -254,13 +205,101 @@
       "cache": true
     }
   },
+  "projects": {
+    "@uniswap/interface": {
+      "targets": {
+        "prepare": {
+          "dependsOn": [
+            "ajv",
+            "graphql:generate",
+            "^prepare"
+          ],
+          "inputs": [
+            "package.json"
+          ]
+        },
+        "ajv": {
+          "command": "node scripts/compile-ajv-validators.js",
+          "inputs": [
+            "scripts/compile-ajv-validators.js",
+            "package.json"
+          ],
+          "outputs": [
+            "src/utils/__generated__/**"
+          ],
+          "cache": true
+        }
+      }
+    },
+    "uniswap": {
+      "targets": {
+        "prepare": {
+          "dependsOn": [
+            "contracts",
+            "graphql:generate",
+            "tradingapi:generate",
+            "^prepare"
+          ],
+          "inputs": [
+            "package.json"
+          ]
+        },
+        "contracts": {
+          "inputs": [
+            "package.json"
+          ],
+          "outputs": [
+            "src/abis/**"
+          ],
+          "cache": true
+        },
+        "i18n:generate": {
+          "inputs": [
+            "src/locales.ts",
+            "src/i18n/locales/source/**"
+          ],
+          "outputs": [
+            "src/i18n/locales/@types/**"
+          ],
+          "cache": true
+        },
+        "tradingapi:generate:openapi": {
+          "inputs": [
+            "src/data/tradingApi/api.json"
+          ],
+          "outputs": [
+            "src/data/tradingApi/__generated__/**"
+          ],
+          "cache": true
+        },
+        "tradingapi:add-local-types": {
+          "dependsOn": [
+            "tradingapi:generate:openapi"
+          ],
+          "inputs": [
+            "src/data/tradingApi/modifyTradingApiTypes.mts",
+            "src/data/tradingApi/__generated__/models/*.ts"
+          ],
+          "outputs": [
+            "src/data/tradingApi/__generated__/models/*.ts"
+          ],
+          "cache": true
+        },
+        "tradingapi:generate": {
+          "dependsOn": [
+            "tradingapi:add-local-types"
+          ],
+          "cache": true
+        }
+      }
+    }
+  },
   "namedInputs": {
     "default": [
-      "sharedGlobals",
-      "{projectRoot}/**/*"
+      "production"
     ],
     "production": [
-      "default",
+      "{projectRoot}/**/*",
       "!{projectRoot}/**/*.spec.tsx",
       "!{projectRoot}/**/*.spec.ts",
       "!{projectRoot}/**/*.test.tsx",
@@ -270,23 +309,8 @@
       "!{projectRoot}/**/*.stories.tsx",
       "!{projectRoot}/**/*.stories.ts"
     ],
-    "sharedGlobals": [
-      "{workspaceRoot}/.github/actions/**/*.yml",
-      "{workspaceRoot}/.github/workflows/*.yml",
-      "{workspaceRoot}/tsconfig.base.json",
-      "{workspaceRoot}/tsconfig.json",
-      "{workspaceRoot}/bun.lock",
-      "{workspaceRoot}/package.json",
-      "{workspaceRoot}/.biome*",
-      "{workspaceRoot}/.eslint*",
-      "{workspaceRoot}/.depcheckrc*",
-      "{workspaceRoot}/.env*",
-      "!{workspaceRoot}/.env.defaults",
-      "{workspaceRoot}/metro.config.*",
-      "{workspaceRoot}/Gemfile*"
-    ],
+    "sharedGlobals": [],
     "sourceFiles": [
-      "sharedGlobals",
       "{projectRoot}/**/*.ts",
       "{projectRoot}/**/*.tsx",
       "{projectRoot}/**/*.js",
@@ -305,29 +329,12 @@
     "appsDir": "apps",
     "libsDir": "packages"
   },
-  "sync": {
-    "applyChanges": true
-  },
   "parallel": 3,
-  "defaultProject": "@universe/web",
+  "defaultProject": "@uniswap/interface",
   "generators": {
     "@nx/js:library": {
       "buildable": false
     }
   },
-  "cacheDirectory": ".nx/cache",
-  "plugins": [
-    {
-      "plugin": "@nx/js/typescript",
-      "options": {
-        "typecheck": {
-          "targetName": "typecheck"
-        },
-        "build": {
-          "targetName": "build",
-          "configName": "tsconfig.json"
-        }
-      }
-    }
-  ]
+  "cacheDirectory": ".nx/cache"
 }

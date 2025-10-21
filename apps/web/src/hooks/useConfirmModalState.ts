@@ -31,14 +31,6 @@ type PendingConfirmModalState = Extract<
   | ConfirmModalState.RESETTING_TOKEN_ALLOWANCE
 >
 
-function isInApprovalPhase(confirmModalState: ConfirmModalState) {
-  return (
-    confirmModalState === ConfirmModalState.RESETTING_TOKEN_ALLOWANCE ||
-    confirmModalState === ConfirmModalState.APPROVING_TOKEN ||
-    confirmModalState === ConfirmModalState.PERMITTING
-  )
-}
-
 export function useConfirmModalState({
   trade,
   originalTrade,
@@ -204,6 +196,14 @@ export function useConfirmModalState({
     }
   }, [allowance, performStep, previousRevocationPending])
 
+  function isInApprovalPhase(confirmModalState: ConfirmModalState) {
+    return (
+      confirmModalState === ConfirmModalState.RESETTING_TOKEN_ALLOWANCE ||
+      confirmModalState === ConfirmModalState.APPROVING_TOKEN ||
+      confirmModalState === ConfirmModalState.PERMITTING
+    )
+  }
+
   const doesTradeDiffer =
     originalTrade &&
     tradeMeaningfullyDiffers({
@@ -240,7 +240,7 @@ export function useConfirmModalState({
       setPriceUpdate(getPriceUpdateBasisPoints(lastExecutionPrice, trade.executionPrice))
       setLastExecutionPrice(trade.executionPrice)
     }
-  }, [lastExecutionPrice, trade])
+  }, [lastExecutionPrice, setLastExecutionPrice, trade])
 
   return {
     startSwapFlow,

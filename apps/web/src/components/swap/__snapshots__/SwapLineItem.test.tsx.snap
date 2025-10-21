@@ -1487,7 +1487,7 @@ exports[`SwapLineItem.tsx > preview exact in 1`] = `
   animation: fAQEyV 1.5s infinite;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
-  background: linear-gradient( to left, #FFFFFF 25%, rgba(19,19,19,0.08) 50%, #FFFFFF 75% );
+  background: linear-gradient( to left, #FFFFFF 25%, rgba(34,34,34,0.05) 50%, #FFFFFF 75% );
   background-size: 400%;
   will-change: background-position;
   border-radius: 12px;
@@ -1597,7 +1597,7 @@ exports[`SwapLineItem.tsx > syncing 1`] = `
   animation: fAQEyV 1.5s infinite;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
-  background: linear-gradient( to left, #FFFFFF 25%, rgba(19,19,19,0.08) 50%, #FFFFFF 75% );
+  background: linear-gradient( to left, #FFFFFF 25%, rgba(34,34,34,0.05) 50%, #FFFFFF 75% );
   background-size: 400%;
   will-change: background-position;
   border-radius: 12px;

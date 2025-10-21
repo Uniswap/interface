@@ -166,7 +166,7 @@ export function CurrencyRow({
               </Text>
               {showAddress && currency.isToken && (
                 <Text variant="body4" color="$neutral3">
-                  {shortenAddress({ address: currency.address })}
+                  {shortenAddress(currency.address)}
                 </Text>
               )}
             </Flex>

@@ -1,19 +1,19 @@
 import { createAdaptiveRefetchContext } from 'appGraphql/data/apollo/AdaptiveRefetch'
-import { GraphQLApi } from '@universe/api'
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import ms from 'ms'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { useFiatOnRampTransactions } from 'state/fiatOnRampTransactions/hooks'
+import {
+  ActivityWebQueryResult,
+  useActivityWebLazyQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useInterval } from 'utilities/src/time/timing'
 
-const { Provider: AdaptiveAssetActivityProvider } = createAdaptiveRefetchContext<GraphQLApi.ActivityWebQueryResult>()
-
-const PAGE_SIZE = 100
-const INITIAL_PAGE = 1
+const { Provider: AdaptiveAssetActivityProvider, useQuery: useAssetActivityQuery } =
+  createAdaptiveRefetchContext<ActivityWebQueryResult>()
 
 function AssetActivityProviderInternal({ children }: PropsWithChildren) {
   const account = useAccount()
@@ -23,14 +23,13 @@ function AssetActivityProviderInternal({ children }: PropsWithChildren) {
 
   const fiatOnRampTransactions = useFiatOnRampTransactions()
 
-  const [lazyFetch, query] = GraphQLApi.useActivityWebLazyQuery()
-
+  const [lazyFetch, query] = useActivityWebLazyQuery()
   const transactionIds = useMemo(
     () => Object.values(fiatOnRampTransactions).map((tx) => tx.externalSessionId),
     [fiatOnRampTransactions],
   )
 
-  const baseVariables = useMemo<GraphQLApi.ActivityWebQueryVariables>(
+  const variables = useMemo(
     () => ({
       account: account.address ?? '',
       chains: gqlChains,
@@ -40,24 +39,11 @@ function AssetActivityProviderInternal({ children }: PropsWithChildren) {
       // so that the backend can find the transactions without signature authentication.
       // Note: No FOR transactions are included in activity without explicity passing IDs from local storage
       onRampTransactionIDs: transactionIds,
-      pageSize: PAGE_SIZE,
-      page: INITIAL_PAGE,
     }),
     [account.address, gqlChains, isTestnetModeEnabled, transactionIds],
   )
 
-  const fetch = useEvent(() => {
-    lazyFetch({
-      variables: baseVariables,
-    }).catch((error) => {
-      logger.error(error, {
-        tags: {
-          file: 'AssetActivityProvider.tsx',
-          function: 'fetch',
-        },
-      })
-    })
-  })
+  const fetch = useEvent(() => lazyFetch({ variables }))
 
   useInterval(async () => {
     if (
@@ -91,4 +77,19 @@ export function AssetActivityProvider({ children }: PropsWithChildren) {
     return children // Immediately render children first without provider overhead.
   }
   return <AssetActivityProviderInternal>{children}</AssetActivityProviderInternal>
+}
+
+export function useAssetActivity() {
+  const query = useAssetActivityQuery()
+  const { loading, data } = query
+  const fetchedActivities = data?.portfolios?.[0]?.assetActivities
+
+  const activities = useMemo(() => {
+    if (!fetchedActivities) {
+      return []
+    }
+    return fetchedActivities
+  }, [fetchedActivities])
+
+  return { activities, loading }
 }

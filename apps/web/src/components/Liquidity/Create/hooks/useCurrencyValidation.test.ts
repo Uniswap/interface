@@ -61,8 +61,6 @@ describe('useCurrencyValidation', () => {
         currencyAddressB: undefined,
         currencyALoaded: ETH,
         currencyBLoaded: undefined,
-        loadingA: false,
-        loadingB: false,
         loading: false,
       })
     })
@@ -89,8 +87,6 @@ describe('useCurrencyValidation', () => {
         currencyAddressB: undefined,
         currencyALoaded: ETH,
         currencyBLoaded: undefined,
-        loadingA: false,
-        loadingB: false,
         loading: false,
       })
     })
@@ -130,8 +126,6 @@ describe('useCurrencyValidation', () => {
         currencyAddressB: undefined,
         currencyALoaded: ETH,
         currencyBLoaded: undefined,
-        loadingA: false,
-        loadingB: false,
         loading: false,
       })
     })
@@ -164,12 +158,10 @@ describe('useCurrencyValidation', () => {
 
       expect(mockValidateCurrencies).toHaveBeenCalledWith(undefined, mockTokenAddressB)
       expect(result.current).toEqual({
-        currencyAddressA: NATIVE_CHAIN_ID,
+        currencyAddressA: undefined,
         currencyAddressB: mockTokenAddressB,
-        currencyALoaded: ETH,
+        currencyALoaded: undefined,
         currencyBLoaded: USDC,
-        loadingA: false,
-        loadingB: false,
         loading: false,
       })
     })
@@ -208,8 +200,6 @@ describe('useCurrencyValidation', () => {
         currencyAddressB: mockTokenAddressB,
         currencyALoaded: ETH,
         currencyBLoaded: USDC,
-        loadingA: false,
-        loadingB: false,
         loading: false,
       })
     })

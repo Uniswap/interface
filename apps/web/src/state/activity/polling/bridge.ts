@@ -1,11 +1,11 @@
-import { TradingApi } from '@universe/api'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
-import { ActivityUpdateTransactionType, type OnActivityUpdate } from 'state/activity/types'
+import type { OnActivityUpdate } from 'state/activity/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
 import type { ConfirmedTransactionDetails, TransactionDetails } from 'state/transactions/types'
 import { isPendingTx } from 'state/transactions/utils'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import type {
@@ -18,13 +18,11 @@ import { logger } from 'utilities/src/logger/logger'
 const MIN_BRIDGE_WAIT_TIME = ms('2s')
 
 type BridgeTransactionDetails = TransactionDetails & { typeInfo: BridgeTransactionInfo }
-
 function isBridgeTransactionDetails(tx: InterfaceTransactionDetails): tx is BridgeTransactionDetails {
   return tx.typeInfo.type === TransactionType.Bridge
 }
 
 type BridgeTransactionDetailsWithChainId = BridgeTransactionDetails & { chainId: UniverseChainId }
-
 function usePendingDepositedBridgeTransactions(): BridgeTransactionDetailsWithChainId[] {
   const multichainTransactions = useMultichainTransactions()
 
@@ -41,10 +39,10 @@ function usePendingDepositedBridgeTransactions(): BridgeTransactionDetailsWithCh
   )
 }
 
-const SWAP_STATUS_TO_FINALIZED_STATUS: Partial<Record<TradingApi.SwapStatus, ConfirmedTransactionDetails['status']>> = {
-  [TradingApi.SwapStatus.SUCCESS]: TransactionStatus.Success,
-  [TradingApi.SwapStatus.FAILED]: TransactionStatus.Failed,
-  [TradingApi.SwapStatus.EXPIRED]: TransactionStatus.Failed,
+const SWAP_STATUS_TO_FINALIZED_STATUS: Partial<Record<SwapStatus, ConfirmedTransactionDetails['status']>> = {
+  [SwapStatus.SUCCESS]: TransactionStatus.Success,
+  [SwapStatus.FAILED]: TransactionStatus.Failed,
+  [SwapStatus.EXPIRED]: TransactionStatus.Failed,
 }
 
 export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpdate) {
@@ -69,7 +67,7 @@ export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpd
           if (!tradingApiChainId) {
             continue
           }
-          const response = await TradingApiClient.fetchSwaps({ txHashes, chainId: tradingApiChainId })
+          const response = await fetchSwaps({ txHashes, chainId: tradingApiChainId })
           for (const swap of response.swaps ?? []) {
             const { txHash, status } = swap
 
@@ -78,7 +76,7 @@ export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpd
             // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
             if (txHash && updatedStatus && fullTxDetails) {
               onActivityUpdate({
-                type: ActivityUpdateTransactionType.BaseTransaction,
+                type: 'transaction',
                 chainId,
                 update: { ...fullTxDetails, status: updatedStatus },
                 original: fullTxDetails,

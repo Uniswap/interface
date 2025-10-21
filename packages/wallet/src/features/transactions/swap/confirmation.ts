@@ -1,5 +1,5 @@
-import { TradingApi } from '@universe/api'
 import { SagaGenerator, take } from 'typed-redux-saga'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { getDelegationService } from 'uniswap/src/domains/services'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
@@ -62,7 +62,7 @@ export function getSwapTransactionCount(swapTxContext: SwapTxAndGasInfo): number
     count++
   }
 
-  if (swapTxContext.routing === TradingApi.Routing.CLASSIC) {
+  if (swapTxContext.routing === Routing.CLASSIC) {
     // Increment count for swap transaction
     count++
 
@@ -70,7 +70,7 @@ export function getSwapTransactionCount(swapTxContext: SwapTxAndGasInfo): number
       // Increment count for swap transaction
       count++
     }
-  } else if (swapTxContext.routing === TradingApi.Routing.BRIDGE) {
+  } else if (swapTxContext.routing === Routing.BRIDGE) {
     // Increment count for bridge transaction
     count++
   }

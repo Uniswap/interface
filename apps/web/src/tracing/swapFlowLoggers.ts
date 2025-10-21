@@ -1,5 +1,6 @@
-import { TradingApi } from '@universe/api'
+import { SignatureType } from 'state/signatures/types'
 import type { ConfirmedTransactionDetails } from 'state/transactions/types'
+import { UniswapXOrderStatus } from 'types/uniswapx'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -71,13 +72,12 @@ export function logSwapFinalized({
   }
 }
 
-const ROUTING_TO_SWAP_ROUTING: Partial<Record<TradingApi.Routing, SwapRouting>> = {
-  [TradingApi.Routing.CLASSIC]: 'classic',
-  [TradingApi.Routing.DUTCH_LIMIT]: 'limit_order',
-  [TradingApi.Routing.PRIORITY]: 'priority_order',
-  [TradingApi.Routing.DUTCH_V2]: 'uniswap_x_v2',
-  [TradingApi.Routing.DUTCH_V3]: 'uniswap_x_v3',
-  [TradingApi.Routing.BRIDGE]: 'bridge',
+const SIGNATURE_TYPE_TO_SWAP_ROUTING: Record<SignatureType, SwapRouting> = {
+  [SignatureType.SIGN_LIMIT]: 'limit_order',
+  [SignatureType.SIGN_PRIORITY_ORDER]: 'priority_order',
+  [SignatureType.SIGN_UNISWAPX_V2_ORDER]: 'uniswap_x_v2',
+  [SignatureType.SIGN_UNISWAPX_V3_ORDER]: 'uniswap_x_v3',
+  [SignatureType.SIGN_UNISWAPX_ORDER]: 'uniswap_x',
 }
 
 export function logUniswapXSwapFinalized({
@@ -86,7 +86,7 @@ export function logUniswapXSwapFinalized({
   orderHash,
   chainId,
   analyticsContext,
-  routing,
+  signatureType,
   status,
 }: {
   id: string
@@ -94,17 +94,17 @@ export function logUniswapXSwapFinalized({
   orderHash: string
   chainId: number
   analyticsContext: ITraceContext
-  routing: TradingApi.Routing
-  status: TransactionStatus
+  signatureType: SignatureType
+  status: UniswapXOrderStatus.FILLED | UniswapXOrderStatus.CANCELLED | UniswapXOrderStatus.EXPIRED
 }) {
   const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FirstSwapSuccess)
   const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstSwapSuccess)
 
   const event =
-    status === TransactionStatus.Success ? SwapEventName.SwapTransactionCompleted : SwapEventName.SwapTransactionFailed
+    status === UniswapXOrderStatus.FILLED ? SwapEventName.SwapTransactionCompleted : SwapEventName.SwapTransactionFailed
 
   sendAnalyticsEvent(event, {
-    routing: ROUTING_TO_SWAP_ROUTING[routing],
+    routing: SIGNATURE_TYPE_TO_SWAP_ROUTING[signatureType],
     order_hash: orderHash,
     transactionOriginType: TransactionOriginType.Internal,
     // We only log the time-to-swap metric for the first swap of a session,

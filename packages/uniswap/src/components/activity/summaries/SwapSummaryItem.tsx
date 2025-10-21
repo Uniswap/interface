@@ -1,14 +1,14 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { memo, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useOnRetrySwap } from 'uniswap/src/components/activity/hooks/useOnRetrySwap'
 import { TransactionSummaryLayout } from 'uniswap/src/components/activity/summaries/TransactionSummaryLayout'
-import type { SummaryItemProps } from 'uniswap/src/components/activity/types'
+import { SummaryItemProps } from 'uniswap/src/components/activity/types'
 import { TXN_HISTORY_ICON_SIZE } from 'uniswap/src/components/activity/utils'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { getAmountsFromTrade } from 'uniswap/src/features/transactions/swap/utils/getAmountsFromTrade'
-import type {
+import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionDetails,
@@ -16,10 +16,11 @@ import type {
 import { isConfirmedSwapTypeInfo } from 'uniswap/src/features/transactions/types/utils'
 import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
-function _SwapSummaryItem({
+export function SwapSummaryItem({
   transaction,
   swapCallbacks,
   index,
+  customDetailsModalOpen,
 }: SummaryItemProps & {
   transaction: TransactionDetails & {
     typeInfo: ExactOutputSwapTransactionInfo | ExactInputSwapTransactionInfo
@@ -69,8 +70,13 @@ function _SwapSummaryItem({
   )
 
   return (
-    <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} onRetry={onRetry} />
+    <TransactionSummaryLayout
+      caption={caption}
+      icon={icon}
+      index={index}
+      transaction={transaction}
+      customDetailsModalOpen={customDetailsModalOpen}
+      onRetry={onRetry}
+    />
   )
 }
-
-export const SwapSummaryItem = memo(_SwapSummaryItem)

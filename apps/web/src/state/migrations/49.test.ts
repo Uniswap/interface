@@ -25,6 +25,7 @@ describe('migration49', () => {
       },
       otherData: 'should remain',
     })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     expect((result as any)?.localWebTransactions).toBeUndefined()
   })
 

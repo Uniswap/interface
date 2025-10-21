@@ -1,11 +1,10 @@
 import { NavIcon } from 'components/NavBar/NavIcon'
 import { SearchModal } from 'components/NavBar/SearchBar/SearchModal'
-import { useIsSearchBarVisible } from 'components/NavBar/SearchBar/useIsSearchBarVisible'
 import { useModalState } from 'hooks/useModalState'
 import styled, { useTheme } from 'lib/styled-components'
 import { Search } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea, useMedia } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName, InterfaceEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -40,8 +39,9 @@ const SearchIcon = styled.div`
 
 export const SearchBar = () => {
   const poolSearchEnabled = useFeatureFlag(FeatureFlags.PoolSearch)
-  const isNavSearchInputVisible = useIsSearchBarVisible()
 
+  const media = useMedia()
+  const isNavSearchInputVisible = !media.xl
   const theme = useTheme()
   const { t } = useTranslation() // subscribe to locale changes
 

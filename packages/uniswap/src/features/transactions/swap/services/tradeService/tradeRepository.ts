@@ -1,10 +1,11 @@
-import { type DiscriminatedQuoteResponse, type TradingApi, type TradingApiClient } from '@universe/api'
+import { DiscriminatedQuoteResponse, type FetchQuote } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
 import { type Logger } from 'utilities/src/logger/logger'
 
 // Minimal parameters needed for indicative quotes
 export interface IndicativeQuoteRequest {
-  type: TradingApi.TradeType
+  type: TradeType
   amount: string
   tokenInChainId: number
   tokenOutChainId: number
@@ -17,12 +18,12 @@ export interface IndicativeQuoteRequest {
 export type FetchIndicativeQuote = (params: IndicativeQuoteRequest) => Promise<DiscriminatedQuoteResponse>
 
 export interface TradeRepository {
-  fetchQuote: TradingApiClient['fetchQuote']
+  fetchQuote: FetchQuote
   fetchIndicativeQuote: FetchIndicativeQuote
 }
 
 export function createTradeRepository(ctx: {
-  fetchQuote: TradingApiClient['fetchQuote']
+  fetchQuote: FetchQuote
   fetchIndicativeQuote: FetchIndicativeQuote
   logger?: Logger
 }): TradeRepository {

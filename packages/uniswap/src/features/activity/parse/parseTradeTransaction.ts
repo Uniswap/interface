@@ -2,7 +2,10 @@
 /* eslint-disable complexity */
 import { BigNumber } from '@ethersproject/bignumber'
 import { Direction, OnChainTransaction, OnChainTransactionLabel } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { GraphQLApi } from '@universe/api'
+import {
+  TokenStandard,
+  TransactionDirection,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
@@ -50,21 +53,19 @@ export default function parseTradeTransaction(
   const nativeCurrencyID = buildNativeCurrencyId(chainId).toLocaleLowerCase()
   const wrappedCurrencyID = buildWrappedNativeCurrencyId(chainId).toLocaleLowerCase()
 
-  const sent = txAssetChanges.find((t) => t.direction === GraphQLApi.TransactionDirection.Out)
+  const sent = txAssetChanges.find((t) => t.direction === TransactionDirection.Out)
 
   const { received, refund } = txAssetChanges.reduce<{
     refund?: Extract<TransferAssetChange, { __typename: 'TokenTransfer' }>
     received?: TransferAssetChange
   }>(
     (acc, t) => {
-      if (t.direction !== GraphQLApi.TransactionDirection.In) {
+      if (t.direction !== TransactionDirection.In) {
         return acc
       }
 
       const isRefundInternalTx =
-        t.__typename === 'TokenTransfer' &&
-        t.asset.id === sent?.asset.id &&
-        t.tokenStandard === GraphQLApi.TokenStandard.Native
+        t.__typename === 'TokenTransfer' && t.asset.id === sent?.asset.id && t.tokenStandard === TokenStandard.Native
 
       if (isRefundInternalTx) {
         acc.refund = t
@@ -95,13 +96,13 @@ export default function parseTradeTransaction(
   // Token swap
   if (onlyERC20Tokens) {
     const inputCurrencyId =
-      sent.tokenStandard === GraphQLApi.TokenStandard.Native
+      sent.tokenStandard === TokenStandard.Native
         ? buildNativeCurrencyId(chainId)
         : sent.asset.address
           ? buildCurrencyId(chainId, sent.asset.address)
           : null
     const outputCurrencyId =
-      received.tokenStandard === GraphQLApi.TokenStandard.Native
+      received.tokenStandard === TokenStandard.Native
         ? buildNativeCurrencyId(chainId)
         : received.asset.address
           ? buildCurrencyId(chainId, received.asset.address)
@@ -177,7 +178,7 @@ export default function parseTradeTransaction(
     const imageURL = nftChange.asset.image?.url
     const tokenId = nftChange.asset.tokenId
     const purchaseCurrencyId =
-      tokenChange.tokenStandard === GraphQLApi.TokenStandard.Native
+      tokenChange.tokenStandard === TokenStandard.Native
         ? buildNativeCurrencyId(chainId)
         : tokenChange.asset.address
           ? buildCurrencyId(chainId, tokenChange.asset.address)

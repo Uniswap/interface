@@ -1,25 +1,23 @@
-import { type UseQueryResult, useQuery } from '@tanstack/react-query'
-import { type TradingApi, type UseQueryApiHelperHookArgs } from '@universe/api'
+import { UseQueryResult, useQuery } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { claimLpFees } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
+import { ClaimLPFeesRequest, ClaimLPFeesResponse } from 'uniswap/src/data/tradingApi/__generated__'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export function useClaimLpFeesCalldataQuery({
   params,
   ...rest
-}: UseQueryApiHelperHookArgs<
-  TradingApi.ClaimLPFeesRequest,
-  TradingApi.ClaimLPFeesResponse
->): UseQueryResult<TradingApi.ClaimLPFeesResponse> {
+}: UseQueryApiHelperHookArgs<ClaimLPFeesRequest, ClaimLPFeesResponse>): UseQueryResult<ClaimLPFeesResponse> {
   const queryKey = [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.claimLpFees, params]
 
-  return useQuery<TradingApi.ClaimLPFeesResponse>({
+  return useQuery<ClaimLPFeesResponse>({
     queryKey,
     queryFn: async () => {
       if (!params) {
         throw { name: 'Params are required' }
       }
-      return await TradingApiClient.claimLpFees(params)
+      return await claimLpFees(params)
     },
     ...rest,
   })

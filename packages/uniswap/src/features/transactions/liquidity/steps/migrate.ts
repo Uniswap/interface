@@ -1,5 +1,5 @@
-import { TradingApi } from '@universe/api'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { migrateLpPosition } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import type { MigrateLPPositionRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
@@ -16,9 +16,7 @@ export interface MigratePositionTransactionStep extends OnChainTransactionFields
 export interface MigratePositionTransactionStepAsync {
   // Migrations that require permit
   type: TransactionStepType.MigratePositionTransactionAsync
-  getTxRequest(
-    signature: string,
-  ): Promise<{ txRequest: ValidatedTransactionRequest | undefined; sqrtRatioX96?: string }>
+  getTxRequest(signature: string): Promise<ValidatedTransactionRequest | undefined>
 }
 
 export function createMigratePositionStep(txRequest: ValidatedTransactionRequest): MigratePositionTransactionStep {
@@ -29,27 +27,25 @@ export function createMigratePositionStep(txRequest: ValidatedTransactionRequest
 }
 
 export function createMigratePositionAsyncStep(
-  migratePositionRequestArgs: TradingApi.MigrateLPPositionRequest | undefined,
+  migratePositionRequestArgs: MigrateLPPositionRequest | undefined,
   signatureDeadline: number | undefined,
 ): MigratePositionTransactionStepAsync {
   return {
     type: TransactionStepType.MigratePositionTransactionAsync,
-    getTxRequest: async (
-      signature: string,
-    ): Promise<{ txRequest: ValidatedTransactionRequest | undefined; sqrtRatioX96?: string }> => {
+    getTxRequest: async (signature: string): Promise<ValidatedTransactionRequest | undefined> => {
       if (!migratePositionRequestArgs || !signatureDeadline) {
-        return { txRequest: undefined }
+        return undefined
       }
 
       try {
-        const { migrate } = await TradingApiClient.migrateLpPosition({
+        const { migrate } = await migrateLpPosition({
           ...migratePositionRequestArgs,
           signature,
           signatureDeadline,
           simulateTransaction: true,
         })
 
-        return { txRequest: validateTransactionRequest(migrate) }
+        return validateTransactionRequest(migrate)
       } catch (e) {
         const message = parseErrorMessageTitle(e, { includeRequestId: true })
         if (message) {

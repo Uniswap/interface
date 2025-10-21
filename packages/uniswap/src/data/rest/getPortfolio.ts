@@ -4,12 +4,11 @@ import { queryOptions, UseQueryResult, useQuery } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import { GetPortfolioRequest, GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { transformInput, WithoutWalletAccount } from '@universe/api'
 import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
+import { transformInput, WithoutWalletAccount } from 'uniswap/src/data/rest/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -65,6 +64,7 @@ export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
   const transformedInput = transformInput(input)
 
   // Changes in the modifier should not cause a refetch, so it's excluded from the queryKey
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { modifier: _modifier, walletAccount, ...inputWithoutModifierAndWalletAccount } = transformedInput ?? {}
   const walletAccountsKey = walletAccount?.platformAddresses
     .map((platformAddress) => `${platformAddress.address}-${platformAddress.platform}`)
@@ -87,19 +87,15 @@ export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
  */
 export function useRestTokenBalanceQuantityParts({
   currencyId,
-  evmAddress,
-  svmAddress,
+  address,
   enabled = true,
 }: {
   currencyId?: CurrencyId
-  evmAddress?: string
-  svmAddress?: string
+  address?: string
   enabled?: boolean
 }): UseQueryResult<TokenBalanceQuantityParts | undefined> {
   const { chains: chainIds } = useEnabledChains()
-
-  // TODO(SWAP-388): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
-  const modifier = useRestPortfolioValueModifier(enabled ? (evmAddress ?? svmAddress) : undefined)
+  const modifier = useRestPortfolioValueModifier(enabled ? address : undefined)
 
   const selectQuantityParts = useEvent((data: GetPortfolioResponse | undefined) => {
     const balance = _findBalanceFromCurrencyId(data, currencyId)
@@ -107,7 +103,7 @@ export function useRestTokenBalanceQuantityParts({
   })
 
   return useQuery({
-    ...getPortfolioQuery({ input: { evmAddress, svmAddress, chainIds, modifier } }),
+    ...getPortfolioQuery({ input: { evmAddress: address, chainIds, modifier } }),
     select: selectQuantityParts,
     enabled,
   })
@@ -119,19 +115,15 @@ export function useRestTokenBalanceQuantityParts({
  */
 export function useRestTokenBalanceMainParts({
   currencyId,
-  evmAddress,
-  svmAddress,
+  address,
   enabled = true,
 }: {
   currencyId?: CurrencyId
-  evmAddress?: string
-  svmAddress?: string
+  address?: string
   enabled?: boolean
 }): UseQueryResult<TokenBalanceMainParts | undefined> {
   const { chains: chainIds } = useEnabledChains()
-
-  // TODO(SWAP-388): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
-  const modifier = useRestPortfolioValueModifier(enabled ? (evmAddress ?? svmAddress) : undefined)
+  const modifier = useRestPortfolioValueModifier(enabled ? address : undefined)
 
   const selectMainParts = useEvent((data: GetPortfolioResponse | undefined) => {
     const balance = _findBalanceFromCurrencyId(data, currencyId)
@@ -147,7 +139,7 @@ export function useRestTokenBalanceMainParts({
   })
 
   return useQuery({
-    ...getPortfolioQuery({ input: { evmAddress, svmAddress, chainIds, modifier } }),
+    ...getPortfolioQuery({ input: { evmAddress: address, chainIds, modifier } }),
     select: selectMainParts,
     enabled,
   })
@@ -174,9 +166,6 @@ function _findBalanceFromCurrencyId(
       return isNativeCurrencyAddress(chainId, bal.token.address)
     }
 
-    return areAddressesEqual({
-      addressInput1: { address: bal.token.address, chainId },
-      addressInput2: { address: tokenAddress, chainId },
-    })
+    return bal.token.address.toLowerCase() === tokenAddress.toLowerCase()
   })
 }

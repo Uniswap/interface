@@ -19,8 +19,8 @@ import { EmptyTokensList } from 'uniswap/src/components/portfolio/EmptyTokensLis
 import { HiddenTokensRow } from 'uniswap/src/components/portfolio/HiddenTokensRow'
 import { TokenBalanceItem } from 'uniswap/src/components/portfolio/TokenBalanceItem'
 import { TokenBalanceItemContextMenu } from 'uniswap/src/components/portfolio/TokenBalanceItemContextMenu'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import {
   TokenBalanceListContextProvider,
   useTokenBalanceListContext,
@@ -46,11 +46,7 @@ const ESTIMATED_TOKEN_ITEM_HEIGHT = 64
 export const TokenBalanceList = forwardRef<FlatList<TokenBalanceListRow>, TokenBalanceListProps>(
   function _TokenBalanceList({ owner, onPressToken, isExternalProfile = false, ...rest }, ref): JSX.Element {
     return (
-      <TokenBalanceListContextProvider
-        isExternalProfile={isExternalProfile}
-        evmOwner={owner}
-        onPressToken={onPressToken}
-      >
+      <TokenBalanceListContextProvider isExternalProfile={isExternalProfile} owner={owner} onPressToken={onPressToken}>
         <TokenBalanceListInner
           ref={ref}
           isExternalProfile={isExternalProfile}

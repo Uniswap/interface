@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import React, { memo, PropsWithChildren, ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
 import { I18nManager } from 'react-native'
 import { SharedValue, useDerivedValue } from 'react-native-reanimated'
@@ -17,6 +16,7 @@ import { Flex, SegmentedControl, Text } from 'ui/src'
 import GraphCurve from 'ui/src/assets/backgrounds/graph-curve.svg'
 import { spacing } from 'ui/src/theme'
 import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
+import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -97,7 +97,7 @@ const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
 
   const { data, loading, error, refetch, setDuration, selectedDuration, numberOfDigits } = useTokenPriceHistory({
     currencyId,
-    initialDuration: GraphQLApi.HistoryDuration.Day,
+    initialDuration: HistoryDuration.Day,
     skip: !isScreenNavigationReady,
   })
 
@@ -123,8 +123,7 @@ const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
 
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
-  const shouldShowAnimatedDot =
-    selectedDuration === GraphQLApi.HistoryDuration.Day || selectedDuration === GraphQLApi.HistoryDuration.Hour
+  const shouldShowAnimatedDot = selectedDuration === HistoryDuration.Day || selectedDuration === HistoryDuration.Hour
   const additionalPadding = shouldShowAnimatedDot ? 40 : 0
 
   const { lastPricePoint, convertedPriceHistory } = useMemo(() => {
@@ -173,7 +172,7 @@ const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
     }))
   }, [])
 
-  if (!loading && !convertedSpot && selectedDuration === GraphQLApi.HistoryDuration.Day) {
+  if (!loading && !convertedSpot && selectedDuration === HistoryDuration.Day) {
     return <PriceExplorerError showRetry={error} onRetry={refetch} />
   }
 

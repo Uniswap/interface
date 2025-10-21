@@ -1,12 +1,12 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
 import { testSaga } from 'redux-saga-test-plan'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { DutchOrderInfo, DutchQuoteV2, OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { signTypedData } from 'uniswap/src/features/transactions/signing'
@@ -55,17 +55,17 @@ const baseSubmitOrderParams = {
   txId: '1',
   onSuccess: jest.fn(),
   onFailure: jest.fn(),
-  routing: TradingApi.Routing.DUTCH_V2,
+  routing: Routing.DUTCH_V2,
   quote: {
     orderId: '0xMockOrderHash',
     encodedOrder: '0xMockEncodedOrder',
-    orderInfo: {} as TradingApi.DutchOrderInfo,
-  } as unknown as TradingApi.DutchQuoteV2,
+    orderInfo: {} as DutchOrderInfo,
+  } as unknown as DutchQuoteV2,
   permit: mockPermit.typedData,
 } satisfies SubmitUniswapXOrderParams
 
 const baseExpectedInitialOrderDetails: UniswapXOrderDetails = {
-  routing: TradingApi.Routing.DUTCH_V2,
+  routing: Routing.DUTCH_V2,
   orderHash: '0xMockOrderHash',
   id: baseSubmitOrderParams.txId,
   chainId: baseSubmitOrderParams.chainId,
@@ -77,10 +77,10 @@ const baseExpectedInitialOrderDetails: UniswapXOrderDetails = {
   transactionOriginType: TransactionOriginType.Internal,
 }
 
-const expectedOrderRequest: TradingApi.OrderRequest = {
+const expectedOrderRequest: OrderRequest = {
   signature: mockSignature,
   quote: baseSubmitOrderParams.quote,
-  routing: TradingApi.Routing.DUTCH_V2,
+  routing: Routing.DUTCH_V2,
 }
 
 describe(submitUniswapXOrder, () => {
@@ -114,7 +114,7 @@ describe(submitUniswapXOrder, () => {
           signer: mockSigner,
         })
         .next(mockSignature)
-        .call(TradingApiClient.submitOrder, expectedOrderRequest)
+        .call(submitOrder, expectedOrderRequest)
         .next()
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
           routing: 'uniswap_x_v2',
@@ -124,7 +124,6 @@ describe(submitUniswapXOrder, () => {
           v3Used: false,
           v4Used: false,
           uniswapXUsed: true,
-          jupiterUsed: false,
         })
         .next()
         .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
@@ -158,7 +157,7 @@ describe(submitUniswapXOrder, () => {
           signer: mockSigner,
         })
         .next(mockSignature)
-        .call(TradingApiClient.submitOrder, expectedOrderRequest)
+        .call(submitOrder, expectedOrderRequest)
         .throw(new Error('pretend the order endpoint failed'))
         .put({
           type: updateTransaction.type,
@@ -200,7 +199,7 @@ describe(submitUniswapXOrder, () => {
         .next()
         // Should skip getSignerManager and getSignerForAccount calls
         // Should skip signTypedData call and use the pre-signed data directly
-        .call(TradingApiClient.submitOrder, expectedOrderRequest)
+        .call(submitOrder, expectedOrderRequest)
         .next()
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
           routing: 'uniswap_x_v2',
@@ -210,7 +209,6 @@ describe(submitUniswapXOrder, () => {
           v3Used: false,
           v4Used: false,
           uniswapXUsed: true,
-          jupiterUsed: false,
         })
         .next()
         .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
@@ -233,7 +231,7 @@ describe(submitUniswapXOrder, () => {
         .next()
         .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
         .next()
-        .call(TradingApiClient.submitOrder, expectedOrderRequest)
+        .call(submitOrder, expectedOrderRequest)
         .throw(new Error('pretend the order endpoint failed'))
         .put({
           type: updateTransaction.type,
@@ -280,7 +278,7 @@ describe(submitUniswapXOrder, () => {
           signer: mockSigner,
         })
         .next(mockSignature)
-        .call(TradingApiClient.submitOrder, expectedOrderRequest)
+        .call(submitOrder, expectedOrderRequest)
         .next()
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
           routing: 'uniswap_x_v2',
@@ -290,7 +288,6 @@ describe(submitUniswapXOrder, () => {
           v3Used: false,
           v4Used: false,
           uniswapXUsed: true,
-          jupiterUsed: false,
         })
         .next()
         .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))

@@ -20,7 +20,6 @@ export function RemoveDelegationTotalFee({ gasFees, setIsLoading }: RemoveDelega
 
   // TODO(WALL-7209): replace/remove this workaround when we use the hook directly
   const [gasFeeUpdateCount, setGasFeeUpdateCount] = useState(0)
-  // biome-ignore lint/correctness/useExhaustiveDependencies: -gasFees
   useEffect(() => {
     // Force a re-render when gasFees changes to ensure ChainFiatFeeCalculator updates
     setGasFeeUpdateCount((count) => count + 1)

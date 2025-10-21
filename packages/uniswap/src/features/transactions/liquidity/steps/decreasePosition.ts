@@ -4,16 +4,11 @@ import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/t
 export interface DecreasePositionTransactionStep extends OnChainTransactionFields {
   // Doesn't require permit
   type: TransactionStepType.DecreasePositionTransaction
-  sqrtRatioX96?: string
 }
 
-export function createDecreasePositionStep(
-  txRequest: ValidatedTransactionRequest,
-  sqrtRatioX96?: string,
-): DecreasePositionTransactionStep {
+export function createDecreasePositionStep(txRequest: ValidatedTransactionRequest): DecreasePositionTransactionStep {
   return {
     type: TransactionStepType.DecreasePositionTransaction,
     txRequest,
-    sqrtRatioX96,
   }
 }

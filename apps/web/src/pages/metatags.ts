@@ -22,7 +22,6 @@ type MetatagAttributes = { property?: string; name?: string; content: string }
 export function useDynamicMetatags(metaTags: MetaTagInjectorInput = DEFAULT_METATAGS) {
   const [metaTagAttributes, setMetaTagAttributes] = useState<MetatagAttributes[]>([])
   const location = useLocation()
-  // biome-ignore lint/correctness/useExhaustiveDependencies: location dependency is sufficient for this effect
   useEffect(() => {
     metaTags.url = window.location.href
     const attributes: MetatagAttributes[] = [

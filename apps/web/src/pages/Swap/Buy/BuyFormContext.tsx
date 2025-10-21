@@ -1,4 +1,5 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
+import { useAccount } from 'hooks/useAccount'
 import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import { useFiatOnRampSupportedTokens, useMeldFiatCurrencyInfo } from 'pages/Swap/Buy/hooks'
@@ -7,7 +8,6 @@ import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext,
 import { useTranslation } from 'react-i18next'
 import { buildPartialCurrencyInfo } from 'uniswap/src/constants/routing'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   useFiatOnRampAggregatorCountryListQuery,
@@ -51,8 +51,8 @@ type BuyFormState = {
   readonly providerModalOpen: boolean
   readonly rampDirection: RampDirection
   readonly selectedUnsupportedCurrency?: FiatOnRampCurrency
+  readonly moonpayOnly?: boolean
   readonly paymentMethod?: FORFilters
-  readonly providers?: string[]
 }
 
 type BuyInfo = {
@@ -84,8 +84,8 @@ const DEFAULT_BUY_FORM_STATE: BuyFormState = {
   providerModalOpen: false,
   rampDirection: RampDirection.ONRAMP,
   selectedUnsupportedCurrency: undefined,
+  moonpayOnly: false,
   paymentMethod: undefined,
-  providers: undefined,
 }
 
 export const BuyFormContext = createContext<BuyFormContextType>({
@@ -110,6 +110,7 @@ export function useBuyFormContext() {
 
 function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
   const { t } = useTranslation()
+  const account = useAccount()
   const inputAmount = useDebounce(state.inputAmount)
   const { formattedAmount: amountOut, loading: amountOutLoading } = useUSDTokenUpdater({
     isFiatInput: state.inputInFiat,
@@ -117,10 +118,7 @@ function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
     exactCurrency: state.quoteCurrency?.currencyInfo?.currency,
   })
 
-  const accountAddress = useActiveAddress(
-    state.quoteCurrency?.currencyInfo?.currency.chainId ?? UniverseChainId.Mainnet,
-  )
-  const balance = useCurrencyBalance(accountAddress, state.quoteCurrency?.currencyInfo?.currency)
+  const balance = useCurrencyBalance(account.address, state.quoteCurrency?.currencyInfo?.currency)
 
   const { meldSupportedFiatCurrency, notAvailableInThisRegion } = useMeldFiatCurrencyInfo(state.selectedCountry)
 
@@ -154,7 +152,7 @@ function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
       inputAmount !== '' &&
       amountOut &&
       amountOut !== '' &&
-      accountAddress &&
+      account.address &&
       state.selectedCountry?.countryCode &&
       sourceCurrencyCode &&
       destinationCurrencyCode
@@ -163,7 +161,7 @@ function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
           sourceCurrencyCode,
           destinationCurrencyCode,
           countryCode: state.selectedCountry.countryCode,
-          walletAddress: accountAddress,
+          walletAddress: account.address,
           state: state.selectedCountry.state,
           rampDirection: state.rampDirection,
         }

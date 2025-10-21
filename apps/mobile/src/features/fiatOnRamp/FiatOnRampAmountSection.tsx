@@ -164,7 +164,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
         if (!isTextInputRefActuallyFocused) {
           inputRef.current?.focus()
         }
-      }, [isTextInputRefActuallyFocused]),
+      }, [inputRef, isTextInputRefActuallyFocused]),
     )
 
     const derivedFiatAmount = isOffRamp ? quoteAmount : sourceAmount
@@ -343,7 +343,7 @@ function PredefinedAmount({
   const { addFiatSymbolToNumber } = useLocalizationContext()
   const { t } = useTranslation()
   const currencyBalance =
-    currency?.currencyInfo?.currency && portfolioBalance?.quantity && isOffRamp
+    currency?.currencyInfo?.currency && portfolioBalance?.quantity
       ? getCurrencyAmount({
           value: portfolioBalance.quantity.toString(),
           valueType: ValueType.Exact,

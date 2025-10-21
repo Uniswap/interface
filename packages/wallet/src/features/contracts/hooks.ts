@@ -25,7 +25,7 @@ export function useIsErc20Contract(
     try {
       await Promise.all([contract.name(), contract.symbol(), contract.decimals(), contract.totalSupply()])
       return true
-    } catch (_e) {
+    } catch (e) {
       return false
     }
   }, [address, isSmartContractAddress, provider])

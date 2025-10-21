@@ -130,7 +130,6 @@ export const DecimalPad = memo(function DecimalPad({
     setCurrentHeight(event.nativeEvent.layout.height)
   }, [])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +sizeMultiplier, onReady
   useEffect(() => {
     currentHeightRef.current = currentHeight
     maxHeightRef.current = maxHeight
@@ -159,6 +158,7 @@ export const DecimalPad = memo(function DecimalPad({
       lineHeight: sizeMultiplier.lineHeight * 0.95,
       padding: sizeMultiplier.padding * 0.8,
     })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentHeight, maxHeight])
 
   if (maxHeight === null) {

@@ -2,10 +2,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { getCurrentLanguageFromNavigator } from 'uniswap/src/features/language/utils'
-import { DEFAULT_DEVICE_ACCESS_TIMEOUT, DeviceAccessTimeout } from 'uniswap/src/features/settings/constants'
 import { WALLET_TESTNET_CONFIG } from 'uniswap/src/features/telemetry/constants'
-import { isWebApp } from 'utilities/src/platform'
-// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
+import { isInterface } from 'utilities/src/platform'
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 
 export interface UserSettingsState {
@@ -15,17 +14,15 @@ export interface UserSettingsState {
   hideSpamTokens: boolean
   isTestnetModeEnabled?: boolean
   hapticsEnabled: boolean
-  deviceAccessTimeout: DeviceAccessTimeout
 }
 
 export const initialUserSettingsState: UserSettingsState = {
-  currentLanguage: isWebApp ? getCurrentLanguageFromNavigator() : Language.English,
+  currentLanguage: isInterface ? getCurrentLanguageFromNavigator() : Language.English,
   currentCurrency: FiatCurrency.UnitedStatesDollar,
   hideSmallBalances: true,
   hideSpamTokens: true,
   isTestnetModeEnabled: false,
   hapticsEnabled: true,
-  deviceAccessTimeout: DEFAULT_DEVICE_ACCESS_TIMEOUT,
 }
 
 const slice = createSlice({
@@ -54,9 +51,6 @@ const slice = createSlice({
     setHapticsEnabled: (state, { payload }: PayloadAction<boolean>) => {
       state.hapticsEnabled = payload
     },
-    setDeviceAccessTimeout: (state, { payload }: PayloadAction<DeviceAccessTimeout>) => {
-      state.deviceAccessTimeout = payload
-    },
     resetSettings: () => initialUserSettingsState,
   },
 })
@@ -68,7 +62,6 @@ export const {
   setCurrentFiatCurrency,
   setIsTestnetModeEnabled,
   setHapticsEnabled,
-  setDeviceAccessTimeout,
 } = slice.actions
 
 export const userSettingsReducer = slice.reducer

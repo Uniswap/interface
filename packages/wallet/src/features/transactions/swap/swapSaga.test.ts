@@ -4,14 +4,14 @@ import { permit2Address } from '@uniswap/permit2-sdk'
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
-import { TradingApi } from '@universe/api'
 import JSBI from 'jsbi'
 import { expectSaga, testSaga } from 'redux-saga-test-plan'
 import { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
 import { DAI, nativeOnChain, USDC } from 'uniswap/src/constants/tokens'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
@@ -78,7 +78,7 @@ jest.mock('uniswap/src/features/transactions/swap/utils/trade', () => {
 
 // TODO(WEB-4499): Use Trade/Quote fixtures instead of casted objects
 const mockTrade = {
-  routing: TradingApi.Routing.CLASSIC,
+  routing: Routing.CLASSIC,
   inputAmount: { currency: nativeOnChain(CHAIN_ID) },
   outputAmount: { currency: USDC },
   quote: { amount: MaxUint256 },
@@ -86,10 +86,10 @@ const mockTrade = {
 } as unknown as ClassicTrade
 
 const mockUniswapXTrade = {
-  routing: TradingApi.Routing.DUTCH_V2,
+  routing: Routing.DUTCH_V2,
   inputAmount: { currency: nativeOnChain(CHAIN_ID), quotient: JSBI.BigInt(1000) },
   outputAmount: { currency: USDC },
-  quote: { amount: MaxUint256, routing: TradingApi.Routing.DUTCH_V2 },
+  quote: { amount: MaxUint256, routing: Routing.DUTCH_V2 },
   slippageTolerance: 0.5,
 } as unknown as UniswapXTrade
 
@@ -119,7 +119,7 @@ const classicSwapParams = {
     transactionOriginType: TransactionOriginType.Internal,
   } as SwapTradeBaseProperties,
   swapTxContext: {
-    routing: TradingApi.Routing.CLASSIC,
+    routing: Routing.CLASSIC,
     approveTxRequest: mockApproveTxRequest,
     revocationTxRequest: mockRevocationTxRequest,
     txRequests: [mockSwapTxRequest],
@@ -143,7 +143,7 @@ const uniswapXSwapParams = {
     transactionOriginType: TransactionOriginType.Internal,
   } as SwapTradeBaseProperties,
   swapTxContext: {
-    routing: TradingApi.Routing.DUTCH_V2,
+    routing: Routing.DUTCH_V2,
 
     approveTxRequest: mockApproveTxRequest,
     revocationTxRequest: mockRevocationTxRequest,

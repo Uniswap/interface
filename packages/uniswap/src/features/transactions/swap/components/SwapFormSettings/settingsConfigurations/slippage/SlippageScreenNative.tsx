@@ -10,13 +10,15 @@ import { BottomSheetTextInput } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { MAX_CUSTOM_SLIPPAGE_TOLERANCE, SLIPPAGE_CRITICAL_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/useSlippageSettings'
-import { useFormatSlippageAmount } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/SlippageInfo/useFormatSlippageAmount'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import type { TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
 import { BridgeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
-import { isWebPlatform } from 'utilities/src/platform'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { NumberType } from 'utilities/src/format/types'
+import { isWeb } from 'utilities/src/platform'
 
 function SlippageMessage({
   inputWarning,
@@ -32,8 +34,7 @@ function SlippageMessage({
   color?: ColorTokens
 }): JSX.Element | null {
   const { t } = useTranslation()
-
-  const formattedSlippageAmount = useFormatSlippageAmount(trade)
+  const { formatCurrencyAmount } = useLocalizationContext()
 
   if (inputWarning) {
     return <WarningMessage showAlert text={inputWarning} color={color} />
@@ -42,10 +43,18 @@ function SlippageMessage({
   return trade ? (
     <Flex centered gap="$spacing8" py="$spacing4">
       <Text color="$neutral2" textAlign="center" variant="body2">
-        {[TradeType.EXACT_INPUT, 'EXACT_INPUT'].includes(trade.tradeType)
+        {trade.tradeType === TradeType.EXACT_INPUT
           ? t('swap.settings.slippage.input.receive.title')
           : t('swap.settings.slippage.output.spend.title')}{' '}
-        {formattedSlippageAmount}
+        {formatCurrencyAmount({
+          value: trade.minAmountOut,
+          type: NumberType.TokenTx,
+        })}{' '}
+        {getSymbolDisplayText(
+          trade.tradeType === TradeType.EXACT_INPUT
+            ? trade.outputAmount.currency.symbol
+            : trade.inputAmount.currency.symbol,
+        )}
       </Text>
       {showSlippageWarning ? (
         <Flex centered row gap="$spacing8">
@@ -172,7 +181,7 @@ export function SlippageScreenNative(): JSX.Element {
                   fontSize: fonts.subheading1.fontSize,
                   width: fonts.subheading1.fontSize * 4,
                   padding: spacing.none,
-                  ...(!isWebPlatform && {
+                  ...(!isWeb && {
                     fontFamily: fonts.subheading1.family,
                   }),
                 }}

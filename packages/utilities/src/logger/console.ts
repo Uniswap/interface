@@ -1,4 +1,4 @@
-// biome-ignore-all lint/suspicious/noConsole: need to use console here
+/* eslint-disable no-console */
 
 const consoleError = console.error
 const consoleWarn = console.warn

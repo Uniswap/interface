@@ -1,7 +1,8 @@
-import { type Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
-import { type ClassicQuoteResponse, TradingApi } from '@universe/api'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
+import { ClassicQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { requireAcceptNewTrade } from 'uniswap/src/features/transactions/swap/utils/trade'
@@ -91,7 +92,7 @@ describe(requireAcceptNewTrade, () => {
           },
         },
         requestId: '123',
-        routing: TradingApi.Routing.BRIDGE,
+        routing: Routing.BRIDGE,
         permitData: null,
       },
       currencyIn: UNI[UniverseChainId.Mainnet],
@@ -111,7 +112,7 @@ describe(requireAcceptNewTrade, () => {
             },
           },
           requestId: '123',
-          routing: TradingApi.Routing.BRIDGE,
+          routing: Routing.BRIDGE,
           permitData: null,
         },
         currencyIn: UNI[UniverseChainId.Mainnet],
@@ -133,7 +134,7 @@ describe(requireAcceptNewTrade, () => {
             },
           },
           requestId: '123',
-          routing: TradingApi.Routing.BRIDGE,
+          routing: Routing.BRIDGE,
           permitData: null,
         },
         currencyIn: UNI[UniverseChainId.Mainnet],
@@ -155,7 +156,7 @@ describe(requireAcceptNewTrade, () => {
             },
           },
           requestId: '123',
-          routing: TradingApi.Routing.BRIDGE,
+          routing: Routing.BRIDGE,
           permitData: null,
         },
         currencyIn: UNI[UniverseChainId.Mainnet],

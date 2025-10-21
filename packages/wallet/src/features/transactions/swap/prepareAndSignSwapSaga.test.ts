@@ -1,17 +1,18 @@
 /* eslint-disable max-lines */
 import { call, select } from '@redux-saga/core/effects'
 import { MaxUint256, TradeType } from '@uniswap/sdk-core'
-import { TradingApi, type UnwrapQuoteResponse, type WrapQuoteResponse } from '@universe/api'
 import JSBI from 'jsbi'
 import { expectSaga } from 'redux-saga-test-plan'
-import type { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
+import { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
 import { USDC } from 'uniswap/src/constants/tokens'
+import { WrapQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { type UniswapXTrade, UnwrapTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { UniswapXTrade, UnwrapTrade, WrapTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { ETH, WETH } from 'uniswap/src/test/fixtures'
 import { mockPermit } from 'uniswap/src/test/fixtures/permit'
-import { ensure0xHex } from 'utilities/src/addresses/hex'
+import { ensure0xHex } from 'uniswap/src/utils/hex'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
 import {
@@ -26,7 +27,6 @@ import {
   prepareAndSignSwapSagaParams,
   prepareSwapTxContext,
 } from 'wallet/src/features/transactions/swap/types/fixtures'
-import { DelegationType } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
@@ -97,13 +97,10 @@ describe('prepareAndSignSwapSaga', () => {
         account,
         chainId: CHAIN_ID,
         submitViaPrivateRpc: false,
-        delegationType: DelegationType.Auto,
+        includesDelegation: false,
         request: mockSwapTxRequest,
       }),
-      {
-        transactionSigner: mockTransactionSigner,
-        transactionService: mockTransactionService,
-      },
+      { transactionSigner: mockTransactionSigner, transactionService: mockTransactionService },
     ],
   ]
 
@@ -254,7 +251,7 @@ describe('prepareAndSignSwapSaga', () => {
             amount: '1000000000000000000',
           },
         },
-      } as WrapQuoteResponse,
+      } as WrapQuoteResponse<Routing.WRAP>,
       currencyIn: ETH,
       currencyOut: WETH,
       tradeType: TradeType.EXACT_INPUT,
@@ -270,7 +267,7 @@ describe('prepareAndSignSwapSaga', () => {
             amount: '1000000000000000000',
           },
         },
-      } as UnwrapQuoteResponse,
+      } as WrapQuoteResponse<Routing.UNWRAP>,
       currencyIn: WETH,
       currencyOut: ETH,
       tradeType: TradeType.EXACT_INPUT,
@@ -279,7 +276,7 @@ describe('prepareAndSignSwapSaga', () => {
     it('should prepare and sign a wrap transaction', async () => {
       const params = prepareAndSignSwapSagaParams({
         swapTxContext: prepareSwapTxContext({
-          routing: TradingApi.Routing.WRAP,
+          routing: Routing.WRAP,
           trade: mockWrapTrade,
         }),
       })
@@ -319,7 +316,7 @@ describe('prepareAndSignSwapSaga', () => {
     it('should prepare and sign an unwrap transaction', async () => {
       const params = prepareAndSignSwapSagaParams({
         swapTxContext: prepareSwapTxContext({
-          routing: TradingApi.Routing.UNWRAP,
+          routing: Routing.UNWRAP,
           trade: mockUnwrapTrade,
         }),
       })
@@ -359,17 +356,17 @@ describe('prepareAndSignSwapSaga', () => {
 
   describe('UniswapX routing', () => {
     const mockUniswapXTrade = {
-      routing: TradingApi.Routing.DUTCH_V2,
+      routing: Routing.DUTCH_V2,
       inputAmount: { currency: ETH, quotient: JSBI.BigInt(1000) },
       outputAmount: { currency: USDC },
-      quote: { amount: MaxUint256, routing: TradingApi.Routing.DUTCH_V2 },
+      quote: { amount: MaxUint256, routing: Routing.DUTCH_V2 },
       slippageTolerance: 0.5,
     } as unknown as UniswapXTrade
 
     it('should prepare and sign a UniswapX order', async () => {
       const params = prepareAndSignSwapSagaParams({
         swapTxContext: prepareSwapTxContext({
-          routing: TradingApi.Routing.DUTCH_V2,
+          routing: Routing.DUTCH_V2,
           trade: mockUniswapXTrade,
           permit: mockPermit,
           gasFeeBreakdown: {
@@ -389,13 +386,10 @@ describe('prepareAndSignSwapSaga', () => {
               account,
               chainId: CHAIN_ID,
               submitViaPrivateRpc: false,
-              delegationType: DelegationType.Auto,
+              includesDelegation: false,
               request: undefined,
             }),
-            {
-              transactionSigner: mockTransactionSigner,
-              transactionService: mockTransactionService,
-            },
+            { transactionSigner: mockTransactionSigner, transactionService: mockTransactionService },
           ],
           [call(shouldSubmitViaPrivateRpc, CHAIN_ID), false],
           [
@@ -420,7 +414,7 @@ describe('prepareAndSignSwapSaga', () => {
       const params = prepareAndSignSwapSagaParams({
         onFailure,
         swapTxContext: prepareSwapTxContext({
-          routing: TradingApi.Routing.DUTCH_V2,
+          routing: Routing.DUTCH_V2,
           trade: mockUniswapXTrade,
           permit: mockPermit,
           gasFeeBreakdown: {
@@ -444,13 +438,10 @@ describe('prepareAndSignSwapSaga', () => {
                 account,
                 chainId: CHAIN_ID,
                 submitViaPrivateRpc: false,
-                delegationType: DelegationType.Auto,
+                includesDelegation: false,
                 request: undefined,
               }),
-              {
-                transactionSigner: mockTransactionSigner,
-                transactionService: mockTransactionService,
-              },
+              { transactionSigner: mockTransactionSigner, transactionService: mockTransactionService },
             ],
             [call(shouldSubmitViaPrivateRpc, CHAIN_ID), false],
             [
@@ -467,10 +458,7 @@ describe('prepareAndSignSwapSaga', () => {
 
       expect(onFailure).toHaveBeenCalledWith(expect.any(Error))
       expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(error, {
-        tags: {
-          file: 'prepareAndSignSwapSaga',
-          function: 'prepareAndSignSwapTransaction',
-        },
+        tags: { file: 'prepareAndSignSwapSaga', function: 'prepareAndSignSwapTransaction' },
         extra: { chainId: CHAIN_ID },
       })
     })
@@ -506,10 +494,7 @@ describe('prepareAndSignSwapSaga', () => {
 
       // Nonce error should be logged by prepareTransactionServices
       expect(mockTransactionSagaDependencies.logger.error).toHaveBeenCalledWith(nonceError, {
-        tags: {
-          file: 'baseTransactionPreparationSaga',
-          function: 'prepareTransactionServices',
-        },
+        tags: { file: 'baseTransactionPreparationSaga', function: 'prepareTransactionServices' },
         extra: { account, chainId: CHAIN_ID },
       })
     })
@@ -561,13 +546,10 @@ describe('prepareAndSignSwapSaga', () => {
               account,
               chainId: CHAIN_ID,
               submitViaPrivateRpc: true,
-              delegationType: DelegationType.Auto,
+              includesDelegation: false,
               request: mockSwapTxRequest,
             }),
-            {
-              transactionSigner: mockTransactionSigner,
-              transactionService: mockTransactionService,
-            },
+            { transactionSigner: mockTransactionSigner, transactionService: mockTransactionService },
           ],
           [
             call(mockTransactionService.getNextNonce, {

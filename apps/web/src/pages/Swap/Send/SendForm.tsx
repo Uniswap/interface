@@ -1,5 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
+import { useAccount } from 'hooks/useAccount'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useModalState } from 'hooks/useModalState'
 import { useSendCallback } from 'hooks/useSendCallback'
@@ -14,15 +16,11 @@ import { useSendContext } from 'state/send/SendContext'
 import { CurrencyState } from 'state/swap/types'
 import { Button, Flex } from 'ui/src'
 import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
-import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useActiveAddress, useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { ElementName, InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useDismissedCompatibleAddressWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   TransactionScreen,
@@ -38,20 +36,11 @@ export type SendFormProps = {
 
 function useSendButtonState() {
   const { sendState, derivedSendInfo } = useSendContext()
-  const { recipient, inputCurrency } = sendState
+  const { recipient } = sendState
   const { parsedTokenAmount, recipientData } = derivedSendInfo
   const { t } = useTranslation()
 
-  const isSolanaToken = inputCurrency?.chainId && isSVMChain(inputCurrency.chainId)
-
   return useMemo(() => {
-    if (isSolanaToken) {
-      return {
-        label: t('send.solanaSendNotSupported'),
-        disabled: true,
-      }
-    }
-
     if (recipient && !recipientData) {
       return {
         label: t('common.invalidRecipient.error'),
@@ -77,7 +66,7 @@ function useSendButtonState() {
       label: t('common.send.button'),
       disabled: false,
     }
-  }, [recipient, recipientData, parsedTokenAmount, t, isSolanaToken])
+  }, [t, parsedTokenAmount, recipient, recipientData])
 }
 
 enum SendFormModalState {
@@ -94,6 +83,7 @@ enum SendSpeedBump {
 }
 
 function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFormProps) {
+  const account = useAccount()
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
   const { setScreen } = useTransactionModalContext()
@@ -110,21 +100,14 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
   const { inputError, recipientData } = derivedSendInfo
   const inputCurrencyId = currencyId(sendState.inputCurrency)
   const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
-  const chainId = sendState.inputCurrency?.chainId ?? defaultChainId
-  const { tokenWarningDismissed: isCompatibleAddressDismissed } = useDismissedCompatibleAddressWarnings(
-    inputCurrencyInfo?.currency,
-  )
-  const isUnichainBridgedAsset = checkIsBridgedAsset(inputCurrencyInfo ?? undefined) && !isCompatibleAddressDismissed
+  const isUnichainBridgedAsset = checkIsBridgedAsset(inputCurrencyInfo ?? undefined)
 
   const { isSmartContractAddress, loading: loadingSmartContractAddress } = useIsSmartContractAddress(
     recipientData?.address,
-    chainId,
+    sendState.inputCurrency?.chainId ?? defaultChainId,
   )
 
-  const { isDisconnected } = useConnectionStatus()
-
-  const accountAddress = useActiveAddress(chainId)
-  const { transfers: recentTransfers, loading: transfersLoading } = useGroupedRecentTransfers(accountAddress)
+  const { transfers: recentTransfers, loading: transfersLoading } = useGroupedRecentTransfers(account.address)
   const isRecentAddress = useMemo(() => {
     if (!recipientData?.address) {
       return undefined
@@ -139,7 +122,6 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
     setSendFormModalState(newState ?? SendFormModalState.None)
   }, [])
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +recipientData?.address
   useEffect(() => {
     setSendFormSpeedBumpState(() => ({
       [SendSpeedBump.SMART_CONTRACT_SPEED_BUMP]: isSmartContractAddress,
@@ -228,7 +210,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
       <Flex gap="$spacing8">
         <SendCurrencyInputForm disabled={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
         <SendRecipientForm disabled={disableTokenInputs} />
-        {isDisconnected ? (
+        {account.isDisconnected ? (
           <Trace
             logPress
             eventOnTrigger={InterfaceEventName.ConnectWalletButtonClicked}

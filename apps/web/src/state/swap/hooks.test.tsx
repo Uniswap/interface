@@ -14,7 +14,6 @@ import { renderHook, waitFor } from 'test-utils/render'
 import { DAI, nativeOnChain, UNI, USDC_OPTIMISM } from 'uniswap/src/constants/tokens'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
-import { AccountsStore } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { GQL_MAINNET_CHAINS, GQL_TESTNET_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -155,7 +154,7 @@ describe('hooks', () => {
       })
 
       expect(result).toBe(
-        `?chain=mainnet&inputCurrency=${UNI_ADDRESSES[UniverseChainId.Mainnet]}&outputCurrency=${NATIVE_CHAIN_ID}&value=100&field=${CurrencyField.OUTPUT}`,
+        `?chain=mainnet&inputCurrency=${UNI_ADDRESSES[UniverseChainId.Mainnet]}&outputCurrency=${ETH_MAINNET.isNative ? NATIVE_CHAIN_ID : ETH_MAINNET.address}&value=100&field=${CurrencyField.OUTPUT}`,
       )
     })
 
@@ -187,11 +186,11 @@ describe('hooks', () => {
       const result = serializeSwapAddressesToURLParameters({
         chainId: UniverseChainId.Mainnet,
         inputTokenAddress: UNI_ADDRESSES[UniverseChainId.Mainnet],
-        outputTokenAddress: NATIVE_CHAIN_ID,
+        outputTokenAddress: ETH_MAINNET.isNative ? NATIVE_CHAIN_ID : ETH_MAINNET.address,
       })
 
       expect(result).toBe(
-        `?chain=mainnet&inputCurrency=${UNI_ADDRESSES[UniverseChainId.Mainnet]}&outputCurrency=${NATIVE_CHAIN_ID}`,
+        `?chain=mainnet&inputCurrency=${UNI_ADDRESSES[UniverseChainId.Mainnet]}&outputCurrency=${ETH_MAINNET.isNative ? NATIVE_CHAIN_ID : ETH_MAINNET.address}`,
       )
     })
 
@@ -244,7 +243,6 @@ describe('hooks', () => {
         isSwapTokenSelectorOpen: false,
         setIsSwapTokenSelectorOpen: () => {},
         setSwapOutputChainId: () => {},
-        useAccountsStoreContextHook: () => ({}) as AccountsStore,
       })
     })
 

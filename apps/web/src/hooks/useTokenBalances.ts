@@ -1,7 +1,7 @@
-import { useActiveAddresses } from 'features/accounts/store/hooks'
 import { useMemo } from 'react'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { currencyKey } from 'utils/currencyKey'
 
 type TokenBalances = { [tokenAddress: string]: { usdValue: number; balance: number } }
@@ -14,9 +14,8 @@ export function useTokenBalances({ cacheOnly }: { cacheOnly?: boolean } = {}): {
   balanceList: readonly PortfolioBalance[]
   loading: boolean
 } {
-  const activeAddresses = useActiveAddresses()
-  const evmAddress = activeAddresses.evmAddress
-  const svmAddress = activeAddresses.svmAddress
+  const evmAddress = useWallet().evmAccount?.address ?? ''
+  const svmAddress = useWallet().svmAccount?.address ?? ''
 
   // Use the factory hook that handles GraphQL/REST switching
   const { data: balancesById, loading } = usePortfolioBalances({

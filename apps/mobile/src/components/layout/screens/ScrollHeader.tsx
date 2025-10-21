@@ -13,7 +13,7 @@ type ScrollHeaderProps = {
   scrollY: SharedValue<number>
   showHeaderScrollYDistance: number
   // hard to type
-  // biome-ignore lint/suspicious/noExplicitAny: Ref type varies based on list component used
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   listRef: React.MutableRefObject<any>
   centerElement?: JSX.Element
   rightElement?: JSX.Element

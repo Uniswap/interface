@@ -7,11 +7,22 @@ import {
   RegistrationOptions,
   WalletSigninResponse,
 } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
-import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
+import {
+  fetchChallengeRequest,
+  fetchCreateWalletRequest,
+  fetchDeleteAuthenticatorRequest,
+  fetchDisconnectRequest,
+  fetchExportSeedPhraseRequest,
+  fetchListAuthenticatorsRequest,
+  fetchRegisterNewAuthenticatorRequest,
+  fetchSignMessagesRequest,
+  fetchSignTransactionsRequest,
+  fetchSignTypedDataRequest,
+  fetchWalletSigninRequest,
+} from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { authenticatePasskey, registerPasskey } from 'uniswap/src/features/passkey/passkey'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { HexString } from 'utilities/src/addresses/hex'
+import { HexString } from 'uniswap/src/utils/hex'
+import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 
 export {
@@ -33,7 +44,7 @@ async function registerNewPasskey({
 } = {}): Promise<string | undefined> {
   const options: RegistrationOptions = { authenticatorAttachment, username } as RegistrationOptions
   try {
-    const challenge = await EmbeddedWalletApiClient.fetchChallengeRequest({
+    const challenge = await fetchChallengeRequest({
       type: AuthenticationTypes.PASSKEY_REGISTRATION,
       action: action ?? Action.CREATE_WALLET,
       options,
@@ -56,19 +67,14 @@ export async function createNewEmbeddedWallet(unitag: string): Promise<HexString
       return undefined
     }
 
-    const createWalletResp = await EmbeddedWalletApiClient.fetchCreateWalletRequest({ credential: passkeyCredential })
+    const createWalletResp = await fetchCreateWalletRequest({ credential: passkeyCredential })
     if (createWalletResp.walletAddress) {
       logger.debug(
         'embeddedWallet.ts',
         'createNewEmbeddedWallet',
         `New wallet created: ${createWalletResp.walletAddress}`,
       )
-      const address = getValidAddress({
-        address: createWalletResp.walletAddress,
-        platform: Platform.EVM,
-        withEVMChecksum: true,
-      })
-      if (!address) {
+      if (!isAddress(createWalletResp.walletAddress)) {
         logger.error(new Error('Invalid address returned from create wallet response'), {
           tags: {
             file: 'embeddedWallet.ts',
@@ -77,7 +83,11 @@ export async function createNewEmbeddedWallet(unitag: string): Promise<HexString
         })
         return undefined
       }
-      return address as HexString
+      const address = isAddress(createWalletResp.walletAddress)
+      if (!address) {
+        throw new Error(`Invalid wallet address returned: ${createWalletResp.walletAddress}`)
+      }
+      return address
     }
     return undefined
   } catch (error) {
@@ -98,12 +108,12 @@ export async function isSessionAuthenticatedForAction(action: Action): Promise<b
   }
 
   try {
-    const challenge = await EmbeddedWalletApiClient.fetchChallengeRequest({
+    const challenge = await fetchChallengeRequest({
       type: AuthenticationTypes.PASSKEY_AUTHENTICATION,
       action,
     })
     return challenge.challengeOptions.length === 0
-  } catch (_error) {
+  } catch (error) {
     return false
   }
 }
@@ -130,7 +140,7 @@ async function reauthenticateSessionWithPasskey(action: Action, walletAddress?: 
     await disconnectWallet()
     throw new Error('not_found: Failed to re-authenticate with correct passkey [00000000-0000-0000-0000-000000000000]')
   }
-  return await EmbeddedWalletApiClient.fetchChallengeRequest({
+  return await fetchChallengeRequest({
     type: AuthenticationTypes.PASSKEY_AUTHENTICATION,
     action,
   })
@@ -139,7 +149,7 @@ async function reauthenticateSessionWithPasskey(action: Action, walletAddress?: 
 export async function authenticateWithPasskey(action: Action, walletAddress?: string): Promise<string | undefined> {
   let challenge: ChallengeResponse | undefined
   try {
-    challenge = await EmbeddedWalletApiClient.fetchChallengeRequest({
+    challenge = await fetchChallengeRequest({
       type: AuthenticationTypes.PASSKEY_AUTHENTICATION,
       action,
     })
@@ -174,7 +184,7 @@ export async function signInWithPasskey(): Promise<WalletSigninResponse | undefi
     if (!credential) {
       return undefined
     }
-    const signInResp = await EmbeddedWalletApiClient.fetchWalletSigninRequest({ credential })
+    const signInResp = await fetchWalletSigninRequest({ credential })
     if (signInResp.walletAddress) {
       return signInResp
     }
@@ -196,7 +206,7 @@ export async function signMessagesWithPasskey(
 ): Promise<string[] | undefined> {
   try {
     const credential = await authenticateWithPasskey(Action.SIGN_MESSAGES, walletAddress)
-    const signedMessagesResp = await EmbeddedWalletApiClient.fetchSignMessagesRequest({ messages, credential })
+    const signedMessagesResp = await fetchSignMessagesRequest({ messages, credential })
     return signedMessagesResp.signedMessages
   } catch (error) {
     logger.error(error, {
@@ -215,7 +225,7 @@ export async function signTransactionsWithPasskey(
 ): Promise<string[] | undefined> {
   try {
     const credential = await authenticateWithPasskey(Action.SIGN_TRANSACTIONS, walletAddress)
-    const signedTransactionResp = await EmbeddedWalletApiClient.fetchSignTransactionsRequest({
+    const signedTransactionResp = await fetchSignTransactionsRequest({
       transactions,
       credential,
     })
@@ -237,7 +247,7 @@ export async function signTypedDataWithPasskey(
 ): Promise<string[] | undefined> {
   try {
     const credential = await authenticateWithPasskey(Action.SIGN_TYPED_DATA_BATCH, walletAddress)
-    const signedTypedDataResp = await EmbeddedWalletApiClient.fetchSignTypedDataRequest({
+    const signedTypedDataResp = await fetchSignTypedDataRequest({
       typedDataBatch,
       credential,
     })
@@ -259,7 +269,7 @@ export async function exportEncryptedSeedPhrase(encryptionKey: string): Promise<
     if (!credential) {
       return undefined
     }
-    const seedPhraseResp = await EmbeddedWalletApiClient.fetchExportSeedPhraseRequest({
+    const seedPhraseResp = await fetchExportSeedPhraseRequest({
       encryptionKey,
       credential,
     })
@@ -277,7 +287,7 @@ export async function exportEncryptedSeedPhrase(encryptionKey: string): Promise<
 
 export async function disconnectWallet(): Promise<void> {
   try {
-    await EmbeddedWalletApiClient.fetchDisconnectRequest()
+    await fetchDisconnectRequest()
   } catch (error) {
     logger.error(error, {
       tags: {
@@ -292,7 +302,7 @@ export async function disconnectWallet(): Promise<void> {
 export async function listAuthenticators(walletAddress?: string): Promise<Authenticator[]> {
   try {
     const credential = await authenticateWithPasskey(Action.LIST_AUTHENTICATORS, walletAddress)
-    const listAuthenticatorsResp = await EmbeddedWalletApiClient.fetchListAuthenticatorsRequest({ credential })
+    const listAuthenticatorsResp = await fetchListAuthenticatorsRequest({ credential })
     return listAuthenticatorsResp.authenticators
   } catch (error) {
     logger.error(error, {
@@ -321,7 +331,7 @@ export async function registerNewAuthenticator({
       username,
     })
     if (newPasskeyCredential && existingCredential) {
-      await EmbeddedWalletApiClient.fetchRegisterNewAuthenticatorRequest({
+      await fetchRegisterNewAuthenticatorRequest({
         newCredential: newPasskeyCredential,
         newAuthenticationType: AuthenticationTypes.PASSKEY_REGISTRATION,
         existingCredential,
@@ -350,7 +360,7 @@ export async function deleteAuthenticator({
 }): Promise<boolean | undefined> {
   try {
     if (credential) {
-      await EmbeddedWalletApiClient.fetchDeleteAuthenticatorRequest({
+      await fetchDeleteAuthenticatorRequest({
         credential,
         authenticationType: AuthenticationTypes.PASSKEY_AUTHENTICATION,
         authenticatorId: authenticator.id,

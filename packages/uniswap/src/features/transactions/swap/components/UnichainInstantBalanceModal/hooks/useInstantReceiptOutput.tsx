@@ -41,7 +41,6 @@ export function useInstantReceiptOutput(): void {
   const fetchReceipt = useFetchReceipt()
 
   const activeFetcherIdAndStartTime = useRef<number | undefined>(undefined)
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +transaction?.hash
   useEffect(() => {
     activeFetcherIdAndStartTime.current = undefined
   }, [transaction?.hash])

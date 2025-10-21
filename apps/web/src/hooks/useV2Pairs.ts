@@ -107,6 +107,5 @@ export function useV2Pairs(currencies: [Maybe<Currency>, Maybe<Currency>][]): [P
 
 export function useV2Pair(tokenA?: Maybe<Currency>, tokenB?: Maybe<Currency>): [PairState, Pair | null] {
   const inputs: [[Maybe<Currency>, Maybe<Currency>]] = useMemo(() => [[tokenA, tokenB]], [tokenA, tokenB])
-  const v2Pairs = useV2Pairs(inputs)
-  return v2Pairs.length ? v2Pairs[0] : [PairState.NOT_EXISTS, null]
+  return useV2Pairs(inputs)[0]
 }

@@ -1,11 +1,11 @@
 import { datadogRum } from '@datadog/browser-rum'
-import { FetchError } from '@universe/api'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import { isWebApp } from 'utilities/src/platform'
+import { isInterface } from 'utilities/src/platform'
 
 /** Superclass used to differentiate categorized/known transaction errors from generic/unknown errors. */
 export abstract class TransactionError extends Error {}
@@ -72,7 +72,7 @@ export class TransactionStepFailedError extends TransactionError {
         fingerprint.push(String(this.originalError.data.detail))
       }
     } catch (e) {
-      if (isWebApp) {
+      if (isInterface) {
         datadogRum.addAction('Transaction Action', {
           message: `problem determining fingerprint for ${this.step.type}`,
           level: 'info',
@@ -146,46 +146,84 @@ function getJupiterExecuteErrorContent(
   message: string
   supportArticleURL?: string
 } {
-  const errorContent = {
-    title: t('common.swap.failed'),
-    message: t('error.jupiterApi.execute.default.title'),
-    supportArticleURL: uniswapUrls.helpArticleUrls.jupiterApiError,
-  }
-
   switch (code) {
+    // Ultra endpoint errors
     case -1:
-      errorContent.message += ' ' + t('error.jupiterApi.missingCachedOrder')
-      return errorContent
+      return {
+        title: t('error.jupiterApi.execute.missingCachedOrder.title'),
+        message: t('error.jupiterApi.execute.missingCachedOrder.message'),
+      }
     case -2:
-      errorContent.message += ' ' + t('error.jupiterApi.invalidSignedTransaction')
-      return errorContent
+      return {
+        title: t('error.jupiterApi.execute.invalidSignedTransaction.title'),
+        message: t('error.jupiterApi.execute.invalidSignedTransaction.message'),
+      }
     case -3:
-      errorContent.message += ' ' + t('error.jupiterApi.invalidMessageBytes')
-      return errorContent
+      return {
+        title: t('error.jupiterApi.execute.invalidMessageBytes.title'),
+        message: t('error.jupiterApi.execute.invalidMessageBytes.message'),
+      }
+
+    // Aggregator swap errors
     case -1000:
-    case -2000:
-      errorContent.message += ' ' + t('error.jupiterApi.failedToLand', { code })
-      return errorContent
-    case -2002:
-      errorContent.message += ' ' + t('error.jupiterApi.invalidPayload')
-      return errorContent
-    case -2003:
-      errorContent.title = t('transaction.status.swap.expired')
-      errorContent.message = t('error.jupiterApi.quoteExpired')
-      return errorContent
+      return {
+        title: t('error.jupiterApi.execute.failedToLand.title'),
+        message: t('error.jupiterApi.execute.failedToLand.message'),
+      }
+    case -1001:
+      return {
+        title: t('error.jupiterApi.execute.unknownError.title'),
+        message: t('error.jupiterApi.execute.unknownError.message'),
+      }
     case -1002:
-      errorContent.message += ' ' + t('error.jupiterApi.invalidTransaction')
-      return errorContent
+      return {
+        title: t('error.jupiterApi.execute.invalidTransaction.title'),
+        message: t('error.jupiterApi.execute.invalidTransaction.message'),
+      }
     case -1003:
-      errorContent.message += ' ' + t('error.jupiterApi.notFullySigned')
-      return errorContent
+      return {
+        title: t('error.jupiterApi.execute.notFullySigned.title'),
+        message: t('error.jupiterApi.execute.notFullySigned.message'),
+      }
     case -1004:
-      errorContent.message += ' ' + t('error.jupiterApi.invalidBlockHeight')
-      return errorContent
+      return {
+        title: t('error.jupiterApi.execute.invalidBlockHeight.title'),
+        message: t('error.jupiterApi.execute.invalidBlockHeight.message'),
+      }
+
+    // RFQ swap errors
+    case -2000:
+      return {
+        title: t('error.jupiterApi.execute.rfqFailedToLand.title'),
+        message: t('error.jupiterApi.execute.rfqFailedToLand.message'),
+      }
+    case -2001:
+      return {
+        title: t('error.jupiterApi.execute.rfqUnknownError.title'),
+        message: t('error.jupiterApi.execute.rfqUnknownError.message'),
+      }
+    case -2002:
+      return {
+        title: t('error.jupiterApi.execute.invalidPayload.title'),
+        message: t('error.jupiterApi.execute.invalidPayload.message'),
+      }
+    case -2003:
+      return {
+        title: t('error.jupiterApi.execute.quoteExpired.title'),
+        message: t('error.jupiterApi.execute.quoteExpired.message'),
+      }
+    case -2004:
+      return {
+        title: t('error.jupiterApi.execute.swapRejected.title'),
+        message: t('error.jupiterApi.execute.swapRejected.message'),
+      }
+
     default:
       // Fallback for unmapped codes
-      errorContent.message += ' ' + t('error.jupiterApi.unknownErrorCode', { code })
-      return errorContent
+      return {
+        title: t('common.unknownError.error'),
+        message: t('common.swap.failed'),
+      }
   }
 }
 

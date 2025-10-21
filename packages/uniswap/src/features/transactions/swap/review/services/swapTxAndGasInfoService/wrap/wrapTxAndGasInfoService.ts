@@ -1,4 +1,4 @@
-import type { GasStrategy } from '@universe/api'
+import type { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import type { TransactionSettings } from 'uniswap/src/features/transactions/components/settings/types'
 import type { EVMSwapInstructionsService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapInstructionsService'
 import { createGetEVMSwapTransactionRequestInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/utils'

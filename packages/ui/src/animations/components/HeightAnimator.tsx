@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useEvent, View } from 'tamagui'
 import { FlexProps } from 'ui/src/components/layout'
-import { isTestEnv } from 'utilities/src/environment/env'
 
 export interface HeightAnimatorProps {
   open?: boolean
@@ -21,10 +20,14 @@ export const HeightAnimator = View.styleable<HeightAnimatorProps>(
       }
     })
 
+    if (animationDisabled) {
+      return open ? <>{children}</> : <></>
+    }
+
     return (
       <View
         ref={ref}
-        animation={animationDisabled || isTestEnv() ? null : animation}
+        animation={animation}
         enterStyle={{ opacity: 0 }}
         exitStyle={{ opacity: 0 }}
         height={open ? visibleHeight : 0}

@@ -1,4 +1,4 @@
-/* biome-ignore-all lint/suspicious/noExplicitAny: legacy code needs review */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { SearchHistoryResultType } from 'uniswap/src/features/search/SearchHistoryResult'
 import { PreV55SearchResultType } from 'uniswap/src/state/oldTypes'
 

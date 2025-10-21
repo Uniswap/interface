@@ -1,11 +1,11 @@
-import { TradingApi } from '@universe/api'
 import { getInternalError, getSdkError } from '@walletconnect/utils'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import { addRequest, WalletSendCallsRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put, select } from 'typed-redux-saga'
 import { UNISWAP_DELEGATION_ADDRESS } from 'uniswap/src/constants/addresses'
-import { checkWalletDelegation, TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { checkWalletDelegation, fetchWalletEncoding7702 } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { WalletCheckDelegationResponseBody } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -120,18 +120,15 @@ export function* handleSendCalls({
   }
 
   try {
-    const { requestId: encodedRequestId, encoded: encodedTransaction } = yield* call(
-      TradingApiClient.fetchWalletEncoding7702,
-      {
-        calls: transformCallsToTransactionRequests({
-          calls: request.calls,
-          chainId: request.chainId,
-          accountAddress: request.account,
-        }),
-        smartContractDelegationAddress: UNISWAP_DELEGATION_ADDRESS,
-        walletAddress: request.account,
-      },
-    )
+    const { requestId: encodedRequestId, encoded: encodedTransaction } = yield* call(fetchWalletEncoding7702, {
+      calls: transformCallsToTransactionRequests({
+        calls: request.calls,
+        chainId: request.chainId,
+        accountAddress: request.account,
+      }),
+      smartContractDelegationAddress: UNISWAP_DELEGATION_ADDRESS,
+      walletAddress: request.account,
+    })
 
     const requestWithEncodedTransaction = {
       ...request,
@@ -196,7 +193,7 @@ export function* handleGetCapabilities({
 
   const chainIds = (chainIdsFromRequest ?? enabledChains).map((chainId) => chainId.valueOf())
 
-  let delegationStatusResponse: TradingApi.WalletCheckDelegationResponseBody | undefined
+  let delegationStatusResponse: WalletCheckDelegationResponseBody | undefined
 
   let hasNoExistingDelegations = true
 

@@ -1,4 +1,3 @@
-import { GraphQLApi } from '@universe/api'
 import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Loader } from 'src/components/loading/loaders'
@@ -7,14 +6,15 @@ import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { RotatableChevron, Verified } from 'ui/src/components/icons'
 import { iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
+import { Currency, NftItemScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 
 type Collection = NonNullable<
-  NonNullable<NonNullable<GraphQLApi.NftItemScreenQuery['nftAssets']>>['edges'][0]
+  NonNullable<NonNullable<NftItemScreenQuery['nftAssets']>>['edges'][0]
 >['node']['collection']
 
 interface CollectionPreviewCardProps {
-  collection: GraphQLApi.Maybe<Collection>
+  collection: Maybe<Collection>
   fallbackData?: NFTItem
   onPress: () => void
   loading: boolean
@@ -74,7 +74,7 @@ export function CollectionPreviewCard({
                   iconColor="$neutral2"
                   price={{
                     value: collection.markets[0].floorPrice.value,
-                    currency: GraphQLApi.Currency.Eth,
+                    currency: Currency.Eth,
                   }}
                   textColor="$neutral2"
                   textVariant="subheading2"

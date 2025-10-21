@@ -8,7 +8,7 @@ import { TokenRate } from 'uniswap/src/components/CurrencyInputPanel/TokenRate'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isExtensionApp, isWebAppDesktop, isWebPlatform } from 'utilities/src/platform'
+import { isExtension, isInterfaceDesktop, isWeb } from 'utilities/src/platform'
 
 interface CurrencyInputPanelHeaderProps {
   headerLabel?: string
@@ -39,12 +39,12 @@ export function CurrencyInputPanelHeader({
   }
 
   const showInputPresets =
-    (isWebAppDesktop || isExtensionApp) && currencyField === CurrencyField.INPUT && currencyBalance
+    (isInterfaceDesktop || isExtension) && currencyField === CurrencyField.INPUT && currencyBalance
 
   return (
     <Flex row justifyContent="space-between">
       {/* IMPORTANT: $micro crashes on mobile */}
-      <Text color="$neutral2" variant="subheading2" fontSize={isWebPlatform ? '$micro' : '$small'}>
+      <Text color="$neutral2" variant="subheading2" fontSize={isWeb ? '$micro' : '$small'}>
         {headerLabel}
       </Text>
       {showInputPresets && (
@@ -57,12 +57,12 @@ export function CurrencyInputPanelHeader({
           />
         </Flex>
       )}
-      {showDefaultTokenOptions && isWebAppDesktop && (
+      {showDefaultTokenOptions && isInterfaceDesktop && (
         <Flex position="absolute" right={0} top={-spacing.spacing6}>
           <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
         </Flex>
       )}
-      {showFlippableRate && isWebAppDesktop && <TokenRate />}
+      {showFlippableRate && isInterfaceDesktop && <TokenRate />}
     </Flex>
   )
 }

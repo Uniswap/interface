@@ -3,8 +3,8 @@ import { createPromiseClient } from '@connectrpc/connect'
 import { queryOptions, UseQueryResult, useQuery } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import { ListTransactionsRequest, ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
-import { transformInput, WithoutWalletAccount } from '@universe/api'
 import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
+import { transformInput, WithoutWalletAccount } from 'uniswap/src/data/rest/utils'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import type { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
@@ -47,13 +47,11 @@ export const getListTransactionsQuery = <TSelectData = ListTransactionsResponse>
 }: GetListTransactionsInput<TSelectData>): GetListTransactionsQuery<TSelectData> => {
   const transformedInput = transformInput(input)
 
-  const { walletAccount, ...inputWithoutWalletAccount } = transformedInput ?? {}
-  const walletAccountsKey = walletAccount?.platformAddresses
-    .map((platformAddress) => `${platformAddress.address}-${platformAddress.platform}`)
-    .join(',')
+  const { walletAccount, ...inputWithoutAddress } = transformedInput ?? {}
+  const address = walletAccount?.platformAddresses[0]?.address
 
   return queryOptions({
-    queryKey: [ReactQueryCacheKey.ListTransactions, walletAccountsKey, inputWithoutWalletAccount],
+    queryKey: [ReactQueryCacheKey.ListTransactions, address, inputWithoutAddress],
     queryFn: () =>
       transformedInput ? transactionsClient.listTransactions(transformedInput) : Promise.resolve(undefined),
     placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when refetching

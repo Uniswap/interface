@@ -56,7 +56,6 @@ bun g:lint:fix                  # Fix linting issues
 bun g:typecheck                 # Type check all packages
 bun g:format:fix                # Fix formatting
 bun g:fix                       # Run both lint and format fix
-bun i18n:extract                # Extract localized strings (run after changing translations)
 ```
 
 ## Architecture Overview
@@ -115,7 +114,6 @@ bun i18n:extract                # Extract localized strings (run after changing 
 - Always update existing unit tests related to changes made
 - Run tests before considering a task to be 'complete'
 - Also run linting and typecheck before considering a task to be 'complete'
-- Run `bun i18n:extract` after making changes to localized strings (e.g., using translation hooks like `useTranslation`)
 
 ## Critical Development Notes
 

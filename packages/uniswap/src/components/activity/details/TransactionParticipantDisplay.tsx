@@ -4,7 +4,7 @@ import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 
 export function TransactionParticipantDisplay({ address }: { address: string }): JSX.Element {
   return (
-    <Flex justifyContent="center" flexDirection="row" gap="$spacing4">
+    <Flex centered flexDirection="row" gap="$spacing4">
       <AddressDisplay
         hideAddressInSubtitle
         address={address}

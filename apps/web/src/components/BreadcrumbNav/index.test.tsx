@@ -5,7 +5,6 @@ import { TokenFromList } from 'state/lists/tokenFromList'
 import { render, screen } from 'test-utils/render'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 describe('BreadcrumbNav', () => {
   it('renders hover components correctly', async () => {
@@ -22,9 +21,9 @@ describe('BreadcrumbNav', () => {
     expect(asFragment()).toMatchSnapshot()
 
     await userEvent.hover(screen.getByTestId('current-breadcrumb'))
-    expect(screen.getByTestId(TestID.BreadcrumbHoverCopy)).toBeInTheDocument()
+    expect(screen.getByTestId('breadcrumb-hover-copy')).toBeInTheDocument()
     await userEvent.unhover(screen.getByTestId('current-breadcrumb'))
-    expect(screen.queryByTestId(TestID.BreadcrumbHoverCopy)).not.toBeInTheDocument()
+    expect(screen.queryByTestId('breadcrumb-hover-copy')).not.toBeInTheDocument()
   })
 
   it('does not display address hover for native tokens', async () => {
@@ -33,6 +32,6 @@ describe('BreadcrumbNav', () => {
     expect(asFragment()).toMatchSnapshot()
 
     await userEvent.hover(screen.getByTestId('current-breadcrumb'))
-    expect(screen.queryByTestId(TestID.BreadcrumbHoverCopy)).not.toBeInTheDocument()
+    expect(screen.queryByTestId('breadcrumb-hover-copy')).not.toBeInTheDocument()
   })
 })

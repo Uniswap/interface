@@ -1,5 +1,5 @@
 import { providers } from 'ethers/lib/ethers'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Clear } from 'ui/src/components/icons/Clear'
@@ -11,8 +11,8 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CancelConfirmationView } from 'uniswap/src/features/transactions/components/cancel/CancelConfirmationView'
 import { useIsCancelable } from 'uniswap/src/features/transactions/hooks/useIsCancelable'
@@ -28,8 +28,7 @@ import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openFORSupportLink, openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { isWebPlatform } from 'utilities/src/platform'
-import { useEvent } from 'utilities/src/react/hooks'
+import { isWeb } from 'utilities/src/platform'
 
 enum SupportLinkParams {
   WalletAddress = 'tf_11041337007757',
@@ -62,7 +61,7 @@ export function useTransactionActions({
 
   const baseActionItems = useTransactionActionItems(transaction)
 
-  const handleCancel = useEvent((txRequest: providers.TransactionRequest): void => {
+  const handleCancel = (txRequest: providers.TransactionRequest): void => {
     dispatch(
       cancelTransaction({
         chainId: transaction.chainId,
@@ -72,15 +71,15 @@ export function useTransactionActions({
       }),
     )
     setShowCancelModal(false)
-  })
+  }
 
-  const handleCancelModalClose = useEvent((): void => {
+  const handleCancelModalClose = (): void => {
     setShowCancelModal(false)
-  })
+  }
 
-  const handleCancelConfirmationBack = useEvent((): void => {
+  const handleCancelConfirmationBack = (): void => {
     setShowCancelModal(false)
-  })
+  }
 
   useEffect(() => {
     if (status !== TransactionStatus.Pending) {
@@ -88,9 +87,9 @@ export function useTransactionActions({
     }
   }, [status])
 
-  const openCancelModal = useEvent((): void => {
+  const openCancelModal = (): void => {
     setShowCancelModal(true)
-  })
+  }
 
   const menuItems = useMemo(() => {
     const items = [...baseActionItems]
@@ -106,22 +105,19 @@ export function useTransactionActions({
     return items
   }, [baseActionItems, isCancelable, t])
 
-  const renderModals = useCallback(
-    (): JSX.Element => (
-      <>
-        {showCancelModal && (
-          <Modal hideHandlebar={false} name={ModalName.TransactionCancellation} onClose={handleCancelModalClose}>
-            <CancelConfirmationView
-              authTrigger={authTrigger}
-              transactionDetails={transaction}
-              onBack={handleCancelConfirmationBack}
-              onCancel={handleCancel}
-            />
-          </Modal>
-        )}
-      </>
-    ),
-    [showCancelModal, authTrigger, transaction, handleCancelConfirmationBack, handleCancel, handleCancelModalClose],
+  const renderModals = (): JSX.Element => (
+    <>
+      {showCancelModal && (
+        <Modal hideHandlebar={false} name={ModalName.TransactionCancellation} onClose={handleCancelModalClose}>
+          <CancelConfirmationView
+            authTrigger={authTrigger}
+            transactionDetails={transaction}
+            onBack={handleCancelConfirmationBack}
+            onCancel={handleCancel}
+          />
+        </Modal>
+      )}
+    </>
   )
 
   return {
@@ -135,6 +131,7 @@ function useTransactionActionItems(transactionDetails: TransactionDetails): Menu
   const { t } = useTranslation()
   const dispatch = useDispatch()
 
+  const items: MenuOptionItem[] = []
   const transactionId = getTransactionId(transactionDetails)
 
   const onRampProviderName =
@@ -144,56 +141,50 @@ function useTransactionActionItems(transactionDetails: TransactionDetails): Menu
       ? transactionDetails.typeInfo.serviceProvider.name
       : undefined
 
-  const items: MenuOptionItem[] = useMemo(() => {
-    const _items: MenuOptionItem[] = []
+  if (transactionId) {
+    const copyLabel = onRampProviderName
+      ? t('transaction.action.copyProvider', {
+          providerName: onRampProviderName,
+        })
+      : t('transaction.action.copy')
 
-    if (transactionId) {
-      const copyLabel = onRampProviderName
-        ? t('transaction.action.copyProvider', {
-            providerName: onRampProviderName,
-          })
-        : t('transaction.action.copy')
-
-      _items.push({
-        label: copyLabel,
-        Icon: CopySheets,
-        onPress: async (): Promise<void> => {
-          await setClipboard(transactionId)
-          dispatch(
-            pushNotification({
-              type: AppNotificationType.Copied,
-              copyType: CopyNotificationType.TransactionId,
-            }),
-          )
-        },
-      })
-    }
-
-    _items.push({
-      label: t('settings.action.help'),
-      Icon: HelpCenter,
+    items.push({
+      label: copyLabel,
+      Icon: CopySheets,
       onPress: async (): Promise<void> => {
-        await openSupportLink(transactionDetails)
+        await setClipboard(transactionId)
+        dispatch(
+          pushNotification({
+            type: AppNotificationType.Copied,
+            copyType: CopyNotificationType.TransactionId,
+          }),
+        )
       },
     })
+  }
 
-    if (
-      (isClassic(transactionDetails) || isBridge(transactionDetails)) &&
-      !isFinalizedTx(transactionDetails) &&
-      transactionDetails.options.timeoutTimestampMs &&
-      transactionDetails.options.timeoutTimestampMs < Date.now()
-    ) {
-      _items.push({
-        label: t('transaction.action.clear'),
-        Icon: Clear,
-        onPress: async (): Promise<void> => {
-          dispatch(finalizeTransaction({ ...transactionDetails, status: TransactionStatus.Failed }))
-        },
-      })
-    }
+  items.push({
+    label: t('settings.action.help'),
+    Icon: HelpCenter,
+    onPress: async (): Promise<void> => {
+      await openSupportLink(transactionDetails)
+    },
+  })
 
-    return _items
-  }, [dispatch, onRampProviderName, t, transactionDetails, transactionId])
+  if (
+    (isClassic(transactionDetails) || isBridge(transactionDetails)) &&
+    !isFinalizedTx(transactionDetails) &&
+    transactionDetails.options.timeoutTimestampMs &&
+    transactionDetails.options.timeoutTimestampMs < Date.now()
+  ) {
+    items.push({
+      label: t('transaction.action.clear'),
+      Icon: Clear,
+      onPress: async (): Promise<void> => {
+        dispatch(finalizeTransaction({ ...transactionDetails, status: TransactionStatus.Failed }))
+      },
+    })
+  }
 
   return items
 }
@@ -207,7 +198,7 @@ async function openSupportLink(transactionDetails: TransactionDetails): Promise<
       return openFORSupportLink(transactionDetails.typeInfo.serviceProvider)
     default:
       params.append(SupportLinkParams.WalletAddress, transactionDetails.ownerAddress ?? '') // Wallet Address
-      params.append(SupportLinkParams.ReportType, isWebPlatform ? 'uniswap_extension_issue' : 'uw_ios_app') // Report Type Dropdown
+      params.append(SupportLinkParams.ReportType, isWeb ? 'uniswap_extension_issue' : 'uw_ios_app') // Report Type Dropdown
       params.append(SupportLinkParams.IssueType, 'uw_transaction_details_page_submission') // Issue type Dropdown
       params.append(SupportLinkParams.TransactionId, transactionDetails.hash ?? 'N/A') // Transaction id
       return openUri({ uri: uniswapUrls.helpRequestUrl + '?' + params.toString() }).catch((e) =>

@@ -57,16 +57,16 @@ exports[`FavoriteTokenCard renders without error 1`] = `
     style={
       {
         "backgroundColor": "#FFFFFF",
-        "borderBottomColor": "rgba(19, 19, 19, 0.08)",
+        "borderBottomColor": "rgba(34,34,34,0.05)",
         "borderBottomLeftRadius": 16,
         "borderBottomRightRadius": 16,
         "borderBottomWidth": 1,
-        "borderLeftColor": "rgba(19, 19, 19, 0.08)",
+        "borderLeftColor": "rgba(34,34,34,0.05)",
         "borderLeftWidth": 1,
-        "borderRightColor": "rgba(19, 19, 19, 0.08)",
+        "borderRightColor": "rgba(34,34,34,0.05)",
         "borderRightWidth": 1,
         "borderStyle": "solid",
-        "borderTopColor": "rgba(19, 19, 19, 0.08)",
+        "borderTopColor": "rgba(34,34,34,0.05)",
         "borderTopLeftRadius": 16,
         "borderTopRightRadius": 16,
         "borderTopWidth": 1,
@@ -87,7 +87,7 @@ exports[`FavoriteTokenCard renders without error 1`] = `
         ],
       }
     }
-    testID="favorite-token-card-undefined"
+    testID="token-box-undefined"
   >
     <View
       onBlur={[Function]}

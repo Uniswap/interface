@@ -9,8 +9,8 @@ import { HiddenTokensRow } from 'uniswap/src/components/portfolio/HiddenTokensRo
 import { PortfolioEmptyState } from 'uniswap/src/components/portfolio/PortfolioEmptyState'
 import { TokenBalanceItem } from 'uniswap/src/components/portfolio/TokenBalanceItem'
 import { TokenBalanceItemContextMenu } from 'uniswap/src/components/portfolio/TokenBalanceItemContextMenu'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import {
   TokenBalanceListContextProvider,
   useTokenBalanceListContext,
@@ -21,8 +21,7 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 
 type TokenBalanceListProps = {
-  evmOwner?: Address
-  svmOwner?: Address
+  owner: Address
   onPressReceive: () => void
   onPressBuy: () => void
   onPressToken?: (currencyId: CurrencyId) => void
@@ -30,8 +29,7 @@ type TokenBalanceListProps = {
 }
 
 export const TokenBalanceListWeb = memo(function _TokenBalanceList({
-  evmOwner,
-  svmOwner,
+  owner,
   onPressReceive,
   onPressBuy,
   onPressToken,
@@ -39,12 +37,7 @@ export const TokenBalanceListWeb = memo(function _TokenBalanceList({
 }: TokenBalanceListProps): JSX.Element {
   return (
     <Flex grow>
-      <TokenBalanceListContextProvider
-        isExternalProfile={false}
-        evmOwner={evmOwner}
-        svmOwner={svmOwner}
-        onPressToken={onPressToken}
-      >
+      <TokenBalanceListContextProvider isExternalProfile={false} owner={owner} onPressToken={onPressToken}>
         <TokenBalanceListInner
           backgroundImageWrapperCallback={backgroundImageWrapperCallback}
           onPressReceive={onPressReceive}
@@ -149,11 +142,11 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
 
   const openModal = useCallback((): void => {
     setModalVisible(true)
-  }, [])
+  }, [setModalVisible])
 
   const closeModal = useCallback((): void => {
     setModalVisible(false)
-  }, [])
+  }, [setModalVisible])
 
   const portfolioBalance = useMemo(() => balancesById?.[item], [balancesById, item])
 

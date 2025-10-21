@@ -1,19 +1,24 @@
 import { useApolloClient } from '@apollo/client'
-import { GraphQLApi } from '@universe/api'
 import dayjs from 'dayjs'
 import { useEffect, useMemo } from 'react'
 import { View } from 'react-native'
 import { batch, useDispatch, useSelector } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import {
+  TransactionHistoryUpdaterQueryResult,
+  TransactionListQuery,
+  useTransactionHistoryUpdaterQuery,
+  useTransactionListLazyQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { parseDataResponseToTransactionDetails } from 'uniswap/src/features/activity/parseRestResponse'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { selectLastTxNotificationUpdate } from 'uniswap/src/features/notifications/slice/selectors'
+import { selectLastTxNotificationUpdate } from 'uniswap/src/features/notifications/selectors'
 import {
   pushNotification,
   setLastTxNotificationUpdate,
   setNotificationStatus,
-} from 'uniswap/src/features/notifications/slice/slice'
-import { ReceiveCurrencyTxNotification, ReceiveNFTNotification } from 'uniswap/src/features/notifications/slice/types'
+} from 'uniswap/src/features/notifications/slice'
+import { ReceiveCurrencyTxNotification, ReceiveNFTNotification } from 'uniswap/src/features/notifications/types'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/portfolio/portfolioUpdates/constants'
 import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
@@ -40,14 +45,14 @@ export function TransactionHistoryUpdater(): JSX.Element | null {
   // Poll at different intervals to reduce requests made for non active accounts.
 
   const activeAddresses = activeAccountAddress ?? []
-  const { data: activeAccountData } = GraphQLApi.useTransactionHistoryUpdaterQuery({
+  const { data: activeAccountData } = useTransactionHistoryUpdaterQuery({
     variables: { addresses: activeAddresses, chains: gqlChains },
     pollInterval: PollingInterval.KindaFast,
     fetchPolicy: 'network-only', // Ensure latest data.
     skip: activeAddresses.length === 0,
   })
 
-  const { data: nonActiveAccountData } = GraphQLApi.useTransactionHistoryUpdaterQuery({
+  const { data: nonActiveAccountData } = useTransactionHistoryUpdaterQuery({
     variables: { addresses: nonActiveAccountAddresses, chains: gqlChains },
     pollInterval: PollingInterval.Normal,
     fetchPolicy: 'network-only', // Ensure latest data.
@@ -84,7 +89,7 @@ function AddressTransactionHistoryUpdater({
   address: string
   activities: NonNullable<
     NonNullable<
-      NonNullable<NonNullable<GraphQLApi.TransactionHistoryUpdaterQueryResult['data']>['portfolios']>[0]
+      NonNullable<NonNullable<TransactionHistoryUpdaterQueryResult['data']>['portfolios']>[0]
     >['assetActivities']
   >
 }): JSX.Element | null {
@@ -101,7 +106,7 @@ function AddressTransactionHistoryUpdater({
   // don't show notifications on spam tokens if setting enabled
   const hideSpamTokens = useHideSpamTokensSetting()
 
-  const localTransactions = useSelectAddressTransactions({ evmAddress: address })
+  const localTransactions = useSelectAddressTransactions(address)
 
   useEffect(() => {
     batch(async () => {
@@ -173,7 +178,7 @@ export function useFetchAndDispatchReceiveNotification(): (
   lastTxNotificationUpdateTimestamp: number | undefined,
   hideSpamTokens: boolean,
 ) => Promise<void> {
-  const [fetchFullTransactionData] = GraphQLApi.useTransactionListLazyQuery()
+  const [fetchFullTransactionData] = useTransactionListLazyQuery()
   const dispatch = useDispatch()
   const { gqlChains } = useEnabledChains()
 
@@ -208,7 +213,7 @@ export function getReceiveNotificationFromData({
   lastTxNotificationUpdateTimestamp,
   hideSpamTokens = false,
 }: {
-  data?: GraphQLApi.TransactionListQuery
+  data?: TransactionListQuery
   address: Address
   lastTxNotificationUpdateTimestamp?: number
   hideSpamTokens?: boolean

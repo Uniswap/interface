@@ -21,7 +21,7 @@ export const getOperationType = (operation: Operation): 'query' | 'mutation' | '
         return operationDefinitionNode.operation
       })[0] || null
     )
-  } catch (_e) {
+  } catch (e) {
     return null
   }
 }

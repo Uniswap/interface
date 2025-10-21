@@ -1,11 +1,10 @@
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
 import Loader from 'components/Icons/LoadingSpinner'
 import { DetectedBadge } from 'components/WalletModal/shared'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
-import { useIsInjectedWallet } from 'features/accounts/store/hooks'
-import { ExternalWallet } from 'features/accounts/store/types'
+import { ConnectionStatus, useConnectionState } from 'features/wallet/connection/connectors/state'
 import { useConnectWallet } from 'features/wallet/connection/hooks/useConnectWallet'
+import { WalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
+import { isEqualWalletConnectorMetaId } from 'features/wallet/connection/utils'
 import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { Flex, Image, Text, useSporeColors } from 'ui/src'
@@ -20,7 +19,6 @@ import Badge, { BadgeVariant } from 'uniswap/src/components/badge/Badge'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isMobileWeb } from 'utilities/src/platform'
@@ -70,28 +68,28 @@ function OtherWalletsIcon() {
  * This function returns the correct icon for the connector.
  */
 function getIcon({
-  wallet,
+  walletConnectorMeta,
   isEmbeddedWalletEnabled,
   themeColors,
 }: {
-  wallet: ExternalWallet
+  walletConnectorMeta: WalletConnectorMeta
   isEmbeddedWalletEnabled: boolean
   themeColors: UseSporeColorsReturn
 }) {
   const iconSize = isEmbeddedWalletEnabled ? iconSizes.icon32 : iconSizes.icon40
 
-  if (wallet.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
+  if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
     return <EmbeddedWalletIcon />
-  } else if (wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
+  } else if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
     return <UniswapMobileIcon iconSize={iconSize} />
-  } else if (wallet.id === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID) {
+  } else if (walletConnectorMeta.wagmi?.id === CONNECTION_PROVIDER_IDS.BINANCE_WALLET_CONNECTOR_ID) {
     return <BinanceWalletIcon iconSize={iconSize} />
   } else {
     // TODO(WEB-7217): RN Web Image is not properly displaying base64 encoded images (Phantom logo) */
     return (
       <img
-        src={wallet.icon}
-        alt={wallet.name}
+        src={walletConnectorMeta.icon}
+        alt={walletConnectorMeta.name}
         style={{
           width: iconSize,
           height: iconSize,
@@ -103,13 +101,19 @@ function getIcon({
   }
 }
 
-function getConnectorText({ wallet, t }: { wallet: ExternalWallet; t: ReturnType<typeof useTranslation>['t'] }) {
-  if (wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
+function getConnectorText({
+  walletConnectorMeta,
+  t,
+}: {
+  walletConnectorMeta: WalletConnectorMeta
+  t: ReturnType<typeof useTranslation>['t']
+}) {
+  if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID) {
     return t('common.uniswapMobile')
-  } else if (wallet.id === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
+  } else if (walletConnectorMeta.customConnectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
     return t('account.passkey.log.in.title')
   } else {
-    return wallet.name
+    return walletConnectorMeta.name
   }
 }
 
@@ -132,41 +136,28 @@ function RightSideDetail({
   return null
 }
 
-export function WalletConnectorOption({
-  wallet,
-  connectOnPlatform = 'any',
-}: {
-  wallet: ExternalWallet
-  connectOnPlatform?: Platform | 'any'
-}) {
+export function WalletConnectorOption({ walletConnectorMeta }: { walletConnectorMeta: WalletConnectorMeta }) {
   const { t } = useTranslation()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
-  const { connectWallet, pendingWallet } = useConnectWallet()
-
-  const isPendingConnection = pendingWallet?.id === wallet.id
+  const connectionState = useConnectionState()
+  const isPendingConnection =
+    connectionState.status === ConnectionStatus.Pending && connectionState.meta.name === walletConnectorMeta.name
 
   const recentConnectorId = useRecentConnectorId()
-  const isRecent = Boolean(recentConnectorId && wallet.id === recentConnectorId)
+  const isRecent = Boolean(recentConnectorId && isEqualWalletConnectorMetaId(walletConnectorMeta, recentConnectorId))
 
   const themeColors = useSporeColors()
-  const icon = getIcon({ wallet, isEmbeddedWalletEnabled, themeColors })
-  const text = getConnectorText({ wallet, t })
+  const icon = getIcon({ walletConnectorMeta, isEmbeddedWalletEnabled, themeColors })
+  const text = getConnectorText({ walletConnectorMeta, t })
   // Porto is set as injected, but we don't want to show it in the wallet modal as a detected wallet
-  const isDetected = useIsInjectedWallet(wallet.id)
+  const isDetected =
+    walletConnectorMeta.isInjected && walletConnectorMeta.wagmi?.id !== CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
   const isDisabled = Boolean(isPendingConnection && !isIFramed())
 
-  const accountDrawer = useAccountDrawer()
-  const setMenu = useSetMenu()
-
-  const onSuccess = useEvent(() => {
-    accountDrawer.close()
-    setMenu({ variant: MenuStateVariant.MAIN })
-  })
-
-  const individualPlatform = connectOnPlatform === 'any' ? undefined : connectOnPlatform
-  const handleConnect = useEvent(() => connectWallet({ wallet, onSuccess, individualPlatform }))
+  const connectWallet = useConnectWallet()
+  const handleConnect = useEvent(() => connectWallet(walletConnectorMeta))
 
   return (
     <WalletConnectorOptionBase
@@ -179,8 +170,8 @@ export function WalletConnectorOption({
       isPendingConnection={isPendingConnection}
       isDisabled={isDisabled}
       analyticsProperties={{
-        wallet_name: wallet.name,
-        wallet_type: wallet.analyticsWalletType,
+        wallet_name: walletConnectorMeta.name,
+        wallet_type: walletConnectorMeta.analyticsWalletType,
       }}
     />
   )
@@ -225,25 +216,25 @@ function WalletConnectorOptionBase({
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
 
   return (
-    <Trace
-      logPress
-      eventOnTrigger={InterfaceEventName.WalletSelected}
-      properties={analyticsProperties}
-      element={ElementName.WalletTypeOption}
+    <Flex
+      backgroundColor={isEmbeddedWalletEnabled ? 'transparent' : '$surface2'}
+      row
+      alignItems="center"
+      width="100%"
+      justifyContent="space-between"
+      position="relative"
+      px="$spacing12"
+      py="$spacing18"
+      cursor={isDisabled ? 'auto' : 'pointer'}
+      hoverStyle={{ backgroundColor: isDisabled ? '$surface2' : '$surface1Hovered' }}
+      opacity={isDisabled && !isPendingConnection ? 0.5 : 1}
+      onPress={onPress}
     >
-      <Flex
-        backgroundColor={isEmbeddedWalletEnabled ? 'transparent' : '$surface2'}
-        row
-        alignItems="center"
-        width="100%"
-        justifyContent="space-between"
-        position="relative"
-        px="$spacing12"
-        py="$spacing18"
-        cursor={isDisabled ? 'auto' : 'pointer'}
-        hoverStyle={{ backgroundColor: isDisabled ? '$surface2' : '$surface1Hovered' }}
-        opacity={isDisabled && !isPendingConnection ? 0.5 : 1}
-        onPress={onPress}
+      <Trace
+        logPress
+        eventOnTrigger={InterfaceEventName.WalletSelected}
+        properties={analyticsProperties}
+        element={ElementName.WalletTypeOption}
       >
         <Flex row alignItems="center" gap="$gap12">
           {icon}
@@ -252,7 +243,7 @@ function WalletConnectorOptionBase({
           </Text>
         </Flex>
         {rightSideDetail}
-      </Flex>
-    </Trace>
+      </Trace>
+    </Flex>
   )
 }

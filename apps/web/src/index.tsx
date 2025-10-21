@@ -8,12 +8,8 @@ import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
 import { datadogRum } from '@datadog/browser-rum'
 import { QueryClientPersistProvider } from 'components/PersistQueryClient'
-import { createWeb3Provider } from 'components/Web3Provider/createWeb3Provider'
+import Web3Provider from 'components/Web3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
-import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
-import { AccountsStoreDevTool } from 'features/accounts/store/devtools'
-import { WebAccountsStoreProvider } from 'features/accounts/store/provider'
-import { ConnectWalletMutationProvider } from 'features/wallet/connection/hooks/useConnectWalletMutation'
 import { ExternalWalletProvider } from 'features/wallet/providers/ExternalWalletProvider'
 import { useAccount } from 'hooks/useAccount'
 import { useDeferredComponent } from 'hooks/useDeferredComponent'
@@ -65,8 +61,8 @@ const loadActivityStateUpdater = () =>
   import('state/activity/updater').then((m) => ({ default: m.ActivityStateUpdater }))
 const loadLogsUpdater = () => import('state/logs/updater')
 const loadFiatOnRampTransactionsUpdater = () => import('state/fiatOnRampTransactions/updater')
-const loadWebAccountsStoreUpdater = () =>
-  import('features/accounts/store/updater').then((m) => ({ default: m.WebAccountsStoreUpdater }))
+const loadWeb3ProviderUpdater = () =>
+  import('components/Web3Provider').then((m) => ({ default: m.Web3ProviderUpdater }))
 
 function Updaters() {
   const location = useLocation()
@@ -78,7 +74,7 @@ function Updaters() {
   const ActivityStateUpdater = useDeferredComponent(loadActivityStateUpdater)
   const LogsUpdater = useDeferredComponent(loadLogsUpdater)
   const FiatOnRampTransactionsUpdater = useDeferredComponent(loadFiatOnRampTransactionsUpdater)
-  const WebAccountsStoreUpdater = useDeferredComponent(loadWebAccountsStoreUpdater)
+  const Web3ProviderUpdater = useDeferredComponent(loadWeb3ProviderUpdater)
 
   return (
     <>
@@ -92,14 +88,10 @@ function Updaters() {
       {ActivityStateUpdater && <ActivityStateUpdater />}
       {LogsUpdater && <LogsUpdater />}
       {FiatOnRampTransactionsUpdater && <FiatOnRampTransactionsUpdater />}
-      {WebAccountsStoreUpdater && <WebAccountsStoreUpdater />}
-      <AccountsStoreDevTool />
+      {Web3ProviderUpdater && <Web3ProviderUpdater />}
     </>
   )
 }
-
-// Production Web3Provider – always reconnects on mount and runs capability effects.
-const Web3Provider = createWeb3Provider({ wagmiConfig })
 
 function GraphqlProviders({ children }: { children: React.ReactNode }) {
   return (
@@ -161,27 +153,23 @@ createRoot(container).render(
                     <Web3Provider>
                       <StatsigProvider>
                         <ExternalWalletProvider>
-                          <ConnectWalletMutationProvider>
-                            <WebAccountsStoreProvider>
-                              <WebUniswapProvider>
-                                <GraphqlProviders>
-                                  <LocalizationContextProvider>
-                                    <BlockNumberProvider>
-                                      <Updaters />
-                                      <ThemeProvider>
-                                        <TamaguiProvider>
-                                          <PortalProvider>
-                                            <ThemedGlobalStyle />
-                                            <App />
-                                          </PortalProvider>
-                                        </TamaguiProvider>
-                                      </ThemeProvider>
-                                    </BlockNumberProvider>
-                                  </LocalizationContextProvider>
-                                </GraphqlProviders>
-                              </WebUniswapProvider>
-                            </WebAccountsStoreProvider>
-                          </ConnectWalletMutationProvider>
+                          <WebUniswapProvider>
+                            <GraphqlProviders>
+                              <LocalizationContextProvider>
+                                <BlockNumberProvider>
+                                  <Updaters />
+                                  <ThemeProvider>
+                                    <TamaguiProvider>
+                                      <PortalProvider>
+                                        <ThemedGlobalStyle />
+                                        <App />
+                                      </PortalProvider>
+                                    </TamaguiProvider>
+                                  </ThemeProvider>
+                                </BlockNumberProvider>
+                              </LocalizationContextProvider>
+                            </GraphqlProviders>
+                          </WebUniswapProvider>
                         </ExternalWalletProvider>
                       </StatsigProvider>
                     </Web3Provider>

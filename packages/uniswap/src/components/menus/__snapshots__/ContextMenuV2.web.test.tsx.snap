@@ -208,6 +208,7 @@ exports[`ContextMenu renders without error 1`] = `
                       "scale": 1,
                     },
                   ],
+                  "width": "100%",
                 }
               }
             >
@@ -321,6 +322,7 @@ exports[`ContextMenu renders without error 1`] = `
                       "scale": 1,
                     },
                   ],
+                  "width": "100%",
                 }
               }
             >

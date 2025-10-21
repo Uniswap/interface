@@ -1,5 +1,5 @@
-import { TradingApi } from '@universe/api'
 import type { Warning, WarningWithStyle } from 'uniswap/src/components/modals/WarningModal/types'
+import type { TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__/index'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { GasFeeResult } from 'uniswap/src/features/gas/types'
@@ -30,7 +30,7 @@ export type SwapReviewTransactionState = {
   isWrap: boolean
   blockingWarning: Warning | undefined
   reviewScreenWarning: WarningWithStyle | undefined
-  txSimulationErrors: TradingApi.TransactionFailureReason[] | undefined
+  txSimulationErrors: TransactionFailureReason[] | undefined
   newTradeRequiresAcceptance: boolean
   feeOnTransferProps: FeeOnTransferFeeGroupProps | undefined
   tokenWarningProps: TokenWarningProps

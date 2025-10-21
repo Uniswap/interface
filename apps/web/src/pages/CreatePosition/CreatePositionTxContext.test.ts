@@ -3,7 +3,6 @@ import { CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, nearestUsableTick, TICK_SPACINGS, TickMath, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
-import { TradingApi } from '@universe/api'
 import { PositionState } from 'components/Liquidity/Create/types'
 import {
   generateAddLiquidityApprovalParams,
@@ -14,6 +13,7 @@ import { ETH_MAINNET } from 'test-utils/constants'
 import { PositionField } from 'types/position'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { USDT } from 'uniswap/src/constants/tokens'
+import { IndependentToken, ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -101,7 +101,7 @@ describe('generateAddLiquidityApprovalParams', () => {
       token0: USDT.address,
       token1: ZERO_ADDRESS,
       simulateTransaction: true,
-      protocol: TradingApi.ProtocolItems.V4,
+      protocol: ProtocolItems.V4,
       generatePermitAsTransaction: undefined,
       amount0: '1000000000000000000',
       amount1: '1000000000000000000',
@@ -126,7 +126,7 @@ describe('generateAddLiquidityApprovalParams', () => {
       token0: USDT.address,
       token1: ZERO_ADDRESS,
       simulateTransaction: true,
-      protocol: TradingApi.ProtocolItems.V4,
+      protocol: ProtocolItems.V4,
       generatePermitAsTransaction: true,
       amount0: '1000000000000000000',
       amount1: '1000000000000000000',
@@ -244,12 +244,12 @@ describe('generateCreateCalldataQueryParams', () => {
       ).toEqual({
         walletAddress: ZERO_ADDRESS,
         simulateTransaction: true,
-        protocol: TradingApi.ProtocolItems.V2,
+        protocol: ProtocolItems.V2,
         slippageTolerance: undefined,
         chainId: UniverseChainId.Mainnet,
         defaultDependentAmount: '1000000000000000000',
         independentAmount: '1000000000000000000',
-        independentToken: TradingApi.IndependentToken.TOKEN_0,
+        independentToken: IndependentToken.TOKEN_0,
         position: {
           pool: {
             token0: USDT.address,
@@ -349,12 +349,12 @@ describe('generateCreateCalldataQueryParams', () => {
       ).toEqual({
         walletAddress: ZERO_ADDRESS,
         simulateTransaction: true,
-        protocol: TradingApi.ProtocolItems.V3,
+        protocol: ProtocolItems.V3,
         slippageTolerance: undefined,
         chainId: UniverseChainId.Mainnet,
         initialDependentAmount: undefined,
         independentAmount: '1000000000000000000',
-        independentToken: TradingApi.IndependentToken.TOKEN_0,
+        independentToken: IndependentToken.TOKEN_0,
         initialPrice: undefined,
         position: {
           pool: {
@@ -390,12 +390,12 @@ describe('generateCreateCalldataQueryParams', () => {
       ).toEqual({
         walletAddress: ZERO_ADDRESS,
         simulateTransaction: true,
-        protocol: TradingApi.ProtocolItems.V3,
+        protocol: ProtocolItems.V3,
         slippageTolerance: undefined,
         chainId: UniverseChainId.Mainnet,
         initialDependentAmount: '1000000000000000000',
         independentAmount: '1000000000000000000',
-        independentToken: TradingApi.IndependentToken.TOKEN_0,
+        independentToken: IndependentToken.TOKEN_0,
         initialPrice: '2437312313659959819381354528',
         position: {
           pool: {
@@ -503,12 +503,12 @@ describe('generateCreateCalldataQueryParams', () => {
       ).toEqual({
         walletAddress: ZERO_ADDRESS,
         simulateTransaction: true,
-        protocol: TradingApi.ProtocolItems.V4,
+        protocol: ProtocolItems.V4,
         slippageTolerance: undefined,
         chainId: UniverseChainId.Mainnet,
         initialDependentAmount: undefined,
         independentAmount: '1000000000000000000',
-        independentToken: TradingApi.IndependentToken.TOKEN_0,
+        independentToken: IndependentToken.TOKEN_0,
         initialPrice: undefined,
         position: {
           pool: {
@@ -544,12 +544,12 @@ describe('generateCreateCalldataQueryParams', () => {
       ).toEqual({
         walletAddress: ZERO_ADDRESS,
         simulateTransaction: true,
-        protocol: TradingApi.ProtocolItems.V4,
+        protocol: ProtocolItems.V4,
         slippageTolerance: undefined,
         chainId: UniverseChainId.Mainnet,
         initialDependentAmount: '1000000000000000000',
         independentAmount: '1000000000000000000',
-        independentToken: TradingApi.IndependentToken.TOKEN_0,
+        independentToken: IndependentToken.TOKEN_0,
         initialPrice: '2437312313659959819381354528',
         position: {
           pool: {

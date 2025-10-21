@@ -15,10 +15,10 @@ import { UNICHAIN_CHAIN_INFO, UNICHAIN_SEPOLIA_CHAIN_INFO } from 'uniswap/src/fe
 import { WORLD_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/worldchain'
 import { ZKSYNC_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/zksync'
 import { ZORA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/zora'
-import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { SOLANA_CHAIN_INFO } from 'uniswap/src/features/chains/svm/info/solana'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
+import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { SolanaToken } from 'uniswap/src/features/tokens/SolanaToken'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -35,6 +35,14 @@ export const { USDC: USDC_SONEIUM } = SONEIUM_CHAIN_INFO.tokens
 export const { DAI } = MAINNET_CHAIN_INFO.tokens
 
 export const { USDC: USDC_SOLANA } = SOLANA_CHAIN_INFO.tokens
+
+export const SOL = new SolanaToken(
+  UniverseChainId.Solana,
+  'So11111111111111111111111111111111111111112',
+  9,
+  'SOL',
+  'Solana',
+)
 
 export const { USDT } = MAINNET_CHAIN_INFO.tokens
 
@@ -72,7 +80,7 @@ export const ETH_BSC = new Token(
   UniverseChainId.Bnb,
   '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
   18,
-  'WETH',
+  'ETH',
   'Ethereum',
 )
 
@@ -341,13 +349,6 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WETH',
     'Wrapped Ether',
   ),
-  [UniverseChainId.Solana]: new SolanaToken(
-    UniverseChainId.Solana,
-    WRAPPED_SOL_ADDRESS_SOLANA,
-    9,
-    'WSOL',
-    'Wrapped SOL',
-  ),
 }
 
 class NativeCurrencyImpl extends NativeCurrency {
@@ -375,18 +376,22 @@ class NativeCurrencyImpl extends NativeCurrency {
   }
 }
 
-const cachedNativeCurrency: { [chainId: number]: NativeCurrencyImpl } = {}
+const cachedNativeCurrency: { [chainId: number]: NativeCurrencyImpl | Token } = {}
 
 /**
  * @deprecated Prefer obtaining metadata via the non-sdk-based getChainInfo(chainId).nativeCurrency instead.
  *
  * Utility for obtaining an `@uniswap/sdk-core` `NativeCurrency` instance for a given chainId.
  */
-export function nativeOnChain(chainId: number): NativeCurrencyImpl {
+export function nativeOnChain(chainId: number): NativeCurrencyImpl | Token {
   const cached = cachedNativeCurrency[chainId]
 
   if (cached) {
     return cached
+  }
+
+  if (isSVMChain(chainId)) {
+    return SOL
   }
 
   const result = new NativeCurrencyImpl(chainId)
@@ -394,41 +399,11 @@ export function nativeOnChain(chainId: number): NativeCurrencyImpl {
   return result
 }
 
-// TODO[DAT-1513]: Replace with metadata fields from backend
-export const UNICHAIN_BRIDGED_ASSETS: readonly BridgedAsset[] = [
-  {
-    unichainAddress: '0xbde8a5331e8ac4831cf8ea9e42e229219eafab97', // SOL
-    nativeChain: 'Solana',
-    nativeAddress: 'native',
-  },
-  {
-    unichainAddress: '0xbe51A5e8FA434F09663e8fB4CCe79d0B2381Afad', // JUP
-    nativeChain: 'Solana',
-    nativeAddress: 'JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN',
-  },
-  {
-    unichainAddress: '0x97Fadb3D000b953360FD011e173F12cDDB5d70Fa', // WIF
-    nativeChain: 'Solana',
-    nativeAddress: 'EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm',
-  },
-  {
-    unichainAddress: '0x15d0e0c55a3e7ee67152ad7e89acf164253ff68d', // HYPE
-    nativeChain: 'HyperEVM',
-    nativeAddress: 'native',
-  },
-  {
-    unichainAddress: '0xBbE97f3522101e5B6976cBf77376047097BA837F', // BONK
-    nativeChain: 'Solana',
-    nativeAddress: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263',
-  },
+// TODO[DAT-1513]: Replace with metadata field from backend
+export const UNICHAIN_BRIDGED_ASSETS: readonly string[] = [
+  '0xbde8a5331e8ac4831cf8ea9e42e229219eafab97', // SOL
+  '0xbe51A5e8FA434F09663e8fB4CCe79d0B2381Afad', // JUP
+  '0x97Fadb3D000b953360FD011e173F12cDDB5d70Fa', // WIF
+  '0x15d0e0c55a3e7ee67152ad7e89acf164253ff68d', // HYPE
+  '0xBbE97f3522101e5B6976cBf77376047097BA837F', // BONK
 ]
-
-export function isBridgedAsset(address: string): boolean {
-  return UNICHAIN_BRIDGED_ASSETS.some((asset) => asset.unichainAddress === address)
-}
-
-export type BridgedAsset = {
-  unichainAddress: string
-  nativeChain: string
-  nativeAddress: string
-}

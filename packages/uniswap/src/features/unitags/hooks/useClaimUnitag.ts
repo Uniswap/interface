@@ -1,14 +1,14 @@
-import { SignMessageFunc, UnitagClaim, UnitagClaimContext } from '@universe/api'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { UnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { claimUnitag } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { SignMessageFunc } from 'uniswap/src/data/utils'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { uploadAndUpdateAvatarAfterClaim } from 'uniswap/src/features/unitags/avatars'
-import { isLocalFileUri } from 'uniswap/src/features/unitags/fileUtils'
+import { isLocalFileUri, uploadAndUpdateAvatarAfterClaim } from 'uniswap/src/features/unitags/avatars.native'
+import { UnitagClaim, UnitagClaimContext } from 'uniswap/src/features/unitags/types'
 import { parseUnitagErrorCode } from 'uniswap/src/features/unitags/utils'
 import { getUniqueId } from 'utilities/src/device/uniqueId'
 import { logger } from 'utilities/src/logger/logger'
@@ -39,7 +39,7 @@ export const useClaimUnitag = (): ((input: ClaimUnitagInput) => Promise<{ claimE
     }
 
     try {
-      const claimResponse = await UnitagsApiClient.claimUnitag({
+      const claimResponse = await claimUnitag({
         data: {
           username: claim.username,
           deviceId,

@@ -1,8 +1,10 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { FeeType, GasEstimate, TradingApi } from '@universe/api'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import { useCheckApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckApprovalQuery'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import type { GasEstimate } from 'uniswap/src/data/tradingApi/types'
+import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/utils'
@@ -45,7 +47,7 @@ describe('useTokenApprovalInfo', () => {
     wrapType: WrapType.NotApplicable,
     currencyInAmount: mockCurrencyInAmount,
     currencyOutAmount: mockCurrencyOutAmount,
-    routing: TradingApi.Routing.CLASSIC,
+    routing: Routing.CLASSIC,
     account: mockAccount,
   }
 

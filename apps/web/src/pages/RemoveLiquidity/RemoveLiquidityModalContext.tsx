@@ -1,11 +1,10 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
 import { getCurrencyWithOptionalUnwrap } from 'components/Liquidity/utils/currency'
-import { useModalInitialState } from 'hooks/useModalInitialState'
 import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useMemo, useState } from 'react'
 import { LiquidityModalInitialState } from 'state/application/reducer'
+import { useAppSelector } from 'state/hooks'
 import { PositionField } from 'types/position'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 
 export enum DecreaseLiquidityStep {
@@ -46,8 +45,7 @@ export function RemoveLiquidityModalContextProvider({ children }: PropsWithChild
   const [currentTransactionStep, setCurrentTransactionStep] = useState<
     { step: TransactionStep; accepted: boolean } | undefined
   >()
-  const positionInfo = useModalInitialState(ModalName.RemoveLiquidity)
-
+  const positionInfo = useAppSelector((state) => state.application.openModal)?.initialState
   const percentInvalid = percent === '0' || percent === '' || !percent
   const currencies = useMemo(() => {
     const currency0 = getCurrencyWithOptionalUnwrap({
@@ -88,7 +86,16 @@ export function RemoveLiquidityModalContextProvider({ children }: PropsWithChild
       currentTransactionStep,
       setCurrentTransactionStep,
     }),
-    [percent, step, positionInfo, currencies, percentInvalid, unwrapNativeCurrency, currentTransactionStep],
+    [
+      percent,
+      step,
+      positionInfo,
+      currencies,
+      percentInvalid,
+      unwrapNativeCurrency,
+      setUnwrapNativeCurrency,
+      currentTransactionStep,
+    ],
   )
 
   return <RemoveLiquidityModalContext.Provider value={ctx}>{children}</RemoveLiquidityModalContext.Provider>

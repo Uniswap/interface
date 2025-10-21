@@ -55,7 +55,7 @@ export function cspMetaTagPlugin(): Plugin {
           if (!directive) {
             // Log unknown directives in development only
             if (env === 'development') {
-              // biome-ignore lint/suspicious/noConsole: Required for Vite build debugging
+              // eslint-disable-next-line no-console
               console.warn(`Unknown CSP directive: ${key}`)
             }
             return null

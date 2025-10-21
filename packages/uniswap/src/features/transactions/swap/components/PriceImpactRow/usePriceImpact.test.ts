@@ -1,11 +1,10 @@
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { usePriceImpact } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/usePriceImpact'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { Trade, TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
 import { renderHook } from 'uniswap/src/test/test-utils'
-import { CurrencyField } from 'uniswap/src/types/currency'
 
 const mockUniswapXTrade = {
   quote: {
@@ -13,17 +12,16 @@ const mockUniswapXTrade = {
       classicGasUseEstimateUSD: '5.32',
     },
   },
-  routing: TradingApi.Routing.DUTCH_V2,
+  routing: Routing.DUTCH_V2,
   swapFee: {
     amount: '100000000',
-    feeField: CurrencyField.OUTPUT,
   },
-  outputAmount: CurrencyAmount.fromRawAmount(DAI, '9500000000000000000000'),
+  outputAmount: CurrencyAmount.fromRawAmount(USDC, '95000000'),
 } as unknown as Trade
 
 const mockClassicTrade = {
   priceImpact: new Percent(5, 100),
-  routing: TradingApi.Routing.CLASSIC,
+  routing: Routing.CLASSIC,
 } as unknown as Trade
 
 const baseSwapInfo: DerivedSwapInfo = {
@@ -58,7 +56,7 @@ describe('usePriceImpact', () => {
 
     const { result } = renderHook(() => usePriceImpact({ derivedSwapInfo: swapInfo }))
 
-    expect(result.current.formattedPriceImpact).toEqual('+0.32%')
+    expect(result.current.formattedPriceImpact).toEqual('+1.32%')
   })
 
   it('should return classic trade price impact directly', () => {
@@ -88,6 +86,6 @@ describe('usePriceImpact', () => {
 
     const { result } = renderHook(() => usePriceImpact({ derivedSwapInfo: swapInfo }))
 
-    expect(result.current.formattedPriceImpact).toEqual('-2.99%')
+    expect(result.current.formattedPriceImpact).toEqual('-1.99%')
   })
 })

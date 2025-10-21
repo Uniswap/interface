@@ -8,13 +8,9 @@ import { Screen } from 'src/components/layout/Screen'
 import { Flex, Switch, Text, TouchableArea } from 'ui/src'
 import { CheckmarkCircle, CopyAlt } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import {
-  resetDismissedBridgedAssetWarnings,
-  resetDismissedCompatibleAddressWarnings,
-  resetDismissedWarnings,
-} from 'uniswap/src/features/tokens/slice/slice'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { resetDismissedWarnings } from 'uniswap/src/features/tokens/slice/slice'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
@@ -41,8 +37,6 @@ export function DevScreen(): JSX.Element {
 
   const onPressResetTokenWarnings = (): void => {
     dispatch(resetDismissedWarnings())
-    dispatch(resetDismissedCompatibleAddressWarnings())
-    dispatch(resetDismissedBridgedAssetWarnings())
   }
 
   const onPressCreate = async (): Promise<void> => {

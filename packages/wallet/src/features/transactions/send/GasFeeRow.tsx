@@ -8,7 +8,7 @@ import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useGasFeeFormattedDisplayAmounts } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { isWebPlatform } from 'utilities/src/platform'
+import { isWeb } from 'utilities/src/platform'
 
 type GasFeeRowProps = {
   gasFee: GasFeeResult
@@ -28,8 +28,8 @@ export function GasFeeRow({ gasFee, chainId }: GasFeeRowProps): JSX.Element | nu
   }
 
   return (
-    <Flex centered row justifyContent={isWebPlatform ? 'space-between' : 'center'} px="$spacing8">
-      {isWebPlatform && (
+    <Flex centered row justifyContent={isWeb ? 'space-between' : 'center'} px="$spacing8">
+      {isWeb && (
         <Text color="$neutral2" flexShrink={1} variant="body3">
           {t('send.gas.networkCost.title')}
         </Text>

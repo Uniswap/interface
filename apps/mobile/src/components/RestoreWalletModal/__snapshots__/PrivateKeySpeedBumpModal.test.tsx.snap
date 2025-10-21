@@ -105,7 +105,7 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
           style={
             {
               "alignItems": "center",
-              "backgroundColor": "rgba(19, 19, 19, 0.08)",
+              "backgroundColor": "rgba(34,34,34,0.05)",
               "borderBottomColor": "transparent",
               "borderBottomLeftRadius": 16,
               "borderBottomRightRadius": 16,

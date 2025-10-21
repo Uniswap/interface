@@ -1,12 +1,11 @@
-import { TradingApi } from '@universe/api'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, IconButton, Text } from 'ui/src'
+import { Button, Flex, IconButton } from 'ui/src'
 import { HelpCenter } from 'ui/src/components/icons/HelpCenter'
 import { X } from 'ui/src/components/icons/X'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModalContent } from 'uniswap/src/components/modals/WarningModal/WarningModal'
-import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
   useTransactionSettingsActions,
@@ -17,7 +16,7 @@ import { useTransactionModalContext } from 'uniswap/src/features/transactions/co
 import { getErrorContent, TransactionStepFailedError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isWebPlatform } from 'utilities/src/platform'
+import { isWeb } from 'utilities/src/platform'
 
 export function SwapErrorScreen({
   submissionError,
@@ -52,7 +51,7 @@ export function SwapErrorScreen({
     } else if (isUniswapXBackendError) {
       // TODO(WEB-7668): move this into onPressRetry logic.
       // Update swap preferences for this session to exclude UniswapX if Uniswap x failed
-      const updatedProtocols = selectedProtocols.filter((protocol) => protocol !== TradingApi.ProtocolItems.UNISWAPX_V2)
+      const updatedProtocols = selectedProtocols.filter((protocol) => protocol !== ProtocolItems.UNISWAPX_V2)
       setSelectedProtocols(updatedProtocols)
     } else {
       resubmitSwap()
@@ -64,23 +63,10 @@ export function SwapErrorScreen({
     await openUri({ uri: supportArticleURL ?? uniswapUrls.helpUrl })
   }
 
-  const caption = supportArticleURL ? (
-    <Flex gap="$spacing8" alignItems="center">
-      <Text color="$neutral2" textAlign="center" variant="body3">
-        {message}
-      </Text>
-      <LearnMoreLink url={supportArticleURL} />
-    </Flex>
-  ) : (
-    <Text color="$neutral2" textAlign="center" variant="body3">
-      {message}
-    </Text>
-  )
-
   return (
     <TransactionModalInnerContainer bottomSheetViewStyles={bottomSheetViewStyles} fullscreen={false}>
       <Flex gap="$spacing16">
-        {isWebPlatform && (
+        {isWeb && (
           <Flex row justifyContent="flex-end" m="$spacing12" gap="$spacing8">
             <Button fill={false} emphasis="tertiary" size="xxsmall" icon={<HelpCenter />} onPress={onPressGetHelp}>
               {t('common.getHelp.button')}
@@ -92,7 +78,7 @@ export function SwapErrorScreen({
           <WarningModalContent
             modalName={ModalName.SwapError}
             title={title}
-            captionComponent={caption}
+            caption={message}
             severity={WarningSeverity.Low}
             rejectText={buttonText ?? t('common.button.tryAgain')}
             onReject={handleTryAgain}

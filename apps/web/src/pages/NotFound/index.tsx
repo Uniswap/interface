@@ -4,6 +4,7 @@ import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
+import { useNavigate } from 'react-router'
 import { ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { Button, Flex } from 'ui/src'
@@ -46,6 +47,7 @@ interface NotFoundProps {
 export default function NotFound({ title, subtitle, actionButton }: NotFoundProps) {
   const isDarkMode = useIsDarkMode()
   const isMobile = useIsMobile()
+  const navigate = useNavigate()
 
   const Title = isMobile ? ThemedText.LargeHeader : ThemedText.Hero
   const Paragraph = isMobile ? ThemedText.HeadlineMedium : ThemedText.HeadlineLarge
@@ -66,7 +68,7 @@ export default function NotFound({ title, subtitle, actionButton }: NotFoundProp
         </Header>
         {actionButton ?? (
           <Flex row alignSelf="stretch">
-            <Button href="/" tag="a" variant="branded" $platform-web={{ textDecoration: 'none' }}>
+            <Button onPress={() => navigate('/')} variant="branded">
               <Trans i18nKey="notFound.oops" />
             </Button>
           </Flex>

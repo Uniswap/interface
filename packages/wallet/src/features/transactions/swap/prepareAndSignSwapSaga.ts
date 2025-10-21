@@ -1,22 +1,19 @@
 import { call, select } from 'typed-redux-saga'
-import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
-import type { PrepareSwapParams } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
+import { PrepareSwapParams } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
 import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isBridge, isClassic, isUniswapX, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
-import type { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
+import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import {
   handleTransactionPreparationError,
   prepareTransactionServices,
   signSingleTransaction,
 } from 'wallet/src/features/transactions/shared/baseTransactionPreparationSaga'
-import type { PreSignedSwapTransaction } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
-import {
-  DelegationType,
-  type TransactionSagaDependencies,
-} from 'wallet/src/features/transactions/types/transactionSagaDependencies'
+import { PreSignedSwapTransaction } from 'wallet/src/features/transactions/swap/types/preSignedTransaction'
+import { TransactionSagaDependencies } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
@@ -41,6 +38,7 @@ export function createPrepareAndSignSwapSaga(dependencies: TransactionSagaDepend
     // MEV protection is not needed for UniswapX approval and/or wrap transactions.
     // We disable for bridge to avoid any potential issues with BE checking status.
     const submitViaPrivateRpc = isClassic(swapTxContext) && (yield* call(shouldSubmitViaPrivateRpc, chainId))
+    const includesDelegation = swapTxContext.includesDelegation ?? false
 
     try {
       // Use shared service preparation utility
@@ -51,7 +49,7 @@ export function createPrepareAndSignSwapSaga(dependencies: TransactionSagaDepend
           account,
           chainId,
           submitViaPrivateRpc,
-          delegationType: swapTxContext.includesDelegation ? DelegationType.Delegate : DelegationType.Auto,
+          includesDelegation,
           request: 'txRequests' in swapTxContext ? swapTxContext.txRequests?.[0] : undefined,
         },
       )

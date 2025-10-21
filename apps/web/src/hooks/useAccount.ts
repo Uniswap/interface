@@ -1,12 +1,13 @@
 import { useMemo } from 'react'
-import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
+import { useEnabledChainsWithConnector } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import {
+  Connector,
   type Register,
   type UseAccountReturnType as UseAccountReturnTypeWagmi,
-  // biome-ignore lint/style/noRestrictedImports: wagmi account hook needed for wallet integration
+  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   useAccount as useAccountWagmi,
-  // biome-ignore lint/style/noRestrictedImports: wagmi chain hook needed for chain management
+  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
   useChainId,
 } from 'wagmi'
 
@@ -18,22 +19,24 @@ type ReplaceChainId<T> = T extends { chainId: number }
 
 type UseAccountReturnType = ReplaceChainId<UseAccountReturnTypeWagmi<Register['config']>>
 
-/**
- * @deprecated use new Account hooks from apps/web/src/features/accounts/store/hooks.ts instead
- */
-export function useAccount(): UseAccountReturnType {
-  const wagmiAccount = useAccountWagmi()
+function useSupportedChainIdWithConnector(
+  chainId?: number | EVMUniverseChainId,
+  connector?: Connector,
+): EVMUniverseChainId | undefined {
+  const { chains } = useEnabledChainsWithConnector(connector)
+  return chains.includes(chainId as EVMUniverseChainId) ? (chainId as EVMUniverseChainId) : undefined
+}
 
+export function useAccount(): UseAccountReturnType {
+  const { chainId, ...rest } = useAccountWagmi()
   const fallbackChainId = useChainId()
-  const supportedChainId = useSupportedChainId(wagmiAccount.chainId ?? fallbackChainId) as
-    | EVMUniverseChainId
-    | undefined
+  const supportedChainId = useSupportedChainIdWithConnector(chainId ?? fallbackChainId, rest.connector)
 
   return useMemo(
     () => ({
-      ...wagmiAccount,
+      ...rest,
       chainId: supportedChainId,
     }),
-    [wagmiAccount, supportedChainId],
+    [rest, supportedChainId],
   )
 }

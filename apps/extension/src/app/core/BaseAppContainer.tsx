@@ -11,7 +11,6 @@ import { LocalizationContextProvider } from 'uniswap/src/features/language/Local
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import i18n from 'uniswap/src/i18n'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-import { AccountsStoreContextProvider } from 'wallet/src/features/accounts/store/provider'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 export function BaseAppContainer({
@@ -24,18 +23,16 @@ export function BaseAppContainer({
         <I18nextProvider i18n={i18n}>
           <SharedWalletProvider reduxStore={getReduxStore()}>
             <ErrorBoundary>
-              <AccountsStoreContextProvider>
-                <GraphqlProvider>
-                  <BlankUrlProvider>
-                    <SmartWalletNudgesProvider>
-                      <LocalizationContextProvider>
-                        <TraceUserProperties />
-                        {children}
-                      </LocalizationContextProvider>
-                    </SmartWalletNudgesProvider>
-                  </BlankUrlProvider>
-                </GraphqlProvider>
-              </AccountsStoreContextProvider>
+              <GraphqlProvider>
+                <BlankUrlProvider>
+                  <SmartWalletNudgesProvider>
+                    <LocalizationContextProvider>
+                      <TraceUserProperties />
+                      {children}
+                    </LocalizationContextProvider>
+                  </SmartWalletNudgesProvider>
+                </BlankUrlProvider>
+              </GraphqlProvider>
             </ErrorBoundary>
           </SharedWalletProvider>
         </I18nextProvider>

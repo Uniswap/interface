@@ -1,8 +1,8 @@
 import type {
-  ChartState,
   Renderer,
   RenderingContext,
 } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
+import { getColorForPrice } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/colorUtils'
 import * as d3 from 'd3'
 
 export function createPriceLineRenderer({
@@ -12,7 +12,7 @@ export function createPriceLineRenderer({
 }: {
   g: d3.Selection<SVGGElement, unknown, null, undefined>
   context: RenderingContext
-  getState: () => ChartState
+  getState: () => { minPrice: number | null; maxPrice: number | null }
 }): Renderer {
   const priceLineGroup = g.append('g').attr('class', 'price-line-group')
 
@@ -45,56 +45,44 @@ export function createPriceLineRenderer({
     const line = d3
       .line<{ date: Date; value: number }>()
       .x((d) => xScale(d.date))
-      .y((d) => priceToY({ price: d.value }))
+      .y((d) => priceToY(d.value))
       .curve(d3.curveMonotoneX)
 
-    // Generate the complete line path data
-    const linePathData = line(priceDataMapped)
-
     // Draw price line with conditional coloring
-    if (minPrice !== undefined && maxPrice !== undefined) {
-      // Create mask for active range only
-      const maskId = 'price-line-active-mask'
-      const defs = priceLineGroup.append('defs')
+    if (minPrice !== null && maxPrice !== null) {
+      // Draw segments with different colors based on price range
+      for (let i = 0; i < priceDataMapped.length - 1; i++) {
+        const currentPoint = priceDataMapped[i]
+        const nextPoint = priceDataMapped[i + 1]
 
-      const minPriceY = priceToY({ price: minPrice })
-      const maxPriceY = priceToY({ price: maxPrice })
+        // Check if current point is within range
+        const color = getColorForPrice({
+          value: currentPoint.value,
+          minPrice,
+          maxPrice,
+          getActiveColor: () => colors.accent1.val,
+          getInactiveColor: () => colors.neutral2.val,
+        })
 
-      // Active range mask
-      defs
-        .append('mask')
-        .attr('id', maskId)
-        .append('rect')
-        .attr('x', 0)
-        .attr('y', maxPriceY)
-        .attr('width', dimensions.width)
-        .attr('height', minPriceY - maxPriceY)
-        .attr('fill', 'white')
-
-      // Draw full grey line (base layer)
-      priceLineGroup
-        .append('path')
-        .attr('d', linePathData)
-        .attr('fill', 'none')
-        .attr('stroke', colors.neutral2.val)
-        .attr('stroke-width', 2)
-
-      // Draw active pink line on top (masked)
-      priceLineGroup
-        .append('path')
-        .attr('d', linePathData)
-        .attr('fill', 'none')
-        .attr('stroke', colors.accent1.val)
-        .attr('stroke-width', 2)
-        .attr('mask', `url(#${maskId})`)
+        // Draw line segment between current and next point
+        priceLineGroup
+          .append('path')
+          .datum([currentPoint, nextPoint])
+          .attr('fill', 'none')
+          .attr('stroke', color)
+          .attr('stroke-width', 2)
+          .attr('d', line)
+          .attr('class', 'price-segment')
+      }
     } else {
       // Draw single grey line when no range is selected
       priceLineGroup
         .append('path')
-        .attr('d', linePathData)
+        .datum(priceDataMapped)
         .attr('fill', 'none')
         .attr('stroke', colors.neutral2.val)
         .attr('stroke-width', 2)
+        .attr('d', line)
         .attr('class', 'price-line')
     }
   }

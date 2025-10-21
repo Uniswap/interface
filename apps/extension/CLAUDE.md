@@ -15,12 +15,10 @@ This is the Uniswap Browser Extension, part of the Universe monorepo. The extens
 bun install
 
 # Start development server (from apps/extension)
-# WXT build system (new, preferred)
-bun start           # WXT development server (port 9998)
-bun start:absolute  # WXT with absolute paths (required for Scantastic API testing)
+bun start
 
-# Legacy webpack build system (still available during migration)
-bun start:webpack   # Webpack development server (port 9997)
+# Start with absolute paths (required for Scantastic API testing)
+bun start:absolute
 
 # Build production bundle
 bun build:production
@@ -76,30 +74,14 @@ This extension is part of the Universe monorepo using bun workspaces and NX:
 
 ### Extension Entry Points
 
-The extension has multiple entry points for different contexts (WXT structure):
+The extension has multiple entry points for different contexts:
 
-- `src/entrypoints/background.ts` - Background service worker
-- `src/entrypoints/sidepanel/main.tsx` - Main sidebar UI (primary interface)
-- `src/entrypoints/fallback-popup/main.tsx` - Extension popup fallback
-- `src/entrypoints/onboarding/main.tsx` - Onboarding flow
-- `src/entrypoints/unitagClaim/main.tsx` - Unitag claim interface
-- `src/entrypoints/injected.content.ts` - Injected script for dApp communication
-- `src/entrypoints/ethereum.content.ts` - Ethereum provider implementation
-
-Each UI entry point has an associated `index.html` file in its directory.
-
-### WXT Migration Status
-
-The extension is currently migrating from Webpack to WXT build system:
-
-- ✅ **Complete**: WXT configuration, entry points restructure, Vite-based builds
-- 🔄 **In Progress**: Full migration from legacy webpack system
-- 📁 **Directory Changes**:
-  - `src/entry/` → `src/entrypoints/` (with HTML files for UI entries)
-  - Content scripts moved to `src/entrypoints/*.content.ts`
-  - Background script moved to `src/entrypoints/background.ts`
-- ⚙️ **Build Systems**: Both WXT (`wxt.config.ts`) and Webpack (`webpack.config.js`) are currently available
-- 🚪 **Development Ports**: WXT uses port 9998, Webpack uses port 9997
+- `src/entry/background.ts` - Background service worker
+- `src/entry/sidebar.tsx` - Main sidebar UI (primary interface)
+- `src/entry/popup.tsx` - Extension popup
+- `src/entry/onboarding.tsx` - Onboarding flow
+- `src/entry/injected.ts` - Injected script for dApp communication
+- `src/entry/ethereum.ts` - Ethereum provider implementation
 
 ### State Management
 
@@ -160,36 +142,16 @@ bun start:absolute
 
 ### Chrome Extension Specifics
 
-#### WXT System
-
-- Manifest is generated dynamically in `wxt.config.ts`
+- Manifest is generated dynamically from `manifest.ts`
 - Background script runs as a service worker (not persistent)
-- Content scripts configured in WXT config
-- Side panel API support for main UI
+- Content scripts are injected for dApp communication
 - Use Chrome Storage API for extension-specific data
-
-#### Legacy System (During Migration)
-
-- Static `src/manifest.json` with build-time modifications
-- Background and content scripts defined separately
 
 ### Build Process
 
-The extension supports two build systems during the WXT migration:
-
-#### WXT Build System (New, Preferred)
-
-- Configuration in `wxt.config.ts`
-- Vite-based build system for better performance
-- Built-in React support via `@wxt-dev/module-react`
-- Dynamic manifest generation
-- Integrated development server with HMR
-- Source maps available in development
-
-#### Webpack Build System (Legacy, During Migration)
-
-- Configuration in `webpack.config.js`
+- Webpack configuration supports multiple environments
 - Code splitting enabled for better performance
+- Source maps available in development
 - Hot Module Replacement (HMR) enabled for faster development
 
 ## Important Notes

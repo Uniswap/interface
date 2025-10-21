@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
 import { AppStackParamList } from 'src/app/navigation/types'
-import { ActivityContent } from 'src/components/activity/ActivityContent'
+import { ActivityTab } from 'src/components/home/ActivityTab'
 import { NftsTab } from 'src/components/home/NftsTab'
 import { TokensTab } from 'src/components/home/TokensTab'
 import { Screen } from 'src/components/layout/Screen'
@@ -85,7 +85,7 @@ export function ExternalProfileScreen({
       switch (route.key) {
         case SectionName.ProfileActivityTab:
           return (
-            <ActivityContent
+            <ActivityTab
               isExternalProfile
               containerProps={sharedProps}
               owner={address}

@@ -61,16 +61,19 @@ function _RecipientSelect({
   const onPressQRScanner = useCallback(() => {
     dismissNativeKeyboard()
     setShowQRScanner(true)
-  }, [])
+  }, [setShowQRScanner])
 
   const onCloseQRScanner = useCallback(() => {
     setShowQRScanner(false)
-  }, [])
+  }, [setShowQRScanner])
 
-  const onSelect = useCallback((newRecipient: string) => {
-    setSelectedRecipient(newRecipient)
-    setCheckSpeedBumps(true)
-  }, [])
+  const onSelect = useCallback(
+    (newRecipient: string) => {
+      setSelectedRecipient(newRecipient)
+      setCheckSpeedBumps(true)
+    },
+    [setSelectedRecipient],
+  )
 
   const onSpeedBumpConfirm = useCallback(() => {
     if (selectedRecipient) {

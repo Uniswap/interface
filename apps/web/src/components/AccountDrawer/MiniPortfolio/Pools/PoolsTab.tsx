@@ -1,22 +1,20 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { EmptyPools } from 'components/AccountDrawer/MiniPortfolio/Pools/EmptyPools'
 import { PortfolioSkeleton } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
-import { SolanaOnlyEmptyState } from 'components/AccountDrawer/MiniPortfolio/SolanaOnlyEmptyState'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
 import { PositionInfo } from 'components/Liquidity/types'
 import { getPositionUrl } from 'components/Liquidity/utils/getPositionUrl'
 import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
 import { useAccount } from 'hooks/useAccount'
-import useSelectChain from 'hooks/useSelectChain'
+import { useSwitchChain } from 'hooks/useSwitchChain'
+import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { AnimatePresence, Flex, TouchableArea } from 'ui/src'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
-import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -40,49 +38,31 @@ export default function Pools({ account }: { account: string }) {
   const { t } = useTranslation()
   const { chains } = useEnabledChains()
   const isPositionVisible = usePositionVisibilityCheck()
-  const { evmAddress, svmAddress } = useActiveAddresses()
-  const accountDrawer = useAccountDrawer()
+
+  const { data, isLoading } = useGetPositionsQuery({
+    address: account,
+    chainIds: chains,
+    positionStatuses: [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE],
+    protocolVersions: [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4],
+    includeHidden: true,
+  })
+
+  const { data: closedData } = useGetPositionsQuery({
+    address: account,
+    chainIds: chains,
+    positionStatuses: [PositionStatus.CLOSED],
+    protocolVersions: [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4],
+    includeHidden: true,
+  })
+
+  const openPositions = useMemo(() => data?.positions.map(parseRestPosition).filter(isPositionInfo), [data?.positions])
+  const closedPositions = useMemo(
+    () => closedData?.positions.map(parseRestPosition).filter(isPositionInfo),
+    [closedData?.positions],
+  )
+
   const [showClosed, toggleShowClosed] = useReducer((showClosed) => !showClosed, false)
   const [showHidden, setShowHidden] = useState(false)
-
-  // Skip queries if Solana-only wallet
-  const skipQueries = Boolean(svmAddress && !evmAddress)
-
-  const { data, isLoading } = useGetPositionsQuery(
-    {
-      address: account,
-      chainIds: chains,
-      positionStatuses: [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE],
-      protocolVersions: [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4],
-      includeHidden: true,
-    },
-    skipQueries,
-  )
-
-  const { data: closedData } = useGetPositionsQuery(
-    {
-      address: account,
-      chainIds: chains,
-      positionStatuses: [PositionStatus.CLOSED],
-      protocolVersions: [ProtocolVersion.V2, ProtocolVersion.V3, ProtocolVersion.V4],
-      includeHidden: true,
-    },
-    skipQueries,
-  )
-
-  const openPositions = useMemo(() => {
-    if (skipQueries) {
-      return undefined
-    }
-    return data?.positions.map(parseRestPosition).filter(isPositionInfo)
-  }, [data?.positions, skipQueries])
-
-  const closedPositions = useMemo(() => {
-    if (skipQueries) {
-      return undefined
-    }
-    return closedData?.positions.map(parseRestPosition).filter(isPositionInfo)
-  }, [closedData?.positions, skipQueries])
 
   const { visibleOpenPositions, visibleClosedPositions, hiddenPositions } = useMemo(() => {
     function splitByVisibility(positions: PositionInfo[] = []) {
@@ -115,23 +95,14 @@ export default function Pools({ account }: { account: string }) {
     }
   }, [openPositions, closedPositions, isPositionVisible])
 
-  // If Solana-only wallet, show Solana-only empty state with EVM connect button
-  if (skipQueries) {
-    return <SolanaOnlyEmptyState tab="pools" showConnectButton />
-  }
+  const accountDrawer = useAccountDrawer()
 
   if (!openPositions && isLoading) {
     return <PortfolioSkeleton />
   }
 
   if (!openPositions || (openPositions.length === 0 && closedPositions?.length === 0)) {
-    // EVM and Solana wallets connected but no pools - Show EmptyPools with dual wallet message
-    if (svmAddress && evmAddress) {
-      return <EmptyPools onNavigateClick={accountDrawer.close} hasSolanaAndEVMWalletsConnected />
-    }
-
-    // EVM-only with no pools
-    return <EmptyPools onNavigateClick={accountDrawer.close} />
+    return <EmptyWalletModule type="pool" onNavigateClick={accountDrawer.close} />
   }
 
   return (
@@ -181,12 +152,12 @@ function PositionListItem({ positionInfo, isVisible = true }: { positionInfo: Po
   const navigate = useNavigate()
   const accountDrawer = useAccountDrawer()
   const account = useAccount()
-  const selectChain = useSelectChain()
+  const switchChain = useSwitchChain()
   const positionUrl = getPositionUrl(positionInfo)
 
   const onPress = useEvent(async () => {
     if (account.chainId !== chainId) {
-      await selectChain(chainId)
+      await switchChain(chainId)
     }
 
     accountDrawer.close()

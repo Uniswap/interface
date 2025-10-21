@@ -1,11 +1,18 @@
-import type { QueryClient, QueryFunction, QueryKey, UseQueryResult } from '@tanstack/react-query'
-import { skipToken, useQuery, useQueryClient } from '@tanstack/react-query'
-import type { TradingApi, UseQueryApiHelperHookArgs } from '@universe/api'
-import { type SwappableTokensParams } from '@universe/api'
+import {
+  QueryClient,
+  QueryFunction,
+  QueryKey,
+  skipToken,
+  UseQueryResult,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import type { TradeableAsset } from 'uniswap/src/entities/assets'
+import { fetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
+import { ChainId, GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
+import { TradeableAsset } from 'uniswap/src/entities/assets'
 import {
   getTokenAddressFromChainForTradingApi,
   toTradingApiSupportedChainId,
@@ -14,16 +21,21 @@ import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { MAX_REACT_QUERY_CACHE_TIME_MS } from 'utilities/src/time/time'
 
+export type SwappableTokensParams = {
+  tokenIn: Address
+  tokenInChainId: ChainId
+}
+
 export function useTradingApiSwappableTokensQuery({
   params,
   ...rest
 }: UseQueryApiHelperHookArgs<
   SwappableTokensParams,
-  TradingApi.GetSwappableTokensResponse
->): UseQueryResult<TradingApi.GetSwappableTokensResponse> {
+  GetSwappableTokensResponse
+>): UseQueryResult<GetSwappableTokensResponse> {
   const queryKey = swappableTokensQueryKey(params)
 
-  return useQuery<TradingApi.GetSwappableTokensResponse>({
+  return useQuery<GetSwappableTokensResponse>({
     queryKey,
     queryFn: params ? swappableTokensQueryFn(params) : skipToken,
     // In order for `getSwappableTokensQueryData` to be more likely to have cached data,
@@ -41,7 +53,7 @@ export function getSwappableTokensQueryData({
 }: {
   queryClient: QueryClient
   params: SwappableTokensParams
-}): TradingApi.GetSwappableTokensResponse | undefined {
+}): GetSwappableTokensResponse | undefined {
   return queryClient.getQueryData(swappableTokensQueryKey(params))
 }
 
@@ -85,7 +97,6 @@ const swappableTokensQueryKey = (params?: SwappableTokensParams): QueryKey => {
 
 const swappableTokensQueryFn = (
   params: SwappableTokensParams,
-): QueryFunction<TradingApi.GetSwappableTokensResponse, QueryKey, never> | undefined => {
-  return async (): ReturnType<typeof TradingApiClient.fetchSwappableTokens> =>
-    await TradingApiClient.fetchSwappableTokens(params)
+): QueryFunction<GetSwappableTokensResponse, QueryKey, never> | undefined => {
+  return async (): ReturnType<typeof fetchSwappableTokens> => await fetchSwappableTokens(params)
 }

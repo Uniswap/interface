@@ -1,4 +1,4 @@
-import { memo, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ElementAfterText } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
@@ -21,7 +21,7 @@ import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/ut
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { shortenAddress } from 'utilities/src/addresses'
 
-function _TransferTokenSummaryItem({
+export function TransferTokenSummaryItem({
   transactionType,
   otherAddress,
   transaction,
@@ -44,17 +44,14 @@ function _TransferTokenSummaryItem({
 
   const isCurrency = transaction.typeInfo.assetType === AssetType.Currency
 
-  const currencyAmount = useMemo(
-    () =>
-      currencyInfo &&
-      transaction.typeInfo.currencyAmountRaw &&
-      getFormattedCurrencyAmount({
-        currency: currencyInfo.currency,
-        amount: transaction.typeInfo.currencyAmountRaw,
-        formatter,
-      }),
-    [currencyInfo, formatter, transaction.typeInfo.currencyAmountRaw],
-  )
+  const currencyAmount =
+    currencyInfo &&
+    transaction.typeInfo.currencyAmountRaw &&
+    getFormattedCurrencyAmount({
+      currency: currencyInfo.currency,
+      amount: transaction.typeInfo.currencyAmountRaw,
+      formatter,
+    })
 
   const icon = useMemo(() => {
     if (isCurrency) {
@@ -93,7 +90,7 @@ function _TransferTokenSummaryItem({
   const { data: unitag } = useUnitagsAddressQuery({
     params: otherAddress ? { address: otherAddress } : undefined,
   })
-  const personDisplayName = unitag?.username ?? ensName ?? shortenAddress({ address: otherAddress })
+  const personDisplayName = unitag?.username ?? ensName ?? shortenAddress(otherAddress)
 
   const tokenAmountWithSymbol = isCurrency
     ? (currencyAmount ?? '') + (getSymbolDisplayText(currencyInfo?.currency.symbol) ?? '')
@@ -139,5 +136,3 @@ function _TransferTokenSummaryItem({
 
   return <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} />
 }
-
-export const TransferTokenSummaryItem = memo(_TransferTokenSummaryItem)

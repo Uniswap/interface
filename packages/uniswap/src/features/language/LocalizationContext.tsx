@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useContext, useMemo } from 'react'
-// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useFiatConverter } from 'uniswap/src/features/fiatCurrency/conversion'
-// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useLocalizedFormatter } from 'uniswap/src/features/language/formatter'
 
 export type LocalizationContextState = {

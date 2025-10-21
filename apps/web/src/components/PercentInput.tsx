@@ -1,7 +1,7 @@
 import { InputProps, localeUsesComma, StyledInput } from 'components/NumericalInput'
 import { NumericalInputFontStyle } from 'pages/Swap/common/shared'
 import React, { forwardRef } from 'react'
-// biome-ignore lint/style/noRestrictedImports: styled-components needed for input component styling
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import styled from 'styled-components'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 

@@ -1,19 +1,12 @@
 import { providers } from 'ethers'
 import { call, select } from 'typed-redux-saga'
-import { AccountType } from 'uniswap/src/features/accounts/types'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import {
-  TransactionDetails,
-  TransactionOriginType,
-  UniswapXOrderDetails,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionDetails, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import {
-  ExecuteTransactionParams,
-  executeTransaction,
-} from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import { signAndSubmitTransaction } from 'wallet/src/features/transactions/executeTransaction/signAndSubmitTransaction'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
+import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 // Note, transaction cancellation on Ethereum is inherently flaky
 // The best we can do is replace the transaction and hope the original isn't mined first
@@ -47,24 +40,22 @@ function* cancelOrder(order: UniswapXOrderDetails, cancelRequest: providers.Tran
       throw new Error(`Cannot cancel order, address is invalid: ${checksummedAddress}`)
     }
     const account = accounts[checksummedAddress]
-    if (!account || account.type !== AccountType.SignerMnemonic) {
+    if (!account) {
       throw new Error(`Cannot cancel order, account missing: ${orderHash}`)
     }
-
-    // Create execute transaction parameters
-    const executeTransactionParams: ExecuteTransactionParams = {
-      chainId,
-      account,
-      options: {
-        request: cancelRequest,
-      },
-      transactionOriginType: TransactionOriginType.Internal,
-    }
+    const signerManager = yield* call(getSignerManager)
+    const provider = yield* call(getProvider, chainId)
 
     // UniswapX Orders are cancelled via submitting a transaction to invalidate the nonce of the permit2 signature used to fill the order.
     // If the permit2 tx is mined before a filler attempts to fill the order, the order is prevented; the cancellation is successful.
     // If the permit2 tx is mined after a filler successfully fills the order, the tx will succeed but have no effect; the cancellation is unsuccessful.
-    yield* call(executeTransaction, executeTransactionParams)
+    yield* call(signAndSubmitTransaction, {
+      request: cancelRequest,
+      account,
+      provider,
+      signerManager,
+      isCancellation: true,
+    })
 
     // At this point, there is no need to track the above transaction in state, as it will be mined regardless of whether the order is filled or not.
     // Instead, the transactionWatcherSaga will either receive 'cancelled' or 'success' from the backend, updating the original tx's UI accordingly.

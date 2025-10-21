@@ -6,35 +6,32 @@ import {
   getSwapTransactionInfo,
   HandleSignatureStepParams,
   handleSignatureStep,
-  TransactionBreadcrumbStatus,
 } from 'state/sagas/transactions/utils'
+import { addSignature } from 'state/signatures/reducer'
+import { SignatureType, UnfilledUniswapXOrderDetails } from 'state/signatures/types'
 import { call, put } from 'typed-redux-saga'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { UniswapXOrderStatus } from 'types/uniswapx'
+import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/errors'
-import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/steps/signOrder'
 import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
-import {
-  QueuedOrderStatus,
-  TransactionOriginType,
-  TransactionStatus,
-  UniswapXOrderDetails,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
 
 interface HandleUniswapXSignatureStepParams extends HandleSignatureStepParams<UniswapXSignatureStep> {
   trade: UniswapXTrade
   analytics: SwapTradeBaseProperties
 }
-
 export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStepParams) {
-  const { analytics, step, trade, account } = params
+  const { analytics, step, trade } = params
   const { quote, routing } = trade.quote
   const orderHash = quote.orderId
   const chainId = trade.inputAmount.currency.chainId
+  const signatureDetails = getUniswapXSignatureInfo({ step, trade, chainId, routing })
 
   const analyticsParams: Parameters<typeof formatSwapSignedAnalyticsEventProperties>[0] = {
     trade,
@@ -59,8 +56,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
     throw new HandledTransactionInterrupt('User signed after deadline')
   }
 
-  const swapInfo = getSwapTransactionInfo(trade)
-  addTransactionBreadcrumb({ step, data: { routing, ...swapInfo }, status: TransactionBreadcrumbStatus.InProgress })
+  addTransactionBreadcrumb({ step, data: { routing, ...signatureDetails.swapInfo }, status: 'in progress' })
   sendAnalyticsEvent(
     SwapEventName.SwapSigned,
     formatSwapSignedAnalyticsEventProperties({
@@ -77,7 +73,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   )
 
   try {
-    yield* call(TradingApiClient.submitOrder, { signature, quote, routing })
+    yield* call(submitOrder, { signature, quote, routing })
   } catch (error) {
     sendAnalyticsEvent(InterfaceEventName.UniswapXOrderPostError, {
       ...formatSwapSignedAnalyticsEventProperties(analyticsParams),
@@ -90,24 +86,43 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
     InterfaceEventName.UniswapXOrderSubmitted,
     formatSwapSignedAnalyticsEventProperties(analyticsParams),
   )
-  const transaction: UniswapXOrderDetails = {
-    // Use orderHash as the ID to ensure consistency with orders fetched from remote
-    // This prevents duplicate orders when the same order is fetched from GraphQL
-    id: orderHash,
-    routing,
-    orderHash,
-    chainId,
-    from: account.address,
-    typeInfo: swapInfo,
-    status: TransactionStatus.Pending,
-    queueStatus: QueuedOrderStatus.Waiting,
-    transactionOriginType: TransactionOriginType.Internal,
-    addedTime: Date.now(),
-    expiry: step.deadline,
-    encodedOrder: trade.quote.quote.encodedOrder,
-  }
 
-  yield* put(addTransaction(transaction))
+  yield* put(addSignature(signatureDetails))
 
   popupRegistry.addPopup({ type: PopupType.Order, orderHash }, orderHash)
+}
+
+const ROUTING_TO_SIGNATURE_TYPE_MAP: {
+  [key in Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY]: SignatureType
+} = {
+  [Routing.DUTCH_V2]: SignatureType.SIGN_UNISWAPX_V2_ORDER,
+  [Routing.DUTCH_V3]: SignatureType.SIGN_UNISWAPX_V3_ORDER,
+  [Routing.PRIORITY]: SignatureType.SIGN_PRIORITY_ORDER,
+  // [Routing.LIMIT_ORDER]: SignatureType.SIGN_LIMIT,
+}
+
+function getUniswapXSignatureInfo({
+  step,
+  trade,
+  chainId,
+  routing,
+}: {
+  step: UniswapXSignatureStep
+  trade: UniswapXTrade
+  chainId: UniverseChainId
+  routing: Routing.DUTCH_V2 | Routing.DUTCH_V3 | Routing.PRIORITY
+}): UnfilledUniswapXOrderDetails {
+  const swapInfo = getSwapTransactionInfo(trade)
+
+  return {
+    type: ROUTING_TO_SIGNATURE_TYPE_MAP[routing],
+    id: step.quote.orderId,
+    addedTime: Date.now(),
+    chainId,
+    encodedOrder: trade.quote.quote.encodedOrder,
+    offerer: trade.quote.quote.orderInfo.swapper,
+    orderHash: trade.quote.quote.orderId,
+    status: UniswapXOrderStatus.OPEN,
+    swapInfo,
+  }
 }

@@ -35,7 +35,6 @@ export function HelpModal({ showOnMobile = false }: { showOnMobile?: boolean }) 
           enterStyle={{ scale: 0.95, opacity: 0 }}
           exitStyle={{ scale: 0.95, opacity: 0 }}
           ml="$spacing12"
-          background="transparent"
         >
           <HelpContent onClose={() => setIsOpen(false)} />
         </Popover.Content>

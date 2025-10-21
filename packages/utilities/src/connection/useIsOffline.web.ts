@@ -4,13 +4,13 @@ export function useIsOffline(): boolean {
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine)
   const isOnlineRef = useRef(isOnline)
 
-  useEffect(() => {
-    const handleCheck = (): void => {
-      const newStatus = navigator.onLine
-      isOnlineRef.current = newStatus
-      setIsOnline(newStatus)
-    }
+  const handleCheck = (): void => {
+    const newStatus = navigator.onLine
+    isOnlineRef.current = newStatus
+    setIsOnline(newStatus)
+  }
 
+  useEffect(() => {
     window.addEventListener('online', handleCheck)
     window.addEventListener('offline', handleCheck)
 

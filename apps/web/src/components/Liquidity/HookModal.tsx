@@ -1,4 +1,5 @@
 import { FlagWarning, getFlagsFromContractAddress, getFlagWarning } from 'components/Liquidity/utils/getFlagWarnings'
+import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components/CopyHelper'
@@ -8,7 +9,6 @@ import { ContractInteraction } from 'ui/src/components/icons/ContractInteraction
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
 import { Page } from 'ui/src/components/icons/Page'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
-import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -175,7 +175,7 @@ export function HookModal({
               </Flex>
               <CopyHelper toCopy={address} iconSize={16} iconPosition="right" color="$neutral2">
                 <Text variant="body3" color="$neutral2">
-                  {shortenAddress({ address })}
+                  {shortenAddress(address)}
                 </Text>
               </CopyHelper>
             </Flex>

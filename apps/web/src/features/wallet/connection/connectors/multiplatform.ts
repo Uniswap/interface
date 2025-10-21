@@ -8,7 +8,7 @@ const NORMALIZATION_RULES = [
   (name: string) => name.replace(/ wallet$/, ''),
 ]
 
-export function normalizeWalletName(name: string) {
+function normalizeWalletName(name: string) {
   return NORMALIZATION_RULES.reduce((name, rule) => rule(name), name)
 }
 

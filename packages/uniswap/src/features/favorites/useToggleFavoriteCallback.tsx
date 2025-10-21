@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { addFavoriteToken, removeFavoriteToken } from 'uniswap/src/features/favorites/slice'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -20,15 +19,15 @@ export function useToggleFavoriteCallback({
 
   return useCallback(() => {
     if (isFavoriteToken) {
-      dispatch(removeFavoriteToken({ currencyId: normalizeCurrencyIdForMapLookup(id) }))
+      dispatch(removeFavoriteToken({ currencyId: id.toLowerCase() }))
     } else {
       sendAnalyticsEvent(MobileEventName.FavoriteItem, {
-        address: currencyIdToAddress(normalizeCurrencyIdForMapLookup(id)),
+        address: currencyIdToAddress(id.toLowerCase()),
         chain: currencyIdToChain(id) as number,
         type: 'token',
         name: tokenName,
       })
-      dispatch(addFavoriteToken({ currencyId: normalizeCurrencyIdForMapLookup(id) }))
+      dispatch(addFavoriteToken({ currencyId: id.toLowerCase() }))
     }
   }, [dispatch, id, isFavoriteToken, tokenName])
 }

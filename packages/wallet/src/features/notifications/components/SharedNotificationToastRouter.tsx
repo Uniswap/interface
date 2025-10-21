@@ -1,18 +1,19 @@
-import { ChangeAssetVisibilityNotification } from 'uniswap/src/components/notifications/notifications/ChangeAssetVisibilityNotification'
-import { CopiedNotification } from 'uniswap/src/components/notifications/notifications/CopiedNotification'
-import { SuccessNotification } from 'uniswap/src/components/notifications/notifications/SuccessNotification'
+/* eslint-disable complexity */
 import { AssetType } from 'uniswap/src/entities/assets'
-import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ApproveNotification } from 'wallet/src/features/notifications/components/ApproveNotification'
 import { BridgeNotification } from 'wallet/src/features/notifications/components/BridgeNotification'
+import { ChangeAssetVisibilityNotification } from 'wallet/src/features/notifications/components/ChangeAssetVisibilityNotification'
 import { ChooseCountryNotification } from 'wallet/src/features/notifications/components/ChooseCountryNotification'
+import { CopiedNotification } from 'wallet/src/features/notifications/components/CopiedNotification'
 import { CopyFailedNotification } from 'wallet/src/features/notifications/components/CopyFailedNotification'
 import { DefaultNotification } from 'wallet/src/features/notifications/components/DefaultNotification'
 import { ErrorNotification } from 'wallet/src/features/notifications/components/ErrorNotification'
 import { NetworkChangedBridgeNotification } from 'wallet/src/features/notifications/components/NetworkChangedBridgeNotification'
 import { NetworkChangedNotification } from 'wallet/src/features/notifications/components/NetworkChangedNotification'
 import { SmartWalletDisabledNotification } from 'wallet/src/features/notifications/components/SmartWalletDisabledNotification'
+import { SuccessNotification } from 'wallet/src/features/notifications/components/SuccessNotification'
 import { SwapNotification } from 'wallet/src/features/notifications/components/SwapNotification'
 import { SwapPendingNotification } from 'wallet/src/features/notifications/components/SwapPendingNotification'
 import { TransactionPendingNotification } from 'wallet/src/features/notifications/components/TransactionPendingNotification'
@@ -23,8 +24,7 @@ import { UnknownTxNotification } from 'wallet/src/features/notifications/compone
 import { WrapNotification } from 'wallet/src/features/notifications/components/WrapNotification'
 
 // Update name in `packages/wallet/src/components/ErrorBoundary/ErrorBoundary.tsx` if we update here
-// eslint-disable-next-line complexity
-export function WalletNotificationToastRouter({ notification }: { notification: AppNotification }): JSX.Element | null {
+export function SharedNotificationToastRouter({ notification }: { notification: AppNotification }): JSX.Element | null {
   switch (notification.type) {
     case AppNotificationType.Default:
       return <DefaultNotification notification={notification} />

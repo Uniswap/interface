@@ -1,4 +1,11 @@
-import { GraphQLApi } from '@universe/api'
+import {
+  ActivityType,
+  AssetActivity,
+  AssetChange,
+  Chain,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { STALE_TRANSACTION_TIME_MS } from 'uniswap/src/features/notifications/constants'
 import {
   erc20ApproveAssetChange,
@@ -19,72 +26,72 @@ export * from './tokens'
  * Base fixtures
  */
 
-export const assetActivity = createFixture<GraphQLApi.AssetActivity>()(() => ({
+export const assetActivity = createFixture<AssetActivity>()(() => ({
   id: faker.datatype.uuid(),
   chain: randomChoice(GQL_CHAINS),
   /** @deprecated use assetChanges field in details */
-  assetChanges: [] as GraphQLApi.AssetChange[],
+  assetChanges: [] as AssetChange[],
   details: gqlTransactionDetails(),
   timestamp: faker.datatype.number({ max: MAX_FIXTURE_TIMESTAMP }),
   /** @deprecated use type field in details */
   transaction: gqlTransaction(),
   /** @deprecated use type field in details */
-  type: randomEnumValue(GraphQLApi.ActivityType),
+  type: randomEnumValue(ActivityType),
 }))
 
 /**
  * Derived fixtures
  */
 
-export const approveAssetActivity = createFixture<GraphQLApi.AssetActivity>()(() =>
+export const approveAssetActivity = createFixture<AssetActivity>()(() =>
   assetActivity({
-    chain: GraphQLApi.Chain.Ethereum,
+    chain: Chain.Ethereum,
     /** @deprecated use type field in details */
-    type: GraphQLApi.ActivityType.Approve,
+    type: ActivityType.Approve,
     details: gqlTransactionDetails({
-      type: GraphQLApi.TransactionType.Approve,
-      transactionStatus: GraphQLApi.TransactionStatus.Confirmed,
+      type: TransactionType.Approve,
+      transactionStatus: TransactionStatus.Confirmed,
       assetChanges: [erc20ApproveAssetChange()],
     }),
   }),
 )
 
-export const erc20SwapAssetActivity = createFixture<GraphQLApi.AssetActivity>()(() =>
+export const erc20SwapAssetActivity = createFixture<AssetActivity>()(() =>
   assetActivity({
-    chain: GraphQLApi.Chain.Ethereum,
+    chain: Chain.Ethereum,
     /** @deprecated use type field in details */
-    type: GraphQLApi.ActivityType.Swap,
+    type: ActivityType.Swap,
     details: gqlTransactionDetails({
-      type: GraphQLApi.TransactionType.Swap,
-      transactionStatus: GraphQLApi.TransactionStatus.Confirmed,
+      type: TransactionType.Swap,
+      transactionStatus: TransactionStatus.Confirmed,
       assetChanges: [erc20TransferIn(), erc20TokenTransferOut()],
     }),
   }),
 )
 
-export const erc20RecentReceiveAssetActivity = createFixture<GraphQLApi.AssetActivity>()(() =>
+export const erc20RecentReceiveAssetActivity = createFixture<AssetActivity>()(() =>
   assetActivity({
-    chain: GraphQLApi.Chain.Ethereum,
+    chain: Chain.Ethereum,
     /** @deprecated use type field in details */
-    type: GraphQLApi.ActivityType.Receive,
+    type: ActivityType.Receive,
     timestamp: (Date.now() - ONE_MINUTE_MS * 5) / 1000,
     details: gqlTransactionDetails({
-      type: GraphQLApi.TransactionType.Receive,
-      transactionStatus: GraphQLApi.TransactionStatus.Confirmed,
+      type: TransactionType.Receive,
+      transactionStatus: TransactionStatus.Confirmed,
       assetChanges: [erc20TransferIn()],
     }),
   }),
 )
 
-export const erc20StaleReceiveAssetActivity = createFixture<GraphQLApi.AssetActivity>()(() =>
+export const erc20StaleReceiveAssetActivity = createFixture<AssetActivity>()(() =>
   assetActivity({
-    chain: GraphQLApi.Chain.Ethereum,
+    chain: Chain.Ethereum,
     /** @deprecated use type field in details */
-    type: GraphQLApi.ActivityType.Receive,
+    type: ActivityType.Receive,
     timestamp: (Date.now() - STALE_TRANSACTION_TIME_MS * 2) / 1000,
     details: gqlTransactionDetails({
-      type: GraphQLApi.TransactionType.Receive,
-      transactionStatus: GraphQLApi.TransactionStatus.Confirmed,
+      type: TransactionType.Receive,
+      transactionStatus: TransactionStatus.Confirmed,
       assetChanges: [erc20TransferIn()],
     }),
   }),

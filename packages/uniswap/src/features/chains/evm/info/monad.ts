@@ -1,5 +1,5 @@
-import { GraphQLApi } from '@universe/api'
 import { MONAD_LOGO } from 'ui/src/assets'
+import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
 import {
@@ -9,7 +9,6 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/features/chains/types'
-import { SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
@@ -26,7 +25,7 @@ export const MONAD_CHAIN_INFO = {
   testnet: true,
   assetRepoNetworkName: undefined,
   backendChain: {
-    chain: GraphQLApi.Chain.MonadTestnet as GqlChainId,
+    chain: BackendChainId.MonadTestnet as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },
@@ -73,15 +72,5 @@ export const MONAD_CHAIN_INFO = {
   },
   interfaceName: 'monad',
   tokens,
-  gasConfig: {
-    send: {
-      configKey: SwapConfigKey.MonSendMinGasAmount,
-      default: 20, // .002 ETH equivalent
-    },
-    swap: {
-      configKey: SwapConfigKey.MonSwapMinGasAmount,
-      default: 150, // .015 ETH equivalent
-    },
-  },
   tradingApiPollingIntervalMs: 200,
 } as const satisfies UniverseChainInfo

@@ -6,16 +6,11 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 
-export function usePendingTransactions({
-  evmAddress,
-  svmAddress,
-  ignoreTransactionTypes = [],
-}: {
-  evmAddress: Address | null
-  svmAddress: Address | null
-  ignoreTransactionTypes?: TransactionType[]
-}): TransactionDetails[] | undefined {
-  const transactions = useSelectAddressTransactions({ evmAddress, svmAddress })
+export function usePendingTransactions(
+  address: Address | null,
+  ignoreTransactionTypes: TransactionType[] = [],
+): TransactionDetails[] | undefined {
+  const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {
     if (!transactions) {
       return undefined
@@ -28,14 +23,8 @@ export function usePendingTransactions({
 }
 
 // sorted oldest to newest
-export function useSortedPendingTransactions({
-  evmAddress,
-  svmAddress,
-}: {
-  evmAddress: Address | null
-  svmAddress: Address | null
-}): TransactionDetails[] | undefined {
-  const transactions = usePendingTransactions({ evmAddress, svmAddress, ignoreTransactionTypes: [] })
+export function useSortedPendingTransactions(address: Address | null): TransactionDetails[] | undefined {
+  const transactions = usePendingTransactions(address)
   return useMemo(() => {
     if (!transactions) {
       return undefined

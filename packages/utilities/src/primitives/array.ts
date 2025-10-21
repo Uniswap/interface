@@ -64,25 +64,17 @@ export function bubbleToTop<T>(arr: T[], predicate: (element: T) => boolean): T[
 export type NonEmptyArray<T> = [T, ...T[]]
 
 /**
- * Checks if an array is non-empty.
- * @param array - The array to check.
- * @returns True if the array is non-empty, false otherwise, as a type guard.
- */
-export function isNonEmptyArray<T>(array: T[]): array is NonEmptyArray<T> {
-  return array.length !== 0
-}
-
-/**
  * Returns a non-empty array or throws an error if the array is empty.
  * @param array - The array to check.
  * @returns A non-empty array.
  * @throws An error if the array is empty.
  */
 export function getNonEmptyArrayOrThrow<T>(array: T[]): NonEmptyArray<T> {
-  if (!isNonEmptyArray(array)) {
+  const [first, ...rest] = array
+  if (!first) {
     throw new Error('Array is empty')
   }
-  return array
+  return [first, ...rest]
 }
 
 /**

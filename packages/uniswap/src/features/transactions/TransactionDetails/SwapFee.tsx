@@ -3,7 +3,6 @@ import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { IndicativeLoadingWrapper } from 'uniswap/src/components/misc/IndicativeLoadingWrapper'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
 import { SwapFeeWarning } from 'uniswap/src/features/transactions/TransactionDetails/modals/SwapFeeWarning'
@@ -57,14 +56,13 @@ export function SwapFee({
   }
 
   const showFeePercentage = swapFeeInfo?.formattedPercent && !swapFeeInfo.noFeeCharged
-  const isJupiterSwap = currency.chainId === UniverseChainId.Solana
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">
-      <SwapFeeWarning noFee={Boolean(swapFeeInfo?.noFeeCharged)} isJupiter={isJupiterSwap}>
+      <SwapFeeWarning noFee={Boolean(swapFeeInfo?.noFeeCharged)}>
         <Flex centered row gap="$spacing4">
           <Text color="$neutral2" variant="body3">
-            {isJupiterSwap ? t('swap.fees.jupiter.label') : t('swap.details.uniswapFee')}
+            {t('swap.details.uniswapFee')}
             {showFeePercentage && ` (${swapFeeInfo.formattedPercent})`}
           </Text>
         </Flex>

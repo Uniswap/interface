@@ -1,9 +1,9 @@
 #!/bin/bash
-MAX_SIZE=24.40
+MAX_SIZE=24.25
 MAX_BUFFER=0.5
 
 # Check OS type and use appropriate stat command
-if [[ $OSTYPE == "darwin"* ]]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
   # MacOS
   BUNDLE_SIZE=$(stat -f %z ios/main.jsbundle | awk '{print $1/1024/1024}')
 else

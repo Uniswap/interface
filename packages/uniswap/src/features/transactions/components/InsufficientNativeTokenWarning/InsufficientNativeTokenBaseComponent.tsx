@@ -9,7 +9,7 @@ import { useGasFeeFormattedDisplayAmounts } from 'uniswap/src/features/gas/hooks
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/constants'
 import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/components/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
-import { isExtensionApp, isWebPlatform } from 'utilities/src/platform'
+import { isExtension, isWeb } from 'utilities/src/platform'
 
 export function InsufficientNativeTokenBaseComponent({
   parsedInsufficientNativeTokenWarning,
@@ -35,12 +35,12 @@ export function InsufficientNativeTokenBaseComponent({
   })
 
   return (
-    <Flex centered row borderRadius="$rounded12" gap="$spacing8" p={isWebPlatform ? '$spacing16' : '$none'}>
+    <Flex centered row borderRadius="$rounded12" gap="$spacing8" p={isWeb ? '$spacing16' : '$none'}>
       <Flex>
         <AlertTriangleFilled color="$neutral2" size="$icon.16" />
       </Flex>
 
-      <Flex fill={isWebPlatform}>
+      <Flex fill={isWeb}>
         <Text color="$neutral2" variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}>
           {shouldShowNetworkName ? (
             flow === 'swap' ? (
@@ -85,7 +85,7 @@ export function InsufficientNativeTokenBaseComponent({
           )}
         </Text>
       </Flex>
-      {gasFeeFormatted && (isWebPlatform || isExtensionApp) && (
+      {gasFeeFormatted && (isWeb || isExtension) && (
         <NetworkFeeWarning
           chainId={nativeCurrency.chainId}
           placement="bottom"
@@ -100,7 +100,7 @@ export function InsufficientNativeTokenBaseComponent({
         />
       )}
 
-      {!isWebPlatform && (
+      {!isWeb && (
         <Flex>
           <InfoCircle color="$neutral3" size="$icon.16" />
         </Flex>

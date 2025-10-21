@@ -1,4 +1,4 @@
-import { FeeType, GasEstimateLegacy } from '@universe/api'
+import { FeeType, GasEstimateLegacy } from 'uniswap/src/data/tradingApi/types'
 
 export const createGasEstimate = (): GasEstimateLegacy => {
   return {

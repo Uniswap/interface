@@ -3,8 +3,7 @@ import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 export type FiatOnRampModalState = {
   prefilledCurrency?: FiatOnRampCurrency
   isOfframp?: boolean
-  providers?: string[]
+  moonpayOnly?: boolean
   prefilledAmount?: string
-  prefilledIsTokenInputMode?: boolean
-  currencyCode?: string
+  moonpayCurrencyCode?: string
 }

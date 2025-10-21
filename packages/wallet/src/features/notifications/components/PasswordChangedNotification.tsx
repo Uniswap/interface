@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { SuccessNotification } from 'uniswap/src/components/notifications/notifications/SuccessNotification'
-import { PasswordChangedNotification as PasswordChangedNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { PasswordChangedNotification as PasswordChangedNotificationType } from 'uniswap/src/features/notifications/types'
+import { SuccessNotification } from 'wallet/src/features/notifications/components/SuccessNotification'
 
 export function PasswordChangedNotification({
   notification: { hideDelay },

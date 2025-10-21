@@ -9,8 +9,6 @@ export enum SectionName {
   HomeNFTsTab = 'home-nfts-tab',
   HomeTokensTab = 'home-tokens-tab',
   ImportAccountForm = 'import-account-form',
-  MigrateSelectTokensStep = 'migrate-select-tokens-step',
-  MigratePriceRangeStep = 'migrate-price-range-step',
   MiniPortfolio = 'mini-portfolio',
   NavbarSearch = 'Navbar Search',
   ProfileActivityTab = 'profile-activity-tab',
@@ -29,6 +27,7 @@ export enum SectionName {
   SendReview = 'transfer-review',
   SendRecipientSelectFullScreen = 'send-recipient-select',
 
+  ChainSelector = 'chain-selector',
   CreatePositionDepositStep = 'create-position-deposit-step',
   CreatePositionPriceRangeStep = 'create-position-price-range-step',
   CreatePositionSelectTokensStep = 'create-position-select-tokens-step',

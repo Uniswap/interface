@@ -1,6 +1,6 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
-import { GraphQLApi } from '@universe/api'
+import { TokenDocument } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fetchOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { fetchOnChainBalancesRest } from 'uniswap/src/features/portfolio/portfolioUpdates/rest/fetchOnChainBalancesRest'
@@ -210,7 +210,7 @@ describe('fetchOnChainBalancesRest', () => {
     })
 
     expect(mockApolloClient.query).toHaveBeenCalledWith({
-      query: GraphQLApi.TokenDocument,
+      query: TokenDocument,
       variables: {
         chain: 'ETHEREUM',
         address: MOCK_TOKEN_ADDRESS_2,

@@ -1,12 +1,12 @@
 import { SerializedError } from '@reduxjs/toolkit'
 import { FetchBaseQueryError, skipToken } from '@reduxjs/toolkit/query/react'
 import { Currency } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getCountry } from 'react-native-localize'
 import { useDispatch } from 'react-redux'
 import { useCurrencies } from 'uniswap/src/components/TokenSelector/hooks/useCurrencies'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
@@ -42,7 +42,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { getFormattedCurrencyAmount } from 'uniswap/src/utils/currency'
-import { areCurrencyIdsEqual, buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useDebounce } from 'utilities/src/time/timing'
 
@@ -90,7 +90,7 @@ export function useFiatOnRampTransactionCreator({
       // Adds a local FOR transaction to track the transaction
       // Later we will query the transaction details for that id
       const transactionDetail: TransactionDetails = {
-        routing: TradingApi.Routing.CLASSIC,
+        routing: Routing.CLASSIC,
         chainId,
         id: externalTransactionId.current,
         from: ownerAddress,
@@ -207,7 +207,7 @@ export function useFiatOnRampSupportedTokens({
     () =>
       Object.entries(supportedTokensById)
         .map(([currencyId, fiatOnRampToken]) => ({
-          currencyInfo: currencies?.find((currency) => areCurrencyIdsEqual(currency.currencyId, currencyId)),
+          currencyInfo: currencies?.find((currency) => currency.currencyId.toLowerCase() === currencyId.toLowerCase()),
           meldCurrencyCode: fiatOnRampToken.cryptoCurrencyCode,
         }))
         .filter((item) => !!item.currencyInfo),
@@ -373,7 +373,7 @@ export function useIsSupportedFiatOnRampCurrency(
     return { currency: undefined, isLoading }
   }
   const currency = supportedTokensList?.find(
-    (token) => token.currencyInfo?.currencyId && areCurrencyIdsEqual(token.currencyInfo.currencyId, currencyId),
+    (token) => token.currencyInfo?.currencyId.toLowerCase() === currencyId.toLowerCase(),
   )
 
   return { currency, isLoading }

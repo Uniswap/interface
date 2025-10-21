@@ -14,7 +14,7 @@ import { bringWindowToFront, closeWindow, openPopupWindow } from 'src/app/naviga
 import { Button, Flex, IconButton, SpinningLoader, Text } from 'ui/src'
 import { X } from 'ui/src/components/icons'
 import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
-import { EmbeddedWalletApiClient } from 'uniswap/src/data/rest/embeddedWallet/requests'
+import { fetchChallengeRequest } from 'uniswap/src/data/rest/embeddedWallet/requests'
 import { parseMessage } from 'uniswap/src/extension/messagePassing/platform'
 import {
   ExtensionToInterfaceRequestType,
@@ -114,7 +114,6 @@ function InitiatePasskeyAuthContent(): JSX.Element {
 
   const popupWindow = useRef<chrome.windows.Window | undefined>(undefined)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: Only run once on mount to initiate auth flow, all handlers are created fresh each render
   useEffect(() => {
     let handleMessagePasskeySignInFlowOpened: Parameters<typeof chrome.runtime.onMessageExternal.addListener>[0]
     let handleMessagePasskeyCredentialRetrieved: Parameters<typeof chrome.runtime.onMessageExternal.addListener>[0]
@@ -129,7 +128,7 @@ function InitiatePasskeyAuthContent(): JSX.Element {
       try {
         const requestId = uuid()
 
-        const challengeResponse = await EmbeddedWalletApiClient.fetchChallengeRequest({
+        const challengeResponse = await fetchChallengeRequest({
           type: AuthenticationTypes.PASSKEY_AUTHENTICATION,
           action: Action.EXPORT_SEED_PHRASE,
         })
@@ -218,6 +217,7 @@ function InitiatePasskeyAuthContent(): JSX.Element {
       chrome.runtime.onMessageExternal.removeListener(handleMessagePasskeySignInFlowOpened)
       chrome.runtime.onMessageExternal.removeListener(handleMessagePasskeyCredentialRetrieved)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const [showBringWindowToFrontButton, setShowBringWindowToFrontButton] = useState(false)
@@ -235,7 +235,7 @@ function InitiatePasskeyAuthContent(): JSX.Element {
       // Will throw if window does not exist anymore.
       await chrome.windows.get(windowId)
       setShowBringWindowToFrontButton(true)
-    } catch (_e) {
+    } catch (e) {
       // Window does not exist anymore.
       navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.SelectImportMethod}`, {
         replace: true,

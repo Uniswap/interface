@@ -1,5 +1,5 @@
 import { queryOptions, UseQueryOptions } from '@tanstack/react-query'
-import type { JupiterOrderUrlParams } from '@universe/api/src/clients/jupiter/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type {
   TradeService,
   TradeWithGasEstimates,
@@ -12,11 +12,7 @@ export type TradeServiceQueryOptions = UseQueryOptions<
   TradeWithGasEstimates,
   Error,
   TradeWithGasEstimates,
-  [
-    ReactQueryCacheKey.TradeService,
-    'getTrade',
-    ValidatedTradeInput | JupiterOrderUrlParams | null, // TODO(SWAP-383): Remove JupiterOrderUrlParams from union once Solana trade repo is implemented
-  ]
+  [ReactQueryCacheKey.TradeService, 'getTrade', ValidatedTradeInput | null]
 >
 
 export function createTradeServiceQueryOptions(ctx: {
@@ -24,7 +20,6 @@ export function createTradeServiceQueryOptions(ctx: {
 }): (params?: UseTradeArgs) => TradeServiceQueryOptions {
   return (params?: UseTradeArgs) => {
     const validatedInput = params ? ctx.tradeService.prepareTradeInput(params) : null
-
     return queryOptions({
       queryKey: [ReactQueryCacheKey.TradeService, 'getTrade', validatedInput],
       queryFn: async (): Promise<TradeWithGasEstimates> => {
@@ -33,7 +28,12 @@ export function createTradeServiceQueryOptions(ctx: {
         }
         return ctx.tradeService.getTrade(params)
       },
-      enabled: !!params && !params.skip && !!validatedInput,
+      enabled:
+        !!params &&
+        !params.skip &&
+        !!validatedInput &&
+        // TODO(SWAP-153): Integrate Solana into TradeService
+        params.amountSpecified?.currency.chainId !== UniverseChainId.Solana,
     })
   }
 }

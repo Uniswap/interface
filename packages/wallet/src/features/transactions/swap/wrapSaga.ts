@@ -1,10 +1,10 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { GasEstimate } from '@universe/api'
 import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
+import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import {
   TransactionOptions,
   TransactionOriginType,

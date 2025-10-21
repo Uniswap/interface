@@ -2,7 +2,7 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import { getChainLabel, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
-import { WalletConnectNotification } from 'uniswap/src/features/notifications/slice/types'
+import { WalletConnectNotification } from 'uniswap/src/features/notifications/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
@@ -50,7 +50,7 @@ export function formApproveNotificationTitle({
   spender: Address
 }): string {
   const currencyDisplayText = getCurrencyDisplayText(currency, tokenAddress)
-  const address = shortenAddress({ address: spender })
+  const address = shortenAddress(spender)
   return txStatus === TransactionStatus.Success
     ? i18n.t('notification.transaction.approve.success', {
         currencySymbol: currencyDisplayText,
@@ -248,7 +248,7 @@ export const formTransferNFTNotificationTitle = ({
   tokenId: string
   senderOrRecipient: string
 }): string => {
-  const nftName = nft?.name ?? `NFT ${shortenAddress({ address: tokenAddress })} #${tokenId}`
+  const nftName = nft?.name ?? `NFT ${shortenAddress(tokenAddress)} #${tokenId}`
   const shortenedAddressOrENS = getShortenedAddressOrEns(senderOrRecipient)
   return formTransferTxTitle({
     txType,
@@ -267,7 +267,7 @@ export function formUnknownTxTitle({
   tokenAddress: Address | undefined
   ensName: string | null
 }): string {
-  const address = tokenAddress && shortenAddress({ address: tokenAddress })
+  const address = tokenAddress && shortenAddress(tokenAddress)
   const target = ensName ?? address
 
   if (txStatus === TransactionStatus.Success) {
@@ -319,5 +319,5 @@ function formTransferTxTitle({
 const getShortenedAddressOrEns = (addressOrENS: string): string => {
   // TODO(WALL-7065): Update to support Solana
   const addressIsValid = Boolean(getValidAddress({ address: addressOrENS, platform: Platform.EVM }))
-  return addressIsValid ? shortenAddress({ address: addressOrENS }) : addressOrENS
+  return addressIsValid ? shortenAddress(addressOrENS) : addressOrENS
 }

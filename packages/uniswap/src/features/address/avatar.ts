@@ -10,8 +10,8 @@ import { getValidAddress } from 'uniswap/src/utils/addresses'
  *  Chose to do this because even if we used useENSAvatar without reverse name resolution,
  *  there is more latency because it has to go to the contract via CCIP-read first.
  */
-export function useAvatar(address: string | undefined): {
-  avatar: string | undefined
+export function useAvatar(address: Maybe<string>): {
+  avatar: Maybe<string>
   loading: boolean
 } {
   // TODO(WEB-8012): Update to support Solana

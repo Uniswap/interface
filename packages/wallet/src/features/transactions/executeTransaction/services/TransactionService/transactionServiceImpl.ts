@@ -5,6 +5,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { FlashbotsRpcProvider } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import { isBridge, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import type {
   OnChainTransactionDetails,
@@ -13,17 +14,15 @@ import type {
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { isBridgeTypeInfo, isSwapTypeInfo } from 'uniswap/src/features/transactions/types/utils'
 import { logger as loggerUtil } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
-import type { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import type { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSagaV2'
 import type { AnalyticsService } from 'wallet/src/features/transactions/executeTransaction/services/analyticsService'
 import type { TransactionRepository } from 'wallet/src/features/transactions/executeTransaction/services/TransactionRepository/transactionRepository'
 import type {
   PrepareTransactionParams,
   SubmitTransactionParams,
-  SubmitTransactionParamsWithTypeInfo,
   TransactionService,
 } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 import type { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
@@ -99,7 +98,7 @@ function trackTransactionAnalytics(params: {
   const { analytics, transactionOriginType, updatedTransaction, methodName, analyticsService, logger } = params
 
   // Track analytics for swaps and bridges
-  if (isBridgeTypeInfo(updatedTransaction.typeInfo) || isSwapTypeInfo(updatedTransaction.typeInfo)) {
+  if (isClassic(updatedTransaction) || isBridge(updatedTransaction)) {
     if (analytics) {
       analyticsService.trackSwapSubmitted(updatedTransaction, analytics)
     } else if (transactionOriginType === TransactionOriginType.Internal) {
@@ -193,7 +192,7 @@ export function createTransactionService(ctx: {
    */
   function createSubmitTransaction(config: { submissionFunction: TransactionSubmissionFunction; methodName: string }) {
     return async function submit(
-      submitParams: SubmitTransactionParamsWithTypeInfo,
+      submitParams: SubmitTransactionParams,
     ): Promise<TransactionDetails & { hash: string }> {
       const { submissionFunction, methodName } = config
       const { chainId, request, options, typeInfo, analytics } = submitParams
@@ -335,20 +334,18 @@ export function createTransactionService(ctx: {
       }
     }
 
-    // Calculate the transaction hash directly from the signed request
+    // Calculate the transaction hash immediately from the signed request
     const transactionHash = utils.keccak256(params.request.signedRequest)
 
-    // Submit the transaction in the background
-    const submitPromise = params.typeInfo
-      ? // Submit and update the local state
-        createSubmitTransaction({
-          submissionFunction,
-          methodName: 'sendTransaction',
-        })({ ...params, typeInfo: params.typeInfo })
-      : // Submit the transaction directly without updating the local state
-        ctx.transactionSigner.sendTransaction({ signedTx: params.request.signedRequest })
+    // Start the submission process in the background (fire and forget)
+    const submit = createSubmitTransaction({
+      submissionFunction,
+      methodName: 'sendTransaction',
+    })
 
-    submitPromise.catch((error) => {
+    // Don't await the submission - let it continue in the background
+    submit(params).catch((error) => {
+      // Log any errors that occur during background submission
       logger.error(error, {
         tags: { file: 'TransactionService', function: 'submitTransaction' },
         extra: { context: 'Background submission failed' },
@@ -362,7 +359,7 @@ export function createTransactionService(ctx: {
   /**
    * Submit a transaction synchronously and return the transaction with receipt details
    */
-  async function submitTransactionSync(params: SubmitTransactionParamsWithTypeInfo): Promise<TransactionDetails> {
+  async function submitTransactionSync(params: SubmitTransactionParams): Promise<TransactionDetails> {
     const submissionFunction = async (submitParams: {
       request: SignedTransactionRequest
       provider: Provider
@@ -455,7 +452,7 @@ export function createTransactionService(ctx: {
     } catch (error) {
       logger.error(error, {
         tags: { file: 'TransactionService', function: 'executeTransaction' },
-        extra: { chainId, transactionType: typeInfo?.type, ...options },
+        extra: { chainId, transactionType: typeInfo.type, ...options },
       })
 
       throw error

@@ -18,10 +18,12 @@ import { ReactNode, useMemo, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isUniswapXTradeType } from 'state/routing/utils'
-import { useIsTransactionConfirmed, useUniswapXOrderByOrderHash } from 'state/transactions/hooks'
+import { useOrder } from 'state/signatures/hooks'
+import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import { AnimationType } from 'theme/components/FadePresence'
 import { ExternalLink } from 'theme/components/Links'
 import { ThemedText } from 'theme/components/text'
+import { UniswapXOrderStatus } from 'types/uniswapx'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -115,16 +117,14 @@ export function Pending({
   const { t } = useTranslation()
 
   const swapStatus = useSwapTransactionStatus(swapResult)
-  const uniswapXOrder = useUniswapXOrderByOrderHash(
-    isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : '',
-  )
+  const uniswapXOrder = useOrder(isUniswapXTradeType(swapResult?.type) ? swapResult.response.orderHash : '')
 
-  const limitPlaced = isLimitTrade(initialTrade) && uniswapXOrder?.status === TransactionStatus.Pending
-  const swapConfirmed = swapStatus === TransactionStatus.Success || uniswapXOrder?.status === TransactionStatus.Success
+  const limitPlaced = isLimitTrade(initialTrade) && uniswapXOrder?.status === UniswapXOrderStatus.OPEN
+  const swapConfirmed = swapStatus === TransactionStatus.Success || uniswapXOrder?.status === UniswapXOrderStatus.FILLED
   const wrapConfirmed = useIsTransactionConfirmed(wrapTxHash)
 
   const swapPending = swapResult !== undefined && !swapConfirmed
-  const wrapPending = wrapTxHash !== undefined && !wrapConfirmed
+  const wrapPending = wrapTxHash != undefined && !wrapConfirmed
   const transactionPending = revocationPending || tokenApprovalPending || wrapPending || swapPending
 
   const showSubmitted = swapPending && chainId === UniverseChainId.Mainnet
@@ -137,8 +137,8 @@ export function Pending({
     let txHash
     if (swapResult && swapResult.type === TradeFillType.Classic) {
       txHash = swapResult.response.hash
-    } else if (uniswapXOrder && uniswapXOrder.status === TransactionStatus.Success) {
-      txHash = uniswapXOrder.hash
+    } else if (uniswapXOrder && uniswapXOrder.status === UniswapXOrderStatus.FILLED) {
+      txHash = uniswapXOrder.txHash
     } else {
       return undefined
     }
@@ -152,8 +152,8 @@ export function Pending({
   // Handle special statuses for UniswapX orders
   if (
     uniswapXOrder &&
-    uniswapXOrder.status !== TransactionStatus.Pending &&
-    uniswapXOrder.status !== TransactionStatus.Success
+    uniswapXOrder.status !== UniswapXOrderStatus.OPEN &&
+    uniswapXOrder.status !== UniswapXOrderStatus.FILLED
   ) {
     return <OrderContent order={uniswapXOrder} />
   }
@@ -189,7 +189,7 @@ export function Pending({
           </Row>
         )}
         {/* Display while UniswapX order is still pending */}
-        {uniswapXOrder && uniswapXOrder.status === TransactionStatus.Pending && (
+        {uniswapXOrder && uniswapXOrder.status === UniswapXOrderStatus.OPEN && (
           <Row justify="center" marginTop="32px" minHeight="24px">
             <ThemedText.BodySmall color="neutral2">
               <ExternalLink

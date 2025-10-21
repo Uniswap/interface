@@ -1,5 +1,5 @@
-import { TradingApi } from '@universe/api'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { createLpPosition, increaseLpPosition } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { CreateLPPositionRequest, IncreaseLPPositionRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
@@ -11,48 +11,39 @@ import { logger } from 'utilities/src/logger/logger'
 export interface IncreasePositionTransactionStep extends OnChainTransactionFields {
   // Doesn't require permit
   type: TransactionStepType.IncreasePositionTransaction
-  sqrtRatioX96: string | undefined
 }
 
 export interface IncreasePositionTransactionStepAsync {
   // Requires permit
   type: TransactionStepType.IncreasePositionTransactionAsync
-  getTxRequest(
-    signature: string,
-  ): Promise<{ txRequest: ValidatedTransactionRequest | undefined; sqrtRatioX96: string | undefined }>
+  getTxRequest(signature: string): Promise<ValidatedTransactionRequest | undefined>
 }
 
-export function createIncreasePositionStep(
-  txRequest: ValidatedTransactionRequest,
-  sqrtRatioX96: string | undefined,
-): IncreasePositionTransactionStep {
+export function createIncreasePositionStep(txRequest: ValidatedTransactionRequest): IncreasePositionTransactionStep {
   return {
     type: TransactionStepType.IncreasePositionTransaction,
     txRequest,
-    sqrtRatioX96,
   }
 }
 
 export function createCreatePositionAsyncStep(
-  createPositionRequestArgs: TradingApi.CreateLPPositionRequest | undefined,
+  createPositionRequestArgs: CreateLPPositionRequest | undefined,
 ): IncreasePositionTransactionStepAsync {
   return {
     type: TransactionStepType.IncreasePositionTransactionAsync,
-    getTxRequest: async (
-      signature: string,
-    ): Promise<{ txRequest: ValidatedTransactionRequest | undefined; sqrtRatioX96: string | undefined }> => {
+    getTxRequest: async (signature: string): Promise<ValidatedTransactionRequest | undefined> => {
       if (!createPositionRequestArgs) {
-        return { txRequest: undefined, sqrtRatioX96: undefined }
+        return undefined
       }
 
       try {
-        const { create, sqrtRatioX96 } = await TradingApiClient.createLpPosition({
+        const { create } = await createLpPosition({
           ...createPositionRequestArgs,
           signature,
           simulateTransaction: true,
         })
 
-        return { txRequest: validateTransactionRequest(create), sqrtRatioX96 }
+        return validateTransactionRequest(create)
       } catch (e) {
         const message = parseErrorMessageTitle(e, { includeRequestId: true })
         if (message) {
@@ -76,25 +67,23 @@ export function createCreatePositionAsyncStep(
 }
 
 export function createIncreasePositionAsyncStep(
-  increasePositionRequestArgs: TradingApi.IncreaseLPPositionRequest | undefined,
+  increasePositionRequestArgs: IncreaseLPPositionRequest | undefined,
 ): IncreasePositionTransactionStepAsync {
   return {
     type: TransactionStepType.IncreasePositionTransactionAsync,
-    getTxRequest: async (
-      signature: string,
-    ): Promise<{ txRequest: ValidatedTransactionRequest | undefined; sqrtRatioX96: string | undefined }> => {
+    getTxRequest: async (signature: string): Promise<ValidatedTransactionRequest | undefined> => {
       if (!increasePositionRequestArgs) {
-        return { txRequest: undefined, sqrtRatioX96: undefined }
+        return undefined
       }
 
       try {
-        const { increase, sqrtRatioX96 } = await TradingApiClient.increaseLpPosition({
+        const { increase } = await increaseLpPosition({
           ...increasePositionRequestArgs,
           signature,
           simulateTransaction: true,
         })
 
-        return { txRequest: validateTransactionRequest(increase), sqrtRatioX96 }
+        return validateTransactionRequest(increase)
       } catch (e) {
         const message = parseErrorMessageTitle(e, { includeRequestId: true })
         if (message) {

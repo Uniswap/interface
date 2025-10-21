@@ -5,7 +5,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isExtensionApp } from 'utilities/src/platform'
+import { isExtension } from 'utilities/src/platform'
 
 export interface SmartWalletModalProps {
   isOpen: boolean
@@ -60,7 +60,7 @@ export function SmartWalletModal({
   secondaryButtonOnClick,
   secondaryButtonVariant = 'default',
   secondaryButtonEmphasis = 'secondary',
-  alignment = isExtensionApp ? 'top' : undefined,
+  alignment = isExtension ? 'top' : undefined,
   hideHandlebar = false,
   isDismissible = true,
   children,
@@ -82,10 +82,10 @@ export function SmartWalletModal({
       <Flex
         flexDirection="column"
         alignItems={horizontalAlignment === 'left' ? 'flex-start' : 'center'}
-        px={isExtensionApp ? null : '$spacing24'}
-        mb={isExtensionApp ? null : '$spacing24'}
+        px={isExtension ? null : '$spacing24'}
+        mb={isExtension ? null : '$spacing24'}
         gap="$spacing16"
-        pt={isExtensionApp ? null : hideHandlebar ? '$spacing24' : '$spacing12'} // handlebar already has padding bottom 12px
+        pt={isExtension ? null : hideHandlebar ? '$spacing24' : '$spacing12'} // handlebar already has padding bottom 12px
       >
         {video ? (
           video
@@ -96,14 +96,14 @@ export function SmartWalletModal({
             borderRadius="$rounded12"
             height="$spacing48"
             width="$spacing48"
-            mt={isExtensionApp ? '$spacing8' : '$none'}
+            mt={isExtension ? '$spacing8' : '$none'}
           >
             {icon}
           </Flex>
         )}
         <Flex flexDirection="column" alignItems={horizontalAlignment === 'left' ? 'flex-start' : 'center'} gap="$gap8">
           <Text
-            variant={isExtensionApp ? 'subheading2' : 'subheading1'}
+            variant={isExtension ? 'subheading2' : 'subheading1'}
             color="$neutral1"
             textAlign={horizontalAlignment}
             loading={titleIsLoading}

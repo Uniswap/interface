@@ -1,19 +1,14 @@
-import { call, type SagaGenerator } from 'typed-redux-saga'
-import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
-import type {
-  PrepareTransactionParams,
-  TransactionService,
-} from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
-import type { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
+import { call, SagaGenerator } from 'typed-redux-saga'
+import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
+import type { TransactionService } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
+import { PrepareTransactionParams } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
+import { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
 import type { CalculatedNonce } from 'wallet/src/features/transactions/executeTransaction/tryGetNonce'
-import type { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
+import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
-import type {
-  DelegationType,
-  TransactionSagaDependencies,
-} from 'wallet/src/features/transactions/types/transactionSagaDependencies'
+import { TransactionSagaDependencies } from 'wallet/src/features/transactions/types/transactionSagaDependencies'
 
 /**
  * Common metadata for all transaction types
@@ -31,7 +26,7 @@ export interface BaseTransactionPreparationParams {
   account: SignerMnemonicAccountMeta
   chainId: UniverseChainId
   submitViaPrivateRpc: boolean
-  delegationType?: DelegationType
+  includesDelegation?: boolean
   onSuccess?: (result: unknown) => void
   onFailure?: (error: Error) => void
 }
@@ -74,7 +69,7 @@ export function* prepareTransactionServices(
     account: SignerMnemonicAccountMeta
     chainId: UniverseChainId
     submitViaPrivateRpc: boolean
-    delegationType: DelegationType
+    includesDelegation: boolean
     request?: ValidatedTransactionRequest
   },
 ): SagaGenerator<{
@@ -86,7 +81,7 @@ export function* prepareTransactionServices(
     account: params.account,
     chainId: params.chainId,
     submitViaPrivateRpc: params.submitViaPrivateRpc,
-    delegationType: params.delegationType,
+    includesDelegation: params.includesDelegation,
     request: params.request,
   })
 
@@ -102,10 +97,7 @@ export function* prepareTransactionServices(
     // If the nonce cannot be calculated, we proceed with the flow because while populating
     // the transaction request, the nonce is calculated and set by the provider (without our custom logic).
     dependencies.logger.error(error, {
-      tags: {
-        file: 'baseTransactionPreparationSaga',
-        function: 'prepareTransactionServices',
-      },
+      tags: { file: 'baseTransactionPreparationSaga', function: 'prepareTransactionServices' },
       extra: { account: params.account, chainId: params.chainId },
     })
   }

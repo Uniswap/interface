@@ -230,7 +230,6 @@ export default function useMultiChainPositions(account: string): UseMultiChainPo
   }, [chains, fetchPositionsForChain, setPositions])
 
   // Fetches positions when existing positions are stale and the document has focus
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +positionsFetching
   useEffect(() => {
     if (positionsFetching.current || cachedPositions?.stale === false) {
       return undefined

@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Circle, Flex, Text, useMedia } from 'ui/src'
+
 import { RightArrow } from 'ui/src/components/icons/RightArrow'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
@@ -20,7 +21,6 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
-import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
 
 interface LiquidityPositionInfoProps {
   positionInfo: PositionInfo
@@ -73,17 +73,13 @@ export function LiquidityPositionInfo({
     if (!(positionInfo.version === ProtocolVersion.V3 && showMigrateButton)) {
       return false
     }
-
-    if (isV4UnsupportedChain(positionInfo.chainId)) {
-      return false
-    }
     // if we're in the md-lg or xl-xxl ranges, hide the button due to overlapping issues
     const isInMdToLgRange = media.lg && !media.md
     const isInXlToXxlRange = media.xxl && !media.xl
     const shouldHideInRange = isInMdToLgRange || isInXlToXxlRange
 
     return !shouldHideInRange
-  }, [positionInfo.version, showMigrateButton, media.lg, media.md, media.xxl, media.xl, positionInfo.chainId])
+  }, [positionInfo.version, showMigrateButton, media.lg, media.md, media.xxl, media.xl])
 
   const [currency0Info, currency1Info] = useCurrencyInfos([
     currencyId(currency0Amount.currency),

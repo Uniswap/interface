@@ -123,6 +123,8 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
 const FALLBACK_APP_LOADING_TIMEOUT_MS = 15000
 
 export function AppLoadingScreen({ navigation }: Props): JSX.Element | null {
+  const dispatch = useDispatch()
+
   const appLoadingTimeoutMs = useDynamicConfigValue({
     config: DynamicConfigs.OnDeviceRecovery,
     key: OnDeviceRecoveryConfigKey.AppLoadingTimeoutMs,
@@ -213,6 +215,7 @@ export function AppLoadingScreen({ navigation }: Props): JSX.Element | null {
       navigateToLanding()
     }
   }, [
+    dispatch,
     finishRecovery,
     finished,
     loading,

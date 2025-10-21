@@ -47,8 +47,8 @@ import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features
 import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import {
@@ -64,8 +64,8 @@ import { generateBatchId, getCapabilitiesCore } from 'wallet/src/features/batche
 import { Call } from 'wallet/src/features/dappRequests/types'
 import {
   ExecuteTransactionParams,
-  executeTransaction,
-} from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+  executeTransactionV2,
+} from 'wallet/src/features/transactions/executeTransaction/executeTransactionSagaV2'
 import { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount, selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
@@ -357,7 +357,7 @@ export function* handleSendTransaction({
     preSignedTransaction,
   }
 
-  const { transactionHash } = yield* call(executeTransaction, sendTransactionParams)
+  const { transactionHash } = yield* call(executeTransactionV2, sendTransactionParams)
 
   // Trigger a pending transaction notification after we send the transaction to chain
   yield* put(
@@ -606,7 +606,7 @@ export function* handleSendCalls({
       preSignedTransaction,
     }
 
-    const { transactionHash } = yield* call(executeTransaction, sendTransactionParams)
+    const { transactionHash } = yield* call(executeTransactionV2, sendTransactionParams)
 
     yield* put(
       addBatchedTransaction({

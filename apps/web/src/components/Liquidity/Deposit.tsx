@@ -16,7 +16,6 @@ import { PositionField } from 'types/position'
 import { Button, Flex, Text } from 'ui/src'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 
 export const DepositStep = () => {
   const {
@@ -191,7 +190,7 @@ export const DepositStep = () => {
             {inputError ? inputError : t('swap.button.review')}
           </Button>
         ) : (
-          <Button size="large" variant="branded" emphasis="secondary" onPress={() => onConnectWallet?.(Platform.EVM)}>
+          <Button size="large" variant="branded" emphasis="secondary" onPress={onConnectWallet}>
             {t('common.connectWallet.button')}
           </Button>
         )}

@@ -1,6 +1,6 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ReceiveModalState } from 'components/ReceiveCryptoModal/types'
-import { useOpenReceiveCryptoModal } from 'components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { ReceiveModalState, receiveCryptoModalStateAtom } from 'components/ReceiveCryptoModal/state'
+import { useAtom } from 'jotai'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
@@ -78,6 +78,7 @@ export const EmptyWalletCards = (
   const providers = useCexTransferProviders()
   const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()
+  const [, setReceiveModalState] = useAtom(receiveCryptoModalStateAtom)
   const { fullWidth } = useDeviceDimensions()
   const shadowProps = useShadowPropsShort()
 
@@ -85,13 +86,8 @@ export const EmptyWalletCards = (
     accountDrawer.close()
     navigate(`/buy`, { replace: true })
   })
-
-  const handleReceiveCryptoClick = useOpenReceiveCryptoModal({
-    modalState: ReceiveModalState.DEFAULT,
-  })
-  const handleCEXTransferClick = useOpenReceiveCryptoModal({
-    modalState: ReceiveModalState.CEX_TRANSFER,
-  })
+  const handleReceiveCryptoClick = useEvent(() => setReceiveModalState(ReceiveModalState.QR_CODE))
+  const handleCEXTransferClick = useEvent(() => setReceiveModalState(ReceiveModalState.CEX_TRANSFER))
 
   const options: ActionCardItem[] = useMemo(
     () => [

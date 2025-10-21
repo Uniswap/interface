@@ -1,14 +1,20 @@
-import { type Currency, CurrencyAmount, type Token, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
-import { type ClassicQuoteResponse, TradingApi } from '@universe/api'
-
+import { ClassicQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import {
+  DutchOrderInfoV2,
+  DutchOutput,
+  DutchQuoteV2,
+  NullablePermit,
+  Routing,
+} from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { type DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import {
   ApprovalAction,
   ClassicTrade,
-  type TokenApprovalInfo,
-  type TradeWithStatus,
+  TokenApprovalInfo,
+  TradeWithStatus,
   UniswapXV2Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
@@ -114,7 +120,7 @@ export function createMockDerivedSwapInfo({
   }
 }
 
-const createMockUniswapXOrder = (inputToken: string, outputToken: string): TradingApi.DutchOrderInfoV2 => ({
+const createMockUniswapXOrder = (inputToken: string, outputToken: string): DutchOrderInfoV2 => ({
   chainId: 1,
   reactor: '0x00000011F84B9aa48e5f8aA8B9897600006289Be',
   swapper: '0x123',
@@ -133,7 +139,7 @@ const createMockUniswapXOrder = (inputToken: string, outputToken: string): Tradi
   ],
   cosigner: '0x4449Cd34d1eb1FEDCF02A1Be3834FfDe8E6A6180',
 })
-export const createMockUniswapXQuote = (inputToken: string, outputToken: string): TradingApi.DutchQuoteV2 => ({
+export const createMockUniswapXQuote = (inputToken: string, outputToken: string): DutchQuoteV2 => ({
   encodedOrder: '0x000',
   orderId: '0xbbb',
   orderInfo: createMockUniswapXOrder(inputToken, outputToken),
@@ -155,7 +161,7 @@ function createMockDutchOutput({
   startAmount: string
   endAmount: string
   recipient: string
-}): TradingApi.DutchOutput {
+}): DutchOutput {
   return {
     token,
     startAmount,
@@ -164,7 +170,7 @@ function createMockDutchOutput({
   }
 }
 
-const createMockPermitData = (token: string): TradingApi.NullablePermit => ({
+const createMockPermitData = (token: string): NullablePermit => ({
   domain: {
     name: 'Permit2',
     chainId: 1,
@@ -241,7 +247,7 @@ export const createMockUniswapXTrade = (inputCurrency: Token, outputCurrency: To
     tradeType: TradeType.EXACT_INPUT,
     quote: {
       requestId: '1',
-      routing: TradingApi.Routing.DUTCH_V2,
+      routing: Routing.DUTCH_V2,
       quote: createMockUniswapXQuote(inputCurrency.address, outputCurrency.address),
       permitData: createMockPermitData(inputCurrency.address),
     },

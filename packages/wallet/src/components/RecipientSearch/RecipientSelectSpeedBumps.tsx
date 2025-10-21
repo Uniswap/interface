@@ -8,9 +8,8 @@ import { WarningModal } from 'uniswap/src/components/modals/WarningModal/Warning
 import { useIsSmartContractAddress } from 'uniswap/src/features/address/useIsSmartContractAddress'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { isSameAddress } from 'utilities/src/addresses'
 import { ConditionalModalRenderer, SpeedBumps } from 'wallet/src/components/modals/SpeedBumps'
 import { NewAddressWarningModal } from 'wallet/src/components/RecipientSearch/modals/NewAddressWarningModal'
 import { useIsErc20Contract } from 'wallet/src/features/contracts/hooks'
@@ -38,7 +37,6 @@ export function RecipientSelectSpeedBumps({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const { defaultChainId } = useEnabledChains()
-  const platform = chainIdToPlatform(chainId ?? defaultChainId)
 
   const activeAddress = useActiveAccountAddressWithThrow()
   const viewOnlyAccounts = useViewOnlyAccounts()
@@ -147,10 +145,7 @@ export function RecipientSelectSpeedBumps({
   const shouldWarnERC20 = isERC20ContractAddress
   const shouldWarnSmartContract = isNewRecipient && !isSignerRecipient && isSmartContractAddress && !shouldWarnERC20
   const shouldWarnNewAddress = isNewRecipient && !isSignerRecipient && !shouldWarnSmartContract && !shouldWarnERC20
-  const shouldWarnSelfSend = areAddressesEqual({
-    addressInput1: { address: activeAddress, platform },
-    addressInput2: { address: recipientAddress, platform },
-  })
+  const shouldWarnSelfSend = isSameAddress(activeAddress, recipientAddress)
 
   const modalRenderers = useMemo<ConditionalModalRenderer[]>(
     () => [

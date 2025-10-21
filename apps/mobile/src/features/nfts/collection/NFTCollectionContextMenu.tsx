@@ -22,7 +22,7 @@ export function NFTCollectionContextMenu({
   showButtonOutline = false,
   iconColor = '$neutral2',
 }: {
-  data: Maybe<NFTCollectionData>
+  data: NFTCollectionData
   showButtonOutline?: boolean
   iconColor?: ColorTokens
 }): Nullable<JSX.Element> {

@@ -40,7 +40,6 @@ export {
   Paragraph,
   Popover,
   Portal,
-  Progress,
   RadioGroup,
   ScrollView,
   Select,
@@ -62,7 +61,6 @@ export {
 } from 'tamagui'
 export { LinearGradient, type LinearGradientProps } from 'tamagui/linear-gradient'
 export * from 'ui/src/animations'
-export * from './components/AnimatableCopyIcon/AnimatableCopyIcon'
 export { Button } from './components/buttons/Button/Button'
 export type { ButtonEmphasis, ButtonProps, ButtonVariant } from './components/buttons/Button/types'
 export { DropdownButton } from './components/buttons/DropdownButton/DropdownButton'
@@ -102,7 +100,6 @@ export { type DynamicColor, useSporeColors } from './hooks/useSporeColors'
 export * from './loading/FlexLoader'
 export * from './loading/Loader'
 export * from './loading/NftCardLoader'
-export * from './loading/RefreshIcon'
 export * from './loading/Shine'
 export * from './loading/Skeleton'
 export * from './loading/SpinningLoader'
@@ -111,5 +108,4 @@ export * from './loading/TransactionLoader'
 export * from './styles/ScrollbarStyles'
 export * from './theme/shadows'
 export * from './utils/colors'
-export { EM_DASH } from './utils/constants'
 export * from './utils/tamagui'

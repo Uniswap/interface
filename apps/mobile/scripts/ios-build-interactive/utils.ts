@@ -1,4 +1,4 @@
-// biome-ignore-all lint/suspicious/noConsole: CLI tool needs console for user interaction
+/* eslint-disable no-console */
 
 import { exec, spawn } from 'child_process'
 import { promisify } from 'util'
@@ -109,7 +109,7 @@ export const runCommand = async (command: string): Promise<{ stdout: string; std
 
 export const spawnProcess = (command: string, args: string[]): Promise<void> => {
   return new Promise((resolve, reject) => {
-    // biome-ignore lint/suspicious/noExplicitAny: Node spawn options type requires any for stdio config
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const process = spawn(command, args, { stdio: 'inherit' } as any)
     process.on('close', (code) => {
       if (code === 0) {

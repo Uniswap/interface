@@ -3,7 +3,6 @@
 import { gqlToCurrency } from 'appGraphql/data/util'
 import { Percent, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { computePairAddress, Pair } from '@uniswap/v2-sdk'
-import { GraphQLApi } from '@universe/api'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from 'constants/routing'
 import { useAccount } from 'hooks/useAccount'
@@ -18,6 +17,10 @@ import {
   updateUserSlippageTolerance,
 } from 'state/user/reducer'
 import { SerializedPair, SlippageTolerance } from 'state/user/types'
+import {
+  TokenSortableField,
+  useTopTokensQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useGetPositionsForPairs } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
@@ -67,7 +70,7 @@ export function useUserSlippageTolerance(): [
           userSlippageTolerance === SlippageTolerance.Auto
             ? SlippageTolerance.Auto
             : JSBI.toNumber(userSlippageTolerance.multiply(10_000).quotient)
-      } catch (_error) {
+      } catch (error) {
         value = SlippageTolerance.Auto
       }
       dispatch(
@@ -160,10 +163,10 @@ export function useTrackedTokenPairs(): [Token, Token][] {
   const supportedChainId = useSupportedChainId(chainId)
 
   // TODO(WEB-4001): use an "all tokens" query for better LP detection
-  const { data: popularTokens } = GraphQLApi.useTopTokensQuery({
+  const { data: popularTokens } = useTopTokensQuery({
     variables: {
       chain: toGraphQLChain(supportedChainId ?? defaultChainId),
-      orderBy: GraphQLApi.TokenSortableField.Popularity,
+      orderBy: TokenSortableField.Popularity,
       page: 1,
       pageSize: 100,
     },

@@ -2,6 +2,10 @@ import { CountryListRow } from 'pages/Swap/Buy/CountryListRow'
 import { US } from 'test-utils/constants'
 import { act, render, screen } from 'test-utils/render'
 
+vi.mock('nft/components/iconExports', () => ({
+  ApprovedCheckmarkIcon: () => <div data-testid="approved-checkmark-icon" />,
+}))
+
 describe('CountryListRow', () => {
   it('should render', () => {
     const clickHandler = vi.fn()

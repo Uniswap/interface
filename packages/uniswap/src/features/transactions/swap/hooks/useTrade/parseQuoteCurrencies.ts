@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, TradeType as SdkTradeType } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
+import { TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 
 interface ParseQuoteCurrenciesInput {
@@ -11,7 +11,7 @@ interface ParseQuoteCurrenciesInput {
 export interface QuoteCurrencyData {
   currencyIn?: Currency
   currencyOut?: Currency
-  requestTradeType: TradingApi.TradeType
+  requestTradeType: TradingApiTradeType
 }
 
 export function parseQuoteCurrencies(input: ParseQuoteCurrenciesInput): QuoteCurrencyData {
@@ -21,7 +21,7 @@ export function parseQuoteCurrencies(input: ParseQuoteCurrenciesInput): QuoteCur
   const currencyOut = tradeType === SdkTradeType.EXACT_OUTPUT ? amountSpecified?.currency : otherCurrency
 
   const requestTradeType =
-    tradeType === SdkTradeType.EXACT_INPUT ? TradingApi.TradeType.EXACT_INPUT : TradingApi.TradeType.EXACT_OUTPUT
+    tradeType === SdkTradeType.EXACT_INPUT ? TradingApiTradeType.EXACT_INPUT : TradingApiTradeType.EXACT_OUTPUT
 
   return {
     currencyIn: currencyIn ?? undefined,

@@ -19,7 +19,7 @@ import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isWebAppDesktop, isWebPlatform } from 'utilities/src/platform'
+import { isInterfaceDesktop, isWeb } from 'utilities/src/platform'
 
 type CurrencyInputPanelInputProps = {
   shakeAnimation: ShakeAnimation
@@ -126,7 +126,7 @@ export const CurrencyInputPanelInput = memo(
               color={showInsufficientBalanceWarning ? '$statusCritical' : color}
               fontSize={inputFontSize.fontSize}
               lineHeight={inputFontSize.lineHeight}
-              mr={isWebPlatform ? '$spacing2' : undefined}
+              mr={isWeb ? '$spacing2' : undefined}
             >
               {fiatCurrencySymbol}
             </Text>
@@ -142,7 +142,7 @@ export const CurrencyInputPanelInput = memo(
             onLayout={inputFontSize.onLayout}
           >
             {currencyInfo ? (
-              <Flex grow flexShrink={isWebPlatform ? 1 : 0}>
+              <Flex grow flexShrink={isWeb ? 1 : 0}>
                 {disabled && (
                   // Invisible TouchableArea overlay to capture onPress events and trigger the shake animation when the input is disabled
                   <TouchableArea
@@ -184,7 +184,7 @@ export const CurrencyInputPanelInput = memo(
                   onSelectionChange={onSelectionChange}
                 />
               </Flex>
-            ) : showDefaultTokenOptions && !isWebAppDesktop ? (
+            ) : showDefaultTokenOptions && !isInterfaceDesktop ? (
               <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
             ) : (
               <TouchableArea onPress={onShowTokenSelector}>

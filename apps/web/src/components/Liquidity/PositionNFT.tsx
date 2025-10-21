@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-// biome-ignore lint/style/noRestrictedImports: styled-components needed for NFT component styling
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import styled from 'styled-components'
 
 // snapshots a src img into a canvas

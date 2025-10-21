@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { ScrollView } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import type { AnimatedRef } from 'react-native-reanimated'
-import { FadeIn } from 'react-native-reanimated'
+import { AnimatedRef, FadeIn } from 'react-native-reanimated'
 import type { SortableGridDragEndCallback, SortableGridRenderItem } from 'react-native-sortables'
 import Sortable from 'react-native-sortables'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,7 +20,7 @@ const DEFAULT_TOKENS_TO_DISPLAY = 4
 
 type FavoriteTokensGridProps = {
   showLoading: boolean
-  listRef: AnimatedRef<FlatList> | AnimatedRef<ScrollView>
+  listRef: AnimatedRef<FlatList>
 }
 
 /** Renders the favorite tokens section on the Explore tab */
@@ -101,6 +99,7 @@ export function FavoriteTokensGrid({ showLoading, listRef, ...rest }: FavoriteTo
         <Flex>
           <Sortable.Grid
             {...rest}
+            dimensionsAnimationType="worklet"
             scrollableRef={listRef}
             data={visibleTokens}
             sortEnabled={isEditing}

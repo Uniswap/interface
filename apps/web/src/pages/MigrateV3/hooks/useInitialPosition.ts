@@ -9,6 +9,10 @@ export default function useInitialPosition(positionInfo?: PositionInfo) {
       return undefined
     }
 
+    if (positionInfo.status !== PositionStatus.OUT_OF_RANGE) {
+      return undefined
+    }
+
     if (positionInfo.version !== ProtocolVersion.V3) {
       return undefined
     }
@@ -23,14 +27,9 @@ export default function useInitialPosition(positionInfo?: PositionInfo) {
     const shouldFlip = unwrappedToken(positionInfo.poolOrPair.token1).isNative
 
     return {
-      fee: {
-        feeAmount: positionInfo.poolOrPair.fee,
-        tickSpacing: positionInfo.poolOrPair.tickSpacing,
-        isDynamic: false,
-      },
       tickLower: shouldFlip ? -tickUpper : tickLower,
       tickUpper: shouldFlip ? -tickLower : tickUpper,
-      isOutOfRange: positionInfo.status === PositionStatus.OUT_OF_RANGE,
+      isOutOfRange: true,
     }
   }, [positionInfo])
 }

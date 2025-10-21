@@ -1,5 +1,5 @@
 import { AlertTriangle } from 'react-feather'
-// biome-ignore lint/style/noRestrictedImports: styled-components needed for theming existing icon
+// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import styled from 'styled-components'
 
 export const CautionTriangle = styled(AlertTriangle)`
