@@ -69,9 +69,6 @@ export const SwapGlowContainer = styled.div`
 export const SwapGlow = styled.div`
   position: absolute;
   top: 100px;
-  background: url(${meshSrc}), radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);
-  background-blend-mode: normal;
-  filter: blur(150px);
   border-radius: 50%;
   max-width: 700px;
   width: 100%;
@@ -80,6 +77,28 @@ export const SwapGlow = styled.div`
   will-change: transform, opacity;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+
+  /* Blurred gradient layer */
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(101.8% 4091.31% at 0% 0%, #4673FA 0%, #9646FA 100%);
+    border-radius: 50%;
+    filter: blur(150px);
+    opacity: 0.7;
+  }
+
+  /* Mesh texture overlay (not blurred) */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url(${meshSrc});
+    border-radius: 50%;
+    opacity: 0.5;
+    mix-blend-mode: overlay;
+  }
 
   @keyframes pulse {
     0%, 100% {
@@ -95,13 +114,19 @@ export const SwapGlow = styled.div`
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.md}px`}) {
     max-width: 500px;
     height: 500px;
-    filter: blur(100px);
+
+    &::before {
+      filter: blur(100px);
+    }
   }
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     max-width: 350px;
     height: 350px;
-    filter: blur(80px);
+
+    &::before {
+      filter: blur(80px);
+    }
   }
 `
 

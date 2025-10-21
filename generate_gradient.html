@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Gradient</title>
+</head>
+<body>
+    <canvas id="canvas" width="1000" height="1000"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Create radial gradient matching the landing page
+        const gradient = ctx.createRadialGradient(500, 500, 0, 500, 500, 500);
+        gradient.addColorStop(0, '#4673FA');
+        gradient.addColorStop(1, '#9646FA');
+        
+        // Fill canvas
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 1000, 1000);
+        
+        // Add noise for dithering
+        const imageData = ctx.getImageData(0, 0, 1000, 1000);
+        const data = imageData.data;
+        for (let i = 0; i < data.length; i += 4) {
+            const noise = (Math.random() - 0.5) * 8;
+            data[i] += noise;     // R
+            data[i + 1] += noise; // G
+            data[i + 2] += noise; // B
+        }
+        ctx.putImageData(imageData, 0, 0);
+        
+        // Download
+        const link = document.createElement('a');
+        link.download = 'gradient-glow.png';
+        canvas.toBlob(blob => {
+            link.href = URL.createObjectURL(blob);
+            link.click();
+        });
+    </script>
+</body>
+</html>
