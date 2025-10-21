@@ -70,19 +70,16 @@ export const SwapGlow = styled.div`
   top: 100px;
   background: radial-gradient(
     circle at center,
-    rgba(200, 4, 125, 0.5) 0%,
-    rgba(220, 45, 145, 0.4) 15%,
-    rgba(235, 75, 180, 0.35) 25%,
-    rgba(245, 95, 205, 0.28) 35%,
-    rgba(252, 114, 255, 0.22) 45%,
-    rgba(250, 125, 245, 0.16) 55%,
-    rgba(240, 140, 235, 0.12) 65%,
-    rgba(220, 160, 245, 0.08) 75%,
-    rgba(200, 180, 250, 0.04) 85%,
-    rgba(180, 195, 255, 0.02) 92%,
-    rgba(166, 151, 255, 0) 100%
+    rgba(140, 82, 255, 0.35) 0%,
+    rgba(150, 100, 255, 0.28) 20%,
+    rgba(160, 120, 255, 0.22) 35%,
+    rgba(170, 140, 255, 0.16) 50%,
+    rgba(180, 160, 255, 0.10) 65%,
+    rgba(190, 180, 255, 0.05) 80%,
+    rgba(200, 200, 255, 0.02) 92%,
+    rgba(210, 210, 255, 0) 100%
   );
-  filter: blur(120px);
+  filter: blur(150px);
   border-radius: 50%;
   max-width: 700px;
   width: 100%;
@@ -94,12 +91,12 @@ export const SwapGlow = styled.div`
 
   @keyframes pulse {
     0%, 100% {
-      opacity: 0.7;
+      opacity: 0.6;
       transform: scale(1) translateZ(0);
     }
     50% {
-      opacity: 0.9;
-      transform: scale(1.08) translateZ(0);
+      opacity: 0.8;
+      transform: scale(1.05) translateZ(0);
     }
   }
 
@@ -122,12 +119,12 @@ const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
   width: 100%;
   max-width: 480px;
   z-index: ${Z_INDEX.default};
-  border: 1px solid ${({ theme, isDark }) => (isDark ? 'rgba(200, 4, 125, 0.3)' : theme.surface3)};
+  border: 1px solid ${({ theme, isDark }) => (isDark ? 'rgba(140, 82, 255, 0.3)' : theme.surface3)};
   transition: all 250ms ease;
   border-radius: 24px;
   box-shadow: ${({ isDark }) =>
     isDark
-      ? '0 0 40px rgba(200, 4, 125, 0.15), 0 0 80px rgba(252, 114, 255, 0.1)'
+      ? '0 0 40px rgba(140, 82, 255, 0.2), 0 0 80px rgba(160, 120, 255, 0.15)'
       : '0 4px 12px rgba(0, 0, 0, 0.05)'};
 
   &:before {
@@ -139,18 +136,17 @@ const SwapWrapperOuter = styled.main<{ isDark?: boolean }>`
     filter: blur(50px);
     background: ${({ isDark }) =>
       isDark
-        ? 'radial-gradient(circle at center, rgba(200, 4, 125, 0.15), rgba(252, 114, 255, 0.08))'
-        : 'rgba(252, 114, 255, 0.075)'};
+        ? 'radial-gradient(circle at center, rgba(140, 82, 255, 0.15), rgba(160, 120, 255, 0.08))'
+        : 'rgba(160, 120, 255, 0.075)'};
     z-index: -2;
   }
 
   &:hover {
-    border: 1px solid ${({ theme, isDark }) => (isDark ? 'rgba(200, 4, 125, 0.5)' : theme.surface3)};
+    border: 1px solid ${({ theme, isDark }) => (isDark ? 'rgba(140, 82, 255, 0.5)' : theme.surface3)};
     box-shadow: ${({ isDark }) =>
       isDark
-        ? '0 0 50px rgba(200, 4, 125, 0.2), 0 0 100px rgba(252, 114, 255, 0.15)'
+        ? '0 0 50px rgba(140, 82, 255, 0.25), 0 0 100px rgba(160, 120, 255, 0.2)'
         : '0 4px 16px rgba(0, 0, 0, 0.08)'};
-    transform: translateY(-2px);
   }
 `
 
