@@ -24,6 +24,12 @@ const Footer = styled.div`
 const LogoSection = styled.div`
   display: flex;
   flex-direction: column;
+  width: 200px;
+  margin: 20px 0 0 0;
+
+  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
+    margin: 0;
+  }
 `
 
 const LogoSectionLeft = styled(LogoSection)`
@@ -115,12 +121,8 @@ const BrandTitle = styled.h3`
   font-size: 24px;
   font-weight: 700;
   line-height: 20px;
-  margin: 20px 0 12px 0;
+  margin: 0 0 12px 0;
   color: ${({ theme }) => theme.neutral1};
-
-  @media screen and (min-width: ${BREAKPOINTS.xl}px) {
-    margin: 0 0 12px 0;
-  }
 `
 
 const BrandDescription = styled.p`
