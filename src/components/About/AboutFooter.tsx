@@ -47,6 +47,7 @@ const StyledLogoWrapper = styled.div`
   height: 72px;
   display: none;
   color: ${({ theme }) => theme.accent1};
+  opacity: 0.2;
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
     display: block;
