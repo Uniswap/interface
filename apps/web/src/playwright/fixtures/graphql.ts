@@ -58,7 +58,7 @@ export const test = base.extend<GraphqlFixture>({
       }
     }
 
-    await page.route(/(?:interface|beta).(gateway|api).uniswap.org\/v1\/graphql/, async (route) => {
+    await page.route(/(?:interface|beta)\.(gateway|api)\.uniswap\.org\/v1\/graphql/, async (route) => {
       const request = route.request()
       const postData = request.postData()
       if (!postData) {
