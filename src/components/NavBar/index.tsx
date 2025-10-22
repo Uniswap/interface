@@ -8,7 +8,7 @@ import { useIsNftPage } from 'hooks/useIsNftPage'
 import { useIsPoolsPage } from 'hooks/useIsPoolsPage'
 import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
-import { UniIcon } from 'nft/components/icons'
+import { TaikoLogo } from 'components/Logo/TaikoLogo'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { ReactNode, useCallback } from 'react'
@@ -116,10 +116,10 @@ const Navbar = ({ blur }: { blur: boolean }) => {
         <Box display="flex" height="full" flexWrap="nowrap">
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
-              <UniIcon
+              <TaikoLogo
                 width="48"
                 height="48"
-                data-testid="uniswap-logo"
+                data-testid="taiko-logo"
                 className={styles.logo}
                 onClick={handleUniIconClick}
               />
