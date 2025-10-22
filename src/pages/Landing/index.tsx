@@ -266,14 +266,7 @@ const LandingSwapContainer = styled.div`
 `
 
 const SwapCss = css`
-  * {
-    pointer-events: none;
-  }
-
-  &:hover {
-    transform: translateY(-4px);
-    transition: ${({ theme }) => `transform ${theme.transition.duration.medium} ${theme.transition.timing.ease}`};
-  }
+  /* Swap is now fully interactive on the landing page */
 `
 
 const LinkCss = css`
