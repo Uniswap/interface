@@ -111,12 +111,32 @@ const Copyright = styled.span`
   color: ${({ theme }) => theme.neutral3};
 `
 
+const BrandTitle = styled.h3`
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin: 20px 0 12px 0;
+  color: ${({ theme }) => theme.neutral1};
+`
+
+const BrandDescription = styled.p`
+  font-size: 16px;
+  line-height: 24px;
+  margin: 0 0 20px 0;
+  color: ${({ theme }) => theme.neutral2};
+  max-width: 300px;
+`
+
 const LogoSectionContent = () => {
   return (
     <>
       <StyledLogoWrapper>
         <TaikoLogo width="72" height="72" />
       </StyledLogoWrapper>
+      <BrandTitle>Taiko Labs</BrandTitle>
+      <BrandDescription>
+        The most developer-friendly and secure Ethereum scaling solution.
+      </BrandDescription>
       <SocialLinks>
         <SocialLink href="https://discord.gg/taikoxyz" target="_blank" rel="noopener noreferrer">
           <DiscordIcon size={32} />
