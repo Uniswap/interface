@@ -3,7 +3,7 @@ import { AnimatePresence, ColorTokens, SpaceTokens, styled, TabLayout, Tabs, Tab
 import { Flex } from 'ui/src/components/layout/Flex'
 import { Text } from 'ui/src/components/text/Text'
 import { assert } from 'utilities/src/errors'
-import { isMobileApp, isWeb } from 'utilities/src/platform'
+import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 
 const TOGGLE_PADDING = 4
 
@@ -33,6 +33,11 @@ const OptionsSelector = styled(Tabs.List, {
       },
     },
     size: {
+      xsmall: {
+        height: 30,
+        gap: '$spacing4',
+        borderRadius: '$roundedFull',
+      },
       small: {
         height: 30,
         gap: '$spacing6',
@@ -115,6 +120,11 @@ const OptionButton = styled(Tabs.Tab, {
       },
     },
     size: {
+      xsmall: {
+        height: '$spacing20',
+        py: '$spacing2',
+        px: 8,
+      },
       small: {
         height: '$spacing20',
         py: '$spacing2',
@@ -163,7 +173,7 @@ export interface SegmentedControlOption<T extends string = string> {
   wrapper?: JSX.Element
 }
 
-type SegmentedControlSize = 'small' | 'smallThumbnail' | 'default' | 'large' | 'largeThumbnail'
+type SegmentedControlSize = 'xsmall' | 'small' | 'smallThumbnail' | 'default' | 'large' | 'largeThumbnail'
 
 interface SegmentedControlProps<T extends string = string> {
   options: readonly SegmentedControlOption<T>[]
@@ -302,7 +312,7 @@ export function SegmentedControl<T extends string = string>({
               height={activeAt.height}
               width={activeAt.width}
               x={activeAt.x - TOGGLE_PADDING + activeIndicatorXAdjustment}
-              y={activeAt.y - TOGGLE_PADDING + activeIndicatorYAdjustment - (isWeb && !outlined ? 1 : 0)}
+              y={activeAt.y - TOGGLE_PADDING + activeIndicatorYAdjustment - (isWebPlatform && !outlined ? 1 : 0)}
             />
           )}
         </AnimatePresence>

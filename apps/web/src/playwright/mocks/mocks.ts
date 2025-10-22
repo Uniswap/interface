@@ -22,12 +22,16 @@ export const Mocks = {
   Token: {
     token_warning: path.resolve(__dirname, '../mocks/graphql/Token/token_warning.json'),
     search_token_tether: path.resolve(__dirname, '../mocks/graphql/Token/search_token_tether.json'),
+    uni_token: path.resolve(__dirname, '../mocks/graphql/Token/uni_token.json'),
+    sepolia_yay_token: path.resolve(__dirname, '../mocks/graphql/Token/sepolia_yay_token.json'),
   },
   TokenProjects: {
     token_spam: path.resolve(__dirname, '../mocks/graphql/TokenProjects/token_warning.json'),
   },
   TokenWeb: {
     token_warning: path.resolve(__dirname, '../mocks/graphql/TokenWeb/token_warning.json'),
+    uni_token: path.resolve(__dirname, '../mocks/graphql/TokenWeb/uni_token.json'),
+    sepolia_yay_token: path.resolve(__dirname, '../mocks/graphql/TokenWeb/sepolia_yay_token.json'),
   },
   Positions: {
     get_single_sided_v3_position: path.resolve(__dirname, '../mocks/rest/positions/get_single_sided_v3_position.json'),

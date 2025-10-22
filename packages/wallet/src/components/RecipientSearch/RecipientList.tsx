@@ -15,7 +15,7 @@ import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UNITAG_SUFFIX } from 'uniswap/src/features/unitags/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 interface RecipientListProps {
   renderedInModal?: boolean
@@ -36,7 +36,7 @@ export function RecipientList({ onPress, sections, renderedInModal = false }: Re
   const renderItem = function ({ item }: ListRenderItemInfo<SearchableRecipient>): JSX.Element {
     return (
       // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
-      <AnimatedFlex entering={FadeIn} exiting={isWeb ? undefined : FadeOut} py="$spacing12">
+      <AnimatedFlex entering={FadeIn} exiting={isWebPlatform ? undefined : FadeOut} py="$spacing12">
         <RecipientRow recipient={item} onPress={onRecipientPress} />
       </AnimatedFlex>
     )
@@ -68,7 +68,7 @@ function SectionHeader(info: { section: SectionListData<SearchableRecipient> }):
       backgroundColor="$surface1"
       entering={FadeIn}
       // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
-      exiting={isWeb ? undefined : FadeOut}
+      exiting={isWebPlatform ? undefined : FadeOut}
       py="$spacing8"
     >
       <Text color="$neutral2" variant="subheading2">

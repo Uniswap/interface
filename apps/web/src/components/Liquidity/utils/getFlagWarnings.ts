@@ -1,7 +1,7 @@
 import { GeneratedIcon } from 'ui/src'
 import { Flag } from 'ui/src/components/icons/Flag'
 import { Pools } from 'ui/src/components/icons/Pools'
-import { SwapCoin } from 'ui/src/components/icons/SwapCoin'
+import { SwapDotted } from 'ui/src/components/icons/SwapDotted'
 import { AppTFunction } from 'ui/src/i18n/types'
 
 export enum HookFlag {
@@ -65,7 +65,7 @@ export function getFlagWarning(flag: HookFlag, t: AppTFunction): FlagWarning | u
     case HookFlag.BeforeSwap:
     case HookFlag.BeforeSwapReturnsDelta:
       return {
-        Icon: SwapCoin,
+        Icon: SwapDotted,
         name: t('common.swap'),
         info: t('position.hook.swapWarning'),
         dangerous: false,

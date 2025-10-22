@@ -3,12 +3,12 @@ import 'test-utils/tokens/mocks'
 import { usePoolsFromTokenAddress } from 'appGraphql/data/pools/usePoolsFromTokenAddress'
 import { ApolloError } from '@apollo/client'
 import { type Currency, Percent, Token } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { TokenDetailsPoolsTable } from 'components/Tokens/TokenDetails/tables/TokenDetailsPoolsTable'
 import { mocked } from 'test-utils/mocked'
 import { validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
-import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 vi.mock('appGraphql/data/pools/usePoolsFromTokenAddress')
@@ -80,7 +80,7 @@ describe('TDPPoolTable', () => {
         volume30d: 500,
         volOverTvl: 1.84,
         apr: new Percent(6, 100),
-        protocolVersion: ProtocolVersion.V3,
+        protocolVersion: GraphQLApi.ProtocolVersion.V3,
       },
     ]
     mocked(usePoolsFromTokenAddress).mockReturnValue({

@@ -43,6 +43,7 @@ export function UniversalImage({
   }, [size.height, size.width])
 
   // Calculate width/height and check for an error in the image retrieval for fast images
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +width, height
   useEffect(() => {
     // If we know dimension or this isn't a fast image, skip calculating width/height
     if (!uri || sizeKnown || !fastImage || isRequireSource) {

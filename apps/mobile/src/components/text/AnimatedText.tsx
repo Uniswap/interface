@@ -32,7 +32,7 @@ const BaseAnimatedText = ({
     return {
       text: text?.value,
       // Here we use any because the text prop is not available in the type
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: Text prop not available in animated type definition
     } as any
   })
 
@@ -49,7 +49,7 @@ const BaseAnimatedText = ({
             {...rest}
           />
           {/* Use the text component to properly calculate the width of the loading shimmer.
-          An input component with a width dependent on the length of the content was sometimes 
+          An input component with a width dependent on the length of the content was sometimes
           rendered with a very small width regardless of the text passed as a value */}
           <Animated.Text style={[style, styles.loadingPlaceholder]}>{loadingPlaceholderText}</Animated.Text>
         </Flex>
@@ -96,7 +96,8 @@ export const AnimatedText = ({ style, ...propsIn }: TextProps): JSX.Element => {
 
   return (
     <BaseAnimatedText
-      {...(props as any)} // eslint-disable-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: Ambigous to type
+      {...(props as any)}
       allowFontScaling={enableFontScaling}
       maxFontSizeMultiplier={multiplier}
       style={[styles.input, textStyles, style]}

@@ -1,4 +1,4 @@
-import { fetchIndicativeQuote, fetchQuote } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
   createTradeRepository,
   type TradeRepository,
@@ -19,10 +19,10 @@ import { logger } from 'utilities/src/logger/logger'
  *
  * @returns A trade repository that can be used to fetch quotes from the trading API.
  */
-export function getTradeRepository(): TradeRepository {
+export function getEVMTradeRepository(): TradeRepository {
   return createTradeRepository({
-    fetchQuote,
-    fetchIndicativeQuote,
+    fetchQuote: TradingApiClient.fetchQuote,
+    fetchIndicativeQuote: TradingApiClient.fetchIndicativeQuote,
     logger,
   })
 }

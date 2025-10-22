@@ -36,7 +36,7 @@ export function isTokenSearchHistoryResult(x: SearchHistoryResult): x is TokenSe
   return x.type === SearchHistoryResultType.Token
 }
 
-// TODO(WEB-6283): Should not contain feeTier in saved redux state -- this can be dynamic and should be re-fetched at calltime
+// TODO(PORT-419): Should not contain feeTier in saved redux state -- this can be dynamic and should be re-fetched at calltime
 export interface PoolSearchHistoryResult extends SearchResultBase {
   type: SearchHistoryResultType.Pool
   chainId: UniverseChainId
@@ -52,7 +52,7 @@ export function isPoolSearchHistoryResult(x: SearchHistoryResult): x is PoolSear
   return x.type === SearchHistoryResultType.Pool
 }
 
-// TODO(WEB-6283): Should not contain name, imageUrl, isVerified in saved redux state -- these are dynamic properties and should be re-fetched at calltime
+// TODO(PORT-419): Should not contain name, imageUrl, isVerified in saved redux state -- these are dynamic properties and should be re-fetched at calltime
 export interface NFTCollectionSearchHistoryResult extends SearchResultBase {
   type: SearchHistoryResultType.NFTCollection
   chainId: UniverseChainId
@@ -63,7 +63,17 @@ export interface NFTCollectionSearchHistoryResult extends SearchResultBase {
 }
 
 export function isNFTCollectionSearchHistoryResult(x: SearchHistoryResult): x is NFTCollectionSearchHistoryResult {
-  return x.type === SearchHistoryResultType.NFTCollection
+  // This handles a migration issue from migrateSearchHistory (mobile 93) where these fields could possibly be undefined
+  // Can be removed after PORT-419 is completed
+  return (
+    x.type === SearchHistoryResultType.NFTCollection &&
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    x.name !== undefined &&
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    x.imageUrl !== undefined &&
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    x.isVerified !== undefined
+  )
 }
 
 export interface EtherscanSearchHistoryResult extends SearchResultBase {

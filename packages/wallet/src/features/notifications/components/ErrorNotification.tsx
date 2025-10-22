@@ -1,6 +1,6 @@
 import { AlertTriangleFilled } from 'ui/src/components/icons'
-import { AppErrorNotification } from 'uniswap/src/features/notifications/types'
-import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
+import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
+import { AppErrorNotification } from 'uniswap/src/features/notifications/slice/types'
 
 export function ErrorNotification({
   notification: { address, errorMessage, hideDelay },

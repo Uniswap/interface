@@ -1,6 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { TradeType, Urgency } from 'uniswap/src/data/tradingApi/__generated__'
-import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { GasStrategy, TradingApi } from '@universe/api'
 import { getActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import {
   isZeroAmount,
@@ -31,8 +30,8 @@ export interface QuoteRequestResult {
   tokenInChainId: number
   tokenOut: string
   tokenOutChainId: number
-  type: TradeType
-  urgency?: Urgency
+  type: TradingApi.TradeType
+  urgency?: TradingApi.Urgency
   routingParams: QuoteRoutingParamsResult
   slippageParams: QuoteSlippageParamsResult
 }
@@ -42,7 +41,7 @@ export interface ValidatedTradeInput {
   currencyIn: Currency
   currencyOut: Currency
   amount: CurrencyAmount<Currency>
-  requestTradeType: TradeType
+  requestTradeType: TradingApi.TradeType
   activeAccountAddress: string | undefined
   tokenInChainId: number
   tokenOutChainId: number
@@ -112,7 +111,7 @@ export interface ParsedTradeInput {
   currencyIn: Maybe<Currency>
   currencyOut: Maybe<Currency>
   amount: Maybe<CurrencyAmount<Currency>>
-  requestTradeType: TradeType
+  requestTradeType: TradingApi.TradeType
   activeAccountAddress: string | undefined
   tokenInChainId?: number
   tokenOutChainId?: number
@@ -122,7 +121,7 @@ export interface ParsedTradeInput {
   isUSDQuote?: boolean
 }
 
-export function parseTradeInputForQuote(input: UseTradeArgs): ParsedTradeInput {
+export function parseTradeInputForTradingApiQuote(input: UseTradeArgs): ParsedTradeInput {
   const { currencyIn, currencyOut, requestTradeType } = parseQuoteCurrencies(input)
   return {
     currencyIn,

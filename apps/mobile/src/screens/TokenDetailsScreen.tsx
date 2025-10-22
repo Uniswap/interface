@@ -1,5 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
+import { GQLQueries, GraphQLApi } from '@universe/api'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
@@ -21,20 +22,17 @@ import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/
 import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetailsHeaders'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
 import { Flex, Separator } from 'ui/src'
-import { ArrowDownCircle, ArrowUpCircle, Bank, ExternalLink, SendRoundedAirplane } from 'ui/src/components/icons'
+import { ArrowDownCircle, ArrowUpCircle, Bank, SendRoundedAirplane } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
+import { getBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import type { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
-import type { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useTokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -91,7 +89,7 @@ function TokenDetailsWrapper(): JSX.Element {
 const TokenDetailsQuery = memo(function _TokenDetailsQuery(): JSX.Element {
   const { currencyId, setError } = useTokenDetailsContext()
 
-  const { error } = useTokenDetailsScreenQuery({
+  const { error } = GraphQLApi.useTokenDetailsScreenQuery({
     variables: currencyIdToContractInput(currencyId),
     pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
@@ -106,6 +104,7 @@ const TokenDetailsQuery = memo(function _TokenDetailsQuery(): JSX.Element {
 const TokenDetails = memo(function _TokenDetails(): JSX.Element {
   const centerElement = useMemo(() => <HeaderTitleElement />, [])
   const rightElement = useMemo(() => <HeaderRightElement />, [])
+
   const inModal = useIsInModal(MobileScreens.Explore, true)
 
   return (
@@ -297,7 +296,7 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     }, 300) // delay is needed to prevent menu from not closing properly
   }, [currencyInfo])
 
-  const isBridgedAsset = currencyInfo && checkIsBridgedAsset(currencyInfo)
+  const bridgedAsset = getBridgedAsset(currencyInfo)
 
   const isScreenNavigationReady = useIsScreenNavigationReady({ navigation })
 
@@ -314,69 +313,57 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     onPressSwap,
   })
 
-  const actionMenuOptions: MenuOptionItem[] = useMemo(
-    () => [
-      ...(fiatOnRampCurrency
-        ? [{ label: t('common.button.buy'), Icon: Bank, onPress: () => onPressBuyFiatOnRamp() }]
-        : []),
-      ...(isBridgedAsset && hasTokenBalance
-        ? [
-            {
-              label: t('common.withdraw'),
-              Icon: ArrowUpCircle,
-              onPress: () => onPressWithdraw(),
-              subheader: t('bridgedAsset.wormhole.toHyperEVM'),
-              rightIcon: <ExternalLink size="$icon.20" color="$neutral2" />,
-              height: 56,
-            },
-          ]
-        : []),
-      ...(hasTokenBalance && fiatOnRampCurrency
-        ? [{ label: t('common.button.sell'), Icon: ArrowUpCircle, onPress: () => onPressBuyFiatOnRamp(true) }]
-        : []),
-      ...(hasTokenBalance
-        ? [
-            {
-              label: t('common.button.send'),
-              Icon: SendRoundedAirplane,
-              onPress: onPressSend,
-            },
-          ]
-        : []),
-      { label: t('common.button.receive'), Icon: ArrowDownCircle, onPress: navigateToReceive },
-    ],
-    [
-      fiatOnRampCurrency,
-      t,
-      isBridgedAsset,
-      hasTokenBalance,
-      onPressWithdraw,
-      onPressSend,
-      navigateToReceive,
-      onPressBuyFiatOnRamp,
-    ],
-  )
+  const actionMenuOptions: MenuOptionItem[] = useMemo(() => {
+    const actions: MenuOptionItem[] = []
 
-  const hideActionButtons = useMemo(() => {
-    return (
-      !isScreenNavigationReady ||
-      tokenColorLoading ||
-      isNativeCurrencyBalanceLoading ||
-      isNativeFiatOnRampCurrencyLoading ||
-      isFiatOnRampCurrencyLoading ||
-      isBridgingTokenLoading
-    )
+    if (fiatOnRampCurrency) {
+      actions.push({ label: t('common.button.buy'), Icon: Bank, onPress: () => onPressBuyFiatOnRamp() })
+    }
+
+    if (!!bridgedAsset && hasTokenBalance) {
+      actions.push({
+        label: t('common.withdraw'),
+        Icon: ArrowUpCircle,
+        onPress: () => onPressWithdraw(),
+        subheader: t('bridgedAsset.wormhole.toNativeChain', { nativeChainName: bridgedAsset.nativeChain }),
+        actionType: 'external-link',
+        height: 56,
+      })
+    }
+
+    if (hasTokenBalance && fiatOnRampCurrency) {
+      actions.push({ label: t('common.button.sell'), Icon: ArrowUpCircle, onPress: () => onPressBuyFiatOnRamp(true) })
+    }
+
+    if (hasTokenBalance) {
+      actions.push({ label: t('common.button.send'), Icon: SendRoundedAirplane, onPress: onPressSend })
+    }
+
+    // All cases have a receive action
+    actions.push({ label: t('common.button.receive'), Icon: ArrowDownCircle, onPress: navigateToReceive })
+
+    return actions
   }, [
-    isScreenNavigationReady,
-    tokenColorLoading,
-    isNativeCurrencyBalanceLoading,
-    isNativeFiatOnRampCurrencyLoading,
-    isFiatOnRampCurrencyLoading,
-    isBridgingTokenLoading,
+    fiatOnRampCurrency,
+    t,
+    bridgedAsset,
+    hasTokenBalance,
+    onPressWithdraw,
+    onPressSend,
+    navigateToReceive,
+    onPressBuyFiatOnRamp,
   ])
 
+  const hideActionButtons =
+    !isScreenNavigationReady ||
+    tokenColorLoading ||
+    isNativeCurrencyBalanceLoading ||
+    isNativeFiatOnRampCurrencyLoading ||
+    isFiatOnRampCurrencyLoading ||
+    isBridgingTokenLoading
+
   return hideActionButtons ? null : (
-    <AnimatedFlex backgroundColor="$surface1" entering={FadeInDown} style={{ marginBottom: insets.bottom }}>
+    <AnimatedFlex mb={insets.bottom} backgroundColor="$surface1" entering={FadeInDown}>
       <TokenDetailsActionButtons
         ctaButton={getCTAVariant}
         actionMenuOptions={actionMenuOptions}
@@ -403,7 +390,7 @@ const TokenBalancesWrapper = memo(function _TokenBalancesWrapper(): JSX.Element 
 
   const crossChainTokens: Array<{
     address: string | null
-    chain: Chain
+    chain: GraphQLApi.Chain
   }> = []
 
   for (const token of projectTokens ?? []) {

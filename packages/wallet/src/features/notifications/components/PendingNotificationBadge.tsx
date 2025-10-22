@@ -4,8 +4,8 @@ import { iconSizes } from 'ui/src/theme'
 import {
   useSelectAddressHasNotifications,
   useSelectAddressNotifications,
-} from 'uniswap/src/features/notifications/hooks'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+} from 'uniswap/src/features/notifications/slice/hooks'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { useSortedPendingTransactions } from 'uniswap/src/features/transactions/hooks/usePendingTransactions'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
@@ -19,7 +19,7 @@ interface Props {
 
 export function PendingNotificationBadge({ size = LOADING_SPINNER_SIZE }: Props): JSX.Element | null {
   const activeAccountAddress = useActiveAccountAddress()
-  const sortedPendingTransactions = useSortedPendingTransactions(activeAccountAddress)
+  const sortedPendingTransactions = useSortedPendingTransactions({ evmAddress: activeAccountAddress, svmAddress: null })
   const hasNotifications = useSelectAddressHasNotifications(activeAccountAddress)
   const notifications = useSelectAddressNotifications(activeAccountAddress)
 

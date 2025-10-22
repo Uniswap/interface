@@ -12,7 +12,7 @@ import { useAutoDimensions } from 'ui/src/components/touchable/TouchableArea/use
 import { useAutoHitSlop } from 'ui/src/components/touchable/TouchableArea/useAutoHitSlop'
 import { getMaybeHoverColor, zIndexes } from 'ui/src/theme'
 import { isTestEnv } from 'utilities/src/environment/env'
-import { isIOS, isMobileApp, isWeb } from 'utilities/src/platform'
+import { isIOS, isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type TouchableAreaEvent = GestureResponderEvent
@@ -100,7 +100,7 @@ const TouchableAreaComponentWithoutMemo = forwardRef<TamaguiElement, TouchableAr
     onPress,
     onPressIn,
     onPressOut,
-    shouldAutomaticallyInjectColors = isWeb,
+    shouldAutomaticallyInjectColors = isWebPlatform,
     ...restProps
   },
   ref,

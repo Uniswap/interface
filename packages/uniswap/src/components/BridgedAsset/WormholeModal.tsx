@@ -1,8 +1,10 @@
 import { atom } from 'jotai'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Button,
   Flex,
+  getContrastPassingTextColor,
   ModalCloseIcon,
   Text,
   TouchableArea,
@@ -15,6 +17,7 @@ import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { iconSizes } from 'ui/src/theme'
 import { BaseModalProps } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
+import { getBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -23,7 +26,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isInterfaceDesktop } from 'utilities/src/platform'
+import { isWebAppDesktop } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type WormholeModalProps = {
@@ -46,6 +49,10 @@ export function WormholeModal({
     defaultColor: colors.accent1.val,
   })
   const { validTokenColor } = useColorsFromTokenColor(tokenColor ?? undefined)
+  const textColor = useMemo(() => {
+    return getContrastPassingTextColor(validTokenColor ?? colors.accent1.val)
+  }, [colors.accent1.val, validTokenColor])
+  const bridgedAsset = getBridgedAsset(currencyInfo)
 
   const onPressLearnMore = async (): Promise<void> => {
     await openUri({ uri: uniswapUrls.helpArticleUrls.bridgedAssets })
@@ -53,11 +60,14 @@ export function WormholeModal({
   }
 
   const onPressContinue = useEvent(async () => {
-    await openUri({ uri: uniswapUrls.wormholeUrl })
+    await openUri({
+      uri: `${uniswapUrls.wormholeUrl}?sourceChain=unichain&targetChain=${bridgedAsset?.nativeChain}&asset=${bridgedAsset?.unichainAddress}&targetAsset=${bridgedAsset?.nativeAddress}`,
+      openExternalBrowser: true,
+    })
     onClose()
   })
 
-  if (!currencyInfo || !currencyInfo.currency.symbol) {
+  if (!currencyInfo || !currencyInfo.currency.symbol || !bridgedAsset) {
     return null
   }
   const chainName = getChainLabel(currencyInfo.currency.chainId)
@@ -79,7 +89,7 @@ export function WormholeModal({
             justifyContent="flex-end"
             alignItems="center"
             gap={10}
-            display={isInterfaceDesktop ? 'flex' : 'none'}
+            display={isWebAppDesktop ? 'flex' : 'none'}
           >
             <Trace logPress element={ElementName.GetHelp}>
               <TouchableArea onPress={onPressLearnMore}>
@@ -115,12 +125,16 @@ export function WormholeModal({
 
             <Flex gap="$spacing8" alignItems="center">
               <Text variant="subheading1" textAlign="center">
-                {t('bridgedAsset.wormhole.title', { currencySymbol: currencyInfo.currency.symbol })}
+                {t('bridgedAsset.wormhole.title', {
+                  currencySymbol: currencyInfo.currency.symbol,
+                  nativeChainName: bridgedAsset.nativeChain,
+                })}
               </Text>
               <Text variant="body2" color="$neutral2" textAlign="center" textWrap="wrap" whiteSpace="wrap">
                 {t('bridgedAsset.wormhole.description', {
                   currencySymbol: currencyInfo.currency.symbol,
                   chainName,
+                  nativeChainName: bridgedAsset.nativeChain,
                 })}
               </Text>
               <Trace logPress element={ElementName.LearnMoreLink}>
@@ -139,11 +153,11 @@ export function WormholeModal({
                 size="medium"
                 emphasis="primary"
                 backgroundColor={validTokenColor ?? '$accent1'}
-                icon={<ExternalLink size={iconSizes.icon20} color="$surface1" />}
+                icon={<ExternalLink size={iconSizes.icon20} color={textColor} />}
                 iconPosition="after"
                 onPress={onPressContinue}
               >
-                <Text variant="buttonLabel1" color="$surface1">
+                <Text variant="buttonLabel1" color={textColor}>
                   {t('bridgedAsset.wormhole.button')}
                 </Text>
               </Button>

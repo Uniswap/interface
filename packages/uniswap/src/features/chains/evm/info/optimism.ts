@@ -1,12 +1,13 @@
+import { GraphQLApi } from '@universe/api'
 import { ETH_LOGO, OPTIMISM_LOGO } from 'ui/src/assets'
 import { config } from 'uniswap/src/config'
-import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   DEFAULT_NATIVE_ADDRESS_LEGACY,
   DEFAULT_RETRY_OPTIONS,
   getQuicknodeEndpointUrl,
 } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
+import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
 import {
   GqlChainId,
   NetworkLayer,
@@ -17,7 +18,7 @@ import {
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { buildDAI, buildUSDC, buildUSDT } from 'uniswap/src/features/tokens/stablecoin'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 import { optimism } from 'wagmi/chains'
 
 const tokens = buildChainTokens({
@@ -34,12 +35,12 @@ export const OPTIMISM_CHAIN_INFO = {
   platform: Platform.EVM,
   assetRepoNetworkName: 'optimism',
   backendChain: {
-    chain: BackendChainId.Optimism as GqlChainId,
+    chain: GraphQLApi.Chain.Optimism as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },
   blockPerMainnetEpochForChainId: 6,
-  blockWaitMsBeforeWarning: isInterface ? 1500000 : 1200000,
+  blockWaitMsBeforeWarning: isWebApp ? 1500000 : 1200000,
   bridge: 'https://app.optimism.io/bridge',
   docs: 'https://optimism.io/',
   elementName: ElementName.ChainOptimism,
@@ -79,5 +80,6 @@ export const OPTIMISM_CHAIN_INFO = {
     decimals: 18,
     address: '0x4200000000000000000000000000000000000006',
   },
+  gasConfig: GENERIC_L2_GAS_CONFIG,
   tradingApiPollingIntervalMs: 200,
 } as const satisfies UniverseChainInfo

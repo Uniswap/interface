@@ -1,12 +1,13 @@
-import { skipToken, UseQueryResult, useQuery } from '@tanstack/react-query'
-import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
-import { fetchAddress, fetchUnitagsByAddresses } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { skipToken, type UseQueryResult, useQuery } from '@tanstack/react-query'
 import {
-  UnitagAddressesRequest,
-  UnitagAddressesResponse,
-  UnitagAddressRequest,
-  UnitagAddressResponse,
-} from 'uniswap/src/features/unitags/types'
+  type UnitagAddressesRequest,
+  type UnitagAddressesResponse,
+  type UnitagAddressRequest,
+  type UnitagAddressResponse,
+  type UseQueryApiHelperHookArgs,
+} from '@universe/api'
+import { UnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { MAX_REACT_QUERY_CACHE_TIME_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 
@@ -15,10 +16,14 @@ export function useUnitagsAddressQuery({
   ...rest
 }: UseQueryApiHelperHookArgs<UnitagAddressRequest, UnitagAddressResponse>): UseQueryResult<UnitagAddressResponse> {
   const queryKey = [ReactQueryCacheKey.UnitagsApi, 'address', params]
+  const isValidEVMAddress = isEVMAddress(params?.address)
 
   return useQuery<UnitagAddressResponse>({
     queryKey,
-    queryFn: params ? async (): ReturnType<typeof fetchAddress> => await fetchAddress(params) : skipToken,
+    queryFn:
+      params && isValidEVMAddress
+        ? async (): Promise<UnitagAddressResponse> => await UnitagsApiClient.fetchAddress(params)
+        : skipToken,
     staleTime: ONE_MINUTE_MS,
     gcTime: MAX_REACT_QUERY_CACHE_TIME_MS,
     ...rest,
@@ -37,7 +42,7 @@ export function useUnitagsAddressesQuery({
   return useQuery<UnitagAddressesResponse>({
     queryKey,
     queryFn: params
-      ? async (): ReturnType<typeof fetchUnitagsByAddresses> => await fetchUnitagsByAddresses(params)
+      ? async (): Promise<UnitagAddressesResponse> => await UnitagsApiClient.fetchUnitagsByAddresses(params)
       : skipToken,
     staleTime: ONE_MINUTE_MS,
     gcTime: MAX_REACT_QUERY_CACHE_TIME_MS,

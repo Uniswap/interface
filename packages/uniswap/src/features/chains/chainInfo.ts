@@ -100,3 +100,7 @@ export const GQL_MAINNET_CHAINS = ORDERED_EVM_CHAINS.filter((chain) => !chain.te
 export const GQL_TESTNET_CHAINS = ORDERED_EVM_CHAINS.filter((chain) => chain.testnet).map(
   (chain) => chain.backendChain.chain,
 )
+
+// If limit support expands beyond Mainnet, refactor to use a `supportsLimits`
+// property on chain info objects and filter chains, similar to the pattern used above
+export const LIMIT_SUPPORTED_CHAINS = [UniverseChainId.Mainnet]

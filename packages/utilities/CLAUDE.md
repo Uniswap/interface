@@ -58,7 +58,7 @@ This package provides cross-platform utilities with platform-specific implementa
 
 ## Testing
 
-- Tests use Jest with platform-specific configurations
+- Tests use Vitest with platform-specific configurations
 - Test files should be colocated with source files using `.test.ts` or `.test.tsx` extensions
 - Use testing utilities from `src/test/` for common test scenarios
 

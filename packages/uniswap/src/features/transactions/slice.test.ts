@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { createStore, Store } from '@reduxjs/toolkit'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TradingApi } from '@universe/api'
+
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   addTransaction,
@@ -67,7 +68,7 @@ const baseApproveTx: TransactionDetails = {
   from: address,
   status: TransactionStatus.Pending,
   hash: undefined,
-  routing: Routing.CLASSIC,
+  routing: TradingApi.Routing.CLASSIC,
   options: approveTxRequest,
   typeInfo: approveTxTypeInfo,
   addedTime: Date.now(),
@@ -85,7 +86,7 @@ const baseBridgeTx: TransactionDetails = {
   from: address,
   status: TransactionStatus.Pending,
   hash: '0xhash',
-  routing: Routing.BRIDGE,
+  routing: TradingApi.Routing.BRIDGE,
   options: approveTxRequest,
   typeInfo: {
     type: TransactionType.Bridge,
@@ -104,7 +105,7 @@ const baseSwapTx: TransactionDetails = {
   from: address,
   status: TransactionStatus.Pending,
   hash: '0xhash',
-  routing: Routing.CLASSIC,
+  routing: TradingApi.Routing.CLASSIC,
   options: approveTxRequest,
   typeInfo: swapTxTypeInfo,
   addedTime: Date.now(),

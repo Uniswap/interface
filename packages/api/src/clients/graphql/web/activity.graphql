@@ -1,0 +1,272 @@
+fragment NFTAssetParts on NftAsset {
+  id
+  name
+  isSpam
+  nftContract {
+    id
+    chain
+    address
+  }
+  tokenId
+  image {
+    id
+    url
+  }
+  collection {
+    id
+    name
+  }
+}
+
+fragment NFTTransferParts on NftTransfer {
+  id
+  asset {
+    ...NFTAssetParts
+  }
+  nftStandard
+  sender
+  recipient
+  direction
+}
+
+fragment TokenAssetParts on Token {
+  id
+  address
+  chain
+  symbol
+  name
+  decimals
+  standard
+  project {
+    id
+    name
+    logo {
+      id
+      url
+    }
+    safetyLevel
+    logoUrl
+    isSpam
+  }
+}
+
+fragment TokenTransferParts on TokenTransfer {
+  id
+  asset {
+    ...TokenAssetParts
+  }
+  tokenStandard
+  quantity
+  sender
+  recipient
+  direction
+  transactedValue {
+    id
+    currency
+    value
+  }
+}
+
+fragment OnRampTransferParts on OnRampTransfer {
+  id
+  token {
+    ...SimpleTokenDetails
+  }
+  tokenStandard
+  amount
+  sourceCurrency
+  sourceAmount
+  serviceProvider {
+    serviceProvider
+    name
+    url
+    logoLightUrl
+    logoDarkUrl
+  }
+  transactionReferenceId
+  externalSessionId
+  networkFee
+  transactionFee
+  totalFee
+}
+
+fragment TokenApprovalParts on TokenApproval {
+  id
+  asset {
+    ...TokenAssetParts
+  }
+  tokenStandard
+  approvedAddress
+  quantity
+}
+
+fragment NFTApprovalParts on NftApproval {
+  id
+  asset {
+    ...NFTAssetParts
+  }
+  nftStandard
+  approvedAddress
+}
+
+fragment NFTApproveForAllParts on NftApproveForAll {
+  id
+  asset {
+    ...NFTAssetParts
+  }
+  nftStandard
+  operatorAddress
+  approved
+}
+
+fragment TransactionParts on Transaction {
+  id
+  blockNumber
+  hash
+  status
+  to
+  from
+  nonce
+}
+
+fragment TransactionDetailsParts on TransactionDetails {
+  id
+  type
+  from
+  to
+  hash
+  nonce
+  status: transactionStatus
+  networkFee {
+    quantity
+    tokenSymbol
+    tokenAddress
+    tokenChain
+  }
+  assetChanges {
+    __typename
+    ... on TokenTransfer {
+      ...TokenTransferParts
+    }
+    ... on NftTransfer {
+      ...NFTTransferParts
+    }
+    ... on TokenApproval {
+      ...TokenApprovalParts
+    }
+    ... on NftApproval {
+      ...NFTApprovalParts
+    }
+    ... on NftApproveForAll {
+      ...NFTApproveForAllParts
+    }
+    ... on OnRampTransfer {
+      ...OnRampTransferParts
+    }
+  }
+}
+
+fragment OnRampTransactionDetailsParts on OnRampTransactionDetails {
+  id
+  status
+  receiverAddress
+  onRampTransfer {
+    id
+    token {
+      ...SimpleTokenDetails
+    }
+    amount
+    sourceCurrency
+    sourceAmount
+    serviceProvider {
+      serviceProvider
+      name
+      url
+      logoLightUrl
+      logoDarkUrl
+    }
+    transactionReferenceId
+    externalSessionId
+  }
+}
+
+fragment OffRampTransactionDetailsParts on OffRampTransactionDetails {
+  id
+  status
+  senderAddress
+  offRampTransfer {
+    id
+    token {
+      ...SimpleTokenDetails
+    }
+    amount
+    destinationCurrency
+    destinationAmount
+    serviceProvider {
+      serviceProvider
+      name
+      url
+      logoLightUrl
+      logoDarkUrl
+    }
+    transactionReferenceId
+    externalSessionId
+    networkFee
+    transactionFee
+    totalFee
+  }
+}
+
+fragment SwapOrderDetailsParts on SwapOrderDetails {
+  id
+  offerer
+  hash
+  orderStatus: swapOrderStatus
+  expiry
+  swapOrderType
+  encodedOrder
+  inputToken {
+    ...TokenAssetParts
+  }
+  inputTokenQuantity
+  outputToken {
+    ...TokenAssetParts
+  }
+  outputTokenQuantity
+}
+
+fragment AssetActivityParts on AssetActivity {
+  id
+  timestamp
+  chain
+  details {
+    __typename
+    ... on TransactionDetails {
+      ...TransactionDetailsParts
+    }
+    ... on SwapOrderDetails {
+      ...SwapOrderDetailsParts
+    }
+    ... on OnRampTransactionDetails {
+      ...OnRampTransactionDetailsParts
+    }
+    ... on OffRampTransactionDetails {
+      ...OffRampTransactionDetailsParts
+    }
+  }
+}
+
+query ActivityWeb($account: String!, $chains: [Chain!]!, $onRampTransactionIDs: [String!], $includeOffChain: Boolean!, $page: Int = 1, $pageSize: Int = 100) {
+  portfolios(ownerAddresses: [$account], chains: $chains) {
+    id
+    assetActivities(pageSize: $pageSize, page: $page, includeOffChain: $includeOffChain, chains: $chains, onRampTransactionIDs: $onRampTransactionIDs, includeBridging: true) {
+      ...AssetActivityParts
+    }
+  }
+}
+
+subscription OnAssetActivity($subscriptionId: ID!, $account: String!) {
+  onAssetActivity(subscriptionId: $subscriptionId, addresses: [$account]) {
+    ...AssetActivityParts
+  }
+}

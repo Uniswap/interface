@@ -18,7 +18,7 @@ export const migration6 = (state: PersistAppStateV6 | undefined) => {
     if (connectionType !== undefined) {
       state.user.recentConnectionMeta = { type: connectionType }
     }
-    delete state.user['selectedWallet']
+    delete state.user.selectedWallet
   }
   return {
     ...state,

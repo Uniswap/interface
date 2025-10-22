@@ -1,4 +1,5 @@
 import { Navigate, useParams } from 'react-router'
+import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
 
 export default function AddLiquidityV2WithTokenRedirects() {
   const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
@@ -7,7 +8,7 @@ export default function AddLiquidityV2WithTokenRedirects() {
   if (currencyIdA) {
     url.searchParams.append('currencyA', currencyIdA)
   }
-  if (currencyIdB && currencyIdA?.toLowerCase() !== currencyIdB.toLowerCase()) {
+  if (currencyIdB && (!currencyIdA || !areCurrencyIdsEqual(currencyIdA, currencyIdB))) {
     url.searchParams.append('currencyB', currencyIdB)
   }
   return <Navigate to={url.pathname + url.search} replace />

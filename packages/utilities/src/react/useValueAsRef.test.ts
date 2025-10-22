@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 import { useValueAsRef } from 'utilities/src/react/useValueAsRef'
 
 describe('useValueAsRef', () => {

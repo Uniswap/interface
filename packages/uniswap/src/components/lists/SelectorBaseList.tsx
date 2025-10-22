@@ -1,3 +1,4 @@
+import { ContentStyle } from '@shopify/flash-list'
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimateTransition, Flex, Loader, Text } from 'ui/src'
@@ -38,6 +39,8 @@ interface SelectorBaseListProps<T extends OnchainItemListOption> {
   keyExtractor: (item: T, index: number) => string
   expandedItems?: string[]
   focusedRowControl?: Omit<FocusedRowControl, 'rowIndex'>
+  renderedInModal: boolean
+  contentContainerStyle?: ContentStyle
 }
 
 function _SelectorBaseList<T extends OnchainItemListOption>({
@@ -52,10 +55,13 @@ function _SelectorBaseList<T extends OnchainItemListOption>({
   keyExtractor,
   expandedItems,
   focusedRowControl,
+  renderedInModal,
+  contentContainerStyle,
 }: SelectorBaseListProps<T>): JSX.Element {
   const { t } = useTranslation()
   const sectionListRef = useRef<OnchainItemListRef>()
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +chainFilter
   useEffect(() => {
     if (sections?.length) {
       sectionListRef.current?.scrollToLocation({
@@ -114,6 +120,8 @@ function _SelectorBaseList<T extends OnchainItemListOption>({
         sections={sections ?? []}
         expandedItems={expandedItems}
         focusedRowControl={focusedRowControl}
+        renderedInModal={renderedInModal}
+        contentContainerStyle={contentContainerStyle}
       />
     </AnimateTransition>
   )

@@ -4,8 +4,8 @@ import { call, cancel, delay, fork, put, race, spawn, take } from 'typed-redux-s
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { waitForFlashbotsProtectReceipt } from 'uniswap/src/features/providers/FlashbotsCommon'
 import { cancelTransaction, replaceTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -31,7 +31,7 @@ import { deleteTransaction } from 'wallet/src/features/transactions/watcher/tran
 import { waitForBridgingStatus } from 'wallet/src/features/transactions/watcher/watchBridgeSaga'
 import { watchForAppBackgrounded } from 'wallet/src/features/transactions/watcher/watchForAppBackgroundedSaga'
 import {
-  updateTransactionStatusNetworkFee,
+  updateTransactionWithReceipt,
   waitForReceiptWithSmartPolling,
   waitForTransactionStatus,
 } from 'wallet/src/features/transactions/watcher/watchTransactionSaga'
@@ -123,9 +123,8 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
   // Bridge transactions need to wait for the send part to be confirmed
   const tradingApiPollingEnabled = tradingApiPollingFlagEnabled && !isBridge(transaction)
   if (tradingApiPollingEnabled) {
-    // The network fee does not get returned from the trading api
-    // so we need to update the transaction with the network fee after the transaction is confirmed
-    yield* spawn(updateTransactionStatusNetworkFee, { ...transaction, hash }, provider)
+    // Trading API returns status but not receipt/networkFee, so update the transaction with the these after the transaction is confirmed
+    yield* spawn(updateTransactionWithReceipt, { ...transaction, hash }, provider)
     status = yield* call(waitForTransactionStatus, { ...transaction, hash })
 
     return { ...transaction, status, hash }

@@ -1,13 +1,16 @@
 /* eslint-disable check-file/no-index */
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: playwright test utilities needed for test fixtures
 import { mergeTests } from '@playwright/test'
 import { test as amplitudeTest } from 'playwright/fixtures/amplitude'
 import { test as anvilTest } from 'playwright/fixtures/anvil'
 import { test as graphqlTest } from 'playwright/fixtures/graphql'
 import { test as tradingApiTest } from 'playwright/fixtures/tradingApi'
 
-// eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-restricted-imports
+// biome-ignore-start lint/style/noRestrictedImports: playwright re-export needed for test framework
+// eslint-disable-next-line no-restricted-syntax
 export * from '@playwright/test'
+
+// biome-ignore-end lint/style/noRestrictedImports: playwright re-export needed for test framework
 
 // Configuration interface for test fixtures
 interface TestConfig {

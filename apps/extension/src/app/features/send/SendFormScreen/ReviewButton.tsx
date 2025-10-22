@@ -5,7 +5,7 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 
 type ReviewButtonProps = {
@@ -39,7 +39,7 @@ export function ReviewButton({ onPress, disabled }: ReviewButtonProps): JSX.Elem
         <Button
           variant="branded"
           isDisabled={disableReviewButton}
-          size={isWeb ? 'medium' : 'large'}
+          size={isWebPlatform ? 'medium' : 'large'}
           testID={TestID.SendReview}
           onPress={onPress}
         >

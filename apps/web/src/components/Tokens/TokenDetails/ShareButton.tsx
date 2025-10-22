@@ -1,4 +1,4 @@
-import { DropdownSelector } from 'components/DropdownSelector'
+import { Dropdown } from 'components/Dropdowns/Dropdown'
 import { Share as ShareIcon } from 'components/Icons/Share'
 import { TwitterXLogo } from 'components/Icons/TwitterX'
 import { ActionButtonStyle } from 'components/Tokens/TokenDetails/shared'
@@ -57,7 +57,7 @@ export default function ShareButton({ name, utmSource }: { name: string; utmSour
   const [isCopied, setCopied] = useCopyClipboard()
 
   return (
-    <DropdownSelector
+    <Dropdown
       isOpen={isOpen}
       toggleOpen={setIsOpen}
       menuLabel={<ShareIcon fill={colors.neutral1.val} width={18} height={18} />}
@@ -84,6 +84,6 @@ export default function ShareButton({ name, utmSource }: { name: string; utmSour
         <TwitterXLogo width="18px" height="18px" fill={colors.neutral1.val} />
         <Text variant="body2">{t('common.share.shareToTwitter')}</Text>
       </ShareAction>
-    </DropdownSelector>
+    </Dropdown>
   )
 }

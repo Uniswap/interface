@@ -2,7 +2,7 @@
 import { Signer } from '@ethersproject/abstract-signer'
 import { SignerInfo, waitForFlashbotsProtectReceipt } from 'uniswap/src/features/providers/FlashbotsCommon'
 import { createFlashbotsRpcClient } from 'uniswap/src/features/providers/FlashbotsRpcClient'
-import { HexString } from 'uniswap/src/utils/hex'
+import { HexString } from 'utilities/src/addresses/hex'
 import { Chain, PublicClient } from 'viem'
 import { mainnet } from 'viem/chains'
 

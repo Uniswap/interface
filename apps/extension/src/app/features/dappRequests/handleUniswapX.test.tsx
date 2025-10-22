@@ -1,5 +1,5 @@
+import { TradingApi } from '@universe/api'
 import { createExternallySubmittedUniswapXOrder } from 'src/app/features/dappRequests/handleUniswapX'
-import { GetOrdersResponse, OrderStatus, OrderType, Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   QueuedOrderStatus,
@@ -36,14 +36,14 @@ describe('handleUniswapX', () => {
       waitForOrder: mockWaitForOrder,
     }
 
-    const mockOrderResponse: GetOrdersResponse = {
+    const mockOrderResponse: TradingApi.GetOrdersResponse = {
       requestId: mockValues.unused,
       orders: [
         {
           chainId: mockValues.chainId,
           orderId: mockValues.orderId,
-          orderStatus: OrderStatus.OPEN,
-          type: OrderType.DUTCH_V2,
+          orderStatus: TradingApi.OrderStatus.OPEN,
+          type: TradingApi.OrderType.DUTCH_V2,
           input: {
             token: mockValues.inputToken,
             startAmount: '1000000',
@@ -76,7 +76,7 @@ describe('handleUniswapX', () => {
 
       const txDetails = mockAddTxToWatcher.mock.calls[0][0]
       expect(txDetails).toMatchObject({
-        routing: Routing.DUTCH_V2,
+        routing: TradingApi.Routing.DUTCH_V2,
         chainId: mockValues.chainId as UniverseChainId,
         id: mockValues.orderId,
         from: mockValues.address,

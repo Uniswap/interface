@@ -5,6 +5,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 export const useUpdateSwapFormOnMountIfExactOutputWillFail = (exactOutputWillFail: boolean): void => {
   const updateSwapForm = useSwapFormStore((s) => s.updateSwapForm)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Since we only want to run this on mount
   useEffect(() => {
     if (exactOutputWillFail) {
       updateSwapForm({
@@ -12,7 +13,5 @@ export const useUpdateSwapFormOnMountIfExactOutputWillFail = (exactOutputWillFai
         focusOnCurrencyField: CurrencyField.INPUT,
       })
     }
-    // Since we only want to run this on mount
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 }

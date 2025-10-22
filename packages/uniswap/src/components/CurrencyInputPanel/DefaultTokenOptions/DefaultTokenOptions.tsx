@@ -6,7 +6,7 @@ import { extraMarginForHoverAnimation } from 'uniswap/src/components/CurrencyInp
 import { TokenOptions } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/TokenOptions/TokenOptions'
 
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isHoverable, isInterfaceDesktop } from 'utilities/src/platform'
+import { isHoverable, isWebAppDesktop } from 'utilities/src/platform'
 
 function _DefaultTokenOptions({ currencyField }: { currencyField: CurrencyField }): JSX.Element {
   return (
@@ -14,7 +14,7 @@ function _DefaultTokenOptions({ currencyField }: { currencyField: CurrencyField 
       <Flex
         row
         m={extraMarginForHoverAnimation}
-        gap={isInterfaceDesktop ? '$gap4' : '$gap8'}
+        gap={isWebAppDesktop ? '$gap4' : '$gap8'}
         flex={1}
         {...(isHoverable
           ? {

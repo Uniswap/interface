@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import i18next from 'i18next'
 import { WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { getTokenBlockedWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getTokenBlockedWarning'
@@ -18,7 +18,9 @@ describe('getTokenBlockedWarning', () => {
       currency: token,
       currencyId: `${UniverseChainId.Mainnet}-${MOCK_CURRENCY_ADDRESS}`,
       logoUrl: null,
-      safetyInfo: isBlocked ? { tokenList: TokenList.Blocked, protectionResult: ProtectionResult.Unknown } : undefined,
+      safetyInfo: isBlocked
+        ? { tokenList: TokenList.Blocked, protectionResult: GraphQLApi.ProtectionResult.Unknown }
+        : undefined,
     }
   }
 

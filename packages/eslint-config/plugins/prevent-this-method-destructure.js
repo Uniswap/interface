@@ -49,7 +49,9 @@ module.exports = {
     return {
       "VariableDeclarator[id.type='ObjectPattern']"(node) {
         const objectNode = node.init
-        if (!objectNode) return
+        if (!objectNode) {
+          return
+        }
 
         try {
           const tsNode = parserServices.esTreeNodeToTSNodeMap.get(objectNode)
@@ -57,10 +59,14 @@ module.exports = {
           const properties = type.getProperties()
 
           for (const prop of node.id.properties) {
-            if (prop.type !== 'Property') continue
+            if (prop.type !== 'Property') {
+              continue
+            }
             const propertyName = prop.key.name
             const symbol = properties.find((s) => s.getName() === propertyName)
-            if (!symbol) continue
+            if (!symbol) {
+              continue
+            }
 
             const declarations = symbol.getDeclarations() || []
             for (const decl of declarations) {
@@ -95,7 +101,7 @@ module.exports = {
               }
             }
           }
-        } catch (error) {
+        } catch {
           // Handle type resolution errors
         }
       },

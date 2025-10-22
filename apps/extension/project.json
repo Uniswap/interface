@@ -1,0 +1,197 @@
+{
+  "targets": {
+    "build": {
+      "executor": "nx:noop",
+      "dependsOn": ["^build", "prepare"]
+    },
+    "build:firefox": {
+      "command": "wxt build -b firefox",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build:production": {
+      "command": "webpack --node-env=production --env BUILD_ENV=prod BUILD_NUM=${BUILD_NUM:-0}",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build:wxt": {
+      "command": "wxt build",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "check:circular": {
+      "command": "concurrently \"../../scripts/check-circular-imports.sh ./src/entrypoints/sidepanel/main.tsx 0\" \"../../scripts/check-circular-imports.sh ./src/entrypoints/onboarding/main.tsx 0\" \"../../scripts/check-circular-imports.sh ./src/entrypoints/unitagClaim/main.tsx 0\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "check:deps:usage": {
+      "command": "depcheck",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "clean": {
+      "command": "wxt clean",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "dev": {
+      "command": "wxt",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "dev:firefox": {
+      "command": "wxt -b firefox",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:local:download": {
+      "command": "bash ../../scripts/downloadEnvLocal.sh m4dhqfltt3dokkqi3hqwigmf2a .env",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:local:upload": {
+      "command": "bash ../../scripts/uploadEnvLocal.sh m4dhqfltt3dokkqi3hqwigmf2a .env",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint": {},
+    "lint:fix": {},
+    "lint:biome": {},
+    "lint:biome:fix": {},
+    "lint:eslint": {
+      "command": "NODE_OPTIONS=--max_old_space_size=8192 eslint . --ext ts,tsx --max-warnings=0",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint:eslint:fix": {
+      "command": "NODE_OPTIONS=--max-old-space-size=8192 eslint . --ext ts,tsx --fix",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "postinstall": {
+      "command": "wxt prepare",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "prepare": {
+      "command": "wxt prepare",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "snapshots": {
+      "command": "jest -u",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start": {
+      "command": "wxt",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:absolute": {
+      "command": "bun run start:absolute:mac",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:absolute:mac": {
+      "command": "WXT_ABSOLUTE_OUTDIR=/Users/Shared/stretch wxt",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:absolute:windows": {
+      "command": "WXT_ABSOLUTE_OUTDIR=C:/ProgramData/stretch wxt",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:webpack": {
+      "command": "webpack serve --config webpack.config.js",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:webpack:absolute": {
+      "command": "webpack serve --config webpack.config.js --output-path /Users/Shared/stretch",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test": {
+      "command": "jest",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "typecheck": {},
+    "zip": {
+      "command": "wxt zip",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "zip:firefox": {
+      "command": "wxt zip -b firefox",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build:e2e": {
+      "command": "webpack --node-env=production --env BUILD_ENV=dev BUILD_NUM=0",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "inputs": ["dependencies", "sourceFiles", "tsConfig"],
+      "outputs": ["{projectRoot}/dist", "{projectRoot}/build", "{projectRoot}/.next", "{projectRoot}/types"],
+      "cache": true,
+      "dependsOn": ["^build", "prepare"]
+    },
+    "playwright:test": {
+      "command": "playwright test --config=e2e/config/playwright.config.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "playwright:test:smoke": {
+      "command": "playwright test --config=e2e/config/playwright.config.ts e2e/tests/smoke/",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "playwright:ui": {
+      "command": "playwright test --ui --config=e2e/config/playwright.config.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "e2e": {
+      "command": "nx playwright:test extension",
+      "dependsOn": ["build:e2e"]
+    },
+    "e2e:smoke": {
+      "command": "nx playwright:test:smoke extension",
+      "dependsOn": ["build:e2e"]
+    },
+    "e2e:ui": {
+      "command": "nx playwright:ui extension",
+      "dependsOn": ["build:e2e"]
+    }
+  }
+}

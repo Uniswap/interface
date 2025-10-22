@@ -29,7 +29,7 @@ test.describe('Fees', () => {
       `/swap?inputCurrency=ETH&outputCurrency=${DAI.address}&layerOverride=${Layers.SwapPage}:${PriceUxUpdateProperties.UpdatedPriceUX}`,
     )
 
-    await page.route(`${uniswapUrls.tradingApiUrl}${uniswapUrls.tradingApiPaths.quote}`, async (route, request) => {
+    await page.route(`${uniswapUrls.tradingApiUrl}/v1/quote`, async (route, request) => {
       const postData = await request.postData()
       const data = JSON.parse(postData ?? '{}')
       if (data.tokenOut === USDC_MAINNET.address) {

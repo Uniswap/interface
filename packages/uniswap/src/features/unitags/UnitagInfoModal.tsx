@@ -38,7 +38,7 @@ export const UnitagInfoModal = ({
           <Pill
             customBackgroundColor={colors.surface1.val}
             foregroundColor={colors.neutral2.val}
-            label={shortenAddress(unitagAddress ?? ADDRESS_ZERO)}
+            label={shortenAddress({ address: unitagAddress ?? ADDRESS_ZERO })}
             px="$spacing12"
             shadowColor="$neutral3"
             shadowOpacity={0.4}

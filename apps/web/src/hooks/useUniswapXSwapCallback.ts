@@ -30,6 +30,7 @@ import {
 } from 'state/routing/types'
 import { InterfaceEventName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import {
@@ -68,7 +69,10 @@ if (UNISWAP_GATEWAY_DNS_URL === undefined) {
 async function getUpdatedNonce(swapper: string, chainId: number): Promise<BigNumber | null> {
   try {
     // endpoint fetches current nonce
-    const res = await fetch(`${UNISWAP_GATEWAY_DNS_URL}/nonce?address=${swapper.toLowerCase()}&chainId=${chainId}`)
+    const res = await fetch(
+      `${UNISWAP_GATEWAY_DNS_URL}/nonce?address=${getValidAddress({ address: swapper, chainId, withEVMChecksum: false })}&chainId=${chainId}`,
+    )
+
     const { nonce } = await res.json()
     return BigNumber.from(nonce).add(1)
   } catch (e) {

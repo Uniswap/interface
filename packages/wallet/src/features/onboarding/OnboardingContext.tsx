@@ -1,21 +1,22 @@
 /* eslint-disable max-lines */
+
+import { UnitagClaim } from '@universe/api'
 import dayjs from 'dayjs'
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { pushNotification } from 'uniswap/src/features/notifications/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useClaimUnitag } from 'uniswap/src/features/unitags/hooks/useClaimUnitag'
-import { UnitagClaim } from 'uniswap/src/features/unitags/types'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtension, isMobileApp } from 'utilities/src/platform'
+import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { setBackupReminderLastSeenTs, setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
 import { createImportedAccounts } from 'wallet/src/features/onboarding/createImportedAccounts'
@@ -161,7 +162,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
    * @param password secures generated mnemonic with password
    */
   const generateOnboardingAccount = async (password?: string): Promise<void> => {
-    if (isExtension) {
+    if (isExtensionApp) {
       // Clear any stale data from the extension Keyring only
       // Mobile enforces the single mnemonic rule via the onboarding recovery process
       await Keyring.removeAllMnemonicsAndPrivateKeys()
@@ -204,7 +205,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     password,
     allowOverwrite,
   }: ImportMnemonicArgs): Promise<void> => {
-    if (isExtension) {
+    if (isExtensionApp) {
       // Clear any stale data from the extension Keyring only
       // Mobile enforces the single mnemonic rule via the onboarding recovery process
       await Keyring.removeAllMnemonicsAndPrivateKeys()
@@ -488,7 +489,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
       dispatch(setBackupReminderLastSeenTs(undefined))
     }
 
-    const isExtensionNoAccounts = onboardingAddresses.length === 0 && isExtension
+    const isExtensionNoAccounts = onboardingAddresses.length === 0 && isExtensionApp
     if (!isExtensionNoAccounts) {
       // Send analytics events
       sendAnalyticsEvent(MobileEventName.OnboardingCompleted, {
@@ -501,7 +502,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     }
 
     // Reset data caused production ios app crashes and it is not necessary on mobile
-    if (isExtension) {
+    if (isExtensionApp) {
       resetOnboardingContextData()
     }
   }
@@ -614,7 +615,7 @@ export function useCreateOnboardingAccountIfNone(): void {
 
 // Checks if context function is used on the proper platform
 const throwIfNotExtension = (): void => {
-  if (!isExtension) {
+  if (!isExtensionApp) {
     throw new Error('We should never generate/store mnemonic in Javascript for a non-extension app')
   }
 }

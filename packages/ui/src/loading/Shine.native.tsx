@@ -16,22 +16,21 @@ import { opacify } from 'ui/src/theme'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
-const SHIMMER_DURATION = ONE_SECOND_MS * 2
-
 const LINEAR_GRADIENT_END = { x: 1, y: 0 }
 const LINEAR_GRADIENT_START = { x: 0, y: 0 }
 
 const BLACK_HEX_COLOR = '#000000'
 
-export function Shine({ children, disabled }: ShineProps): JSX.Element {
+export function Shine({ shimmerDurationSeconds = 2, children, disabled }: ShineProps): JSX.Element {
   const colors = useSporeColors()
+  const shimmerDuration = shimmerDurationSeconds * ONE_SECOND_MS
 
   const [layout, setLayout] = useState<LayoutRectangle | null>()
   const xPosition = useSharedValue(0)
 
   useEffect(() => {
-    xPosition.value = withRepeat(withTiming(1, { duration: SHIMMER_DURATION }), Infinity, false)
-  }, [xPosition])
+    xPosition.value = withRepeat(withTiming(1, { duration: shimmerDuration }), Infinity, false)
+  }, [xPosition, shimmerDuration])
 
   const animatedStyle = useAnimatedStyle(() => ({
     ...StyleSheet.absoluteFillObject,

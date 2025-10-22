@@ -3,8 +3,8 @@ import { CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { TradingApi } from '@universe/api'
 import { DYNAMIC_FEE_AMOUNT, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/models/Routing'
 import { uniswapRoutingProvider } from 'uniswap/src/utils/routingDiagram/routingProviders/uniswapRoutingProvider'
 
 // Mock currency objects
@@ -39,13 +39,12 @@ function createMockV4Pool(fee: number): V4Pool {
 }
 
 // Mock ClassicTrade helper - using weak typing for easier testing with less boilerplate
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createMockTrade(overrides: any): any {
   const defaultInputAmount = CurrencyAmount.fromRawAmount(mockTokenA, '1000000000')
   const defaultOutputAmount = CurrencyAmount.fromRawAmount(mockTokenB, '1000000000000000000')
 
   return {
-    routing: Routing.CLASSIC,
+    routing: TradingApi.Routing.CLASSIC,
     inputAmount: defaultInputAmount,
     outputAmount: defaultOutputAmount,
     tradeType: TradeType.EXACT_INPUT,
@@ -132,7 +131,6 @@ describe('uniswapProvider', () => {
         ],
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(() => uniswapRoutingProvider.getRoutingEntries(trade as any)).toThrow('Unknown pool type')
     })
   })
@@ -376,7 +374,6 @@ describe('uniswapProvider', () => {
         ],
       })
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       expect(() => uniswapRoutingProvider.getRoutingEntries(trade as any)).toThrow('Invalid route path')
     })
   })

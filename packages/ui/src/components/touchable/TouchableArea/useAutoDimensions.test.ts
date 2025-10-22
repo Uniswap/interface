@@ -1,13 +1,14 @@
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import type { LayoutChangeEvent } from 'react-native'
 import {
   DEFAULT_MIN_HEIGHT,
   DEFAULT_MIN_WIDTH,
   useAutoDimensions,
 } from 'ui/src/components/touchable/TouchableArea/useAutoDimensions'
+import { describe, expect, it, vi } from 'vitest'
 
 // We're testing the mobile version of this hook
-jest.mock('utilities/src/platform', () => ({
+vi.mock('utilities/src/platform', () => ({
   isMobileApp: true,
 }))
 
@@ -101,7 +102,7 @@ describe('useAutoDimensions', () => {
   })
 
   it('should call the provided onLayout callback', () => {
-    const mockOnLayout = jest.fn()
+    const mockOnLayout = vi.fn()
     const { result } = renderHook(() =>
       useAutoDimensions({ onLayout: mockOnLayout, shouldConsiderMinimumDimensions: true }),
     )

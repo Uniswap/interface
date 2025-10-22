@@ -1,26 +1,26 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { Keyboard } from 'react-native'
 import {
   closeKeyboardBeforeCallback,
   dismissNativeKeyboard,
 } from 'utilities/src/device/keyboard/dismissNativeKeyboard.native'
+import { type Mock, vi } from 'vitest'
 
 // Mock the react-native Keyboard module
-jest.mock('react-native', () => ({
+vi.mock('react-native', () => ({
   Keyboard: {
-    dismiss: jest.fn(),
-    isVisible: jest.fn(),
+    dismiss: vi.fn(),
+    isVisible: vi.fn(),
   },
 }))
 
 describe('dismissNativeKeyboard', () => {
   beforeEach(() => {
-    jest.clearAllMocks()
-    jest.useFakeTimers()
+    vi.clearAllMocks()
+    vi.useFakeTimers()
   })
 
   afterEach(() => {
-    jest.useRealTimers()
+    vi.useRealTimers()
   })
 
   describe('dismissNativeKeyboard', () => {
@@ -32,8 +32,8 @@ describe('dismissNativeKeyboard', () => {
 
   describe('closeKeyboardBeforeCallback', () => {
     it('should call callback immediately if keyboard is not visible', () => {
-      const callback = jest.fn()
-      ;(Keyboard.isVisible as jest.Mock).mockReturnValue(false)
+      const callback = vi.fn()
+      ;(Keyboard.isVisible as Mock).mockReturnValue(false)
 
       closeKeyboardBeforeCallback(callback)
 

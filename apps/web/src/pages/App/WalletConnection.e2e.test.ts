@@ -15,8 +15,6 @@ test.describe('Wallet Connection', () => {
     // Disconnect the wallet
     await page.getByTestId(TestID.Web3StatusConnected).click()
     await page.getByTestId(TestID.WalletDisconnect).click()
-    await expect(await page.getByTestId(TestID.WalletDisconnect)).toContainText('Disconnect') // Confirmation UI
-    await page.getByTestId(TestID.WalletDisconnect).click() // Confirm
 
     // Verify wallet has disconnected
     await expect(await page.getByText('Connect wallet')).toBeVisible()

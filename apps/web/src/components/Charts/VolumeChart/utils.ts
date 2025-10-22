@@ -194,7 +194,7 @@ export function calculateColumnPositionsInPlace({
   endIndex: number
 }) {
   const common = columnCommon(barSpacingMedia, horizontalPixelRatio)
-  let previous: ColumnPositionItem | undefined = undefined
+  let previous: ColumnPositionItem | undefined
   for (let i = startIndex; i < Math.min(endIndex, items.length); i++) {
     // Modification fix: is possible for previous column to not be directly behind the current column, i.e. if whitespace in between
     if (previous?.x && items[i].x - previous.x > barSpacingMedia) {

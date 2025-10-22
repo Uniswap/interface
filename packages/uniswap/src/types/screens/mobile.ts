@@ -1,6 +1,7 @@
 import { ExtensionOnboardingFlow, ExtensionScreens } from 'uniswap/src/types/screens/extension'
 
 export enum MobileScreens {
+  Activity = 'Activity',
   Dev = 'Dev',
   Storybook = 'Storybook',
   Education = 'Education',

@@ -14,7 +14,7 @@ import { useDecimalPadControlledField } from 'uniswap/src/features/transactions/
 import { useSyncFiatAndTokenAmountUpdater } from 'uniswap/src/features/transactions/swap/form/hooks/useSyncFiatAndTokenAmountUpdater'
 import { createSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/createSwapFormScreenStore'
 import { useSwapNetworkChangeEffect } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/hooks/useSwapNetworkChangeEffect'
-import { useTemporaryFoTWarning } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/hooks/useTemporaryFoTWarning'
+import { useTemporaryExactOutputUnavailableWarning } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/hooks/useTemporaryExactOutputUnavailableWarning'
 import { useUpdateSwapFormOnMountIfExactOutputWillFail } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/hooks/useUpdateSwapFormOnMountIfExactOutputWillFail'
 import { SwapFormScreenStoreContext } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/SwapFormScreenStoreContext'
 import { useSwapFormScreenCallbacks } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenCallbacks'
@@ -25,7 +25,7 @@ import {
 } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { getExactOutputWillFail } from 'uniswap/src/features/transactions/swap/utils/getExactOutputWillFail'
 import { CurrencyField } from 'uniswap/src/types/currency'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
 import { isMobileApp } from 'utilities/src/platform'
@@ -137,26 +137,30 @@ export const SwapFormScreenStoreContextProvider = ({
   })
 
   // Keep cursor synced when derived value changes while opposite field is focused
+  // biome-ignore lint/correctness/useExhaustiveDependencies: -callbacks.moveCursorToEnd, decimalPadControlledField, exactCurrencyField
   useEffect(() => {
     if (decimalPadControlledField === exactCurrencyField) {
       return
     }
     callbacks.moveCursorToEnd({ targetInputRef: formattedDerivedValueRef })
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formattedDerivedValue])
 
   const exactValue = isFiatMode ? exactAmountFiat : exactAmountToken
   const exactValueRef = useExactValueRef()
   const decimalPadValueRef = decimalPadControlledField === exactCurrencyField ? exactValueRef : formattedDerivedValueRef
 
-  const { showWarning, showTemporaryFoTWarning } = useTemporaryFoTWarning()
+  const { showExactOutputUnavailableWarning, showTemporaryExactOutputUnavailableWarning } =
+    useTemporaryExactOutputUnavailableWarning()
 
   const isBlockedTokens =
     getTokenWarningSeverity(currencies.input) === WarningSeverity.Blocked ||
     getTokenWarningSeverity(currencies.output) === WarningSeverity.Blocked
 
-  // Always show footer on native mobile; otherwise only when we have tokens & amount and not blocked
-  const showFooter = Boolean(!hideFooter && (isMobileApp || (!isBlockedTokens && input && output && exactAmountToken)))
+  // Always show footer on native mobile; otherwise only when we have tokens & amount & not blocked, or when we have an exact output unavailable warning
+  const showFooter = Boolean(
+    !hideFooter &&
+      (isMobileApp || (!isBlockedTokens && input && output && exactAmountToken) || showExactOutputUnavailableWarning),
+  )
 
   // Compose full state object (same shape as SwapFormScreenStoreState)
   const derivedState = useMemo(
@@ -186,7 +190,7 @@ export const SwapFormScreenStoreContextProvider = ({
       tokenColor,
       walletNeedsRestore,
       showFooter,
-      showWarning,
+      showExactOutputUnavailableWarning,
       outputTokenHasBuyTax,
       exactAmountToken,
       isBridge,
@@ -206,7 +210,7 @@ export const SwapFormScreenStoreContextProvider = ({
       onOutputSelectionChange: callbacks.onOutputSelectionChange,
       onSetExactAmountOutput: callbacks.onSetExactAmountOutput,
       onShowTokenSelectorOutput: callbacks.onShowTokenSelectorOutput,
-      showTemporaryFoTWarning,
+      showTemporaryExactOutputUnavailableWarning,
       onDecimalPadTriggerInputShake: callbacks.onDecimalPadTriggerInputShake,
     }),
     [
@@ -239,12 +243,12 @@ export const SwapFormScreenStoreContextProvider = ({
       tokenColor,
       walletNeedsRestore,
       showFooter,
-      showWarning,
+      showExactOutputUnavailableWarning,
+      showTemporaryExactOutputUnavailableWarning,
       outputTokenHasBuyTax,
       exactAmountToken,
       isBridge,
       trade,
-      showTemporaryFoTWarning,
     ],
   )
 

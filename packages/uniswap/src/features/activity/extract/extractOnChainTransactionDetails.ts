@@ -3,9 +3,14 @@ import {
   OnChainTransactionLabel,
   OnChainTransactionStatus,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TradingApi } from '@universe/api'
+
 import { parseRestApproveTransaction } from 'uniswap/src/features/activity/parse/parseApproveTransaction'
 import { parseRestBridgeTransaction } from 'uniswap/src/features/activity/parse/parseBridgingTransaction'
+import {
+  buildExecuteTransactionDetails,
+  parseRestExecuteTransaction,
+} from 'uniswap/src/features/activity/parse/parseExecuteTransaction'
 import { parseRestLiquidityTransaction } from 'uniswap/src/features/activity/parse/parseLiquidityTransaction'
 import { parseRestNFTMintTransaction } from 'uniswap/src/features/activity/parse/parseMintTransaction'
 import { parseRestReceiveTransaction } from 'uniswap/src/features/activity/parse/parseReceiveTransaction'
@@ -40,16 +45,25 @@ function mapRestStatusToLocal(status: OnChainTransactionStatus, isCancel: boolea
 
 /**
  * Extract transaction details from an onChain transaction in the REST format
+ * Returns an array to support batched transactions (e.g., EXECUTE label with swap + approve)
  */
-export default function extractRestOnChainTransactionDetails(
-  transaction: OnChainTransaction,
-): TransactionDetails | null {
+// eslint-disable-next-line complexity
+export default function extractRestOnChainTransactionDetails(transaction: OnChainTransaction): TransactionDetails[] {
   const { chainId, transactionHash, timestampMillis, from, label, status, fee } = transaction
 
   const isCancel = label === OnChainTransactionLabel.CANCEL
   let typeInfo: TransactionTypeInfo | undefined
 
   switch (label) {
+    case OnChainTransactionLabel.EXECUTE: {
+      // Handle EXECUTE label separately, this represents batched transactions like swap + approve
+      const parsed = parseRestExecuteTransaction(transaction)
+      if (parsed) {
+        return buildExecuteTransactionDetails({ transaction, parsed, mapStatusFn: mapRestStatusToLocal })
+      }
+      // If can't parse EXECUTE, this will be parsed as unknown transaction
+      break
+    }
     case OnChainTransactionLabel.SEND:
       typeInfo = parseRestSendTransaction(transaction)
       break
@@ -97,19 +111,21 @@ export default function extractRestOnChainTransactionDetails(
       }
     : undefined
 
-  const routing = label === OnChainTransactionLabel.UNISWAP_X ? Routing.DUTCH_V2 : Routing.CLASSIC
+  const routing = label === OnChainTransactionLabel.UNISWAP_X ? TradingApi.Routing.DUTCH_V2 : TradingApi.Routing.CLASSIC
 
-  return {
-    routing,
-    id: transactionHash,
-    hash: transactionHash,
-    chainId,
-    status: mapRestStatusToLocal(status, isCancel),
-    addedTime: Number(timestampMillis),
-    from,
-    typeInfo,
-    options: { request: {} },
-    networkFee,
-    transactionOriginType: TransactionOriginType.Internal,
-  }
+  return [
+    {
+      routing,
+      id: transactionHash,
+      hash: transactionHash,
+      chainId,
+      status: mapRestStatusToLocal(status, isCancel),
+      addedTime: Number(timestampMillis),
+      from,
+      typeInfo,
+      options: { request: {} },
+      networkFee,
+      transactionOriginType: TransactionOriginType.Internal,
+    },
+  ]
 }

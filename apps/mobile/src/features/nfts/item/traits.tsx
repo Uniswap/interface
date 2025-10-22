@@ -1,12 +1,12 @@
+import { GraphQLApi } from '@universe/api'
 import dayjs from 'dayjs'
 import React from 'react'
 import { ListRenderItemInfo, StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { NftAssetTrait } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-const formatTraitValue = (trait: NftAssetTrait): string | undefined => {
+const formatTraitValue = (trait: GraphQLApi.NftAssetTrait): string | undefined => {
   if (!trait.value) {
     return undefined
   }
@@ -23,7 +23,7 @@ export function NFTTraitCard({
   trait,
   titleTextColor,
 }: {
-  trait: NftAssetTrait
+  trait: GraphQLApi.NftAssetTrait
   titleTextColor?: string
 }): JSX.Element {
   const colors = useSporeColors()
@@ -50,10 +50,10 @@ export function NFTTraitList({
   traits,
   titleTextColor = 'neutral1',
 }: {
-  traits: NftAssetTrait[]
+  traits: GraphQLApi.NftAssetTrait[]
   titleTextColor?: string
 }): JSX.Element {
-  function renderItem(item: ListRenderItemInfo<NftAssetTrait>): JSX.Element {
+  function renderItem(item: ListRenderItemInfo<GraphQLApi.NftAssetTrait>): JSX.Element {
     return <NFTTraitCard titleTextColor={titleTextColor} trait={item.item} />
   }
 

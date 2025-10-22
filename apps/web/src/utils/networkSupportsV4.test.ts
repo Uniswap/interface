@@ -6,10 +6,6 @@ describe('isV4UnsupportedChain', () => {
     expect(isV4UnsupportedChain(UniverseChainId.Zksync)).toBe(true)
   })
 
-  it('returns true for Celo', () => {
-    expect(isV4UnsupportedChain(UniverseChainId.Celo)).toBe(true)
-  })
-
   it.each([
     UniverseChainId.Mainnet,
     UniverseChainId.Avalanche,
@@ -17,6 +13,7 @@ describe('isV4UnsupportedChain', () => {
     UniverseChainId.Base,
     UniverseChainId.Blast,
     UniverseChainId.Bnb,
+    UniverseChainId.Celo,
     UniverseChainId.Optimism,
     UniverseChainId.Polygon,
     UniverseChainId.Soneium,

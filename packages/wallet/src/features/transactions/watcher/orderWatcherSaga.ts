@@ -1,5 +1,5 @@
+import { TradingApi } from '@universe/api'
 import { call, delay, fork, select, take } from 'typed-redux-saga'
-import { OrderStatus, UniswapXOrder } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { makeSelectUniswapXOrder } from 'uniswap/src/features/transactions/selectors'
 import { updateTransaction } from 'uniswap/src/features/transactions/slice'
 import { getOrders } from 'uniswap/src/features/transactions/swap/orders'
@@ -10,18 +10,9 @@ import {
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTxStatus } from 'uniswap/src/features/transactions/types/utils'
+import { convertOrderStatusToTransactionStatus } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-
-const ORDER_STATUS_TO_TX_STATUS: { [key in OrderStatus]: TransactionStatus } = {
-  [OrderStatus.CANCELLED]: TransactionStatus.Canceled,
-  [OrderStatus.ERROR]: TransactionStatus.Failed,
-  [OrderStatus.EXPIRED]: TransactionStatus.Expired,
-  [OrderStatus.FILLED]: TransactionStatus.Success,
-  [OrderStatus.INSUFFICIENT_FUNDS]: TransactionStatus.InsufficientFunds,
-  [OrderStatus.OPEN]: TransactionStatus.Pending,
-  [OrderStatus.UNVERIFIED]: TransactionStatus.Unknown,
-}
 
 // If the backend cannot provide a status for an order, we can assume after a certain threshold the submission failed.
 const ORDER_TIMEOUT_BUFFER = 20 * ONE_SECOND_MS
@@ -59,7 +50,7 @@ export class OrderWatcher {
 
     try {
       const data = yield* call(getOrders, orderHashes)
-      const remoteOrderMap = new Map(data.orders.map((order: UniswapXOrder) => [order.orderId, order]))
+      const remoteOrderMap = new Map(data.orders.map((order: TradingApi.UniswapXOrder) => [order.orderId, order]))
 
       for (const localOrderHash of orderHashes) {
         const remoteOrder = remoteOrderMap.get(localOrderHash)
@@ -89,7 +80,7 @@ export class OrderWatcher {
           continue
         }
 
-        const updatedStatus = ORDER_STATUS_TO_TX_STATUS[remoteOrder.orderStatus]
+        const updatedStatus = convertOrderStatusToTransactionStatus(remoteOrder.orderStatus)
 
         const isUnchanged = updatedStatus === localOrder.status
         const isFinal = isFinalizedTxStatus(updatedStatus)
@@ -144,7 +135,7 @@ export class OrderWatcher {
     const promise = new Promise<UniswapXOrderDetails>((resolve) => {
       resolvePromise = resolve
     })
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion -- Must appease typechecker since resolvePromise is assigned inside promise scope
+    // biome-ignore lint/style/noNonNullAssertion: Safe assertion in test or migration context -- Must appease typechecker since resolvePromise is assigned inside promise scope
     OrderWatcher.listeners[orderHash] = { updateOrderStatus: resolvePromise!, promise }
 
     return yield* call(() => promise)

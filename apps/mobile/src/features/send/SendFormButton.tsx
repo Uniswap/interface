@@ -9,6 +9,7 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { selectHasDismissedLowNetworkTokenWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useDismissedCompatibleAddressWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -56,7 +57,10 @@ export function SendFormButton({
   const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlocked(recipient)
   const isBlocked = isActiveBlocked || isRecipientBlocked
   const isBlockedLoading = isActiveBlockedLoading || isRecipientBlockedLoading
-  const isUnichainBridgedAsset = checkIsBridgedAsset(currencyInInfo ?? undefined)
+  const { tokenWarningDismissed: isCompatibleAddressDismissed } = useDismissedCompatibleAddressWarnings(
+    currencyInInfo?.currency,
+  )
+  const isUnichainBridgedAsset = checkIsBridgedAsset(currencyInInfo ?? undefined) && !isCompatibleAddressDismissed
 
   const insufficientGasFunds = warnings.warnings.some((warning) => warning.type === WarningLabel.InsufficientGasFunds)
 

@@ -1,8 +1,7 @@
 import providers from '@ethersproject/providers'
 import { ONE, Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Fraction, Percent, TradeType } from '@uniswap/sdk-core'
-import { NullablePermit, Permit } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
+import { GasEstimate, TradingApi } from '@universe/api'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { ACROSS_DAPP_INFO, isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -13,6 +12,7 @@ import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionType,
+  TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
   PopulatedTransactionRequestArray,
@@ -94,6 +94,7 @@ function isNewTradePriceOutsideThreshold(oldTrade: Trade, newTrade: Trade): bool
 
 // any price movement below ACCEPT_NEW_TRADE_THRESHOLD is auto-accepted for the user
 const ACCEPT_NEW_TRADE_THRESHOLD = new Percent(1, 100)
+
 /** Returns true if `newTrade` differs from `oldTrade` enough to require explicit user acceptance. */
 export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Trade>): boolean {
   if (!oldTrade || !newTrade) {
@@ -172,7 +173,7 @@ export function getRateToDisplay({
       value: price.toSignificant(),
       type: NumberType.SwapPrice,
     })
-  } catch (error) {
+  } catch (_error) {
     // This means the price impact is so high that the rate is basically 0 (an error is thrown because we try to divide by 0)
     formattedPrice = '0'
   }
@@ -206,6 +207,7 @@ export function validateTransactionRequest(
   }
   return undefined
 }
+
 export function validateTransactionRequests(
   requests?: providers.TransactionRequest[] | null,
 ): PopulatedTransactionRequestArray | undefined {
@@ -231,11 +233,18 @@ type RemoveUndefined<T> = {
   [P in keyof T]-?: Exclude<T[P], undefined>
 }
 
-export type ValidatedPermit = RemoveUndefined<Permit>
-export function validatePermit(permit: NullablePermit | undefined): ValidatedPermit | undefined {
+export type ValidatedPermit = RemoveUndefined<TradingApi.Permit>
+
+export function validatePermit(permit: TradingApi.NullablePermit | undefined): ValidatedPermit | undefined {
   const { domain, types, values } = permit ?? {}
   if (domain && types && values) {
     return { domain, types, values }
   }
   return undefined
+}
+
+export function hasTradeType(
+  typeInfo: TransactionTypeInfo,
+): typeInfo is ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
+  return 'tradeType' in typeInfo && typeInfo.tradeType !== undefined
 }

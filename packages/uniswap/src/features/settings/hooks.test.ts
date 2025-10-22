@@ -3,7 +3,6 @@ import {
   useHideSpamTokensSetting,
   useTestnetModeBannerHeight,
 } from 'uniswap/src/features/settings/hooks'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { selectIsTestnetModeEnabled, selectWalletHideSpamTokensSetting } from 'uniswap/src/features/settings/selectors'
 
 import { renderHook } from 'uniswap/src/test/test-utils'

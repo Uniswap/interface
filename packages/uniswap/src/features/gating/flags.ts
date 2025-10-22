@@ -1,15 +1,16 @@
 import { logger } from 'utilities/src/logger/logger'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 // only disable for this enum
-/* eslint-disable @typescript-eslint/prefer-enum-initializers */
 /**
  * Feature flag names
  */
+/* biome-ignore-start lint/style/useEnumInitializers: preserve the order */
 export enum FeatureFlags {
   // Shared
   ArbitrumDutchV3,
   BlockaidFotLogging,
+  ChainedActions,
   DisableSwap7702,
   EmbeddedWallet,
   FiatOffRamp,
@@ -31,10 +32,13 @@ export enum FeatureFlags {
   ForcePermitTransactions,
   EnablePermitMismatchUX,
   ViemProviderEnabled,
+  EthAsErc20UniswapX,
   ForceDisableWalletGetCapabilities,
   SmartWalletDisableVideo,
 
   // Wallet
+  BottomTabs,
+  BridgedAssetsBanner,
   DisableFiatOnRampKorea,
   EnableTransactionSpacingForDelegatedAccounts,
   EnableExportPrivateKeys,
@@ -46,11 +50,11 @@ export enum FeatureFlags {
   UwULink,
   BlurredLockScreen,
   Eip5792Methods,
-  ExecuteTransactionV2,
   EnableRestoreSeedPhrase,
   SmartWalletSettings,
   SwapPreSign,
   TradingApiSwapConfirmation,
+  UseAlarmsApi,
 
   // Web
   AATestWeb,
@@ -64,26 +68,30 @@ export enum FeatureFlags {
   LimitsFees,
   LpIncentives,
   MigrateV2,
+  PoolInfoEndpoint,
   PoolSearch,
+  PortfolioPage,
   PriceRangeInputV2,
-  SharedPortfolioUI,
   SolanaPromo,
+  Toucan,
   TraceJsonRpc,
   TwitterConversionTracking,
   UniversalSwap,
   BatchedSwaps,
   PortoWalletConnector,
+  UnirouteEnabled,
 }
-/* eslint-enable @typescript-eslint/prefer-enum-initializers */
+/* biome-ignore-end lint/style/useEnumInitializers: preserve the order */
 
 // These names must match the gate name on statsig
 export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.ArbitrumDutchV3, 'uniswapx_dutchv3_orders_arbitrum'],
   [FeatureFlags.BlockaidFotLogging, 'blockaid_fot_logging'],
+  [FeatureFlags.ChainedActions, 'enable_chained_actions'],
   [FeatureFlags.DisableSwap7702, 'disable-swap-7702'],
   [FeatureFlags.EmbeddedWallet, 'embedded_wallet'],
   [FeatureFlags.EnablePermitMismatchUX, 'enable_permit2_mismatch_ux'],
-  [FeatureFlags.ExecuteTransactionV2, 'new_execute_transaction_arch'],
+  [FeatureFlags.EthAsErc20UniswapX, 'eth_as_erc20_uniswapx'],
   [FeatureFlags.FiatOffRamp, 'fiat_offramp_web'],
   [FeatureFlags.ForceDisableWalletGetCapabilities, 'force_disable_wallet_get_capabilities'],
   [FeatureFlags.ForcePermitTransactions, 'force_permit_transactions'],
@@ -99,6 +107,7 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.TwoSecondSwapQuotePollingInterval, 'two_second_swap_quote_polling_interval'],
   [FeatureFlags.UnichainFlashblocks, 'unichain_flashblocks'],
   [FeatureFlags.UniquoteEnabled, 'uniquote_enabled'],
+  [FeatureFlags.UnirouteEnabled, 'uniroute_rollout'],
   [FeatureFlags.UniswapX, 'uniswapx'],
   [FeatureFlags.UniswapXPriorityOrdersBase, 'uniswapx_priority_orders_base'],
   [FeatureFlags.UniswapXPriorityOrdersOptimism, 'uniswapx_priority_orders_optimism'],
@@ -121,11 +130,13 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.LimitsFees, 'limits_fees'],
   [FeatureFlags.LpIncentives, 'lp_incentives'],
   [FeatureFlags.MigrateV2, 'migrate_v2'],
+  [FeatureFlags.PoolInfoEndpoint, 'pool_info_endpoint'],
   [FeatureFlags.PoolSearch, 'pool_search'],
+  [FeatureFlags.PortfolioPage, 'portfolio_page'],
   [FeatureFlags.PortoWalletConnector, 'porto_wallet_connector'],
   [FeatureFlags.PriceRangeInputV2, 'price_range_input_v2'],
-  [FeatureFlags.SharedPortfolioUI, 'shared_portfolio_ui'],
   [FeatureFlags.SolanaPromo, 'solana_promo'],
+  [FeatureFlags.Toucan, 'toucan'],
   [FeatureFlags.TraceJsonRpc, 'traceJsonRpc'],
   [FeatureFlags.TwitterConversionTracking, 'twitter_conversion_tracking'],
   [FeatureFlags.UnichainFlashblocks, 'unichain_flashblocks'],
@@ -136,6 +147,8 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
 export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   ...SHARED_FEATURE_FLAG_NAMES,
   [FeatureFlags.BlurredLockScreen, 'blurred_lock_screen'],
+  [FeatureFlags.BottomTabs, 'bottom_tabs'],
+  [FeatureFlags.BridgedAssetsBanner, 'bridged_assets_banner'],
   [FeatureFlags.DisableFiatOnRampKorea, 'disable-fiat-onramp-korea'],
   [FeatureFlags.Eip5792Methods, 'eip_5792_methods'],
   [FeatureFlags.EnableExportPrivateKeys, 'enable-export-private-keys'],
@@ -147,6 +160,7 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.Scantastic, 'scantastic'],
   [FeatureFlags.SmartWalletSettings, 'smart_wallet_settings'],
   [FeatureFlags.SwapPreSign, 'swap_pre_sign'],
+  [FeatureFlags.UseAlarmsApi, 'use_alarms_api'],
   [FeatureFlags.UwULink, 'uwu-link'],
 ])
 
@@ -164,7 +178,7 @@ export function getFeatureFlagName(flag: FeatureFlags, client?: FeatureFlagClien
   const names =
     client !== undefined
       ? FEATURE_FLAG_NAMES[client]
-      : isInterface
+      : isWebApp
         ? FEATURE_FLAG_NAMES[FeatureFlagClient.Web]
         : FEATURE_FLAG_NAMES[FeatureFlagClient.Wallet]
   const name = names.get(flag)

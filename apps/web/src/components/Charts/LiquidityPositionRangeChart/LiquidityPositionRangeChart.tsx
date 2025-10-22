@@ -3,6 +3,7 @@ import { Currency, Price } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { GraphQLApi } from '@universe/api'
 import { ActiveLiquidityChart } from 'components/Charts/ActiveLiquidityChart/ActiveLiquidityChart'
 import { BandsIndicator } from 'components/Charts/BandsIndicator/bands-indicator'
 import { cloneReadonly } from 'components/Charts/BandsIndicator/helpers/simple-clone'
@@ -31,13 +32,12 @@ import { LoadingPriceCurve } from 'ui/src/components/icons/LoadingPriceCurve'
 import { opacify } from 'ui/src/theme'
 import { zIndexes } from 'ui/src/theme/zIndexes'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import useResizeObserver from 'use-resize-observer'
 
 // Not using the formatters in a react context, so we need to import the formatter directly.
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Need direct formatter import for chart formatting outside React context
 import { formatNumber } from 'utilities/src/format/localeBased'
 import { isMobileWeb } from 'utilities/src/platform'
 
@@ -351,7 +351,7 @@ interface LiquidityPositionRangeChartProps {
   }
   width?: number | string
   height?: number
-  duration?: HistoryDuration
+  duration?: GraphQLApi.HistoryDuration
   showXAxis?: boolean
   showYAxis?: boolean
   interactive?: boolean
@@ -480,7 +480,7 @@ function LiquidityPositionRangeChart({
     ? {
         addressOrId: poolAddressOrId,
         chain: chainInfo.backendChain.chain,
-        duration: duration ?? HistoryDuration.Month,
+        duration: duration ?? GraphQLApi.HistoryDuration.Month,
         isV4,
         isV3,
         isV2,

@@ -68,7 +68,7 @@ function getInjectedMeta(provider: ExternalProvider & Record<string, unknown>): 
 
   // Coinbase Wallet can be connected through an extension or a QR code, with `qrUrl` as the only differentiator,
   // so we capture `qrUrl` in the agent string.
-  if (properties.includes('qrUrl') && provider['qrUrl']) {
+  if (properties.includes('qrUrl') && provider.qrUrl) {
     names.push('qrUrl')
   }
 

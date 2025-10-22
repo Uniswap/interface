@@ -1,0 +1,6 @@
+{
+  "extends": "//",
+  "formatter": {
+    "includes": ["**"]
+  }
+}

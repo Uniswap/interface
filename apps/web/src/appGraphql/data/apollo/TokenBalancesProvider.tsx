@@ -1,14 +1,14 @@
 import { AdaptiveTokenBalancesProvider } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { apolloClient } from 'appGraphql/data/apollo/client'
 import { useQueryClient } from '@tanstack/react-query'
+import { GraphQLApi } from '@universe/api'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccount } from 'hooks/useAccount'
 import { PropsWithChildren, useCallback, useEffect, useMemo, useState } from 'react'
 import { useWatchTransactionsCallback } from 'state/sagas/transactions/watcherSaga'
 import { usePendingTransactions } from 'state/transactions/hooks'
-import { usePortfolioBalancesLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: This import is needed for fetching portfolio value modifiers despite being restricted
 import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances/balances'
 import { usePrevious } from 'utilities/src/react/hooks'
 
@@ -34,7 +34,7 @@ function useHasAccountUpdate() {
 }
 
 function TokenBalancesProviderInternal({ children }: PropsWithChildren) {
-  const [lazyFetch, query] = usePortfolioBalancesLazyQuery({ errorPolicy: 'all' })
+  const [lazyFetch, query] = GraphQLApi.usePortfolioBalancesLazyQuery({ errorPolicy: 'all' })
   const account = useAccount()
   const hasAccountUpdate = useHasAccountUpdate()
   const queryClient = useQueryClient()

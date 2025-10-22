@@ -1,6 +1,6 @@
 import type { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import type { SwapTradeBaseProperties, UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
-import type { OnChainTransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 /**
  * Service for tracking analytics events
@@ -19,5 +19,5 @@ export interface AnalyticsService {
    * @param transaction The transaction details
    * @param analytics Analytics properties for the swap
    */
-  trackSwapSubmitted(transaction: OnChainTransactionDetails, analytics?: SwapTradeBaseProperties): void
+  trackSwapSubmitted(transaction: TransactionDetails, analytics?: SwapTradeBaseProperties): void
 }

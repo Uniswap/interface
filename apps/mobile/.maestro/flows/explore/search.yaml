@@ -1,0 +1,231 @@
+appId: com.uniswap.mobile.dev
+jsEngine: graaljs
+tags:
+  - language-agnostic
+env:
+  E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
+  DATADOG_API_KEY: ${DATADOG_API_KEY}
+---
+# Initialize Performance Tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/init-tracking.js
+
+# Start Flow Tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/start-flow.js
+    env:
+      FLOW_NAME: 'explore-search'
+
+# Setup: Start app, recover wallet, and navigate to explore
+- runFlow: ../../shared-flows/start.yaml
+- runFlow: ../../shared-flows/recover-fast.yaml
+- runFlow: ../../shared-flows/navigate-to-explore.yaml
+
+# --- Test Case: Search for a token ---
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'ExploreSearchInput'
+      PHASE: 'start'
+
+# Tap on the search input field
+- tapOn:
+    id: ${output.testIds.ExploreSearchInput}
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'ExploreSearchInput'
+      PHASE: 'end'
+
+# Enter search text for a token
+- inputText: "Uniswap"
+
+# Wait for search results to load
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      text: ".*UNI.*"
+    timeout: 5000
+
+# Tap on the UNI token result (looking for UNI text in the result)
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'UNI_Token_Result'
+      PHASE: 'start'
+
+- tapOn:
+    text: "UNI"
+    index: 0
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'UNI_Token_Result'
+      PHASE: 'end'
+
+- waitForAnimationToEnd
+
+# Assert navigation to token details page
+- assertVisible:
+    id: ${output.testIds.TokenDetailsHeaderText}
+
+# Verify swap button is visible for the token
+- assertVisible:
+    id: ${output.testIds.TokenDetailsSwapButton}
+
+# Go back to main page
+- tapOn:
+    id: ${output.testIds.Back}
+- waitForAnimationToEnd
+
+# --- Test Case: Search for a wallet ---
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'ExploreSearchInput_Wallet'
+      PHASE: 'start'
+
+# Tap on the search input field again
+- tapOn:
+    id: ${output.testIds.ExploreSearchInput}
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'ExploreSearchInput_Wallet'
+      PHASE: 'end'
+
+# Switch to Wallets tab
+- tapOn:
+    id: "Wallets"
+    optional: true
+
+# Enter a wallet address or ENS name
+- eraseText: 30
+
+- extendedWaitUntil:
+    visible: 'noop'
+    timeout: 2000
+    optional: true
+
+- inputText: "hayden.eth"
+
+# Wait for search results to load
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      text: "hayden.eth"
+    timeout: 7000
+
+# Tap on the wallet result
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'hayden_eth_Wallet'
+      PHASE: 'start'
+
+# Tap on the second occurrence (search result, not search bar)
+# or alternatively tap on the partial address which should be unique
+- tapOn:
+    text: "hayden.eth"
+    index: 1
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'hayden_eth_Wallet'
+      PHASE: 'end'
+
+- waitForAnimationToEnd
+
+# Assert navigation to wallet/profile details page
+# Check for some wallet-specific UI elements
+- extendedWaitUntil:
+    visible:
+      text: ".*hayden.*"
+    timeout: 3000
+
+# Verify the send action button is visible (confirms we're on a wallet details page)
+- assertVisible:
+    id: ${output.testIds.Send}
+
+# Go back to explore
+- tapOn:
+    id: ${output.testIds.Back}
+- waitForAnimationToEnd
+
+# --- Test Case: Search for a unitag ---
+
+# Tap on the search input field again
+- tapOn:
+    id: ${output.testIds.ExploreSearchInput}
+
+# Enter a unitag
+- eraseText: 30
+- extendedWaitUntil:
+    visible: 'noop'
+    timeout: 2000
+    optional: true
+
+- inputText: "test"
+
+# Wait for search results to load
+- waitForAnimationToEnd
+- extendedWaitUntil:
+    visible:
+      id: "test.uni.eth"
+    timeout: 8000
+
+# Tap on the wallet result
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'test_uni_eth_Wallet'
+      PHASE: 'start'
+
+# Tap on the second occurrence (search result, not search bar)
+# or alternatively tap on the partial address which should be unique
+- tapOn:
+    id: "test.uni.eth"
+
+- runScript:
+    file: ../../scripts/performance/dist/actions/track-action.js
+    env:
+      ACTION: 'tap'
+      TARGET: 'test_uni_eth_Wallet'
+      PHASE: 'end'
+
+- waitForAnimationToEnd
+
+# Assert navigation to wallet/profile details page
+# Check for some wallet-specific UI elements
+- extendedWaitUntil:
+    visible:
+      text: ".*test.*"
+    timeout: 3000
+
+# Verify the Send button is visible (confirms we're on a wallet details page)
+- assertVisible:
+    id: ${output.testIds.Send}
+
+# End Flow Tracking
+- runScript:
+    file: ../../scripts/performance/dist/actions/end-flow.js
+
+# Upload Metrics (for CI/Maestro Cloud)
+- runScript:
+    file: ../../scripts/performance/upload-metrics.js
+    env:
+      DATADOG_API_KEY: ${DATADOG_API_KEY}
+      ENVIRONMENT: 'maestro_cloud'

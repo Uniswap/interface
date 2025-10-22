@@ -1,3 +1,4 @@
+import { GraphQLApi } from '@universe/api'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { StackedLineData } from 'components/Charts/StackedLineChart'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
@@ -10,25 +11,16 @@ import {
 } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo, useReducer } from 'react'
-import {
-  CandlestickOhlcFragment,
-  Chain,
-  HistoryDuration,
-  PriceHistoryFallbackFragment,
-  useTokenHistoricalTvlsQuery,
-  useTokenHistoricalVolumesQuery,
-  useTokenPriceQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-type TDPChartQueryVariables = { chain: Chain; address?: string; duration: HistoryDuration }
+type TDPChartQueryVariables = { chain: GraphQLApi.Chain; address?: string; duration: GraphQLApi.HistoryDuration }
 
-function fallbackToPriceChartData(priceHistoryEntry: PriceHistoryFallbackFragment): PriceChartData {
+function fallbackToPriceChartData(priceHistoryEntry: GraphQLApi.PriceHistoryFallbackFragment): PriceChartData {
   const { value, timestamp } = priceHistoryEntry
   const time = timestamp as UTCTimestamp
   return { time, value, open: value, high: value, low: value, close: value }
 }
 
-function toPriceChartData(ohlc: CandlestickOhlcFragment): PriceChartData {
+function toPriceChartData(ohlc: GraphQLApi.CandlestickOhlcFragment): PriceChartData {
   const { open, high, low, close } = ohlc
   const time = ohlc.timestamp as UTCTimestamp
   return { time, value: close.value, open: open.value, high: high.value, low: low.value, close: close.value }
@@ -47,15 +39,15 @@ export function useTDPPriceChartData({
   priceChartType: PriceChartType
 }): ChartQueryResult<PriceChartData, ChartType.PRICE> & { disableCandlestickUI: boolean } {
   const [fallback, enablePriceHistoryFallback] = useReducer(() => true, false)
-  const { data, loading } = useTokenPriceQuery({ variables: { ...variables, fallback }, skip })
+  const { data, loading } = GraphQLApi.useTokenPriceQuery({ variables: { ...variables, fallback }, skip })
 
   return useMemo(() => {
     const { ohlc, priceHistory, price } = data?.token?.market ?? {}
     let entries =
       (ohlc
-        ? ohlc.filter((v): v is CandlestickOhlcFragment => v !== undefined).map(toPriceChartData)
+        ? ohlc.filter((v): v is GraphQLApi.CandlestickOhlcFragment => v !== undefined).map(toPriceChartData)
         : priceHistory
-            ?.filter((v): v is PriceHistoryFallbackFragment => v !== undefined)
+            ?.filter((v): v is GraphQLApi.PriceHistoryFallbackFragment => v !== undefined)
             .map(fallbackToPriceChartData)) ?? []
     const currentPrice = price?.value
 
@@ -156,11 +148,11 @@ export function useTDPVolumeChartData(
   variables: TDPChartQueryVariables,
   skip: boolean,
 ): ChartQueryResult<SingleHistogramData, ChartType.VOLUME> {
-  const { data, loading } = useTokenHistoricalVolumesQuery({ variables, skip })
+  const { data, loading } = GraphQLApi.useTokenHistoricalVolumesQuery({ variables, skip })
   return useMemo(() => {
     const entries =
       data?.token?.market?.historicalVolume
-        ?.filter((v): v is PriceHistoryFallbackFragment => v !== undefined)
+        ?.filter((v): v is GraphQLApi.PriceHistoryFallbackFragment => v !== undefined)
         .map(withUTCTimestamp) ?? []
     const dataQuality = checkDataQuality({ data: entries, chartType: ChartType.VOLUME, duration: variables.duration })
     return { chartType: ChartType.VOLUME, entries, loading, dataQuality }
@@ -175,11 +167,13 @@ export function useTDPTVLChartData(
   variables: TDPChartQueryVariables,
   skip: boolean,
 ): ChartQueryResult<StackedLineData, ChartType.TVL> {
-  const { data, loading } = useTokenHistoricalTvlsQuery({ variables, skip })
+  const { data, loading } = GraphQLApi.useTokenHistoricalTvlsQuery({ variables, skip })
   return useMemo(() => {
     const { historicalTvl, totalValueLocked } = data?.token?.market ?? {}
     const entries =
-      historicalTvl?.filter((v): v is PriceHistoryFallbackFragment => v !== undefined).map(toStackedLineData) ?? []
+      historicalTvl
+        ?.filter((v): v is GraphQLApi.PriceHistoryFallbackFragment => v !== undefined)
+        .map(toStackedLineData) ?? []
     const currentTvl = totalValueLocked?.value
 
     // Append current tvl to end of array to ensure data freshness and that each time period ends with same tvl

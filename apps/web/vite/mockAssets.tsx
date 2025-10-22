@@ -119,19 +119,5 @@ vi.mock('ui/src/assets', () => ({
   SMART_WALLET_UPGRADE_FALLBACK: 'smart-wallet-upgrade-fallback.png',
 }))
 
-vi.mock('nft/components/iconExports', () => ({
-  ApprovedCheckmarkIcon: () => <span data-testid="approved-checkmark-icon" />,
-  VerifiedIcon: () => <span data-testid="verified-icon" />,
-  ReversedArrowsIcon: () => <span data-testid="reversed-arrows-icon" />,
-  OpenSeaMarketplaceIcon: () => <span data-testid="opensea-marketplace-icon" />,
-  CollectionSelectedAssetIcon: () => <span data-testid="collection-selected-asset-icon" />,
-  Nft20Icon: () => <span data-testid="nft20-icon" />,
-  NftXIcon: () => <span data-testid="nftx-icon" />,
-  X2y2Icon: () => <span data-testid="x2y2-icon" />,
-  SudoSwapIcon: () => <span data-testid="sudo-swap-icon" />,
-  LooksRareIcon: () => <span data-testid="looks-rare-icon" />,
-  LarvaLabsMarketplaceIcon: () => <span data-testid="larva-labs-marketplace-icon" />,
-}))
-
 // Add more asset mocks as needed
 // This ensures all asset imports resolve to consistent static paths.

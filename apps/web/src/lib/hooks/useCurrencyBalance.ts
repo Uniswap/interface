@@ -4,7 +4,7 @@ import { useTokenBalances } from 'hooks/useTokenBalances'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { isAddress } from 'utilities/src/addresses'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { currencyKey } from 'utils/currencyKey'
 import { assume0xAddress } from 'utils/wagmi'
 import { erc20Abi } from 'viem'
@@ -27,7 +27,8 @@ export function useRpcTokenBalancesWithLoadingIndicator({
     () =>
       skip
         ? []
-        : (tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false && t?.chainId === chainId) ?? []),
+        : (tokens?.filter((t?: Token): t is Token => isEVMAddress(t?.address) !== false && t.chainId === chainId) ??
+          []),
     [chainId, tokens, skip],
   )
 
@@ -159,6 +160,8 @@ function useGqlCurrencyBalances(
 }
 
 /**
+ * @deprecated use usePortfolioBalances & getOnChainBalancesFetch from packages/uniswap instead
+ *
  * Returns balances for tokens on currently-connected chainId via RPC.
  * Falls back to graphql TokenBalances if user is not connected to chain, a.k.a !isSynced.
  */

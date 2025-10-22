@@ -1,9 +1,8 @@
+import { TradingApi } from '@universe/api'
 import { useCallback, useMemo } from 'react'
-// only using to keep a consistent timing on interface
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: only using to keep a consistent timing on interface
 import { ADAPTIVE_MODAL_ANIMATION_DURATION } from 'ui/src/components/modal/AdaptiveWebModal'
 import type { ParsedWarnings } from 'uniswap/src/components/modals/WarningModal/types'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import type { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { TransactionScreen } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
@@ -15,7 +14,7 @@ import type { SwapFormState } from 'uniswap/src/features/transactions/swap/store
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import type { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 interface SwapReviewCallbacks {
@@ -77,7 +76,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
   const shouldShowConfirmedState =
     shouldShowFlashblocksUI(derivedSwapInfo.trade.trade?.routing) ||
     // show the confirmed state for bridges
-    derivedSwapInfo.trade.trade?.routing === Routing.BRIDGE
+    derivedSwapInfo.trade.trade?.routing === TradingApi.Routing.BRIDGE
 
   const onFailure = useCallback(
     (error?: Error, onPressRetry?: () => void) => {
@@ -105,7 +104,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
     }
 
     // On interface, the swap component stays mounted; after swap we reset the form to avoid showing the previous values.
-    if (isInterface) {
+    if (isWebApp) {
       updateSwapForm({
         exactAmountFiat: undefined,
         exactAmountToken: '',

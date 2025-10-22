@@ -1,12 +1,18 @@
 ignores: [
     # Dependencies that depcheck thinks are unused but are actually used
+    'concurrently',
     'react-native-web',
     'jest-environment-jsdom',
     'webpack-cli',
+    '@wxt-dev/module-react',
+    'serve',
+    'typescript',
     # Dependencies that depcheck thinks are missing but are actually present or never used
     ## Internal packages / workspaces
     'src',
+    'e2e',
     'tsconfig',
+    'config',
     # Webpack plugins
     '@svgr/webpack',
     'tamagui-loader',

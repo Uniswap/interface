@@ -1,6 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
-import { JupiterOrderResponse } from 'uniswap/src/data/apiClients/jupiterApi/order/types'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/models/Routing'
+import { type JupiterOrderResponse, TradingApi } from '@universe/api'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 import { jupiterRoutingProvider } from 'uniswap/src/utils/routingDiagram/routingProviders/jupiterRoutingProvider'
@@ -31,7 +30,7 @@ function createMockJupiterTrade(
   routePlan: Array<{ swapInfo: ReturnType<typeof createMockSwapInfo>; percent: number }>,
 ): SolanaTrade {
   return {
-    routing: Routing.JUPITER,
+    routing: TradingApi.Routing.JUPITER,
     quote: {
       quote: {
         routePlan,

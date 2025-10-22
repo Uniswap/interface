@@ -9,7 +9,7 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import type { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 export function UniswapXInfo({
   children,
@@ -24,7 +24,10 @@ export function UniswapXInfo({
   return (
     <WarningInfo
       infoButton={
-        <LearnMoreLink textVariant={isWeb ? 'body4' : undefined} url={uniswapUrls.helpArticleUrls.uniswapXInfo} />
+        <LearnMoreLink
+          textVariant={isWebPlatform ? 'body4' : undefined}
+          url={uniswapUrls.helpArticleUrls.uniswapXInfo}
+        />
       }
       modalProps={{
         backgroundIconColor: opacify(16, colors.uniswapXPurple),
@@ -33,7 +36,9 @@ export function UniswapXInfo({
         icon: <UniswapX size="$icon.24" />,
         modalName: ModalName.UniswapXInfo,
         severity: WarningSeverity.None,
-        titleComponent: <UniswapXText variant={isWeb ? 'subheading2' : 'body1'}>{t('uniswapx.label')}</UniswapXText>,
+        titleComponent: (
+          <UniswapXText variant={isWebPlatform ? 'subheading2' : 'body1'}>{t('uniswapx.label')}</UniswapXText>
+        ),
         zIndex: zIndexes.popover,
       }}
       tooltipProps={{

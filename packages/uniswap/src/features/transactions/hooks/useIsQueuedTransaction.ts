@@ -1,18 +1,21 @@
 import { BigNumberish } from '@ethersproject/bignumber'
 import { useMemo } from 'react'
+import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { usePendingTransactions } from 'uniswap/src/features/transactions/hooks/usePendingTransactions'
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 
 function useLowestPendingNonce(): BigNumberish | undefined {
-  const { evmAccount } = useWallet()
+  const activeAddresses = useActiveAddresses()
 
-  if (!evmAccount) {
-    throw new Error('EVM account address not found')
+  if (!activeAddresses.evmAddress && !activeAddresses.svmAddress) {
+    throw new Error('Account address not found')
   }
 
-  const pending = usePendingTransactions(evmAccount.address)
+  const pending = usePendingTransactions({
+    evmAddress: activeAddresses.evmAddress ?? null,
+    svmAddress: activeAddresses.svmAddress ?? null,
+  })
 
   return useMemo(() => {
     let min: BigNumberish | undefined

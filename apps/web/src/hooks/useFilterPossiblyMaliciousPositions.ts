@@ -2,15 +2,11 @@ import { apolloClient } from 'appGraphql/data/apollo/client'
 import { gqlTokenToCurrencyInfo } from 'appGraphql/data/types'
 import { apolloQueryOptions } from 'appGraphql/data/util'
 import { useQueries } from '@tanstack/react-query'
+import { GraphQLApi } from '@universe/api'
 import { useAccount } from 'hooks/useAccount'
 import { useTokenContractsConstant } from 'hooks/useTokenContractsConstant'
 import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
-import {
-  Token,
-  TokenDocument,
-  TokenQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -29,16 +25,16 @@ function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId
     queryKey: [ReactQueryCacheKey.PositionCurrencyInfo, position],
     queryFn: async () => {
       const queries = [
-        apolloClient.query<TokenQuery>({
-          query: TokenDocument,
+        apolloClient.query<GraphQLApi.TokenQuery>({
+          query: GraphQLApi.TokenDocument,
           variables: {
             address: position.token0,
             chain: toGraphQLChain(chainId),
           },
           fetchPolicy: 'cache-first',
         }),
-        apolloClient.query<TokenQuery>({
-          query: TokenDocument,
+        apolloClient.query<GraphQLApi.TokenQuery>({
+          query: GraphQLApi.TokenDocument,
           variables: {
             address: position.token1,
             chain: toGraphQLChain(chainId),
@@ -49,8 +45,8 @@ function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId
       const [currency0, currency1] = await Promise.all(queries)
       return {
         position,
-        currency0Info: gqlTokenToCurrencyInfo(currency0.data.token as Token),
-        currency1Info: gqlTokenToCurrencyInfo(currency1.data.token as Token),
+        currency0Info: gqlTokenToCurrencyInfo(currency0.data.token as GraphQLApi.Token),
+        currency1Info: gqlTokenToCurrencyInfo(currency1.data.token as GraphQLApi.Token),
       }
     },
   })

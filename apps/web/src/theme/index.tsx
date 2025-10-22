@@ -137,7 +137,7 @@ function applyOverriddenColors(defaultColors: ThemeColors, overriddenColors?: Pa
 
 export function ThemeProvider({ children, ...overriddenColors }: PropsWithChildren<Partial<ThemeColors>>) {
   const darkMode = useIsDarkMode()
-  // eslint-disable-next-line react-hooks/exhaustive-deps -- only update when darkMode or overriddenColors' entries change
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Only update when darkMode or overriddenColors' entries change
   const themeObject = useMemo(() => getTheme(darkMode, overriddenColors), [darkMode, JSON.stringify(overriddenColors)])
 
   // TODO(WEB-7508): set theme for wallet connect modal
@@ -156,6 +156,6 @@ export const ThemedGlobalStyle = createGlobalStyle`
   }
 
   a {
-    color: ${({ theme }) => theme.accent1}; 
+    color: ${({ theme }) => theme.accent1};
   }
 `

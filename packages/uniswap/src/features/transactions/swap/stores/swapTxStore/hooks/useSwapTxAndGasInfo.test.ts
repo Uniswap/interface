@@ -1,7 +1,6 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
+import { FeeType, TradingApi } from '@universe/api'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { GasFeeResult } from 'uniswap/src/features/gas/types'
@@ -118,7 +117,7 @@ describe('useSwapTxAndGasInfo', () => {
     )
 
     expect(result.current).toMatchObject<ClassicSwapTxAndGasInfo>({
-      routing: Routing.CLASSIC,
+      routing: TradingApi.Routing.CLASSIC,
       trade: expect.any(Object),
       txRequests: expect.any(Array),
       approveTxRequest: expect.any(Object),

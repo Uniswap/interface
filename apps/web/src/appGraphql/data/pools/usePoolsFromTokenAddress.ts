@@ -5,16 +5,13 @@ import {
   sortPools,
   TablePool,
 } from 'appGraphql/data/pools/useTopPools'
+import { GraphQLApi } from '@universe/api'
 import { useCallback, useMemo, useRef } from 'react'
 import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
-import {
-  useTopV2PairsQuery,
-  useTopV3PoolsQuery,
-  useTopV4PoolsQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/features/chains/evm/rpc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 
 const DEFAULT_QUERY_SIZE = 20
 
@@ -30,17 +27,20 @@ export function usePoolsFromTokenAddress({
   isNative?: boolean
 }) {
   const chain = toGraphQLChain(chainId)
+  const skipPoolQueries = isSVMChain(chainId)
+
   const {
     loading: loadingV4,
     error: errorV4,
     data: dataV4,
     fetchMore: fetchMoreV4,
-  } = useTopV4PoolsQuery({
+  } = GraphQLApi.useTopV4PoolsQuery({
     variables: {
       first: DEFAULT_QUERY_SIZE,
       tokenAddress: isNative ? DEFAULT_NATIVE_ADDRESS : tokenAddress,
       chain,
     },
+    skip: skipPoolQueries,
   })
 
   const {
@@ -48,12 +48,13 @@ export function usePoolsFromTokenAddress({
     error: errorV3,
     data: dataV3,
     fetchMore: fetchMoreV3,
-  } = useTopV3PoolsQuery({
+  } = GraphQLApi.useTopV3PoolsQuery({
     variables: {
       first: DEFAULT_QUERY_SIZE,
       tokenAddress,
       chain,
     },
+    skip: skipPoolQueries,
   })
 
   const {
@@ -61,13 +62,13 @@ export function usePoolsFromTokenAddress({
     error: errorV2,
     data: dataV2,
     fetchMore: fetchMoreV2,
-  } = useTopV2PairsQuery({
+  } = GraphQLApi.useTopV2PairsQuery({
     variables: {
       first: DEFAULT_QUERY_SIZE,
       tokenAddress,
       chain,
     },
-    skip: !chainId,
+    skip: skipPoolQueries,
   })
   const loading = loadingV4 || loadingV3 || loadingV2
 

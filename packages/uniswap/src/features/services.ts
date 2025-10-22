@@ -1,17 +1,19 @@
 import { useMemo } from 'react'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
-import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
-import { getTradeRepository } from 'uniswap/src/features/repositories'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { getEVMTradeRepository } from 'uniswap/src/features/repositories'
+import { useWithQuoteLogging } from 'uniswap/src/features/transactions/swap/hooks/useTrade/logging'
+import { createEVMTradeService } from 'uniswap/src/features/transactions/swap/services/tradeService/evmTradeService'
+import { createSolanaTradeService } from 'uniswap/src/features/transactions/swap/services/tradeService/svmTradeService'
 import {
   createTradeService,
   TradeService,
 } from 'uniswap/src/features/transactions/swap/services/tradeService/tradeService'
 import { getMinAutoSlippageToleranceL2 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { getLogger } from 'utilities/src/logger/logger'
-import { isMobileApp } from 'utilities/src/platform'
 
 /**
  * Services
@@ -41,36 +43,39 @@ interface TradeServiceContext {
 export function getTradeService(ctx: TradeServiceContext): TradeService {
   const { getIsUniswapXSupported, getEnabledChains } = ctx
 
-  return createTradeService({
-    tradeRepository: getTradeRepository(),
+  const evmTradeService = createEVMTradeService({
+    tradeRepository: getEVMTradeRepository(),
     getIsUniswapXSupported,
     getEnabledChains,
     getIsL2ChainId: (chainId?: UniverseChainId) => (chainId ? isL2ChainId(chainId) : false),
     getMinAutoSlippageToleranceL2,
     logger: getLogger(),
-    onTradeError: (error, errorCtx) => {
-      // Error logging
-      // We use DataDog to catch network errors on Mobile
-      if ((!isMobileApp || !(error instanceof FetchError)) && !errorCtx.input.isUSDQuote) {
-        getLogger().error(error, {
-          tags: { file: 'useTrade', function: 'quote' },
-          extra: { ...errorCtx.quoteRequestArgs },
-        })
-      }
+  })
+
+  const svmTradeService =
+    createSolanaTradeService(
+      // { tradeRepository: getSolanaTradeRepository() } // TODO(SWAP-383): build Solana Trade Repository
+    )
+
+  return createTradeService({
+    serviceByPlatform: {
+      [Platform.EVM]: evmTradeService,
+      [Platform.SVM]: svmTradeService,
     },
   })
 }
 
 export function useTradeService(): TradeService {
+  const withQuoteLogging = useWithQuoteLogging()
   const getIsUniswapXSupported = useUniswapContextSelector((state) => state.getIsUniswapXSupported)
   const enabledChains = useEnabledChains()
 
-  return useMemo(
-    () =>
-      getTradeService({
-        getIsUniswapXSupported: getIsUniswapXSupported ?? ((): boolean => false),
-        getEnabledChains: () => enabledChains.chains,
-      }),
-    [getIsUniswapXSupported, enabledChains],
-  )
+  return useMemo(() => {
+    const baseService = getTradeService({
+      getIsUniswapXSupported: getIsUniswapXSupported ?? ((): boolean => false),
+      getEnabledChains: () => enabledChains.chains,
+    })
+
+    return withQuoteLogging(baseService)
+  }, [getIsUniswapXSupported, enabledChains, withQuoteLogging])
 }

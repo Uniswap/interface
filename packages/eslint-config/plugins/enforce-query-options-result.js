@@ -45,19 +45,27 @@ module.exports = {
 
     function checkFunctionReturnType(node) {
       // Skip if already processed
-      if (processedFunctions.has(node)) return
+      if (processedFunctions.has(node)) {
+        return
+      }
       processedFunctions.add(node)
 
       // Early return if no return type annotation
-      if (!node.returnType?.typeAnnotation) return
+      if (!node.returnType?.typeAnnotation) {
+        return
+      }
 
       // Skip hooks (functions whose names start with "use")
-      if (isHook(node)) return
+      if (isHook(node)) {
+        return
+      }
 
       const typeAnnotation = node.returnType.typeAnnotation
 
       // Only check TSTypeReference nodes
-      if (typeAnnotation.type !== 'TSTypeReference' || !typeAnnotation.typeName) return
+      if (typeAnnotation.type !== 'TSTypeReference' || !typeAnnotation.typeName) {
+        return
+      }
 
       const typeName =
         typeAnnotation.typeName.type === 'Identifier'
@@ -102,7 +110,9 @@ module.exports = {
     return {
       ImportDeclaration(node) {
         const importValue = node.source?.value
-        if (!importValue) return
+        if (!importValue) {
+          return
+        }
 
         // Check if this import is from our utilities path
         if (
@@ -136,7 +146,9 @@ module.exports = {
 
       // Check exported functions
       ExportNamedDeclaration(node) {
-        if (!node.declaration) return
+        if (!node.declaration) {
+          return
+        }
 
         if (node.declaration.type === 'FunctionDeclaration') {
           checkFunctionReturnType(node.declaration)

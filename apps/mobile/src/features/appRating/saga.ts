@@ -7,7 +7,7 @@ import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isJestRun } from 'utilities/src/environment/constants'
+import { isTestRun } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -23,7 +23,7 @@ function isAndroid14(): boolean {
 const SWAP_FINALIZED_PROMPT_DELAY_MS = 3 * ONE_SECOND_MS
 
 try {
-  if (!isJestRun && !isAndroid14()) {
+  if (!isTestRun && !isAndroid14()) {
     import('expo-store-review')
   }
 } catch (error) {

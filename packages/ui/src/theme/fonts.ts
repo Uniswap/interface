@@ -1,8 +1,8 @@
 // until the web app needs all of tamagui, avoid heavy imports there
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: until the web app needs all of tamagui, avoid heavy imports there
 import { createFont, isAndroid } from '@tamagui/core'
 import { needsSmallFont } from 'ui/src/utils/needs-small-font'
-import { isInterface, isWeb } from 'utilities/src/platform'
+import { isWebApp, isWebPlatform } from 'utilities/src/platform'
 
 // TODO(EXT-148): remove this type and use Tamagui's FontTokens
 export type TextVariantTokens = keyof typeof fonts
@@ -33,7 +33,7 @@ const fontFamilyByPlatform = {
   },
 }
 
-const platform = isWeb ? 'web' : isAndroid ? 'android' : 'ios'
+const platform = isWebPlatform ? 'web' : isAndroid ? 'android' : 'ios'
 
 const fontFamily = {
   serif: 'serif',
@@ -45,11 +45,11 @@ const fontFamily = {
   },
 }
 
-const baselMedium = isWeb
+const baselMedium = isWebPlatform
   ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
   : fontFamily.sansSerif.medium
 
-const baselBook = isWeb
+const baselBook = isWebPlatform
   ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
   : fontFamily.sansSerif.book
 
@@ -57,7 +57,7 @@ type SansSerifFontFamilyKey = keyof typeof fontFamily.sansSerif
 type SansSerifFontFamilyValue = (typeof fontFamily.sansSerif)[SansSerifFontFamilyKey]
 
 const platformFontFamily = (family: SansSerifFontFamilyKey): SansSerifFontFamilyKey | SansSerifFontFamilyValue => {
-  if (isWeb) {
+  if (isWebPlatform) {
     return family
   }
 
@@ -77,9 +77,9 @@ const MEDIUM_WEIGHT = '500'
 const MEDIUM_WEIGHT_WEB = '535'
 
 const defaultWeights = {
-  book: isInterface ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
-  true: isInterface ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
-  medium: isInterface ? MEDIUM_WEIGHT_WEB : MEDIUM_WEIGHT,
+  book: isWebApp ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
+  true: isWebApp ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
+  medium: isWebApp ? MEDIUM_WEIGHT_WEB : MEDIUM_WEIGHT,
 }
 
 // on native, the Basel font files render down a few px

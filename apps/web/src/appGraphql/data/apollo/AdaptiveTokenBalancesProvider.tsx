@@ -1,10 +1,10 @@
 import { createAdaptiveRefetchContext } from 'appGraphql/data/apollo/AdaptiveRefetch'
-import { PortfolioBalancesQueryResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 
 const {
   Provider: AdaptiveTokenBalancesProvider,
   useQuery: useTokenBalancesQuery,
   PrefetchWrapper: PrefetchBalancesWrapper,
-} = createAdaptiveRefetchContext<PortfolioBalancesQueryResult>()
+} = createAdaptiveRefetchContext<GraphQLApi.PortfolioBalancesQueryResult>()
 
 export { AdaptiveTokenBalancesProvider, PrefetchBalancesWrapper, useTokenBalancesQuery }

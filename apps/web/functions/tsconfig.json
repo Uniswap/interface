@@ -11,9 +11,9 @@
       "functions/*": ["./*"]
     },
     "tsBuildInfoFile": "../node_modules/.cache/tsbuildinfo/functions", // avoid clobbering the build tsbuildinfo
-    "types": ["node", "@cloudflare/workers-types", "vitest/globals"],
+    "types": ["node", "@cloudflare/workers-types", "vitest/globals"]
   },
-  "include": ["**/*.ts", "**/*.tsx"],
+  "include": ["../../../index.d.ts", "**/*.ts", "**/*.tsx"],
   "references": [
     {
       "path": "../../../packages/ui"

@@ -10,7 +10,7 @@ import { useOnToggleIsFiatMode } from 'uniswap/src/features/transactions/swap/st
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -90,7 +90,7 @@ export function useSwapFormScreenCallbacks({
 
       selectionRef.current = { start, end }
 
-      if (!isWeb && inputFieldRef) {
+      if (!isWebPlatform && inputFieldRef) {
         setTimeout(() => {
           inputFieldRef.current?.setNativeProps({ selection: { start, end } })
         }, 0)

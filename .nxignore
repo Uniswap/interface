@@ -11,6 +11,9 @@ apps/extension/build
 packages/*/dist
 packages/*/types
 
+# Ignore Generator Templates
+tools/**/generators/**/files
+
 # Ignore test coverage
 coverage
 .nyc_output

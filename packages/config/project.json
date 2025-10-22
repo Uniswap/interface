@@ -1,0 +1,16 @@
+{
+  "name": "@universe/config",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/config/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "typecheck": {},
+    "lint:biome": {},
+    "lint:biome:fix": {},
+    "lint:eslint": {},
+    "lint:eslint:fix": {},
+    "lint": {},
+    "lint:fix": {}
+  }
+}

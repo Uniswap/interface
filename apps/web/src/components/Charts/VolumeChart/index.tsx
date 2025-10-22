@@ -1,4 +1,5 @@
 import { TimePeriod, toHistoryDuration } from 'appGraphql/data/util'
+import { GraphQLApi } from '@universe/api'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModelParams } from 'components/Charts/ChartModel'
 import { useHeaderDateFormatter } from 'components/Charts/hooks'
@@ -14,7 +15,6 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -50,21 +50,21 @@ class VolumeChartModel extends CustomVolumeChartModel<SingleHistogramData> {
 }
 
 // eslint-disable-next-line consistent-return
-function formatHistoryDuration(t: TFunction, duration: HistoryDuration): string {
+function formatHistoryDuration(t: TFunction, duration: GraphQLApi.HistoryDuration): string {
   switch (duration) {
-    case HistoryDuration.FiveMinute:
+    case GraphQLApi.HistoryDuration.FiveMinute:
       return t('common.pastFiveMinutes')
-    case HistoryDuration.Hour:
+    case GraphQLApi.HistoryDuration.Hour:
       return t('common.pastHour')
-    case HistoryDuration.Day:
+    case GraphQLApi.HistoryDuration.Day:
       return t('common.pastDay')
-    case HistoryDuration.Week:
+    case GraphQLApi.HistoryDuration.Week:
       return t('common.pastWeek')
-    case HistoryDuration.Month:
+    case GraphQLApi.HistoryDuration.Month:
       return t('common.pastMonth')
-    case HistoryDuration.Year:
+    case GraphQLApi.HistoryDuration.Year:
       return t('common.pastYear')
-    case HistoryDuration.Max:
+    case GraphQLApi.HistoryDuration.Max:
       return t('common.allTime')
   }
 }

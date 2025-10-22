@@ -84,7 +84,7 @@ export const useTimeout = (
       timeoutIdRef.current = undefined
       clearTimeout(timeoutId)
     }
-  }, [timeoutIdRef])
+  }, [])
 
   useEffect(() => {
     if (delay >= 0) {

@@ -1,3 +1,4 @@
+import { GqlResult } from '@universe/api'
 import { memo, useCallback, useMemo, useRef } from 'react'
 import { TokenSelectorOption } from 'uniswap/src/components/lists/items/types'
 import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
@@ -10,7 +11,6 @@ import { useTrendingTokensOptions } from 'uniswap/src/components/TokenSelector/h
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { OnSelectCurrency, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
 import { isSwapListLoading } from 'uniswap/src/components/TokenSelector/utils'
-import { GqlResult } from 'uniswap/src/data/types'
 import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -181,9 +181,11 @@ function _TokenSelectorSwapList({
   svmAddress,
   chainFilter,
   oppositeSelectedToken,
+  renderedInModal,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
   chainFilter: UniverseChainId | null
+  renderedInModal: boolean
 }): JSX.Element {
   const {
     data: sections,
@@ -205,6 +207,7 @@ function _TokenSelectorSwapList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
+      renderedInModal={renderedInModal}
       onSelectCurrency={onSelectCurrency}
     />
   )

@@ -22,6 +22,9 @@ test.describe('Buy Crypto Form', () => {
 
     await page.goto('/buy')
 
+    // Wait for wallet to be connected
+    await page.getByTestId(TestID.Web3StatusConnected).waitFor()
+
     await page.getByTestId(TestID.ChooseInputToken).click()
     // eslint-disable-next-line
     await page.getByTestId('for-currency-list-wrapper').getByText('Ethereum').click()
@@ -30,14 +33,14 @@ test.describe('Buy Crypto Form', () => {
   test('quick amount select', async ({ page }) => {
     await page.getByText('$100', { exact: true }).click()
     await page.getByRole('button', { name: 'Continue' }).click()
-    await expect(page.getByText('Checkout with')).toBeVisible()
+    await expect(page.getByTestId(TestID.BuyFormChooseProvider)).toBeVisible()
   })
 
   test('user input amount', async ({ page }) => {
     await page.getByTestId(TestID.BuyFormAmountInput).click()
     await page.getByTestId(TestID.BuyFormAmountInput).fill('123')
     await page.getByRole('button', { name: 'Continue' }).click()
-    await expect(page.getByText('Checkout with')).toBeVisible()
+    await expect(page.getByTestId(TestID.BuyFormChooseProvider)).toBeVisible()
   })
 
   test('change input token', async ({ page }) => {
@@ -46,7 +49,7 @@ test.describe('Buy Crypto Form', () => {
     await page.getByTestId('for-currency-list-wrapper').getByText('DAI').nth(1).click()
     await page.getByTestId(TestID.BuyFormAmountInput).fill('123')
     await page.getByRole('button', { name: 'Continue' }).click()
-    await expect(page.getByText('Checkout with')).toBeVisible()
+    await expect(page.getByTestId(TestID.BuyFormChooseProvider)).toBeVisible()
   })
 
   test('change country', async ({ page }) => {
@@ -54,6 +57,6 @@ test.describe('Buy Crypto Form', () => {
     await page.getByText('Argentina').click()
     await page.getByTestId(TestID.BuyFormAmountInput).fill('123')
     await page.getByRole('button', { name: 'Continue' }).click()
-    await expect(page.getByText('Checkout with')).toBeVisible()
+    await expect(page.getByTestId(TestID.BuyFormChooseProvider)).toBeVisible()
   })
 })

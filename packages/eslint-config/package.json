@@ -7,18 +7,15 @@
   "bugs": "https://github.com/Uniswap/eslint-config/issues",
   "license": "MIT",
   "scripts": {
-    "format": "biome check . --linter-enabled=false",
-    "lint": "eslint .",
-    "test": "jest"
+    "lint": "nx lint eslint-config",
+    "lint:fix": "nx lint:fix eslint-config",
+    "test": "nx test eslint-config"
+  },
+  "nx": {
+    "includedScripts": []
   },
   "main": "base.js",
-  "files": [
-    "restrictedImports.js",
-    "base.js",
-    "react.js",
-    "native.js",
-    "load.js"
-  ],
+  "files": ["restrictedImports.js", "base.js", "react.js", "native.js", "load.js"],
   "dependencies": {
     "@jambit/eslint-plugin-typed-redux-saga": "0.4.0",
     "@react-native-community/eslint-config": "3.2.0",
@@ -26,7 +23,7 @@
     "@typescript-eslint/eslint-plugin": "6.20.0",
     "@typescript-eslint/parser": "6.20.0",
     "@typescript-eslint/utils": "6.20.0",
-    "eslint-config-turbo": "latest",
+    "eslint-config-turbo": "2.5.6",
     "eslint-import-resolver-typescript": "3.6.3",
     "eslint-plugin-check-file": "2.8.0",
     "eslint-plugin-detox": "1.0.0",

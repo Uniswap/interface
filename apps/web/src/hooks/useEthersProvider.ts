@@ -12,13 +12,12 @@ export function clientToProvider(client?: Client<Transport, Chain>, chainId?: nu
   }
   const { chain, transport } = client
 
-  const ensAddress = chain.contracts?.ensRegistry?.address
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   const network = chain
     ? {
         chainId: chain.id,
         name: chain.name,
-        ensAddress,
+        ensAddress: chain.contracts?.ensRegistry?.address,
       }
     : chainId
       ? { chainId, name: 'Unsupported' }

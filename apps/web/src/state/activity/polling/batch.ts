@@ -2,15 +2,17 @@ import { Web3Provider } from '@ethersproject/providers'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useEffect, useMemo } from 'react'
-import { OnActivityUpdate } from 'state/activity/types'
+import { ActivityUpdateTransactionType, OnActivityUpdate } from 'state/activity/types'
 import { usePendingTransactions } from 'state/transactions/hooks'
 import { PendingTransactionDetails } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { HexString } from 'uniswap/src/utils/hex'
+import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
+import { ONE_HOUR_MS } from 'utilities/src/time/time'
 
 type PendingBatchDetails = Required<Pick<PendingTransactionDetails, 'batchInfo'>> & PendingTransactionDetails
+
 function usePendingBatches(): PendingBatchDetails[] {
   const transactions = usePendingTransactions()
   const account = useAccount()
@@ -24,7 +26,13 @@ function usePendingBatches(): PendingBatchDetails[] {
         const batchConnectorId = tx.batchInfo?.connectorId
         // Don't attempt to check batches where the stored connector ID differs from the current connector.
         // Only the wallet that processed the batch will be able to return a status for it.
-        return Boolean(isBatch && batchConnectorId === connectorId)
+        const isCorrectConnector = Boolean(isBatch && batchConnectorId === connectorId)
+
+        // Only check batches added within the last hour
+        const oneHourAgo = Date.now() - ONE_HOUR_MS
+        const isWithinLastHour = tx.addedTime >= oneHourAgo
+
+        return isCorrectConnector && isWithinLastHour
       }
 
       return transactions.filter(shouldAttemptCheck)
@@ -47,7 +55,7 @@ function finalizeBatch(params: {
 }) {
   const { transaction, onActivityUpdate, hash, status } = params
   onActivityUpdate({
-    type: 'transaction',
+    type: ActivityUpdateTransactionType.BaseTransaction,
     chainId: transaction.batchInfo.chainId,
     update: { ...transaction, status, hash },
     original: transaction,

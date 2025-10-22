@@ -1,5 +1,5 @@
 import 'utilities/jest-package-mocks'
-import 'ui/jest-package-mocks'
+import 'config/jest-presets/ui/ui-package-mocks'
 import 'uniswap/jest-package-mocks'
 import 'wallet/jest-package-mocks'
 
@@ -75,4 +75,12 @@ Object.defineProperty(global, "crypto", {
 // Use native locales
 jest.mock('utilities/src/device/locales', () => {
   return jest.requireActual('utilities/src/device/locales.native.ts')
+})
+
+// Mock getConfig to use native implementation
+jest.mock('@universe/config', () => {
+  const { getConfig } = jest.requireActual('@universe/config/src/getConfig.native')
+  return {
+    getConfig
+  }
 })

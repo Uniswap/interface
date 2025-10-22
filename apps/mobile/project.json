@@ -1,0 +1,320 @@
+{
+  "targets": {
+    "build": {
+      "executor": "nx:noop"
+    },
+    "android": {
+      "command": "rnef run:android --variant=devDebug --app-id-suffix=dev && bun run start",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "android:release": {
+      "command": "rnef run:android --variant=devRelease --app-id-suffix=dev",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "android:beta": {
+      "command": "rnef run:android --variant=betaDebug --app-id-suffix=beta",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "android:beta:release": {
+      "command": "rnef run:android --variant=betaRelease --app-id-suffix=beta",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "android:prod": {
+      "command": "rnef run:android --variant=prodDebug",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "android:prod:release": {
+      "command": "rnef run:android --variant=prodRelease",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "check:deps:usage": {
+      "command": "./scripts/checkDepsUsage.sh",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "check:bundlesize": {
+      "command": "./scripts/checkBundleSize.sh",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "clean": {
+      "command": "react-native-clean-project",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "debug:reactotron:install": {
+      "command": "./scripts/installDebugger.sh",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "deduplicate": {
+      "command": "echo 'Bun automatically deduplicates dependencies'",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "depcheck": {
+      "command": "depcheck",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:android:keystore:download": {
+      "command": "bash ./scripts/downloadAndroidKeystore.sh",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:fastlane:download": {
+      "command": "bash ./scripts/downloadFastlaneEnv.sh",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:fastlane:upload": {
+      "command": "bash ./scripts/uploadFastlaneEnv.sh",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:local:download": {
+      "command": "bash ../../scripts/downloadEnvLocal.sh xmznnx7ozuojy5lnohcmt73aee ../../.env.defaults.local && bun run env:local:copy:swift",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:local:upload": {
+      "command": "bash ../../scripts/uploadEnvLocal.sh xmznnx7ozuojy5lnohcmt73aee ../../.env.defaults.local",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "env:local:copy:swift": {
+      "command": "python3 scripts/copy_env_vars_to_swift.py",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "e2e:prepare": {
+      "command": "bun run e2e:generate-ids && bun run e2e:build-js",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "e2e:generate-ids": {
+      "command": "mkdir -p .maestro/scripts/dist && ts-node .maestro/scripts/tooling/generateTestIds.ts > .maestro/scripts/dist/testIds.js",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "e2e:build-js": {
+      "command": "ts-node .maestro/scripts/tooling/buildPerformanceScripts.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "e2e": {
+      "command": "bun run e2e:prepare && maestro test .maestro/flows",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "e2e:onboarding": {
+      "command": "bun run e2e:prepare && maestro test .maestro/flows/onboarding",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "e2e:swap": {
+      "command": "bun run e2e:prepare && maestro test .maestro/flows/swap",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "e2e:clear-logs": {
+      "command": "rm -rf $HOME/.maestro/tests",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "e2e:local:submit-metrics": {
+      "command": "cd .maestro/scripts/performance && ./submit-local.sh && cd ../../..",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "e2e:local:extract-metrics": {
+      "command": "cd .maestro/scripts/performance && ./extract-metrics.sh && cd ../../..",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "e2e:local:process-metrics": {
+      "command": "bun run e2e:local:extract-metrics && bun run e2e:local:submit-metrics",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "e2e:interactive": {
+      "command": "bun run e2e:prepare && ts-node .maestro/scripts/yarn/e2e-interactive.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "firestore:deploy:rules": {
+      "command": "firebase deploy --only firestore:rules",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "link:assets": {
+      "command": "react-native-asset",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "check:circular": {
+      "command": "../../scripts/check-circular-imports.sh ./src/app/App.tsx 0",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "ios": {
+      "command": "rnef run:ios --scheme Uniswap --configuration Debug && bun run start",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "ios:interactive": {
+      "command": "ts-node scripts/ios-build-interactive/main.ts",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "ios:smol": {
+      "command": "rnef run:ios --device=\"iPhone SE (3rd generation)\"",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "ios:dev:release": {
+      "command": "rnef run:ios --configuration Dev",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "ios:beta": {
+      "command": "rnef run:ios --configuration Beta",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "ios:bundle": {
+      "command": "rnef bundle --entry-file='index.js' --dev false --bundle-output='./ios/main.jsbundle' --sourcemap-output ./ios/main.jsbundle.map --dev=false --platform='ios' --assets-dest='./ios'",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "ios:release": {
+      "command": "rnef run:ios --configuration Release",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint:biome": {},
+    "lint:biome:fix": {},
+    "lint": {},
+    "lint:fix": {},
+    "lint:eslint": {},
+    "lint:eslint:fix": {},
+    "start": {
+      "command": "NODE_ENV=development rnef start --client-logs",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:e2e": {
+      "command": "NODE_ENV=development IS_E2E_TEST=true rnef start --client-logs",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start:production": {
+      "command": "NODE_ENV=production rnef start --reset-cache",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test": {
+      "command": "node --max-old-space-size=8912 ../../node_modules/.bin/jest",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "snapshots": {
+      "command": "jest -u",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "typecheck": {},
+    "unicons": {
+      "command": "cd scripts && python3 populate_svgs.py && cd .. && bun run lint --fix",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "pod": {
+      "command": "./scripts/podinstall.sh",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "pod:update": {
+      "command": "./scripts/podinstall.sh -u",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "storybook:generate": {
+      "command": "sb-rn-get-stories",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "prestart": {
+      "command": "bun run storybook:generate",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "softreset": {
+      "command": "bash ./scripts/resetDevEnv.sh",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "hardreset": {
+      "command": "bash ./scripts/resetDevEnv.sh --hard",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

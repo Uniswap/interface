@@ -1,7 +1,7 @@
 import { Fragment } from 'react'
 import { DropdownMenuSheetItem, DropdownMenuSheetItemProps, Flex, getMenuItemColor, Separator } from 'ui/src'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 type MenuContentProps = {
   items: MenuOptionItem[]
@@ -22,7 +22,7 @@ export function MenuContent({ items, handleCloseMenu }: MenuContentProps): JSX.E
       minWidth={200}
       maxWidth={250}
     >
-      {/* eslint-disable-next-line react/forbid-elements */}
+      {/* biome-ignore  lint/correctness/noRestrictedElements: needed here */}
       <div
         // Prevent any right-click from bubbling up or showing default context menu
         onContextMenu={(e) => {
@@ -30,23 +30,21 @@ export function MenuContent({ items, handleCloseMenu }: MenuContentProps): JSX.E
           e.stopPropagation()
         }}
       >
-        {items.map(({ label, onPress, Icon, showDivider, disabled, iconColor, closeDelay, destructive }, index) => (
+        {items.map(({ Icon, iconColor, destructive, disabled, showDivider, ...otherProps }, index) => (
           <Fragment key={index}>
             {showDivider && <Separator my="$spacing6" />}
             <DropdownMenuSheetItem
               role="none"
-              variant={isWeb ? 'small' : 'medium'}
-              label={label}
+              variant={isWebPlatform ? 'small' : 'medium'}
               icon={
                 Icon && (
                   <Icon size="$icon.16" color={getMenuItemColor({ overrideColor: iconColor, destructive, disabled })} />
                 )
               }
-              disabled={disabled}
               destructive={destructive}
-              closeDelay={closeDelay}
+              disabled={disabled}
+              {...otherProps}
               handleCloseMenu={handleCloseMenu}
-              onPress={onPress}
             />
           </Fragment>
         ))}

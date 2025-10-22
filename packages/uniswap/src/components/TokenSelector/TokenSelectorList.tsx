@@ -85,7 +85,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
   const { tokenWarningDismissed: bridgedAssetTokenWarningDismissed } = useDismissedBridgedAssetWarnings(
     currencyInfo.currency,
   )
-  const shouldShowBridgedAssetWarningModalOnPress = isBridgedAsset && !bridgedAssetTokenWarningDismissed
+  const shouldShowBridgedAssetWarningModalOnPress = showWarnings && isBridgedAsset && !bridgedAssetTokenWarningDismissed
   const hasWarningModals = shouldShowWarningModalOnPress || shouldShowBridgedAssetWarningModalOnPress
 
   const setWarningModalVisible = useCallback(
@@ -99,7 +99,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
       // Handle bridged asset warning modal visibility
       setShowBridgedAssetWarningModal(visible)
     },
-    [shouldShowWarningModalOnPress, setShowWarningModal, setShowBridgedAssetWarningModal],
+    [shouldShowWarningModalOnPress],
   )
 
   const onAcceptTokenWarning = useCallback(() => {
@@ -183,6 +183,7 @@ interface TokenSelectorListProps {
   errorText?: string
   showTokenAddress?: boolean
   isKeyboardOpen?: boolean
+  renderedInModal: boolean
 }
 
 function _TokenSelectorList({
@@ -196,6 +197,7 @@ function _TokenSelectorList({
   emptyElement,
   errorText,
   showTokenAddress,
+  renderedInModal,
 }: TokenSelectorListProps): JSX.Element {
   const [expandedItems, setExpandedItems] = useState<string[]>([])
 
@@ -246,6 +248,7 @@ function _TokenSelectorList({
       errorText={errorText}
       keyExtractor={key}
       expandedItems={expandedItems}
+      renderedInModal={renderedInModal}
     />
   )
 }

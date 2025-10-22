@@ -32,11 +32,7 @@ const PrivacyChoicesModal = createLazy(() =>
   import('components/PrivacyChoices').then((module) => ({ default: module.PrivacyChoicesModal })),
 )
 const FeatureFlagModal = createLazy(() => import('components/FeatureFlagModal/FeatureFlagModal'))
-const SolanaPromoModal = createLazy(() =>
-  import('components/Banner/SolanaPromo/SolanaPromoModal').then((module) => ({
-    default: module.SolanaPromoModal,
-  })),
-)
+const SolanaPromoModal = createLazy(() => import('components/Banner/SolanaPromo/SolanaPromoModal'))
 const DevFlagsBox = createLazy(() => import('dev/DevFlagsBox'))
 const TokenNotFoundModal = createLazy(() => import('components/NotFoundModal/TokenNotFoundModal'))
 const PoolNotFoundModal = createLazy(() => import('components/NotFoundModal/PoolNotFoundModal'))

@@ -1,4 +1,4 @@
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 
 export enum FiatOnRampTransactionStatus {
   INITIATED = 'INITIATED',
@@ -8,13 +8,13 @@ export enum FiatOnRampTransactionStatus {
 }
 
 // eslint-disable-next-line consistent-return
-export function backendStatusToFiatOnRampStatus(status: TransactionStatus) {
+export function backendStatusToFiatOnRampStatus(status: GraphQLApi.TransactionStatus) {
   switch (status) {
-    case TransactionStatus.Confirmed:
+    case GraphQLApi.TransactionStatus.Confirmed:
       return FiatOnRampTransactionStatus.COMPLETE
-    case TransactionStatus.Pending:
+    case GraphQLApi.TransactionStatus.Pending:
       return FiatOnRampTransactionStatus.PENDING
-    case TransactionStatus.Failed:
+    case GraphQLApi.TransactionStatus.Failed:
       return FiatOnRampTransactionStatus.FAILED
   }
 }

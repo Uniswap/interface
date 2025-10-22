@@ -1,13 +1,13 @@
-import { arrayify, isHexString } from 'ethers/lib/utils'
 import { signTypedData } from 'uniswap/src/features/transactions/signing'
 import { ensureLeading0x } from 'uniswap/src/utils/addresses'
 import { SignMessageInfo } from 'wallet/src/features/wallet/signing/signing'
 import { EthTypedMessage } from 'wallet/src/features/wallet/signing/types'
+import { formatMessageForSigning } from 'wallet/src/features/wallet/signing/utils'
 
 // https://docs.ethers.io/v5/api/signer/#Signer--signing-methods
-export async function signMessage({ message, account, signerManager }: SignMessageInfo): Promise<string> {
+export async function signMessage({ message, account, signerManager, signAsString }: SignMessageInfo): Promise<string> {
   const signer = await signerManager.getSignerForAccount(account)
-  const formattedMessage = isHexString(message) ? arrayify(message) : message
+  const formattedMessage = formatMessageForSigning(message, signAsString)
   const signature = await signer.signMessage(formattedMessage)
   return ensureLeading0x(signature)
 }

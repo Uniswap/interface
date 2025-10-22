@@ -5,17 +5,17 @@ import { NetworkFeeWarning } from 'uniswap/src/components/gas/NetworkFeeWarning'
 import type { GasInfo } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/GasAndWarningRows/types'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
-function NetworkFeeWarningContent({ gasInfo }: { gasInfo: GasInfo }): JSX.Element | null {
+function NetworkFeeWarningContent({ gasInfo }: { gasInfo?: GasInfo }): JSX.Element | null {
   const priceUXEnabled = usePriceUXEnabled()
 
-  if (!gasInfo.fiatPriceFormatted) {
+  if (!gasInfo?.fiatPriceFormatted) {
     return null
   }
 
   const color =
-    gasInfo.isHighRelativeToValue && !isInterface
+    gasInfo.isHighRelativeToValue && !isWebApp
       ? '$statusCritical'
       : priceUXEnabled && gasInfo.isLoading
         ? '$neutral3'
@@ -51,12 +51,13 @@ export function GasInfoRow({ gasInfo, hidden }: { gasInfo: GasInfo; hidden?: boo
     >
       <NetworkFeeWarning
         gasFeeHighRelativeToValue={gasInfo.isHighRelativeToValue}
-        placement={isInterface ? 'top' : 'bottom'}
+        placement={isWebApp ? 'top' : 'bottom'}
         tooltipTrigger={
           <Flex centered row gap="$spacing4" testID={TestID.GasInfoRow}>
-            <NetworkFeeWarningContent gasInfo={gasInfo} />
+            <NetworkFeeWarningContent gasInfo={hidden ? undefined : gasInfo} />
           </Flex>
         }
+        disabled={hidden}
         uniswapXGasFeeInfo={gasInfo.uniswapXGasFeeInfo}
         chainId={gasInfo.chainId}
       />

@@ -76,54 +76,74 @@ exports[`AccountDetails renders without error 1`] = `
               "borderTopRightRadius": 999999,
               "borderTopWidth": 0,
               "flexDirection": "column",
+              "height": 50,
               "position": "relative",
+              "width": 50,
             }
           }
           testID="account-icon"
         >
-          <svg
-            height={50}
-            viewBox="0 0 50 50"
-            width={50}
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g
-              style={
-                {
-                  "transformOrigin": "center center",
-                }
+          <View
+            collapsable={false}
+            forwardedRef={[Function]}
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "opacity": 0,
+                },
               }
+            }
+            style={
+              {
+                "flexDirection": "column",
+                "opacity": 0,
+              }
+            }
+          >
+            <svg
+              height={50}
+              viewBox="0 0 50 50"
+              width={50}
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <circle
-                cx={25}
-                cy={25}
-                fill="#00C3A01F"
-                r={25}
-              />
               <g
-                transform="translate(8.333333333333332, 8.333333333333332) scale(0.6944444444444445)"
+                style={
+                  {
+                    "transformOrigin": "center center",
+                  }
+                }
               >
-                <path
-                  clipRule="evenodd"
-                  d="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
-                  fill="#00C3A0"
-                  fillRule="evenodd"
+                <circle
+                  cx={25}
+                  cy={25}
+                  fill="#00C3A01F"
+                  r={25}
                 />
-                <path
-                  clipRule="evenodd"
-                  d="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
-                  fill="#00C3A0"
-                  fillRule="evenodd"
-                />
+                <g
+                  transform="translate(8.333333333333332, 8.333333333333332) scale(0.6944444444444445)"
+                >
+                  <path
+                    clipRule="evenodd"
+                    d="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
+                    fill="#00C3A0"
+                    fillRule="evenodd"
+                  />
+                  <path
+                    clipRule="evenodd"
+                    d="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
+                    fill="#00C3A0"
+                    fillRule="evenodd"
+                  />
+                </g>
               </g>
-            </g>
-          </svg>
+            </svg>
+          </View>
         </View>
         <View
           style={
             {
               "flexDirection": "column",
-              "flexShrink": 1,
+              "flexGrow": 1,
               "gap": 0,
             }
           }
@@ -296,54 +316,74 @@ exports[`AccountDetails renders without error with chevron 1`] = `
               "borderTopRightRadius": 999999,
               "borderTopWidth": 0,
               "flexDirection": "column",
+              "height": 50,
               "position": "relative",
+              "width": 50,
             }
           }
           testID="account-icon"
         >
-          <svg
-            height={50}
-            viewBox="0 0 50 50"
-            width={50}
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <g
-              style={
-                {
-                  "transformOrigin": "center center",
-                }
+          <View
+            collapsable={false}
+            forwardedRef={[Function]}
+            jestAnimatedStyle={
+              {
+                "value": {
+                  "opacity": 0,
+                },
               }
+            }
+            style={
+              {
+                "flexDirection": "column",
+                "opacity": 0,
+              }
+            }
+          >
+            <svg
+              height={50}
+              viewBox="0 0 50 50"
+              width={50}
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <circle
-                cx={25}
-                cy={25}
-                fill="#00C3A01F"
-                r={25}
-              />
               <g
-                transform="translate(8.333333333333332, 8.333333333333332) scale(0.6944444444444445)"
+                style={
+                  {
+                    "transformOrigin": "center center",
+                  }
+                }
               >
-                <path
-                  clipRule="evenodd"
-                  d="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
-                  fill="#00C3A0"
-                  fillRule="evenodd"
+                <circle
+                  cx={25}
+                  cy={25}
+                  fill="#00C3A01F"
+                  r={25}
                 />
-                <path
-                  clipRule="evenodd"
-                  d="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
-                  fill="#00C3A0"
-                  fillRule="evenodd"
-                />
+                <g
+                  transform="translate(8.333333333333332, 8.333333333333332) scale(0.6944444444444445)"
+                >
+                  <path
+                    clipRule="evenodd"
+                    d="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
+                    fill="#00C3A0"
+                    fillRule="evenodd"
+                  />
+                  <path
+                    clipRule="evenodd"
+                    d="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
+                    fill="#00C3A0"
+                    fillRule="evenodd"
+                  />
+                </g>
               </g>
-            </g>
-          </svg>
+            </svg>
+          </View>
         </View>
         <View
           style={
             {
               "flexDirection": "column",
-              "flexShrink": 1,
+              "flexGrow": 1,
               "gap": 0,
             }
           }

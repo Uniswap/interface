@@ -1,16 +1,16 @@
+import { TradingApi } from '@universe/api'
 import { useAccount } from 'hooks/useAccount'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
 import { CanceledError, RetryableError, retry } from 'state/activity/polling/retry'
-import { OnActivityUpdate } from 'state/activity/types'
+import { ActivityUpdateTransactionType, OnActivityUpdate } from 'state/activity/types'
 import { useAppDispatch } from 'state/hooks'
 import { useMultichainTransactions, useTransactionRemover } from 'state/transactions/hooks'
 import { PendingTransactionDetails } from 'state/transactions/types'
 import { isPendingTx } from 'state/transactions/utils'
-import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__/models/SwapStatus'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RetryOptions, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -18,11 +18,12 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { checkedTransaction } from 'uniswap/src/features/transactions/slice'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { TransactionReceipt, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { receiptFromViemReceipt } from 'uniswap/src/features/transactions/utils/receipt'
-import { isValidHexString } from 'uniswap/src/utils/hex'
 import { shouldCheckTransaction } from 'uniswap/src/utils/polling'
+import { isValidHexString } from 'utilities/src/addresses/hex'
 import { usePublicClient } from 'wagmi'
 
 interface ReceiptWithStatus {
@@ -40,7 +41,8 @@ function usePendingTransactions(chainId?: UniverseChainId): PendingTransactionDe
     }
     return multichainTransactions.flatMap(([tx, txChainId]) => {
       // Avoid polling for already-deposited bridge transactions, as they will be finalized by the bridge updater.
-      if (isPendingTx(tx, /* skipDepositedBridgeTxs = */ true) && txChainId === chainId) {
+      // Also avoid polling UniswapX orders, as they are polled by usePollPendingOrders using the UniswapX backend API.
+      if (isPendingTx(tx, /* skipDepositedBridgeTxs = */ true) && txChainId === chainId && !isUniswapX(tx)) {
         // Ignore batch txs which need to be polled against wallet instead of chain.
         return tx.batchInfo ? [] : [tx]
       }
@@ -49,10 +51,10 @@ function usePendingTransactions(chainId?: UniverseChainId): PendingTransactionDe
   }, [chainId, multichainTransactions])
 }
 
-const SWAP_STATUS_TO_FINALIZED_STATUS: Partial<Record<SwapStatus, 'success' | 'reverted'>> = {
-  [SwapStatus.SUCCESS]: 'success',
-  [SwapStatus.FAILED]: 'reverted',
-  [SwapStatus.EXPIRED]: 'reverted',
+const SWAP_STATUS_TO_FINALIZED_STATUS: Partial<Record<TradingApi.SwapStatus, 'success' | 'reverted'>> = {
+  [TradingApi.SwapStatus.SUCCESS]: 'success',
+  [TradingApi.SwapStatus.FAILED]: 'reverted',
+  [TradingApi.SwapStatus.EXPIRED]: 'reverted',
 }
 
 export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
@@ -133,7 +135,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
         if (!tx.hash) {
           throw new Error(`Invalid transaction hash: hash not defined`)
         }
-        return fetchSwaps({ txHashes: [tx.hash], chainId })
+        return TradingApiClient.fetchSwaps({ txHashes: [tx.hash], chainId })
           .then(async (res) => {
             const status = res.swaps?.[0]?.status
             const finalizedStatus = status ? SWAP_STATUS_TO_FINALIZED_STATUS[status] : undefined
@@ -211,7 +213,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
               return
             }
             onActivityUpdate({
-              type: 'transaction',
+              type: ActivityUpdateTransactionType.BaseTransaction,
               chainId: account.chainId,
               original: tx,
               update: {

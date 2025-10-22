@@ -7,7 +7,7 @@ import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 interface InfoModalProps {
   name: ModalNameType
@@ -66,13 +66,13 @@ export function InfoLinkModal({
           zIndex={zIndexes.default}
           onPress={onDismiss}
         >
-          {isWeb && <X color="$neutral2" size="$icon.16" />}
+          {isWebPlatform && <X color="$neutral2" size="$icon.16" />}
         </TouchableArea>
       )}
-      <Flex alignItems="center" gap="$spacing8" mx={isWeb ? '$none' : '$spacing36'} pt="$spacing16">
+      <Flex alignItems="center" gap="$spacing8" mx={isWebPlatform ? '$none' : '$spacing36'} pt="$spacing16">
         {icon}
         <Flex centered gap="$spacing8" p="$spacing16">
-          <Text color="$neutral1" variant={isWeb ? 'subheading2' : 'subheading1'}>
+          <Text color="$neutral1" variant={isWebPlatform ? 'subheading2' : 'subheading1'}>
             {title}
           </Text>
           <Text color="$neutral2" textAlign="center" variant="body3">

@@ -20,7 +20,12 @@ export function TokenDetailsBridgedAssetSection(): JSX.Element | null {
     navigate(ModalName.BridgedAsset, {
       currencyInfo0: currencyInfo,
       onContinue: () => {
-        navigateToSwapFlow({ currencyField: CurrencyField.OUTPUT, currencyAddress: address, currencyChainId: chainId })
+        navigateToSwapFlow({
+          currencyField: CurrencyField.OUTPUT,
+          currencyAddress: address,
+          currencyChainId: chainId,
+          origin: ModalName.BridgedAsset,
+        })
       },
     })
   })

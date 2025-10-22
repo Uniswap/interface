@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Keyboard addListener is allowed for this use case
 import { Keyboard, TextInput as NativeTextInput } from 'react-native'
 import InputWithSuffix from 'src/features/import/InputWithSuffix'
 import { ColorTokens, Flex, Text, useMedia } from 'ui/src'

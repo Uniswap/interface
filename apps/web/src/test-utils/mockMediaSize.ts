@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Test utilities need direct access to format functions
 import { UseMediaState } from '@tamagui/core'
 import { mocked } from 'test-utils/mocked'
 import { useMedia } from 'ui/src'

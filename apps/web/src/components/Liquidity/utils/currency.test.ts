@@ -9,6 +9,7 @@ import {
 import { ETH_MAINNET } from 'test-utils/constants'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 const nativeCurrency = nativeOnChain(UniverseChainId.Mainnet)
@@ -63,6 +64,12 @@ describe('getTokenOrZeroAddress', () => {
 
   it('returns wrapped token address for native currency in V2/V3', () => {
     expect(getTokenOrZeroAddress(nativeCurrency)).toBe(ZERO_ADDRESS)
+  })
+
+  it('returns native currency address for native currency on Celo', () => {
+    expect(getTokenOrZeroAddress(nativeOnChain(UniverseChainId.Celo))).toBe(
+      getChainInfo(UniverseChainId.Celo).nativeCurrency.address,
+    )
   })
 })
 

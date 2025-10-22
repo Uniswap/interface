@@ -1,3 +1,4 @@
+import { GqlResult } from '@universe/api'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
@@ -9,7 +10,6 @@ import { useOnchainItemListSection } from 'uniswap/src/components/lists/utils'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks/usePortfolioTokenOptions'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { OnSelectCurrency, TokenSectionsHookProps } from 'uniswap/src/components/TokenSelector/types'
-import { GqlResult } from 'uniswap/src/data/types'
 
 function useTokenSectionsForSend({
   evmAddress,
@@ -68,9 +68,11 @@ function _TokenSelectorSendList({
   chainFilter,
   onSelectCurrency,
   onEmptyActionPress,
+  renderedInModal,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
   onEmptyActionPress: () => void
+  renderedInModal: boolean
 }): JSX.Element {
   const {
     data: sections,
@@ -94,6 +96,7 @@ function _TokenSelectorSendList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={false}
+      renderedInModal={renderedInModal}
       onSelectCurrency={onSelectCurrency}
     />
   )

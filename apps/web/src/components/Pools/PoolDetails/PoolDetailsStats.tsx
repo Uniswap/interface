@@ -1,6 +1,7 @@
 import { PoolData } from 'appGraphql/data/pools/usePoolData'
 import { getTokenDetailsURL, unwrapToken } from 'appGraphql/data/util'
 import { Currency } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
@@ -19,7 +20,6 @@ import { ClickableStyle } from 'theme/components/styles'
 import { Flex, Text, useMedia } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -122,7 +122,7 @@ const StatHeaderBubble = styled(LoadingBubble)`
   border-radius: 8px;
 `
 
-type TokenFullData = Token & {
+type TokenFullData = GraphQLApi.Token & {
   price: number
   tvl: number
   percent: number

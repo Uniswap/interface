@@ -1,5 +1,4 @@
 import { queryOptions } from '@tanstack/react-query'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { TradeService } from 'uniswap/src/features/transactions/swap/services/tradeService/tradeService'
 import type { ValidatedTradeInput } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/buildQuoteRequest'
 import type { IndicativeTrade, UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -31,12 +30,7 @@ export function createIndicativeTradeServiceQueryOptions(ctx: {
         }
         return ctx.tradeService.getIndicativeTrade(params)
       },
-      enabled:
-        !!params &&
-        !params.skip &&
-        !!validatedInput &&
-        // TODO(SWAP-153): Integrate Solana into TradeService
-        params.amountSpecified?.currency.chainId !== UniverseChainId.Solana,
+      enabled: !!params && !params.skip && !!validatedInput,
     })
   }
 }

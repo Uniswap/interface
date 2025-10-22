@@ -1,5 +1,4 @@
 import { ModalRenderer } from 'components/TopLevelModals/modalRegistry'
-import { useAccount } from 'hooks/useAccount'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import { PasskeysHelpModalTypeAtom } from 'hooks/usePasskeyAuthWithHelpModal'
@@ -8,21 +7,24 @@ import { BridgedAssetModalAtom } from 'uniswap/src/components/BridgedAsset/Bridg
 import { WormholeModalAtom } from 'uniswap/src/components/BridgedAsset/WormholeModal'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 
 export default function TopLevelModals() {
   const isLandingPage = useIsPage(PageType.LANDING)
-  const account = useAccount()
+  const wallet = useWallet()
+  const evmAddress = wallet.evmAccount?.address
+  const svmAddress = wallet.svmAccount?.address
   const { data: unitag } = useUnitagsAddressQuery({
-    params: account.address ? { address: account.address } : undefined,
+    params: evmAddress ? { address: evmAddress } : undefined,
   })
-  const accountName = unitag?.username
+  const evmAccountName = unitag?.username
     ? unitag.username + '.uni.eth'
-    : account.address
-      ? shortenAddress(account.address)
+    : evmAddress
+      ? shortenAddress({ address: evmAddress })
       : undefined
-  useAccountRiskCheck(account.address)
+  const blockedAddress = useAccountRiskCheck({ evmAddress, svmAddress })
   const passkeysHelpModalType = useAtomValue(PasskeysHelpModalTypeAtom)
   const bridgedAssetModalProps = useAtomValue(BridgedAssetModalAtom)
   const wormholeModalProps = useAtomValue(WormholeModalAtom)
@@ -53,7 +55,7 @@ export default function TopLevelModals() {
   return (
     <>
       <ModalRenderer modalName={ModalName.AddressClaim} />
-      <ModalRenderer modalName={ModalName.BlockedAccount} />
+      <ModalRenderer modalName={ModalName.BlockedAccount} componentProps={{ blockedAddress }} />
       <ModalRenderer modalName={ModalName.UniWalletConnect} />
       <ModalRenderer modalName={ModalName.Banners} />
       <ModalRenderer modalName={ModalName.OffchainActivity} />
@@ -69,7 +71,10 @@ export default function TopLevelModals() {
       <ModalRenderer modalName={ModalName.AddLiquidity} />
       <ModalRenderer modalName={ModalName.RemoveLiquidity} />
       <ModalRenderer modalName={ModalName.ClaimFee} />
-      <ModalRenderer modalName={ModalName.PasskeysHelp} componentProps={{ type: passkeysHelpModalType, accountName }} />
+      <ModalRenderer
+        modalName={ModalName.PasskeysHelp}
+        componentProps={{ type: passkeysHelpModalType, accountName: evmAccountName }}
+      />
       <ModalRenderer modalName={ModalName.Help} />
       <ModalRenderer modalName={ModalName.DelegationMismatch} />
       <ModalRenderer modalName={ModalName.ReceiveCryptoModal} />

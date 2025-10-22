@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { Flex } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances/balances'
+import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice/slice'
 import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/form/hooks/useSwapPrefilledState'
 import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
 import { prepareSwapFormState, TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
@@ -14,6 +15,7 @@ import { invalidateAndRefetchWalletDelegationQueries } from 'wallet/src/features
 import { useActiveAccountWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 export function SwapFlowScreen(): JSX.Element {
+  const dispatch = useDispatch()
   const { navigateBack, locationState } = useExtensionNavigation()
   const { defaultChainId } = useEnabledChains()
   const account = useActiveAccountWithThrow()
@@ -59,9 +61,15 @@ export function SwapFlowScreen(): JSX.Element {
 
   const swapPrefilledState = useSwapPrefilledState(initialTransactionState)
 
+  // Clear all notification toasts when the swap flow closes
+  const onClose = useCallback(() => {
+    dispatch(clearNotificationQueue())
+    navigateBack()
+  }, [dispatch, navigateBack])
+
   return (
     <Flex fill p="$spacing12">
-      <WalletSwapFlow prefilledState={swapPrefilledState} walletNeedsRestore={false} onClose={navigateBack} />
+      <WalletSwapFlow prefilledState={swapPrefilledState} walletNeedsRestore={false} onClose={onClose} />
     </Flex>
   )
 }

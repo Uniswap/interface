@@ -14,7 +14,6 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { usePrevious } from 'utilities/src/react/hooks'
 import { showSwitchNetworkNotification } from 'utils/showSwitchNetworkNotification'
 
@@ -24,6 +23,7 @@ interface CurrencySearchProps {
   onCurrencySelect: (currency: Currency) => void
   onDismiss: () => void
   chainIds?: UniverseChainId[]
+  variation?: TokenSelectorVariation
 }
 
 export function CurrencySearch({
@@ -32,6 +32,7 @@ export function CurrencySearch({
   onCurrencySelect,
   onDismiss,
   chainIds,
+  variation,
 }: CurrencySearchProps) {
   const wallet = useWallet()
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, isMultichainContext } =
@@ -71,6 +72,7 @@ export function CurrencySearch({
     <Trace logImpression eventOnTrigger={InterfaceEventName.TokenSelectorOpened} modal={ModalName.TokenSelectorWeb}>
       <Flex width="100%" flexGrow={1} flexShrink={1} flexBasis="auto">
         <TokenSelectorContent
+          renderedInModal={false}
           evmAddress={wallet.evmAccount?.address}
           svmAddress={wallet.svmAccount?.address}
           isLimits={currentTab === SwapTab.Limit}
@@ -80,7 +82,10 @@ export function CurrencySearch({
           flow={TokenSelectorFlow.Swap}
           isSurfaceReady={true}
           variation={
-            currencyField === CurrencyField.INPUT ? TokenSelectorVariation.SwapInput : TokenSelectorVariation.SwapOutput
+            variation ??
+            (currencyField === CurrencyField.INPUT
+              ? TokenSelectorVariation.SwapInput
+              : TokenSelectorVariation.SwapOutput)
           }
           onClose={onDismiss}
           onSelectCurrency={handleCurrencySelectTokenSelectorCallback}

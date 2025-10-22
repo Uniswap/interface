@@ -32,7 +32,6 @@ export function BridgedAssetWarningWrapper({
 
   // If no currency info found, skip warning and proceed to SwapFlow
   if (!currencyInfo) {
-    onClose()
     onAcknowledge?.()
     return null
   }
@@ -41,7 +40,6 @@ export function BridgedAssetWarningWrapper({
 
   // If token is not bridged or warning was dismissed and not blocked, skip warning and proceed to SwapFlow
   if (!isBridgedAsset || bridgedAssetWarningDismissed) {
-    onClose()
     onAcknowledge?.()
     return null
   }
@@ -52,10 +50,7 @@ export function BridgedAssetWarningWrapper({
       isOpen={true}
       modalName={ModalName.BridgedAssetNav}
       onClose={onClose}
-      onContinue={(): void => {
-        onClose()
-        onAcknowledge?.()
-      }}
+      onContinue={onAcknowledge}
     />
   )
 }

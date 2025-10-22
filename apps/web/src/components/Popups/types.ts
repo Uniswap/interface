@@ -10,6 +10,7 @@ export enum PopupType {
   Bridge = 'bridge',
   Mismatch = 'mismatch',
   FORTransaction = 'forTransaction',
+  Error = 'error',
 }
 
 export enum SwitchNetworkAction {
@@ -52,4 +53,8 @@ export type PopupContent =
       type: PopupType.FORTransaction
       transaction: FORTransaction
       currencyId: CurrencyId
+    }
+  | {
+      type: PopupType.Error
+      error: string
     }

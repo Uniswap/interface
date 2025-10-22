@@ -1,0 +1,20 @@
+{
+  "targets": {
+    "lint:biome": {},
+    "lint:biome:fix": {},
+    "lint:eslint": {
+      "command": "eslint . --ext ts,tsx,js,jsx --max-warnings=0"
+    },
+    "lint:eslint:fix": {
+      "command": "eslint . --ext ts,tsx,js,jsx --fix"
+    },
+    "lint": {},
+    "lint:fix": {},
+    "test": {
+      "command": "jest",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import type { AnvilClient } from 'playwright/anvil/anvil-manager'
-import { HexString, isValidHexString } from 'uniswap/src/utils/hex'
+import { HexString, isValidHexString } from 'utilities/src/addresses/hex'
 import { Address } from 'viem'
 import { concat, keccak256, pad, toHex } from 'viem/utils'
 export const ONE_MILLION_USDT = 1_000_000_000_000n

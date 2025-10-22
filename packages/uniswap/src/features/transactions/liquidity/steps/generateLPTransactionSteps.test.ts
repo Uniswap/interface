@@ -1,6 +1,6 @@
+import { TradingApi } from '@universe/api'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { USDC, USDT } from 'uniswap/src/constants/tokens'
-import { IndependentToken, ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
 import { generateLPTransactionSteps } from 'uniswap/src/features/transactions/liquidity/steps/generateLPTransactionSteps'
 import {
   IncreasePositionTxAndGasInfo,
@@ -38,12 +38,12 @@ describe('Liquidity', () => {
     },
     increasePositionRequestArgs: {
       simulateTransaction: true,
-      protocol: ProtocolItems.V3,
+      protocol: TradingApi.ProtocolItems.V3,
       tokenId: 1000000,
       walletAddress: '0x18d058a7E0486E632f7DfC473BC76D72CD201cAd',
       chainId: 1,
       independentAmount: '1000000',
-      independentToken: IndependentToken.TOKEN_1,
+      independentToken: TradingApi.IndependentToken.TOKEN_1,
       position: {
         tickLower: -887220,
         tickUpper: 887220,
@@ -56,6 +56,7 @@ describe('Liquidity', () => {
       },
     },
     txRequest: mockTxRequest,
+    sqrtRatioX96: '1000000000000000000',
     unsigned: false,
     approveToken0Request: undefined,
     approveToken1Request: undefined,
@@ -77,6 +78,7 @@ describe('Liquidity', () => {
 
       expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
         {
+          sqrtRatioX96: '1000000000000000000',
           txRequest: liquidityTxContext.txRequest,
           type: TransactionStepType.IncreasePositionTransaction,
         },
@@ -100,6 +102,7 @@ describe('Liquidity', () => {
           pair: undefined,
         },
         {
+          sqrtRatioX96: '1000000000000000000',
           txRequest: liquidityTxContext.txRequest,
           type: TransactionStepType.IncreasePositionTransaction,
         },
@@ -132,6 +135,7 @@ describe('Liquidity', () => {
           pair: undefined,
         },
         {
+          sqrtRatioX96: '1000000000000000000',
           txRequest: liquidityTxContext.txRequest,
           type: TransactionStepType.IncreasePositionTransaction,
         },
@@ -155,7 +159,6 @@ describe('Liquidity', () => {
           amount: '0',
           token: liquidityTxContext.action.currency0Amount.currency,
           spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
-          pair: undefined,
         },
         {
           txRequest: liquidityTxContext.revokeToken1Request,
@@ -171,7 +174,6 @@ describe('Liquidity', () => {
           amount: liquidityTxContext.action.currency0Amount.quotient.toString(),
           token: liquidityTxContext.action.currency0Amount.currency,
           spender: '0x000000000022d473030f116ddee9f6b43ac78ba3',
-          pair: undefined,
         },
         {
           txRequest: liquidityTxContext.approveToken1Request,
@@ -182,6 +184,7 @@ describe('Liquidity', () => {
           pair: undefined,
         },
         {
+          sqrtRatioX96: '1000000000000000000',
           txRequest: liquidityTxContext.txRequest,
           type: TransactionStepType.IncreasePositionTransaction,
         },
@@ -198,6 +201,7 @@ describe('Liquidity', () => {
 
       expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
         {
+          sqrtRatioX96: '1000000000000000000',
           txRequest: liquidityTxContext.txRequest,
           type: TransactionStepType.DecreasePositionTransaction,
         },

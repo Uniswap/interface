@@ -29,8 +29,8 @@ export default function QuestionHelper({
 }) {
   const [show, setShow] = useState<boolean>(false)
 
-  const open = useCallback(() => setShow(true), [setShow])
-  const close = useCallback(() => setShow(false), [setShow])
+  const open = useCallback(() => setShow(true), [])
+  const close = useCallback(() => setShow(false), [])
   return (
     <Flex ml="$spacing4" alignItems="center">
       <MouseoverTooltip text={text} forceShow={show} placement={placement}>

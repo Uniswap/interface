@@ -1,11 +1,11 @@
 import { flush, getUserId, Identify, identify, init, setDeviceId, track } from '@amplitude/analytics-react-native'
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import {
   Analytics,
   AnalyticsInitConfig,
   TestnetModeConfig,
   UserPropertyValue,
+  // biome-ignore lint/style/noRestrictedImports: needed here
 } from 'utilities/src/telemetry/analytics/analytics'
 import {
   AMPLITUDE_NATIVE_TRACKING_OPTIONS,

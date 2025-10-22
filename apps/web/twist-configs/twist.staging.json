@@ -1,5 +1,9 @@
 {
   "publicKeys": [
-    { "id": "1", "alg": "ECDSA", "publicKey": "0x3056301006072a8648ce3d020106052b8104000a03420004062d6b6dfee30ee876ba3369b0ecca43cd902baa64e5595158f633a69ac22b4f6e147c5ef7dd672817bccacf35764037e194fc2ebc230f9ff6a82c9eeb8a19b4" }
+    {
+      "id": "1",
+      "alg": "ECDSA",
+      "publicKey": "0x3056301006072a8648ce3d020106052b8104000a03420004062d6b6dfee30ee876ba3369b0ecca43cd902baa64e5595158f633a69ac22b4f6e147c5ef7dd672817bccacf35764037e194fc2ebc230f9ff6a82c9eeb8a19b4"
+    }
   ]
 }

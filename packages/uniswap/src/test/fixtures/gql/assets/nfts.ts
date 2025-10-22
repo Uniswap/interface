@@ -1,9 +1,4 @@
-import {
-  NftAsset,
-  NftAssetTrait,
-  NftCollection,
-  NftContract,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 import { GQL_CHAINS, image } from 'uniswap/src/test/fixtures/gql/misc'
 import { faker } from 'uniswap/src/test/shared'
 import { createArray, createFixture, randomChoice } from 'uniswap/src/test/utils'
@@ -12,20 +7,20 @@ import { createArray, createFixture, randomChoice } from 'uniswap/src/test/utils
  * Base fixtures
  */
 
-export const nftAsset = createFixture<NftAsset>()(() => ({
+export const nftAsset = createFixture<GraphQLApi.NftAsset>()(() => ({
   __typename: 'NftAsset',
   id: faker.datatype.uuid(),
   tokenId: faker.datatype.uuid(),
 }))
 
-export const nftAssetTrait = createFixture<NftAssetTrait>()(() => ({
+export const nftAssetTrait = createFixture<GraphQLApi.NftAssetTrait>()(() => ({
   __typename: 'NftAssetTrait',
   id: faker.datatype.uuid(),
   name: faker.lorem.word(),
   value: faker.lorem.word(),
 }))
 
-export const nftContract = createFixture<NftContract>()(() => ({
+export const nftContract = createFixture<GraphQLApi.NftContract>()(() => ({
   __typename: 'NftContract',
   id: faker.datatype.uuid(),
   chain: randomChoice(GQL_CHAINS),
@@ -36,7 +31,7 @@ type NftCollectionOptions = {
   contractsCount: number
 }
 
-export const nftCollection = createFixture<NftCollection, NftCollectionOptions>({
+export const nftCollection = createFixture<GraphQLApi.NftCollection, NftCollectionOptions>({
   contractsCount: 2,
 })(({ contractsCount }) => ({
   __typename: 'NftCollection',

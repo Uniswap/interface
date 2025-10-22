@@ -8,6 +8,7 @@ import { curveCardinal, scaleLinear } from 'd3'
 import { memo } from 'react'
 import { TokenStat } from 'state/explore/types'
 import { Flex, useSporeColors } from 'ui/src'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
@@ -31,7 +32,7 @@ function _SparklineChart({ width, height, tokenData, pricePercentChange, sparkli
     addressInput2: { address: chainInfo?.wrappedNativeCurrency.address, platform: chainInfo?.platform ?? Platform.EVM },
   })
   const pricePoints = tokenData.address
-    ? sparklineMap[isNative ? NATIVE_CHAIN_ID : tokenData.address.toLowerCase()]
+    ? sparklineMap[isNative ? NATIVE_CHAIN_ID : normalizeTokenAddressForCache(tokenData.address)]
     : null
 
   // Don't display if there's one or less pricepoints

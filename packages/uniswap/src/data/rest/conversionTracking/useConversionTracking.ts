@@ -16,7 +16,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { HexString } from 'uniswap/src/utils/hex'
+import { HexString } from 'utilities/src/addresses/hex'
 
 const conversionLeadsAtom = atomWithStorage<ConversionLead[]>(CONVERSION_LEADS_STORAGE_KEY, [])
 
@@ -43,6 +43,7 @@ export function useConversionTracking(accountAddress?: HexString): UseConversion
   const isGoogleConversionTrackingEnabled = useFeatureFlag(FeatureFlags.GoogleConversionTracking)
   const conversionProxy = useConversionProxy()
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: -conversionProxy.mutateAsync
   const trackConversion = useCallback(
     async ({ platformIdType, eventId, eventName }: TrackConversionArgs) => {
       const lead = conversionLeads.find(({ type }) => type === platformIdType)
@@ -104,7 +105,6 @@ export function useConversionTracking(accountAddress?: HexString): UseConversion
       }
     },
     // TODO: Investigate why conversionProxy as a dependency causes a rendering loop
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       accountAddress,
       conversionLeads,

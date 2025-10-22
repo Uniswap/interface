@@ -5,15 +5,11 @@ import { useBiometricUnlockDisableMutation } from 'src/app/features/biometricUnl
 import { useBiometricUnlockSetupMutation } from 'src/app/features/biometricUnlock/useBiometricUnlockSetupMutation'
 import { useHasBiometricUnlockCredential } from 'src/app/features/biometricUnlock/useShouldShowBiometricUnlock'
 import { useShouldShowBiometricUnlockEnrollment } from 'src/app/features/biometricUnlock/useShouldShowBiometricUnlockEnrollment'
+import { BiometricAuthModal } from 'src/app/features/settings/BiometricUnlock/BiometricAuthModal'
 import { SettingsToggleRow } from 'src/app/features/settings/components/SettingsToggleRow'
 import { EnterPasswordModal } from 'src/app/features/settings/password/EnterPasswordModal'
 import { builtInBiometricCapabilitiesQuery } from 'src/app/utils/device/builtInBiometricCapabilitiesQuery'
-import { Flex, GeneratedIcon, Text } from 'ui/src'
-import { Button } from 'ui/src/components/buttons/Button/Button'
-import { Fingerprint, HelpCenter } from 'ui/src/components/icons'
-import { Modal } from 'uniswap/src/components/modals/Modal'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { Fingerprint } from 'ui/src/components/icons'
 import { useEvent } from 'utilities/src/react/hooks'
 
 enum ShowModal {
@@ -89,69 +85,20 @@ export function BiometricUnlockSettingsToggleRow(): JSX.Element | null {
           onNext={onPasswordModalNext}
           onClose={hidePasswordModal}
           shouldReturnPassword
+          hideBiometrics={true}
         />
       )}
 
       {modal === ShowModal.WaitingForBiometrics && (
-        <WaitingForBiometricsModal onClose={hideWaitingForBiometricsModal} Icon={Icon} name={name} />
+        <BiometricAuthModal
+          onClose={hideWaitingForBiometricsModal}
+          biometricMethodName={name}
+          Icon={Icon}
+          title={t('settings.setting.biometrics.extension.waitingForBiometricsModal.title', {
+            biometricsMethod: name,
+          })}
+        />
       )}
     </>
-  )
-}
-
-/**
- * We render this component as a workaround because of this Chrome bug:
- * https://issues.chromium.org/issues/381056235
- *
- * Additional information:
- * https://www.notion.so/uniswaplabs/Extension-Biometric-Unlock-Issues-21ec52b2548b80328d6bf044cf3d8942
- *
- * We could consider removing or redesigning this modal once this bug is fixed.
- */
-function WaitingForBiometricsModal({
-  Icon,
-  name,
-  onClose,
-}: {
-  Icon: GeneratedIcon
-  name: string
-  onClose: () => void
-}): JSX.Element | null {
-  const { t } = useTranslation()
-
-  const onPressGetHelp = useEvent((): void => {
-    window.open(uniswapUrls.helpArticleUrls.extensionBiometricsEnrollment, '_blank')
-  })
-
-  return (
-    <Modal name={ModalName.WaitingForBiometricsEnrollment} isModalOpen={true} onClose={onClose}>
-      <Flex grow alignItems="flex-end" mb="$spacing16">
-        <Flex row>
-          <Button icon={<HelpCenter />} size="xsmall" emphasis="tertiary" onPress={onPressGetHelp}>
-            {t('common.getHelp.button')}
-          </Button>
-        </Flex>
-      </Flex>
-
-      <Flex gap="$spacing16" alignItems="center">
-        <Flex borderRadius="$rounded12" backgroundColor="$surface3" p="$padding16">
-          <Icon color="$neutral1" size="$icon.28" />
-        </Flex>
-
-        <Text variant="heading3">
-          {t('settings.setting.biometrics.extension.waitingForBiometricsModal.title', { biometricsMethod: name })}
-        </Text>
-
-        <Text textAlign="center" variant="body1" color="$neutral2">
-          {t('settings.setting.biometrics.extension.waitingForBiometricsModal.content', { biometricsMethod: name })}
-        </Text>
-      </Flex>
-
-      <Flex row mt="$spacing16">
-        <Button emphasis="secondary" onPress={onClose}>
-          {t('common.button.cancel')}
-        </Button>
-      </Flex>
-    </Modal>
   )
 }

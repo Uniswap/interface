@@ -1,8 +1,8 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { BrowserEvent, SharedEventName } from '@uniswap/analytics-events'
 import React, { memo, PropsWithChildren, ReactNode, useEffect, useId, useMemo } from 'react'
-import { isWeb } from 'utilities/src/platform'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { isWebPlatform } from 'utilities/src/platform'
+// biome-ignore lint/style/noRestrictedImports: Platform-specific implementation needs internal types
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { useAnalyticsNavigationContext } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ITraceContext, TraceContext, useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -19,7 +19,7 @@ function getEventsFromProps({
 }): string[] {
   const events = []
   if (logPress) {
-    events.push(isWeb ? 'onClick' : 'onPress')
+    events.push(isWebPlatform ? 'onClick' : 'onPress')
   }
   if (logFocus) {
     events.push(BrowserEvent.onFocus)
@@ -100,6 +100,7 @@ function _Trace({
   }, [parentTrace, screen, section, modal, element, page])
 
   // Log impression on mount for elements that are not part of the navigation tree
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Impressions should only be logged on mount
   useEffect(() => {
     if (!devDoubleLogDisableMap[id] && logImpression && !isPartOfNavigationTree) {
       if (shouldLogScreen(directFromPage, (properties as ITraceContext | undefined)?.screen)) {
@@ -116,8 +117,6 @@ function _Trace({
         }
       }
     }
-    // Impressions should only be logged on mount.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [logImpression])
 
   const modifiedChildren =

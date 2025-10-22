@@ -1,7 +1,7 @@
 import Popover, { PopoverProps } from 'components/Popover'
 import styled from 'lib/styled-components'
 import { transparentize } from 'polished'
-import { Fragment, memo, PropsWithChildren, ReactNode, useCallback, useEffect, useState } from 'react'
+import { Fragment, memo, PropsWithChildren, ReactNode, useEffect, useState } from 'react'
 import { Flex } from 'ui/src'
 import { noop } from 'utilities/src/react/noop'
 
@@ -107,52 +107,3 @@ export const MouseoverTooltip = memo(function MouseoverTooltip(props: MouseoverT
     </Popover>
   )
 })
-
-const CursorFollowerContainer = styled.div`
-  position: fixed;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-`
-
-type MouseFollowTooltipProps = Omit<MouseoverTooltipProps, 'timeout'>
-
-export function MouseFollowTooltip(props: MouseFollowTooltipProps) {
-  const [position, setPosition] = useState<{ x?: number; y?: number }>({
-    x: undefined,
-    y: undefined,
-  })
-  const { text, disabled, children, onOpen, forceShow, ...rest } = props
-  const [show, setShow] = useState(false)
-  const open = () => {
-    setShow(true)
-    onOpen?.()
-  }
-  const close = () => setShow(false)
-
-  const handleMouseMove = useCallback((event: MouseEvent) => {
-    setPosition({ x: event.clientX, y: event.clientY })
-  }, [])
-
-  useEffect(() => {
-    if (show && !disabled) {
-      document.addEventListener('mousemove', handleMouseMove)
-    }
-    return () => document.removeEventListener('mousemove', handleMouseMove)
-  }, [disabled, handleMouseMove, show])
-
-  return (
-    <>
-      <CursorFollowerContainer
-        style={{
-          left: position.x ? `${position.x}px` : undefined,
-          top: position.y ? `${position.y + 16}px` : undefined,
-        }}
-      >
-        <MouseoverTooltip {...rest} text={disabled ? null : text} forceShow={forceShow} />
-      </CursorFollowerContainer>
-      <Flex onMouseEnter={disabled ? noop : open} onMouseLeave={disabled ? noop : close}>
-        {children}
-      </Flex>
-    </>
-  )
-}

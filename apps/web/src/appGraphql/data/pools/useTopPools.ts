@@ -1,8 +1,8 @@
 import { OrderDirection } from 'appGraphql/data/util'
 import { Percent } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { FeeData } from 'components/Liquidity/Create/types'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
-import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
   return pools.sort((a, b) => {
@@ -61,15 +61,15 @@ export function calculateApr({
 
 export interface TablePool {
   hash: string
-  token0: Token
-  token1: Token
+  token0: GraphQLApi.Token
+  token1: GraphQLApi.Token
   tvl: number
   volume24h: number
   volume30d: number
   apr: Percent
   volOverTvl: number
   feeTier: FeeData
-  protocolVersion: ProtocolVersion
+  protocolVersion: GraphQLApi.ProtocolVersion
   hookAddress?: string
   boostedApr?: number
 }

@@ -1,6 +1,6 @@
+import { TradingApi } from '@universe/api'
 import { toGqlSafetyLevel } from 'uniswap/src/components/TokenSelector/utils'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
@@ -9,7 +9,7 @@ import { NATIVE_ADDRESS_FOR_TRADING_API } from 'uniswap/src/features/transaction
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 export function tradingApiSwappableTokenToCurrencyInfo(
-  token: GetSwappableTokensResponse['tokens'][0],
+  token: TradingApi.GetSwappableTokensResponse['tokens'][0],
 ): CurrencyInfo | undefined {
   const isNative = token.address === NATIVE_ADDRESS_FOR_TRADING_API
   const supportedChainId = toSupportedChainId(token.chainId)

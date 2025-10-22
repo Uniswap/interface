@@ -1,6 +1,5 @@
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { useAtom } from 'jotai'
+import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip } from 'ui/src'
 import { Wrench } from 'ui/src/components/icons/Wrench'
@@ -8,7 +7,7 @@ import { Wrench } from 'ui/src/components/icons/Wrench'
 export default function TestnetModeTooltip() {
   const { t } = useTranslation()
   const accountDrawer = useAccountDrawer()
-  const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
+  const setMenu = useSetMenu()
 
   return (
     <Tooltip delay={{ close: 0 }} placement="bottom-end">
@@ -22,7 +21,7 @@ export default function TestnetModeTooltip() {
           borderRadius="$rounded8"
           cursor="pointer"
           onPress={() => {
-            setMenu(MenuState.SETTINGS)
+            setMenu({ variant: MenuStateVariant.SETTINGS })
             accountDrawer.open()
           }}
         >

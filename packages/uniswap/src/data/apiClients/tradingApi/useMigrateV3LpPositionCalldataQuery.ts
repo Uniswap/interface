@@ -1,26 +1,25 @@
-import { UseQueryResult, useQuery } from '@tanstack/react-query'
+import { type UseQueryResult, useQuery } from '@tanstack/react-query'
+import { type TradingApi, type UseQueryApiHelperHookArgs } from '@universe/api'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { migrateLpPosition } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
-import { MigrateLPPositionRequest, MigrateLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export function useMigrateV3LpPositionCalldataQuery({
   params,
   ...rest
 }: UseQueryApiHelperHookArgs<
-  MigrateLPPositionRequest,
-  MigrateLPPositionResponse
->): UseQueryResult<MigrateLPPositionResponse> {
+  TradingApi.MigrateLPPositionRequest,
+  TradingApi.MigrateLPPositionResponse
+>): UseQueryResult<TradingApi.MigrateLPPositionResponse> {
   const queryKey = [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.migrate, params]
 
-  return useQuery<MigrateLPPositionResponse>({
+  return useQuery<TradingApi.MigrateLPPositionResponse>({
     queryKey,
     queryFn: async () => {
       if (!params) {
         throw { name: 'Params are required' }
       }
-      return await migrateLpPosition(params)
+      return await TradingApiClient.migrateLpPosition(params)
     },
     ...rest,
   })

@@ -129,11 +129,21 @@ type ErrorStateProps = {
   onRetry?: () => void
   retryButtonLabel?: string
   icon?: ReactNode
+  alternativeButtonLabel?: string
+  onAlternativePress?: () => void
 }
 
 function ErrorState(props: ErrorStateProps): JSX.Element {
   const { t } = useTranslation()
-  const { title, description = t('common.card.error.description'), retryButtonLabel, onRetry, icon } = props
+  const {
+    title,
+    description = t('common.card.error.description'),
+    retryButtonLabel,
+    onRetry,
+    icon,
+    alternativeButtonLabel,
+    onAlternativePress,
+  } = props
   return (
     <Flex centered grow gap="$spacing24" p="$spacing12" width="100%">
       <Flex centered gap="$spacing16">
@@ -149,11 +159,18 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
           </Text>
         </Flex>
       </Flex>
-      <Flex row>
+      <Flex alignItems="center" gap="$spacing16">
         {retryButtonLabel ? (
           <TouchableArea onPress={onRetry}>
             <Text color="$accent1" variant="buttonLabel2">
               {retryButtonLabel}
+            </Text>
+          </TouchableArea>
+        ) : null}
+        {alternativeButtonLabel ? (
+          <TouchableArea onPress={onAlternativePress}>
+            <Text color="$accent1" variant="buttonLabel2">
+              {alternativeButtonLabel}
             </Text>
           </TouchableArea>
         ) : null}

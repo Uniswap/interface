@@ -56,7 +56,7 @@ function _PoolOptionItem({
       subtitle={
         <Text color="$neutral2" numberOfLines={1} variant="body3">
           {protocolVersion !== ProtocolVersion.V4
-            ? shortenAddress(poolId)
+            ? shortenAddress({ address: poolId })
             : ellipseMiddle({ str: poolId, charsStart: 6 })}
         </Text>
       }
@@ -67,7 +67,7 @@ function _PoolOptionItem({
           </Badge>
           {hookAddress && (
             <Badge size="small" placement="middle">
-              {shortenAddress(hookAddress, 4)}
+              {shortenAddress({ address: hookAddress, chars: 4 })}
             </Badge>
           )}
           <Badge size="small" placement="end">

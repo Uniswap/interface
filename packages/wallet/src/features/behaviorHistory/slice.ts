@@ -12,6 +12,7 @@ export interface BehaviorHistoryState {
   hasUsedExplore: boolean
   backupReminderLastSeenTs?: number
   hasViewedOffRampTooltip: boolean
+  hasViewedBridgedAssetsCard?: boolean
   hasDismissedBridgingWarning?: boolean
   hasViewedDappRequestBridgingBanner?: {
     [dappUrl: string]: boolean
@@ -47,6 +48,7 @@ export const initialBehaviorHistoryState: BehaviorHistoryState = {
   hasViewedNotificationsCard: false,
   hasUsedExplore: false,
   backupReminderLastSeenTs: undefined,
+  hasViewedBridgedAssetsCard: false,
   hasViewedOffRampTooltip: false,
   hasViewedDappRequestBridgingBanner: {},
   smartWalletNudge: {},
@@ -71,6 +73,9 @@ const slice = createSlice({
     },
     setBackupReminderLastSeenTs: (state, action: PayloadAction<number | undefined>) => {
       state.backupReminderLastSeenTs = action.payload
+    },
+    setHasViewedBridgedAssetsCard: (state, action: PayloadAction<boolean>) => {
+      state.hasViewedBridgedAssetsCard = action.payload
     },
     setHasViewedOffRampTooltip: (state, action: PayloadAction<boolean>) => {
       state.hasViewedOffRampTooltip = action.payload
@@ -164,6 +169,7 @@ export const {
   setHasViewedDappRequestBridgingBanner,
   resetWalletBehaviorHistory,
   setHasViewedNotificationsCard,
+  setHasViewedBridgedAssetsCard,
   setHasDismissedSmartWalletHomeScreenNudge,
   setHasCopiedPrivateKeys,
   setHasShown5792Nudge,

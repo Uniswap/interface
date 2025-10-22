@@ -5,7 +5,7 @@ import {
   TwoDecimalsCurrency,
   TYPE_TO_FORMATTER_RULES,
 } from 'utilities/src/format/localeBasedFormats'
-import { NumberType } from 'utilities/src/format/types'
+import { NumberType, PercentNumberDecimals, PercentNumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 
 const PLACEHOLDER_TEXT = '-'
@@ -101,6 +101,19 @@ export function formatNumberOrString({
   return formatNumber({ input: price, locale, currencyCode, type, placeholder })
 }
 
+export function getPercentNumberType(maxDecimals: PercentNumberDecimals): PercentNumberType {
+  switch (maxDecimals) {
+    case 1:
+      return NumberType.PercentageOneDecimal
+    case 3:
+      return NumberType.PercentageThreeDecimals
+    case 4:
+      return NumberType.PercentageFourDecimals
+    default:
+      return NumberType.Percentage
+  }
+}
+
 export function formatPercent({
   rawPercentage,
   locale,
@@ -108,18 +121,13 @@ export function formatPercent({
 }: {
   rawPercentage: Maybe<number | string>
   locale: string
-  maxDecimals?: 2 | 3 | 4
+  maxDecimals?: PercentNumberDecimals
 }): string {
   if (rawPercentage === null || rawPercentage === undefined) {
     return PLACEHOLDER_TEXT
   }
 
-  const type =
-    maxDecimals === 3
-      ? NumberType.PercentageThreeDecimals
-      : maxDecimals === 4
-        ? NumberType.PercentageFourDecimals
-        : NumberType.Percentage
+  const type = getPercentNumberType(maxDecimals)
   const percentage =
     typeof rawPercentage === 'string' ? parseFloat(rawPercentage) : parseFloat(rawPercentage.toString())
 

@@ -51,6 +51,8 @@ const router = createHashRouter([
  * this is the root of the app and it imports all sub-pages, we need to push the
  * router/router state to a different file so it can be imported by those pages
  */
+
+// biome-ignore lint/suspicious/noExplicitAny: Router state object has dynamic structure from react-router
 router.subscribe((state: any) => {
   setRouterState(state)
 })
@@ -75,6 +77,7 @@ function UnitagAppInner(): JSX.Element {
       // needed to reload on address param change for hash router
       router
         .navigate(0)
+        // biome-ignore lint/suspicious/noExplicitAny: Router state object has dynamic structure from react-router
         .catch((e: any) => logger.error(e, { tags: { file: 'UnitagClaimApp.tsx', function: 'UnitagClaimAppInner' } }))
     }
   }, [address, prevAddress])

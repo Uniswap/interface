@@ -8,10 +8,10 @@ import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { QrCode, Scan } from 'ui/src/components/icons'
 import { useSporeColorsForTheme } from 'ui/src/hooks/useSporeColors'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
+import { ReceiveQRCode } from 'uniswap/src/components/ReceiveQRCode/ReceiveQRCode'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 type Props = {
@@ -78,7 +78,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
           onScanCode={onScanCode}
         />
       )}
-      {currentScreenState === ScannerModalState.WalletQr && activeAddress && <WalletQRCode address={activeAddress} />}
+      {currentScreenState === ScannerModalState.WalletQr && activeAddress && <ReceiveQRCode address={activeAddress} />}
       <Flex centered mb="$spacing12" mt="$spacing16" mx="$spacing16">
         <TouchableArea
           borderColor={isDarkMode ? '$transparent' : '$surface3'}

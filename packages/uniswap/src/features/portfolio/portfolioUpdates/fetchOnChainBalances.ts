@@ -1,13 +1,8 @@
 import { ApolloCache, NormalizedCacheObject } from '@apollo/client'
 import { CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
+import { GraphQLApi, TradingApi } from '@universe/api'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { fetchTradingApiIndicativeQuoteIgnoring404 } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiIndicativeQuoteQuery'
-import {
-  PortfolioBalancesQuery,
-  TokenDocument,
-  TokenQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { QuoteRequest, QuoteResponse, TradeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
@@ -37,7 +32,7 @@ export async function fetchOnChainBalances({
   currencyIds,
 }: {
   apolloCache: ApolloCache<NormalizedCacheObject>
-  cachedPortfolio: NonNullable<PortfolioBalancesQuery['portfolios']>[0]
+  cachedPortfolio: NonNullable<GraphQLApi.PortfolioBalancesQuery['portfolios']>[0]
   accountAddress: Address
   currencyIds: Set<CurrencyId>
 }): Promise<OnChainMap> {
@@ -65,8 +60,8 @@ export async function fetchOnChainBalances({
         accountAddress,
       })
 
-      const token = apolloCache.readQuery<TokenQuery>({
-        query: TokenDocument,
+      const token = apolloCache.readQuery<GraphQLApi.TokenQuery>({
+        query: GraphQLApi.TokenDocument,
         variables: currencyIdToContractInput(currencyId),
       })?.token
 
@@ -129,8 +124,8 @@ async function getDenominatedValue({
 }: {
   accountAddress: Address
   onchainQuantityCurrencyAmount: CurrencyAmount<NativeCurrency | Token>
-  token: NonNullable<TokenQuery['token']>
-  cachedPortfolio: NonNullable<PortfolioBalancesQuery['portfolios']>[0]
+  token: NonNullable<GraphQLApi.TokenQuery['token']>
+  cachedPortfolio: NonNullable<GraphQLApi.PortfolioBalancesQuery['portfolios']>[0]
 }): Promise<DenominatedValue | undefined> {
   const inferredDenominatedValue = getInferredCachedDenominatedValue({
     cachedPortfolio,
@@ -176,7 +171,7 @@ async function getDenominatedValue({
   const stablecoinCurrency = getPrimaryStablecoin(universeChainId)
 
   const indicativeQuote = await fetchIndicativeQuote({
-    type: TradeType.EXACT_INPUT,
+    type: TradingApi.TradeType.EXACT_INPUT,
     amount: onchainQuantityCurrencyAmount.quotient.toString(),
     tokenInChainId: chainId,
     tokenOutChainId: chainId,
@@ -211,8 +206,8 @@ function getInferredCachedDenominatedValue({
   token,
   onchainQuantityCurrencyAmount,
 }: {
-  cachedPortfolio: NonNullable<PortfolioBalancesQuery['portfolios']>[0]
-  token: NonNullable<TokenQuery['token']>
+  cachedPortfolio: NonNullable<GraphQLApi.PortfolioBalancesQuery['portfolios']>[0]
+  token: NonNullable<GraphQLApi.TokenQuery['token']>
   onchainQuantityCurrencyAmount: CurrencyAmount<NativeCurrency | Token>
 }): DenominatedValue | undefined {
   const cachedTokenBalance = cachedPortfolio?.tokenBalances?.find(
@@ -233,7 +228,9 @@ function getInferredCachedDenominatedValue({
   return undefined
 }
 
-export async function fetchIndicativeQuote(params: QuoteRequest): Promise<QuoteResponse | undefined> {
+export async function fetchIndicativeQuote(
+  params: TradingApi.QuoteRequest,
+): Promise<TradingApi.QuoteResponse | undefined> {
   try {
     return await fetchTradingApiIndicativeQuoteIgnoring404({ params })
   } catch (error) {

@@ -82,7 +82,7 @@ async function processMetrics(inputFile: string, outputFile: string): Promise<vo
           const flowEnd = metric as FlowEndMetric
           flowEnds.add(flowEnd.testRunId)
         }
-      } catch (e) {
+      } catch (_e) {
         console.error('Failed to parse metric line:', line)
         // Continue processing other lines even if one fails
       }

@@ -15,7 +15,7 @@ export default function useIsWindowVisible(): boolean {
   const [focused, setFocused] = useState<boolean>(false)
   const listener = useCallback(() => {
     setFocused(isWindowVisible())
-  }, [setFocused])
+  }, [])
 
   useEffect(() => {
     if (!isVisibilityStateSupported()) {

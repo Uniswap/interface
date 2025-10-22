@@ -1,14 +1,13 @@
+import { GraphQLApi } from '@universe/api'
 import { SOLANA_LOGO } from 'ui/src/assets'
-import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
+import { SOLANA_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
+import { DEFAULT_NATIVE_ADDRESS_SOLANA, WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { NetworkLayer, RPCType, UniverseChainId, UniverseChainInfo } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { SolanaToken } from 'uniswap/src/features/tokens/SolanaToken'
-
-// TODO(WEB-8095): Remove this once we have a proper RPC URL
-const TEMP_RPC_URL =
-  'https://wandering-stylish-forest.solana-mainnet.quiknode.pro/d6166fc738c9c06adee384fff922a7929ccb7222'
 
 const tokens = buildChainTokens({
   stables: {
@@ -47,34 +46,29 @@ export const SOLANA_CHAIN_INFO = {
     name: 'Solana',
     symbol: 'SOL',
     decimals: 9,
-    address: 'So11111111111111111111111111111111111111112',
+    address: DEFAULT_NATIVE_ADDRESS_SOLANA,
     explorerLink: 'https://explorer.solana.com',
     logo: SOLANA_LOGO,
   },
-  /**
-   * Currently in our apps, we do not need to differentiate between SOL and wSOL,
-   * as a user will typically only have wSol during the lifetime of a transaction.
-   *
-   * Reference: https://spl.solana.com/token#example-wrapping-sol-in-a-token
-   */
   wrappedNativeCurrency: {
     name: 'Wrapped SOL',
     symbol: 'wSOL',
     decimals: 9,
-    address: 'So11111111111111111111111111111111111111112',
+    address: WRAPPED_SOL_ADDRESS_SOLANA,
   },
+  gasConfig: SOLANA_GAS_CONFIG,
   networkLayer: NetworkLayer.L1,
   pendingTransactionsRetryOptions: undefined,
   rpcUrls: {
     [RPCType.Default]: {
-      http: [TEMP_RPC_URL],
+      http: [getQuicknodeEndpointUrl(UniverseChainId.Solana)],
     },
     [RPCType.Interface]: {
-      http: [TEMP_RPC_URL],
+      http: [''], // Not used for Solana; defined for type compatibility with EVM chains
     },
   },
   backendChain: {
-    chain: BackendChainId.Solana,
+    chain: GraphQLApi.Chain.Solana,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },

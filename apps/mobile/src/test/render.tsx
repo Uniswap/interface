@@ -9,6 +9,7 @@ import {
   render as RNRender,
   renderHook as RNRenderHook,
 } from '@testing-library/react-native'
+import { GraphQLApi } from '@universe/api'
 import React, { PropsWithChildren } from 'react'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
 import type { MobileState } from 'src/app/mobileReducer'
@@ -16,7 +17,6 @@ import { navigationRef } from 'src/app/navigation/navigationRef'
 import { store as appStore, persistedReducer } from 'src/app/store'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
-import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
 import { mockUniswapContext } from 'uniswap/src/test/render'
@@ -27,7 +27,7 @@ type AppStore = typeof appStore
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderOptions = RenderOptions & {
-  resolvers?: Resolvers
+  resolvers?: GraphQLApi.Resolvers
   preloadedState?: PreloadedState<MobileState>
   store?: AppStore
 }
@@ -78,7 +78,7 @@ export function renderWithProviders(
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderHookOptions<P> = RenderHookOptions<P> & {
-  resolvers?: Resolvers
+  resolvers?: GraphQLApi.Resolvers
   preloadedState?: PreloadedState<MobileState>
   store?: AppStore
 }

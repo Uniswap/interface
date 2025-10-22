@@ -1,0 +1,999 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+  // Generic Biome Config Marker System:
+  // This config uses __INCLUDE_GLOBAL_VALUES__ markers in overrides to merge values from the main linter config.
+  // When scripts/generate.js runs, it:
+  // 1. Extracts all rule values from the main linter.rules section
+  // 2. Looks for __INCLUDE_GLOBAL_VALUES__ markers in override sections
+  // 3. Merges the global values into the override at the same rule path
+  // 4. Removes the markers from the compiled output
+  //
+  // First-level merging:
+  // - Only merges top-level keys (e.g., path names in "paths", keys in "deniedGlobals")
+  // - Does NOT merge nested properties within each key's value
+  // - When both global and override define the same key, the override value completely replaces the global value
+  //
+  // Special behaviors:
+  // - Setting a key to "off" removes that specific global entry from the override
+  // - Array options (like "patterns") are deduplicated by comparing JSON serialization
+  //
+  // Overrides structure:
+  // - Overrides are grouped by package/app with inline comments marking each section
+  // - Groups: GLOBAL (test files, JS files), packages/*, apps/*
+  //
+  // Example usage in an override:
+  // "noRestrictedImports": {
+  //   "options": {
+  //     "paths": {
+  //       "__INCLUDE_GLOBAL_VALUES__": true,  // Include all global paths
+  //       "some-global-path": "off",          // Except this one
+  //       "override-specific-path": { ... }    // Plus override-specific restrictions
+  //     },
+  //     "patterns": ["__INCLUDE_GLOBAL_VALUES__"]  // Include all global patterns
+  //   }
+  // }
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "**/*.ts",
+      "**/*.tsx",
+      "**/*.js",
+      "**/*.jsx",
+      "**/*.json",
+      "**/*.jsonc",
+      "!.vscode/settings.json",
+      "!.vscode/extensions.json",
+      "!tools/uniswap-nx/src/generators"
+    ],
+    "experimentalScannerIgnores": [
+      "*.tsbuildinfo",
+      "__generated__/**",
+      "__mocks__/**",
+      ".bun/**",
+      ".detoxrc.js",
+      ".tamagui/**",
+      "@types/**",
+      "*.graphql",
+      "*.html",
+      "*.inc",
+      "*.json",
+      "*.jsonc",
+      "*.md",
+      "*.yml",
+      "craco.config.cjs",
+      "jest-setup.js",
+      "jest.config.js",
+      "metro.config.js",
+      "types/**",
+      "**/lcov-report/**",
+      "apps/extension/.storybook/storybook.requires.ts",
+      "apps/extension/.maestro/**",
+      "apps/extension/dev/**",
+      "apps/mobile/.storybook/storybook.requires.ts",
+      "apps/mobile/.maestro/**",
+      "apps/web/playwright/**",
+      "apps/web/cypress/**",
+      "apps/web/public/**",
+      "apps/web/functions/**",
+      "apps/web/vite/**",
+      "apps/web/scripts/**",
+      "apps/web/twist-configs/**",
+      "apps/web/test-results/**",
+      "apps/web/**/*.native.*",
+      "apps/web/**/*.ios.*",
+      "apps/web/**/*.android.*",
+      "apps/web/**/*.mts"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 120,
+    "attributePosition": "auto",
+    "bracketSameLine": false,
+    "bracketSpacing": true,
+    "expand": "auto",
+    "useEditorconfig": true,
+    "includes": [
+      "**",
+      "!**/*.tsbuildinfo",
+      "!**/__generated__",
+      "!**/__mocks__",
+      "!**/.bun",
+      "!**/.detoxrc.js",
+      "!**/.tamagui",
+      "!**/@types",
+      "!**/*.graphql",
+      "!**/*.html",
+      "!**/*.inc",
+      "!**/*.md",
+      "!**/*.yml",
+      "!**/craco.config.cjs",
+      "!**/jest-setup.js",
+      "!**/jest.config.js",
+      "!**/metro.config.js",
+      "!**/types",
+      "!**/lcov-report",
+      "!apps/mobile/ios/**",
+      "!apps/mobile/android/**",
+      "!apps/mobile/.storybook/storybook.requires.ts",
+      "!apps/mobile/**/metro.config.js",
+      "!apps/web/playwright/**",
+      "!apps/web/cypress/**",
+      "!apps/web/public/**",
+      "!apps/web/functions/**",
+      "!apps/web/scripts/**",
+      "!apps/web/twist-configs/**",
+      "!apps/web/test-results/**"
+    ]
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": false,
+      "complexity": {
+        "noAdjacentSpacesInRegex": "warn",
+        "noArguments": "error",
+        "noBannedTypes": "error",
+        "noCommaOperator": "warn",
+        "noExtraBooleanCast": "warn",
+        "noUselessCatch": "error",
+        "noUselessEscapeInRegex": "warn",
+        "noUselessLoneBlockStatements": "warn",
+        "noUselessTypeConstraint": "error",
+        "noUselessUndefinedInitialization": "warn",
+        "noVoid": "warn",
+        "useLiteralKeys": "warn"
+      },
+      "correctness": {
+        "noChildrenProp": "error",
+        "noEmptyCharacterClassInRegex": "warn",
+        "noEmptyPattern": "error",
+        "noNonoctalDecimalEscape": "error",
+        "noPrecisionLoss": "error",
+        "noRestrictedElements": {
+          "level": "error",
+          "options": {
+            "elements": {
+              "div": "Please avoid using div when possible, even in web code! Use `Flex` or  Fragments (`<>`)"
+            }
+          }
+        },
+        "noSelfAssign": "error",
+        "noSwitchDeclarations": "error",
+        "noUnsafeFinally": "error",
+        "noUnsafeOptionalChaining": "error",
+        "noUnusedImports": {
+          "level": "error",
+          "fix": "safe"
+        },
+        "noUnusedLabels": "error",
+        "noUnusedVariables": "error",
+        "useExhaustiveDependencies": "error",
+        "useHookAtTopLevel": "error",
+        "useIsNan": "warn",
+        "useJsxKeyInIterable": "error",
+        "useValidForDirection": "error",
+        "useValidTypeof": "warn",
+        "useYield": "error"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "error",
+        "noDangerouslySetInnerHtmlWithChildren": "error",
+        "noGlobalEval": "error"
+      },
+      "style": {
+        "noDoneCallback": "error",
+        "noNamespace": "error",
+        "noNonNullAssertion": "error",
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            // Global path restrictions that can be included in overrides using __INCLUDE_GLOBAL_VALUES__
+            "paths": {
+              "utilities/src/telemetry/analytics/analytics": {
+                "message": "Please only use this for initialization, tests, flushing, and internal usage. Otherwise use `packages/uniswap/src/features/telemetry`"
+              },
+              "utilities/src/telemetry/trace/Trace": {
+                "message": "Please use the Trace in 'uniswap/src/features/telemetry/Trace' for app level usage!"
+              },
+              "ui/src/components/modal/AdaptiveWebModal": {
+                "message": "Please import Modal from `uniswap/src/components/modals/Modal` instead. Modal uses AdaptiveWebModal under the hood but has extra logic for handling animation, mounting, and dismounting."
+              },
+              "react-native": {
+                "importNames": ["Switch", "Keyboard"],
+                "message": "Use our custom Switch component instead of Switch. Please use dismissNativeKeyboard() for keyboard dismissals."
+              },
+              "ui/src/hooks/useDeviceInsets": {
+                "importNames": ["useDeviceInsets"],
+                "message": "Use `useAppInsets` instead."
+              },
+              "react-native-safe-area-context": {
+                "importNames": ["useSafeAreaInsets"],
+                "message": "Use our internal useAppInsets hook instead."
+              },
+              "react-native-device-info": {
+                "importNames": ["getUniqueId"],
+                "message": "Not supported for web/extension, use `getUniqueId` from `utilities/src/device/getUniqueId` instead."
+              },
+              "wallet/src/data/apollo/usePersistedApolloClient": {
+                "importNames": ["usePersistedApolloClient"],
+                "message": "This hook should only be used once at the top level where the React app is initialized . You can use `import { useApolloClient } from '@apollo/client'` to get the default apollo client from the provider elsewhere in React. If you need access to apollo outside of React, you can use `import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient''`."
+              },
+              "expo-localization": {
+                "message": "Avoid using due to issue with unsupported locales. Use utilities/src/device/locales.ts getDeviceLocales instead"
+              },
+              "utilities/src/format/localeBased": {
+                "message": "Use via `useLocalizationContext` instead."
+              },
+              "uniswap/src/features/fiatCurrency/conversion": {
+                "importNames": ["useFiatConverter"],
+                "message": "Use via `useLocalizationContext` instead."
+              },
+              "uniswap/src/features/language/formatter": {
+                "importNames": ["useLocalizedFormatter"],
+                "message": "Use via `useLocalizationContext` instead."
+              },
+              "uniswap/src/features/dataApi/balances/balances": {
+                "importNames": ["usePortfolioValueModifiers"],
+                "message": "Use the wrapper hooks `usePortfolioTotalValue`, `useAccountListData` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly."
+              },
+              "@gorhom/bottom-sheet": {
+                "importNames": ["BottomSheetTextInput"],
+                "message": "Use our internal BottomSheetTextInput wrapper from /uniswap/src/components/modals/Modal."
+              },
+              "expo-haptics": {
+                "message": "Use our internal HapticFeedback wrapper instead: import { HapticFeedback } from packages/uniswap/src/features/settings/useHapticFeedback/types"
+              },
+              "@uniswap/analytics": {
+                "importNames": ["sendAnalyticsEvent"],
+                "message": "Please use the typed `sendAnalyticsEvent` in 'uniswap/src/features/telemetry/send'"
+              },
+              "@tamagui/core": {
+                "message": "Please import from 'tamagui' directly to prevent mismatches."
+              }
+            },
+            "patterns": [
+              {
+                "group": ["ui/src/assets/icons/*.svg"],
+                "message": "Please do not import SVG files directly from `ui/src/assets/icons/*.svg`. Use generated icon components instead, e.g., `ui/src/components/icons/{iconName}`."
+              }
+            ]
+          }
+        },
+        "noRestrictedGlobals": {
+          "level": "error",
+          "options": {
+            "deniedGlobals": {
+              // Denied globals that can be included in overrides using __INCLUDE_GLOBAL_VALUES__
+              "defaultStatus": "Use of this global variable is restricted.",
+              "status": "Use of this global variable is restricted.",
+              "scroll": "Use of this global variable is restricted.",
+              "outerHeight": "Use of this global variable is restricted.",
+              "screenX": "Use of this global variable is restricted.",
+              "opener": "Use of this global variable is restricted.",
+              "onfocus": "Use of this global variable is restricted.",
+              "pageYOffset": "Use of this global variable is restricted.",
+              "addEventListener": "Use of this global variable is restricted.",
+              "defaultstatus": "Use of this global variable is restricted.",
+              "history": "Use of this global variable is restricted.",
+              "frames": "Use of this global variable is restricted.",
+              "screenY": "Use of this global variable is restricted.",
+              "focus": "Use of this global variable is restricted.",
+              "outerWidth": "Use of this global variable is restricted.",
+              "opera": "Use of this global variable is restricted.",
+              "external": "Use of this global variable is restricted.",
+              "innerHeight": "Use of this global variable is restricted.",
+              "closed": "Use of this global variable is restricted.",
+              "frameElement": "Use of this global variable is restricted.",
+              "scrollY": "Use of this global variable is restricted.",
+              "self": "Use of this global variable is restricted.",
+              "chrome": "Direct `chrome` access is restricted to prevent accidental usage in the wrong context. Use `getChrome()` or `getChromeWithThrow()` instead.",
+              "onblur": "Use of this global variable is restricted.",
+              "find": "Use of this global variable is restricted.",
+              "parent": "Use of this global variable is restricted.",
+              "top": "Use of this global variable is restricted.",
+              "moveBy": "Use of this global variable is restricted.",
+              "menubar": "Use of this global variable is restricted.",
+              "length": "Use of this global variable is restricted.",
+              "onerror": "Use of this global variable is restricted.",
+              "onresize": "Use of this global variable is restricted.",
+              "removeEventListener": "Use of this global variable is restricted.",
+              "onload": "Use of this global variable is restricted.",
+              "scrollTo": "Use of this global variable is restricted.",
+              "moveTo": "Use of this global variable is restricted.",
+              "scrollX": "Use of this global variable is restricted.",
+              "name": "Use of this global variable is restricted.",
+              "toolbar": "Use of this global variable is restricted.",
+              "innerWidth": "Use of this global variable is restricted.",
+              "location": "Use of this global variable is restricted.",
+              "locationbar": "Use of this global variable is restricted.",
+              "scrollBy": "Use of this global variable is restricted.",
+              "resizeTo": "Use of this global variable is restricted.",
+              "stop": "Use of this global variable is restricted.",
+              "scrollbars": "Use of this global variable is restricted.",
+              "blur": "Use of this global variable is restricted.",
+              "screenTop": "Use of this global variable is restricted.",
+              "confirm": "Use of this global variable is restricted.",
+              "screen": "Use of this global variable is restricted.",
+              "screenLeft": "Use of this global variable is restricted.",
+              "event": "Use of this global variable is restricted.",
+              "onunload": "Use of this global variable is restricted.",
+              "pageXOffset": "Use of this global variable is restricted.",
+              "resizeBy": "Use of this global variable is restricted.",
+              "statusbar": "Use of this global variable is restricted.",
+              "close": "Use of this global variable is restricted.",
+              "open": "Use of this global variable is restricted.",
+              "print": "Use of this global variable is restricted."
+            }
+          }
+        },
+        "noYodaExpression": "warn",
+        "useArrayLiterals": "error",
+        "useAsConstAssertion": "error",
+        "useBlockStatements": "warn",
+        "useConst": "error",
+        "useEnumInitializers": "error"
+      },
+      "suspicious": {
+        "noAlert": "warn",
+        "noAsyncPromiseExecutor": "error",
+        "noBitwiseOperators": "warn",
+        "noCatchAssign": "warn",
+        "noClassAssign": "error",
+        "noCommentText": "error",
+        "noCompareNegZero": "error",
+        "noConsole": "error",
+        "noControlCharactersInRegex": "warn",
+        "noDebugger": "warn",
+        "noDoubleEquals": "warn",
+        "noDuplicateCase": "error",
+        "noDuplicateElseIf": "error",
+        "noDuplicateJsxProps": "error",
+        "noEmptyInterface": "error",
+        "noExplicitAny": "error",
+        "noExtraNonNullAssertion": "error",
+        "noFallthroughSwitchClause": "warn",
+        "noGlobalAssign": "error",
+        "noIrregularWhitespace": "error",
+        "noLabelVar": "warn",
+        "noMisleadingCharacterClass": "error",
+        "noMisleadingInstantiator": "error",
+        "noOctalEscape": "warn",
+        "noPrototypeBuiltins": "error",
+        "noSelfCompare": "warn",
+        "noShadowRestrictedNames": "warn",
+        "noSparseArray": "warn",
+        "noUnsafeDeclarationMerging": "error",
+        "noUselessRegexBackrefs": "error",
+        "noVar": "error",
+        "noWith": "warn"
+      }
+    },
+    "includes": [
+      "**",
+      "!**/.eslintrc.js",
+      "!**/babel.config.js",
+      "!**/jest.config.js",
+      "!**/metro.config.js",
+      "!**/node_modules",
+      "!**/storybook-static",
+      "!**/coverage",
+      "!.maestro/scripts/dist",
+      "!.maestro/scripts/performance/dist",
+      "!.maestro/scripts/performance/**/*.js",
+      "!**/__mocks__/**",
+      "!scripts/**",
+      "!.vscode/extensions.json"
+    ]
+  },
+  "javascript": {
+    "formatter": {
+      "jsxQuoteStyle": "double",
+      "quoteProperties": "asNeeded",
+      "trailingCommas": "all",
+      "semicolons": "asNeeded",
+      "arrowParentheses": "always",
+      "bracketSameLine": false,
+      "quoteStyle": "single",
+      "attributePosition": "auto",
+      "bracketSpacing": true
+    }
+  },
+  "json": {
+    "formatter": {
+      "trailingCommas": "none"
+    }
+  },
+  "html": {
+    "formatter": {
+      "selfCloseVoidElements": "always"
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": {
+          "level": "on",
+          "options": {
+            "identifierOrder": "natural"
+          }
+        }
+      }
+    }
+  },
+  // ===================================================================
+  // OVERRIDES
+  // ===================================================================
+  "overrides": [
+    // GLOBAL: Test files
+    {
+      "includes": ["**/*.test.ts", "**/*.test.tsx", "**/test/**", "**/tests/**", "**/*.spec.ts", "**/*.spec.tsx"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noRestrictedElements": "off",
+            "noUnusedVariables": "off",
+            "noUnusedImports": "off",
+            "useExhaustiveDependencies": "off"
+          },
+          "style": {
+            "useEnumInitializers": "off",
+            "noNonNullAssertion": "off",
+            "noRestrictedImports": "off",
+            "noRestrictedGlobals": "off"
+          },
+          "suspicious": {
+            "noEmptyInterface": "off",
+            "noExplicitAny": "off",
+            "noShadowRestrictedNames": "off",
+            "noConsole": "off"
+          },
+          "complexity": {
+            "noUselessLoneBlockStatements": "off"
+          }
+        }
+      }
+    },
+    // GLOBAL: JavaScript files
+    {
+      "includes": ["**/*.js", "**/*.jsx"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
+    },
+    // packages/ui
+    {
+      "includes": [
+        "packages/ui/**",
+        "!packages/ui/**/*.test.ts",
+        "!packages/ui/**/*.test.tsx",
+        "!packages/ui/**/test/**",
+        "!packages/ui/**/tests/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "__INCLUDE_GLOBAL_VALUES__": true,
+                  "ui/src": {
+                    "message": "Avoid importing directly from ui/src from within the ui package which causes circular imports."
+                  }
+                },
+                "patterns": ["__INCLUDE_GLOBAL_VALUES__"]
+              }
+            }
+          }
+        }
+      }
+    },
+    // packages/utilities
+    {
+      "includes": [
+        "packages/utilities/**",
+        "!packages/utilities/**/*.test.ts",
+        "!packages/utilities/**/*.test.tsx",
+        "!packages/utilities/**/test/**",
+        "!packages/utilities/**/tests/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "__INCLUDE_GLOBAL_VALUES__": true,
+                  "utilities/src": {
+                    "message": "Avoid importing directly from utilities/src from within the utilities package which causes circular imports."
+                  }
+                },
+                "patterns": ["__INCLUDE_GLOBAL_VALUES__"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "packages/utilities/src/index.ts",
+        "packages/utilities/src/platform/*",
+        "packages/utilities/src/addresses/*",
+        "packages/utilities/src/errors/*"
+      ],
+      "linter": {
+        "rules": {}
+      }
+    },
+    // packages/uniswap
+    {
+      "includes": [
+        "packages/uniswap/**",
+        "!packages/uniswap/**/*.test.ts",
+        "!packages/uniswap/**/*.test.tsx",
+        "!packages/uniswap/**/test/**",
+        "!packages/uniswap/**/tests/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "__INCLUDE_GLOBAL_VALUES__": true,
+                  "uniswap/src": {
+                    "message": "Avoid importing directly from uniswap/src from within the uniswap package which causes circular imports."
+                  },
+                  "@uniswap/sdk-core": {
+                    "importNames": ["ChainId"],
+                    "message": "Don't use ChainId from @uniswap/sdk-core. Use the UniverseChainId from universe/uniswap."
+                  },
+                  "uniswap/src/features/chains/hooks/useOrderedChainIds": {
+                    "importNames": ["useOrderedChainIds"],
+                    "message": "Use `useEnabledChains` instead, which returns the ordered chains that are currently enabled."
+                  },
+                  "uniswap/src/features/settings/selectors": {
+                    "importNames": ["selectIsTestnetModeEnabled"],
+                    "message": "Use `useEnabledChains` instead."
+                  },
+                  "uniswap/src/features/chains/chainInfo": {
+                    "importNames": ["UNIVERSE_CHAIN_INFO"],
+                    "message": "Use useChainInfo or helpers in packages/uniswap/src/features/chains/utils.ts when possible!"
+                  },
+                  "uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks": {
+                    "importNames": ["useAccountListQuery"],
+                    "message": "Use `useAccountListData` instead."
+                  }
+                },
+                "patterns": ["__INCLUDE_GLOBAL_VALUES__"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "packages/uniswap/src/index.ts",
+        "packages/uniswap/src/features/telemetry/constants/index.ts",
+        "packages/uniswap/src/features/telemetry/constants/trace/index.ts",
+        "packages/uniswap/src/i18n/index.ts",
+        "packages/uniswap/src/state/index.ts",
+        "packages/uniswap/src/test/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "__INCLUDE_GLOBAL_VALUES__": true,
+                  "uniswap/src": "off",
+                  "utilities/src/format/localeBased": "off"
+                },
+                "patterns": ["__INCLUDE_GLOBAL_VALUES__"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["packages/uniswap/src/data/**/__generated__/**", "packages/uniswap/src/abis/types/**"],
+      "linter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": ["packages/uniswap/vite/**"],
+      "linter": {
+        "enabled": false
+      }
+    },
+    // packages/api
+    {
+      "includes": [
+        "packages/api/.eslintrc.js",
+        "packages/api/codegen.ts",
+        "packages/api/scripts/**",
+        "packages/api/src/**/__generated__/**"
+      ],
+      "linter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": ["packages/api/src/clients/trading/api.json"],
+      "formatter": {
+        "enabled": false
+      }
+    },
+    // apps/extension
+    {
+      "includes": [
+        "apps/extension/**",
+        "!apps/extension/**/*.test.ts",
+        "!apps/extension/**/*.test.tsx",
+        "!apps/extension/**/test/**",
+        "!apps/extension/**/tests/**",
+        "!apps/extension/jest-setup.js",
+        "!apps/extension/scripts/**",
+        "!apps/extension/ReactotronConfig.ts",
+        "!apps/extension/index.js"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedGlobals": "off",
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "__INCLUDE_GLOBAL_VALUES__": true,
+                  "ethers": {
+                    "message": "Please import from '@ethersproject/module' directly to support tree-shaking."
+                  }
+                },
+                "patterns": ["__INCLUDE_GLOBAL_VALUES__"]
+              }
+            }
+          }
+        }
+      },
+      "javascript": {
+        "jsxRuntime": "reactClassic"
+      }
+    },
+    {
+      "includes": ["apps/extension/**/contentScript/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedGlobals": {
+              "level": "error",
+              "options": {
+                "deniedGlobals": {
+                  "chrome": "Direct `chrome` access is restricted to prevent accidental usage in the wrong context. Use `getChrome()` or `getChromeWithThrow()` instead."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/extension/**/extensionMigrations.ts", "apps/extension/**/extensionMigrationsTests.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useEnumInitializers": "off",
+            "noNonNullAssertion": "off"
+          },
+          "suspicious": {
+            "noEmptyInterface": "off",
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    },
+    // apps/mobile
+    {
+      "includes": [
+        "apps/mobile/**",
+        "!apps/mobile/**/*.test.ts",
+        "!apps/mobile/**/*.test.tsx",
+        "!apps/mobile/**/test/**",
+        "!apps/mobile/**/tests/**",
+        "!apps/mobile/ios/**",
+        "!apps/mobile/android/**",
+        "!apps/mobile/.storybook/storybook.requires.ts",
+        "!apps/mobile/scripts/**",
+        "!apps/mobile/ReactotronConfig.ts",
+        "!apps/mobile/index.js"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "__INCLUDE_GLOBAL_VALUES__": true,
+                  "react-router": {
+                    "message": "Do not import react-router in native code. Use react-navigation instead."
+                  }
+                },
+                "patterns": ["__INCLUDE_GLOBAL_VALUES__"]
+              }
+            }
+          }
+        }
+      },
+      "javascript": {
+        "jsxRuntime": "reactClassic"
+      }
+    },
+    {
+      "includes": ["apps/mobile/**/utils/haptics/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "expo-haptics": "Allow expo-haptics in haptics utility files"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/mobile/.maestro/scripts/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": "off",
+            "useBlockStatements": "off"
+          },
+          "suspicious": {
+            "noConsole": "off"
+          },
+          "complexity": {
+            "noUselessLoneBlockStatements": "off"
+          },
+          "correctness": {
+            "noSwitchDeclarations": "off",
+            "noUnusedVariables": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/mobile/scripts/**", "apps/mobile/ReactotronConfig.ts", "apps/mobile/index.js"],
+      "linter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": ["apps/mobile/migrations.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useEnumInitializers": "off",
+            "noNonNullAssertion": "off"
+          },
+          "suspicious": {
+            "noEmptyInterface": "off",
+            "noExplicitAny": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/mobile/**/*saga*.ts", "apps/mobile/**/*Saga.ts", "apps/mobile/**/handleDeepLink.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "useEnumInitializers": "off"
+          }
+        }
+      }
+    },
+    // apps/web
+    {
+      "includes": [
+        "apps/web/.storybook/**",
+        "apps/web/functions/**",
+        "apps/web/vite/**",
+        "apps/web/**/*.config.*",
+        "apps/web/**/*.d.ts"
+      ],
+      "linter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": [
+        "apps/web/src/**",
+        "!apps/web/src/**/*.test.ts",
+        "!apps/web/src/**/*.test.tsx",
+        "!apps/web/src/**/test/**",
+        "!apps/web/src/**/tests/**"
+      ],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off",
+            "noBitwiseOperators": "off"
+          },
+          "style": {
+            "noNonNullAssertion": "off",
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "__INCLUDE_GLOBAL_VALUES__": true,
+                  "src/nft/components/icons": {
+                    "message": "Please import icons from nft/components/iconExports instead of directly from icons.tsx"
+                  },
+                  "nft/components/icons": {
+                    "message": "Please import icons from nft/components/iconExports instead of directly from icons.tsx"
+                  },
+                  "@playwright/test": {
+                    "message": "Import test and expect from playwright/fixtures instead."
+                  },
+                  "styled-components": {
+                    "message": "Styled components is deprecated, please use Flex or styled from \"ui/src\" instead."
+                  },
+                  "ethers": {
+                    "message": "Please import from '@ethersproject/module' directly to support tree-shaking."
+                  },
+                  "ui/src/components/icons": {
+                    "message": "Please import icons directly from their respective files, e.g. `ui/src/components/icons/SpecificIcon`. This is to avoid importing the entire icons folder when only some icons are needed, which increases bundle size"
+                  },
+                  "utilities/src/platform": {
+                    "importNames": ["isIOS", "isAndroid"],
+                    "message": "Importing isIOS and isAndroid from platform is not allowed. Use isWebIOS and isWebAndroid instead."
+                  },
+                  "src/test-utils": {
+                    "message": "test-utils should not be imported in non-test files"
+                  },
+                  "wagmi": {
+                    "importNames": [
+                      "useChainId",
+                      "useAccount",
+                      "useConnect",
+                      "useDisconnect",
+                      "useBlockNumber",
+                      "useWatchBlockNumber"
+                    ],
+                    "message": "Import wrapped utilities from internal hooks instead: useAccount from `hooks/useAccount`, useConnect from `hooks/useConnect`, useDisconnect from `hooks/useDisconnect`, useBlockNumber from `hooks/useBlockNumber`."
+                  },
+                  "uniswap/src/features/chains/chainInfo": {
+                    "importNames": ["UNIVERSE_CHAIN_INFO"],
+                    "message": "Use useChainInfo or helpers in packages/uniswap/src/features/chains/utils.ts when possible!"
+                  }
+                },
+                "patterns": ["__INCLUDE_GLOBAL_VALUES__"]
+              }
+            }
+          }
+        }
+      },
+      "javascript": {
+        "jsxRuntime": "reactClassic"
+      }
+    },
+    {
+      "includes": ["apps/web/src/playwright/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noConsole": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["apps/web/src/**/*.e2e.test.ts", "!apps/web/src/**/*.anvil.e2e.test.ts"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "patterns": [
+                  {
+                    "group": ["**/playwright/anvil/**", "**/playwright/fixtures/anvil"],
+                    "message": "Anvil imports must only be used in *.anvil.e2e.test.ts files."
+                  }
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    // packages/wallet
+    {
+      "includes": [
+        "packages/wallet/**",
+        "!packages/wallet/**/*.test.ts",
+        "!packages/wallet/**/*.test.tsx",
+        "!packages/wallet/**/test/**",
+        "!packages/wallet/**/tests/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "__INCLUDE_GLOBAL_VALUES__": true,
+                  "wallet/src": {
+                    "message": "Avoid importing directly from wallet/src from within the wallet package which causes circular imports."
+                  },
+                  "uniswap/src/features/dataApi/balances/balancesRest": {
+                    "importNames": ["useRESTPortfolioTotalValue"],
+                    "message": "Use the wrapper hooks `usePortfolioTotalValue`, `useAccountListData` or `usePortfolioBalances` instead of `useRESTPortfolioTotalValue` directly."
+                  },
+                  "wallet/src/components/ErrorBoundary/restart": {
+                    "message": "Use `wallet/src/components/ErrorBoundary/restartApp` instead."
+                  }
+                },
+                "patterns": ["__INCLUDE_GLOBAL_VALUES__"]
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": [
+        "packages/wallet/src/components/landing/elements/index.tsx",
+        "packages/wallet/src/index.ts",
+        "packages/wallet/src/state/index.ts",
+        "packages/wallet/src/test/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "__INCLUDE_GLOBAL_VALUES__": true,
+                  "wallet/src": "off"
+                },
+                "patterns": ["__INCLUDE_GLOBAL_VALUES__"]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
-import { ReactNode, useCallback } from 'react'
+import { ReactNode, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, LabeledCheckbox, Text, TouchableArea } from 'ui/src'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -8,6 +8,7 @@ import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
+import { useDismissedCompatibleAddressWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { openUri } from 'uniswap/src/utils/linking'
 
 interface CompatibleAddressModalProps {
@@ -27,16 +28,22 @@ export function CompatibleAddressModal({
 }: CompatibleAddressModalProps): JSX.Element {
   const { t } = useTranslation()
   const chainName = getChainLabel(currencyInfo.currency.chainId)
+  const [dontShowAgain, setDontShowAgain] = useState<boolean>(false)
+  const { onDismissTokenWarning } = useDismissedCompatibleAddressWarnings(currencyInfo.currency)
 
   const handleOnAcknowledge = useCallback(() => {
+    if (dontShowAgain) {
+      onDismissTokenWarning()
+    }
+
     onAcknowledge()
-  }, [onAcknowledge])
+  }, [onAcknowledge, dontShowAgain, onDismissTokenWarning])
 
   return (
     <Trace logImpression modal={ModalName.CompatibleAddressWarning}>
       <WarningModal
         captionComponent={
-          <Flex>
+          <Flex gap="$spacing24" alignItems="center">
             <Text color="$neutral2" textAlign="center" variant="body3">
               {t('bridgedAsset.send.warning.description', {
                 chainName,
@@ -53,6 +60,19 @@ export function CompatibleAddressModal({
                 </TouchableArea>
               </Trace>
             </Text>
+
+            <LabeledCheckbox
+              checked={dontShowAgain}
+              checkedColor="$neutral1"
+              text={
+                <Text color="$neutral2" variant="buttonLabel3">
+                  {t('token.safety.warning.dontShowWarningAgainShort')}
+                </Text>
+              }
+              size="$icon.16"
+              gap="$spacing8"
+              onCheckPressed={() => setDontShowAgain((s: boolean) => !s)}
+            />
           </Flex>
         }
         closeHeaderComponent={closeHeaderComponent}

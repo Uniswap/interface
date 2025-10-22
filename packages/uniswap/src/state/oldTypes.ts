@@ -1,5 +1,5 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { FeeData } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SafetyInfo } from 'uniswap/src/features/dataApi/types'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -41,7 +41,7 @@ export interface TokenSearchResult extends SearchResultBase {
   name: string | null
   logoUrl: string | null
   safetyInfo?: SafetyInfo | null
-  feeData?: FeeData | null
+  feeData?: GraphQLApi.FeeData | null
 }
 
 interface PoolSearchResult extends SearchResultBase {

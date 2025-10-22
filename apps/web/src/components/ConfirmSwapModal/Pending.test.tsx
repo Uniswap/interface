@@ -2,24 +2,29 @@ import 'test-utils/tokens/mocks'
 
 import { BigNumber } from '@ethersproject/bignumber'
 import { WETH9 } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import { Pending } from 'components/ConfirmSwapModal/Pending'
 import { SwapResult, useSwapTransactionStatus } from 'hooks/useSwapCallback'
 import { TradeFillType } from 'state/routing/types'
-import { useOrder } from 'state/signatures/hooks'
-import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
+import { useUniswapXOrderByOrderHash } from 'state/transactions/hooks'
 import { LIMIT_ORDER_TRADE, TEST_TRADE_EXACT_INPUT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render, screen } from 'test-utils/render'
-import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 
 vi.mock('state/transactions/hooks', async () => {
   const actual = await vi.importActual('state/transactions/hooks')
   return {
     ...actual,
+    useUniswapXOrderByOrderHash: vi.fn(),
     useIsTransactionConfirmed: vi.fn(),
   }
 })
@@ -29,14 +34,6 @@ vi.mock('hooks/useSwapCallback', async () => {
   return {
     ...actual,
     useSwapTransactionStatus: vi.fn(),
-  }
-})
-
-vi.mock('state/signatures/hooks', async () => {
-  const actual = await vi.importActual('state/signatures/hooks')
-  return {
-    ...actual,
-    useOrder: vi.fn(),
   }
 })
 
@@ -68,10 +65,10 @@ const uniswapXSwapResult: SwapResult = {
 }
 
 const filledOrderDetails: UniswapXOrderDetails = {
-  type: SignatureType.SIGN_LIMIT,
+  routing: TradingApi.Routing.DUTCH_LIMIT,
   orderHash: '0x1234',
-  status: UniswapXOrderStatus.FILLED,
-  swapInfo: {
+  status: TransactionStatus.Success,
+  typeInfo: {
     isUniswapXOrder: true,
     type: TransactionType.Swap,
     tradeType: 0,
@@ -82,13 +79,14 @@ const filledOrderDetails: UniswapXOrderDetails = {
     minimumOutputCurrencyAmountRaw: '106841079134757921',
     settledOutputCurrencyAmountRaw: '106841079134757921',
   },
-  txHash: '0x1234',
+  hash: '0x1234',
   encodedOrder: '0xencodedOrder',
   id: '0x1234',
   addedTime: 3,
   chainId: UniverseChainId.Mainnet,
   expiry: 4,
-  offerer: '0x1234',
+  from: '0x1234',
+  transactionOriginType: TransactionOriginType.Internal,
 }
 
 describe('Pending - classic trade titles', () => {
@@ -125,7 +123,7 @@ describe('Pending - uniswapX trade titles', () => {
     'renders limit order correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p',
     // eslint-disable-next-line max-params
     async (approvalPending, revocationPending, wrapTxHash, trade, swapResult, orderDetails, expectedTitle) => {
-      mocked(useOrder).mockReturnValue(orderDetails)
+      mocked(useUniswapXOrderByOrderHash).mockReturnValue(orderDetails)
       const { asFragment } = render(
         <Pending
           trade={trade}

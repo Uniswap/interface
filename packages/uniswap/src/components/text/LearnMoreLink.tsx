@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import type { TextProps, TouchableAreaProps, TouchableTextLinkProps } from 'ui/src'
 import { Button, TouchableTextLink } from 'ui/src'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 const onPressLearnMore = (uri: string): Promise<void> => openUri({ uri })
@@ -28,7 +28,7 @@ export const LearnMoreLink = ({
 
   if (componentType === 'Button') {
     return (
-      <Button display={display} size={isWeb ? 'medium' : 'large'} emphasis="text-only" onPress={handleOnPress}>
+      <Button display={display} size={isWebPlatform ? 'medium' : 'large'} emphasis="text-only" onPress={handleOnPress}>
         <Button.Text color={textColor}>{t('common.button.learn')}</Button.Text>
       </Button>
     )

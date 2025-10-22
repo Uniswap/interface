@@ -34,7 +34,15 @@ test.describe('Token Details', () => {
     await expect(page.getByText('Ethereum').first()).toBeVisible()
   })
 
-  test('connected wallet on mainnet mode should load testnet token details', async ({ page }) => {
+  test('connected wallet on mainnet mode should load testnet token details', async ({ page, graphql }) => {
+    await graphql.intercept('TokenWeb', Mocks.TokenWeb.sepolia_yay_token, {
+      chain: 'ETHEREUM_SEPOLIA',
+      address: '0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531',
+    })
+    await graphql.intercept('Token', Mocks.Token.sepolia_yay_token, {
+      chain: 'ETHEREUM_SEPOLIA',
+      address: '0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531',
+    })
     await page.goto('/explore/tokens/ethereum_sepolia/0x97dbb794244e1c27b6ff688fc8cef5fe8d80f531')
     await expect(page.getByText('Yay').first()).toBeVisible()
   })

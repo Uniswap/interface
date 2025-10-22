@@ -12,18 +12,16 @@ import { Field as FieldV3 } from 'state/mint/v3/actions'
 import { FullRange, MintState as MintV3State } from 'state/mint/v3/reducer'
 import { routingApi } from 'state/routing/slice'
 import { RouterPreference } from 'state/routing/types'
-import { SignatureState } from 'state/signatures/reducer'
 import { UserState } from 'state/user/reducer'
 import { SerializedPair, SlippageTolerance } from 'state/user/types'
 import { WalletCapabilitiesState } from 'state/walletCapabilities/types'
-import { ConnectedWalletsState, Wallet } from 'state/wallets/types'
 import { InterfaceState } from 'state/webReducer'
 import { assert, Equals } from 'tsafe'
 import { UniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FavoritesState } from 'uniswap/src/features/favorites/slice'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
-import { NotificationState } from 'uniswap/src/features/notifications/slice'
+import { NotificationState } from 'uniswap/src/features/notifications/slice/slice'
 import { PortfolioState } from 'uniswap/src/features/portfolio/slice/slice'
 import { SearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
 import { UserSettingsState } from 'uniswap/src/features/settings/slice'
@@ -60,11 +58,9 @@ import { VisibilityState } from 'uniswap/src/features/visibility/slice'
 type ExpectedAppState = CombinedState<{
   // Web State
   readonly user: UserState
-  readonly signatures: SignatureState
   readonly fiatOnRampTransactions: FiatOnRampTransactionsState
   readonly lists: ListsState
   readonly application: ApplicationState
-  readonly wallets: ConnectedWalletsState
   readonly mint: MintState
   readonly mintV3: MintV3State
   readonly logs: LogsState
@@ -78,7 +74,6 @@ type ExpectedAppState = CombinedState<{
   readonly searchHistory: Readonly<SearchHistoryState>
   readonly timing: TimingState
   readonly tokens: TokensState
-  readonly bridgedAssets: TokensState
   readonly transactions: TransactionsState
   readonly userSettings: UserSettingsState
   readonly portfolio: PortfolioState
@@ -140,13 +135,6 @@ interface ExpectedApplicationState {
 }
 
 assert<Equals<ApplicationState, ExpectedApplicationState>>()
-
-interface ExpectedWalletState {
-  connectedWallets: Wallet[]
-  switchingChain: UniverseChainId | false
-}
-
-assert<Equals<ConnectedWalletsState, ExpectedWalletState>>()
 
 interface ExpectedMintState {
   readonly independentField: Field

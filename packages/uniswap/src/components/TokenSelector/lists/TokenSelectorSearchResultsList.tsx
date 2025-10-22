@@ -19,6 +19,7 @@ function _TokenSelectorSearchResultsList({
   debouncedParsedSearchFilter,
   isBalancesOnlySearch,
   input,
+  renderedInModal,
 }: {
   onSelectCurrency: OnSelectCurrency
   evmAddress?: string
@@ -30,6 +31,7 @@ function _TokenSelectorSearchResultsList({
   debouncedParsedSearchFilter: string | null
   isBalancesOnlySearch: boolean
   input: TradeableAsset | undefined
+  renderedInModal: boolean
 }): JSX.Element {
   const { t } = useTranslation()
   const { registerSearchTokenCurrencyInfo } = useAddToSearchHistory()
@@ -70,6 +72,7 @@ function _TokenSelectorSearchResultsList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
+      renderedInModal={renderedInModal}
       onSelectCurrency={onSelectCurrency}
     />
   )

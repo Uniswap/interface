@@ -17,6 +17,7 @@ import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Button, type ButtonProps, Flex, styled, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useCurrencyInputFontSize } from 'uniswap/src/components/CurrencyInputPanel/hooks/useCurrencyInputFontSize'
+import { TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -332,6 +333,7 @@ export default function SendCurrencyInputForm({
         onCurrencySelect={handleSelectCurrency}
         selectedCurrency={inputCurrency}
         switchNetworkAction={SwitchNetworkAction.Send}
+        variation={TokenSelectorVariation.BalancesOnly}
       />
     </Wrapper>
   )

@@ -1,4 +1,7 @@
 jest.mock('src/background/messagePassing/messageChannels')
+jest.mock('wxt/utils/define-content-script', () => ({
+  defineContentScript: jest.fn((definition) => definition),
+}))
 
 describe('injected', () => {
   it('should run without throwing an error', () => {

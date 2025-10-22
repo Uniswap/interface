@@ -4,7 +4,6 @@ import {
   useTransactionSettingsAutoSlippageToleranceStore,
   useTransactionSettingsStore,
 } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/components/AcrossRoutingInfo'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/MaxSlippageRow'
 import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/PriceImpactRow'
 import { RoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo'
@@ -68,7 +67,7 @@ export function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Elemen
           outputCurrency={trade.trade.outputAmount.currency}
           transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
           uniswapXGasBreakdown={gasFeeBreakdown}
-          RoutingInfo={isBridge ? <AcrossRoutingInfo /> : <RoutingInfo gasFee={gasFee} chainId={chainId} />}
+          RoutingInfo={<RoutingInfo trade={trade.trade} gasFee={gasFee} chainId={chainId} />}
           RateInfo={
             showPriceImpactWarning ? (
               <Flex row alignItems="center" justifyContent="space-between">

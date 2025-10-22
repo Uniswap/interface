@@ -14,7 +14,7 @@ import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/
 import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { UnichainPoweredMessage } from 'uniswap/src/features/transactions/TransactionDetails/UnichainPoweredMessage'
 import { getShouldDisplayTokenWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/utils/getShouldDisplayTokenWarningCard'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | null {
   const showInterfaceReviewSteps = useShowInterfaceReviewSteps()
@@ -33,7 +33,7 @@ export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | 
     <TransactionModalFooterContainer>
       {isUnichain && <UnichainPoweredMessage />}
       <Flex row gap="$spacing8">
-        {!isWeb && !showPendingUI && (
+        {!isWebPlatform && !showPendingUI && (
           <IconButton
             icon={<BackArrow />}
             emphasis="secondary"

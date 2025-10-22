@@ -1,4 +1,5 @@
 import { getTokenDetailsURL } from 'appGraphql/data/util'
+import { GraphQLApi } from '@universe/api'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -10,7 +11,7 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Flex, Text, useMedia } from 'ui/src'
 import { MATIC_MAINNET, UNI, USDC_BASE } from 'uniswap/src/constants/tokens'
-import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -47,7 +48,7 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
     address,
     chainId,
   })
-  const tokenPromoQuery = useTokenPromoQuery({
+  const tokenPromoQuery = GraphQLApi.useTokenPromoQuery({
     variables: {
       address: currency?.wrapped.address,
       chain: toGraphQLChain(chainId),
@@ -196,6 +197,8 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
 
 export function WebappCard() {
   const { t } = useTranslation()
+  const { chains } = useEnabledChains()
+
   return (
     <ValuePropCard
       to="/tokens/ethereum"
@@ -205,11 +208,11 @@ export function WebappCard() {
         backgroundColor: 'rgba(0, 102, 255, 0.12)',
       }}
       $theme-light={{
-        backgroundColor: 'rgba(0, 102, 255, 0.04)',
+        backgroundColor: 'rgba(176, 207, 252, 0.04)',
       }}
       title={<PillButton color={primary} label={t('common.webApp')} icon={<Computer size="24px" fill={primary} />} />}
       subtitle={t('landing.swapSubtitle')}
-      bodyText={t('landing.swapBody')}
+      bodyText={t('landing.swapBody', { amount: chains.length })}
       button={<PillButton color={primary} label={t('common.exploreTokens')} backgroundColor="$surface1" />}
     >
       <Flex

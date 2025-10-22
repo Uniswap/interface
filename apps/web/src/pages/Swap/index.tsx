@@ -10,7 +10,8 @@ import { PageType, useIsPage } from 'hooks/useIsPage'
 import { useModalState } from 'hooks/useModalState'
 import { useResetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
 import { useWebSwapSettings } from 'pages/Swap/settings/useWebSwapSettings'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { TDPContext } from 'pages/TokenDetails/TDPContext'
+import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router'
@@ -20,6 +21,7 @@ import { useWrapCallback } from 'state/sagas/transactions/wrapSaga'
 import { useInitialCurrencyState } from 'state/swap/hooks'
 import { SwapAndLimitContextProvider } from 'state/swap/SwapContext'
 import type { CurrencyState } from 'state/swap/types'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import type { SegmentedControlOption } from 'ui/src'
 import { Flex, SegmentedControl, styled, Text, Tooltip } from 'ui/src'
 import type { AppTFunction } from 'ui/src/i18n/types'
@@ -132,6 +134,8 @@ export function Swap({
   usePersistedFilteredChainIds?: boolean
   passkeyAuthStatus?: PasskeyAuthStatus
 }) {
+  const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
+
   const isExplorePage = useIsPage(PageType.EXPLORE)
   const isModeMismatch = useIsModeMismatch(chainId)
   const isSharedSwapDisabled = isModeMismatch && isExplorePage
@@ -139,7 +143,6 @@ export function Swap({
   const input = currencyToAsset(initialInputCurrency)
   const output = currencyToAsset(initialOutputCurrency)
 
-  const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
   const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
 
   const prefilledState = useSwapPrefilledState({
@@ -222,7 +225,11 @@ function UniversalSwapFlow({
   swapRedirectCallback?: SwapRedirectFn
   tokenColor?: string
 }) {
-  const [currentTab, setCurrentTab] = useState(SwapTab.Swap)
+  const { currentTab, setCurrentTab } = useSwapAndLimitContext()
+
+  // Get TDP currency if available (will be null if not in TDP context)
+  const tdpCurrency = currencyToAsset(useContext(TDPContext)?.currency)
+
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -254,7 +261,7 @@ function UniversalSwapFlow({
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       setCurrentTab(PATHNAME_TO_TAB[pathname] ?? SwapTab.Swap)
     }
-  }, [pathname, setCurrentTab, openSendFormModal])
+  }, [pathname, openSendFormModal, setCurrentTab])
 
   const onTabClick = useCallback(
     (tab: SwapTab) => {
@@ -335,14 +342,14 @@ function UniversalSwapFlow({
         <BuyForm
           rampDirection={RampDirection.ONRAMP}
           disabled={disableTokenInputs}
-          initialCurrency={prefilledState?.output}
+          initialCurrency={tdpCurrency ?? prefilledState?.output}
         />
       )}
       {currentTab === SwapTab.Sell && BuyForm && (
         <BuyForm
           rampDirection={RampDirection.OFFRAMP}
           disabled={disableTokenInputs}
-          initialCurrency={prefilledState?.output}
+          initialCurrency={tdpCurrency ?? prefilledState?.output}
         />
       )}
     </Flex>

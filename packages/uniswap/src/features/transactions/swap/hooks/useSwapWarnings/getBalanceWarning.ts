@@ -2,7 +2,7 @@ import { TFunction } from 'i18next'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 export function getBalanceWarning({
   t,
@@ -29,7 +29,7 @@ export function getBalanceWarning({
     title: t('swap.warning.insufficientBalance.title', {
       currencySymbol,
     }),
-    buttonText: isWeb
+    buttonText: isWebPlatform
       ? t('common.insufficientTokenBalance.error.simple', {
           tokenSymbol: currencySymbol,
         })

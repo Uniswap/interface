@@ -67,6 +67,7 @@ export function SwapAndLimitContextProvider({
     }
   }, [initialInputCurrency, isUserSelectedToken, prefilledState, previousInitialInputCurrency])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +prefilledState
   useEffect(() => {
     if (!isUserSelectedToken && initialChainId && previousInitialChainId !== initialChainId) {
       setSelectedChainId(initialChainId)

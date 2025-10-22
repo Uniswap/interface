@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+THUMBS_DB
+tsconfig.tsbuildinfo
+dist/
+
+# generated files
+src/**/__generated__

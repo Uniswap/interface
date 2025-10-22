@@ -6,7 +6,7 @@ exports[`FavoriteTokenCard renders without error 1`] = `
     [
       {
         "onPress": [Function],
-        "systemIcon": "heart",
+        "systemIcon": "heart.fill",
         "title": "Favorite token",
       },
       {
@@ -57,16 +57,16 @@ exports[`FavoriteTokenCard renders without error 1`] = `
     style={
       {
         "backgroundColor": "#FFFFFF",
-        "borderBottomColor": "rgba(34,34,34,0.05)",
+        "borderBottomColor": "rgba(19, 19, 19, 0.08)",
         "borderBottomLeftRadius": 16,
         "borderBottomRightRadius": 16,
         "borderBottomWidth": 1,
-        "borderLeftColor": "rgba(34,34,34,0.05)",
+        "borderLeftColor": "rgba(19, 19, 19, 0.08)",
         "borderLeftWidth": 1,
-        "borderRightColor": "rgba(34,34,34,0.05)",
+        "borderRightColor": "rgba(19, 19, 19, 0.08)",
         "borderRightWidth": 1,
         "borderStyle": "solid",
-        "borderTopColor": "rgba(34,34,34,0.05)",
+        "borderTopColor": "rgba(19, 19, 19, 0.08)",
         "borderTopLeftRadius": 16,
         "borderTopRightRadius": 16,
         "borderTopWidth": 1,
@@ -87,7 +87,7 @@ exports[`FavoriteTokenCard renders without error 1`] = `
         ],
       }
     }
-    testID="token-box-undefined"
+    testID="favorite-token-card-undefined"
   >
     <View
       onBlur={[Function]}

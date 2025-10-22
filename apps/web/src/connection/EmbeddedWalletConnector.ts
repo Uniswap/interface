@@ -1,7 +1,7 @@
 import { EmbeddedWalletProvider, embeddedWalletProvider, Listener } from 'connection/EmbeddedWalletProvider'
 import { getEmbeddedWalletState } from 'state/embeddedWallet/store'
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
-import { HexString } from 'uniswap/src/utils/hex'
+import { HexString } from 'utilities/src/addresses/hex'
 import {
   getAddress,
   ProviderConnectInfo,

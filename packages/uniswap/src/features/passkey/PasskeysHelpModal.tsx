@@ -9,7 +9,7 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 export enum PasskeysHelpModalTypes {
   Default = 'default',
@@ -86,9 +86,9 @@ export function PasskeysHelpModal({
       <Flex
         centered
         gap="$spacing12"
-        pb={isWeb ? '$none' : '$spacing12'}
+        pb={isWebPlatform ? '$none' : '$spacing12'}
         pt="$spacing12"
-        px={isWeb ? '$none' : '$spacing24'}
+        px={isWebPlatform ? '$none' : '$spacing24'}
       >
         {icon}
 

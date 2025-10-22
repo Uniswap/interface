@@ -13,6 +13,7 @@ import commonjs from 'vite-plugin-commonjs'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgr from 'vite-plugin-svgr'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import { generateAssetsIgnorePlugin } from './vite/generateAssetsIgnorePlugin.js'
 import { cspMetaTagPlugin } from './vite/vite.plugins.js'
 
 // Get current file directory (ESM equivalent of __dirname)
@@ -74,17 +75,19 @@ const portWarningPlugin = (isProduction: boolean) =>
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 
 export default defineConfig(({ mode }) => {
-  // Load ALL env variables (including those without VITE_ prefix)
-  const env = loadEnv(mode, process.cwd(), '')
+  let env = loadEnv(mode, __dirname, '')
+
+  // Log environment loading for CI verification
+  console.log(`ENV_LOADED: mode=${mode} REACT_APP_AWS_API_ENDPOINT=${env.REACT_APP_AWS_API_ENDPOINT}`)
 
   const isProduction = mode === 'production'
+  const isVercelDeploy = DEPLOY_TARGET === 'vercel'
   const root = path.resolve(__dirname)
 
   // External package aliases only
   const overrides = {
     // External package aliases
     'react-native': 'react-native-web',
-    crypto: 'expo-crypto',
     'expo-blur': path.resolve(__dirname, './.storybook/__mocks__/expo-blur.jsx'),
     '@web3-react/core': path.resolve(__dirname, 'src/connection/web3reactShim.ts'),
     'uniswap/src': path.resolve(__dirname, '../../packages/uniswap/src'),
@@ -114,7 +117,6 @@ export default defineConfig(({ mode }) => {
 
     resolve: {
       extensions: ['.web.tsx', '.web.ts', '.web.js', '.tsx', '.ts', '.js'],
-      preserveSymlinks: true,
       modules: [path.resolve(root, 'node_modules')],
       dedupe: [
         '@uniswap/sdk-core',
@@ -125,6 +127,7 @@ export default defineConfig(({ mode }) => {
         '@uniswap/universal-router-sdk',
         '@uniswap/uniswapx-sdk',
         '@uniswap/permit2-sdk',
+        '@visx/responsive',
         'jsbi',
         'ethers',
         'react',
@@ -146,7 +149,10 @@ export default defineConfig(({ mode }) => {
             importsWhitelist: ['constants.js'],
           })
         : undefined,
-      tsconfigPaths(),
+      tsconfigPaths({
+        // ignores tsconfig files in Nx generator template directories
+        skip: (dir) => dir.includes('files'),
+      }),
       env.REACT_APP_SKIP_CSP ? undefined : cspMetaTagPlugin(),
       svgr({
         svgrOptions: {
@@ -208,10 +214,11 @@ export default defineConfig(({ mode }) => {
         ? undefined
         : bundlesize({
             limits: [
-              { name: 'assets/index-*.js', limit: '2.2 MB', mode: 'gzip' },
+              { name: 'assets/index-*.js', limit: '2.3 MB', mode: 'gzip' },
               { name: '**/*', limit: Infinity, mode: 'uncompressed' },
             ],
           }),
+      generateAssetsIgnorePlugin(isProduction && !isVercelDeploy && !VITE_DISABLE_SOURCEMAP, __dirname),
       {
         name: 'copy-twist-config',
         writeBundle() {
@@ -242,7 +249,7 @@ export default defineConfig(({ mode }) => {
           }
         },
       },
-      DEPLOY_TARGET === 'cloudflare'
+      DEPLOY_TARGET === 'cloudflare' || mode === 'development'
         ? cloudflare({
             configPath: './wrangler-vite-worker.jsonc',
             // Workaround for cloudflare plugin bug: explicitly set environment name based on CLOUDFLARE_ENV
@@ -297,8 +304,8 @@ export default defineConfig(({ mode }) => {
 
     build: {
       outDir: 'build',
-      sourcemap: isProduction || VITE_DISABLE_SOURCEMAP ? false : 'hidden',
-      minify: isProduction ? 'esbuild' : undefined,
+      sourcemap: VITE_DISABLE_SOURCEMAP ? false : (isProduction && !isVercelDeploy ? 'hidden' : true),
+      minify: isProduction && !isVercelDeploy ? 'esbuild' : undefined,
       rollupOptions: {
         external: [/\.stories\.[tj]sx?$/, /\.mdx$/, /expo-clipboard\/build\/ClipboardPasteButton\.js/],
         output: {

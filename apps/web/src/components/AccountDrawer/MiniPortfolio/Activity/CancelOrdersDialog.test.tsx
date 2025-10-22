@@ -1,21 +1,26 @@
 import { WETH9 } from '@uniswap/sdk-core'
+import { TradingApi } from '@universe/api'
 import {
   CancellationState,
   CancelOrdersDialog,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
-import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
-import { UniswapXOrderStatus } from 'types/uniswapx'
 import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { vi } from 'vitest'
 
 const mockOrderDetails: UniswapXOrderDetails = {
-  type: SignatureType.SIGN_UNISWAPX_ORDER,
+  routing: TradingApi.Routing.DUTCH_V2,
   orderHash: '0x1234',
-  status: UniswapXOrderStatus.OPEN,
-  swapInfo: {
+  status: TransactionStatus.Pending,
+  typeInfo: {
     isUniswapXOrder: true,
     type: TransactionType.Swap,
     tradeType: 0,
@@ -31,8 +36,21 @@ const mockOrderDetails: UniswapXOrderDetails = {
   addedTime: 3,
   chainId: UniverseChainId.Mainnet,
   expiry: 4,
-  offerer: '0x1234',
+  from: '0x1234',
+  transactionOriginType: TransactionOriginType.Internal,
 }
+
+vi.mock('components/AccountDrawer/MiniPortfolio/Activity/hooks', async () => {
+  const actual = await vi.importActual('components/AccountDrawer/MiniPortfolio/Activity/hooks')
+  return {
+    ...actual,
+    useCancelOrdersGasEstimate: vi.fn(),
+    usePendingActivity: vi.fn(() => ({
+      pendingActivityCount: 0,
+      hasPendingActivity: false,
+    })),
+  }
+})
 
 vi.mock('hooks/useTransactionGasFee', async () => {
   const actual = await vi.importActual('hooks/useTransactionGasFee')
@@ -41,10 +59,6 @@ vi.mock('hooks/useTransactionGasFee', async () => {
     useTransactionGasFee: vi.fn(),
   }
 })
-
-vi.mock('components/AccountDrawer/MiniPortfolio/Activity/utils', () => ({
-  useCreateCancelTransactionRequest: vi.fn(),
-}))
 
 vi.mock('utilities/src/logger/logger', async () => {
   const actual = await vi.importActual('utilities/src/logger/logger')
@@ -90,7 +104,7 @@ describe('CancelOrdersDialog', () => {
         onCancel={mockOnCancel}
         onConfirm={mockOnConfirm}
         isVisible={true}
-        orders={[{ ...mockOrderDetails, type: SignatureType.SIGN_LIMIT }]}
+        orders={[{ ...mockOrderDetails, routing: TradingApi.Routing.DUTCH_LIMIT }]}
         cancelState={CancellationState.REVIEWING_CANCELLATION}
       />,
     )

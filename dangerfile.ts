@@ -3,11 +3,11 @@ import * as fs from 'fs'
 import { dirname } from 'path'
 
 function getIndicesOf(searchStr: string, str: string): number[] {
-  var searchStrLen = searchStr.length
-  if (searchStrLen == 0) {
+  const searchStrLen = searchStr.length
+  if (searchStrLen === 0) {
     return []
   }
-  var startIndex = 0,
+  let startIndex = 0,
     index,
     indices: number[] = []
   while ((index = str.indexOf(searchStr, startIndex)) > -1) {
@@ -271,7 +271,7 @@ async function processAddChanges() {
       if (fileContent.includes('TouchableArea')) {
         filesWithTouchableArea.push(file)
       }
-    } catch (e) {
+    } catch {
       // Ignore files that can't be read (e.g., deleted or binary)
     }
   }

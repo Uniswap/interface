@@ -47,6 +47,7 @@ export enum NumberType {
   NFTCollectionStats = 'nft-collection-stats',
 
   Percentage = 'percentage',
+  PercentageOneDecimal = 'percentage-one-decimal',
   PercentageThreeDecimals = 'percentage-three-decimals',
   PercentageFourDecimals = 'percentage-four-decimals',
 }
@@ -60,4 +61,13 @@ export type FiatNumberType = Extract<
   | NumberType.FiatRewards
   | NumberType.PortfolioBalance
   | NumberType.FiatStandard
+>
+
+export type PercentNumberDecimals = 1 | 2 | 3 | 4
+export type PercentNumberType = Extract<
+  NumberType,
+  | NumberType.Percentage
+  | NumberType.PercentageOneDecimal
+  | NumberType.PercentageThreeDecimals
+  | NumberType.PercentageFourDecimals
 >

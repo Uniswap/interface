@@ -1,3 +1,4 @@
+import { GraphQLApi } from '@universe/api'
 import { NativeSyntheticEvent, Share } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import configureMockStore from 'redux-mock-store'
@@ -5,7 +6,6 @@ import { thunk } from 'redux-thunk'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { renderHookWithProviders } from 'src/test/render'
-import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { FavoritesState } from 'uniswap/src/features/favorites/slice'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -22,7 +22,7 @@ const mockNavigate = navigate as jest.MockedFunction<typeof navigate>
 const tokenId = SAMPLE_SEED_ADDRESS_1
 const currencyId = `1-${tokenId}`
 
-const resolvers: Resolvers = {
+const resolvers: GraphQLApi.Resolvers = {
   Token: {
     id: () => tokenId,
   },

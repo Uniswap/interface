@@ -27,7 +27,7 @@ export function OpenLimitOrdersButton({
   className?: string
 }) {
   const { t } = useTranslation()
-  const { openLimitOrders } = useOpenLimitOrders(account)
+  const { openLimitOrders, loading } = useOpenLimitOrders(account)
   const colors = useSporeColors()
   const extraWarning = getExtraWarning(openLimitOrders)
 
@@ -38,11 +38,11 @@ export function OpenLimitOrdersButton({
   return (
     <Flex mx="$spacing4" mb="$spacing8">
       <TabButton
-        text={t('limit.open.count', { count: openLimitOrders.length })}
+        text={loading ? t('common.loading') : t('limit.open.count', { count: openLimitOrders.length })}
         icon={<Clock fill={colors.neutral2.val} color={colors.surface2.val} size="20px" />}
         extraWarning={extraWarning}
         onClick={openLimitsMenu}
-        disabled={disabled}
+        disabled={disabled || loading}
         className={className}
       />
     </Flex>

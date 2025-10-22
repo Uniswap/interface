@@ -2,6 +2,7 @@ import { useScrollToTop } from '@react-navigation/native'
 import React, { PropsWithChildren, useRef } from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 import { useAnimatedScrollHandler, useSharedValue, withTiming } from 'react-native-reanimated'
+import type { Edge } from 'react-native-safe-area-context'
 import { Screen } from 'src/components/layout/Screen'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
@@ -12,6 +13,8 @@ import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 
 // Distance to scroll to show scrolled state header elements
 const SHOW_HEADER_SCROLL_Y_DISTANCE = 50
+
+const EDGES: Edge[] = ['top', 'left', 'right']
 
 type HeaderScrollScreenProps = {
   centerElement?: JSX.Element
@@ -38,7 +41,7 @@ export function HeaderScrollScreen({
   const colors = useSporeColors()
 
   // difficult to properly type
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: FlatList generic type is complex and varies by data
   const listRef = useRef<FlatList<any>>(null)
 
   // scrolls to top when tapping on the active tab
@@ -60,7 +63,7 @@ export function HeaderScrollScreen({
   )
 
   return (
-    <Screen backgroundColor={backgroundColor} edges={['top', 'left', 'right']} noInsets={fullScreen}>
+    <Screen backgroundColor={backgroundColor} edges={EDGES} noInsets={fullScreen}>
       {showHandleBar ? <HandleBar backgroundColor={colors.surface1.get()} /> : null}
       <ScrollHeader
         alwaysShowCenterElement={alwaysShowCenterElement}

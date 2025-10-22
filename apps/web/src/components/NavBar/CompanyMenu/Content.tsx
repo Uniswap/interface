@@ -84,7 +84,7 @@ export const useMenuContent = (args?: {
       [MenuSectionTitle.Company]: {
         title: t('common.company'),
         items: [
-          { label: t('settings.section.about'), href: uniswapUrls.aboutUrl },
+          { label: t('common.about'), href: uniswapUrls.aboutUrl },
           { label: t('common.careers'), href: uniswapUrls.careersUrl },
           { label: t('common.blog'), href: uniswapUrls.blogUrl },
         ],

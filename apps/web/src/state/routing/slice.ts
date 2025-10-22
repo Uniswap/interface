@@ -23,6 +23,7 @@ import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logSwapQuoteFetch } from 'uniswap/src/features/transactions/swap/analytics'
 import { logger } from 'utilities/src/logger/logger'
+import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 
 const UNISWAP_GATEWAY_DNS_URL = process.env.REACT_APP_UNISWAP_GATEWAY_DNS
 if (UNISWAP_GATEWAY_DNS_URL === undefined) {
@@ -137,7 +138,7 @@ export const routingApi = createApi({
             url: `${UNISWAP_GATEWAY_DNS_URL}/quote`,
             body: JSON.stringify(requestBody),
             headers: {
-              'x-request-source': 'uniswap-web',
+              'x-request-source': REQUEST_SOURCE,
             },
           })
           if (response.error) {

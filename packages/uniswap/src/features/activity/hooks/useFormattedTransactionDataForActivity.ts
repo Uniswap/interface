@@ -1,22 +1,20 @@
 import { NetworkStatus, QueryHookOptions } from '@apollo/client'
 import { PartialMessage } from '@bufbuild/protobuf'
 import { FiatOnRampParams } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { GraphQLApi } from '@universe/api'
 import isEqual from 'lodash/isEqual'
 import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { isLoadingItem, isSectionHeader, LoadingItem } from 'uniswap/src/components/activity/utils'
-import {
-  TransactionListQuery,
-  TransactionListQueryVariables,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { formatTransactionsByDate } from 'uniswap/src/features/activity/formatTransactionsByDate'
 import { useMergeLocalAndRemoteTransactions } from 'uniswap/src/features/activity/hooks/useMergeLocalAndRemoteTransactions'
 import { useListTransactions } from 'uniswap/src/features/dataApi/listTransactions/listTransactions'
 import { useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { isLimitOrder } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { selectNftsVisibility } from 'uniswap/src/features/visibility/selectors'
 
 const LOADING_ITEM = (index: number): LoadingItem => ({ itemType: 'LOADING', id: index })
@@ -24,9 +22,13 @@ const LOADING_DATA = [LOADING_ITEM(1), LOADING_ITEM(2), LOADING_ITEM(3), LOADING
 
 // Contract for returning Transaction data
 
-type TransactionListQueryArgs = QueryHookOptions<TransactionListQuery, TransactionListQueryVariables>
+type TransactionListQueryArgs = QueryHookOptions<
+  GraphQLApi.TransactionListQuery,
+  GraphQLApi.TransactionListQueryVariables
+>
 interface UseFormattedTransactionDataOptions {
-  address: Address
+  evmAddress?: Address
+  svmAddress?: Address
   ownerAddresses: Address[]
   fiatOnRampParams: PartialMessage<FiatOnRampParams> | undefined
   hideSpamTokens: boolean
@@ -50,7 +52,8 @@ export interface FormattedTransactionDataResult {
  * Hook that returns transaction data using REST API
  */
 export function useFormattedTransactionDataForActivity({
-  address,
+  evmAddress,
+  svmAddress,
   ownerAddresses,
   hideSpamTokens,
   pageSize,
@@ -69,7 +72,8 @@ export function useFormattedTransactionDataForActivity({
     refetch,
     networkStatus,
   } = useListTransactions({
-    address,
+    evmAddress,
+    svmAddress,
     pageSize,
     hideSpamTokens,
     tokenVisibilityOverrides,
@@ -78,15 +82,25 @@ export function useFormattedTransactionDataForActivity({
     ...queryOptions,
   })
 
-  const keyExtractor = useMemo(() => createTransactionKeyExtractor(address), [address])
+  const keyExtractor = useMemo(
+    () => createTransactionKeyExtractor(evmAddress ?? svmAddress ?? ''),
+    [evmAddress, svmAddress],
+  )
 
-  const transactions = useMergeLocalAndRemoteTransactions(address, formattedTransactions)
+  const transactions = useMergeLocalAndRemoteTransactions({
+    evmAddress,
+    svmAddress,
+    remoteTransactions: formattedTransactions,
+  })
+
+  // TODO(PORT-429): update to only TradingApi.Routing.DUTCH_V2 once limit orders can be excluded from REST query
+  const transactionsWithOutLimitOrders = useMemo(() => transactions?.filter((tx) => !isLimitOrder(tx)), [transactions])
 
   // Format transactions for section list
   const localizedDayjs = useLocalizedDayjs()
   const { pending, todayTransactionList, yesterdayTransactionList, priorByMonthTransactionList } = useMemo(
-    () => formatTransactionsByDate(transactions, localizedDayjs),
-    [transactions, localizedDayjs],
+    () => formatTransactionsByDate(transactionsWithOutLimitOrders, localizedDayjs),
+    [transactionsWithOutLimitOrders, localizedDayjs],
   )
 
   const hasTransactions = transactions && transactions.length > 0

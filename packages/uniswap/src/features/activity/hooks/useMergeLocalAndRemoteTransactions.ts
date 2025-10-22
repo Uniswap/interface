@@ -18,12 +18,17 @@ type HashToTxMap = Map<string, TransactionDetails>
 /**
  * Merge local and remote transactions. If duplicated hash found use data from local store.
  */
-export function useMergeLocalAndRemoteTransactions(
-  address: Address,
-  remoteTransactions: TransactionDetails[] | undefined,
-): TransactionDetails[] | undefined {
+export function useMergeLocalAndRemoteTransactions({
+  evmAddress,
+  svmAddress,
+  remoteTransactions,
+}: {
+  evmAddress?: Address
+  svmAddress?: Address
+  remoteTransactions: TransactionDetails[] | undefined
+}): TransactionDetails[] | undefined {
   const dispatch = useDispatch()
-  const localTransactions = useSelectAddressTransactions(address)
+  const localTransactions = useSelectAddressTransactions({ evmAddress, svmAddress })
 
   const { chains } = useEnabledChains()
 

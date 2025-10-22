@@ -10,20 +10,24 @@ import {
   PositionFlowStep,
   type PositionState,
   type PriceRangeState,
+  RangeAmountInputPriceMode,
 } from 'components/Liquidity/Create/types'
 import type { DepositState } from 'components/Liquidity/types'
 import { getPriceRangeInfo } from 'components/Liquidity/utils/priceRangeInfo'
-import { createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useRef, useState } from 'react'
+import { createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export const DEFAULT_PRICE_RANGE_STATE: PriceRangeState = {
   priceInverted: false,
-  fullRange: true,
+  fullRange: false,
   minPrice: '',
   maxPrice: '',
   initialPrice: '',
+  inputMode: RangeAmountInputPriceMode.PRICE,
 }
 
 export const DEFAULT_DEPOSIT_STATE: DepositState = {
@@ -57,7 +61,7 @@ interface BaseCreateLiquidityState {
   ticksAtLimit: [boolean, boolean]
 
   // From CreatePositionContext
-  areTokensUnchanged: boolean
+  isNativeTokenAOnly: boolean
   positionState: PositionState
   step: PositionFlowStep
   currentTransactionStep?: { step: TransactionStep; accepted: boolean }
@@ -149,9 +153,7 @@ export function CreateLiquidityContextProvider({
   initialDepositState?: Partial<DepositState>
   initialFlowStep: PositionFlowStep
 }) {
-  // Combined state from all 4 providers
-  const initialCurrencyInputs = useRef(currencyInputs).current
-
+  const isD3LiquidityRangeChartEnabled = useFeatureFlag(FeatureFlags.D3LiquidityRangeChart)
   const [positionState, setPositionState] = useState<PositionState>(() => ({
     ...DEFAULT_POSITION_STATE,
     ...initialPositionState,
@@ -171,7 +173,7 @@ export function CreateLiquidityContextProvider({
 
   // Initialize price range state
   const initialPosition = positionState.initialPosition
-  const defaultFullRange = initialPosition?.isOutOfRange ? false : true
+  const defaultFullRange = initialPosition?.isOutOfRange ? false : !isD3LiquidityRangeChartEnabled
   const urlFullRange = initialPriceRangeState?.fullRange
   const initialFullRange = urlFullRange !== undefined ? urlFullRange : defaultFullRange
   const [priceRangeState, setPriceRangeState] = useState<PriceRangeState>(() => ({
@@ -277,6 +279,8 @@ export function CreateLiquidityContextProvider({
     }
   }, [derivedPositionInfo.protocolVersion, poolOrPair, derivedPositionInfo.currencies])
 
+  const isNativeTokenAOnly = Boolean(currencyInputs.tokenA?.isNative && !currencyInputs.tokenB)
+
   const value: CreateLiquidityContextType = {
     // State
     ...protocolSpecificValues,
@@ -296,7 +300,7 @@ export function CreateLiquidityContextProvider({
       derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2
         ? [undefined, undefined]
         : derivedPriceRangeInfo.pricesAtTicks,
-    areTokensUnchanged: currencyInputs.tokenA === initialCurrencyInputs.tokenA && !currencyInputs.tokenB,
+    isNativeTokenAOnly,
     positionState,
     step,
     currentTransactionStep,

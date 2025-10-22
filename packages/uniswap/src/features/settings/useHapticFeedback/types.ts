@@ -1,4 +1,5 @@
-import { ImpactFeedbackStyle, NotificationFeedbackType } from 'expo-haptics'
+/** biome-ignore lint/style/noRestrictedImports: this the implementation of the wrapper we recommend to use */
+import { type ImpactFeedbackStyle, type NotificationFeedbackType } from 'expo-haptics'
 
 export type HapticFeedbackStyle = ImpactFeedbackStyle | NotificationFeedbackType
 

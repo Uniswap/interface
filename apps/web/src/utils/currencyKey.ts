@@ -1,14 +1,15 @@
 import { Currency } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { Chain, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 
 export type CurrencyKey = string
 
 export function buildCurrencyKey(chainId: UniverseChainId, address: string): CurrencyKey {
-  // We lowercase for compatibility/indexability between gql tokens and sdk currencies
-  return `${chainId}-${address.toLowerCase()}`
+  // We normalize for compatibility/indexability between gql tokens and sdk currencies
+  return `${chainId}-${normalizeTokenAddressForCache(address)}`
 }
 
 export function currencyKey(currency: Currency): CurrencyKey {
@@ -17,11 +18,11 @@ export function currencyKey(currency: Currency): CurrencyKey {
 
 export function currencyKeyFromGraphQL(contract: {
   address?: string
-  chain: Chain
-  standard?: TokenStandard
+  chain: GraphQLApi.Chain
+  standard?: GraphQLApi.TokenStandard
 }): CurrencyKey {
   const chainId = fromGraphQLChain(contract.chain)
-  const address = contract.standard === TokenStandard.Native ? NATIVE_CHAIN_ID : contract.address
+  const address = contract.standard === GraphQLApi.TokenStandard.Native ? NATIVE_CHAIN_ID : contract.address
   if (!address) {
     throw new Error('Non-native token missing address')
   }

@@ -27,7 +27,7 @@ import {
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
-import { isMobileApp, isWeb } from 'utilities/src/platform'
+import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'
@@ -38,7 +38,7 @@ export function QueuedOrderModal(): JSX.Element | null {
   const isShortMobileDevice = useIsShortMobileDevice()
 
   const account = useActiveSignerAccount()
-  const erroredQueuedOrders = useErroredQueuedOrders(account?.address ?? null)
+  const erroredQueuedOrders = useErroredQueuedOrders({ evmAddress: account?.address })
   const currentFailedOrder = erroredQueuedOrders?.[0]
 
   const dispatch = useDispatch()
@@ -73,12 +73,12 @@ export function QueuedOrderModal(): JSX.Element | null {
 
   const buttonSize = isShortMobileDevice ? 'small' : 'medium'
 
-  const platformButtonStyling = isWeb ? { flex: 1, flexBasis: 1 } : undefined
+  const platformButtonStyling = isWebPlatform ? { flex: 1, flexBasis: 1 } : undefined
 
   return (
     <ErrorBoundary showNotification fallback={null} name={ModalName.QueuedOrderModal} onError={onCancel}>
       <Modal isDismissible alignment="top" name={ModalName.TransactionDetails} onClose={onCancel}>
-        <Flex gap="$spacing12" pb={isWeb ? '$none' : '$spacing12'} px={isWeb ? '$none' : '$spacing24'}>
+        <Flex gap="$spacing12" pb={isWebPlatform ? '$none' : '$spacing12'} px={isWebPlatform ? '$none' : '$spacing24'}>
           <Flex centered gap="$spacing8">
             <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" mb="$spacing8" p="$spacing12">
               <AlertTriangleFilled color="$black" size="$icon.24" />
@@ -98,7 +98,7 @@ export function QueuedOrderModal(): JSX.Element | null {
           </Flex>
           <Separator />
           <SwapTransactionDetails disableClick={isMobileApp} typeInfo={currentFailedOrder.typeInfo} />
-          <Flex gap="$spacing8" row={isWeb}>
+          <Flex gap="$spacing8" row={isWebPlatform}>
             <Flex row>
               <Button
                 isDisabled={!transactionState}

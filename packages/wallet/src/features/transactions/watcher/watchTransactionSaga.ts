@@ -1,7 +1,7 @@
+import { TradingApi } from '@universe/api'
 import { providers } from 'ethers'
 import { call, delay, put, SagaGenerator, select } from 'typed-redux-saga'
-import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { makeSelectTransaction } from 'uniswap/src/features/transactions/selectors'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
@@ -10,7 +10,7 @@ import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/tran
 import { POLLING_CONSTANTS, shouldCheckTransaction, withTimeout } from 'uniswap/src/utils/polling'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { buildNetworkFeeFromReceipt } from 'wallet/src/features/transactions/utils'
+import { processTransactionReceipt } from 'wallet/src/features/transactions/utils'
 import {
   FINALIZED_SWAP_STATUS,
   SWAP_STATUS_TO_TX_STATUS,
@@ -131,23 +131,25 @@ function* waitForTransactionInStore(
   throw new Error('Transaction not found in store after timeout')
 }
 
-export function* updateTransactionStatusNetworkFee(
+/**
+ * Fetches the transaction receipt onchain and updates the transaction with
+ * network fee and receipt data. Used when Trading API provides status but not receipt details.
+ */
+export function* updateTransactionWithReceipt(
   transaction: RequireNonNullable<TransactionDetails, 'hash'>,
   provider: providers.Provider,
 ) {
   const ethersReceipt = yield* call(waitForReceipt, transaction.hash, provider)
-  const { nativeCurrency } = getChainInfo(transaction.chainId)
 
-  const networkFee = buildNetworkFeeFromReceipt({
-    receipt: ethersReceipt,
-    nativeCurrency,
-    chainId: transaction.chainId,
+  // Wait for trading api to update the transaction status first
+  const updatedTransaction = yield* call(waitForTransactionInStore, transaction)
+
+  const transactionWithReceipt = processTransactionReceipt({
+    ethersReceipt,
+    transaction: updatedTransaction,
   })
 
-  // wait for trading api to update the transaction status
-  const updatedTransactionWithoutNetworkFee = yield* call(waitForTransactionInStore, transaction)
-  const updatedTransaction = { ...updatedTransactionWithoutNetworkFee, networkFee }
-  yield* put(transactionActions.updateTransactionWithoutWatch(updatedTransaction))
+  yield* put(transactionActions.updateTransactionWithoutWatch(transactionWithReceipt))
 }
 
 /**
@@ -164,7 +166,7 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
   }
 
   const { tradingApiPollingIntervalMs } = getChainInfo(transaction.chainId)
-  let swapStatus: SwapStatus | undefined
+  let swapStatus: TradingApi.SwapStatus | undefined
   const maxRetries = 10
   const halfMaxRetries = Math.floor(maxRetries / 2)
   const backoffFactor = 1.5 // gentle backoff
@@ -184,7 +186,7 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
 
     yield* delay(currentPollInterval)
 
-    const data = yield* call(fetchSwaps, {
+    const data = yield* call(TradingApiClient.fetchSwaps, {
       txHashes: [txHash],
       chainId,
     })

@@ -8,11 +8,13 @@
  * component itself, or importing it via CSS modules.
  */
 
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: legacy styled-components needed for deprecation compatibility
 import styledFn from 'styled-components'
 
 /** @deprecated use `styled` from `ui/src` instead */
 export default styledFn
 
-// eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-restricted-imports
+// biome-ignore-start lint/style/noRestrictedImports: re-export needed for backward compatibility
+// eslint-disable-next-line no-restricted-syntax
 export * from 'styled-components'
+// biome-ignore-end lint/style/noRestrictedImports: re-export needed for backward compatibility

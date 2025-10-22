@@ -1,20 +1,20 @@
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TradingApi } from '@universe/api'
 import {
   OnChainTransactionDetails,
   TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isBridgeTypeInfo } from 'uniswap/src/features/transactions/types/utils'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
-import { ExecuteTransactionParams } from 'wallet/src/features/transactions/executeTransaction/executeTransactionSaga'
+import { SubmitTransactionParamsWithTypeInfo } from 'wallet/src/features/transactions/executeTransaction/services/TransactionService/transactionService'
 
 export function createUnsubmittedTransactionDetails(
-  executeTransactionParams: ExecuteTransactionParams,
+  executeTransactionParams: SubmitTransactionParamsWithTypeInfo,
 ): OnChainTransactionDetails {
   const { txId, chainId, typeInfo, account, options, transactionOriginType } = executeTransactionParams
   const id = txId ?? createTransactionId()
 
   const transaction: OnChainTransactionDetails = {
-    routing: isBridgeTypeInfo(typeInfo) ? Routing.BRIDGE : Routing.CLASSIC,
+    routing: isBridgeTypeInfo(typeInfo) ? TradingApi.Routing.BRIDGE : TradingApi.Routing.CLASSIC,
     id,
     chainId,
     typeInfo,

@@ -1,0 +1,242 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`StatusIcon > with account > renders children in correct order 1`] = `
+.c0 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c0 > img,
+.c0 span {
+  height: 16px;
+  width: 16px;
+}
+
+.c1 {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  bottom: -4px;
+  right: -4px;
+  border-radius: 50%;
+  outline: 2px solid #FFFFFF;
+  outline-offset: -0.1px;
+  background-color: #FFFFFF;
+  overflow: hidden;
+}
+
+.c3 {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  bottom: -4px;
+  left: -4px;
+  border-radius: 50%;
+  outline: 2px solid #FFFFFF;
+  outline-offset: -0.1px;
+  background-color: #FFFFFF;
+  overflow: hidden;
+}
+
+.c2 {
+  width: 16px;
+  height: 16px;
+}
+
+@media only screen and (min-width:1024px) {
+  .c0 {
+    margin-right: 4px;
+  }
+}
+
+@media (max-width:960px) {
+  .c0 {
+    -webkit-align-items: flex-end;
+    -webkit-box-align: flex-end;
+    -ms-flex-align: flex-end;
+    align-items: flex-end;
+  }
+}
+
+@supports (overflow:clip) {
+  .c1 {
+    overflow: clip;
+  }
+}
+
+@supports (overflow:clip) {
+  .c3 {
+    overflow: clip;
+  }
+}
+
+<div
+  class="c0"
+  data-testid="StatusIconRoot"
+  size="16"
+>
+  <div
+    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-transparent _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _position-relative _width-16px _height-16px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+    data-testid="account-icon"
+  >
+    <div
+      class="_opacity-0enter-0 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+    >
+      <span
+        data-testid="unicon"
+      >
+        🔵
+      </span>
+    </div>
+  </div>
+  <div
+    class="c1"
+    data-testid="MiniIcon"
+  >
+    <img
+      alt="MetaMask icon"
+      class="c2"
+      src="/src/assets/wallets/metamask-icon.svg"
+    />
+  </div>
+  <div
+    class="c3"
+  >
+    <img
+      class="c2"
+      src="/src/assets/svg/socks.svg"
+    />
+  </div>
+</div>
+`;
+
+exports[`StatusIcon > with no account > renders children in correct order 1`] = `
+.c0 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c0 > img,
+.c0 span {
+  height: 16px;
+  width: 16px;
+}
+
+.c1 {
+  position: absolute;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  bottom: -4px;
+  left: -4px;
+  border-radius: 50%;
+  outline: 2px solid #FFFFFF;
+  outline-offset: -0.1px;
+  background-color: #FFFFFF;
+  overflow: hidden;
+}
+
+.c2 {
+  width: 16px;
+  height: 16px;
+}
+
+@media only screen and (min-width:1024px) {
+  .c0 {
+    margin-right: 4px;
+  }
+}
+
+@media (max-width:960px) {
+  .c0 {
+    -webkit-align-items: flex-end;
+    -webkit-box-align: flex-end;
+    -ms-flex-align: flex-end;
+    align-items: flex-end;
+  }
+}
+
+@supports (overflow:clip) {
+  .c1 {
+    overflow: clip;
+  }
+}
+
+<div
+  class="c0"
+  data-testid="StatusIconRoot"
+  size="16"
+>
+  <div
+    class="c1"
+  >
+    <img
+      class="c2"
+      src="/src/assets/svg/socks.svg"
+    />
+  </div>
+</div>
+`;

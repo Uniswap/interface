@@ -88,8 +88,7 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
           }
           suppressHighlighting={true}
         >
-          -
-           
+          - 
         </Text>
       </View>
     </View>
@@ -283,8 +282,7 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
           }
           suppressHighlighting={true}
         >
-          -
-           
+          - 
         </Text>
       </View>
     </View>

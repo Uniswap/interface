@@ -1,28 +1,28 @@
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 
 export default function getNetworkLogoUrl(network: string, origin: string) {
   switch (network) {
-    case Chain.Polygon:
+    case GraphQLApi.Chain.Polygon:
       return origin + '/images/logos/Polygon_Logo.png'
-    case Chain.Arbitrum:
+    case GraphQLApi.Chain.Arbitrum:
       return origin + '/images/logos/Arbitrum_Logo.png'
-    case Chain.Optimism:
+    case GraphQLApi.Chain.Optimism:
       return origin + '/images/logos/Optimism_Logo.png'
-    case Chain.Celo:
+    case GraphQLApi.Chain.Celo:
       return origin + '/images/logos/Celo_Logo.png'
-    case Chain.Base:
+    case GraphQLApi.Chain.Base:
       return origin + '/images/logos/Base_Logo.png'
-    case Chain.Bnb:
+    case GraphQLApi.Chain.Bnb:
       return origin + '/images/logos/BNB_Logo.png'
-    case Chain.Avalanche:
+    case GraphQLApi.Chain.Avalanche:
       return origin + '/images/logos/Avax_Logo.png'
-    case Chain.Blast:
+    case GraphQLApi.Chain.Blast:
       return origin + '/images/logos/Blast_Logo.png'
-    case Chain.Zora:
+    case GraphQLApi.Chain.Zora:
       return origin + '/images/logos/Zora_Logo.png'
-    case Chain.Zksync:
+    case GraphQLApi.Chain.Zksync:
       return origin + '/images/logos/zkSync_Logo.png'
-    case Chain.Unichain:
+    case GraphQLApi.Chain.Unichain:
       return origin + '/images/logos/Unichain_Logo.png'
     default:
       return ''

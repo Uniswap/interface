@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { faker } from 'uniswap/src/test/shared'
@@ -25,7 +25,7 @@ type CurrencyInfoOptions = {
 
 export const benignSafetyInfo: SafetyInfo = {
   tokenList: TokenList.Default,
-  protectionResult: ProtectionResult.Benign,
+  protectionResult: GraphQLApi.ProtectionResult.Benign,
   blockaidFees: {
     buyFeePercent: 0,
     sellFeePercent: 0,
@@ -89,7 +89,6 @@ export const removeSafetyInfo = (item: Maybe<CurrencyInfo>): Maybe<CurrencyInfo>
   if (!item) {
     return item
   }
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { safetyInfo: _, ...rest } = item
   return rest
 }

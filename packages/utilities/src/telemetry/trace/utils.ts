@@ -1,7 +1,7 @@
 import React from 'react'
 import { logger } from 'utilities/src/logger/logger'
-import { isInterface } from 'utilities/src/platform'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+import { isWebApp } from 'utilities/src/platform'
+// biome-ignore lint/style/noRestrictedImports: Platform-specific implementation needs internal types
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -28,8 +28,8 @@ export function getEventHandlers({
   for (const event of triggers) {
     eventHandlers[event] = (eventHandlerArgs: unknown): void => {
       // Some interface elements don't have handlers defined.
-      // TODO(WEB-4252): Potentially can remove isInterface check once web is fully converted to tamagui
-      if (!child.props[event] && !isInterface) {
+      // TODO(WEB-4252): Potentially can remove isWebApp check once web is fully converted to tamagui
+      if (!child.props[event] && !isWebApp) {
         logger.info('trace/utils.ts', 'getEventHandlers', 'Found a null handler while logging an event', {
           eventName,
           ...consumedProps,

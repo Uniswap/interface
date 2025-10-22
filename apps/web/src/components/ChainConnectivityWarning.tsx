@@ -1,3 +1,4 @@
+import { POPUP_MAX_WIDTH } from 'components/Popups/constants'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import useMachineTimeMs from 'hooks/useMachineTime'
@@ -46,7 +47,7 @@ const Wrapper = styled.div`
   border: 1px solid ${({ theme }) => theme.surface3};
   z-index: 2;
   display: block;
-  max-width: 348px;
+  max-width: ${POPUP_MAX_WIDTH}px;
   padding: 16px 20px;
   position: fixed;
   bottom: 16px;

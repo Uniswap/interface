@@ -1,5 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { FlashList } from '@shopify/flash-list'
+import { isNonPollingRequestInFlight } from '@universe/api'
 import { forwardRef, useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ListRenderItemInfo } from 'react-native'
@@ -12,7 +13,6 @@ import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { useNftListRenderData } from 'uniswap/src/components/nfts/hooks/useNftListRenderData'
 import { NftsListProps } from 'uniswap/src/components/nfts/NftsList'
 import { ShowNFTModal } from 'uniswap/src/components/nfts/ShowNFTModal'
-import { isNonPollingRequestInFlight } from 'uniswap/src/data/utils'
 import { EMPTY_NFT_ITEM, ESTIMATED_NFT_LIST_ITEM_SIZE, HIDDEN_NFTS_ROW } from 'uniswap/src/features/nfts/constants'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
@@ -33,6 +33,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     renderedInModal = false,
     errorStateStyle,
     emptyStateStyle,
+    customEmptyState,
     ListFooterComponent,
     numColumns = 2,
     renderNFTItem,
@@ -147,20 +148,21 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
             />
           </Flex>
         ) : (
-          // empty view
-          <Flex centered pt="$spacing48" px="$spacing36" style={emptyStateStyle}>
-            <BaseCard.EmptyState
-              buttonLabel={isExternalProfile || !onPressEmptyState ? undefined : t('tokens.nfts.list.none.button')}
-              description={
-                isExternalProfile
-                  ? t('tokens.nfts.list.none.description.external')
-                  : t('tokens.nfts.list.none.description.default')
-              }
-              icon={<NoNfts color="$neutral3" size="$icon.100" />}
-              title={t('tokens.nfts.list.none.title')}
-              onPress={onPressEmptyState}
-            />
-          </Flex>
+          (customEmptyState ?? (
+            <Flex centered pt="$spacing48" px="$spacing36" style={emptyStateStyle}>
+              <BaseCard.EmptyState
+                buttonLabel={isExternalProfile || !onPressEmptyState ? undefined : t('tokens.nfts.list.none.button')}
+                description={
+                  isExternalProfile
+                    ? t('tokens.nfts.list.none.description.external')
+                    : t('tokens.nfts.list.none.description.default')
+                }
+                icon={<NoNfts color="$neutral3" size="$icon.100" />}
+                title={t('tokens.nfts.list.none.title')}
+                onPress={onPressEmptyState}
+              />
+            </Flex>
+          ))
         )
       }
       // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top

@@ -1,6 +1,8 @@
 /**
  * Common mocks for this package. This file is intended to be imported in the jest-setup.js file of the package.
  *
+ * TODO(INFRA-292): Remove this file when other packages are migrated to vitest
+ *
  * Notes:
  * * Try not to add test specific mocks here.
  * * Be wary of the import order.

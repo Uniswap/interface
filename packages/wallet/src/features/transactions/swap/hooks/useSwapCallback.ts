@@ -1,6 +1,6 @@
+import { TradingApi } from '@universe/api'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -52,7 +52,7 @@ export function useSwapCallback(): SwapCallback {
       const { trade, gasFee } = swapTxContext
 
       // unsigned (missing permit signature) swaps are only supported on interface; this is an unreachable state and the following check is included for type safety.
-      if (swapTxContext.routing === Routing.CLASSIC && swapTxContext.unsigned) {
+      if (swapTxContext.routing === TradingApi.Routing.CLASSIC && swapTxContext.unsigned) {
         throw new Error('Swaps with async signatures are not implemented for wallet')
       }
 

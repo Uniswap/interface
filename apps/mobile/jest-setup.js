@@ -5,7 +5,7 @@ import 'core-js' // necessary so setImmediate works in tests
 import 'utilities/jest-package-mocks'
 import 'uniswap/jest-package-mocks'
 import 'wallet/jest-package-mocks'
-import 'ui/jest-package-mocks'
+import 'config/jest-presets/ui/ui-package-mocks'
 
 import 'uniswap/src/i18n' // Uses real translations for tests
 

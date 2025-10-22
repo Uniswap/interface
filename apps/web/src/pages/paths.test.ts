@@ -3,6 +3,7 @@ import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTi
 import { paths } from 'pages/paths'
 import { routes } from 'pages/RouteDefinitions'
 import React from 'react'
+import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 
 // Mock the actual components since they're not needed to test route definitions.
 vi.mock('pages/Swap', () => ({
@@ -15,6 +16,10 @@ describe('Paths', () => {
     appPaths.forEach((path) => {
       // We don't want to expose these fallback routes to the Cloudflare function.
       if (path === '*' || path === '/not-found') {
+        return
+      }
+      if (path === `/explore/tokens/solana/${WRAPPED_SOL_ADDRESS_SOLANA}`) {
+        // Special case: WSOL is redirected to SOL TDP, so we don't want to expose it to the Cloudflare function.
         return
       }
       expect(paths).toContain(path)

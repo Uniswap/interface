@@ -1,6 +1,5 @@
-import { SignatureType } from 'state/signatures/types'
+import { TradingApi } from '@universe/api'
 import { logSwapFinalized, logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
-import { UniswapXOrderStatus } from 'types/uniswapx'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
@@ -75,8 +74,8 @@ describe('swapFlowLoggers', () => {
       orderHash: mockOrderHash,
       chainId: mockChainId,
       analyticsContext: mockAnalyticsContext,
-      signatureType: SignatureType.SIGN_UNISWAPX_V2_ORDER,
-      status: UniswapXOrderStatus.FILLED,
+      routing: TradingApi.Routing.DUTCH_V2,
+      status: TransactionStatus.Success,
     })
 
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SwapTransactionCompleted, {

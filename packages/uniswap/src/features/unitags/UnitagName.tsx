@@ -37,6 +37,7 @@ export function UnitagName({
       exitStyle={animateText ? { opacity: 0 } : undefined}
       opacity={opacity}
       alignItems="center"
+      testID={`${name}${UNITAG_SUFFIX}`}
     >
       <Text
         color="$neutral1"

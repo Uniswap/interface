@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* biome-ignore-all lint/suspicious/noExplicitAny: Test utilities need flexible typing for generic render functions */
 import { InMemoryCache } from '@apollo/client'
 import type { EnhancedStore, PreloadedState } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
@@ -10,9 +10,9 @@ import {
   render as RNRender,
   renderHook as RNRenderHook,
 } from '@testing-library/react-native'
+import { GraphQLApi } from '@universe/api'
 import React, { PropsWithChildren } from 'react'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
-import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
 import { mockUniswapContext } from 'uniswap/src/test/render'
 import { WalletNavigationContextState, WalletNavigationProvider } from 'wallet/src/contexts/WalletNavigationContext'
@@ -24,7 +24,7 @@ import { WalletStateReducersOnly, walletRootReducer } from 'wallet/src/state/wal
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderOptions = RenderOptions & {
   cache?: InMemoryCache
-  resolvers?: Resolvers
+  resolvers?: GraphQLApi.Resolvers
   preloadedState?: PreloadedState<WalletStateReducersOnly>
   store?: EnhancedStore<WalletStateReducersOnly>
 }
@@ -91,7 +91,7 @@ export function renderWithProviders(
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderHookOptions<P> = RenderHookOptions<P> & {
   cache?: InMemoryCache
-  resolvers?: Resolvers
+  resolvers?: GraphQLApi.Resolvers
   preloadedState?: PreloadedState<WalletStateReducersOnly>
   store?: EnhancedStore<WalletStateReducersOnly>
 }

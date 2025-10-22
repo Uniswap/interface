@@ -1,0 +1,28 @@
+{
+  "name": "@universe/sessions",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/sessions/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "typecheck": {},
+    "lint:biome": {},
+    "lint:biome:fix": {},
+    "lint:eslint": {},
+    "lint:eslint:fix": {},
+    "lint": {},
+    "lint:fix": {},
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:coverage": {
+      "command": "vitest run --coverage",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

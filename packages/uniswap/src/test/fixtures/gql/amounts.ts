@@ -1,21 +1,17 @@
-import {
-  Amount,
-  Currency,
-  TimestampedAmount,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 import { faker, MAX_FIXTURE_TIMESTAMP } from 'uniswap/src/test/shared'
 import { createFixture, randomEnumValue } from 'uniswap/src/test/utils'
 
-export const amount = createFixture<Amount>()(() => ({
+export const amount = createFixture<GraphQLApi.Amount>()(() => ({
   __typename: 'Amount',
   id: faker.datatype.uuid(),
   value: faker.datatype.float({ min: 0, max: 1000, precision: 0.01 }),
-  currency: randomEnumValue(Currency),
+  currency: randomEnumValue(GraphQLApi.Currency),
 }))
 
 const usdAmountFactory =
   (value: number) =>
-  (currency = Currency.Usd): Amount =>
+  (currency = GraphQLApi.Currency.Usd): GraphQLApi.Amount =>
     amount({ value, currency })
 
 export const amounts = {
@@ -27,7 +23,7 @@ export const amounts = {
   xl: usdAmountFactory(500000),
 }
 
-export const timestampedAmount = createFixture<TimestampedAmount>()(() => ({
+export const timestampedAmount = createFixture<GraphQLApi.TimestampedAmount>()(() => ({
   __typename: 'TimestampedAmount',
   id: faker.datatype.uuid(),
   timestamp: faker.datatype.number({ max: MAX_FIXTURE_TIMESTAMP }),

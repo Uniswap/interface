@@ -14,3 +14,6 @@ export const selectHasViewedContractAddressExplainer = (state: UniswapState): bo
 
 export const selectHasShownMismatchToast = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.hasShownMismatchToast === true
+
+export const selectHasSeenToucanIntroModal = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.hasSeenToucanIntroModal === true

@@ -1,11 +1,6 @@
 {
-  "defaultSrc": [
-    "'self'"
-  ],
-  "scriptSrc": [
-    "'self'",
-    "'wasm-unsafe-eval'"
-  ],
+  "defaultSrc": ["'self'"],
+  "scriptSrc": ["'self'", "'wasm-unsafe-eval'"],
   "styleSrc": [
     "'self'",
     "'unsafe-inline'",
@@ -19,11 +14,7 @@
     "https://fonts.gstatic.com",
     "https://fonts.gstatic.com/s/inter/v18/*"
   ],
-  "imgSrc": [
-    "*",
-    "blob:",
-    "data:"
-  ],
+  "imgSrc": ["*", "blob:", "data:"],
   "frameSrc": [
     "'self'",
     "https://buy.moonpay.com/",
@@ -31,13 +22,8 @@
     "https://verify.walletconnect.org/",
     "https://id.porto.sh"
   ],
-  "mediaSrc": [
-    "self",
-    "*"
-  ],
-  "formAction": [
-    "'none'"
-  ],
+  "mediaSrc": ["self", "*"],
+  "formAction": ["'none'"],
   "connectSrc": [
     "'self'",
     "blob:",
@@ -85,7 +71,6 @@
     "https://ipv4-check-perf.radar.cloudflare.com",
     "https://ipv6-check-perf.radar.cloudflare.com/",
     "https://lh3.googleusercontent.com/",
-    "https://lite-api.jup.ag/",
     "https://mainnet.base.org/",
     "https://browser-intake-datadoghq.com",
     "https://openseauserdata.com/",
@@ -137,8 +122,5 @@
     "wss://www.walletlink.org",
     "wss://nbstream.binance.com"
   ],
-  "workerSrc": [
-    "'self'",
-    "blob:"
-  ]
+  "workerSrc": ["'self'", "blob:"]
 }

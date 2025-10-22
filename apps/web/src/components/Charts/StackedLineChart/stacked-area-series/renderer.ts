@@ -192,7 +192,7 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
     let firstBar = true
 
     // Modification: tracks and returns coordinates of where a glyph should be rendered for each line when a crosshair is drawn
-    const hoverInfo = { points: new Array<number>(), x: 0 }
+    const hoverInfo = { points: [] as number[], x: 0 }
 
     const numLines = isV4DataEnabled ? 3 : 2
     // Modification: updated loop to include one point above and below the visible range to ensure the line is drawn to edges of chart

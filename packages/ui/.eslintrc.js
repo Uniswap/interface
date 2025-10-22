@@ -1,6 +1,4 @@
-const {
-  native: { paths: nativePaths, patterns: nativePatterns },
-} = require('@uniswap/eslint-config/restrictedImports')
+const biomeSupportedRules = require('@uniswap/eslint-config/biome-supported')
 
 module.exports = {
   root: true,
@@ -15,9 +13,11 @@ module.exports = {
     'jest.config.js',
     'babel.config.js',
     '.nx',
+    'vitest-setup.ts',
+    'vitest.config.ts',
   ],
   parserOptions: {
-    project: 'tsconfig.json',
+    project: 'tsconfig.eslint.json',
     tsconfigRootDir: __dirname,
     ecmaFeatures: {
       jsx: true,
@@ -26,19 +26,8 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
-    '@typescript-eslint/no-restricted-imports': [
-      'error',
-      {
-        paths: [
-          ...nativePaths,
-          {
-            name: 'ui/src',
-            message: 'Avoid importing directly from ui/src from within the ui package which causes circular imports.',
-          },
-        ],
-        patterns: nativePatterns,
-      },
-    ],
+    // Disable all ESLint rules that have been migrated to Biome
+    ...biomeSupportedRules,
   },
   overrides: [
     {

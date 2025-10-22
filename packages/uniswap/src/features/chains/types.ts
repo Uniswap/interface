@@ -1,9 +1,10 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
 import { CurrencyAmount, Token, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
+import type { GraphQLApi } from '@universe/api'
 import type { ImageSourcePropType } from 'react-native'
-import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
 import { type UNIVERSE_CHAIN_INFO } from 'uniswap/src/features/chains/chainInfo'
+import { SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { NonEmptyArray } from 'utilities/src/primitives/array'
@@ -64,7 +65,7 @@ export interface RetryOptions {
   maxWait: number
 }
 
-export type GqlChainId = Exclude<BackendChainId, BackendChainId.UnknownChain | BackendChainId.EthereumGoerli>
+export type GqlChainId = Exclude<GraphQLApi.Chain, GraphQLApi.Chain.UnknownChain | GraphQLApi.Chain.EthereumGoerli>
 
 export interface BackendChain {
   chain: GqlChainId
@@ -134,6 +135,16 @@ export interface UniverseChainInfo extends WagmiChain {
     symbol: string // 'WETH',
     decimals: number // 18,
     address: string // '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6'
+  }
+  readonly gasConfig: {
+    send: {
+      configKey: SwapConfigKey // Dynamic config key for send transactions
+      default: number // Default gas amount in 10^-4 units relative to chain's native decimals
+    }
+    swap: {
+      configKey: SwapConfigKey // Dynamic config key for swap transactions
+      default: number // Default gas amount in 10^-4 units relative to chain's native decimals
+    }
   }
   readonly tradingApiPollingIntervalMs: number
 }

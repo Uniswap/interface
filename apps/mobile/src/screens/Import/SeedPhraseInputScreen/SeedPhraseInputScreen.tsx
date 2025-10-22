@@ -70,17 +70,14 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
   const isShowingAsCloudBackupFallback = params.showAsCloudBackupFallback ?? false
   const targetMnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
 
-  const handleOnInputValidated: NativeSeedPhraseInputProps['onInputValidated'] = useCallback(
-    (event) => {
-      setIsSubmitEnabled(event.nativeEvent.canSubmit)
-    },
-    [setIsSubmitEnabled],
-  )
+  const handleOnInputValidated: NativeSeedPhraseInputProps['onInputValidated'] = useCallback((event) => {
+    setIsSubmitEnabled(event.nativeEvent.canSubmit)
+  }, [])
 
   const handleSubmitError: NativeSeedPhraseInputProps['onSubmitError'] = useCallback(() => {
     sendAnalyticsEvent(MobileEventName.SeedPhraseInputSubmitError)
     setIsSubmitEnabled(true)
-  }, [setIsSubmitEnabled])
+  }, [])
 
   const handleOnMnemonicStored: NativeSeedPhraseInputProps['onMnemonicStored'] = useCallback(
     async (event) => {
@@ -97,7 +94,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: SeedPhr
       })
       setIsSubmitEnabled(true)
     },
-    [dispatch, generateImportedAccounts, setIsSubmitEnabled, isRestoringMnemonic, navigation, params],
+    [dispatch, generateImportedAccounts, isRestoringMnemonic, navigation, params],
   )
 
   const onPressRecoveryHelpButton = useCallback(

@@ -1,12 +1,12 @@
+import { TradingApi } from '@universe/api'
 import { useCallback } from 'react'
-import { fetchClaimLpIncentiveRewards } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { ClaimLPRewardsResponse, Distributor } from 'uniswap/src/data/tradingApi/__generated__'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 
 interface UseLpIncentivesClaimDataParams {
   walletAddress: string
   chainId: number
   tokens: string[]
-  distributor: Distributor
+  distributor: TradingApi.Distributor
 }
 
 // Fetch LP incentive claim data from trading API
@@ -19,11 +19,11 @@ export function useLpIncentivesClaimData() {
       tokens,
       distributor,
     }: UseLpIncentivesClaimDataParams): Promise<{
-      data: ClaimLPRewardsResponse | null
+      data: TradingApi.ClaimLPRewardsResponse | null
       error: Error | null
     }> => {
       try {
-        const response = await fetchClaimLpIncentiveRewards({
+        const response = await TradingApiClient.fetchClaimLpIncentiveRewards({
           walletAddress,
           chainId,
           tokens,

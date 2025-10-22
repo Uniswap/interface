@@ -12,7 +12,7 @@ const shineKeyframe = `
   }
 `
 
-export function Shine({ children, disabled, ...rest }: ShineProps): JSX.Element {
+export function Shine({ shimmerDurationSeconds = 1, children, disabled, ...rest }: ShineProps): JSX.Element {
   return (
     <>
       <style>{shineKeyframe}</style>
@@ -25,7 +25,7 @@ export function Shine({ children, disabled, ...rest }: ShineProps): JSX.Element 
                 WebkitMaskImage: `linear-gradient(-75deg, rgba(0,0,0,0.5) 30%, #000 50%, rgba(0,0,0,0.5) 70%)`,
                 WebkitMaskSize: '200%',
                 animationName: 'shine',
-                animationDuration: '1s',
+                animationDuration: `${shimmerDurationSeconds}s`,
                 animationTimingFunction: 'linear',
                 animationIterationCount: 'infinite',
                 animationDelay: rest['$platform-web']?.animationDelay,

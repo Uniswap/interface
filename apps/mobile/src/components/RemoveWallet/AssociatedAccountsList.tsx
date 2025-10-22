@@ -1,3 +1,4 @@
+import { GraphQLApi } from '@universe/api'
 import React, { useMemo } from 'react'
 import { StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
@@ -5,7 +6,6 @@ import { Flex, Text } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
-import { AccountListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
@@ -18,7 +18,7 @@ interface SortedAddressData {
   balance: number
 }
 
-type Portfolio = NonNullable<NonNullable<NonNullable<AccountListQuery['portfolios']>[0]>>
+type Portfolio = NonNullable<NonNullable<NonNullable<GraphQLApi.AccountListQuery['portfolios']>[0]>>
 
 function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Element {
   const { fullHeight } = useDeviceDimensions()

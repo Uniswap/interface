@@ -1,4 +1,4 @@
-import { ContractInput } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { UwULinkAllowlist } from 'uniswap/src/features/gating/configs'
 
@@ -18,6 +18,6 @@ export const isUwULinkAllowlistType = (x: unknown): x is UwULinkAllowlist => {
 export const isUniverseChainIdArrayType = (x: unknown): x is UniverseChainId[] =>
   Array.isArray(x) && x.every((c: unknown) => typeof c === 'number')
 
-export const isContractInputArrayType = (x: unknown): x is ContractInput[] =>
+export const isContractInputArrayType = (x: unknown): x is GraphQLApi.ContractInput[] =>
   Array.isArray(x) &&
   x.every((val) => typeof val.chain === 'string' && (!val.address || typeof val.address === 'string'))

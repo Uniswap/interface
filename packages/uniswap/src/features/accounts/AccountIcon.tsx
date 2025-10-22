@@ -8,12 +8,13 @@ const EYE_ICON_SCALING_FACTOR = 0.4
 interface AccountIconProps {
   size: number
   showViewOnlyBadge?: boolean
-  address: string
+  address?: string
   avatarUriOverride?: string | null
   showBackground?: boolean // Display images with solid background.
   showBorder?: boolean // Display border stroke around image
   borderWidth?: FlexProps['borderWidth']
   borderColor?: ColorTokens
+  transition?: string
 }
 
 export function AccountIcon({
@@ -25,8 +26,14 @@ export function AccountIcon({
   showBorder,
   borderColor = '$surface1',
   borderWidth = '$spacing2',
-}: AccountIconProps): JSX.Element {
+  transition,
+  ...flexProps
+}: FlexProps & AccountIconProps): JSX.Element | null {
   const { avatar } = useAvatar(address)
+
+  if (!address) {
+    return null
+  }
   // scale eye icon to be a portion of container size
   const eyeIconSize = size * EYE_ICON_SCALING_FACTOR
 
@@ -42,17 +49,18 @@ export function AccountIcon({
       borderWidth={showBorder ? borderWidth : '$none'}
       position="relative"
       testID="account-icon"
+      width={size}
+      height={size}
+      {...flexProps}
     >
-      {avatarUri ? (
+      <Flex animation="fast" enterStyle={{ opacity: 0 }}>
         <UniversalImage
-          style={{ image: { borderRadius: size } }}
+          style={{ image: { borderRadius: size, ...(transition && { transition }) } }}
           fallback={uniconImage}
           size={{ width: size, height: size, resizeMode: UniversalImageResizeMode.Cover }}
           uri={avatarUri}
         />
-      ) : (
-        uniconImage
-      )}
+      </Flex>
       {showViewOnlyBadge && (
         <Flex
           alignItems="center"

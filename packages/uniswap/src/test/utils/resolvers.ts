@@ -1,11 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* biome-ignore-all lint/suspicious/noExplicitAny: legacy code needs review */
+import { GraphQLApi } from '@universe/api'
 import cloneDeepWith from 'lodash/cloneDeepWith'
-import {
-  QueryResolvers,
-  Resolver,
-  ResolverFn,
-  ResolverWithResolve,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 type UndefinedToNull<T> = T extends undefined ? null : T
 
@@ -15,35 +10,35 @@ type ResolverReturnType<T> = T extends (...args: any[]) => infer TResult
     ? TResult
     : never
 
-type ResolverParameters<T extends Resolver<any, any, any, any>> = T extends ResolverWithResolve<
+type ResolverParameters<T extends GraphQLApi.Resolver<any, any, any, any>> = T extends GraphQLApi.ResolverWithResolve<
   infer TResult, // only result type is needed to filter selected fields
   any,
   any,
   any
 >
-  ? Parameters<ResolverFn<TResult, any, any, any>>
-  : T extends ResolverFn<infer TResult, any, any, any>
-    ? Parameters<ResolverFn<TResult, any, any, any>>
+  ? Parameters<GraphQLApi.ResolverFn<TResult, any, any, any>>
+  : T extends GraphQLApi.ResolverFn<infer TResult, any, any, any>
+    ? Parameters<GraphQLApi.ResolverFn<TResult, any, any, any>>
     : never
 
-type ResolverResponses<T extends QueryResolvers> = {
+type ResolverResponses<T extends GraphQLApi.QueryResolvers> = {
   [K in keyof T]: Promise<ResolverReturnType<T[K]>>
 }
 
-function isResolverWithResolve<T extends Resolver<any, any, any, any>>(
+function isResolverWithResolve<T extends GraphQLApi.Resolver<any, any, any, any>>(
   resolver: T,
-): resolver is Extract<T, ResolverWithResolve<any, any, any, any>> {
+): resolver is Extract<T, GraphQLApi.ResolverWithResolve<any, any, any, any>> {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   return typeof resolver === 'object' && resolver !== null && 'resolve' in resolver
 }
 
-function isResolverFunction<T extends Resolver<any, any, any, any>>(
+function isResolverFunction<T extends GraphQLApi.Resolver<any, any, any, any>>(
   resolver: T,
-): resolver is Extract<T, ResolverFn<any, any, any, any>> {
+): resolver is Extract<T, GraphQLApi.ResolverFn<any, any, any, any>> {
   return typeof resolver === 'function'
 }
 
-export function queryResolvers<T extends QueryResolvers>(
+export function queryResolvers<T extends GraphQLApi.QueryResolvers>(
   resolvers: T,
 ): {
   resolved: ResolverResponses<T>

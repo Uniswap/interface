@@ -1,7 +1,7 @@
 {
   "$schema": "https://json.schemastore.org/tsconfig",
   "display": "UI",
-  "extends": "./base.json",
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "esModuleInterop": true,
     "allowJs": false,
@@ -9,8 +9,6 @@
     "resolveJsonModule": true,
     "noEmit": false,
     "target": "es2019",
-    "types": [
-      "node"
-    ],
+    "types": ["node"]
   }
 }

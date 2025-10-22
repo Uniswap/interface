@@ -1,10 +1,11 @@
 import { Currency } from '@uniswap/sdk-core'
 import { DepositInfo } from 'components/Liquidity/types'
+import { useModalInitialState } from 'hooks/useModalInitialState'
 import { useDerivedIncreaseLiquidityInfo } from 'pages/IncreaseLiquidity/hooks/useDerivedIncreaseLiquidityInfo'
 import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useMemo, useState } from 'react'
 import { LiquidityModalInitialState } from 'state/application/reducer'
-import { useAppSelector } from 'state/hooks'
 import { PositionField } from 'types/position'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 
 export enum IncreaseLiquidityStep {
@@ -57,7 +58,7 @@ export function useIncreaseLiquidityContext() {
 }
 
 export function IncreaseLiquidityContextProvider({ children }: PropsWithChildren) {
-  const positionInfo = useAppSelector((state) => state.application.openModal)?.initialState
+  const positionInfo = useModalInitialState(ModalName.AddLiquidity)
 
   const [step, setStep] = useState(IncreaseLiquidityStep.Input)
   const [unwrapNativeCurrency, setUnwrapNativeCurrency] = useState(true)

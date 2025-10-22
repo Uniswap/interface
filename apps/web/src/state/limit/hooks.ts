@@ -15,7 +15,7 @@ import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getStablecoinsForChain, isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { isEVMChain, isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export type LimitInfo = {
@@ -118,7 +118,8 @@ export function useDerivedLimitInfo(state: LimitState): LimitInfo {
 
   const { marketPrice, fee: swapFee } = useMarketPriceAndFee(inputCurrency, outputCurrency)
 
-  const skip = !(inputCurrency && outputCurrency)
+  const skip =
+    !(inputCurrency && outputCurrency) || isSVMChain(inputCurrency.chainId) || isSVMChain(outputCurrency.chainId)
 
   const { trade } = useRoutingAPITrade(
     skip,
@@ -221,7 +222,9 @@ function useMarketPriceAndFee(
   inputCurrency: Currency | undefined,
   outputCurrency: Currency | undefined,
 ): { marketPrice?: Price<Currency, Currency>; fee?: SwapFeeInfo } {
-  const skip = !(inputCurrency && outputCurrency)
+  const skip =
+    !(inputCurrency && outputCurrency) || isSVMChain(inputCurrency.chainId) || isSVMChain(outputCurrency.chainId)
+
   // TODO(limits): update amount for MATIC and CELO once Limits are supported on those chains
   const baseCurrencyAmount =
     inputCurrency && CurrencyAmount.fromRawAmount(nativeOnChain(inputCurrency.chainId), 10 ** 18)
