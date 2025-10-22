@@ -112,8 +112,8 @@ const Copyright = styled.span`
 `
 
 const BrandTitle = styled.h3`
-  font-size: 16px;
-  font-weight: 535;
+  font-size: 24px;
+  font-weight: 700;
   line-height: 20px;
   margin: 20px 0 12px 0;
   color: ${({ theme }) => theme.neutral1};
