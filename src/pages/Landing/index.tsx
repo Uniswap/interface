@@ -5,17 +5,13 @@ import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
-import { useAccountDrawer } from 'components/AccountDrawer'
 import { BaseButton } from 'components/Button'
 import { AppleLogo } from 'components/Logo/AppleLogo'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
-import { parse } from 'qs'
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { ArrowDownCircle } from 'react-feather'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
 import { Link as NativeLink } from 'react-router-dom'
-import { useAppSelector } from 'state/hooks'
 import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
@@ -300,28 +296,14 @@ const Link = styled(NativeLink)`
 export default function Landing() {
   const isDarkMode = useIsDarkMode()
   const cardsRef = useRef<HTMLDivElement>(null)
-  const selectedWallet = useAppSelector((state) => state.user.selectedWallet)
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const cards = useMemo(
     () => MAIN_CARDS.filter((card) => !(shouldDisableNFTRoutes && card.to.startsWith('/nft'))),
     [shouldDisableNFTRoutes]
   )
 
-  const [accountDrawerOpen] = useAccountDrawer()
-  const navigate = useNavigate()
-  useEffect(() => {
-    if (accountDrawerOpen) {
-      setTimeout(() => {
-        navigate('/swap')
-      }, TRANSITION_DURATIONS.fast)
-    }
-  }, [accountDrawerOpen, navigate])
-
-  const location = useLocation()
-  const queryParams = parse(location.search, { ignoreQueryPrefix: true })
-  if (selectedWallet && !queryParams.intro) {
-    return <Navigate to={{ ...location, pathname: '/swap' }} replace />
-  }
+  // Landing page now includes the swap functionality directly
+  // No need to redirect to /swap anymore
 
   return (
     <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
