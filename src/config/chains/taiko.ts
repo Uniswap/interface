@@ -13,7 +13,7 @@ import { ChainAddresses } from './validation'
  * Custom ChainIds for Taiko networks
  */
 export const TAIKO_MAINNET_CHAIN_ID = 167000 as const
-export const TAIKO_HOODI_CHAIN_ID = 167012 as const
+export const TAIKO_HOODI_CHAIN_ID = 167013 as const
 
 /**
  * Taiko Hoodi Testnet Configuration
@@ -24,14 +24,14 @@ export const TAIKO_HOODI_CHAIN_ID = 167012 as const
  */
 export const TAIKO_HOODI_ADDRESSES: ChainAddresses = {
   // Core Protocol
-  weth9: '0x73C251a8005D31900Fe32A309C05d60adf6ba87a',
-  factory: '0xF7D0a7B04eBcB07b1bB5992d6B50a5BF55C903af',
+  weth9: '0xc1FC6b2269cA5D24B51a386B200d905165a223dB',
+  factory: '0x87C772301B2054D47e2b12c4C3C402481158B7f2',
 
   // Periphery Contracts
-  router: '0x7812fF6117c838cC025F5cfaD5ac8C300baA0c5D',
-  positionManager: '0x6a794430DC233E3433E8a70d1a900923fd3cB9e3',
-  quoterV2: '0xef840140Dd75eC5Fa4Aa0002aEa52a8937da2611',
-  multicall: '0xA37f6e12b224A3d6AaF5C384876B919b3122B830',
+  router: '0x290265ACd21816EE414E64eEC77dd490d8dd9f51',
+  positionManager: '0xa3a3F71bd5a24BC65B4ba80ac14839fAAc7ae5fD',
+  quoterV2: '0x95270d42071FA60dEfdb3F8D29ebaAF1754ab225',
+  multicall: '0x323dD97aF6DDc101eF306c5daA6aE34c15EA37B7',
   tickLens: '0xFaF7dd4dF637fdcb9Abe41e98D84b3e4a906A1D0',
 
   // Additional Contracts
@@ -136,7 +136,7 @@ export const TAIKO_MAINNET_METADATA: TaikoChainMetadata = {
  */
 export const TAIKO_UNIVERSAL_ROUTER_ADDRESS = {
   [TAIKO_MAINNET_CHAIN_ID]: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
-  [TAIKO_HOODI_CHAIN_ID]: '0x7812fF6117c838cC025F5cfaD5ac8C300baA0c5D', // Verified deployment
+  [TAIKO_HOODI_CHAIN_ID]: '0x290265ACd21816EE414E64eEC77dd490d8dd9f51', // Verified deployment (SwapRouter02)
 } as const
 
 /**

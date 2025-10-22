@@ -154,6 +154,8 @@ const commonTheme = {
   chain_167000_background: colors.pink900,
   chain_167012: colors.networkTaiko,
   chain_167012_background: colors.pink900,
+  chain_167013: colors.networkTaiko,
+  chain_167013_background: colors.pink900,
   promotional: colors.magenta300,
 
   brandedGradient: 'linear-gradient(139.57deg, #FF79C9 4.35%, #FFB8E2 96.44%);',

@@ -289,8 +289,8 @@ const CHAIN_INFO: ChainInfoMap = {
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     statusPage: 'https://status.taiko.xyz/',
     defaultListUrl: '', // No default token list yet
-    color: darkTheme.chain_167012,
-    backgroundColor: darkTheme.chain_167012_background,
+    color: darkTheme.chain_167013,
+    backgroundColor: darkTheme.chain_167013_background,
   },
 } as const
 
