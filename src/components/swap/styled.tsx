@@ -30,7 +30,7 @@ export const PageWrapper = styled.div`
 
 // Gradient background for swap page
 export const SwapGradientBackground = styled.div<{ isDarkMode: boolean }>`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
@@ -51,7 +51,7 @@ export const SwapGradientBackground = styled.div<{ isDarkMode: boolean }>`
 
 // Glow effect behind swap card
 export const SwapGlowContainer = styled.div`
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   right: 0;
