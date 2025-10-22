@@ -245,8 +245,8 @@ export default function App() {
                     }
                   />
                   <Route path="create-proposal" element={<Navigate to="/vote/create-proposal" replace />} />
-                  <Route path="send" element={<Navigate to={{ ...location, pathname: '/swap' }} replace />} />
-                  <Route path="swap" element={<Swap />} />
+                  <Route path="send" element={<Navigate to={{ ...location, pathname: '/' }} replace />} />
+                  <Route path="swap" element={<Navigate to="/" replace />} />
 
                   <Route path="pool/v2/find" element={<PoolFinder />} />
                   <Route path="pool/v2" element={<PoolV2 />} />

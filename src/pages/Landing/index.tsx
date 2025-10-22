@@ -327,15 +327,7 @@ export default function Landing() {
     <Trace page={InterfacePageName.LANDING_PAGE} shouldLogImpression>
       <PageContainer data-testid="landing-page">
         <LandingSwapContainer>
-          <TraceEvent
-            events={[BrowserEvent.onClick]}
-            name={SharedEventName.ELEMENT_CLICKED}
-            element={InterfaceElementName.LANDING_PAGE_SWAP_ELEMENT}
-          >
-            <Link to="/swap">
-              <LandingSwap />
-            </Link>
-          </TraceEvent>
+          <LandingSwap />
         </LandingSwapContainer>
         <Gradient isDarkMode={isDarkMode} />
         <GlowContainer>

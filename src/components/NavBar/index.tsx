@@ -64,7 +64,7 @@ export const PageTabs = () => {
 
   return (
     <>
-      <MenuItem href="/swap" isActive={pathname.startsWith('/swap')}>
+      <MenuItem href="/" isActive={pathname === '/'}>
         <Trans>Swap</Trans>
       </MenuItem>
       {/* Temporarily hidden - Tokens page
