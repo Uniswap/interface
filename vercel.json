@@ -1,7 +1,7 @@
 {
-  "buildCommand": "yarn ajv && yarn contracts && yarn i18n && yarn build",
+  "buildCommand": "yarn build",
   "devCommand": "yarn start",
-  "installCommand": "yarn install --ignore-engines --ignore-scripts --registry https://registry.yarnpkg.com",
+  "installCommand": "yarn install --ignore-engines --registry https://registry.yarnpkg.com",
   "framework": null,
   "outputDirectory": "build",
   "env": {
