@@ -1,0 +1,7 @@
+{
+  "buildCommand": "yarn build",
+  "devCommand": "yarn start",
+  "installCommand": "yarn install",
+  "framework": null,
+  "outputDirectory": "build"
+}
