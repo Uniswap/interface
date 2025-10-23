@@ -1,7 +1,10 @@
 {
   "buildCommand": "yarn build",
   "devCommand": "yarn start",
-  "installCommand": "yarn install",
+  "installCommand": "yarn install --ignore-engines",
   "framework": null,
-  "outputDirectory": "build"
+  "outputDirectory": "build",
+  "env": {
+    "NODE_VERSION": "20.x"
+  }
 }
