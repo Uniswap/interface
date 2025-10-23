@@ -1,7 +1,7 @@
 {
   "buildCommand": "yarn build",
   "devCommand": "yarn start",
-  "installCommand": "yarn install --ignore-engines --registry https://registry.yarnpkg.com",
+  "installCommand": "yarn install --ignore-engines --network-timeout 100000",
   "framework": null,
   "outputDirectory": "build",
   "env": {
