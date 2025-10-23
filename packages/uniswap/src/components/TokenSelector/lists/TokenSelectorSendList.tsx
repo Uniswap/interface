@@ -68,11 +68,9 @@ function _TokenSelectorSendList({
   chainFilter,
   onSelectCurrency,
   onEmptyActionPress,
-  renderedInModal,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
   onEmptyActionPress: () => void
-  renderedInModal: boolean
 }): JSX.Element {
   const {
     data: sections,
@@ -96,7 +94,6 @@ function _TokenSelectorSendList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={false}
-      renderedInModal={renderedInModal}
       onSelectCurrency={onSelectCurrency}
     />
   )

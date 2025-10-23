@@ -14,7 +14,6 @@ import { DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { FORMAT_DATE_TIME_SHORT, useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
-import { useEvent } from 'utilities/src/react/hooks'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
@@ -24,13 +23,13 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
 
   const sortedBackups = params.backups.slice().sort((a, b) => b.createdAt - a.createdAt)
 
-  const onPressRestoreBackup = useEvent((backup: CloudStorageMnemonicBackup): void => {
+  const onPressRestoreBackup = async (backup: CloudStorageMnemonicBackup): Promise<void> => {
     navigation.navigate({
       name: OnboardingScreens.RestoreCloudBackupPassword,
       params: { ...params, mnemonicId: backup.mnemonicId },
       merge: true,
     })
-  })
+  }
 
   useNavigationHeader(navigation)
 
@@ -56,7 +55,7 @@ const BackupListItem = ({
   onPressRestoreBackup,
 }: {
   backup: CloudStorageMnemonicBackup
-  onPressRestoreBackup: (backup: CloudStorageMnemonicBackup) => void
+  onPressRestoreBackup: (backup: CloudStorageMnemonicBackup) => Promise<void>
 }): JSX.Element => {
   const { mnemonicId, createdAt } = backup
   const isDarkMode = useIsDarkMode()
@@ -73,7 +72,7 @@ const BackupListItem = ({
       p="$spacing16"
       shadowColor="$surface3"
       shadowRadius={!isDarkMode ? '$spacing4' : undefined}
-      onPress={(): void => onPressRestoreBackup(backup)}
+      onPress={(): Promise<void> => onPressRestoreBackup(backup)}
     >
       <Flex row alignItems="center" gap="$spacing12">
         <AccountIcon address={mnemonicId} size={iconSizes.icon36} />

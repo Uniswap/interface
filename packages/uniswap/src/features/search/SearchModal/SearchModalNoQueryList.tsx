@@ -181,7 +181,7 @@ interface SearchModalNoQueryListProps {
   chainFilter: UniverseChainId | null
   activeTab: SearchTab
   onSelect?: SearchModalListProps['onSelect']
-  renderedInModal: boolean
+  renderedInModal?: boolean
   contentContainerStyle?: ContentStyle
 }
 

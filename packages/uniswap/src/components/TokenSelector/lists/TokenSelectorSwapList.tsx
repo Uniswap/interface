@@ -181,11 +181,9 @@ function _TokenSelectorSwapList({
   svmAddress,
   chainFilter,
   oppositeSelectedToken,
-  renderedInModal,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
   chainFilter: UniverseChainId | null
-  renderedInModal: boolean
 }): JSX.Element {
   const {
     data: sections,
@@ -207,7 +205,6 @@ function _TokenSelectorSwapList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
-      renderedInModal={renderedInModal}
       onSelectCurrency={onSelectCurrency}
     />
   )

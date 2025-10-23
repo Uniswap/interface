@@ -108,14 +108,12 @@ export const ExploreScreenSearchResultsList = memo(function _ExploreScreenSearch
             debouncedSearchFilter={debouncedSearchQuery}
             searchFilter={searchQuery}
             activeTab={activeTab}
-            renderedInModal={!isBottomTabsEnabled}
             contentContainerStyle={contentContainerStyle}
           />
         ) : (
           <SearchModalNoQueryList
             chainFilter={chainFilter}
             activeTab={activeTab}
-            renderedInModal={!isBottomTabsEnabled}
             contentContainerStyle={contentContainerStyle}
           />
         )}

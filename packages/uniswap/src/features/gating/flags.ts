@@ -53,6 +53,7 @@ export enum FeatureFlags {
   SmartWalletSettings,
   SwapPreSign,
   TradingApiSwapConfirmation,
+  UseAlarmsApi,
 
   // Web
   AATestWeb,
@@ -88,7 +89,6 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.DisableSwap7702, 'disable-swap-7702'],
   [FeatureFlags.EmbeddedWallet, 'embedded_wallet'],
   [FeatureFlags.EnablePermitMismatchUX, 'enable_permit2_mismatch_ux'],
-
   [FeatureFlags.FiatOffRamp, 'fiat_offramp_web'],
   [FeatureFlags.ForceDisableWalletGetCapabilities, 'force_disable_wallet_get_capabilities'],
   [FeatureFlags.ForcePermitTransactions, 'force_permit_transactions'],
@@ -156,6 +156,7 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.Scantastic, 'scantastic'],
   [FeatureFlags.SmartWalletSettings, 'smart_wallet_settings'],
   [FeatureFlags.SwapPreSign, 'swap_pre_sign'],
+  [FeatureFlags.UseAlarmsApi, 'use_alarms_api'],
   [FeatureFlags.UwULink, 'uwu-link'],
 ])
 
