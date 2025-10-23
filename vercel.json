@@ -1,5 +1,5 @@
 {
-  "buildCommand": "yarn build",
+  "buildCommand": "yarn ajv && yarn contracts && yarn i18n && yarn build",
   "devCommand": "yarn start",
   "installCommand": "yarn install --ignore-engines --registry https://registry.yarnpkg.com",
   "framework": null,
