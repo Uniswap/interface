@@ -1,7 +1,7 @@
 {
   "buildCommand": "yarn build",
   "devCommand": "yarn start",
-  "installCommand": "yarn install --ignore-engines",
+  "installCommand": "yarn install --ignore-engines --registry https://registry.yarnpkg.com",
   "framework": null,
   "outputDirectory": "build",
   "env": {
