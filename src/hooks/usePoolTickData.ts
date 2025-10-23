@@ -2,6 +2,7 @@ import { ChainId, Currency, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, nearestUsableTick, Pool, TICK_SPACINGS, tickToPrice } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { ZERO_ADDRESS } from 'constants/misc'
+import { TAIKO_HOODI_CHAIN_ID, TAIKO_MAINNET_CHAIN_ID } from 'constants/taiko'
 import { useAllV3TicksQuery } from 'graphql/thegraph/__generated__/types-and-hooks'
 import { TickData, Ticks } from 'graphql/thegraph/AllV3TicksQuery'
 import { apolloClient } from 'graphql/thegraph/apollo'
@@ -15,7 +16,12 @@ import { useTickLens } from './useContract'
 import { PoolState, usePool } from './usePools'
 
 const PRICE_FIXED_DIGITS = 8
-const CHAIN_IDS_MISSING_SUBGRAPH_DATA = [ChainId.ARBITRUM_ONE, ChainId.ARBITRUM_GOERLI]
+const CHAIN_IDS_MISSING_SUBGRAPH_DATA = [
+  ChainId.ARBITRUM_ONE,
+  ChainId.ARBITRUM_GOERLI,
+  TAIKO_MAINNET_CHAIN_ID,
+  TAIKO_HOODI_CHAIN_ID,
+]
 
 // Tick with fields parsed to JSBIs, and active liquidity computed.
 export interface TickProcessed {

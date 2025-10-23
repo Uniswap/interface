@@ -1,4 +1,6 @@
 import { ApolloError, useQuery } from '@apollo/client'
+import { useWeb3React } from '@web3-react/core'
+import { TAIKO_HOODI_CHAIN_ID, TAIKO_MAINNET_CHAIN_ID } from 'constants/taiko'
 import gql from 'graphql-tag'
 import { useMemo } from 'react'
 
@@ -38,6 +40,11 @@ export default function useFeeTierDistributionQuery(
   token1: string | undefined,
   interval: number
 ): { error?: ApolloError; isLoading: boolean; data: FeeTierDistributionQuery } {
+  const { chainId } = useWeb3React()
+
+  // Skip subgraph queries for Taiko chains (no subgraph deployed yet)
+  const skip = chainId === TAIKO_MAINNET_CHAIN_ID || chainId === TAIKO_HOODI_CHAIN_ID
+
   const {
     data,
     loading: isLoading,
@@ -49,6 +56,7 @@ export default function useFeeTierDistributionQuery(
     },
     pollInterval: interval,
     client: apolloClient,
+    skip,
   })
 
   return useMemo(
