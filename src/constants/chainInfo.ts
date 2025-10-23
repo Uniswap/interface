@@ -15,6 +15,7 @@ import optimismSquareLogoUrl from 'assets/svg/optimism_square_logo.svg'
 import optimismLogoUrl from 'assets/svg/optimistic_ethereum.svg'
 import polygonSquareLogoUrl from 'assets/svg/polygon_square_logo.svg'
 import polygonMaticLogo from 'assets/svg/polygon-matic-logo.svg'
+import taikoLogo from 'assets/svg/taiko_logo.svg'
 import ms from 'ms'
 import { darkTheme } from 'theme/colors'
 
@@ -268,8 +269,8 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://taikoscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Taiko',
-    logoUrl: ethereumLogoUrl, // TODO: Replace with Taiko logo when available
-    circleLogoUrl: ethereumLogoUrl, // TODO: Replace with Taiko logo when available
+    logoUrl: taikoLogo,
+    circleLogoUrl: taikoLogo,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     statusPage: 'https://status.taiko.xyz/',
     defaultListUrl: '', // No default token list yet
@@ -284,8 +285,8 @@ const CHAIN_INFO: ChainInfoMap = {
     explorer: 'https://hoodi.taikoscan.io/',
     infoLink: 'https://info.uniswap.org/#/',
     label: 'Taiko Hoodi',
-    logoUrl: ethereumLogoUrl, // TODO: Replace with Taiko logo when available
-    circleLogoUrl: ethereumLogoUrl, // TODO: Replace with Taiko logo when available
+    logoUrl: taikoLogo,
+    circleLogoUrl: taikoLogo,
     nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
     statusPage: 'https://status.taiko.xyz/',
     defaultListUrl: '', // No default token list yet
