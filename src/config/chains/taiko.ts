@@ -24,7 +24,7 @@ export const TAIKO_HOODI_CHAIN_ID = 167013 as const
  */
 export const TAIKO_HOODI_ADDRESSES: ChainAddresses = {
   // Core Protocol
-  weth9: '0xc1FC6b2269cA5D24B51a386B200d905165a223dB',
+  weth9: '0x3B39685B5495359c892DDD1057B5712F49976835',
   factory: '0x87C772301B2054D47e2b12c4C3C402481158B7f2',
 
   // Periphery Contracts
