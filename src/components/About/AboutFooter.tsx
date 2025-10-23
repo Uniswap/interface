@@ -121,7 +121,7 @@ const BrandTitle = styled.h3`
   font-size: 24px;
   font-weight: 700;
   line-height: 20px;
-  margin: 0 0 12px 0;
+  margin: 16px 0 12px 0;
   color: ${({ theme }) => theme.neutral1};
 `
 
