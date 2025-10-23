@@ -1,8 +1,5 @@
 import { CHART_BEHAVIOR } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
-import type {
-  ChartStoreState,
-  TickNavigationParams,
-} from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
+import type { ChartStoreState } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { DefaultPriceStrategy } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { getClosestTick } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/getClosestTick'
 import {
@@ -56,17 +53,13 @@ export const createPriceActions = ({
     }
   },
 
-  setPriceStrategy: ({ priceStrategy, animate = true }: { priceStrategy: DefaultPriceStrategy; animate: boolean }) => {
-    const { actions, dimensions, dynamicZoomMin, renderingContext, defaultMinPrice, defaultMaxPrice } = get()
+  setPriceStrategy: (priceStrategy: DefaultPriceStrategy) => {
+    const { actions, dimensions, dynamicZoomMin, renderingContext } = get()
     if (!renderingContext) {
       return
     }
 
-    set((state) => ({
-      ...state,
-      selectedPriceStrategy: priceStrategy,
-      isFullRange: priceStrategy === DefaultPriceStrategy.FULL_RANGE,
-    }))
+    set((state) => ({ ...state, selectedPriceStrategy: priceStrategy }))
 
     const { priceData, liquidityData } = renderingContext
     const currentPrice = priceData[priceData.length - 1].value || 0
@@ -75,8 +68,6 @@ export const createPriceActions = ({
       priceStrategy,
       currentPrice,
       liquidityData,
-      defaultMinPrice,
-      defaultMaxPrice,
     })
 
     const { index: minTickIndex } = getClosestTick(liquidityData, targetMinPrice)
@@ -90,21 +81,12 @@ export const createPriceActions = ({
       dimensions,
     })
 
-    if (animate) {
-      actions.animateToState({
-        targetZoom,
-        targetPan: targetPanY,
-        targetMinPrice,
-        targetMaxPrice,
-      })
-    } else {
-      actions.setChartState({
-        zoomLevel: targetZoom,
-        panY: targetPanY,
-        minPrice: targetMinPrice,
-        maxPrice: targetMaxPrice,
-      })
-    }
+    actions.animateToState({
+      targetZoom,
+      targetPan: targetPanY,
+      targetMinPrice,
+      targetMaxPrice,
+    })
 
     setTimeout(() => {
       actions.handlePriceChange('min', targetMinPrice)
@@ -112,26 +94,16 @@ export const createPriceActions = ({
     }, CHART_BEHAVIOR.ANIMATION_DURATION)
   },
 
-  incrementMax: ({
-    tickSpacing,
-    baseCurrency,
-    quoteCurrency,
-    priceInverted,
-    protocolVersion,
-  }: TickNavigationParams) => {
-    const { maxPrice, actions } = get()
-    if (!maxPrice) {
+  incrementMax: () => {
+    const { maxPrice, renderingContext, actions } = get()
+    if (!maxPrice || !renderingContext) {
       return
     }
 
     const newPrice = navigateTick({
+      liquidityData: renderingContext.liquidityData,
       currentPrice: maxPrice,
-      tickSpacing,
-      direction: 'increment',
-      baseCurrency,
-      quoteCurrency,
-      priceInverted,
-      protocolVersion,
+      direction: 'next',
     })
 
     if (newPrice !== undefined) {
@@ -140,26 +112,16 @@ export const createPriceActions = ({
     }
   },
 
-  decrementMax: ({
-    tickSpacing,
-    baseCurrency,
-    quoteCurrency,
-    priceInverted,
-    protocolVersion,
-  }: TickNavigationParams) => {
-    const { maxPrice, actions } = get()
-    if (!maxPrice) {
+  decrementMax: () => {
+    const { maxPrice, renderingContext, actions } = get()
+    if (!maxPrice || !renderingContext) {
       return
     }
 
     const newPrice = navigateTick({
+      liquidityData: renderingContext.liquidityData,
       currentPrice: maxPrice,
-      tickSpacing,
-      direction: 'decrement',
-      baseCurrency,
-      quoteCurrency,
-      priceInverted,
-      protocolVersion,
+      direction: 'prev',
     })
 
     if (newPrice !== undefined) {
@@ -168,26 +130,16 @@ export const createPriceActions = ({
     }
   },
 
-  incrementMin: ({
-    tickSpacing,
-    baseCurrency,
-    quoteCurrency,
-    priceInverted,
-    protocolVersion,
-  }: TickNavigationParams) => {
-    const { minPrice, actions } = get()
-    if (!minPrice) {
+  incrementMin: () => {
+    const { minPrice, renderingContext, actions } = get()
+    if (!minPrice || !renderingContext) {
       return
     }
 
     const newPrice = navigateTick({
+      liquidityData: renderingContext.liquidityData,
       currentPrice: minPrice,
-      tickSpacing,
-      direction: 'increment',
-      baseCurrency,
-      quoteCurrency,
-      priceInverted,
-      protocolVersion,
+      direction: 'next',
     })
 
     if (newPrice !== undefined) {
@@ -196,41 +148,21 @@ export const createPriceActions = ({
     }
   },
 
-  decrementMin: ({
-    tickSpacing,
-    baseCurrency,
-    quoteCurrency,
-    priceInverted,
-    protocolVersion,
-  }: TickNavigationParams) => {
-    const { minPrice, actions } = get()
-    if (!minPrice) {
+  decrementMin: () => {
+    const { minPrice, renderingContext, actions } = get()
+    if (!minPrice || !renderingContext) {
       return
     }
 
     const newPrice = navigateTick({
+      liquidityData: renderingContext.liquidityData,
       currentPrice: minPrice,
-      tickSpacing,
-      direction: 'decrement',
-      baseCurrency,
-      quoteCurrency,
-      priceInverted,
-      protocolVersion,
+      direction: 'prev',
     })
 
     if (newPrice !== undefined) {
       actions.setChartState({ minPrice: newPrice })
       actions.handlePriceChange('min', newPrice)
     }
-  },
-
-  syncIsFullRangeFromParent: (isFullRange: boolean) => {
-    const { actions, isFullRange: currentIsFullRange } = get()
-    if (currentIsFullRange === isFullRange) {
-      return
-    }
-
-    set((state) => ({ ...state, isFullRange }))
-    actions.reset({ animate: false })
   },
 })

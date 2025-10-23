@@ -1675,6 +1675,7 @@
   "settings.action.lock": "قفل المحفظة",
   "settings.action.privacy": "سياسة الخصوصية",
   "settings.action.terms": "شروط الخدمة",
+  "settings.connectWalletPlatform.warning": "لاستخدام Uniswap على {{platform}}، قم بالاتصال بمحفظة تدعم {{platform}}.",
   "settings.footer": "صُنع بكل حب، \nفريق Uniswap 🦄",
   "settings.hideSmallBalances": "إخفاء الأرصدة الصغيرة",
   "settings.hideSmallBalances.subtitle": "سيتم إخفاء الأرصدة التي تقل عن 1 دولار أمريكي من محفظتك.",
@@ -1845,7 +1846,7 @@
   "smartWallets.postSwapNudge.title.dapp": "يدعم هذا التطبيق المحافظ الذكية",
   "smartWallets.unavailableModal.description": "يُدير موفر محفظة آخر إعدادات المحفظة الذكية لـ {{displayName}}. يمكنك الاستمرار في استخدام Uniswap كالمعتاد.",
   "smartWallets.unavailableModal.title": "ميزات المحفظة الذكية غير متوفرة",
-  "solanaPromo.banner.description": "قم بتداول رموز Solana مباشرة على تطبيق Uniswap Web App.",
+  "solanaPromo.banner.description": "قم بتداول رموز Solana مباشرة على Uniswap.",
   "solanaPromo.banner.title": "سولانا متاحة الآن",
   "solanaPromo.modal.connectWallet": "قم بتوصيل محفظة Solana المفضلة لديك",
   "solanaPromo.modal.startSwapping.button": "ابدأ بالتبديل على سولانا",

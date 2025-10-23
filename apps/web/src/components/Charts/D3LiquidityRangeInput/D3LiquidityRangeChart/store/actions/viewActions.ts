@@ -101,7 +101,7 @@ export const createViewActions = ({
   },
 
   reset: (params?: { animate?: boolean; minPrice?: number | null; maxPrice?: number | null }) => {
-    const { animate = true, minPrice: providedMinPrice, maxPrice: providedMaxPrice } = params ?? {}
+    const { animate = true, minPrice, maxPrice } = params ?? {}
     const { actions, isFullRange, dynamicZoomMin, renderingContext } = get()
 
     if (!renderingContext) {
@@ -151,32 +151,12 @@ export const createViewActions = ({
 
     // Take 20%-80% of the viewport range (middle 60%)
     const visibleRange = maxVisiblePrice - minVisiblePrice
+    const defaultMinPrice = minPrice ?? minVisiblePrice + visibleRange * 0.2
+    const defaultMaxPrice = maxPrice ?? minVisiblePrice + visibleRange * 0.8
 
-    // Calculate and store the default 20%-80% range
-    const calculatedDefaultMinPrice = minVisiblePrice + visibleRange * 0.2
-    const calculatedDefaultMaxPrice = minVisiblePrice + visibleRange * 0.8
-
-    // Find ticks for calculated default prices
-    const { index: defaultMinTickIndex } = getClosestTick(liquidityData, calculatedDefaultMinPrice)
-    const { index: defaultMaxTickIndex } = getClosestTick(liquidityData, calculatedDefaultMaxPrice)
-    const defaultMinPrice = liquidityData[defaultMinTickIndex].price0
-    const defaultMaxPrice = liquidityData[defaultMaxTickIndex].price0
-
-    // Store default prices in state
-    set((state) => ({
-      ...state,
-      defaultMinPrice,
-      defaultMaxPrice,
-      selectedPriceStrategy: undefined,
-    }))
-
-    // For the actual position, use provided prices or fall back to defaults
-    const minPrice = providedMinPrice ?? defaultMinPrice
-    const maxPrice = providedMaxPrice ?? defaultMaxPrice
-
-    // Find ticks for the actual position
-    const { index: minTickIndex } = getClosestTick(liquidityData, minPrice)
-    const { index: maxTickIndex } = getClosestTick(liquidityData, maxPrice)
+    // Find ticks that correspond to the default min and max prices
+    const { index: minTickIndex } = getClosestTick(liquidityData, defaultMinPrice)
+    const { index: maxTickIndex } = getClosestTick(liquidityData, defaultMaxPrice)
 
     const resetDimensions = { width: 0, height: CHART_DIMENSIONS.LIQUIDITY_CHART_HEIGHT }
 
@@ -204,23 +184,23 @@ export const createViewActions = ({
       actions.animateToState({
         targetZoom: desiredZoom,
         targetPan: centerPanY,
-        targetMinPrice: minPrice,
-        targetMaxPrice: maxPrice,
+        targetMinPrice: defaultMinPrice,
+        targetMaxPrice: defaultMaxPrice,
       })
     } else {
       actions.setChartState({
         zoomLevel: desiredZoom,
         panY: centerPanY,
-        minPrice,
-        maxPrice,
+        minPrice: defaultMinPrice,
+        maxPrice: defaultMaxPrice,
       })
     }
 
     // Wait until animation is complete before calling handlePriceChange
     setTimeout(
       () => {
-        actions.handlePriceChange('min', minPrice)
-        actions.handlePriceChange('max', maxPrice)
+        actions.handlePriceChange('min', defaultMinPrice)
+        actions.handlePriceChange('max', defaultMaxPrice)
       },
       animate ? CHART_BEHAVIOR.ANIMATION_DURATION : 0,
     )

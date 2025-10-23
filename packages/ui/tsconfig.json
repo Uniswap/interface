@@ -4,12 +4,9 @@
   "references": [
     {
       "path": "../utilities"
-    },
-    {
-      "path": "../../config/vitest-presets"
     }
   ],
   "compilerOptions": {
-    "types": ["chrome", "vitest/globals"]
+    "types": ["chrome", "jest"]
   }
 }

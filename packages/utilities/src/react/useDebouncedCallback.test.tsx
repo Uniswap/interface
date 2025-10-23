@@ -1,19 +1,19 @@
-import { act, renderHook } from '@testing-library/react'
+import { waitFor } from '@testing-library/react'
+import { act, renderHook } from '@testing-library/react-hooks'
 import { useDebouncedCallback } from 'utilities/src/react/useDebouncedCallback'
-import { vi } from 'vitest'
 
 describe('useDebouncedCallback', () => {
   beforeEach(() => {
-    vi.useFakeTimers()
+    jest.useFakeTimers()
   })
 
   afterEach(() => {
-    vi.useRealTimers()
+    jest.useRealTimers()
   })
 
   it('should debounce the callback and only execute after delay period', async () => {
-    const callback = vi.fn()
-    const { result, rerender } = renderHook(() => useDebouncedCallback(callback, 1000))
+    const callback = jest.fn()
+    const { result } = renderHook(() => useDebouncedCallback(callback, 1000))
 
     // Multiple rapid calls should not execute the callback immediately
     act(() => {
@@ -29,28 +29,32 @@ describe('useDebouncedCallback', () => {
 
     // Advance time by less than delay - callback still shouldn't execute
     act(() => {
-      vi.advanceTimersByTime(500)
+      jest.advanceTimersByTime(500)
     })
     expect(callback).toHaveBeenCalledTimes(0)
     expect(result.current[1]).toBe(true) // Still pending
 
-    // Advance time to complete the delay and run all timers
-    await act(async () => {
-      vi.advanceTimersByTime(500)
-      await vi.runAllTimersAsync()
+    // Advance time to complete the delay
+    act(() => {
+      jest.advanceTimersByTime(500)
     })
 
-    // Force a rerender to get updated state
-    rerender()
+    // Wait for the async callback and state update to complete
+    await waitFor(() => {
+      expect(callback).toHaveBeenCalledTimes(1)
+    })
 
-    expect(callback).toHaveBeenCalledTimes(1)
     expect(callback).toHaveBeenLastCalledWith('arg4')
-    expect(result.current[1]).toBe(false)
+
+    // Wait for the pending state to update
+    await waitFor(() => {
+      expect(result.current[1]).toBe(false)
+    })
   })
 
   it('should reset the timer when called again before delay completes', async () => {
-    const callback = vi.fn()
-    const { result, rerender } = renderHook(() => useDebouncedCallback(callback, 1000))
+    const callback = jest.fn()
+    const { result } = renderHook(() => useDebouncedCallback(callback, 1000))
     const [debouncedCallback] = result.current
 
     // First call
@@ -61,7 +65,7 @@ describe('useDebouncedCallback', () => {
 
     // Advance time partially
     act(() => {
-      vi.advanceTimersByTime(800)
+      jest.advanceTimersByTime(800)
     })
     expect(callback).toHaveBeenCalledTimes(0)
 
@@ -72,26 +76,24 @@ describe('useDebouncedCallback', () => {
 
     // Advance time by 800ms again (less than full delay from second call)
     act(() => {
-      vi.advanceTimersByTime(800)
+      jest.advanceTimersByTime(800)
     })
     expect(callback).toHaveBeenCalledTimes(0) // Still not called
 
-    // Complete the delay from second call and run all timers
-    await act(async () => {
-      vi.advanceTimersByTime(200)
-      await vi.runAllTimersAsync()
+    // Complete the delay from second call
+    act(() => {
+      jest.advanceTimersByTime(200)
     })
 
-    // Force a rerender to get updated state
-    rerender()
-
-    expect(callback).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(callback).toHaveBeenCalledTimes(1)
+    })
     expect(callback).toHaveBeenLastCalledWith('second')
   })
 
   it('should handle async callbacks and errors properly', async () => {
-    const asyncCallback = vi.fn().mockRejectedValue(new Error('Test error'))
-    const { result, rerender } = renderHook(() => useDebouncedCallback(asyncCallback, 500))
+    const asyncCallback = jest.fn().mockRejectedValue(new Error('Test error'))
+    const { result } = renderHook(() => useDebouncedCallback(asyncCallback, 500))
     const [debouncedCallback] = result.current
 
     act(() => {
@@ -100,20 +102,23 @@ describe('useDebouncedCallback', () => {
 
     expect(result.current[1]).toBe(true)
 
-    // Complete the delay and run all timers
-    await act(async () => {
-      vi.advanceTimersByTime(500)
-      await vi.runAllTimersAsync()
+    // Complete the delay
+    act(() => {
+      jest.advanceTimersByTime(500)
     })
 
-    rerender()
+    await waitFor(() => {
+      expect(asyncCallback).toHaveBeenCalledTimes(1)
+    })
 
-    expect(asyncCallback).toHaveBeenCalledTimes(1)
-    expect(result.current[1]).toBe(false)
+    // Wait for the pending state to update even after error
+    await waitFor(() => {
+      expect(result.current[1]).toBe(false)
+    })
   })
 
   it('should clean up timeout on unmount', async () => {
-    const callback = vi.fn()
+    const callback = jest.fn()
     const { result, unmount } = renderHook(() => useDebouncedCallback(callback, 1000))
     const [debouncedCallback] = result.current
 
@@ -124,15 +129,15 @@ describe('useDebouncedCallback', () => {
     unmount()
 
     act(() => {
-      vi.advanceTimersByTime(1000)
+      jest.advanceTimersByTime(1000)
     })
 
     expect(callback).not.toHaveBeenCalled()
   })
 
   it('should handle multiple arguments correctly with latest call winning', async () => {
-    const callback = vi.fn()
-    const { result, rerender } = renderHook(() => useDebouncedCallback(callback, 100))
+    const callback = jest.fn()
+    const { result } = renderHook(() => useDebouncedCallback(callback, 100))
     const [debouncedCallback] = result.current
 
     act(() => {
@@ -141,40 +146,41 @@ describe('useDebouncedCallback', () => {
       debouncedCallback('third', 3)
     })
 
-    await act(async () => {
-      vi.advanceTimersByTime(100)
-      await vi.runAllTimersAsync()
+    act(() => {
+      jest.advanceTimersByTime(100)
     })
 
-    rerender()
-
-    expect(callback).toHaveBeenCalledTimes(1)
+    await waitFor(() => {
+      expect(callback).toHaveBeenCalledTimes(1)
+    })
     expect(callback).toHaveBeenLastCalledWith('third', 3)
   })
 
   it('should handle async callbacks correctly', async () => {
-    const asyncCallback = vi.fn().mockResolvedValue('result')
-    const { result, rerender } = renderHook(() => useDebouncedCallback(asyncCallback, 100))
+    const asyncCallback = jest.fn().mockResolvedValue('result')
+    const { result } = renderHook(() => useDebouncedCallback(asyncCallback, 100))
     const [debouncedCallback] = result.current
 
     act(() => {
       debouncedCallback('test')
     })
 
-    await act(async () => {
-      vi.advanceTimersByTime(100)
-      await vi.runAllTimersAsync()
+    act(() => {
+      jest.advanceTimersByTime(100)
     })
 
-    rerender()
+    await waitFor(() => {
+      expect(asyncCallback).toHaveBeenCalledWith('test')
+    })
 
-    expect(asyncCallback).toHaveBeenCalledWith('test')
-    expect(result.current[1]).toBe(false)
+    await waitFor(() => {
+      expect(result.current[1]).toBe(false)
+    })
   })
 
   it('should maintain pending state correctly throughout debounce cycle', async () => {
-    const callback = vi.fn()
-    const { result, rerender } = renderHook(() => useDebouncedCallback(callback, 1000))
+    const callback = jest.fn()
+    const { result } = renderHook(() => useDebouncedCallback(callback, 1000))
     const [debouncedCallback] = result.current
 
     // Initially not pending
@@ -194,13 +200,12 @@ describe('useDebouncedCallback', () => {
     expect(result.current[1]).toBe(true)
 
     // After timeout completes, should no longer be pending
-    await act(async () => {
-      vi.advanceTimersByTime(1000)
-      await vi.runAllTimersAsync()
+    act(() => {
+      jest.advanceTimersByTime(1000)
     })
 
-    rerender()
-
-    expect(result.current[1]).toBe(false)
+    await waitFor(() => {
+      expect(result.current[1]).toBe(false)
+    })
   })
 })

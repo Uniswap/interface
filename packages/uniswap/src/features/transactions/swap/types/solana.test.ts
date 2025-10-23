@@ -49,7 +49,7 @@ function createMockQuote(overrides: Partial<JupiterOrderResponse> = {}): Jupiter
     routePlan: [],
     feeBps: 50,
     prioritizationFeeLamports: 0,
-    router: { raw: 'iris', normalized: 'iris' },
+    swapType: 'aggregator',
     transaction: '',
     gasless: false,
     requestId: 'test-request-id',

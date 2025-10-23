@@ -35,10 +35,7 @@ import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
 import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import {
-  ExtractedBaseTradeAnalyticsProperties,
-  getBaseTradeAnalyticsProperties,
-} from 'uniswap/src/features/transactions/swap/analytics'
+import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { FLASHBLOCKS_UI_SKIP_ROUTES } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
 import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
@@ -72,7 +69,7 @@ interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'i
   step: SwapTransactionStep | SwapTransactionStepAsync
   signature?: string
   trade: ClassicTrade | BridgeTrade
-  analytics: ExtractedBaseTradeAnalyticsProperties
+  analytics: SwapTradeBaseProperties
   onTransactionHash?: (hash: string) => void
 }
 function* handleSwapTransactionStep(params: HandleSwapStepParams) {
@@ -195,7 +192,7 @@ type SwapParams = {
   selectChain: (chainId: number) => Promise<boolean>
   startChainId?: number
   account: SignerMnemonicAccountDetails
-  analytics: ExtractedBaseTradeAnalyticsProperties
+  analytics: SwapTradeBaseProperties
   swapTxContext: ValidatedSwapTxContext
   setCurrentStep: SetCurrentStepFn
   setSteps: (steps: TransactionStep[]) => void

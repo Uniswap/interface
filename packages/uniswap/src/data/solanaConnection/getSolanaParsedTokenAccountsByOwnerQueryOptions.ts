@@ -1,26 +1,11 @@
-import { Commitment, ParsedAccountData, PublicKey } from '@solana/web3.js'
+import { ParsedAccountData, PublicKey } from '@solana/web3.js'
 import { queryOptions } from '@tanstack/react-query'
 import { getSolanaConnection } from 'uniswap/src/features/providers/getSolanaConnection'
 import { logger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
-/**
- * When fetching onchain balances on Solana, we use the 'confirmed' commitment level instead of the default 'processed' level.
- * This allows us to get an updated balance much faster after a swap.
- *
- * | Level     | Time    | Safety                                 |
- * |-----------|---------|----------------------------------------|
- * | Processed | ~400ms  | ~5% rollback risk                      |
- * | Confirmed | ~1-2s   | No rollback in Solana's 5-year history |
- * | Finalized | ~12-13s | Completely irreversible                |
- */
-export const SOLANA_ONCHAIN_BALANCE_COMMITMENT: Commitment = 'confirmed'
-
-// We want this to return fresh data.
-// We only return cached data if it's called multiple times almost at the exact same time.
-const SOLANA_ONCHAIN_BALANCE_CACHE_TIME_MS = 100
-
+const SOLANA_ONCHAIN_BALANCE_CACHE_TIME = 100
 // Solana has two primary token programs; we need to fetch for both
 // ref: https://solana.com/docs/tokens#token-program
 const SOLANA_TOKEN_PROGRAM_IDS = [
@@ -71,11 +56,7 @@ export function getSolanaParsedTokenAccountsByOwnerQueryOptions({
       const tokenAccountBalances = (
         await Promise.all(
           SOLANA_TOKEN_PROGRAM_IDS.map((programId) =>
-            connection.getParsedTokenAccountsByOwner(
-              new PublicKey(params.accountAddress),
-              { programId },
-              SOLANA_ONCHAIN_BALANCE_COMMITMENT,
-            ),
+            connection.getParsedTokenAccountsByOwner(new PublicKey(params.accountAddress), { programId }),
           ),
         )
       ).flatMap((result) => result.value)
@@ -91,7 +72,7 @@ export function getSolanaParsedTokenAccountsByOwnerQueryOptions({
 
       return balanceMap
     },
-    staleTime: SOLANA_ONCHAIN_BALANCE_CACHE_TIME_MS,
-    gcTime: SOLANA_ONCHAIN_BALANCE_CACHE_TIME_MS,
+    staleTime: SOLANA_ONCHAIN_BALANCE_CACHE_TIME,
+    gcTime: SOLANA_ONCHAIN_BALANCE_CACHE_TIME,
   })
 }

@@ -247,7 +247,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     enabled: isQueryEnabled,
   })
 
-  const { increase, gasFee: actualGasFee, dependentAmount, sqrtRatioX96 } = increaseCalldata || {}
+  const { increase, gasFee: actualGasFee, dependentAmount } = increaseCalldata || {}
 
   if (calldataError) {
     const message = parseErrorMessageTitle(calldataError, { defaultTitle: 'unknown IncreaseLpPositionCalldataQuery' })
@@ -334,7 +334,6 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
       positionTokenPermitTransaction: undefined,
       increasePositionRequestArgs: { ...increaseCalldataQueryParams, batchPermitData: permitData ?? undefined },
       txRequest,
-      sqrtRatioX96,
       unsigned,
     }
   }, [
@@ -354,7 +353,6 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     token0PermitTransaction,
     token1PermitTransaction,
     increaseCalldataQueryParams,
-    sqrtRatioX96,
   ])
 
   const totalGasFee = useMemo(() => {
@@ -385,7 +383,7 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
     txInfo: increaseLiquidityTxContext,
     gasFeeEstimateUSD: totalGasFee ?? undefined,
     // in some cases there is an error with create but createCalldata still has a cached value
-    dependentAmount: calldataError && fallbackDependentAmount ? fallbackDependentAmount : dependentAmount,
+    dependentAmount: calldataError && dependentAmount ? dependentAmount : fallbackDependentAmount,
     error: transactionError,
     setTransactionError,
     refetch: approvalError ? approvalRefetch : calldataError ? calldataRefetch : undefined,

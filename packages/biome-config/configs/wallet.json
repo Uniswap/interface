@@ -1,0 +1,37 @@
+{
+  "linter": {
+    "rules": {
+      "style": {
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "wallet/src": {
+                "message": "Avoid importing directly from wallet/src from within the wallet package which causes circular imports."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["src/components/landing/elements/index.tsx", "src/index.ts", "src/state/index.ts", "src/test/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "wallet/src": "off"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

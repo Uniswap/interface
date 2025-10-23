@@ -89,7 +89,7 @@ export function useExploreTokenContextMenu({
     () => [
       {
         title: isFavorited ? t('explore.tokens.favorite.action.remove') : t('explore.tokens.favorite.action.add'),
-        systemIcon: isFavorited ? 'heart.slash.fill' : 'heart.fill',
+        systemIcon: isFavorited ? 'heart.fill' : 'heart',
         onPress: onPressToggleFavorite,
       },
       ...(onEditFavorites

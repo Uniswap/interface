@@ -5,7 +5,7 @@ exports[`FavoriteWalletCard renders without error 1`] = `
   actions={
     [
       {
-        "systemIcon": "heart.slash.fill",
+        "systemIcon": "heart.fill",
         "title": "Remove favorite",
       },
       {

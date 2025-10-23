@@ -22,7 +22,6 @@ export const getConfig = (): Config => {
     graphqlUrlOverride: process.env.GRAPHQL_URL_OVERRIDE || '',
     infuraKey: process.env.REACT_APP_INFURA_KEY || '',
     includePrototypeFeatures: process.env.INCLUDE_PROTOTYPE_FEATURES || '',
-    jupiterProxyUrl: process.env.REACT_APP_JUPITER_PROXY_URL || process.env.JUPITER_PROXY_URL || '',
     onesignalAppId: process.env.ONESIGNAL_APP_ID || '',
     quicknodeEndpointName: process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME || process.env.QUICKNODE_ENDPOINT_NAME || '',
     quicknodeEndpointToken:
@@ -41,7 +40,8 @@ export const getConfig = (): Config => {
     walletConnectProjectIdDev: process.env.WALLETCONNECT_PROJECT_ID_DEV || '',
   }
   if (isNonTestDev) {
-    // biome-ignore lint/suspicious/noConsole: Cannot use logger here, causes error from circular dep
+    // Cannot use logger here, causes error from circular dep
+    // eslint-disable-next-line no-console
     console.debug('Using app config:', config)
   }
   return Object.freeze(config)

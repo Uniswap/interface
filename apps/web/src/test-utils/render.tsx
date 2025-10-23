@@ -3,7 +3,8 @@ import { TokenBalancesProvider } from 'appGraphql/data/apollo/TokenBalancesProvi
 import { MockedProvider } from '@apollo/client/testing'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { queries } from '@testing-library/dom'
-import { RenderHookOptions, RenderOptions, render, renderHook } from '@testing-library/react'
+import { RenderOptions, render } from '@testing-library/react'
+import { RenderHookOptions, renderHook, WrapperComponent } from '@testing-library/react-hooks'
 import TestWeb3Provider from 'components/Web3Provider/TestWeb3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
 import { WebAccountsStoreProvider } from 'features/accounts/store/provider'
@@ -11,7 +12,7 @@ import { WebAccountsStoreUpdater } from 'features/accounts/store/updater'
 import { ConnectWalletMutationProvider } from 'features/wallet/connection/hooks/useConnectWalletMutation'
 import { ExternalWalletProvider } from 'features/wallet/providers/ExternalWalletProvider'
 import { BlockNumberContext } from 'lib/hooks/useBlockNumber'
-import { ComponentType, PropsWithChildren, ReactElement, ReactNode } from 'react'
+import { PropsWithChildren, ReactElement, ReactNode } from 'react'
 import { HelmetProvider } from 'react-helmet-async/lib/index'
 import { Provider } from 'react-redux'
 import { BrowserRouter } from 'react-router'
@@ -117,7 +118,7 @@ const customRenderHook = <Result, Props>(
   hook: (initialProps: Props) => Result,
   options?: CustomRenderHookOptions<Props>,
 ) => {
-  return renderHook(hook, { ...options, wrapper: WithProviders as ComponentType<PropsWithChildren<unknown>> })
+  return renderHook(hook, { ...options, wrapper: WithProviders as WrapperComponent<Props> })
 }
 
 // Testing utils may export *.

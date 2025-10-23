@@ -6,6 +6,7 @@ ignores: [
     'jest-presets',
     ## Internal packages / workspaces
     'ui',
+    '@uniswap/biome-config',
     # used in package.json
     'esbuild-register',
   ]

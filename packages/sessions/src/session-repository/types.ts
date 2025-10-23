@@ -29,9 +29,10 @@ interface InitSessionResponse {
  * Request for a bot detection challenge
  * Empty - session identified via cookie or header
  */
-
-// biome-ignore lint/complexity/noBannedTypes: Empty per proto
-type ChallengeRequest = {}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface ChallengeRequest {
+  // Empty per proto
+}
 
 /**
  * Bot detection challenge response
@@ -73,16 +74,18 @@ interface UpgradeSessionResponse {
  * Request to delete a session
  * Empty - session identified via cookie or header
  */
-
-// biome-ignore lint/complexity/noBannedTypes: Empty per proto
-type DeleteSessionRequest = {}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface DeleteSessionRequest {
+  // Empty per proto
+}
 
 /**
  * Response from session deletion
  */
-
-// biome-ignore lint/complexity/noBannedTypes: Empty per proto
-type DeleteSessionResponse = {}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+interface DeleteSessionResponse {
+  // Empty per proto
+}
 
 /**
  * Introspect request - Entry Gateway only

@@ -12,7 +12,7 @@ ignores: [
     'src',
     'e2e',
     'tsconfig',
-    'config',
+    '@uniswap/biome-config',
     # Webpack plugins
     '@svgr/webpack',
     'tamagui-loader',

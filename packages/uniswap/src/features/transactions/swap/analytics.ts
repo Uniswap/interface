@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { Protocol } from '@uniswap/router-sdk'
 import type { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -20,9 +19,8 @@ import type { TransactionSettings } from 'uniswap/src/features/transactions/comp
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { ClassicTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getSwapFeeUsd } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
-import { isChained, isClassic, isJupiter, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
-import { getProtocolVersionFromTrade } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
@@ -51,7 +49,6 @@ export interface SwapRoutesAnalyticsData {
   v3Used: boolean
   v4Used: boolean
   uniswapXUsed: boolean
-  jupiterUsed: boolean
 }
 
 const DEFAULT_RESULT = {
@@ -59,7 +56,6 @@ const DEFAULT_RESULT = {
   v3Used: false,
   v4Used: false,
   uniswapXUsed: false,
-  jupiterUsed: false,
 }
 
 function getPoolAddress(pool: Pair | V3Pool | V4Pool): Address | undefined {
@@ -92,39 +88,7 @@ function getRoutings(routes: ClassicTrade['routes']): Array<Array<Pair | V3Pool 
 }
 
 /**
- * Extracts the block number for analytics, if applicable to the trade type.
- * Currently only classic quotes expose block number.
- */
-function getAnalyticsBlockNumber(trade: Trade): string | undefined {
-  if (isClassic(trade)) {
-    return trade.quote.quote.blockNumber
-  }
-  return undefined
-}
-
-/**
- * Extracts the estimated network fee in USD for analytics. Currently only implemented for classic quotes.
- */
-function getAnalyticsNetworkFeeUSD(trade: Trade): string | undefined {
-  if (isClassic(trade)) {
-    return trade.quote.quote.gasFeeUSD
-  }
-  return undefined
-}
-
-/**
- * Extracts simulation failure reasons for analytics. Currently only implemented for classic quotes.
- */
-function getAnalyticsSimulationFailures(trade: Trade): TradingApi.TransactionFailureReason[] | undefined {
-  if (isClassic(trade)) {
-    return trade.quote.quote.txFailureReasons
-  }
-  return undefined
-}
-
-/**
- * Extract route data from a trade for analytics purposes.
- * Handles Classic (with detailed pool information), UniswapX, and Jupiter routing.
+ * Extract route data from a trade for analytics purposes
  * @param trade The trade object containing route information
  * @returns Structured route data for analytics or undefined if route data is not available
  */
@@ -160,8 +124,8 @@ export function getRouteAnalyticsData({
       v2Used,
       v3Used,
       v4Used,
+      // For classic trades, X is not used
       uniswapXUsed: false,
-      jupiterUsed: false,
     }
   }
 
@@ -174,80 +138,8 @@ export function getRouteAnalyticsData({
     }
   }
 
-  if (isJupiter({ routing })) {
-    // For Jupiter trades, route through various Solana DEXs but don't expose
-    // detailed pool information in the same format as Classic
-    return {
-      ...DEFAULT_RESULT,
-      jupiterUsed: true,
-    }
-  }
-
   // For other trade types or if extraction fails
   return DEFAULT_RESULT
-}
-
-export function getPriceImpact(trade: Trade | null | undefined): string | undefined {
-  if (!trade || isUniswapX(trade) || isChained(trade)) {
-    return undefined
-  }
-  return trade.priceImpact?.multiply(100).toSignificant()
-}
-
-function getFeeUsd({
-  trade,
-  currencyInAmountUSD,
-  currencyOutAmountUSD,
-}: {
-  trade: Trade<Currency, Currency, TradeType>
-  currencyInAmountUSD?: Maybe<CurrencyAmount<Currency>>
-  currencyOutAmountUSD?: Maybe<CurrencyAmount<Currency>>
-}): number | undefined {
-  const swapFee = trade.swapFee
-
-  if (!swapFee) {
-    return undefined
-  }
-
-  const amountUsd = swapFee.feeField === CurrencyField.INPUT ? currencyInAmountUSD : currencyOutAmountUSD
-
-  if (!amountUsd) {
-    return undefined
-  }
-
-  const amount = swapFee.feeField === CurrencyField.INPUT ? trade.inputAmount : trade.outputAmount
-
-  return getSwapFeeUsd({ swapFee, amount, amountUsd })
-}
-
-function getQuoteRequestIdFields(trade: Trade): {
-  requestId: string
-  quoteId: string | undefined
-  ura_request_id: string | undefined
-} {
-  const requestId = trade.quote.requestId
-  let uraRequestId: string | undefined
-  let quoteId: string | undefined
-
-  // quote id -> points to routing api whereas request id -> points to trading api
-  if (isClassic(trade)) {
-    quoteId = trade.quote.quote.quoteId
-  }
-
-  // Backwards compatibility with old ura_request_id field
-  if (isClassic(trade) || isUniswapX(trade)) {
-    uraRequestId = requestId
-  }
-
-  return { requestId, ura_request_id: uraRequestId, quoteId }
-}
-
-function getAnalyticsProtocolType(trade: Trade): string | undefined {
-  if (isJupiter(trade)) {
-    return trade.quote.quote.router.raw
-  }
-
-  return getProtocolVersionFromTrade(trade)
 }
 
 // hook-based analytics because this one is data-lifecycle dependent
@@ -287,28 +179,11 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
         trace,
       }),
     )
-
-    // TODO(SWAP-641): Add blockingError for evm
-    if (trade.blockingError) {
-      sendAnalyticsEvent(SwapEventName.SwapBlocked, {
-        ...getBaseTradeAnalyticsProperties({
-          formatter,
-          trade,
-          currencyInAmountUSD: derivedSwapInfo.currencyAmountsUSDValue.input,
-          currencyOutAmountUSD: derivedSwapInfo.currencyAmountsUSDValue.output,
-          portfolioBalanceUsd: portfolioData?.balanceUSD,
-          trace,
-        }),
-        category: trade.blockingError.category,
-        error_code: trade.blockingError.code,
-        error_message: trade.blockingError.message,
-      })
-    }
   }, [quoteId])
+
+  return
 }
 
-// Typing is improved by using the actual return type instead of narrowing to `SwapTradeBaseProperties`
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function getBaseTradeAnalyticsProperties({
   formatter,
   trade,
@@ -335,8 +210,8 @@ export function getBaseTradeAnalyticsProperties({
   includedPermitTransactionStep?: boolean
   includesDelegation?: boolean
   isSmartWalletTransaction?: boolean
-}) {
-  const portionAmount = trade.swapFee?.amount
+}): SwapTradeBaseProperties {
+  const portionAmount = getClassicQuoteFromResponse(trade.quote)?.portionAmount
 
   const feeCurrencyAmount = getCurrencyAmount({
     value: portionAmount,
@@ -344,18 +219,19 @@ export function getBaseTradeAnalyticsProperties({
     currency: trade.outputAmount.currency,
   })
 
+  const classicQuote = getClassicQuoteFromResponse(trade.quote)
+
   const finalOutputAmount = feeCurrencyAmount ? trade.outputAmount.subtract(feeCurrencyAmount) : trade.outputAmount
 
   return {
     ...trace,
     routing: tradeRoutingToFillType(trade),
-    protocol: getAnalyticsProtocolType(trade),
     total_balances_usd: portfolioBalanceUsd,
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
     token_in_address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
     token_out_address: getCurrencyAddressForAnalytics(trade.outputAmount.currency),
-    price_impact_basis_points: getPriceImpact(trade),
+    price_impact_basis_points: isClassic(trade) ? trade.priceImpact.multiply(100).toSignificant() : undefined,
     chain_id:
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
         ? trade.inputAmount.currency.chainId
@@ -375,28 +251,34 @@ export function getBaseTradeAnalyticsProperties({
       trade.slippageTolerance !== undefined ? parseFloat(trade.slippageTolerance.toFixed(2)) : undefined,
     allowed_slippage_basis_points: trade.slippageTolerance ? trade.slippageTolerance * 100 : undefined,
     fee_amount: portionAmount,
-    ...getQuoteRequestIdFields(trade),
-    ura_block_number: getAnalyticsBlockNumber(trade),
-    swap_quote_block_number: getAnalyticsBlockNumber(trade),
+    requestId: trade.quote.requestId,
+    ura_request_id: trade.quote.requestId,
+    ura_block_number: isClassic(trade) ? trade.quote.quote.blockNumber : undefined,
+    quoteId: classicQuote?.quoteId,
     transactionOriginType: TransactionOriginType.Internal,
-    estimated_network_fee_usd: getAnalyticsNetworkFeeUSD(trade),
-    fee_usd: getFeeUsd({ trade, currencyInAmountUSD, currencyOutAmountUSD }),
+    swap_quote_block_number: classicQuote?.blockNumber,
+    estimated_network_fee_usd: isClassic(trade) ? trade.quote.quote.gasFeeUSD : undefined,
+    fee_usd: currencyOutAmountUSD
+      ? getSwapFeeUsd({
+          trade,
+          outputAmount: trade.outputAmount,
+          outputAmountUsd: currencyOutAmountUSD,
+        })
+      : undefined,
     type: trade.tradeType,
     minimum_output_after_slippage: trade.minAmountOut.toSignificant(6),
     token_in_amount_max: trade.maxAmountIn.toExact(),
     token_out_amount_min: trade.minAmountOut.toExact(),
     token_in_detected_tax: parseFloat(trade.inputTax.toFixed(2)),
     token_out_detected_tax: parseFloat(trade.outputTax.toFixed(2)),
-    simulation_failure_reasons: getAnalyticsSimulationFailures(trade),
+    simulation_failure_reasons: isClassic(trade) ? trade.quote.quote.txFailureReasons : undefined,
     ...getRouteAnalyticsData(trade),
     is_batch: isBatched,
     included_permit_transaction_step: includedPermitTransactionStep,
     includes_delegation: includesDelegation,
     is_smart_wallet_transaction: isSmartWalletTransaction,
-  } as const
+  }
 }
-
-export type ExtractedBaseTradeAnalyticsProperties = ReturnType<typeof getBaseTradeAnalyticsProperties>
 
 export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
   transactionSettings,
@@ -439,7 +321,7 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
     token_out_symbol: outputCurrencyAmount?.currency.symbol,
     token_in_address: inputCurrencyAmount ? getCurrencyAddressForAnalytics(inputCurrencyAmount.currency) : '',
     token_out_address: outputCurrencyAmount ? getCurrencyAddressForAnalytics(outputCurrencyAmount.currency) : '',
-    price_impact_basis_points: getPriceImpact(trade),
+    price_impact_basis_points: trade && isClassic(trade) ? trade.priceImpact.multiply(100).toSignificant() : undefined,
     estimated_network_fee_usd: undefined,
     chain_id: chainId,
     token_in_amount: inputCurrencyAmount?.toExact() ?? '',
@@ -514,8 +396,6 @@ export function tradeRoutingToFillType({
       return 'classic'
     case TradingApi.Routing.BRIDGE:
       return 'bridge'
-    case TradingApi.Routing.JUPITER:
-      return 'jupiter'
     default:
       return 'none'
   }

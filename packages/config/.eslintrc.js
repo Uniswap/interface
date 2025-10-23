@@ -1,5 +1,3 @@
-const biomeSupportedRules = require('@uniswap/eslint-config/biome-supported')
-
 module.exports = {
   root: true,
   extends: ['@uniswap/eslint-config/native', '@uniswap/eslint-config/webPlatform'],
@@ -24,13 +22,6 @@ module.exports = {
     sourceType: 'module',
   },
   overrides: [
-    {
-      files: ['**'],
-      rules: {
-        // Disable all ESLint rules that have been migrated to Biome
-        ...biomeSupportedRules,
-      },
-    },
     {
       files: ['src/index.ts'],
       rules: {

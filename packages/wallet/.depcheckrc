@@ -8,7 +8,7 @@ ignores: [
     "wallet",
     "src",
     "tsconfig",
-    "config",
+    '@uniswap/biome-config',
     # types
     "@types/chrome",
   ]

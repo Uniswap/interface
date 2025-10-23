@@ -1,8 +1,7 @@
-import { cleanup, render } from '@testing-library/react'
+import { cleanup, render } from '@testing-library/react-native'
 import { QRCodeErrorCorrectionLevel } from 'qrcode'
 import { QRCode } from 'ui/src/components/QRCode/QRCode'
 import { SharedUIUniswapProvider } from 'ui/src/test/render'
-import { describe, expect, it } from 'vitest'
 
 const qrCodeValue = ['s', 'oneSizeBiggerValue']
 const sizes = [100, 200]
@@ -36,7 +35,7 @@ describe('QRCode', () => {
           />
         </SharedUIUniswapProvider>,
       )
-      expect(tree.container.innerHTML).toMatchSnapshot()
+      expect(tree.toJSON()).toMatchSnapshot()
       cleanup()
     },
   )

@@ -137,7 +137,7 @@ export default function AuthenticatedHeader({
             <IconButton
               size="small"
               emphasis="text-only"
-              data-testid={TestID.WalletSettings}
+              data-testid="wallet-disconnect"
               icon={<Settings height={24} width={24} color={theme.neutral2} />}
               borderRadius="$rounded32"
               hoverStyle={{

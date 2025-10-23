@@ -1,10 +1,9 @@
 import { opacifyRaw } from 'ui/src/theme'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-vi.mock('utilities/src/logger/logger', () => ({
+jest.mock('utilities/src/logger/logger', () => ({
   logger: {
-    error: vi.fn(),
-    warn: vi.fn(),
+    error: jest.fn(),
+    warn: jest.fn(),
   },
 }))
 
@@ -13,7 +12,7 @@ import { logger } from 'utilities/src/logger/logger'
 
 describe(opacifyRaw, () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it.each`

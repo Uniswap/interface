@@ -136,15 +136,6 @@ globalThis.origin = 'https://app.uniswap.org'
   globalThis.React = React
 }
 
-const IntersectionObserverMock = vi.fn(() => ({
-  disconnect: vi.fn(),
-  observe: vi.fn(),
-  takeRecords: vi.fn(),
-  unobserve: vi.fn(),
-}))
-
-vi.stubGlobal('IntersectionObserver', IntersectionObserverMock)
-
 vi.mock('react-native-svg', () => require('@tamagui/react-native-svg'))
 
 vi.mock('expo-blur', () => ({

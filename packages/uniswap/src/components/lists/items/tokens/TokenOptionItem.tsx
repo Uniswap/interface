@@ -195,7 +195,6 @@ function _LegacyTokenOptionItem(props: LegacyTokenOptionItemProps): JSX.Element 
         onPress={onPressTokenOption}
         onLongPress={async (): Promise<void> => {
           await hapticFeedback.success()
-          dismissNativeKeyboard()
           openContextMenu()
         }}
       >
@@ -294,10 +293,7 @@ const BaseTokenOptionItem = memo(function _BaseTokenOptionItem(
       modalInfo={modalInfo}
       focusedRowControl={focusedRowControl}
       onPress={onPress}
-      onLongPress={() => {
-        dismissNativeKeyboard()
-        openContextMenu?.()
-      }}
+      onLongPress={openContextMenu}
     />
   )
 })

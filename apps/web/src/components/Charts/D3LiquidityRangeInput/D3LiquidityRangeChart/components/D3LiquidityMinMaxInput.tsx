@@ -4,13 +4,11 @@ import {
   useLiquidityChartStorePriceDifferences,
   useLiquidityChartStoreRenderingContext,
 } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/viewSelectors'
-import { TickNavigationParams } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { useLiquidityChartStoreActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
 import { RangeSelectionInput } from 'components/Liquidity/Create/RangeAmountInput'
 import { RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
-import { getBaseAndQuoteCurrencies } from 'components/Liquidity/utils/currency'
 import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Flex } from 'ui/src'
 
 // Convert user input to price based on the input mode
@@ -43,7 +41,7 @@ function usePercentageToPrice() {
 }
 
 export function D3LiquidityMinMaxInput() {
-  const { ticksAtLimit, setPriceRangeState, priceRangeState, positionState, currencies } = useCreateLiquidityContext()
+  const { ticksAtLimit, setPriceRangeState } = useCreateLiquidityContext()
   const [typedValue, setTypedValue] = useState({ [RangeSelectionInput.MIN]: '', [RangeSelectionInput.MAX]: '' })
   const percentageToPrice = usePercentageToPrice()
   const [displayUserTypedValue, setDisplayUserTypedValue] = useState({
@@ -60,23 +58,6 @@ export function D3LiquidityMinMaxInput() {
   const currentPrice = priceData?.[priceData.length - 1]?.value
   const absoluteMinPrice = liquidityData?.[0].price0
   const absoluteMaxPrice = liquidityData?.[liquidityData.length - 1].price0
-
-  // Navigation params for increment/decrement actions
-  const tickNavigationParams: TickNavigationParams | undefined = useMemo(() => {
-    if (!positionState.fee.tickSpacing || !currencies.display.TOKEN0 || !currencies.display.TOKEN1) {
-      return undefined
-    }
-
-    const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(currencies.display, priceRangeState.priceInverted)
-
-    return {
-      tickSpacing: positionState.fee.tickSpacing,
-      baseCurrency,
-      quoteCurrency,
-      priceInverted: priceRangeState.priceInverted,
-      protocolVersion: positionState.protocolVersion,
-    }
-  }, [positionState.fee.tickSpacing, currencies.display, priceRangeState.priceInverted, positionState.protocolVersion])
 
   // Get display value based on input mode
   const getDisplayValue = useCallback(
@@ -140,8 +121,8 @@ export function D3LiquidityMinMaxInput() {
       <D3RangeAmountInput
         isDisabled={isFullRange}
         input={RangeSelectionInput.MIN}
-        handleDecrement={() => tickNavigationParams && decrementMin(tickNavigationParams)}
-        handleIncrement={() => tickNavigationParams && incrementMin(tickNavigationParams)}
+        handleDecrement={decrementMin}
+        handleIncrement={incrementMin}
         showIncrementButtons={!isFullRange}
         value={getDisplayValue(RangeSelectionInput.MIN)}
         handlePriceRangeInput={handlePriceRangeInput}
@@ -156,8 +137,8 @@ export function D3LiquidityMinMaxInput() {
       <D3RangeAmountInput
         isDisabled={isFullRange}
         input={RangeSelectionInput.MAX}
-        handleDecrement={() => tickNavigationParams && decrementMax(tickNavigationParams)}
-        handleIncrement={() => tickNavigationParams && incrementMax(tickNavigationParams)}
+        handleDecrement={decrementMax}
+        handleIncrement={incrementMax}
         showIncrementButtons={!isFullRange}
         value={getDisplayValue(RangeSelectionInput.MAX)}
         handlePriceRangeInput={handlePriceRangeInput}

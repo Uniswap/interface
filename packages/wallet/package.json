@@ -75,6 +75,7 @@
     "@testing-library/react-native": "13.0.0",
     "@types/react": "18.3.18",
     "@types/zxcvbn": "4.4.2",
+    "@uniswap/biome-config": "workspace:^",
     "@uniswap/eslint-config": "workspace:^",
     "depcheck": "1.4.7",
     "eslint": "8.44.0",

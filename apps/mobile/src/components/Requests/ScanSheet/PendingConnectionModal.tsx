@@ -149,7 +149,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         await returnToPreviousApp()
         setDidOpenFromDeepLink(false)
       }
-    } catch {
+    } catch (_error) {
       setIsConnecting(false)
     } finally {
       setIsConnecting(false)

@@ -153,7 +153,6 @@ export const uniswapUrls = {
     poolInfo: `${tradingApiVersionPrefix}/lp/pool_info`,
     order: `${tradingApiVersionPrefix}/order`,
     orders: `${tradingApiVersionPrefix}/orders`,
-    priceDiscrepancy: `${tradingApiVersionPrefix}/lp/price_discrepancy`,
     quote: `${tradingApiVersionPrefix}/quote`,
     swap: `${tradingApiVersionPrefix}/swap`,
     swap5792: `${tradingApiVersionPrefix}/swap_5792`,

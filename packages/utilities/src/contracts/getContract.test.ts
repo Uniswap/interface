@@ -3,21 +3,20 @@ import { Contract } from '@ethersproject/contracts'
 import { JsonRpcProvider } from '@ethersproject/providers'
 import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
 import { getContract } from 'utilities/src/contracts/getContract'
-import { type Mock, vi } from 'vitest'
 
-vi.mock('@ethersproject/contracts', () => ({
-  Contract: vi.fn(),
+jest.mock('@ethersproject/contracts', () => ({
+  Contract: jest.fn(),
 }))
 
-vi.mock('utilities/src/addresses/evm/evm', () => ({
-  isEVMAddressWithChecksum: vi.fn(),
+jest.mock('utilities/src/addresses/evm/evm', () => ({
+  isEVMAddressWithChecksum: jest.fn(),
 }))
-const addressMock = isEVMAddressWithChecksum as unknown as Mock
+const addressMock = isEVMAddressWithChecksum as unknown as jest.Mock
 
 describe('getContract', () => {
   const mockProvider = {
-    getSigner: vi.fn().mockReturnValue({
-      connectUnchecked: vi.fn(),
+    getSigner: jest.fn().mockReturnValue({
+      connectUnchecked: jest.fn(),
     }),
   } as unknown as JsonRpcProvider
 
@@ -26,7 +25,7 @@ describe('getContract', () => {
   const mockAccount = '0xabcdefabcdefabcdefabcdefabcdefabcdef'
 
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it('should throw an error if the address is invalid', () => {

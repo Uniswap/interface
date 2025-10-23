@@ -64,7 +64,6 @@ export function useTokenSectionsForSearchResults({
     searchQuery: searchFilter,
     chainFilter,
     skip: isBalancesOnlySearch,
-    hideWSOL: true, // Hide WSOL in token selector
   })
 
   const [selectedNetworkResults, otherNetworksSearchResults] = useMemo((): [CurrencyInfo[], CurrencyInfo[]] => {

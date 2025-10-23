@@ -1,5 +1,4 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { FetchError } from '@universe/api/src'
 import { type JupiterOrderUrlParams } from '@universe/api/src/clients/jupiter/types'
 import { JupiterApiClient } from 'uniswap/src/data/apiClients/jupiterApi/JupiterFetchClient'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
@@ -13,10 +12,6 @@ import {
 } from 'uniswap/src/features/transactions/swap/services/tradeService/tradeService'
 import { createSolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 import { UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
-
-class JupiterOrderError extends Error {
-  name = 'JupiterOrderError'
-}
 
 function prepareJupiterTradeInput(args: UseTradeArgs): JupiterOrderUrlParams | null {
   const input = args.tradeType === TradeType.EXACT_INPUT ? args.amountSpecified?.currency : args.otherCurrency
@@ -46,7 +41,11 @@ function prepareJupiterTradeInput(args: UseTradeArgs): JupiterOrderUrlParams | n
   }
 }
 
-export function createSolanaTradeService(): TradeService {
+export function createSolanaTradeService({
+  onTradeError,
+}: {
+  onTradeError: (error: Error, ctx: { input: UseTradeArgs; quoteRequestArgs?: JupiterOrderUrlParams }) => void
+}): TradeService {
   return {
     async getTrade(args: UseTradeArgs): Promise<TradeWithGasEstimates> {
       let quoteRequestArgs: JupiterOrderUrlParams | undefined
@@ -73,15 +72,11 @@ export function createSolanaTradeService(): TradeService {
 
         return { trade, gasEstimate: undefined } // `gasEstimate` is used for our Gas Experiment, which we don't conduct on Solana
       } catch (e) {
-        let error = e instanceof Error ? e : new Error('Unknown error')
-
-        // Translate FetchErrors into JupiterOrderError; FetchErrors are ignored in parts of logging
-        // However since the Jupiter proxy currently does not have backend monitoring, we want
-        // fetch related errors here to alert the frontend
-        if (error instanceof FetchError) {
-          error = new JupiterOrderError(String(error.data.error))
-        }
-
+        const error = e instanceof Error ? e : new Error('Unknown error')
+        onTradeError(error, {
+          input: args,
+          quoteRequestArgs,
+        })
         quoteRequestArgs = undefined
         throw error
       }

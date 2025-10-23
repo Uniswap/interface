@@ -43,7 +43,7 @@
     "lint": {},
     "lint:fix": {},
     "test": {
-      "command": "vitest run",
+      "command": "jest && echo 'ignoring'",
       "options": {
         "cwd": "{projectRoot}"
       }

@@ -1,3 +1,8 @@
 {
-  "ignore": ["**/*.native.ts", "**/*.web.ts", "**/*.native.tsx", "**/*.web.tsx"]
+  "ignore": [
+    "**/*.native.ts",
+    "**/*.web.ts",
+    "**/*.native.tsx",
+    "**/*.web.tsx"
+  ]
 }

@@ -235,7 +235,7 @@ function InitiatePasskeyAuthContent(): JSX.Element {
       // Will throw if window does not exist anymore.
       await chrome.windows.get(windowId)
       setShowBringWindowToFrontButton(true)
-    } catch {
+    } catch (_e) {
       // Window does not exist anymore.
       navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.SelectImportMethod}`, {
         replace: true,

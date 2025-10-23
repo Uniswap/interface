@@ -1675,6 +1675,7 @@
   "settings.action.lock": "پرس مقفل کریں۔",
   "settings.action.privacy": "رازداری کی پالیسی",
   "settings.action.terms": "سروس کی شرائط",
+  "settings.connectWalletPlatform.warning": "{{platform}}پر Uniswap استعمال کرنے کے لیے، ایک ایسے والیٹ سے جڑیں جو {{platform}}کو سپورٹ کرتا ہو۔",
   "settings.footer": "محبت کے ساتھ بنایا گیا، \nUnswap ٹیم 🦄",
   "settings.hideSmallBalances": "چھوٹے بیلنس چھپائیں۔",
   "settings.hideSmallBalances.subtitle": "1 USD سے کم بیلنس آپ کے پورٹ فولیو سے چھپائے جائیں گے۔",
@@ -1845,7 +1846,7 @@
   "smartWallets.postSwapNudge.title.dapp": "یہ ایپ سمارٹ بٹوے کو سپورٹ کرتی ہے۔",
   "smartWallets.unavailableModal.description": "ایک مختلف والیٹ فراہم کنندہ اب {{displayName}}کے لیے سمارٹ والیٹ کی ترتیبات کا انتظام کر رہا ہے۔ آپ یونی سویپ کا استعمال معمول کے مطابق جاری رکھ سکتے ہیں۔",
   "smartWallets.unavailableModal.title": "اسمارٹ والیٹ کی خصوصیات دستیاب نہیں ہیں۔",
-  "solanaPromo.banner.description": "سولانا ٹوکنز کو براہ راست Uniswap ویب ایپ پر تجارت کریں۔",
+  "solanaPromo.banner.description": "سولانا ٹوکنز کو براہ راست Uniswap پر تجارت کریں۔",
   "solanaPromo.banner.title": "سولانا اب دستیاب ہے۔",
   "solanaPromo.modal.connectWallet": "اپنے پسندیدہ سولانا والیٹ کو جوڑیں۔",
   "solanaPromo.modal.startSwapping.button": "سولانا پر تبادلہ کرنا شروع کریں۔",

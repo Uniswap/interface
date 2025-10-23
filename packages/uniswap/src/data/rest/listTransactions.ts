@@ -5,10 +5,6 @@ import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connec
 import { ListTransactionsRequest, ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { transformInput, WithoutWalletAccount } from '@universe/api'
 import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
-import {
-  AccountAddressesByPlatform,
-  buildAccountAddressesByPlatform,
-} from 'uniswap/src/data/rest/buildAccountAddressesByPlatform'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import type { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
@@ -38,7 +34,7 @@ type GetListTransactionsQuery<TSelectData = ListTransactionsResponse> = QueryOpt
   TSelectData,
   readonly [
     ReactQueryCacheKey.ListTransactions,
-    AccountAddressesByPlatform | undefined,
+    Address | undefined,
     PartialMessage<ListTransactionsRequest> | undefined,
   ]
 >
@@ -49,13 +45,15 @@ export const getListTransactionsQuery = <TSelectData = ListTransactionsResponse>
   refetchInterval,
   select,
 }: GetListTransactionsInput<TSelectData>): GetListTransactionsQuery<TSelectData> => {
-  const accountAddressesByPlatform = buildAccountAddressesByPlatform(input)
   const transformedInput = transformInput(input)
 
-  const { walletAccount: _walletAccount, ...inputWithoutWalletAccount } = transformedInput ?? {}
+  const { walletAccount, ...inputWithoutWalletAccount } = transformedInput ?? {}
+  const walletAccountsKey = walletAccount?.platformAddresses
+    .map((platformAddress) => `${platformAddress.address}-${platformAddress.platform}`)
+    .join(',')
 
   return queryOptions({
-    queryKey: [ReactQueryCacheKey.ListTransactions, accountAddressesByPlatform, inputWithoutWalletAccount],
+    queryKey: [ReactQueryCacheKey.ListTransactions, walletAccountsKey, inputWithoutWalletAccount],
     queryFn: () =>
       transformedInput ? transactionsClient.listTransactions(transformedInput) : Promise.resolve(undefined),
     placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when refetching

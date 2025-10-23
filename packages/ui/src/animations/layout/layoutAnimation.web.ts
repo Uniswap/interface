@@ -1,10 +1,8 @@
-import { DEFAULT_LAYOUT_ANIMATION_DURATION } from 'ui/src/animations/layout/constants'
-import type { LayoutAnimationOptions } from 'ui/src/animations/layout/types'
+import { LayoutAnimationOptions } from 'ui/src/animations/layout/types'
 
 const DEFAULT_OPTIONS: Required<LayoutAnimationOptions> = {
   preset: 'easeInEaseOut',
   shouldSkip: false,
-  duration: DEFAULT_LAYOUT_ANIMATION_DURATION,
 }
 
 export function easeInEaseOutLayoutAnimation(options?: LayoutAnimationOptions): void {

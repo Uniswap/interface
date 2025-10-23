@@ -127,15 +127,10 @@ export function SendTokenForm(): JSX.Element {
   const maxDecimals = isFiatInput ? MAX_FIAT_INPUT_DECIMALS : (currencyIn?.decimals ?? 0)
   const selectionRef = useRef<TextInputProps['selection']>()
 
-  const onInputSelectionChange = useCallback(
-    (start: number, end: number) => {
-      selectionRef.current = { start, end }
-      decimalPadRef.current?.updateDisabledKeys()
-      exactAmountTokenRef.current = exactAmountToken
-      exactAmountFiatRef.current = exactAmountFiat
-    },
-    [exactAmountFiat, exactAmountToken],
-  )
+  const onInputSelectionChange = useCallback((start: number, end: number) => {
+    selectionRef.current = { start, end }
+    decimalPadRef.current?.updateDisabledKeys()
+  }, [])
 
   const resetSelection = useCallback(
     ({ start, end }: { start: number; end?: number; currencyField?: CurrencyField }) => {

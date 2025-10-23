@@ -13,4 +13,5 @@ ignores: [
     "@universe/config",
     "tsconfig",
     "utilities",
+    "@uniswap/biome-config",
   ]

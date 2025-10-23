@@ -46,6 +46,7 @@
     "@types/chrome": "0.0.304",
     "@types/node": "22.13.1",
     "@types/react": "18.3.18",
+    "@uniswap/biome-config": "workspace:^",
     "@uniswap/eslint-config": "workspace:^",
     "@vitest/coverage-v8": "3.2.1",
     "depcheck": "1.4.7",

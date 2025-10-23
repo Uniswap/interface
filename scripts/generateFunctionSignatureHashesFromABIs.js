@@ -57,12 +57,13 @@ async function processABIFiles(directory) {
   return results
 }
 
+
 const packages = [
   '@uniswap/v3-periphery/artifacts',
   '@uniswap/v3-core/artifacts',
   '@uniswap/v2-core/build',
   '@uniswap/universal-router/artifacts',
-  '@uniswap/swap-router-contracts/artifacts',
+  '@uniswap/swap-router-contracts/artifacts'
 ]
 
 function mapHashesToSignatures(data) {
@@ -88,8 +89,14 @@ async function main() {
   const data = await Promise.all(calls)
   const results = data.reduce((acc, cur) => ({ ...acc, ...cur }), {})
 
-  await writeFile('scripts/dist/file-to-signature-to-hash.json', JSON.stringify(results, null, 2))
-  await writeFile('scripts/dist/hash-to-signature.json', JSON.stringify(mapHashesToSignatures(results), null, 2))
+  await writeFile(
+    'scripts/dist/file-to-signature-to-hash.json',
+    JSON.stringify(results, null, 2)
+  )
+  await writeFile(
+    'scripts/dist/hash-to-signature.json',
+    JSON.stringify(mapHashesToSignatures(results), null, 2)
+  )
 }
 main()
   .then(() => console.log('done'))

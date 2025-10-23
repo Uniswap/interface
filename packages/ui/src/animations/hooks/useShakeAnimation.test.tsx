@@ -1,28 +1,31 @@
-import { act, render, renderHook } from '@testing-library/react'
+/** @jsxImportSource react */
+import { act, renderHook } from '@testing-library/react-hooks'
+import { render, screen } from '@testing-library/react-native'
+import { View } from 'react-native'
+import Animated from 'react-native-reanimated'
 import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
 import { useShakeAnimation } from 'ui/src/animations/hooks/useShakeAnimation'
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 // Mock the errorShakeAnimation function
-vi.mock('ui/src/animations/errorShakeAnimation', () => ({
-  errorShakeAnimation: vi.fn(),
+jest.mock('ui/src/animations/errorShakeAnimation', () => ({
+  errorShakeAnimation: jest.fn(),
 }))
 
 // Test component that uses useShakeAnimation
 const TestShakeComponent = () => {
-  const { triggerShakeAnimation } = useShakeAnimation()
+  const { shakeStyle, triggerShakeAnimation } = useShakeAnimation()
   return (
-    <div data-testid="shake-container">
-      <button data-testid="shake-button" onClick={triggerShakeAnimation}>
+    <Animated.View testID="shake-container" style={shakeStyle}>
+      <View testID="shake-button" onTouchEnd={triggerShakeAnimation}>
         Shake Me
-      </button>
-    </div>
+      </View>
+    </Animated.View>
   )
 }
 
 describe('useShakeAnimation', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
+    jest.clearAllMocks()
   })
 
   it('should return shakeStyle and triggerShakeAnimation', () => {
@@ -34,18 +37,17 @@ describe('useShakeAnimation', () => {
     expect(typeof result.current.triggerShakeAnimation).toBe('function')
   })
 
-  it('should initialize and trigger shake animation', () => {
+  it('should initialize with translateX: 0 and update after shake', () => {
     // Arrange
-    const result = render(<TestShakeComponent />)
-    const container = result.getByTestId('shake-container')
-    const button = result.getByTestId('shake-button')
+    render(<TestShakeComponent />)
+    const container = screen.getByTestId('shake-container')
 
-    // Assert initial state - check that container exists
-    expect(container).toBeDefined()
+    // Assert initial state
+    expect(container.props.style.transform[0].translateX).toBe(0)
 
     // Act - trigger the shake animation
     act(() => {
-      button.click()
+      screen.getByTestId('shake-button').props.onTouchEnd()
     })
 
     // Assert - verify errorShakeAnimation was called
@@ -62,7 +64,7 @@ describe('useShakeAnimation', () => {
     rerender()
 
     // Assert
-    expect(result.current.shakeStyle).toStrictEqual(initialShakeStyle)
+    expect(result.current.shakeStyle).toBe(initialShakeStyle)
     expect(result.current.triggerShakeAnimation).toBe(initialTriggerShakeAnimation)
   })
 })

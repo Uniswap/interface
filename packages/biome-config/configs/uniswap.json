@@ -1,0 +1,56 @@
+{
+  "linter": {
+    "rules": {
+      "style": {
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "uniswap/src": {
+                "message": "Avoid importing directly from uniswap/src from within the uniswap package which causes circular imports."
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": [
+        "src/index.ts",
+        "src/features/telemetry/constants/index.ts",
+        "src/features/telemetry/constants/trace/index.ts",
+        "src/i18n/index.ts",
+        "src/state/index.ts",
+        "src/test/**"
+      ],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "uniswap/src": "off"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/data/**/__generated__/**", "src/abis/types/**"],
+      "linter": {
+        "enabled": false
+      }
+    },
+    {
+      "includes": ["vite/**"],
+      "linter": {
+        "enabled": false
+      }
+    }
+  ]
+}

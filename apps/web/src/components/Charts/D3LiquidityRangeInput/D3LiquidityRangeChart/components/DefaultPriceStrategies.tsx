@@ -5,7 +5,7 @@ import { useLiquidityChartStoreActions } from 'components/Charts/D3LiquidityRang
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Flex, Shine, styled, Text } from 'ui/src'
+import { Flex, Shine, Switch, styled, Text } from 'ui/src'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import i18n from 'uniswap/src/i18n'
@@ -38,25 +38,25 @@ const priceStrategies: PriceStrategy[] = [
   {
     key: DefaultPriceStrategy.STABLE,
     title: i18n.t('position.stable'),
-    display: '± 3 ticks',
+    display: '± 1%',
     description: i18n.t('position.stable.description'),
   },
   {
     key: DefaultPriceStrategy.WIDE,
     title: i18n.t('position.wide'),
-    display: '–50% — +100%',
+    display: '± 10%',
     description: i18n.t('position.wide.description'),
   },
   {
     key: DefaultPriceStrategy.ONE_SIDED_LOWER,
     title: i18n.t('position.one_sided_lower'),
-    display: '–50%',
+    display: '- 10%',
     description: i18n.t('position.one_sided_lower.description'),
   },
   {
     key: DefaultPriceStrategy.ONE_SIDED_UPPER,
     title: i18n.t('position.one_sided_upper'),
-    display: '+100%',
+    display: '+ 10%',
     description: i18n.t('position.one_sided_upper.description'),
   },
 ]
@@ -78,12 +78,12 @@ const DefaultPriceStrategyComponent = ({
         justifyContent="space-between"
       >
         <Flex gap="$spacing8" $sm={{ gap: '$spacing2' }}>
-          <Flex row gap="$gap12" justifyContent="space-between">
+          <Flex row gap={10} justifyContent="space-between">
             <Text variant="buttonLabel3" color="$neutral2">
               {strategy.title}
             </Text>
           </Flex>
-          <Text variant="body2">{strategy.display}</Text>
+          <Text variant="body1">{strategy.display}</Text>
         </Flex>
         <Flex mt="$spacing16" gap="$spacing2">
           <Text variant="body4" color="$neutral2">
@@ -101,16 +101,9 @@ export function DefaultPriceStrategies({ isLoading }: { isLoading: boolean }) {
   const actions = useLiquidityChartStoreActions()
 
   const handleSelect = useEvent((key: DefaultPriceStrategy) => {
-    if (key === selectedPriceStrategy) {
-      return
-    }
-
     try {
-      // If in full range mode, switch to custom first
-      if (isFullRange) {
-        actions.setChartState({ isFullRange: false })
-      }
-      actions.setPriceStrategy({ priceStrategy: key, animate: !isFullRange })
+      actions.setChartState({ isFullRange: false })
+      actions.setPriceStrategy(key)
     } catch (_e) {
       popupRegistry.addPopup(
         { type: PopupType.Error, error: i18n.t('position.default_price_strategies.error') },
@@ -125,15 +118,39 @@ export function DefaultPriceStrategies({ isLoading }: { isLoading: boolean }) {
   }
 
   return (
-    <Flex backgroundColor="$surface2" gap="$gap16" p="$spacing16">
+    <Flex
+      backgroundColor="$surface2"
+      gap="$gap16"
+      p="$spacing16"
+      borderRadius="$rounded20"
+      borderTopLeftRadius="$rounded20"
+      borderTopRightRadius="$rounded20"
+    >
       <Flex justifyContent="space-between" row alignItems="center">
         <Text variant="body3" color="$neutral2">
           {i18n.t('position.default_price_strategies')}
         </Text>
+        <Flex row alignItems="center" gap="$spacing8">
+          <Text variant="body3" color="$neutral2">
+            {i18n.t('common.fullRange')}
+          </Text>
+          <Trace logPress element={ElementName.LiquidityDefaultPriceStrategy} properties={{ strategy: 'full_range' }}>
+            <Switch
+              size="$spacing12"
+              variant="branded"
+              checked={isFullRange}
+              onPress={() =>
+                actions.setChartState({
+                  isFullRange: !isFullRange,
+                })
+              }
+            />
+          </Trace>
+        </Flex>
       </Flex>
       <Flex
         $platform-web={{
-          display: 'grid',
+          display: isFullRange ? 'none' : 'grid',
         }}
         gridTemplateColumns="repeat(4, 1fr)"
         gap="$spacing8"

@@ -70,7 +70,7 @@ test.describe('Navigation', () => {
 
   test.describe('Company menu', () => {
     test.beforeEach(async ({ page }) => {
-      await page.goto('/?featureFlagOverride=conversion-tracking')
+      await page.goto('/')
     })
     test('contains appropriate sections and links', async ({ page }) => {
       await page.getByTestId(TestID.NavCompanyMenu).hover()
@@ -97,11 +97,10 @@ test.describe('Navigation', () => {
 
     test('contains Legal & Privacy section with appropriate links', async ({ page }) => {
       await page.getByTestId(TestID.NavCompanyMenu).hover()
-      const dropdown = page.getByTestId(TestID.NavCompanyDropdown).first()
-      await expect(dropdown).toBeVisible()
+      await expect(page.getByTestId(TestID.NavCompanyDropdown).first()).toBeVisible()
 
-      await expect(dropdown.getByText('Legal & Privacy')).toBeVisible()
-      await dropdown.getByText('Legal & Privacy').click()
+      await expect(page.getByTestId(TestID.NavCompanyDropdown).getByText('Legal & Privacy')).toBeVisible()
+      await page.getByTestId(TestID.NavCompanyDropdown).getByText('Legal & Privacy').click()
 
       await expect(page.getByTestId(TestID.NavCompanyDropdown).getByText('Your Privacy Choices')).toBeVisible()
       await expect(page.getByTestId(TestID.NavCompanyDropdown).getByText('Privacy Policy')).toBeVisible()
@@ -167,7 +166,7 @@ test.describe('Mobile navigation', () => {
   test.beforeEach(async ({ page }) => {
     // Set a mobile viewport
     await page.setViewportSize({ width: 449, height: 900 })
-    await page.goto('/?featureFlagOverride=conversion-tracking')
+    await page.goto('/')
     await page.waitForTimeout(500)
     await page.getByTestId(TestID.NavCompanyMenu).click()
   })

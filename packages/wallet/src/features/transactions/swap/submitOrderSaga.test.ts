@@ -124,7 +124,6 @@ describe(submitUniswapXOrder, () => {
           v3Used: false,
           v4Used: false,
           uniswapXUsed: true,
-          jupiterUsed: false,
         })
         .next()
         .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
@@ -210,7 +209,6 @@ describe(submitUniswapXOrder, () => {
           v3Used: false,
           v4Used: false,
           uniswapXUsed: true,
-          jupiterUsed: false,
         })
         .next()
         .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
@@ -290,7 +288,6 @@ describe(submitUniswapXOrder, () => {
           v3Used: false,
           v4Used: false,
           uniswapXUsed: true,
-          jupiterUsed: false,
         })
         .next()
         .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))

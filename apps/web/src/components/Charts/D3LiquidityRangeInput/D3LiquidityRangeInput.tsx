@@ -170,6 +170,7 @@ export function D3LiquidityRangeInput({
         onTimePeriodChange={setSelectedHistoryDuration}
         setIsFullRange={setIsFullRange}
       >
+        <DefaultPriceStrategies isLoading={isLoading} />
         <Flex
           backgroundColor="$surface2"
           gap="$gap16"
@@ -214,7 +215,6 @@ export function D3LiquidityRangeInput({
           )}
           <LiquidityRangeActionButtons />
         </Flex>
-        <DefaultPriceStrategies isLoading={isLoading} />
         <D3LiquidityMinMaxInput />
       </LiquidityChartStoreProvider>
     </Flex>

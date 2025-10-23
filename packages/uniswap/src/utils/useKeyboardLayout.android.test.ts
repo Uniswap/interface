@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook } from '@testing-library/react-hooks'
 import { DeviceEventEmitter, Dimensions } from 'react-native'
 import { act } from 'react-test-renderer'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'

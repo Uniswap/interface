@@ -3,24 +3,23 @@ import {
   closeKeyboardBeforeCallback,
   dismissNativeKeyboard,
 } from 'utilities/src/device/keyboard/dismissNativeKeyboard.native'
-import { type Mock, vi } from 'vitest'
 
 // Mock the react-native Keyboard module
-vi.mock('react-native', () => ({
+jest.mock('react-native', () => ({
   Keyboard: {
-    dismiss: vi.fn(),
-    isVisible: vi.fn(),
+    dismiss: jest.fn(),
+    isVisible: jest.fn(),
   },
 }))
 
 describe('dismissNativeKeyboard', () => {
   beforeEach(() => {
-    vi.clearAllMocks()
-    vi.useFakeTimers()
+    jest.clearAllMocks()
+    jest.useFakeTimers()
   })
 
   afterEach(() => {
-    vi.useRealTimers()
+    jest.useRealTimers()
   })
 
   describe('dismissNativeKeyboard', () => {
@@ -32,8 +31,8 @@ describe('dismissNativeKeyboard', () => {
 
   describe('closeKeyboardBeforeCallback', () => {
     it('should call callback immediately if keyboard is not visible', () => {
-      const callback = vi.fn()
-      ;(Keyboard.isVisible as Mock).mockReturnValue(false)
+      const callback = jest.fn()
+      ;(Keyboard.isVisible as jest.Mock).mockReturnValue(false)
 
       closeKeyboardBeforeCallback(callback)
 

@@ -22,21 +22,14 @@ export interface CheckpointData {
   cumulativeMps: number
 }
 
-export enum DisplayMode {
-  VALUATION = 'VALUATION',
-  TOKEN_PRICE = 'TOKEN_PRICE',
-}
-
 interface AuctionState {
   auctionDetails: AuctionDetails | null
   checkpointData: CheckpointData | null
   tokenColor?: string
-  displayMode: DisplayMode
 }
 
 interface AuctionActions {
   setTokenColor: (color?: string) => void
-  setDisplayMode: (mode: DisplayMode) => void
 }
 
 export type AuctionStoreState = AuctionState & {

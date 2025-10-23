@@ -10,21 +10,13 @@ type IntroCardStackProps = {
 
 export const INTRO_CARD_MIN_HEIGHT = isExtensionApp ? 70 : 110
 
-const keyExtractor = (card: IntroCardProps): string => {
-  return card.title
-}
-
-const renderCard = (card: IntroCardProps): JSX.Element => {
-  return <IntroCard {...card} />
-}
-
 export function IntroCardStack({ cards, onSwiped }: IntroCardStackProps): JSX.Element {
   return (
     <SwipeableCardStack
       cards={cards}
-      keyExtractor={keyExtractor}
+      keyExtractor={(card) => card.title}
       minCardHeight={INTRO_CARD_MIN_HEIGHT}
-      renderCard={renderCard}
+      renderCard={(card) => <IntroCard {...card} />}
       onSwiped={onSwiped}
     />
   )

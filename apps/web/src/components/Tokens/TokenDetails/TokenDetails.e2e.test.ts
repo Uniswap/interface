@@ -1,6 +1,5 @@
 /* eslint-disable no-restricted-syntax */
 import { expect, getTest } from 'playwright/fixtures'
-import { Mocks } from 'playwright/mocks/mocks'
 import { shortenAddress } from 'utilities/src/addresses'
 
 const test = getTest()
@@ -14,30 +13,29 @@ test.describe('Token details', () => {
     await expect(page.locator('h1')).toHaveCount(1)
   })
 
-  test('UNI token should have all information populated', async ({ page, graphql }) => {
-    await graphql.intercept('TokenWeb', Mocks.TokenWeb.uni_token, {
-      chain: 'ETHEREUM',
-      address: UNI_ADDRESS,
-    })
-    await graphql.intercept('Token', Mocks.Token.uni_token, {
-      chain: 'ETHEREUM',
-      address: UNI_ADDRESS,
-    })
+  test('UNI token should have all information populated', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 })
     // $UNI token
     await page.goto(`/explore/tokens/ethereum/${UNI_ADDRESS}`)
-    // Wait for token name to load
-    await expect(page.getByText('Uniswap').first()).toBeVisible()
+    // There should be a single h1 tag on large screen sizes
+    await expect(page.locator('h1')).toHaveCount(1)
 
-    // Stats should have: TVL, FDV, market cap
+    // Price chart should be filled in
+    await expect(page.locator('#chart-header')).toContainText('$')
+    await expect(page.getByTestId('tdp-Price-chart-container')).toBeVisible()
+
+    // Stats should have: TVL, FDV, market cap, 24H volume
     await expect(page.getByTestId('token-details-stats')).toBeVisible()
     await expect(page.getByTestId('tvl')).toContainText('$')
     await expect(page.getByTestId('fdv')).toContainText('$')
     await expect(page.getByTestId('market-cap')).toContainText('$')
+    await expect(page.getByTestId('volume-24h')).toContainText('$')
 
     // Info section should have description of token & relevant links
     await expect(page.getByTestId('token-details-info-section')).toBeVisible()
-    await expect(page.getByTestId('token-description-truncated')).toContainText('UNI is the governance token')
+    await expect(page.getByTestId('token-description-truncated')).toContainText(
+      'UNI is the governance token for Uniswap',
+    )
 
     // Check links
     const etherscanLink = page.getByTestId('token-details-info-links').getByRole('link', { name: 'Etherscan' })

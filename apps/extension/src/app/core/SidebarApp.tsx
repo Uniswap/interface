@@ -7,7 +7,6 @@ import { useDispatch } from 'react-redux'
 import { createHashRouter, RouterProvider } from 'react-router'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ErrorElement } from 'src/app/components/ErrorElement'
-import { useTraceSidebarDappUrl } from 'src/app/components/Trace/useTraceSidebarDappUrl'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
 import { DatadogAppNameTag } from 'src/app/datadog'
 import { AccountSwitcherScreen } from 'src/app/features/accounts/AccountSwitcherScreen'
@@ -221,17 +220,6 @@ router.subscribe((state) => {
 
 setRouter(router)
 
-function SidebarContent(): JSX.Element {
-  useTraceSidebarDappUrl()
-
-  return (
-    <>
-      <PrimaryAppInstanceDebuggerLazy />
-      <RouterProvider router={router} />
-    </>
-  )
-}
-
 export default function SidebarApp(): JSX.Element {
   // initialize analytics on load
   useEffect(() => {
@@ -252,7 +240,8 @@ export default function SidebarApp(): JSX.Element {
     <PersistGate persistor={getReduxPersistor()}>
       <BaseAppContainer appName={DatadogAppNameTag.Sidebar}>
         <DappContextProvider>
-          <SidebarContent />
+          <PrimaryAppInstanceDebuggerLazy />
+          <RouterProvider router={router} />
         </DappContextProvider>
       </BaseAppContainer>
     </PersistGate>

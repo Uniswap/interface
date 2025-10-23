@@ -10,34 +10,25 @@ export function calculateStrategyPrices({
   priceStrategy,
   currentPrice,
   liquidityData,
-  defaultMinPrice,
-  defaultMaxPrice,
 }: {
   priceStrategy: DefaultPriceStrategy
   currentPrice: number
   liquidityData: ChartEntry[]
-  defaultMinPrice?: number
-  defaultMaxPrice?: number
 }): { minPrice: number; maxPrice: number } {
   const { index } = getClosestTick(liquidityData, currentPrice)
   const nextTick = liquidityData[index + 1]
   const prevTick = liquidityData[index - 1]
 
   switch (priceStrategy) {
-    case DefaultPriceStrategy.STABLE: {
-      // For stable pairs, use ±3 ticks instead of percentage
-      const minTickIndex = Math.max(0, index - 3)
-      const maxTickIndex = Math.min(liquidityData.length - 1, index + 3)
-
+    case DefaultPriceStrategy.STABLE:
       return {
-        minPrice: liquidityData[minTickIndex].price0,
-        maxPrice: liquidityData[maxTickIndex].price0,
+        minPrice: currentPrice * 0.99,
+        maxPrice: currentPrice * 1.01,
       }
-    }
     case DefaultPriceStrategy.WIDE:
       return {
-        minPrice: currentPrice * 0.5,
-        maxPrice: currentPrice * 2,
+        minPrice: currentPrice * 0.9,
+        maxPrice: currentPrice * 1.1,
       }
     case DefaultPriceStrategy.ONE_SIDED_UPPER:
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -47,7 +38,7 @@ export function calculateStrategyPrices({
 
       return {
         minPrice: nextTick.price0,
-        maxPrice: currentPrice * 2,
+        maxPrice: currentPrice * 1.1,
       }
     case DefaultPriceStrategy.ONE_SIDED_LOWER:
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
@@ -56,16 +47,9 @@ export function calculateStrategyPrices({
       }
 
       return {
-        minPrice: currentPrice * 0.5,
+        minPrice: currentPrice * 0.9,
         maxPrice: prevTick.price0,
       }
-    case DefaultPriceStrategy.FULL_RANGE:
-      return {
-        minPrice: liquidityData[0]?.price0 ?? 0,
-        maxPrice: liquidityData[liquidityData.length - 1]?.price0 ?? Infinity,
-      }
-    case DefaultPriceStrategy.CUSTOM:
-      return { minPrice: defaultMinPrice ?? currentPrice, maxPrice: defaultMaxPrice ?? currentPrice }
     default:
       return { minPrice: currentPrice, maxPrice: currentPrice }
   }
@@ -92,7 +76,6 @@ export function detectPriceStrategy({
     DefaultPriceStrategy.WIDE,
     DefaultPriceStrategy.ONE_SIDED_LOWER,
     DefaultPriceStrategy.ONE_SIDED_UPPER,
-    DefaultPriceStrategy.FULL_RANGE,
   ]
 
   for (const priceStrategy of priceStrategies) {

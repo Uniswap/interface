@@ -4,7 +4,10 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "module": "commonjs",
-    "types": ["jest", "node"],
+    "types": [
+      "jest",
+      "node"
+    ],
     "jsx": "preserve"
   }
 }

@@ -1,6 +1,5 @@
 import { colorsLight } from 'ui/src/theme'
 import { isGrayColor, passesContrast } from 'ui/src/utils/colors'
-import { describe, expect, it } from 'vitest'
 
 describe('isGrayColor', () => {
   it('should return true for gray hex colors', () => {

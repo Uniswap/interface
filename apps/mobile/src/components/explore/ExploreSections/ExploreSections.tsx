@@ -8,18 +8,12 @@ import {
 import { ALL_NETWORKS_ARG } from '@universe/api'
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  type NativeScrollEvent,
-  type NativeSyntheticEvent,
-  ScrollView,
-  StyleSheet,
-  useWindowDimensions,
-} from 'react-native'
+import { ScrollView, StyleSheet, useWindowDimensions } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import { AnimatedRef, useAnimatedRef } from 'react-native-reanimated'
 import Sortable from 'react-native-sortables'
 import { useDispatch, useSelector } from 'react-redux'
-import { ESTIMATED_BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
+import { BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
 import { ExploreScreenParams } from 'src/app/navigation/types'
 import { FavoritesSection } from 'src/components/explore/ExploreSections/FavoritesSection'
 import { NetworkPills, NetworkPillsProps } from 'src/components/explore/ExploreSections/NetworkPillsRow'
@@ -28,7 +22,7 @@ import { TokenItem } from 'src/components/explore/TokenItem'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { getTokenMetadataDisplayType } from 'src/features/explore/utils'
 import { Flex, Loader, Text } from 'ui/src'
-import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
+import { AnimatedBottomSheetFlashList, AnimatedFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
 import { spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
@@ -42,7 +36,6 @@ import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
-import { useEvent } from 'utilities/src/react/hooks'
 import { useInitialLoadingState } from 'utilities/src/react/useInitialLoadingState'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
 import { setTokensOrderBy } from 'wallet/src/features/wallet/slice'
@@ -55,7 +48,6 @@ type TokenItemDataWithMetadata = { tokenItemData: TokenItemData; tokenMetadataDi
 
 type ExploreSectionsProps = ExploreScreenParams & {
   listRef: AnimatedRef<FlatList>
-  setIsAtTopOnScroll?: (isAtTop: boolean) => void
 }
 
 const renderItem = ({
@@ -80,7 +72,6 @@ function _ExploreSections({
   showFavorites = true,
   orderByMetric,
   chainId,
-  setIsAtTopOnScroll,
 }: ExploreSectionsProps): JSX.Element {
   const { t } = useTranslation()
   const insets = useAppInsets()
@@ -92,16 +83,6 @@ function _ExploreSections({
 
   // Network filtering
   const [selectedNetwork, setSelectedNetwork] = useState<UniverseChainId | null>(null)
-
-  // Track scroll position for double-tap behavior
-  const handleScroll = useEvent((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    if (!isBottomTabsEnabled || !setIsAtTopOnScroll) {
-      return
-    }
-    const yOffset = event.nativeEvent.contentOffset.y
-    const isAtTop = yOffset <= 0
-    setIsAtTopOnScroll(isAtTop)
-  })
 
   // Update selectedNetwork and orderBy when chainId prop changes (e.g., from deep links)
   useEffect(() => {
@@ -142,6 +123,8 @@ function _ExploreSections({
   const isLoadingOrFetching = isLoading || isFetching
   const showFullScreenLoadingState = (!hasAllData && isLoadingOrFetching) || (!!error && isLoadingOrFetching)
 
+  const ListComponent = isBottomTabsEnabled ? AnimatedFlashList : AnimatedBottomSheetFlashList
+
   const contentContainerStyleWithoutBottomTabs = useMemo(() => {
     return {
       paddingBottom: insets.bottom,
@@ -150,7 +133,7 @@ function _ExploreSections({
 
   const contentContainerStyleWithBottomTabs = useMemo(() => {
     return {
-      paddingBottom: ESTIMATED_BOTTOM_TABS_HEIGHT + spacing.spacing32 + insets.bottom,
+      paddingBottom: BOTTOM_TABS_HEIGHT + spacing.spacing32 + insets.bottom,
     }
   }, [insets.bottom])
 
@@ -199,7 +182,6 @@ function _ExploreSections({
           estimatedItemSize={TOKEN_ITEM_SIZE}
           drawDistance={TOKEN_ITEM_SIZE * AMOUNT_TO_DRAW}
           estimatedListSize={dimensions}
-          onScroll={handleScroll}
         />
       </Flex>
     )
@@ -207,7 +189,7 @@ function _ExploreSections({
 
   return (
     <Flex fill animation="100ms">
-      <AnimatedBottomSheetFlashList
+      <ListComponent
         ref={listRef}
         ListEmptyComponent={ListEmptyComponent}
         ListHeaderComponent={
@@ -275,7 +257,7 @@ const styles = StyleSheet.create({
 function getTokenMetadataDisplayTypeSafe(orderBy: ExploreOrderBy): TokenMetadataDisplayType | null {
   try {
     return getTokenMetadataDisplayType(orderBy)
-  } catch {
+  } catch (_e) {
     return null
   }
 }

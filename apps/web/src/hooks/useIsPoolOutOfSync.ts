@@ -48,7 +48,7 @@ export function useIsPoolOutOfSync(poolOrPair?: V4Pool | V3Pool | Pair) {
   let poolPrice
   try {
     poolPrice = poolOrPair?.token0Price
-  } catch {
+  } catch (_e) {
     // for a v2 pool if it has been created but there is no liquidity then getting the price will throw an error
     poolPrice = undefined
   }

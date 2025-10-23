@@ -10,6 +10,10 @@
     "noEmit": false,
     "jsx": "react-jsx",
     "target": "es2019",
-    "lib": ["es2021", "dom", "esnext"]
+    "lib": [
+      "es2021",
+      "dom",
+      "esnext"
+    ]
   }
 }

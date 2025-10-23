@@ -1,8 +1,12 @@
 import type { BottomTabBarProps } from '@react-navigation/bottom-tabs'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import type { LayoutChangeEvent } from 'react-native'
-import { useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated'
-import { TAB_BAR_ANIMATION_DURATION, TAB_ITEMS } from 'src/app/navigation/tabs/CustomTabBar/constants'
+import { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import {
+  BOTTOM_TABS_HEIGHT,
+  TAB_BAR_ANIMATION_DURATION,
+  TAB_ITEMS,
+} from 'src/app/navigation/tabs/CustomTabBar/constants'
 import { SwapButton } from 'src/app/navigation/tabs/SwapButton'
 import { SwapLongPressModal } from 'src/app/navigation/tabs/SwapLongPressModal'
 import { Flex, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
@@ -24,9 +28,6 @@ interface TabItemProps {
 const tabShadowOffset = { width: 0, height: 1 }
 const tabBarShadowOffset = { width: 0, height: 6 }
 
-const MARGIN = spacing.spacing4
-const ANIMATED_VIEW_BORDER_WIDTH = spacing.spacing1 / 2
-
 const TabItem = ({ tab, index, isFocused, onPress, colors }: TabItemProps): JSX.Element => {
   const IconComponent = tab.icon
 
@@ -43,9 +44,10 @@ const TabItem = ({ tab, index, isFocused, onPress, colors }: TabItemProps): JSX.
       flex={1}
       alignItems="center"
       justifyContent="center"
-      py="$spacing18"
+      px="$spacing24"
+      py="$spacing8"
       borderRadius="$roundedFull"
-      onPress={handlePress}
+      onPressIn={handlePress}
     >
       <IconComponent
         color={isFocused ? colors.neutral1.val : colors.neutral3.val}
@@ -64,30 +66,33 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps): JSX.Elem
   const isDarkMode = useIsDarkMode()
   const { hapticFeedback } = useHapticFeedback()
 
-  const TAB_WIDTH = containerWidth / TAB_ITEMS.length
-  const ANIMATED_VIEW_WIDTH = TAB_WIDTH - MARGIN * 2 - ANIMATED_VIEW_BORDER_WIDTH * 2
-
-  const activeTabIndex = useDerivedValue(() => {
-    return withTiming(state.index, {
-      duration: TAB_BAR_ANIMATION_DURATION,
-    })
-  })
-
+  // Animated style for the sliding background
+  const activeTabIndex = useSharedValue(state.index)
+  const tabWidth = useSharedValue(0)
   const animatedBackgroundStyle = useAnimatedStyle(() => {
-    const translateX = TAB_WIDTH * activeTabIndex.value + MARGIN - activeTabIndex.value * ANIMATED_VIEW_BORDER_WIDTH
+    const backgroundLeft = activeTabIndex.value * tabWidth.value + spacing.spacing8
 
     return {
-      transform: [{ translateX }],
+      transform: [{ translateX: backgroundLeft }],
     }
   })
 
-  const onLayout = useEvent((event: LayoutChangeEvent) => {
-    const { width } = event.nativeEvent.layout
-    setContainerWidth(width)
-  })
+  const onLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      const { width } = event.nativeEvent.layout
+      const adjustedWidth = width - spacing.spacing8
+      setContainerWidth(adjustedWidth)
+      tabWidth.value = adjustedWidth / TAB_ITEMS.length
+    },
+    [tabWidth],
+  )
 
   const handleTabPress = useEvent((index: number) => {
     const route = state.routes[index]
+
+    activeTabIndex.value = withTiming(index, {
+      duration: TAB_BAR_ANIMATION_DURATION,
+    })
 
     const event = navigation.emit({
       type: 'tabPress',
@@ -107,14 +112,22 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps): JSX.Elem
 
   return (
     <>
-      <Flex position="absolute" bottom={insets.bottom} left={0} right={0} pointerEvents="box-none">
+      <Flex
+        position="absolute"
+        bottom={insets.bottom}
+        left={0}
+        right={0}
+        pointerEvents="box-none"
+        height={BOTTOM_TABS_HEIGHT}
+      >
         <Flex row alignItems="center" justifyContent="space-between" px="$spacing24" gap="$spacing12">
-          {/* Main parent container for TabItems */}
           <Flex
             row
             fill
             alignItems="center"
-            backgroundColor="$surface1"
+            px="$spacing4"
+            py="$spacing8"
+            backgroundColor={isDarkMode ? '$surface1' : '$surface2'}
             borderRadius="$roundedFull"
             borderColor="$surface3"
             borderWidth="$spacing1"
@@ -127,21 +140,21 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps): JSX.Elem
           >
             {/* Animated sliding background */}
             {containerWidth > 0 && (
-              <Flex position="absolute" height="100%" py="$spacing4">
-                <AnimatedFlex
-                  height="100%"
-                  width={ANIMATED_VIEW_WIDTH}
-                  backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
-                  borderRadius="$roundedFull"
-                  borderWidth={ANIMATED_VIEW_BORDER_WIDTH}
-                  borderColor="$surface3"
-                  shadowColor="$shadowColor"
-                  shadowOffset={tabShadowOffset}
-                  shadowRadius={6}
-                  shadowOpacity={0.05}
-                  style={animatedBackgroundStyle}
-                />
-              </Flex>
+              <AnimatedFlex
+                position="absolute"
+                top={spacing.spacing4}
+                bottom={spacing.spacing4}
+                width={containerWidth / TAB_ITEMS.length - spacing.spacing8} // Subtract margin for both sides
+                backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
+                borderRadius="$roundedFull"
+                borderWidth="$spacing1"
+                borderColor="$surface3"
+                shadowColor="$shadowColor"
+                shadowOffset={tabShadowOffset}
+                shadowRadius={6}
+                shadowOpacity={0.05}
+                style={animatedBackgroundStyle}
+              />
             )}
 
             {TAB_ITEMS.map((tab, index): JSX.Element => {

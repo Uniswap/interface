@@ -1,5 +1,4 @@
 import { getMaybeHexOrRGBColor } from 'ui/src/components/buttons/Button/utils/getMaybeHexOrRGBColor'
-import { describe, expect, it } from 'vitest'
 
 describe('getMaybeHexOrRGBColor', () => {
   it('should return the same hex color if valid', () => {

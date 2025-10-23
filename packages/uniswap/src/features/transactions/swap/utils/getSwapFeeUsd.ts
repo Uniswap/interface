@@ -1,23 +1,30 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { SwapFee } from 'uniswap/src/features/transactions/swap/types/trade'
+import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { CurrencyField } from 'uniswap/src/types/currency'
 
 export function getSwapFeeUsd({
-  swapFee,
-  amount,
-  amountUsd,
+  trade,
+  outputAmount,
+  outputAmountUsd,
 }: {
-  swapFee: SwapFee
-  amount: CurrencyAmount<Currency>
-  amountUsd: CurrencyAmount<Currency>
+  trade: Trade
+  outputAmount: CurrencyAmount<Currency>
+  outputAmountUsd: CurrencyAmount<Currency>
 }): number | undefined {
-  const outputCurrencyPricePerUnitExact = (parseFloat(amountUsd.toExact()) / parseFloat(amount.toExact())).toString()
+  if (!trade.swapFee) {
+    return undefined
+  }
+
+  const outputCurrencyPricePerUnitExact = (
+    parseFloat(outputAmountUsd.toExact()) / parseFloat(outputAmount.toExact())
+  ).toString()
 
   const currencyAmount = getCurrencyAmount({
-    value: swapFee.amount,
+    value: trade.swapFee.amount,
     valueType: ValueType.Raw,
-    currency: amount.currency,
+    currency: trade.outputAmount.currency,
   })
 
   if (!currencyAmount) {
@@ -29,18 +36,17 @@ export function getSwapFeeUsd({
 }
 
 export function getSwapFeeUsdFromDerivedSwapInfo(derivedSwapInfo: DerivedSwapInfo): number | undefined {
-  const swapFee = derivedSwapInfo.trade.trade?.swapFee
-
-  if (!swapFee) {
+  if (
+    !derivedSwapInfo.trade.trade ||
+    !derivedSwapInfo.currencyAmounts[CurrencyField.OUTPUT] ||
+    !derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]
+  ) {
     return undefined
   }
 
-  const amount = derivedSwapInfo.currencyAmounts[swapFee.feeField]
-  const amountUsd = derivedSwapInfo.currencyAmountsUSDValue[swapFee.feeField]
-
-  if (!amount || !amountUsd) {
-    return undefined
-  }
-
-  return getSwapFeeUsd({ swapFee, amount, amountUsd })
+  return getSwapFeeUsd({
+    trade: derivedSwapInfo.trade.trade,
+    outputAmount: derivedSwapInfo.currencyAmounts[CurrencyField.OUTPUT],
+    outputAmountUsd: derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT],
+  })
 }

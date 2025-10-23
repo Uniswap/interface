@@ -15,7 +15,13 @@
     "includedScripts": []
   },
   "main": "base.js",
-  "files": ["restrictedImports.js", "base.js", "react.js", "native.js", "load.js"],
+  "files": [
+    "restrictedImports.js",
+    "base.js",
+    "react.js",
+    "native.js",
+    "load.js"
+  ],
   "dependencies": {
     "@jambit/eslint-plugin-typed-redux-saga": "0.4.0",
     "@react-native-community/eslint-config": "3.2.0",

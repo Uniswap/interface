@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook } from '@testing-library/react-hooks'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useSyncFiatAndTokenAmountUpdater } from 'uniswap/src/features/transactions/swap/form/hooks/useSyncFiatAndTokenAmountUpdater'
 import { SwapFormStoreState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'

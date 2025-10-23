@@ -16,18 +16,12 @@ import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EdgeFade } from 'uniswap/src/features/fiatOnRamp/EdgeFade/EdgeFade'
 import { PaymentMethodFilter } from 'uniswap/src/features/fiatOnRamp/PaymentMethodFilter/PaymentMethodFilter'
-import {
-  type FORFilters,
-  type FORQuote,
-  type FORServiceProvider,
-  RampDirection,
-} from 'uniswap/src/features/fiatOnRamp/types'
+import { FORFilters, FORQuote, FORServiceProvider, RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { filterQuotesByPaymentMethod } from 'uniswap/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useIsForFiltersEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsForFiltersEnabled'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
@@ -168,7 +162,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
           closeDataTestId="ChooseProviderModal-close"
         />
         <Flex row alignItems="center" justifyContent="space-between">
-          <Text variant="subheading1" color="$neutral1" testID={TestID.BuyFormChooseProvider}>
+          <Text variant="subheading1" color="$neutral1">
             {rampDirection === RampDirection.ONRAMP ? t('fiatOnRamp.checkout.title') : t('fiatOffRamp.checkout.title')}
           </Text>
           <Flex row gap="$spacing12" alignItems="center" pr="$spacing2">

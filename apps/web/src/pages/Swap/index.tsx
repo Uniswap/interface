@@ -7,6 +7,7 @@ import { PageWrapper } from 'components/swap/styled'
 import { useAccount } from 'hooks/useAccount'
 import { useDeferredComponent } from 'hooks/useDeferredComponent'
 import { PageType, useIsPage } from 'hooks/useIsPage'
+import { useMissingPlatformWalletPopup } from 'hooks/useMissingPlatformWalletPopup'
 import { useModalState } from 'hooks/useModalState'
 import { useResetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
 import { useWebSwapSettings } from 'pages/Swap/settings/useWebSwapSettings'
@@ -33,6 +34,7 @@ import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
+import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { WebFORNudgeProvider } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { InterfaceEventName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -134,7 +136,9 @@ export function Swap({
   usePersistedFilteredChainIds?: boolean
   passkeyAuthStatus?: PasskeyAuthStatus
 }) {
-  const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
+  const { isSwapTokenSelectorOpen, swapInputChainId, swapOutputChainId } = useUniswapContext()
+
+  useMissingPlatformWalletPopup(swapInputChainId ? chainIdToPlatform(swapInputChainId) : undefined) // show mismatching wallet platform popup if input chain id doesn't match
 
   const isExplorePage = useIsPage(PageType.EXPLORE)
   const isModeMismatch = useIsModeMismatch(chainId)

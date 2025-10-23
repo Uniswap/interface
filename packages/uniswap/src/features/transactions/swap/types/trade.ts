@@ -28,13 +28,11 @@ import { BigNumber, providers } from 'ethers/lib/ethers'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { BlockingTradeError } from 'uniswap/src/features/transactions/swap/types/BlockingTradeError'
-import { getTradingApiSwapFee } from 'uniswap/src/features/transactions/swap/types/getTradingApiSwapFee'
+import { getSwapFee } from 'uniswap/src/features/transactions/swap/types/getSwapFee'
 import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
-import { CurrencyField } from 'uniswap/src/types/currency'
 
 type QuoteResponseWithAggregatedOutputs =
   | ClassicQuoteResponse
@@ -114,8 +112,6 @@ export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, Trade
   readonly maxAmountIn: CurrencyAmount<Currency>
   readonly minAmountOut: CurrencyAmount<Currency>
 
-  readonly blockingError?: BlockingTradeError
-
   constructor({
     quote,
     currencyIn,
@@ -131,7 +127,7 @@ export class UniswapXV2Trade extends V2DutchOrderTrade<Currency, Currency, Trade
     super({ currencyIn, currenciesOut: [currencyOut], orderInfo, tradeType })
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
-    this.swapFee = getTradingApiSwapFee(quote)
+    this.swapFee = getSwapFee(quote)
 
     // TODO(SWAP-235): Cleanup redundancy
     this.maxAmountIn = this.maximumAmountIn()
@@ -183,8 +179,6 @@ export class UniswapXV3Trade extends V3DutchOrderTrade<Currency, Currency, Trade
   readonly maxAmountIn: CurrencyAmount<Currency>
   readonly minAmountOut: CurrencyAmount<Currency>
 
-  readonly blockingError?: BlockingTradeError
-
   constructor({
     quote,
     currencyIn,
@@ -204,7 +198,7 @@ export class UniswapXV3Trade extends V3DutchOrderTrade<Currency, Currency, Trade
 
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
-    this.swapFee = getTradingApiSwapFee(quote)
+    this.swapFee = getSwapFee(quote)
 
     // TODO(SWAP-235): Cleanup redundancy
     this.maxAmountIn = this.maximumAmountIn()
@@ -256,8 +250,6 @@ export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, 
   readonly maxAmountIn: CurrencyAmount<Currency>
   readonly minAmountOut: CurrencyAmount<Currency>
 
-  readonly blockingError?: BlockingTradeError
-
   constructor({
     quote,
     currencyIn,
@@ -277,7 +269,7 @@ export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, 
 
     this.quote = quote
     this.slippageTolerance = this.quote.quote.slippageTolerance ?? 0
-    this.swapFee = getTradingApiSwapFee(quote)
+    this.swapFee = getSwapFee(quote)
 
     // TODO(SWAP-235): Cleanup redundancy
     this.maxAmountIn = this.maximumAmountIn()
@@ -335,8 +327,6 @@ export class ClassicTrade<
   readonly maxAmountIn: CurrencyAmount<Currency>
   readonly minAmountOut: CurrencyAmount<Currency>
 
-  readonly blockingError?: BlockingTradeError
-
   constructor({
     quote,
     deadline,
@@ -370,7 +360,7 @@ export class ClassicTrade<
     this.quote = quote
     this.deadline = deadline
     this.slippageTolerance = quote.quote.slippage ?? MAX_AUTO_SLIPPAGE_TOLERANCE
-    this.swapFee = getTradingApiSwapFee(quote)
+    this.swapFee = getSwapFee(quote)
 
     const slippageTolerancePercent = slippageToleranceToPercent(this.slippageTolerance)
     // TODO(SWAP-235): Cleanup redundancy
@@ -456,13 +446,7 @@ export interface UseTradeArgs {
   isV4HookPoolsEnabled?: boolean
 }
 
-export type SwapFee = {
-  recipient?: string
-  percent: Percent
-  amount: string
-  /** Indicates if the fee is taken from the input or output token. */
-  feeField: CurrencyField
-}
+export type SwapFee = { recipient?: string; percent: Percent; amount: string }
 
 export type SwapFeeInfo = {
   noFeeCharged: boolean
@@ -675,8 +659,6 @@ export class BridgeTrade {
   readonly priceImpact: undefined
   readonly deadline: undefined
 
-  readonly blockingError?: BlockingTradeError
-
   constructor({
     quote,
     currencyIn,
@@ -684,7 +666,7 @@ export class BridgeTrade {
     tradeType,
   }: { quote: BridgeQuoteResponse; currencyIn: Currency; currencyOut: Currency; tradeType: TradeType }) {
     this.quote = quote
-    this.swapFee = getTradingApiSwapFee(quote)
+    this.swapFee = getSwapFee(quote)
 
     const quoteInputAmount = quote.quote.input?.amount
     const quoteOutputAmount = quote.quote.output?.amount
@@ -752,9 +734,6 @@ abstract class BaseWrapTrade<
   readonly slippageTolerance = 0
   readonly priceImpact: undefined
   readonly deadline: undefined
-
-  readonly blockingError?: BlockingTradeError
-
   constructor({
     quote,
     currencyIn,
@@ -854,8 +833,6 @@ export class ChainedActionTrade {
 
   // worst case scenario is the output amount
   readonly minAmountOut: CurrencyAmount<Currency>
-
-  readonly blockingError?: BlockingTradeError
 
   constructor({
     quote,

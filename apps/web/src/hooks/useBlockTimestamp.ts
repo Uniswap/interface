@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useMemo } from 'react'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import { isMainnetChainId } from 'uniswap/src/features/chains/utils'
 import {
@@ -15,26 +15,18 @@ import { useBlock, useBlockNumber } from 'wagmi'
  * @param params - The block query parameters
  * @param params.chainId - The EVM chain ID to query (wagmi only supports EVM chains)
  * @param params.blockNumber - The block number to get the timestamp for
- * @param params.watch - Whether to watch for block updates (default: false)
  * @returns The block timestamp as a bigint, or undefined if not available
  */
 export function useBlockTimestamp({
   chainId,
   blockNumber,
-  watch = false,
 }: {
   chainId: EVMUniverseChainId | undefined
   blockNumber: number | undefined
-  watch?: boolean
 }): bigint | undefined {
-  // Keep track of the previous valid timestamp to prevent undefined during updates
-  const previousTimestampRef = useRef<bigint | undefined>(undefined)
-
   const currentBlockNumber = useBlockNumber({
     chainId,
-    watch,
   }).data
-
   const currentBlockTimestamp = useBlock({
     chainId,
     blockNumber: currentBlockNumber,
@@ -44,7 +36,6 @@ export function useBlockTimestamp({
   const { data: pastBlock } = useBlock({
     blockNumber: blockNumber !== undefined && isPastBlock ? BigInt(blockNumber) : undefined,
     chainId,
-    watch,
     query: {
       enabled: blockNumber !== undefined && chainId !== undefined && isPastBlock,
     },
@@ -70,15 +61,5 @@ export function useBlockTimestamp({
     return currentBlockTimestamp + estimatedTimeUntilTarget
   }, [blockNumber, currentBlockNumber, currentBlockTimestamp, chainId])
 
-  const result = isPastBlock ? pastBlock?.timestamp : estimatedFutureTimestamp
-
-  // Update the previous timestamp ref whenever we have a valid result
-  useEffect(() => {
-    if (result !== undefined) {
-      previousTimestampRef.current = result
-    }
-  }, [result])
-
-  // Return the current result if available, otherwise fall back to previous
-  return result !== undefined ? result : previousTimestampRef.current
+  return isPastBlock ? pastBlock?.timestamp : estimatedFutureTimestamp
 }
