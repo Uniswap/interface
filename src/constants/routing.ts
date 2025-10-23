@@ -28,12 +28,14 @@ import {
   USDC_MAINNET,
   USDC_OPTIMISM,
   USDC_POLYGON,
+  USDC_TAIKO_HOODI,
   USDT,
   USDT_ARBITRUM_ONE,
   USDT_AVALANCHE,
   USDT_BSC,
   USDT_OPTIMISM,
   USDT_POLYGON,
+  USDT_TAIKO_HOODI,
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_CELO,
@@ -42,6 +44,7 @@ import {
   WETH_AVALANCHE,
   WETH_POLYGON,
   WETH_POLYGON_MUMBAI,
+  WETH_TAIKO_HOODI,
   WRAPPED_NATIVE_CURRENCY,
 } from './tokens'
 import { TAIKO_HOODI_CHAIN_ID, TAIKO_MAINNET_CHAIN_ID } from './taiko'
@@ -117,7 +120,12 @@ export const COMMON_BASES: ChainCurrencyList = {
     WETH_AVALANCHE,
   ],
   [TAIKO_MAINNET_CHAIN_ID]: [nativeOnChain(TAIKO_MAINNET_CHAIN_ID), WRAPPED_NATIVE_CURRENCY[TAIKO_MAINNET_CHAIN_ID] as Token],
-  [TAIKO_HOODI_CHAIN_ID]: [nativeOnChain(TAIKO_HOODI_CHAIN_ID), WRAPPED_NATIVE_CURRENCY[TAIKO_HOODI_CHAIN_ID] as Token],
+  [TAIKO_HOODI_CHAIN_ID]: [
+    nativeOnChain(TAIKO_HOODI_CHAIN_ID),
+    WETH_TAIKO_HOODI,
+    USDC_TAIKO_HOODI,
+    USDT_TAIKO_HOODI,
+  ],
 }
 
 // used to construct the list of all pairs we consider by default in the frontend
@@ -140,6 +148,7 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     USDT_AVALANCHE,
     WETH_AVALANCHE,
   ],
+  [TAIKO_HOODI_CHAIN_ID]: [WETH_TAIKO_HOODI, USDC_TAIKO_HOODI, USDT_TAIKO_HOODI],
 }
 export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {
   [ChainId.MAINNET]: [
