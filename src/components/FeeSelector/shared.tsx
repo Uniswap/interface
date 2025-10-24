@@ -3,6 +3,8 @@ import { ChainId, SUPPORTED_CHAINS } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import type { ReactNode } from 'react'
 
+import { TAIKO_HOODI_CHAIN_ID } from 'config/chains'
+
 export const FEE_AMOUNT_DETAIL: Record<
   FeeAmount,
   { label: string; description: ReactNode; supportedChains: readonly ChainId[] }
@@ -21,6 +23,7 @@ export const FEE_AMOUNT_DETAIL: Record<
       ChainId.POLYGON_MUMBAI,
       ChainId.AVALANCHE,
       ChainId.BASE,
+      TAIKO_HOODI_CHAIN_ID,
     ],
   },
   [FeeAmount.LOW]: {

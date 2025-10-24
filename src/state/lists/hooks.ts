@@ -5,6 +5,7 @@ import { AppState } from 'state/reducer'
 import sortByListPriority from 'utils/listSort'
 
 import BROKEN_LIST from '../../constants/tokenLists/broken.tokenlist.json'
+import TAIKO_LIST from '../../constants/tokenLists/taiko.tokenlist.json'
 import { DEFAULT_ACTIVE_LIST_URLS, UNSUPPORTED_LIST_URLS } from './../../constants/lists'
 
 type Mutable<T> = {
@@ -67,7 +68,10 @@ export function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAd
 // get all the tokens from active lists, combine with local default tokens
 export function useCombinedActiveList(): TokenAddressMap {
   const activeTokens = useCombinedTokenMapFromUrls(DEFAULT_ACTIVE_LIST_URLS)
-  return activeTokens
+  const taikoListMap = useMemo(() => tokensToChainTokenMap(TAIKO_LIST), [])
+
+  // Combine Taiko list with active lists (Taiko list takes precedence)
+  return useMemo(() => combineMaps(taikoListMap, activeTokens), [taikoListMap, activeTokens])
 }
 
 // list of tokens not supported on interface for various reasons, used to show warnings and prevent swaps and adds

@@ -1,0 +1,50 @@
+{
+  "name": "Taiko Hoodi Token List",
+  "timestamp": "2025-01-24T00:00:00.000Z",
+  "version": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
+  },
+  "tags": {
+    "stablecoin": {
+      "name": "Stablecoin",
+      "description": "Tokens that are fixed to an external asset, e.g. the US dollar"
+    },
+    "wrapped": {
+      "name": "Wrapped",
+      "description": "Tokens that represent a wrapped native asset"
+    }
+  },
+  "logoURI": "https://taiko.xyz/images/logos/taiko-icon.svg",
+  "keywords": ["taiko", "hoodi", "testnet", "uniswap"],
+  "tokens": [
+    {
+      "name": "Wrapped Ether",
+      "address": "0x3B39685B5495359c892DDD1057B5712F49976835",
+      "symbol": "WETH",
+      "decimals": 18,
+      "chainId": 167013,
+      "logoURI": "https://tokens.1inch.io/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2.png",
+      "tags": ["wrapped"]
+    },
+    {
+      "name": "USD Coin",
+      "address": "0x18d5bB147f3D05D5f6c5E60Caf1daeeDBF5155B6",
+      "symbol": "USDC",
+      "decimals": 6,
+      "chainId": 167013,
+      "logoURI": "https://tokens.1inch.io/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48.png",
+      "tags": ["stablecoin"]
+    },
+    {
+      "name": "Tether USD",
+      "address": "0xeb4e8Eb83d6FFBa2ce0d8F62ACe60648d1ECE116",
+      "symbol": "USDT",
+      "decimals": 6,
+      "chainId": 167013,
+      "logoURI": "https://tokens.1inch.io/0xdac17f958d2ee523a2206206994597c13d831ec7.png",
+      "tags": ["stablecoin"]
+    }
+  ]
+}
