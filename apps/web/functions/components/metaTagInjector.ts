@@ -160,7 +160,7 @@ export async function metaTagInjectionMiddleware(c: Context, next: Next): Promis
       statusText: originalResponse.statusText,
       headers: originalResponse.headers,
     })
-  } catch (_e) {
+  } catch {
     // next() has already been called, so we can just return the original response
     return c.res
   }

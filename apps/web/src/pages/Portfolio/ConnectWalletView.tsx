@@ -3,10 +3,13 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
 import { LineChartDots } from 'ui/src/components/icons/LineChartDots'
 import { iconSizes } from 'ui/src/theme'
+import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 
 export default function PortfolioConnectWalletView() {
   const { t } = useTranslation()
   const accountDrawer = useAccountDrawer()
+  const { chains } = useEnabledChains()
+
   return (
     <Flex alignItems="center">
       <Flex
@@ -26,7 +29,7 @@ export default function PortfolioConnectWalletView() {
         <Flex gap="$spacing4" alignItems="center">
           <Text variant="body1">{t('common.getStarted')}</Text>
           <Text variant="body3" color="$neutral2">
-            {t('portfolio.connectWallet.summary')}
+            {t('portfolio.connectWallet.summary', { amount: chains.length })}
           </Text>
         </Flex>
         <Button variant="branded" emphasis="primary" size="large" minHeight={48} onPress={accountDrawer.open}>

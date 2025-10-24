@@ -10,6 +10,7 @@ coverage
 
 # utility script output
 scripts/dist
+tools/uniswap-nx/dist
 
 # next.js
 .next/

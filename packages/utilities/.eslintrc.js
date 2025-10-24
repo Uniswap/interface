@@ -4,7 +4,15 @@ const { reactNative: reactNativeImports } = require('@uniswap/eslint-config/rest
 module.exports = {
   root: true,
   extends: ['@uniswap/eslint-config/native', '@uniswap/eslint-config/webPlatform'],
-  ignorePatterns: ['node_modules', '.turbo', '.eslintrc.js', 'codegen.ts', '.nx'],
+  ignorePatterns: [
+    'node_modules',
+    '.turbo',
+    '.eslintrc.js',
+    'codegen.ts',
+    '.nx',
+    'vitest-setup.ts',
+    'vitest.config.ts',
+  ],
   parserOptions: {
     project: 'tsconfig.eslint.json',
     tsconfigRootDir: __dirname,

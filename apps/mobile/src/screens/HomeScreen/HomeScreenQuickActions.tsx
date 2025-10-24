@@ -6,7 +6,7 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { ArrowDownCircle, Bank, SendAction, Swap } from 'ui/src/components/icons'
+import { ArrowDownCircle, Bank, SendAction, SwapDotted } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances/balances'
@@ -22,7 +22,7 @@ import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hoo
 
 const MIN_BUTTON_WIDTH = 102
 
-type IconComponent = typeof Swap | typeof Bank | typeof SendAction | typeof ArrowDownCircle
+type IconComponent = typeof SwapDotted | typeof Bank | typeof SendAction | typeof ArrowDownCircle
 type ActionItem = {
   Icon: IconComponent
   label: string
@@ -113,7 +113,7 @@ export function HomeScreenQuickActions(): JSX.Element {
       ...(isBottomTabsEnabled
         ? [
             {
-              Icon: Swap,
+              Icon: SwapDotted,
               label: 'Swap',
               name: ElementName.Swap,
               onPress: onPressSwap,

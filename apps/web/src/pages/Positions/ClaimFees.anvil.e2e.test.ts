@@ -55,7 +55,7 @@ test.describe('Claim fees', () => {
         try {
           data.claim.gasLimit = DEFAULT_TEST_GAS_LIMIT
           return data
-        } catch (_error) {
+        } catch {
           return data
         }
       },

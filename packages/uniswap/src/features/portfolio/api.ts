@@ -7,7 +7,10 @@ import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
-import { getSolanaParsedTokenAccountsByOwnerQueryOptions } from 'uniswap/src/data/solanaConnection/getSolanaParsedTokenAccountsByOwnerQueryOptions'
+import {
+  getSolanaParsedTokenAccountsByOwnerQueryOptions,
+  SOLANA_ONCHAIN_BALANCE_COMMITMENT,
+} from 'uniswap/src/data/solanaConnection/getSolanaParsedTokenAccountsByOwnerQueryOptions'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPollingIntervalByBlocktime } from 'uniswap/src/features/chains/utils'
@@ -142,12 +145,12 @@ async function getOnChainBalancesFetchSVM(params: BalanceLookupParams): Promise<
     // Native currency lookup
     if (currencyAddress === getChainInfo(chainId).nativeCurrency.address) {
       const connection = getSolanaConnection()
-      const balance = await connection.getBalance(new PublicKey(accountAddress))
+      const balance = await connection.getBalance(new PublicKey(accountAddress), SOLANA_ONCHAIN_BALANCE_COMMITMENT)
       return { balance: balance.toString() }
     }
 
     // SPL token lookup with caching
-    const tokenAccountsMap = await SharedQueryClient.ensureQueryData(
+    const tokenAccountsMap = await SharedQueryClient.fetchQuery(
       getSolanaParsedTokenAccountsByOwnerQueryOptions({ params: { accountAddress } }),
     )
 
@@ -160,6 +163,10 @@ async function getOnChainBalancesFetchSVM(params: BalanceLookupParams): Promise<
     return { balance: undefined }
   }
 }
+
+// We want this to return fresh data.
+// We only return cached data if it's called multiple times almost at the exact same time.
+const ONCHAIN_BALANCE_CACHE_TIME_MS = 100
 
 /**
  * Equivalent to `useOnChainCurrencyBalance`, to be used when hooks aren't an option.
@@ -187,6 +194,8 @@ export async function fetchOnChainCurrencyBalance({
         currencyIsNative,
         accountAddress,
       }),
+    staleTime: ONCHAIN_BALANCE_CACHE_TIME_MS,
+    gcTime: getPollingIntervalByBlocktime(chainId),
   })
 }
 

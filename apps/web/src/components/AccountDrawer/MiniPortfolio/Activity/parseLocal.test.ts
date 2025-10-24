@@ -5,7 +5,7 @@ import { TradeType as MockTradeType } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import { transactionToActivity, useLocalActivities } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
 import type { TransactionInfo } from 'state/transactions/types'
-import { act, renderHook } from 'test-utils/render'
+import { act, renderHook, waitFor } from 'test-utils/render'
 import { DAI as MockDAI, USDC_MAINNET as MockUSDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -175,7 +175,7 @@ vi.mock('../../../../state/transactions/hooks', async () => {
 
 describe('parseLocalActivity', () => {
   it('only returns activity for the current account', async () => {
-    const { result: result1, waitFor } = renderHook(() => useLocalActivities(mockAccount1))
+    const { result: result1 } = renderHook(() => useLocalActivities(mockAccount1))
     const { result: result2 } = renderHook(() => useLocalActivities(mockAccount2))
 
     await waitFor(() => {
@@ -185,7 +185,7 @@ describe('parseLocalActivity', () => {
   })
 
   it('Properly uses correct tense of activity title based on tx status', async () => {
-    const { result, waitFor } = renderHook(() => useLocalActivities(mockAccount2))
+    const { result } = renderHook(() => useLocalActivities(mockAccount2))
 
     await act(async () => {
       await waitFor(() => {

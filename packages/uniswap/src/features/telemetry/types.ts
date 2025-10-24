@@ -4,7 +4,7 @@ import { TransactionRequest as EthersTransactionRequest } from '@ethersproject/p
 import { SerializedError } from '@reduxjs/toolkit'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { SharedEventName } from '@uniswap/analytics-events'
-import { Protocol } from '@uniswap/router-sdk'
+import { OnChainStatus } from '@uniswap/client-trading/dist/trading/v1/api_pb'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { TradingApi, UnitagClaimContext } from '@universe/api'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
@@ -22,6 +22,7 @@ import {
   LiquidityEventName,
   MobileAppsFlyerEvents,
   MobileEventName,
+  SwapBlockedCategory,
   SwapEventName,
   UniswapEventName,
   UnitagEventName,
@@ -124,6 +125,7 @@ type OnboardingCompletedProps = {
 }
 
 export type SwapRouting =
+  | 'jupiter'
   | 'classic'
   | 'uniswap_x'
   | 'uniswap_x_v2'
@@ -212,7 +214,8 @@ type BaseSwapTransactionResultProperties = {
   route?: string
   quoteId?: string
   submitViaPrivateRpc?: boolean
-  protocol?: Protocol
+  /** For Uniswap data sources, this should be of type Protocol from @uniswap/router-sdk. For other sources like Jupiter, this could be unknown values from their orderResponse.router field.*/
+  protocol?: string
   transactedUSDValue?: number
   simulation_failure_reasons?: TradingApi.TransactionFailureReason[]
   includes_delegation?: SwapTradeBaseProperties['includes_delegation']
@@ -231,6 +234,8 @@ type FailedUniswapXOrderResultProperties = Omit<UniswapXTransactionResultPropert
 
 type FailedClassicSwapResultProperties = Omit<ClassicSwapTransactionResultProperties, 'hash'> & {
   hash: string | undefined
+  error_message?: string
+  error_code?: number
 }
 
 type FailedBridgeSwapResultProperties = Omit<BridgeSwapTransactionResultProperties, 'hash'> & {
@@ -691,6 +696,7 @@ export type UniverseEventProperties = {
     createPosition?: boolean
     expectedAmountBaseRaw: string
     expectedAmountQuoteRaw: string
+    price_discrepancy?: string
   } & LiquidityAnalyticsProperties
   [LiquidityEventName.RemoveLiquiditySubmitted]: {
     expectedAmountBaseRaw: string
@@ -700,6 +706,12 @@ export type UniverseEventProperties = {
   [LiquidityEventName.TransactionModifiedInWallet]: {
     expected?: string
     actual: string
+  } & LiquidityAnalyticsProperties
+  [LiquidityEventName.PriceDiscrepancyChecked]: {
+    status: OnChainStatus
+    price_discrepancy: string
+    sqrt_ratio_x96_before: string
+    sqrt_ratio_x96_after: string
   } & LiquidityAnalyticsProperties
   [MobileEventName.AutomatedOnDeviceRecoveryTriggered]: {
     showNotificationScreen: boolean
@@ -833,8 +845,18 @@ export type UniverseEventProperties = {
     | CancelledBridgeSwapResultProperties
   [SwapEventName.SwapDetailsExpanded]: ITraceContext | undefined
   [SwapEventName.SwapAutorouterVisualizationExpanded]: ITraceContext
+  [SwapEventName.SwapQuoteFailed]: {
+    error_message?: string
+  } & SwapTradeBaseProperties
   [SwapEventName.SwapQuoteReceived]: {
     quote_latency_milliseconds?: number
+  } & SwapTradeBaseProperties
+  [SwapEventName.SwapBlocked]: {
+    category?: SwapBlockedCategory
+    error_code?: number
+    error_message?: string
+    protocol?: string
+    simulation_failure_reasons?: TradingApi.TransactionFailureReason[]
   } & SwapTradeBaseProperties
   [SwapEventName.SwapSubmittedButtonClicked]: {
     estimated_network_fee_wei?: string

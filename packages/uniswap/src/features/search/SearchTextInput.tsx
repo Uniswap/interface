@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useRef, useState } from 'react'
+import { forwardRef, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import type {
   LayoutChangeEvent,
@@ -6,7 +6,17 @@ import type {
   TextInput as NativeTextInput,
   TextInputFocusEventData,
 } from 'react-native'
-import { AnimatePresence, Flex, Input, InputProps, SpaceTokens, Text, TouchableArea, useComposedRefs } from 'ui/src'
+import {
+  AnimatePresence,
+  Flex,
+  FlexProps,
+  Input,
+  InputProps,
+  SpaceTokens,
+  Text,
+  TouchableArea,
+  useComposedRefs,
+} from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { Search } from 'ui/src/components/icons/Search'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -18,9 +28,21 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isAndroid } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 
+const ENTER_EXIT_STYLE = { opacity: 0, scale: 0 }
 const DEFAULT_MIN_HEIGHT = 48
 const CANCEL_CHEVRON_X_OFFSET = -6
+const SHADOW_PROPS = {
+  shadowColor: '$shadowColor',
+  shadowOffset: SHADOW_OFFSET_SMALL,
+  shadowOpacity: 0.25,
+  shadowRadius: 6,
+  elevationAndroid: 6,
+  '$theme-dark': {
+    shadowColor: '$black',
+  },
+} satisfies Partial<FlexProps>
 
 export const springConfig = {
   stiffness: 1000,
@@ -91,38 +113,33 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
     const showBackChevron = !!onCancel && cancelBehaviorType === CancelBehaviorType.BackChevron
     const cancelChevronWidth = showBackChevron ? iconSizes.icon20 + CANCEL_CHEVRON_X_OFFSET : 0
 
-    const onCancelButtonLayout = useCallback((event: LayoutChangeEvent) => {
+    const onCancelButtonLayout = useEvent((event: LayoutChangeEvent) => {
       setCancelButtonWidth(event.nativeEvent.layout.width)
-    }, [])
+    })
 
-    const onPressCancel = (): void => {
+    const onPressCancel = useEvent((): void => {
       inputRef.current?.clear()
       setIsFocus(false)
       dismissNativeKeyboard()
       sendAnalyticsEvent(WalletEventName.ExploreSearchCancel, { query: value || '' })
       onChangeText?.('')
       onCancel?.()
-    }
+    })
 
-    const onTextInputFocus = (e: NativeSyntheticEvent<TextInputFocusEventData>): void => {
+    const onTextInputFocus = useEvent((e: NativeSyntheticEvent<TextInputFocusEventData>): void => {
       onFocus?.(e)
       setIsFocus(true)
-    }
+    })
 
-    const onChangeTextInput = useCallback(
-      (text: string) => {
-        onChangeText?.(text)
-      },
-      [onChangeText],
+    const animateOnly = useMemo(
+      () => [cancelBehaviorType === CancelBehaviorType.BackChevron ? 'marginLeft' : 'marginRight'],
+      [cancelBehaviorType],
     )
-
-    const animationDirection = cancelBehaviorType === CancelBehaviorType.BackChevron ? 'marginLeft' : 'marginRight'
 
     return (
       <Flex row shrink alignItems="center" mx={mx}>
         {showBackChevron && (
           <Flex
-            animation="200ms"
             left={0}
             opacity={isFocus ? 1 : 0}
             pointerEvents={isFocus ? 'auto' : 'none'}
@@ -141,7 +158,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           grow
           row
           alignItems="center"
-          animateOnly={[animationDirection]}
+          animateOnly={animateOnly}
           animation="quick"
           backgroundColor={backgroundColor}
           borderRadius="$roundedFull"
@@ -152,16 +169,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           my={my}
           px={px}
           py={py}
-          {...(showShadow && {
-            shadowColor: '$shadowColor',
-            shadowOffset: SHADOW_OFFSET_SMALL,
-            shadowOpacity: 0.25,
-            shadowRadius: 6,
-            elevation: 6,
-            '$theme-dark': {
-              shadowColor: '$black',
-            },
-          })}
+          {...(showShadow && SHADOW_PROPS)}
         >
           {!hideIcon && (
             <Flex py="$spacing4">
@@ -199,13 +207,10 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                   value,
                 })}
                 // web and iOS need this to avoid platform specific issues
-                width="100%"
                 // fix Android TextInput issue when the width is changed
                 // (the placeholder text was wrapping in 2 lines when the width was changed)
-                {...(isAndroid && {
-                  width: value ? undefined : 9999,
-                })}
-                onChangeText={onChangeTextInput}
+                width={!isAndroid ? '100%' : value ? undefined : 9999}
+                onChangeText={onChangeText}
                 onFocus={onTextInputFocus}
                 onSubmitEditing={dismissNativeKeyboard}
                 onKeyPress={onKeyPress}
@@ -219,8 +224,8 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
               <TouchableArea
                 animation="quick"
                 backgroundColor={backgroundColor}
-                enterStyle={{ opacity: 0, scale: 0 }}
-                exitStyle={{ opacity: 0, scale: 0 }}
+                enterStyle={ENTER_EXIT_STYLE}
+                exitStyle={ENTER_EXIT_STYLE}
                 onPress={onClose}
               >
                 <RotatableChevron color="$neutral3" direction="up" height={iconSizes.icon20} width={iconSizes.icon20} />

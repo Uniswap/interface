@@ -1,7 +1,8 @@
 ignores: [
+    # Dependencies that depcheck thinks are unused but are actually used
+    '@vitest/coverage-v8',
     # Dependencies that depcheck thinks are missing but are actually present
     ## Internal packages / workspaces
     "tsconfig",
     "utilities",
-    '@uniswap/biome-config',
   ]

@@ -257,6 +257,7 @@ function useNavigateToTokenDetails(): (currencyId: string) => void {
       closeKeyboardBeforeCallback(() => {
         const route = navigationRef.getCurrentRoute()
         const isSwap = route?.name === ModalName.Swap
+        const isExploreScreen = route?.name === MobileScreens.Explore
 
         dispatch(closeAllModals())
 
@@ -274,7 +275,12 @@ function useNavigateToTokenDetails(): (currencyId: string) => void {
           return
         }
 
-        // Always call `onClose`
+        if (isExploreScreen) {
+          // There's nothing to close on Explore with bottom tabs enabled
+          appNavigation.navigate(MobileScreens.TokenDetails, { currencyId })
+          return
+        }
+
         onClose()
 
         if (isSwap) {

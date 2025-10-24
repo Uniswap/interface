@@ -1,17 +1,18 @@
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import { useThrottledCallback } from 'utilities/src/react/useThrottledCallback'
+import { vi } from 'vitest'
 
 describe('useThrottledCallback', () => {
   beforeEach(() => {
-    jest.useFakeTimers()
+    vi.useFakeTimers()
   })
 
   afterEach(() => {
-    jest.useRealTimers()
+    vi.useRealTimers()
   })
 
   it('should throttle the callback and prevent multiple rapid calls', async () => {
-    const callback = jest.fn()
+    const callback = vi.fn()
     const { result } = renderHook(() => useThrottledCallback(callback, 1000))
     const [throttledCallback, isDebouncing] = result.current
 
@@ -25,7 +26,7 @@ describe('useThrottledCallback', () => {
     // expect(isDebouncing).toBe(true) // unsure why this is failing but this is the correct behavior
 
     act(() => {
-      jest.advanceTimersByTime(1000)
+      vi.advanceTimersByTime(1000)
     })
     expect(isDebouncing).toBe(false)
 

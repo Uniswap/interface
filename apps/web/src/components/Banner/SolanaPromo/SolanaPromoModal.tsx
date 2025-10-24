@@ -73,20 +73,6 @@ export default function SolanaPromoModal(): JSX.Element {
     <Modal isModalOpen={isOpen} name={ModalName.SolanaPromo} onClose={handleClose} maxWidth={440} padding="$none">
       <Flex p="$spacing24" gap="$spacing24">
         <GradientContainer backgroundImage={`url(${SOLANA_BANNER_LIGHT})`} />
-        <IconButton
-          position="absolute"
-          right="$spacing16"
-          top="$spacing16"
-          size="small"
-          emphasis="secondary"
-          onPress={(e) => {
-            e.stopPropagation()
-            handleClose()
-          }}
-          icon={<X />}
-          p={8}
-          scale={0.8}
-        />
 
         {/* Header */}
         <Flex alignItems="flex-start" gap="$spacing16" pt="$spacing16">
@@ -137,6 +123,22 @@ export default function SolanaPromoModal(): JSX.Element {
             {t('solanaPromo.modal.startSwapping.button')}
           </Button>
         </Trace>
+
+        {/* Close button */}
+        <IconButton
+          position="absolute"
+          right="$spacing16"
+          top="$spacing16"
+          size="small"
+          emphasis="secondary"
+          onPress={(e) => {
+            e.stopPropagation()
+            handleClose()
+          }}
+          icon={<X />}
+          p={8}
+          scale={0.8}
+        />
       </Flex>
     </Modal>
   )

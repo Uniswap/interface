@@ -20,7 +20,7 @@ function modifyGasLimit(data: { create: { gasLimit: string } }) {
   try {
     data.create.gasLimit = DEFAULT_TEST_GAS_LIMIT
     return data
-  } catch (_error) {
+  } catch {
     return data
   }
 }

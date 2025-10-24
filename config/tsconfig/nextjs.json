@@ -4,15 +4,9 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "target": "es2019",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "paths": {
-      "react-native": [
-        "react-native-web"
-      ]
+      "react-native": ["react-native-web"]
     },
     "allowJs": true,
     "resolveJsonModule": true,

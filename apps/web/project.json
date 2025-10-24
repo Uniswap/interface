@@ -124,6 +124,20 @@
       },
       "defaultConfiguration": "staging"
     },
+    "build:staging:preview": {
+      "command": "VITE_DISABLE_SOURCEMAP=true CLOUDFLARE_ENV=staging ROLLDOWN_OPTIONS_VALIDATION=loose vite build --mode staging",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "defaultConfiguration": "staging"
+    },
+    "preview:e2e": {
+      "command": "ROLLDOWN_OPTIONS_VALIDATION=loose vite preview --port 3000",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "continuous": true
+    },
     "preview": {
       "command": "ROLLDOWN_OPTIONS_VALIDATION=loose vite preview --port 3000",
       "options": {
@@ -131,6 +145,14 @@
       },
       "continuous": true,
       "dependsOn": ["build:production"]
+    },
+    "preview:staging": {
+      "command": "ROLLDOWN_OPTIONS_VALIDATION=loose vite preview --port 3000",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "continuous": true,
+      "dependsOn": ["build:staging:preview"]
     },
     "analyze": {
       "command": "source-map-explorer 'build/assets/*.js' --no-border-checks --gzip",

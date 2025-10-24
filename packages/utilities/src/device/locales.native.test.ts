@@ -4,7 +4,7 @@ import { getDeviceLocales } from 'utilities/src/device/locales.native'
 const MOCK_LANGUAGE_CODE = 'es'
 const MOCK_LANGUAGE_TAG = 'es-ES'
 
-jest.mock('expo-localization', () => ({
+vi.mock('expo-localization', () => ({
   getLocales: (): Locale[] => [
     {
       languageCode: MOCK_LANGUAGE_CODE,

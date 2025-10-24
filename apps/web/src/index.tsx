@@ -34,6 +34,7 @@ import { ThemedGlobalStyle, ThemeProvider } from 'theme'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
 import { PortalProvider } from 'ui/src'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
+import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import type { StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
@@ -54,6 +55,9 @@ if (__DEV__ && !isTestEnv()) {
     strict: false,
   })
 }
+
+// Initialize portfolio balance overrides for instant token balance updates
+initializePortfolioQueryOverrides({ store, apolloClient })
 
 const loadListsUpdater = () => import('state/lists/updater')
 const loadSystemThemeUpdater = () =>

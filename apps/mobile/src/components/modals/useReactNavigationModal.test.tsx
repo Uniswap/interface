@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 
 const mockGoBack = jest.fn()

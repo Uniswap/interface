@@ -32,6 +32,7 @@ export enum FeatureFlags {
   ForcePermitTransactions,
   EnablePermitMismatchUX,
   ViemProviderEnabled,
+  EthAsErc20UniswapX,
   ForceDisableWalletGetCapabilities,
   SmartWalletDisableVideo,
 
@@ -78,6 +79,7 @@ export enum FeatureFlags {
   UniversalSwap,
   BatchedSwaps,
   PortoWalletConnector,
+  UnirouteEnabled,
 }
 /* biome-ignore-end lint/style/useEnumInitializers: preserve the order */
 
@@ -89,6 +91,7 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.DisableSwap7702, 'disable-swap-7702'],
   [FeatureFlags.EmbeddedWallet, 'embedded_wallet'],
   [FeatureFlags.EnablePermitMismatchUX, 'enable_permit2_mismatch_ux'],
+  [FeatureFlags.EthAsErc20UniswapX, 'eth_as_erc20_uniswapx'],
   [FeatureFlags.FiatOffRamp, 'fiat_offramp_web'],
   [FeatureFlags.ForceDisableWalletGetCapabilities, 'force_disable_wallet_get_capabilities'],
   [FeatureFlags.ForcePermitTransactions, 'force_permit_transactions'],
@@ -104,6 +107,7 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.TwoSecondSwapQuotePollingInterval, 'two_second_swap_quote_polling_interval'],
   [FeatureFlags.UnichainFlashblocks, 'unichain_flashblocks'],
   [FeatureFlags.UniquoteEnabled, 'uniquote_enabled'],
+  [FeatureFlags.UnirouteEnabled, 'uniroute_rollout'],
   [FeatureFlags.UniswapX, 'uniswapx'],
   [FeatureFlags.UniswapXPriorityOrdersBase, 'uniswapx_priority_orders_base'],
   [FeatureFlags.UniswapXPriorityOrdersOptimism, 'uniswapx_priority_orders_optimism'],

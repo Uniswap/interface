@@ -273,7 +273,7 @@ export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = fals
     }
     const tokenUrl = `${uniswapUrls.webInterfaceTokensUrl}/${network}/${tokenAddress}`
     return addMobileUTMTags ? tokenUrl + `?${UTM_TAGS_MOBILE}` : tokenUrl
-  } catch (_) {
+  } catch {
     return undefined
   }
 }

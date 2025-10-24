@@ -1,3 +1,4 @@
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useAccountsStore } from 'features/accounts/store/hooks'
 import type { ExternalConnector, ExternalWallet } from 'features/accounts/store/types'
 import {
@@ -7,6 +8,7 @@ import {
 import { useSolanaConnectionService } from 'features/wallet/connection/connectors/solana'
 import { getEVMConnectionService } from 'features/wallet/connection/connectors/wagmi'
 import type { ConnectionService } from 'features/wallet/connection/services/IConnectionService'
+import { createMetamaskConnectionService } from 'features/wallet/connection/services/metamaskConnectionService'
 import { createMultiPlatformConnectionService } from 'features/wallet/connection/services/multiplatformConnectionService'
 import { useMemo } from 'react'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
@@ -28,6 +30,7 @@ function useGetConnector() {
 
 /** Returns a function capable of returning the proper connection service for a given wallet / platform. */
 export function useGetConnectionService(): GetConnectionServiceFn {
+  const accountDrawer = useAccountDrawer()
   const getConnector = useGetConnector()
   const svmConnectionService = useSolanaConnectionService(getConnector)
   const evmConnectionService = useMemo(() => getEVMConnectionService(getConnector), [getConnector])
@@ -35,8 +38,17 @@ export function useGetConnectionService(): GetConnectionServiceFn {
   const multiPlatformService = useMemo(() => {
     return createMultiPlatformConnectionService({
       platformServices: { [Platform.EVM]: evmConnectionService, [Platform.SVM]: svmConnectionService },
+      onCompletedPlatform: accountDrawer.close,
     })
-  }, [evmConnectionService, svmConnectionService])
+  }, [evmConnectionService, svmConnectionService, accountDrawer.close])
+
+  const metaMaskConnectionService = useMemo(() => {
+    return createMetamaskConnectionService({
+      platformServices: { [Platform.EVM]: evmConnectionService, [Platform.SVM]: svmConnectionService },
+      onCompletedPlatform: accountDrawer.close,
+      onSvmRejected: accountDrawer.open,
+    })
+  }, [evmConnectionService, svmConnectionService, accountDrawer.close, accountDrawer.open])
 
   const uniswapEmbeddedService = useUniswapEmbeddedConnectionService()
   const uniswapMobileService = useUniswapMobileConnectionService()
@@ -53,6 +65,11 @@ export function useGetConnectionService(): GetConnectionServiceFn {
     const overrideService = overrides[params.wallet.id]
     if (overrideService) {
       return overrideService
+    }
+
+    // TODO(SWAP-657): Remove this once MM fixes their dual VM bug
+    if (!params.individualPlatform && params.wallet.id === CONNECTION_PROVIDER_IDS.METAMASK_RDNS) {
+      return metaMaskConnectionService
     }
 
     // If connection is requested for a specific platform, return the corresponding service

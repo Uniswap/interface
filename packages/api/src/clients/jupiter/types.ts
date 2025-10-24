@@ -42,8 +42,8 @@ const routePlanSchema = z.array(
 
 const platformFeeSchema = z
   .object({
-    amount: z.string(),
-    feeBps: z.number(),
+    // amount: z.string(), // amount is documented as required but occasionally returns undefined -- we calculate it on our own
+    feeBps: z.number().nullish(),
   })
   .passthrough()
 
@@ -58,21 +58,10 @@ const platformFeeSchema = z
 //   })
 //   .passthrough()
 
-const swapTypeSchema = z
-  .union([
-    z.literal('aggregator'),
-    z.literal('rfq'),
-    z.literal('hashflow'),
-    z.string(), // allow unknown values too
-  ])
-  .transform((val) => {
-    if (val === 'aggregator' || val === 'rfq' || val === 'hashflow') {
-      return val
-    }
-    return 'unknown'
-  })
-
-export type JupiterOrderSwapType = z.infer<typeof swapTypeSchema>
+const routerTypeSchema = z.string().transform((val) => {
+  const normalized = val === 'iris' || val === 'jupiterz' || val === 'dflow' || val === 'okx' ? val : 'unknown'
+  return { raw: val, normalized } as const
+})
 
 export const jupiterOrderResponseSchema = z
   .object({
@@ -83,12 +72,14 @@ export const jupiterOrderResponseSchema = z
     otherAmountThreshold: z.string(),
     swapMode: z.enum(['ExactIn', 'ExactOut']),
     slippageBps: z.number(),
-    priceImpactPct: z.string(),
+    priceImpactPct: z.string().nullish(),
     routePlan: routePlanSchema,
+    // Represents just swap fee
+    platformFee: platformFeeSchema.nullish(),
+    // feeBps: z.number().nullish(), // `response.feeBps` represents total fee (for example, swap fee + fee for gasless support); currently we use `response.platformFee` to get the swap fee and ignore gasless support fee specifics.
     feeMint: z.string().nullish(),
-    feeBps: z.number(),
     prioritizationFeeLamports: z.number(),
-    swapType: swapTypeSchema,
+    router: routerTypeSchema,
     transaction: z.string().nullish(),
     gasless: z.boolean(),
     requestId: z.string(),
@@ -97,9 +88,9 @@ export const jupiterOrderResponseSchema = z
     quoteId: z.string().nullish(),
     maker: z.string().nullish(),
     // expireAt: z.string().nullish(),
-    platformFee: platformFeeSchema.nullish(),
     // dynamicSlippageReport: dynamicSlippageReportSchema.nullish(),
-    // errorMessage: z.string().nullish(),
+    errorMessage: z.string().nullish(),
+    errorCode: z.number().nullish(),
   })
   .passthrough()
 

@@ -19,7 +19,7 @@ export async function getRGBColor(imageUrl: string | undefined, checkDistance = 
 
     const type = data.headers.get('content-type') ?? ''
     return getAverageColor({ arrayBuffer: buffer, type, checkDistance })
-  } catch (_e) {
+  } catch {
     return DEFAULT_COLOR
   }
 }

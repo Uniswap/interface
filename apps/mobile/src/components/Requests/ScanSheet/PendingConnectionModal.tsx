@@ -20,7 +20,7 @@ import {
   WalletConnectVerifyStatus,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, useSporeColors } from 'ui/src'
-import { CheckCircleFilled } from 'ui/src/components/icons'
+import { Verified } from 'ui/src/components/icons'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
@@ -149,7 +149,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         await returnToPreviousApp()
         setDidOpenFromDeepLink(false)
       }
-    } catch (_error) {
+    } catch {
       setIsConnecting(false)
     } finally {
       setIsConnecting(false)
@@ -259,7 +259,7 @@ function PendingConnectionModalContent({
             url={pendingSession.dappRequestInfo.url}
           />
           {verifyStatus === WalletConnectVerifyStatus.Verified && (
-            <CheckCircleFilled color={colors.statusCritical.val} size="$icon.16" />
+            <Verified color={colors.accent1.val} size="$icon.16" />
           )}
         </Flex>
       </Flex>

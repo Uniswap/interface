@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "$id": "Package",
+  "title": "",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Package name will be '@universe/<name>' and default path is 'packages/<name>'",
+      "$default": {
+        "$source": "argv",
+        "index": 0
+      },
+      "x-prompt": "What name would you like to use?"
+    },
+    "path": {
+      "type": "string",
+      "description": "Defaults to 'packages/<name>'"
+    },
+    "types": {
+      "type": "string",
+      "description": "Comma separated list of types to be included in the tsconfig compilerOptions.",
+      "$default": "node"
+    }
+  },
+  "required": ["name"]
+}

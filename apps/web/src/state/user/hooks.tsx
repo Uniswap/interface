@@ -67,7 +67,7 @@ export function useUserSlippageTolerance(): [
           userSlippageTolerance === SlippageTolerance.Auto
             ? SlippageTolerance.Auto
             : JSBI.toNumber(userSlippageTolerance.multiply(10_000).quotient)
-      } catch (_error) {
+      } catch {
         value = SlippageTolerance.Auto
       }
       dispatch(

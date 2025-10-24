@@ -35,7 +35,7 @@ ignores: [
     "src",
     "ui",
     "tsconfig",
-    "@uniswap/biome-config",
+    "config",
     ## Subpackages of installed packages
     "@redux-saga/core",
     "@ethersproject/constants",

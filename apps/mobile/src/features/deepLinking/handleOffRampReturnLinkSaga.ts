@@ -20,7 +20,7 @@ import { fetchOffRampTransferDetails } from 'wallet/src/features/fiatOnRamp/api'
 export function* handleOffRampReturnLink(url: URL) {
   try {
     yield* call(_handleOffRampReturnLink, url)
-  } catch (_error) {
+  } catch {
     Alert.alert(i18n.t('fiatOffRamp.error.populateSend.title'), i18n.t('fiatOffRamp.error.populateSend.description'))
   }
 }

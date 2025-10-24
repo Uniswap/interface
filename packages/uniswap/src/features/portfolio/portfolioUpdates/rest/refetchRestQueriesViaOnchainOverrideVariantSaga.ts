@@ -1,17 +1,19 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
+import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { Portfolio } from '@uniswap/client-data-api/dist/data/v1/types_pb.d'
 import { GQLQueries, SharedQueryClient } from '@universe/api'
-import { call, delay } from 'typed-redux-saga'
+import { all, call, delay, put } from 'typed-redux-saga'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
-import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
+import { doesGetPortfolioQueryMatchAddress, getPortfolioQueriesToUpdate } from 'uniswap/src/data/rest/getPortfolio'
+import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { getCurrenciesWithExpectedUpdates } from 'uniswap/src/features/portfolio/portfolioUpdates/getCurrenciesWithExpectedUpdates'
 import {
   fetchOnChainBalancesRest,
   OnChainMapRest,
 } from 'uniswap/src/features/portfolio/portfolioUpdates/rest/fetchOnChainBalancesRest'
-import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
+import { addTokensToBalanceOverride } from 'uniswap/src/features/portfolio/slice/slice'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { buildCurrencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
@@ -144,6 +146,59 @@ export function mergeOnChainBalances(
   return updatedData
 }
 
+export async function fetchAndMergeOnchainBalances({
+  apolloClient,
+  cachedPortfolio,
+  accountAddress,
+  currencyIds,
+}: {
+  apolloClient: ApolloClient<NormalizedCacheObject>
+  cachedPortfolio: Portfolio
+  accountAddress: string
+  currencyIds: Set<CurrencyId>
+}): Promise<GetPortfolioResponse | undefined> {
+  const log = createLogger(FILE_NAME, 'fetchAndMergeOnchainBalances', '[REST-ITBU]')
+  log.debug(`Fetching onchain balances for ${currencyIds.size} currencies`, {
+    accountAddress,
+    currencyIds: Array.from(currencyIds),
+  })
+
+  try {
+    const onchainBalancesByCurrencyId = await fetchOnChainBalancesRest({
+      apolloClient,
+      cachedPortfolio,
+      accountAddress,
+      currencyIds,
+    })
+
+    log.debug('On-chain balance fetching completed', { fetchedBalances: onchainBalancesByCurrencyId.size })
+
+    if (onchainBalancesByCurrencyId.size === 0) {
+      log.debug('No onchain balances fetched, returning undefined')
+      return undefined
+    }
+
+    // Wrap the portfolio in a GetPortfolioResponse
+    const portfolioResponse = new GetPortfolioResponse({
+      portfolio: cachedPortfolio,
+    })
+
+    // Merge onchain balances into the portfolio data
+    const mergedData = mergeOnChainBalances(portfolioResponse, onchainBalancesByCurrencyId)
+
+    log.debug('Successfully merged onchain balances into portfolio data')
+
+    return mergedData
+  } catch (error) {
+    log.error(error, {
+      accountAddress,
+      currencyIds: Array.from(currencyIds),
+      message: 'Error fetching and merging onchain balances',
+    })
+    return undefined
+  }
+}
+
 export function* refetchRestQueriesViaOnchainOverrideVariant({
   transaction,
   activeAddress,
@@ -165,17 +220,36 @@ export function* refetchRestQueriesViaOnchainOverrideVariant({
     count: currenciesWithBalanceToUpdate.size,
   })
 
-  // Build query
-  const { chains: chainIds } = yield* call(getEnabledChainIdsSaga)
-  const portfolioQuery = getPortfolioQuery({ input: { evmAddress: activeAddress, chainIds } })
+  // Save to Redux so that subsequent queries will apply overrides
+  yield* put(
+    addTokensToBalanceOverride({
+      ownerAddress: activeAddress,
+      currencyIds: Array.from(currenciesWithBalanceToUpdate),
+    }),
+  )
 
-  // Update the cache with fresh on-chain balances
-  yield* call(updatePortfolioCache, {
-    apolloClient,
-    ownerAddress: activeAddress,
-    currencyIds: currenciesWithBalanceToUpdate,
-    portfolioQuery,
+  const platform = chainIdToPlatform(transaction.chainId)
+
+  // Find all active portfolio queries that match this address
+  const portfolioQueriesToUpdate = getPortfolioQueriesToUpdate({ address: activeAddress, platform })
+
+  log.debug(`Found ${portfolioQueriesToUpdate.length} matching portfolio queries`, {
+    portfolioQueriesToUpdate,
+    address: activeAddress,
+    platform,
   })
+
+  // Update the cache with fresh on-chain balances for each query in parallel
+  yield* all(
+    portfolioQueriesToUpdate.map((query) =>
+      call(updatePortfolioCache, {
+        apolloClient,
+        ownerAddress: activeAddress,
+        currencyIds: currenciesWithBalanceToUpdate,
+        queryKey: query.queryKey,
+      }),
+    ),
+  )
 
   // Wait before invalidating and refetching queries
   yield* delay(REFETCH_DELAY)
@@ -183,8 +257,10 @@ export function* refetchRestQueriesViaOnchainOverrideVariant({
   // Once NFTs are migrated to REST we won't need to do this
   yield* call([apolloClient, apolloClient.refetchQueries], { include: [GQLQueries.NftsTab] })
 
+  // Invalidate all portfolio queries that match this address
   yield* call([SharedQueryClient, SharedQueryClient.invalidateQueries], {
-    queryKey: portfolioQuery.queryKey,
+    predicate: (query: { queryKey: readonly unknown[] }) =>
+      doesGetPortfolioQueryMatchAddress({ queryKey: query.queryKey, address: activeAddress, platform }),
   })
 }
 
@@ -192,51 +268,36 @@ function* updatePortfolioCache({
   apolloClient,
   ownerAddress,
   currencyIds,
-  portfolioQuery,
+  queryKey,
 }: {
   apolloClient: ApolloClient<NormalizedCacheObject>
   ownerAddress: string
   currencyIds: Set<CurrencyId>
-  portfolioQuery: ReturnType<typeof getPortfolioQuery>
+  queryKey: readonly unknown[]
 }) {
   const log = createLogger(FILE_NAME, 'updatePortfolioCache', '[REST-ITBU]')
   log.debug(`updatePortfolioCache with ${currencyIds.size} currencyIds`, { currencyIds })
 
-  const cachedPortfolioData = SharedQueryClient.getQueryData(portfolioQuery.queryKey)
+  const cachedPortfolioData = SharedQueryClient.getQueryData<GetPortfolioResponse>(queryKey)
 
   if (!cachedPortfolioData?.portfolio) {
     log.warn('No cached portfolio data found')
     return
   }
 
-  try {
-    const onchainBalancesByCurrencyId = yield* call(fetchOnChainBalancesRest, {
-      apolloClient,
-      cachedPortfolio: cachedPortfolioData.portfolio,
-      accountAddress: ownerAddress,
-      currencyIds,
-    })
+  const mergedData = yield* call(fetchAndMergeOnchainBalances, {
+    apolloClient,
+    cachedPortfolio: cachedPortfolioData.portfolio,
+    accountAddress: ownerAddress,
+    currencyIds,
+  })
 
-    log.debug('On-chain balance fetching completed', { fetchedBalances: onchainBalancesByCurrencyId.size })
-
-    // Update the cached portfolio data with fresh on-chain balances
-    if (onchainBalancesByCurrencyId.size > 0) {
-      log.debug('Updating cached portfolio balances')
-
-      SharedQueryClient.setQueryData(portfolioQuery.queryKey, (oldData: GetPortfolioResponse | undefined) => {
-        return mergeOnChainBalances(oldData, onchainBalancesByCurrencyId)
-      })
-
-      log.debug('Successfully updated react-query cache with fresh balances')
-    } else {
-      log.debug('No balance updates to apply or no cached data available')
-    }
-  } catch (error) {
-    log.error(error, {
-      ownerAddress,
-      currencyIds: Array.from(currencyIds),
-      message: 'Error fetching on-chain balances',
-    })
+  if (mergedData) {
+    log.debug('Updating cached portfolio balances')
+    SharedQueryClient.setQueryData(queryKey, () => mergedData)
+    log.debug('Successfully updated react-query cache with fresh balances')
+  } else {
+    log.debug('No balance updates to apply')
   }
 
   log.debug('Cache update completed', { ownerAddress, currencyIds: Array.from(currencyIds) })

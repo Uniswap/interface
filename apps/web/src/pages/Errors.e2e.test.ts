@@ -1,5 +1,6 @@
 import { expect, getTest } from 'playwright/fixtures'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const test = getTest()
@@ -9,7 +10,7 @@ test.describe('Errors', () => {
     await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
     // The API response is too variable so stubbing a 404.
-    await page.route('https://trading-api-labs.interface.gateway.uniswap.org/v1/quote', async (route) => {
+    await page.route(`${uniswapUrls.tradingApiUrl}/v1/quote`, async (route) => {
       await route.fulfill({
         status: 404,
         body: JSON.stringify({

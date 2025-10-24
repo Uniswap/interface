@@ -7,6 +7,7 @@ import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
 import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { Heart } from 'ui/src/components/icons/Heart'
+import { HeartSlash } from 'ui/src/components/icons/HeartSlash'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { ReceiveAlt } from 'ui/src/components/icons/ReceiveAlt'
 import { SendAction } from 'ui/src/components/icons/SendAction'
@@ -184,7 +185,7 @@ function _TokenOptionItemContextMenu({
         label: isFavoriteToken
           ? t('explore.wallets.favorite.action.remove.short')
           : t('explore.tokens.favorite.action.add'),
-        Icon: Heart,
+        Icon: isFavoriteToken ? HeartSlash : Heart,
         closeDelay: COPY_CLOSE_DELAY,
         iconColor: isFavoriteToken ? '$accent1' : '$neutral2',
       })

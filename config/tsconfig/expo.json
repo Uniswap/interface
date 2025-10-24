@@ -14,15 +14,7 @@
     "noImplicitAny": true,
     "resolveJsonModule": true,
     "target": "esnext",
-    "types": [
-      "react-native",
-      "jest"
-    ]
+    "types": ["react-native", "jest"]
   },
-  "exclude": [
-    "node_modules",
-    "babel.config.js",
-    "metro.config.js",
-    "jest.config.js"
-  ]
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js"]
 }

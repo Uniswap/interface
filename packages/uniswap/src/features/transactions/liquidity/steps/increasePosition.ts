@@ -11,18 +11,25 @@ import { logger } from 'utilities/src/logger/logger'
 export interface IncreasePositionTransactionStep extends OnChainTransactionFields {
   // Doesn't require permit
   type: TransactionStepType.IncreasePositionTransaction
+  sqrtRatioX96: string | undefined
 }
 
 export interface IncreasePositionTransactionStepAsync {
   // Requires permit
   type: TransactionStepType.IncreasePositionTransactionAsync
-  getTxRequest(signature: string): Promise<ValidatedTransactionRequest | undefined>
+  getTxRequest(
+    signature: string,
+  ): Promise<{ txRequest: ValidatedTransactionRequest | undefined; sqrtRatioX96: string | undefined }>
 }
 
-export function createIncreasePositionStep(txRequest: ValidatedTransactionRequest): IncreasePositionTransactionStep {
+export function createIncreasePositionStep(
+  txRequest: ValidatedTransactionRequest,
+  sqrtRatioX96: string | undefined,
+): IncreasePositionTransactionStep {
   return {
     type: TransactionStepType.IncreasePositionTransaction,
     txRequest,
+    sqrtRatioX96,
   }
 }
 
@@ -31,19 +38,21 @@ export function createCreatePositionAsyncStep(
 ): IncreasePositionTransactionStepAsync {
   return {
     type: TransactionStepType.IncreasePositionTransactionAsync,
-    getTxRequest: async (signature: string): Promise<ValidatedTransactionRequest | undefined> => {
+    getTxRequest: async (
+      signature: string,
+    ): Promise<{ txRequest: ValidatedTransactionRequest | undefined; sqrtRatioX96: string | undefined }> => {
       if (!createPositionRequestArgs) {
-        return undefined
+        return { txRequest: undefined, sqrtRatioX96: undefined }
       }
 
       try {
-        const { create } = await TradingApiClient.createLpPosition({
+        const { create, sqrtRatioX96 } = await TradingApiClient.createLpPosition({
           ...createPositionRequestArgs,
           signature,
           simulateTransaction: true,
         })
 
-        return validateTransactionRequest(create)
+        return { txRequest: validateTransactionRequest(create), sqrtRatioX96 }
       } catch (e) {
         const message = parseErrorMessageTitle(e, { includeRequestId: true })
         if (message) {
@@ -71,19 +80,21 @@ export function createIncreasePositionAsyncStep(
 ): IncreasePositionTransactionStepAsync {
   return {
     type: TransactionStepType.IncreasePositionTransactionAsync,
-    getTxRequest: async (signature: string): Promise<ValidatedTransactionRequest | undefined> => {
+    getTxRequest: async (
+      signature: string,
+    ): Promise<{ txRequest: ValidatedTransactionRequest | undefined; sqrtRatioX96: string | undefined }> => {
       if (!increasePositionRequestArgs) {
-        return undefined
+        return { txRequest: undefined, sqrtRatioX96: undefined }
       }
 
       try {
-        const { increase } = await TradingApiClient.increaseLpPosition({
+        const { increase, sqrtRatioX96 } = await TradingApiClient.increaseLpPosition({
           ...increasePositionRequestArgs,
           signature,
           simulateTransaction: true,
         })
 
-        return validateTransactionRequest(increase)
+        return { txRequest: validateTransactionRequest(increase), sqrtRatioX96 }
       } catch (e) {
         const message = parseErrorMessageTitle(e, { includeRequestId: true })
         if (message) {

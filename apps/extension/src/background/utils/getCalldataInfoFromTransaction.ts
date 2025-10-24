@@ -48,7 +48,7 @@ export default function getCalldataInfoFromTransaction({
       result.contractInteractions = EthSendTransactionRPCActions.Swap
       result.parsedCalldata = v4Calldata
       return result
-    } catch (_e) {
+    } catch {
       noop()
     }
 
@@ -57,7 +57,7 @@ export default function getCalldataInfoFromTransaction({
       result.contractInteractions = EthSendTransactionRPCActions.Swap
       result.parsedCalldata = URCalldata
       return result
-    } catch (_e) {
+    } catch {
       noop()
     }
 
@@ -66,7 +66,7 @@ export default function getCalldataInfoFromTransaction({
       result.contractInteractions = EthSendTransactionRPCActions.LP
       result.parsedCalldata = NfPMCalldata
       return result
-    } catch (_e) {
+    } catch {
       noop()
     }
 

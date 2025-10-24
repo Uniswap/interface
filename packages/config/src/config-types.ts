@@ -22,6 +22,7 @@ export interface Config {
   graphqlUrlOverride: string
   includePrototypeFeatures: string
   infuraKey: string
+  jupiterProxyUrl: string
   onesignalAppId: string
   quicknodeEndpointName: string
   quicknodeEndpointToken: string

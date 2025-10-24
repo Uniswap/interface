@@ -198,7 +198,7 @@ export function OnboardingIntroCardStack({
 
   if (cards.length) {
     return (
-      <Flex pt="$spacing12">
+      <Flex pt="$spacing12" px="$spacing12">
         {isLoading ? <Flex height={INTRO_CARD_MIN_HEIGHT} /> : <IntroCardStack cards={cards} onSwiped={handleSwiped} />}
       </Flex>
     )

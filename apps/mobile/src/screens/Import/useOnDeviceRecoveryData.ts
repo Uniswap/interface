@@ -39,7 +39,7 @@ function useStoredAddressesForMnemonic(mnemonicId: string | undefined): {
         derivationIndices.map((index) => {
           try {
             return Keyring.generateAndStorePrivateKey(mnemonicId, index)
-          } catch (_error) {
+          } catch {
             logger.error(`Failed to generate address for mnemonicId: ${mnemonicId}`, {
               tags: { file: 'useOnDeviceRecoveryData', function: 'getAddresses' },
             })

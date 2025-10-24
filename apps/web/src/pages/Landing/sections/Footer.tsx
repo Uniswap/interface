@@ -17,10 +17,11 @@ const SocialIcon = styled(Wiggle, {
 
 const PolicyLink = styled(Text, {
   variant: 'body3',
-  animation: '100ms',
   color: '$neutral2',
   cursor: 'pointer',
   hoverStyle: { color: '$neutral1' },
+  // Tamagui bug. Animation property breaks theme value transition, needs to use style instead
+  style: { transition: '100ms' },
 })
 
 export function Socials({ iconSize }: { iconSize?: string }) {

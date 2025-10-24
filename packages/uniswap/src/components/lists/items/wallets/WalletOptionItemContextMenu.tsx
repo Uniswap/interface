@@ -2,6 +2,7 @@ import React, { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { Heart } from 'ui/src/components/icons/Heart'
+import { HeartSlash } from 'ui/src/components/icons/HeartSlash'
 import { ContextMenu, MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
@@ -32,7 +33,7 @@ function _WalletOptionItemContextMenu({
       {
         onPress: toggleFavoriteWallet,
         label: isFavorited ? t('explore.wallets.favorite.action.remove') : t('explore.wallets.favorite.action.add'),
-        Icon: Heart,
+        Icon: isFavorited ? HeartSlash : Heart,
         iconColor: '$neutral2',
       },
     ],

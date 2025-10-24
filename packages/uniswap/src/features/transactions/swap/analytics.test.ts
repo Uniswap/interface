@@ -102,6 +102,7 @@ describe('analytics', () => {
         v3Used: false,
         v4Used: false,
         uniswapXUsed: true,
+        jupiterUsed: false,
       })
     })
 
@@ -125,6 +126,7 @@ describe('analytics', () => {
         v3Used: true,
         v4Used: false,
         uniswapXUsed: false,
+        jupiterUsed: false,
       })
     })
 
@@ -145,6 +147,7 @@ describe('analytics', () => {
         v3Used: false,
         v4Used: true,
         uniswapXUsed: false,
+        jupiterUsed: false,
       })
     })
 
@@ -163,6 +166,7 @@ describe('analytics', () => {
         v3Used: false,
         v4Used: false,
         uniswapXUsed: false,
+        jupiterUsed: false,
       })
     })
   })

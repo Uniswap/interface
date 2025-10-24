@@ -30,8 +30,8 @@ export function createSessionRepository(ctx: CreateSessionRepositoryDeps): Sessi
 
       // Map the protobuf response to our interface
       // The proto has 'challenge' field, we need to extract challenge details from it
-      // TODO use schema to parse the response
-      let challengeData = {} as any // eslint-disable-line @typescript-eslint/no-explicit-any
+      // biome-ignore lint/suspicious/noExplicitAny: TODO use schema to parse the response
+      let challengeData = {} as any
       if (response.challenge) {
         try {
           challengeData = JSON.parse(response.challenge)

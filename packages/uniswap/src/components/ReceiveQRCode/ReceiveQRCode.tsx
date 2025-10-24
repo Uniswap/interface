@@ -135,21 +135,21 @@ export function ReceiveQRCode({ address }: { address: Address }): JSX.Element | 
               row
               position="absolute"
               top={-8}
-              left="50%"
-              alignItems="center"
-              backgroundColor="$surface1"
-              gap="$spacing4"
-              px="$spacing8"
-              style={{ transform: [{ translateX: '-50%' }] }}
+              left={0}
+              right={0}
+              backgroundColor="transparent"
+              justifyContent="center"
             >
-              <Text color="$neutral2" variant="body4">
-                {platformAddressLabel}
-              </Text>
-              {copied ? (
-                <CheckmarkCircle color="$statusSuccess" size="$icon.16" />
-              ) : (
-                <CopySheets color="$neutral2" size="$icon.16" />
-              )}
+              <Flex row backgroundColor="$surface1" alignItems="center" gap="$spacing4" px="$spacing8">
+                <Text color="$neutral2" variant="body4">
+                  {platformAddressLabel}
+                </Text>
+                {copied ? (
+                  <CheckmarkCircle color="$statusSuccess" size="$icon.16" />
+                ) : (
+                  <CopySheets color="$neutral2" size="$icon.16" />
+                )}
+              </Flex>
             </Flex>
           </Flex>
         </TouchableArea>

@@ -28,38 +28,19 @@
     "noUncheckedIndexedAccess": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": [
-      "es2022",
-      "dom"
-    ],
+    "lib": ["es2022", "dom"],
     "baseUrl": ".",
     "rootDir": ".",
     "outDir": "./dist/out-tsc",
-    "types": [
-      "node"
-    ],
+    "types": ["node"],
     "paths": {
-      "ui/*": [
-        "packages/ui/*"
-      ],
-      "uniswap/*": [
-        "packages/uniswap/*"
-      ],
-      "@universe/api/*": [
-        "packages/api/*"
-      ],
-      "@universe/sessions/*": [
-        "packages/sessions/*"
-      ],
-      "@universe/config/*": [
-        "packages/config/*"
-      ],
-      "utilities/*": [
-        "packages/utilities/*"
-      ],
-      "wallet/*": [
-        "packages/wallet/*"
-      ]
+      "@universe/api/*": ["packages/api/*"],
+      "@universe/config/*": ["packages/config/*"],
+      "@universe/sessions/*": ["packages/sessions/*"],
+      "ui/*": ["packages/ui/*"],
+      "uniswap/*": ["packages/uniswap/*"],
+      "utilities/*": ["packages/utilities/*"],
+      "wallet/*": ["packages/wallet/*"]
     }
   }
 }

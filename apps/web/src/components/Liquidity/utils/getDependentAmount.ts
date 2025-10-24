@@ -37,7 +37,7 @@ export function getDependentAmountFromV2Pair({
         ? CurrencyAmount.fromRawAmount(dependentToken, dependentTokenAmount.quotient)
         : dependentTokenAmount
       : undefined
-  } catch (_e) {
+  } catch {
     // in some cases there can be an initialized pool but there is no liquidity in which case
     // the user can enter whatever they want for the dependent amount and that pool will be created
     return otherAmount

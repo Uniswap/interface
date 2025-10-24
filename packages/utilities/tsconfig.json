@@ -2,6 +2,11 @@
   "extends": "../../config/tsconfig/app.json",
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json"],
   "compilerOptions": {
-    "types": ["jest", "chrome"]
-  }
+    "types": ["node", "vitest/globals", "chrome"]
+  },
+  "references": [
+    {
+      "path": "../../config/vitest-presets"
+    }
+  ]
 }

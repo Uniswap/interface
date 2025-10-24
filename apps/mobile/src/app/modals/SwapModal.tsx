@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { BiometricsIconProps, useBiometricsIcon } from 'src/components/icons/useBiometricsIcon'
@@ -9,6 +9,7 @@ import { useOsBiometricAuthEnabled } from 'src/features/biometrics/useOsBiometri
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice/slice'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
@@ -27,7 +28,13 @@ export function SwapModal({ route }: AppStackScreenProp<typeof ModalName.Swap>):
   const chains = useEnabledChains()
   const accountAddresses = signerMnemonicAccounts.map((account) => account.address)
 
-  const { onClose } = useReactNavigationModal()
+  const { onClose: onCloseModal } = useReactNavigationModal()
+
+  // Clear all notification toasts when the swap modal closes
+  const onClose = useCallback(() => {
+    appDispatch(clearNotificationQueue())
+    onCloseModal()
+  }, [appDispatch, onCloseModal])
 
   // Update flow start timestamp every time modal is opened for logging
   useEffect(() => {

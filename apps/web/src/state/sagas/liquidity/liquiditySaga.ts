@@ -1,3 +1,7 @@
+import {
+  GetLPPriceDiscrepancyRequest,
+  GetLPPriceDiscrepancyResponse,
+} from '@uniswap/client-trading/dist/trading/v1/api_pb'
 import { getLiquidityEventName } from 'components/Liquidity/analytics'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
@@ -10,7 +14,10 @@ import {
   handleSignatureStep,
 } from 'state/sagas/transactions/utils'
 import invariant from 'tiny-invariant'
-import { call } from 'typed-redux-saga'
+import { call, delay, spawn } from 'typed-redux-saga'
+import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
+import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { InterfaceEventName, LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
@@ -39,7 +46,7 @@ import type {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
-import { currencyId } from 'uniswap/src/utils/currencyId'
+import { currencyId, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -71,21 +78,28 @@ function* getLiquidityTxRequest(
 ) {
   if (
     step.type === TransactionStepType.IncreasePositionTransaction ||
-    step.type === TransactionStepType.DecreasePositionTransaction ||
+    step.type === TransactionStepType.DecreasePositionTransaction
+  ) {
+    return {
+      txRequest: step.txRequest,
+      sqrtRatioX96: step.sqrtRatioX96,
+    }
+  }
+  if (
     step.type === TransactionStepType.MigratePositionTransaction ||
     step.type === TransactionStepType.CollectFeesTransactionStep
   ) {
-    return step.txRequest
+    return { txRequest: step.txRequest }
   }
 
   if (!signature) {
     throw new Error('Signature required for async increase position transaction step')
   }
 
-  const txRequest = yield* call(step.getTxRequest, signature)
+  const { txRequest, sqrtRatioX96 } = yield* call(step.getTxRequest, signature)
   invariant(txRequest !== undefined, 'txRequest must be defined')
 
-  return txRequest
+  return { txRequest, sqrtRatioX96 }
 }
 
 interface HandlePositionStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
@@ -107,7 +121,7 @@ interface HandlePositionStepParams extends Omit<HandleOnChainStepParams, 'step' 
 function* handlePositionTransactionStep(params: HandlePositionStepParams) {
   const { action, step, signature, analytics } = params
   const info = getLiquidityTransactionInfo(action)
-  const txRequest = yield* call(getLiquidityTxRequest, step, signature)
+  const { txRequest, sqrtRatioX96 } = yield* call(getLiquidityTxRequest, step, signature)
 
   const onModification = ({ hash, data }: { hash: string; data: string }) => {
     if (analytics) {
@@ -151,6 +165,34 @@ function* handlePositionTransactionStep(params: HandlePositionStepParams) {
       | UniverseEventProperties[LiquidityEventName.RemoveLiquiditySubmitted]
       | UniverseEventProperties[LiquidityEventName.MigrateLiquiditySubmitted]
       | UniverseEventProperties[LiquidityEventName.CollectLiquiditySubmitted])
+
+    // Don't block the main flow, spawn a new task for polling LP price discrepancy
+    yield* spawn(function* () {
+      if (hash && sqrtRatioX96 && txRequest.chainId === UniverseChainId.Mainnet) {
+        try {
+          const priceDiscrepancyResponse: GetLPPriceDiscrepancyResponse = yield* call(pollForLPPriceDiscrepancy, {
+            hash,
+            chainId: txRequest.chainId,
+            sqrtRatioX96,
+            analytics,
+          })
+
+          sendAnalyticsEvent(LiquidityEventName.PriceDiscrepancyChecked, {
+            ...analytics,
+            transaction_hash: hash,
+            status: priceDiscrepancyResponse.status,
+            sqrt_ratio_x96_before: priceDiscrepancyResponse.sqrtRatioX96Before,
+            sqrt_ratio_x96_after: priceDiscrepancyResponse.sqrtRatioX96After,
+            price_discrepancy: priceDiscrepancyResponse.percentPriceDifference,
+          })
+        } catch (error) {
+          // Don't break the main flow if price discrepancy call fails
+          logger.info('liquiditySaga', 'handlePositionTransactionStep', 'Failed to get LP price discrepancy', {
+            extra: { hash, error: error.message },
+          })
+        }
+      }
+    })
   }
 
   popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash)
@@ -285,4 +327,73 @@ function getLiquidityTransactionInfo(
     currency0AmountRaw: quotient0.toString(),
     currency1AmountRaw: quotient1.toString(),
   }
+}
+
+function* pollForLPPriceDiscrepancy(params: {
+  hash: string
+  chainId: number
+  sqrtRatioX96: string
+  analytics: NonNullable<HandlePositionStepParams['analytics']>
+}) {
+  const { hash, chainId, sqrtRatioX96, analytics } = params
+
+  let attempt = 1
+  const maxAttempts = 10
+  const baseDelay = 2_000 // Start with 2 seconds
+  const maxDelay = 15_000 // Cap at 15 seconds
+
+  yield* delay(baseDelay)
+
+  // Polling is required because the BE cannot wait for the transaction to be confirmed
+  // without throwing a timeout error.
+  while (attempt < maxAttempts) {
+    try {
+      const priceDiscrepancyResponse: GetLPPriceDiscrepancyResponse = yield* call(
+        TradingApiClient.getLPPriceDiscrepancy,
+        new GetLPPriceDiscrepancyRequest({
+          txnHash: hash,
+          chainId,
+          token0: isNativeCurrencyAddress(chainId, analytics.baseCurrencyId) ? ZERO_ADDRESS : analytics.baseCurrencyId,
+          token1: isNativeCurrencyAddress(chainId, analytics.quoteCurrencyId)
+            ? ZERO_ADDRESS
+            : analytics.quoteCurrencyId,
+          tickSpacing: analytics.tick_spacing,
+          fee: analytics.fee_tier,
+          hooks: analytics.hook,
+          sqrtRatioX96,
+          // @ts-expect-error endpoint excepts a string
+          protocol: analytics.type,
+        }),
+      )
+
+      return priceDiscrepancyResponse
+    } catch (error) {
+      const errorMessage = JSON.stringify(error)
+
+      // If it's not a "Transaction receipt not found" error, don't retry
+      if (!errorMessage.includes('Transaction receipt not found')) {
+        throw error
+      }
+
+      // If we've exhausted all attempts, throw the error
+      if (attempt >= maxAttempts) {
+        throw error
+      }
+
+      // Calculate exponential backoff delay
+      const exponentialDelay = Math.min(baseDelay * Math.pow(2, attempt), maxDelay)
+
+      logger.info(
+        'liquiditySaga',
+        'pollForLPPriceDiscrepancy',
+        `Transaction receipt not found, retrying in ${exponentialDelay}ms (attempt ${attempt + 1}/${maxAttempts})`,
+        { extra: { hash } },
+      )
+
+      yield* delay(exponentialDelay)
+      attempt++
+    }
+  }
+
+  throw new Error('Max polling attempts reached')
 }

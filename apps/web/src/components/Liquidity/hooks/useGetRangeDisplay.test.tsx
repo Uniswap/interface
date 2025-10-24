@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 import { Currency, Price } from '@uniswap/sdk-core'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'

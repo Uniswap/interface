@@ -25,7 +25,7 @@ export function anonymizeLink(href: string): string {
       return `${url.protocol}//${url.hostname}${anonymizedPath}`
     }
     return href
-  } catch (_error) {
+  } catch {
     return href
   }
 }

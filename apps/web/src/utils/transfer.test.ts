@@ -1,6 +1,6 @@
 import { ExternalProvider, JsonRpcProvider, JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { renderHook } from 'test-utils/render'
+import { renderHook, waitFor } from 'test-utils/render'
 import { Mutable } from 'types/mutable'
 import { DAI, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -30,14 +30,14 @@ describe('useCreateTransfer', () => {
     }
     const transactionHookResult = renderHook(() => useCreateTransferTransaction(transferInfo))
 
-    await transactionHookResult.waitForNextUpdate()
-
-    expect(transactionHookResult.result.current).toStrictEqual({
-      from: wallet,
-      to: '0xaDd287e6d0213e662D400d815C481b4b2ddE5d65',
-      value: (1e18).toString(),
-      chainId: 1,
-    })
+    waitFor(() =>
+      expect(transactionHookResult.result.current).toMatchObject({
+        from: wallet,
+        to: '0xaDd287e6d0213e662D400d815C481b4b2ddE5d65',
+        value: (1e18).toString(),
+        chainId: 1,
+      }),
+    )
   })
 
   it('sending token', async () => {
@@ -50,22 +50,20 @@ describe('useCreateTransfer', () => {
     }
     const transactionHookResult = renderHook(() => useCreateTransferTransaction(transferInfo))
 
-    await transactionHookResult.waitForNextUpdate()
-
-    expect(transactionHookResult.result.current).toStrictEqual({
-      data: '0xa9059cbb000000000000000000000000add287e6d0213e662d400d815c481b4b2dde5d650000000000000000000000000000000000000000000000000de0b6b3a7640000',
-      to: DAI.address,
-      from: wallet,
-      chainId: 1,
-    })
+    waitFor(() =>
+      expect(transactionHookResult.result.current).toMatchObject({
+        data: '0xa9059cbb000000000000000000000000add287e6d0213e662d400d815c481b4b2dde5d650000000000000000000000000000000000000000000000000de0b6b3a7640000',
+        to: DAI.address,
+        from: wallet,
+        chainId: 1,
+      }),
+    )
   })
 
   it('fails when transfer info is not defined', async () => {
     const transferInfo = {}
     const transactionHookResult = renderHook(() => useCreateTransferTransaction(transferInfo))
 
-    await transactionHookResult.waitForNextUpdate()
-
-    expect(transactionHookResult.result.current).toBeNull()
+    waitFor(() => expect(transactionHookResult.result.current).toBeNull())
   })
 })

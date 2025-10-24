@@ -33,6 +33,11 @@ const OptionsSelector = styled(Tabs.List, {
       },
     },
     size: {
+      xsmall: {
+        height: 30,
+        gap: '$spacing4',
+        borderRadius: '$roundedFull',
+      },
       small: {
         height: 30,
         gap: '$spacing6',
@@ -115,6 +120,11 @@ const OptionButton = styled(Tabs.Tab, {
       },
     },
     size: {
+      xsmall: {
+        height: '$spacing20',
+        py: '$spacing2',
+        px: 8,
+      },
       small: {
         height: '$spacing20',
         py: '$spacing2',
@@ -163,7 +173,7 @@ export interface SegmentedControlOption<T extends string = string> {
   wrapper?: JSX.Element
 }
 
-type SegmentedControlSize = 'small' | 'smallThumbnail' | 'default' | 'large' | 'largeThumbnail'
+type SegmentedControlSize = 'xsmall' | 'small' | 'smallThumbnail' | 'default' | 'large' | 'largeThumbnail'
 
 interface SegmentedControlProps<T extends string = string> {
   options: readonly SegmentedControlOption<T>[]

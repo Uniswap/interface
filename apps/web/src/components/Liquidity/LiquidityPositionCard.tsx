@@ -230,6 +230,7 @@ export function LiquidityPositionCard({
   isVisible = true,
   disabled = false,
   isLast = false,
+  onMenuOpenChange,
 }: {
   liquidityPosition: PositionInfo
   isMiniVersion?: boolean
@@ -238,6 +239,7 @@ export function LiquidityPositionCard({
   isVisible?: boolean
   disabled?: boolean
   isLast?: boolean
+  onMenuOpenChange?: (isOpen: boolean) => void
 }) {
   const { convertFiatAmountFormatted } = useLocalizationContext()
   const isTouchDevice = useIsTouchDevice()
@@ -342,6 +344,7 @@ export function LiquidityPositionCard({
           tickLower={liquidityPosition.tickLower}
           tickUpper={liquidityPosition.tickUpper}
           isLast={isLast}
+          onMenuOpenChange={onMenuOpenChange}
         />
       ) : (
         <Flex
@@ -439,6 +442,7 @@ function MiniPositionCard({
   tickUpper,
   disabled,
   isLast = false,
+  onMenuOpenChange,
 }: {
   positionInfo: PositionInfo
   menuOptions: MenuOptionItem[]
@@ -450,6 +454,7 @@ function MiniPositionCard({
   tickUpper?: number
   disabled?: boolean
   isLast?: boolean
+  onMenuOpenChange?: (isOpen: boolean) => void
 }) {
   const { t } = useTranslation()
   const [pricesInverted, setPricesInverted] = useState(false)
@@ -517,7 +522,7 @@ function MiniPositionCard({
       ) : (
         <Text variant="body4">{t('common.fullRange')}</Text>
       )}
-      <PositionDropdownMoreMenu menuOptions={menuOptions} isLast={isLast} />
+      <PositionDropdownMoreMenu menuOptions={menuOptions} isLast={isLast} onOpenChange={onMenuOpenChange} />
     </Flex>
   )
 }
@@ -535,8 +540,21 @@ const PositionDetailsMenuButton = styled(Flex, {
   },
 })
 
-function PositionDropdownMoreMenu({ menuOptions, isLast }: { menuOptions: MenuOptionItem[]; isLast: boolean }) {
+function PositionDropdownMoreMenu({
+  menuOptions,
+  isLast,
+  onOpenChange,
+}: {
+  menuOptions: MenuOptionItem[]
+  isLast: boolean
+  onOpenChange?: (isOpen: boolean) => void
+}) {
   const [isOpen, setIsOpen] = useState(false)
+
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open)
+    onOpenChange?.(open)
+  }
 
   const dropdownTrigger = (
     <Flex
@@ -544,7 +562,7 @@ function PositionDropdownMoreMenu({ menuOptions, isLast }: { menuOptions: MenuOp
       onPress={(event) => {
         event.preventDefault()
         event.stopPropagation()
-        setIsOpen(!isOpen)
+        handleOpenChange(!isOpen)
       }}
     >
       <PositionDetailsMenuButton $group-hover={activeStyle} open={isOpen} onPress={() => {}}>
@@ -561,7 +579,7 @@ function PositionDropdownMoreMenu({ menuOptions, isLast }: { menuOptions: MenuOp
         positionFixed
         forceFlipUp={isLast}
         isOpen={isOpen}
-        toggleOpen={setIsOpen}
+        toggleOpen={handleOpenChange}
         trigger={dropdownTrigger}
         dropdownStyle={{
           p: 0,
@@ -571,7 +589,7 @@ function PositionDropdownMoreMenu({ menuOptions, isLast }: { menuOptions: MenuOp
           borderWidth: 0,
         }}
       >
-        <MenuContent items={menuOptions} handleCloseMenu={() => setIsOpen(false)} />
+        <MenuContent items={menuOptions} handleCloseMenu={() => handleOpenChange(false)} />
       </AdaptiveDropdown>
     </Flex>
   )

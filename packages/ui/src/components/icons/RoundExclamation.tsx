@@ -13,7 +13,7 @@ export const [RoundExclamation, AnimatedRoundExclamation] = createIcon({
           cx="8"
           cy="8"
           r="6.64286"
-          fill={'currentColor' ?? '#E10F0F'}
+          fill="currentColor"
           stroke="currentColor"
           strokeWidth="1.28571"
         />

@@ -204,6 +204,23 @@ export function filterChainIdsByFeatureFlag(
   })
 }
 
+/**
+ * Filters chain IDs by platform (EVM or SVM)
+ * @param chainIds Array of chain IDs to filter (as numbers)
+ * @param platform Platform to filter by (EVM or SVM)
+ * @returns Filtered array of chain IDs matching the specified platform
+ */
+export function filterChainIdsByPlatform<T extends number>(chainIds: T[], platform: Platform): T[] {
+  return chainIds.filter<T>((chainId): chainId is T => {
+    const universeChainId = chainId as UniverseChainId
+    if (!ALL_CHAIN_IDS.includes(universeChainId)) {
+      return false
+    }
+    const chainInfo = getChainInfo(universeChainId)
+    return chainInfo.platform === platform
+  })
+}
+
 export function getEnabledChains({
   platform,
   /**

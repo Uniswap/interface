@@ -281,7 +281,7 @@ export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: vo
         // Reset the wallet to the original balance because tests might rely on that
         await anvil.setBalance({ address: TEST_WALLET_ADDRESS, value: originalBalance })
         await use(undefined)
-      } catch (_e) {
+      } catch {
         await use(undefined)
       }
     },

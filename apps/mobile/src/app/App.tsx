@@ -52,6 +52,7 @@ import { flexStyles, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { config } from 'uniswap/src/config'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
+import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { DatadogSessionSampleRateKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
@@ -238,6 +239,12 @@ function AppOuter(): JSX.Element | null {
       })
     }
   }, [])
+
+  useEffect(() => {
+    if (client) {
+      initializePortfolioQueryOverrides({ store, apolloClient: client })
+    }
+  }, [client])
 
   if (!client) {
     return null

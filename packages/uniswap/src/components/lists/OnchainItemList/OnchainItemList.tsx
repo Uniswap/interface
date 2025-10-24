@@ -29,7 +29,7 @@ export interface OnchainItemListProps<T extends OnchainItemListOption> {
   renderSectionHeader?: (info: SectionRowInfo) => JSX.Element
   sections: OnchainItemSection<T>[]
   expandedItems?: string[]
-  renderedInModal?: boolean
+  renderedInModal: boolean
   focusedRowControl?: Omit<FocusedRowControl, 'rowIndex'>
   contentContainerStyle?: ContentStyle
 }

@@ -72,6 +72,7 @@ export function CurrencySearch({
     <Trace logImpression eventOnTrigger={InterfaceEventName.TokenSelectorOpened} modal={ModalName.TokenSelectorWeb}>
       <Flex width="100%" flexGrow={1} flexShrink={1} flexBasis="auto">
         <TokenSelectorContent
+          renderedInModal={false}
           evmAddress={wallet.evmAccount?.address}
           svmAddress={wallet.svmAccount?.address}
           isLimits={currentTab === SwapTab.Limit}

@@ -7,16 +7,17 @@ import {
   validateColorValue,
   validColor,
 } from 'ui/src/theme/tokens'
+import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest'
 
 // Mock the process.env.NODE_ENV for testing validColor behavior
 const originalNodeEnv = process.env.NODE_ENV
 beforeAll(() => {
-  jest.spyOn(console, 'error').mockImplementation(() => {})
+  vi.spyOn(console, 'error').mockImplementation(() => {})
 })
 
 afterAll(() => {
   process.env.NODE_ENV = originalNodeEnv
-  jest.restoreAllMocks()
+  vi.restoreAllMocks()
 })
 
 describe('tokens utils', () => {

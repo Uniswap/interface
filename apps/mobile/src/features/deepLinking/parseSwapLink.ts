@@ -239,7 +239,7 @@ function parseWebAmountData(
       if (isNaN(numValue) || numValue < 0) {
         throw new Error('Invalid amount value')
       }
-    } catch (_error) {
+    } catch {
       throw new Error('Invalid swap amount')
     }
   }

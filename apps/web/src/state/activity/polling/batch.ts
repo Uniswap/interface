@@ -9,6 +9,7 @@ import { TransactionStatus } from 'uniswap/src/features/transactions/types/trans
 import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
+import { ONE_HOUR_MS } from 'utilities/src/time/time'
 
 type PendingBatchDetails = Required<Pick<PendingTransactionDetails, 'batchInfo'>> & PendingTransactionDetails
 
@@ -25,7 +26,13 @@ function usePendingBatches(): PendingBatchDetails[] {
         const batchConnectorId = tx.batchInfo?.connectorId
         // Don't attempt to check batches where the stored connector ID differs from the current connector.
         // Only the wallet that processed the batch will be able to return a status for it.
-        return Boolean(isBatch && batchConnectorId === connectorId)
+        const isCorrectConnector = Boolean(isBatch && batchConnectorId === connectorId)
+
+        // Only check batches added within the last hour
+        const oneHourAgo = Date.now() - ONE_HOUR_MS
+        const isWithinLastHour = tx.addedTime >= oneHourAgo
+
+        return isCorrectConnector && isWithinLastHour
       }
 
       return transactions.filter(shouldAttemptCheck)

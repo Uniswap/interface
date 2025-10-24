@@ -76,7 +76,6 @@
     "@types/redux-logger": "3.0.9",
     "@types/redux-persist-webextension-storage": "1.0.3",
     "@types/ua-parser-js": "0.7.31",
-    "@uniswap/biome-config": "workspace:^",
     "@uniswap/eslint-config": "workspace:^",
     "@welldone-software/why-did-you-render": "8.0.1",
     "clean-webpack-plugin": "4.0.0",

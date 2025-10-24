@@ -94,7 +94,7 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
       } else {
         setUserSlippageTolerance(new Percent(parsed, 10_000))
       }
-    } catch (_e) {
+    } catch {
       setSlippageError(SlippageError.InvalidInput)
     }
   }

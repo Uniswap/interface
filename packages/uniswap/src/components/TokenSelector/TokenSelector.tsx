@@ -57,6 +57,8 @@ export enum TokenSelectorVariation {
   SwapOutput = 'swap-output', // suggested bases, balances, recent searches, favorites, popular
 }
 
+export const SNAP_POINTS = ['65%', '100%']
+
 export interface TokenSelectorProps {
   variation: TokenSelectorVariation
   isModalOpen: boolean
@@ -101,7 +103,8 @@ export function TokenSelectorContent({
   onClose,
   onSelectChain,
   onSelectCurrency,
-}: Omit<TokenSelectorProps, 'isModalOpen'>): JSX.Element {
+  renderedInModal,
+}: Omit<TokenSelectorProps, 'isModalOpen'> & { renderedInModal: boolean }): JSX.Element {
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
     useFilterCallbacks(chainId ?? null, flowToModalName(flow))
   const debouncedSearchFilter = useDebounce(searchFilter)
@@ -219,6 +222,7 @@ export function TokenSelectorContent({
           evmAddress={evmAddress}
           svmAddress={svmAddress}
           chainFilter={chainFilter}
+          renderedInModal={renderedInModal}
           onSelectCurrency={onSelectCurrencyCallback}
         />
       )
@@ -236,6 +240,7 @@ export function TokenSelectorContent({
           parsedChainFilter={parsedChainFilter}
           searchFilter={searchFilter}
           input={input}
+          renderedInModal={renderedInModal}
           onSelectCurrency={onSelectCurrencyCallback}
         />
       )
@@ -248,6 +253,7 @@ export function TokenSelectorContent({
             evmAddress={evmAddress}
             svmAddress={svmAddress}
             chainFilter={chainFilter}
+            renderedInModal={renderedInModal}
             onEmptyActionPress={onSendEmptyActionPress}
             onSelectCurrency={onSelectCurrencyCallback}
           />
@@ -259,6 +265,7 @@ export function TokenSelectorContent({
             evmAddress={evmAddress}
             svmAddress={svmAddress}
             chainFilter={chainFilter}
+            renderedInModal={renderedInModal}
             onSelectCurrency={onSelectCurrencyCallback}
           />
         )
@@ -269,6 +276,7 @@ export function TokenSelectorContent({
             evmAddress={evmAddress}
             svmAddress={svmAddress}
             chainFilter={chainFilter}
+            renderedInModal={renderedInModal}
             onSelectCurrency={onSelectCurrencyCallback}
           />
         )
@@ -290,6 +298,7 @@ export function TokenSelectorContent({
     input,
     onSendEmptyActionPress,
     output,
+    renderedInModal,
   ])
 
   return (
@@ -365,7 +374,7 @@ function TokenSelectorModalContent(props: TokenSelectorProps): JSX.Element {
     }
   }, [isModalOpen])
 
-  return <TokenSelectorContent {...props} isSurfaceReady={isSheetReady} />
+  return <TokenSelectorContent {...props} isSurfaceReady={isSheetReady} renderedInModal={true} />
 }
 
 function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
@@ -385,7 +394,7 @@ function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
       maxHeight={isWebApp ? TOKEN_SELECTOR_WEB_MAX_HEIGHT : undefined}
       name={ModalName.TokenSelector}
       padding="$none"
-      snapPoints={['65%', '100%']}
+      snapPoints={SNAP_POINTS}
       height={isWebApp ? '100vh' : undefined}
       focusHook={focusHook}
       onClose={onClose}

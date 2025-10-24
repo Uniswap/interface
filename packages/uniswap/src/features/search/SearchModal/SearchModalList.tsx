@@ -48,7 +48,7 @@ export interface SearchModalListProps {
   errorText?: string
   onSelect?: () => void
   searchFilters: SearchFilterContext
-  renderedInModal?: boolean
+  renderedInModal: boolean
   contentContainerStyle?: ContentStyle
 }
 

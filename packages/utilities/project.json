@@ -30,7 +30,7 @@
     "lint": {},
     "lint:fix": {},
     "test": {
-      "command": "jest",
+      "command": "vitest run",
       "options": {
         "cwd": "{projectRoot}"
       }

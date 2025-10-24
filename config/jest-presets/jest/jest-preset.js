@@ -24,6 +24,7 @@ module.exports = {
     '.+\\.(css|style|less|sass|scss|png|jpg|ttf|woff|woff2|mp4)$': 'jest-transform-stub',
     // Jest by default doesn't support absolute imports out of the box
     '^src/(.*)$': '<rootDir>/src/$1',
+    '^config/(.*)$': '<rootDir>/../../config/$1',
   },
   modulePathIgnorePatterns: ['<rootDir>/node_modules'],
   testPathIgnorePatterns: ['<rootDir>/node_modules', '<rootDir>/dist'],

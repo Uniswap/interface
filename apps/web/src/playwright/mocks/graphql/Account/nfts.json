@@ -5,6 +5,7 @@
         {
           "node": {
             "ownedAsset": {
+              "chain": "ETHEREUM",
               "id": "TmZ0QXNzZXQ6RVRIRVJFVU1fMHgzQzkwNTAyZjBDQjBhZDBBNDhjNTEzNTdFNjVGZjE1MjQ3QTFEODhFXzIx",
               "animationUrl": "https://c.neevacdn.net/video/upload/xyz/IFfA-7mHig754Y1IWwIJrwKY7PTwYlCSrTjFouvG2iM.wav",
               "collection": {
@@ -63,11 +64,16 @@
               },
               "suspiciousFlag": null,
               "tokenId": "21",
+              "nftContract": {
+                "id": "TmZ0Q29udHJhY3Q6RVRIRVJFVU1fMHgzQzkwNTAyZjBDQjBhZDBBNDhjNTEzNTdFNjVGZjE1MjQ3QTFEODhF",
+                "address": "0x3C90502f0CB0ad0A48c51357E65Ff15247A1D88E"
+              },
               "thumbnail": {
                 "id": "SW1hZ2U6aHR0cHM6Ly9jLm5lZXZhY2RuLm5ldC9pbWFnZS91cGxvYWQvY19saW1pdCxwZ18xLGhfNjAwLHdfNjAwL2Zfd2VicC94eXovSUxXV1pTQjQ2b3Nrc2oxdXB2aXNzZVZQcEFLQm5MTE55MmpBTWJKZDltRS53ZWJw",
                 "url": "https://c.neevacdn.net/image/upload/c_limit,pg_1,h_600,w_600/f_webp/xyz/ILWWZSB46osksj1upvisseVPpAKBnLLNy2jAMbJd9mE.webp",
                 "__typename": "Image"
               },
+              "isSpam": false,
               "listings": {
                 "edges": [],
                 "__typename": "NftOrderConnection"

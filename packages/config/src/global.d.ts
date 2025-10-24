@@ -14,6 +14,7 @@ declare module 'react-native-dotenv' {
   export const INCLUDE_PROTOTYPE_FEATURES: string
   export const INFURA_KEY: string
   export const IS_E2E_TEST: string
+  export const JUPITER_PROXY_URL: string
   export const ONESIGNAL_APP_ID: string
   export const QUICKNODE_ENDPOINT_NAME: string
   export const QUICKNODE_ENDPOINT_TOKEN: string

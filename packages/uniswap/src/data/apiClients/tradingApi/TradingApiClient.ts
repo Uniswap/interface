@@ -2,8 +2,10 @@ import { createTradingApiClient, TradingApi } from '@universe/api'
 import { config } from 'uniswap/src/config'
 import { tradingApiVersionPrefix, uniswapUrls } from 'uniswap/src/constants/urls'
 import { createUniswapFetchClient } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
+import { filterChainIdsByPlatform } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 
 const TradingFetchClient = createUniswapFetchClient({
   baseUrl: uniswapUrls.tradingApiUrl,
@@ -16,19 +18,50 @@ const V4_HEADERS = {
   'x-universal-router-version': TradingApi.UniversalRouterVersion._2_0,
 }
 
+/**
+ * Helper to add a header only if enabled.
+ */
+function addHeaderIfEnabled(params: { headers: Record<string, string>; key: string; enabled: boolean }): void {
+  const { headers, key, enabled } = params
+  if (enabled) {
+    headers[key] = 'true'
+  }
+}
+
+/**
+ * Returns the headers for the trading API client that are based on feature flags
+ *
+ * NOTE: Be sure to confirm that adding this header does not cause a CORS issue
+ * with the web environments.
+ */
 export const getFeatureFlaggedHeaders = (): Record<string, string> => {
+  const headers: Record<string, string> = {}
   const uniquoteEnabled = getFeatureFlag(FeatureFlags.UniquoteEnabled)
   const viemProviderEnabled = getFeatureFlag(FeatureFlags.ViemProviderEnabled)
+  const ethAsErc20UniswapXEnabled = getFeatureFlag(FeatureFlags.EthAsErc20UniswapX)
+  const chainedActionsEnabled = getFeatureFlag(FeatureFlags.ChainedActions)
+  addHeaderIfEnabled({ headers, key: 'x-uniquote-enabled', enabled: uniquoteEnabled })
+  addHeaderIfEnabled({ headers, key: 'x-viem-provider-enabled', enabled: viemProviderEnabled })
+  addHeaderIfEnabled({ headers, key: 'x-erc20eth-enabled', enabled: ethAsErc20UniswapXEnabled })
+  addHeaderIfEnabled({ headers, key: 'x-chained-actions-enabled', enabled: chainedActionsEnabled })
+  return headers
+}
 
-  return {
-    'x-uniquote-enabled': uniquoteEnabled ? 'true' : 'false',
-    'x-viem-provider-enabled': viemProviderEnabled ? 'true' : 'false',
-  }
+/**
+ * NOTE: Be sure to confirm that adding this header does not cause a CORS issue
+ * with the web environments
+ */
+export const getQuoteHeaders = (): Record<string, string> => {
+  const headers: Record<string, string> = {}
+  const unirouteEnabled = getFeatureFlag(FeatureFlags.UnirouteEnabled)
+  addHeaderIfEnabled({ headers, key: 'x-uniroute-enabled', enabled: unirouteEnabled })
+  return headers
 }
 
 export const TradingApiClient = createTradingApiClient({
   fetchClient: TradingFetchClient,
   getFeatureFlagHeaders: getFeatureFlaggedHeaders,
+  getQuoteHeaders,
   getV4Headers: () => V4_HEADERS,
   getApiPathPrefix: () => tradingApiVersionPrefix,
 })
@@ -99,8 +132,11 @@ export async function checkWalletDelegation(
 ): Promise<TradingApi.WalletCheckDelegationResponseBody> {
   const { walletAddresses, chainIds } = params
 
-  // If no wallet addresses provided, no need to make a call to backend
-  if (!walletAddresses || walletAddresses.length === 0) {
+  // Filter out SVM chains - check_delegation only supports EVM chains
+  const evmChainIds = filterChainIdsByPlatform(chainIds, Platform.EVM)
+
+  // If no wallet addresses provided or if no EVM chains after filtering, return empty response
+  if (!walletAddresses || walletAddresses.length === 0 || evmChainIds.length === 0) {
     return {
       requestId: '',
       delegationDetails: {},
@@ -108,23 +144,30 @@ export async function checkWalletDelegation(
   }
 
   // Ensure batchThreshold is at least the number of chain IDs
-  const effectiveBatchThreshold = Math.max(batchThreshold, chainIds.length)
+  const effectiveBatchThreshold = Math.max(batchThreshold, evmChainIds.length)
 
-  const totalCombinations = walletAddresses.length * chainIds.length
+  const totalCombinations = walletAddresses.length * evmChainIds.length
 
   // If under threshold, make a single request
   if (totalCombinations <= effectiveBatchThreshold) {
-    return await TradingApiClient.checkWalletDelegationWithoutBatching(params)
+    return await TradingApiClient.checkWalletDelegationWithoutBatching({
+      walletAddresses,
+      chainIds: evmChainIds,
+    })
   }
 
   // Split into batches
-  const walletChunks = chunkWalletAddresses({ walletAddresses, chainIds, batchThreshold: effectiveBatchThreshold })
+  const walletChunks = chunkWalletAddresses({
+    walletAddresses,
+    chainIds: evmChainIds,
+    batchThreshold: effectiveBatchThreshold,
+  })
 
   // Make batched requests
   const batchPromises = walletChunks.map((chunk) =>
     TradingApiClient.checkWalletDelegationWithoutBatching({
       walletAddresses: chunk,
-      chainIds,
+      chainIds: evmChainIds,
     }),
   )
 

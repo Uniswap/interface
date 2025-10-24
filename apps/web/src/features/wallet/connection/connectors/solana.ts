@@ -1,3 +1,4 @@
+import { WalletError } from '@solana/wallet-adapter-base'
 import { useWallet as useSolanaWalletContext } from '@solana/wallet-adapter-react'
 import type { ExternalConnector } from 'features/accounts/store/types'
 import type { GetConnectorFn } from 'features/wallet/connection/services/createConnectionService'
@@ -20,11 +21,30 @@ export function useSolanaConnectionService(getConnector: GetConnectorFn): Connec
       throw new Error(`Solana Wallet Adapter not found for wallet ${connector.externalLibraryId}`)
     }
 
-    solanaWalletContext.select(connector.externalLibraryId)
-    // TODO(WEB-8126): Investigate why this is needed
-    // adapter.connect() can throw an error if called too soon after solanaWalletContext.select()
-    await sleep(10)
-    await adapter.connect()
+    // adapter.connect() immediately resolves regardless of user input; we form a promise around
+    // the connect and error events in order to actually detect user acceptance or rejection
+    let connectHandler = () => {}
+    let errorHandler = (_error: WalletError) => {}
+
+    const promise = new Promise((resolve, reject) => {
+      connectHandler = () => resolve(undefined)
+      errorHandler = (error: WalletError) => reject(error)
+      adapter.addListener('connect', connectHandler)
+      adapter.addListener('error', errorHandler)
+    })
+
+    try {
+      solanaWalletContext.select(connector.externalLibraryId)
+      // TODO(WEB-8126): Investigate why this is needed
+      // adapter.connect() can throw an error if called too soon after solanaWalletContext.select()
+      await sleep(10)
+      await adapter.connect()
+
+      await promise
+    } finally {
+      adapter.removeListener('connect', connectHandler)
+      adapter.removeListener('error', errorHandler)
+    }
   })
 
   return useMemo(

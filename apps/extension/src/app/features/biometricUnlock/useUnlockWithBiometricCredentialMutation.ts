@@ -46,7 +46,7 @@ export async function reauthenticateWithBiometricCredential(): Promise<{ passwor
     const password = await getPasswordFromBiometricCredential(abortSignal)
     const success = await Keyring.checkPassword(password)
     return { password: success ? password : null }
-  } catch (_error) {
+  } catch {
     return { password: null }
   }
 }

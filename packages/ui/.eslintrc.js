@@ -13,6 +13,8 @@ module.exports = {
     'jest.config.js',
     'babel.config.js',
     '.nx',
+    'vitest-setup.ts',
+    'vitest.config.ts',
   ],
   parserOptions: {
     project: 'tsconfig.eslint.json',

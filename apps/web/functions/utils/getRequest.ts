@@ -21,7 +21,7 @@ export async function getRequest<T extends Data>({
       await Cache.put(data, url)
       return data
     }
-  } catch (_e) {
+  } catch {
     return undefined
   }
 }

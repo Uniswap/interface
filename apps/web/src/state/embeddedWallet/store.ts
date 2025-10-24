@@ -37,7 +37,7 @@ try {
   if (persisted) {
     state = JSON.parse(persisted)
   }
-} catch (_e) {
+} catch {
   logger.info('embeddedWallet', 'store', `No existing embedded wallet state found for key ${embeddedWalletStateKey}`)
 }
 

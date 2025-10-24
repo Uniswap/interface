@@ -181,6 +181,7 @@ export default function FeatureFlagModal() {
           <FeatureFlagGroup name="Swap Features">
             <FeatureFlagOption flag={FeatureFlags.ChainedActions} label="Enable Chained Actions" />
             <FeatureFlagOption flag={FeatureFlags.BatchedSwaps} label="Enable Batched Swaps" />
+            <FeatureFlagOption flag={FeatureFlags.EthAsErc20UniswapX} label="Enable Eth as ERC20 for UniswapX " />
             <FeatureFlagOption flag={FeatureFlags.UnichainFlashblocks} label="Enable Unichain Flashblocks" />
             <FeatureFlagOption flag={FeatureFlags.UniquoteEnabled} label="Enable Uniquote" />
             <FeatureFlagOption flag={FeatureFlags.ViemProviderEnabled} label="Enable Viem Provider" />

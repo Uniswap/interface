@@ -2,6 +2,8 @@ import { ApolloError } from '@apollo/client'
 import { GraphQLApi } from '@universe/api'
 import { atomWithReset, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { DynamicConfigs, OutageBannerChainIdConfigKey } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 
 export type ChainOutageData = {
   chainId: UniverseChainId
@@ -9,6 +11,24 @@ export type ChainOutageData = {
 }
 
 export const manualChainOutageAtom = atomWithReset<ChainOutageData | undefined>(undefined)
+
+export function useChainOutageConfig(): ChainOutageData | undefined {
+  const chainId = useDynamicConfigValue({
+    config: DynamicConfigs.OutageBannerChainId,
+    key: OutageBannerChainIdConfigKey.ChainId,
+    defaultValue: undefined,
+    customTypeGuard: (x): x is UniverseChainId | undefined => {
+      return x === undefined || (typeof x === 'number' && x > 0)
+    },
+  })
+
+  if (!chainId) {
+    return undefined
+  }
+
+  return { chainId }
+}
+
 export function useUpdateManualOutage({
   chainId,
   errorV3,

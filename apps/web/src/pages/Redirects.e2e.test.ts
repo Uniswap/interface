@@ -35,24 +35,17 @@ test.describe('Redirects', () => {
   })
 
   test('should redirect add v2 liquidity to positions create page', async ({ page }) => {
-    await page.goto('/add/v2/0x318400242bFdE3B20F49237a9490b8eBB6bdB761/ETH')
+    await page.goto('/add/v2/1-0x318400242bFdE3B20F49237a9490b8eBB6bdB761/1-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48')
     await expect(page).toHaveURL(
-      /\/positions\/create\/v2\?currencyA=0x318400242bFdE3B20F49237a9490b8eBB6bdB761&currencyB=ETH/,
+      /\/positions\/create\/v2\?currencyA=1-0x318400242bFdE3B20F49237a9490b8eBB6bdB761&currencyB=1-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/,
     )
   })
 
   test('should redirect add v3 liquidity to positions create page', async ({ page }) => {
-    await page.goto('/add/0x318400242bFdE3B20F49237a9490b8eBB6bdB761/ETH')
+    await page.goto('/add/1-0x318400242bFdE3B20F49237a9490b8eBB6bdB761/1-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48')
     await expect(page).toHaveURL(
-      /\/positions\/create\/v3\?currencyA=0x318400242bFdE3B20F49237a9490b8eBB6bdB761&currencyB=ETH/,
+      /\/positions\/create\/v3\?currencyA=1-0x318400242bFdE3B20F49237a9490b8eBB6bdB761&currencyB=1-0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/,
     )
-  })
-
-  test('should redirect remove v2 liquidity to positions page', async ({ page }) => {
-    await page.goto(
-      '/remove/v2/1-0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/1-0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-    )
-    await expect(page).toHaveURL(/\/positions\/v2\/ethereum\/0xBb2b8038a1640196FbE3e38816F3e67Cba72D940/)
   })
 
   test('should redirect remove v3 liquidity to positions page', async ({ page }) => {

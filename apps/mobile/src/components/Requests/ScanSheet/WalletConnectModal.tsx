@@ -186,7 +186,7 @@ export function WalletConnectModal({
           dispatch(addRequest(wcRequest.request))
 
           onClose()
-        } catch (_) {
+        } catch {
           Alert.alert(t('walletConnect.error.uwu.title'), t('walletConnect.error.uwu.scan'), [
             {
               text: t('common.button.ok'),

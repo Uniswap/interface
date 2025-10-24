@@ -93,7 +93,7 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
   }
   try {
     return BigNumber.from(tokenId)
-  } catch (_error) {
+  } catch {
     return undefined
   }
 }

@@ -16,7 +16,7 @@ test.describe('Fees', () => {
     // Set up swap
     await page.getByTestId(TestID.AmountInputOut).fill('1')
 
-    const response = await page.waitForResponse('https://trading-api-labs.interface.gateway.uniswap.org/v1/quote')
+    const response = await page.waitForResponse(`${uniswapUrls.tradingApiUrl}/v1/quote`)
     const {
       quote: { portionBips, portionRecipient },
     } = await response.json()

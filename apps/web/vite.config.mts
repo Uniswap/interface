@@ -13,6 +13,7 @@ import commonjs from 'vite-plugin-commonjs'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgr from 'vite-plugin-svgr'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import { generateAssetsIgnorePlugin } from './vite/generateAssetsIgnorePlugin.js'
 import { cspMetaTagPlugin } from './vite/vite.plugins.js'
 
 // Get current file directory (ESM equivalent of __dirname)
@@ -148,7 +149,10 @@ export default defineConfig(({ mode }) => {
             importsWhitelist: ['constants.js'],
           })
         : undefined,
-      tsconfigPaths(),
+      tsconfigPaths({
+        // ignores tsconfig files in Nx generator template directories
+        skip: (dir) => dir.includes('files'),
+      }),
       env.REACT_APP_SKIP_CSP ? undefined : cspMetaTagPlugin(),
       svgr({
         svgrOptions: {
@@ -210,10 +214,11 @@ export default defineConfig(({ mode }) => {
         ? undefined
         : bundlesize({
             limits: [
-              { name: 'assets/index-*.js', limit: '2.2 MB', mode: 'gzip' },
+              { name: 'assets/index-*.js', limit: '2.3 MB', mode: 'gzip' },
               { name: '**/*', limit: Infinity, mode: 'uncompressed' },
             ],
           }),
+      generateAssetsIgnorePlugin(isProduction && !isVercelDeploy && !VITE_DISABLE_SOURCEMAP, __dirname),
       {
         name: 'copy-twist-config',
         writeBundle() {
@@ -244,7 +249,7 @@ export default defineConfig(({ mode }) => {
           }
         },
       },
-      DEPLOY_TARGET === 'cloudflare'
+      DEPLOY_TARGET === 'cloudflare' || mode === 'development'
         ? cloudflare({
             configPath: './wrangler-vite-worker.jsonc',
             // Workaround for cloudflare plugin bug: explicitly set environment name based on CLOUDFLARE_ENV
@@ -299,7 +304,7 @@ export default defineConfig(({ mode }) => {
 
     build: {
       outDir: 'build',
-      sourcemap: VITE_DISABLE_SOURCEMAP ? false : (isProduction && !isVercelDeploy ? false : true),
+      sourcemap: VITE_DISABLE_SOURCEMAP ? false : (isProduction && !isVercelDeploy ? 'hidden' : true),
       minify: isProduction && !isVercelDeploy ? 'esbuild' : undefined,
       rollupOptions: {
         external: [/\.stories\.[tj]sx?$/, /\.mdx$/, /expo-clipboard\/build\/ClipboardPasteButton\.js/],

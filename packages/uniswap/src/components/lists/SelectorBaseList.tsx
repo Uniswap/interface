@@ -39,7 +39,7 @@ interface SelectorBaseListProps<T extends OnchainItemListOption> {
   keyExtractor: (item: T, index: number) => string
   expandedItems?: string[]
   focusedRowControl?: Omit<FocusedRowControl, 'rowIndex'>
-  renderedInModal?: boolean
+  renderedInModal: boolean
   contentContainerStyle?: ContentStyle
 }
 

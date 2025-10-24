@@ -81,6 +81,7 @@ export function D3RangeAmountInput({
       $lg={{
         borderBottomRightRadius: input === RangeSelectionInput.MAX ? '$rounded20' : '$none',
         borderBottomLeftRadius: input === RangeSelectionInput.MAX ? '$rounded20' : '$none',
+        flexBasis: 'auto',
       }}
       p="$spacing16"
       justifyContent="space-between"

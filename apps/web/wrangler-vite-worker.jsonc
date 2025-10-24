@@ -3,7 +3,7 @@
   "compatibility_date": "2024-09-23",
   "compatibility_flags": ["nodejs_compat_v2"],
   "main": "./functions/main.ts",
-  
+
   // Assets configuration (applies to all environments)
   "assets": {
     "run_worker_first": true,

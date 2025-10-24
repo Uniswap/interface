@@ -1,5 +1,4 @@
 import { MismatchToastItem } from 'components/Popups/MismatchToastItem'
-import { MismatchWalletPlatformToastItem } from 'components/Popups/MismatchWalletPlatformToast'
 import {
   FailedNetworkSwitchPopup,
   FORTransactionPopupContent,
@@ -66,9 +65,6 @@ export function PopupItem({ content, onClose }: { content: PopupContent; popKey:
           text={content.error}
         />
       )
-    }
-    case PopupType.MissingPlatformWallet: {
-      return <MismatchWalletPlatformToastItem expectedPlatform={content.expectedPlatform} onDismiss={onClose} />
     }
   }
 }

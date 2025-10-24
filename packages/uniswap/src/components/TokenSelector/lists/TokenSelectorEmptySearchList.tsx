@@ -10,11 +10,13 @@ function _TokenSelectorEmptySearchList({
   svmAddress,
   chainFilter,
   onSelectCurrency,
+  renderedInModal,
 }: {
   evmAddress?: string
   svmAddress?: string
   onSelectCurrency: OnSelectCurrency
   chainFilter: UniverseChainId | null
+  renderedInModal: boolean
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -38,6 +40,7 @@ function _TokenSelectorEmptySearchList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
+      renderedInModal={renderedInModal}
       onSelectCurrency={onSelectCurrency}
     />
   )

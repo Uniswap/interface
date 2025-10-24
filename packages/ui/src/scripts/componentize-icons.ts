@@ -46,7 +46,7 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): 
   ensureDirSync(dirs.output)
 
   let indexFile = ``
-  const fileNames = readdirSync(dirs.input).filter((name) => name.endsWith('.svg'))
+  const fileNames = readdirSync(dirs.input).filter((name: string) => name.endsWith('.svg'))
 
   for (const fileName of fileNames) {
     const className = generateClassName(fileName)
@@ -200,7 +200,7 @@ getIcon: (props) => (
 ${defaultFill ? `defaultFill: '${defaultFill}'` : ''}
 })
 `
-    .replace(/fill="(#[a-z0-9]+)"/gi, `fill={"currentColor" ?? '$1'}`)
+    .replace(/fill="(#[a-z0-9]+)"/gi, `fill="currentColor"`)
     .replaceAll(`xmlns:xlink="http://www.w3.org/1999/xlink"`, '')
     .replaceAll(`xlink:href`, 'xlinkHref')
 }

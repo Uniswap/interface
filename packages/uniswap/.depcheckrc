@@ -13,7 +13,9 @@ ignores: [
     "utilities",
     "src",
     "tsconfig",
-    "@uniswap/biome-config",
+    "config",
+    ## GraphQL
+    "@graphql-codegen/*",
     # i18n
     "i18next-resources-for-ts",
     # zustand store dev tooling

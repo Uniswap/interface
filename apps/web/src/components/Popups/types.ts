@@ -1,6 +1,5 @@
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { CurrencyId } from 'uniswap/src/types/currency'
 
 export enum PopupType {
@@ -12,7 +11,6 @@ export enum PopupType {
   Mismatch = 'mismatch',
   FORTransaction = 'forTransaction',
   Error = 'error',
-  MissingPlatformWallet = 'missingPlatformWallet',
 }
 
 export enum SwitchNetworkAction {
@@ -59,8 +57,4 @@ export type PopupContent =
   | {
       type: PopupType.Error
       error: string
-    }
-  | {
-      type: PopupType.MissingPlatformWallet
-      expectedPlatform: Platform | undefined
     }

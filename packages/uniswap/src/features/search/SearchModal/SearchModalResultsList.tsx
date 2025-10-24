@@ -183,7 +183,7 @@ interface SearchModalResultsListProps {
   debouncedParsedSearchFilter: string | null
   activeTab: SearchTab
   onSelect?: SearchModalListProps['onSelect']
-  renderedInModal?: boolean
+  renderedInModal: boolean
   contentContainerStyle?: ContentStyle
 }
 

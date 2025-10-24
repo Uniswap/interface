@@ -11,7 +11,7 @@ describe('Chrome utilities', () => {
 
   beforeEach(() => {
     // Reset the global chrome object before each test
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   afterAll(() => {

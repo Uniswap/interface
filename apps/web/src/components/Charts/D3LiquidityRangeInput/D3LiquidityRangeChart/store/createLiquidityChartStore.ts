@@ -171,12 +171,11 @@ export const createLiquidityChartStore = ({
     },
   )
 
-  // Reset when isFullRange changes
+  // Sync isFullRange changes back to parent
   store.subscribe(
     (state) => state.isFullRange,
     (isFullRange) => {
       setIsFullRange(isFullRange)
-      store.getState().actions.reset({ animate: false })
     },
   )
 

@@ -183,6 +183,7 @@ interface TokenSelectorListProps {
   errorText?: string
   showTokenAddress?: boolean
   isKeyboardOpen?: boolean
+  renderedInModal: boolean
 }
 
 function _TokenSelectorList({
@@ -196,6 +197,7 @@ function _TokenSelectorList({
   emptyElement,
   errorText,
   showTokenAddress,
+  renderedInModal,
 }: TokenSelectorListProps): JSX.Element {
   const [expandedItems, setExpandedItems] = useState<string[]>([])
 
@@ -246,6 +248,7 @@ function _TokenSelectorList({
       errorText={errorText}
       keyExtractor={key}
       expandedItems={expandedItems}
+      renderedInModal={renderedInModal}
     />
   )
 }

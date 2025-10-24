@@ -89,11 +89,9 @@ export function TokenBalanceListContextProvider({
   const rows = useMemo<TokenBalanceListRow[]>(() => {
     const shownTokensArray = shownTokens ?? []
     const newRowIds = [
-      // already sorted when testnet mode is disabled;
-      // api uses usd value, which is available for prod tokens
-      ...(isTestnetModeEnabled
-        ? sortPortfolioBalances({ balances: shownTokensArray, isTestnetModeEnabled })
-        : shownTokensArray),
+      // Always sort tokens to ensure proper ordering after instant balance updates
+      // In prod, sort by USD value; in testnet mode, sort by native balances
+      ...sortPortfolioBalances({ balances: shownTokensArray, isTestnetModeEnabled }),
       ...(sortedHiddenTokens?.length ? [HIDDEN_TOKEN_BALANCES_ROW] : []),
       ...(hiddenTokensExpanded && sortedHiddenTokens ? sortedHiddenTokens : []),
     ].map((token) => {

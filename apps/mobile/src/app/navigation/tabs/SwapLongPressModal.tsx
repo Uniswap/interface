@@ -4,12 +4,13 @@ import { useTranslation } from 'react-i18next'
 import { Modal, StyleSheet } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
+import { ESTIMATED_BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
 import { SwapButton } from 'src/app/navigation/tabs/SwapButton'
 import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Bank, Buy, ReceiveAlt, SendAction } from 'ui/src/components/icons'
-import { iconSizes, spacing } from 'ui/src/theme'
+import { iconSizes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -135,7 +136,7 @@ export function SwapLongPressModal({ isVisible, onClose, onSwapLongPress }: Swap
         <TouchableArea activeOpacity={1} flex={1} justifyContent="flex-end" alignItems="flex-end" onPress={onClose}>
           <Flex
             position="absolute"
-            bottom={insets.bottom + spacing.spacing2}
+            bottom={insets.bottom}
             right={0}
             alignItems="flex-end"
             gap="$spacing16"
@@ -146,7 +147,7 @@ export function SwapLongPressModal({ isVisible, onClose, onSwapLongPress }: Swap
             ))}
 
             {/* Swap Button as last item in the column */}
-            <Flex row alignItems="center" gap="$spacing24">
+            <Flex row height={ESTIMATED_BOTTOM_TABS_HEIGHT} alignItems="center" gap="$spacing24">
               <Text variant="buttonLabel2" color="$neutral1" textAlign="right">
                 {t('common.button.swap')}
               </Text>

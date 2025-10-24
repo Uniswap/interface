@@ -1,6 +1,6 @@
 const RANGE_INDICATOR_WIDTH = 16
 const LIQUIDITY_CHART_HEIGHT = 200
-const LIQUIDITY_CHART_PADDING = 12
+const LIQUIDITY_CHART_PADDING = 14
 
 // Chart Dimension Constants
 export const CHART_DIMENSIONS = {

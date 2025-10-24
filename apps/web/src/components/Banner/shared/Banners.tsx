@@ -1,4 +1,4 @@
-import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
+import { manualChainOutageAtom, useChainOutageConfig } from 'featureFlags/flags/outageBanner'
 import { getOutageBannerSessionStorageKey, OutageBanner } from 'components/Banner/Outage/OutageBanner'
 import { SOLANA_PROMO_BANNER_STORAGE_KEY, SolanaPromoBanner } from 'components/Banner/SolanaPromo/SolanaPromoBanner'
 import { useAtomValue } from 'jotai/utils'
@@ -16,20 +16,23 @@ export function Banners() {
   const currentPage = getCurrentPageFromLocation(pathname)
   const isSolanaPromoEnabled = useFeatureFlag(FeatureFlags.SolanaPromo)
 
-  const manualOutage = useAtomValue(manualChainOutageAtom)
+  // Read from both sources: error-detected (from GraphQL failures) and Statsig (manual config)
+  const statsigOutage = useChainOutageConfig()
+  const errorDetectedOutage = useAtomValue(manualChainOutageAtom)
+  const outage = errorDetectedOutage || statsigOutage
 
   // Calculate the chainId for the current page's contextual chain (e.g. /tokens/ethereum or /tokens/arbitrum), if it exists.
   const pageChainId = useMemo(() => {
     const chainUrlParam = pathname.split('/').find(isChainUrlParam)
     return chainUrlParam ? getChainIdFromChainUrlParam(chainUrlParam) : UniverseChainId.Mainnet
   }, [pathname])
-  const currentPageHasManualOutage = manualOutage?.chainId === pageChainId
+  const currentPageHasOutage = outage?.chainId === pageChainId
 
   const showOutageBanner = useMemo(() => {
     return (
       currentPage &&
       pageChainId &&
-      currentPageHasManualOutage &&
+      currentPageHasOutage &&
       !sessionStorage.getItem(getOutageBannerSessionStorageKey(pageChainId)) &&
       (
         [
@@ -40,13 +43,11 @@ export function Banners() {
         ] as string[]
       ).includes(currentPage)
     )
-  }, [currentPage, currentPageHasManualOutage, pageChainId])
+  }, [currentPage, currentPageHasOutage, pageChainId])
 
   // Outage Banners should take precedence over other promotional banners
   if (pageChainId && showOutageBanner) {
-    return (
-      <OutageBanner chainId={pageChainId} version={currentPageHasManualOutage ? manualOutage?.version : undefined} />
-    )
+    return <OutageBanner chainId={pageChainId} version={currentPageHasOutage ? outage?.version : undefined} />
   }
 
   const userAlreadySeenSolanaPromo = localStorage.getItem(SOLANA_PROMO_BANNER_STORAGE_KEY) === 'true'

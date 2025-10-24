@@ -315,6 +315,7 @@ export function generateCreatePositionTxRequest({
     token0PermitTransaction: validatedToken0PermitTransaction,
     token1PermitTransaction: validatedToken1PermitTransaction,
     positionTokenPermitTransaction: undefined,
+    sqrtRatioX96: createCalldata.sqrtRatioX96,
   } satisfies CreatePositionTxAndGasInfo
 }
 

@@ -5,6 +5,7 @@ import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgr from 'vite-plugin-svgr'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { defineConfig } from 'wxt'
+import { getTsconfigAliases } from './config/getTsconfigAliases'
 
 const icons = {
   16: 'assets/icon16.png',
@@ -15,7 +16,7 @@ const icons = {
 
 const BASE_NAME = 'Uniswap Extension'
 const BASE_DESCRIPTION = "The Uniswap Extension is a self-custody crypto wallet that's built for swapping."
-const BASE_VERSION = '1.30.0'
+const BASE_VERSION = '1.61.0'
 
 const BUILD_NUM = parseInt(process.env.BUILD_NUM || '0')
 const EXTENSION_VERSION = `${BASE_VERSION}.${BUILD_NUM}`
@@ -139,12 +140,10 @@ export default defineConfig({
       'react-native': 'react-native-web',
       // Skip expo-crypto alias during prepare phase since it imports react-native-web
       crypto: isPreparePhase ? 'crypto' : 'expo-crypto',
-      'uniswap/src': path.resolve(__dirname, '../../packages/uniswap/src'),
-      'utilities/src': path.resolve(__dirname, '../../packages/utilities/src'),
-      'ui/src': path.resolve(__dirname, '../../packages/ui/src'),
-      'wallet/src': path.resolve(__dirname, '../../packages/wallet/src'),
       'expo-clipboard': path.resolve(__dirname, '../web/src/lib/expo-clipboard.jsx'),
       jsbi: path.resolve(__dirname, '../../node_modules/jsbi/dist/jsbi.mjs'), // force consistent ESM build
+      // Dynamically load all monorepo package aliases from tsconfig.base.json
+      ...getTsconfigAliases(),
     }
 
     return {
@@ -202,7 +201,10 @@ export default defineConfig({
             })
           },
         },
-        tsconfigPaths(),
+        tsconfigPaths({
+          // ignores tsconfig files in Nx generator template directories
+          skip: (dir) => dir.includes('files'),
+        }),
         // TODO(INFRA-299): enable tamagui in production once building works
         // !isPreparePhase && isProduction
         //   ? tamaguiPlugin({
