@@ -91,13 +91,34 @@ export function usePools(
   const poolTokens: ([Token, Token, FeeAmount] | undefined)[] = useMemo(() => {
     if (!chainId) return new Array(poolKeys.length)
 
-    return poolKeys.map(([currencyA, currencyB, feeAmount]) => {
+    return poolKeys.map(([currencyA, currencyB, feeAmount], index) => {
       if (currencyA && currencyB && feeAmount) {
         const tokenA = currencyA.wrapped
         const tokenB = currencyB.wrapped
-        if (tokenA.equals(tokenB)) return undefined
+        if (tokenA.equals(tokenB)) {
+          if (process.env.NODE_ENV === 'development') {
+            console.log('⚠️ poolTokens: Same token detected', {
+              index,
+              symbol: tokenA.symbol,
+              address: tokenA.address,
+              feeAmount
+            })
+          }
+          return undefined
+        }
 
         return tokenA.sortsBefore(tokenB) ? [tokenA, tokenB, feeAmount] : [tokenB, tokenA, feeAmount]
+      }
+      if (process.env.NODE_ENV === 'development') {
+        console.log('⚠️ poolTokens: Missing currency or fee', {
+          index,
+          hasCurrencyA: !!currencyA,
+          hasCurrencyB: !!currencyB,
+          hasFeeAmount: !!feeAmount,
+          currencyA: currencyA?.symbol,
+          currencyB: currencyB?.symbol,
+          feeAmount
+        })
       }
       return undefined
     })
