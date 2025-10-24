@@ -448,6 +448,16 @@ export function useV3DerivedMintInfo(
   }
 
   if (poolState === PoolState.INVALID) {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🚨 SHOWING "Invalid pair" ERROR', {
+        poolState,
+        currencyA: currencies[Field.CURRENCY_A]?.symbol,
+        currencyB: currencies[Field.CURRENCY_B]?.symbol,
+        feeAmount,
+        currencyAAddress: currencies[Field.CURRENCY_A]?.wrapped.address,
+        currencyBAddress: currencies[Field.CURRENCY_B]?.wrapped.address,
+      })
+    }
     errorMessage = errorMessage ?? <Trans>Invalid pair</Trans>
   }
 
