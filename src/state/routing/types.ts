@@ -149,8 +149,17 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
   isUniswapXBetter: boolean | undefined
   requestId: string | undefined
   quoteMethod: QuoteMethod
-  inputTax: Percent
-  outputTax: Percent
+  private _inputTax: Percent
+  private _outputTax: Percent
+
+  // Override readonly getters from base Trade class
+  get inputTax(): Percent {
+    return this._inputTax
+  }
+
+  get outputTax(): Percent {
+    return this._outputTax
+  }
 
   constructor({
     gasUseEstimateUSD,
@@ -196,8 +205,8 @@ export class ClassicTrade extends Trade<Currency, Currency, TradeType> {
     this.requestId = requestId
     this.quoteMethod = quoteMethod
     this.approveInfo = approveInfo
-    this.inputTax = inputTax
-    this.outputTax = outputTax
+    this._inputTax = inputTax
+    this._outputTax = outputTax
   }
 
   public get totalTaxRate(): Percent {

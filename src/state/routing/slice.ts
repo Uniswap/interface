@@ -125,15 +125,20 @@ export const routingApi = createApi({
         logSwapQuoteRequest(args.tokenInChainId, args.routerPreference)
         const quoteStartMark = performance.mark(`quote-fetch-start-${Date.now()}`)
 
-        // TODO: Taiko swaps not yet supported
-        // Issue: ClassicTrade constructor conflicts with base Trade class inputTax/outputTax getters
-        // The Uniswap routing API doesn't support Taiko, and client-side AlphaRouter doesn't work in browsers
-        // Possible solutions:
-        // 1. Run your own routing API instance that supports Taiko
-        // 2. Fix the ClassicTrade class to work with the Trade base class properly
-        // 3. Use direct swap router calls without quotes (not ideal UX)
+        // Taiko chains use on-chain quoter since they're not supported by the routing API
         if (args.tokenInChainId === TAIKO_HOODI_CHAIN_ID) {
-          console.warn('Taiko swaps not yet supported - quotes unavailable')
+          try {
+            const { getTaikoQuote } = await import('lib/hooks/routing/taikoQuoter')
+            const quoteResult = await getTaikoQuote(args)
+
+            if (quoteResult.state === QuoteState.SUCCESS && quoteResult.data) {
+              const trade = await transformRoutesToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE_FALLBACK)
+              return { data: { ...trade, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
+            }
+          } catch (error: any) {
+            console.error('Taiko quoter failed:', error)
+          }
+
           return {
             data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
           }
