@@ -80,6 +80,25 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
           continue
         }
 
+        // Fetch actual pool state - REQUIRED for SDK Pool validation
+        const { Contract } = require('@ethersproject/contracts')
+        const poolContract = new Contract(
+          poolAddress,
+          [
+            'function slot0() view returns (uint160 sqrtPriceX96, int24 tick, uint16 observationIndex, uint16 observationCardinality, uint16 observationCardinalityNext, uint8 feeProtocol, bool unlocked)',
+            'function liquidity() view returns (uint128)',
+          ],
+          provider
+        )
+
+        const [slot0, liquidity] = await Promise.all([poolContract.slot0(), poolContract.liquidity()])
+
+        console.log(`🔵 Pool state:`, {
+          sqrtPriceX96: slot0.sqrtPriceX96.toString(),
+          tick: slot0.tick.toString(),
+          liquidity: liquidity.toString(),
+        })
+
         if (tradeType === TradeType.EXACT_INPUT) {
           // Quoter V1 uses separate parameters, not a struct
           const amountOut = await quoter.callStatic.quoteExactInputSingle(
@@ -113,9 +132,9 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
                   symbol: args.tokenOutSymbol,
                 },
                 fee: fee.toString(),
-                liquidity: '0',
-                sqrtRatioX96: '0',
-                tickCurrent: '0',
+                liquidity: liquidity.toString(),
+                sqrtRatioX96: slot0.sqrtPriceX96.toString(),
+                tickCurrent: slot0.tick.toString(),
                 amountIn: amount,
                 amountOut: amountOut.toString(),
               }]],
@@ -167,9 +186,9 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
                   symbol: args.tokenOutSymbol,
                 },
                 fee: fee.toString(),
-                liquidity: '0',
-                sqrtRatioX96: '0',
-                tickCurrent: '0',
+                liquidity: liquidity.toString(),
+                sqrtRatioX96: slot0.sqrtPriceX96.toString(),
+                tickCurrent: slot0.tick.toString(),
                 amountIn: amountIn.toString(),
                 amountOut: amount,
               }]],
