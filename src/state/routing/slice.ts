@@ -124,6 +124,29 @@ export const routingApi = createApi({
         let fellBack = false
         logSwapQuoteRequest(args.tokenInChainId, args.routerPreference)
         const quoteStartMark = performance.mark(`quote-fetch-start-${Date.now()}`)
+
+        // Use on-chain quoter for Taiko chains FIRST - skip API entirely
+        // The Uniswap API doesn't support custom chains, and AlphaRouter doesn't work in browsers
+        if (args.tokenInChainId === TAIKO_HOODI_CHAIN_ID) {
+          try {
+            const { getTaikoQuote } = await import('lib/hooks/routing/taikoQuoter')
+            const quoteResult = await getTaikoQuote(args)
+            if (quoteResult.state === QuoteState.SUCCESS) {
+              const trade = await transformRoutesToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE)
+              return {
+                data: { ...trade, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
+              }
+            } else {
+              return { data: { ...quoteResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
+            }
+          } catch (error: any) {
+            console.warn(`Taiko quote failed: ${error}`)
+            return {
+              data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
+            }
+          }
+        }
+
         if (shouldUseAPIRouter(args)) {
           fellBack = true
           try {
@@ -179,28 +202,6 @@ export const routingApi = createApi({
                 error?.message ?? error?.detail ?? error
               }`
             )
-          }
-        }
-
-        // Use on-chain quoter for Taiko chains as AlphaRouter doesn't support browser environments
-        // and Taiko chains aren't supported by the routing API
-        if (args.tokenInChainId === TAIKO_HOODI_CHAIN_ID) {
-          try {
-            const { getTaikoQuote } = await import('lib/hooks/routing/taikoQuoter')
-            const quoteResult = await getTaikoQuote(args)
-            if (quoteResult.state === QuoteState.SUCCESS) {
-              const trade = await transformRoutesToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE)
-              return {
-                data: { ...trade, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
-              }
-            } else {
-              return { data: { ...quoteResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
-            }
-          } catch (error: any) {
-            console.warn(`Taiko quote failed: ${error}`)
-            return {
-              data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
-            }
           }
         }
 

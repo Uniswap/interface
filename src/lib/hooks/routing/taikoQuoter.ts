@@ -25,14 +25,24 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
     tradeType,
   } = args
 
+  console.log('🔵 Taiko Quoter called:', {
+    tokenInAddress,
+    tokenOutAddress,
+    amount,
+    tradeType: tradeType === TradeType.EXACT_INPUT ? 'EXACT_INPUT' : 'EXACT_OUTPUT',
+  })
+
   // Only support Taiko Hoodi chain
   if (tokenInChainId !== TAIKO_HOODI_CHAIN_ID || tokenOutChainId !== TAIKO_HOODI_CHAIN_ID) {
+    console.log('❌ Chain mismatch')
     return { state: QuoteState.NOT_FOUND }
   }
 
   try {
     const provider = RPC_PROVIDERS[TAIKO_HOODI_CHAIN_ID]
     const quoterAddress = TAIKO_HOODI_ADDRESSES.quoterV2
+
+    console.log('🔵 Using QuoterV2 at:', quoterAddress)
 
     if (!quoterAddress || quoterAddress === '0x0000000000000000000000000000000000000000') {
       console.warn('QuoterV2 not configured for Taiko Hoodi')
@@ -46,6 +56,7 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
 
     for (const fee of feeTiers) {
       try {
+        console.log(`🔵 Trying fee tier: ${fee}`)
         let result: any
 
         if (tradeType === TradeType.EXACT_INPUT) {
@@ -58,6 +69,7 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
           })
 
           const amountOut = result.amountOut || result[0]
+          console.log(`✅ Got quote: amountOut = ${amountOut}`)
 
           if (amountOut && !BigNumber.from(amountOut).isZero()) {
             return {
@@ -138,16 +150,18 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
             }
           }
         }
-      } catch (poolError) {
+      } catch (poolError: any) {
         // Pool doesn't exist or has no liquidity for this fee tier, try next one
+        console.log(`⚠️ Fee tier ${fee} failed:`, poolError.reason || poolError.message)
         continue
       }
     }
 
     // No pool found with any fee tier
+    console.log('❌ No pool found with any fee tier')
     return { state: QuoteState.NOT_FOUND }
   } catch (error: any) {
-    console.error('Taiko quoter error:', error)
+    console.error('❌ Taiko quoter error:', error)
     return { state: QuoteState.NOT_FOUND }
   }
 }
