@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmY1cbcRmdUtaHxg3Dk7iu3FQAoy2DtYFogHrCd1CEEBcX`
-- CIDv1: `bafybeiepwrzciksdcvpgt4u4sss6hgh5b6zrofqlz4m5gh5myhsa226ofq`
+- CIDv0: `QmZmRjJXcRL1HVbuFBLX23qqmQydzmqGsLmb94qrqTU9A7`
+- CIDv1: `bafybeifjzfti2rq27be42zfwqnturszxqyecs4zxklxxr4pejgcgi72eja`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,9 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiepwrzciksdcvpgt4u4sss6hgh5b6zrofqlz4m5gh5myhsa226ofq.ipfs.dweb.link/
-- [ipfs://QmY1cbcRmdUtaHxg3Dk7iu3FQAoy2DtYFogHrCd1CEEBcX/](ipfs://QmY1cbcRmdUtaHxg3Dk7iu3FQAoy2DtYFogHrCd1CEEBcX/)
+- https://bafybeifjzfti2rq27be42zfwqnturszxqyecs4zxklxxr4pejgcgi72eja.ipfs.dweb.link/
+- [ipfs://QmZmRjJXcRL1HVbuFBLX23qqmQydzmqGsLmb94qrqTU9A7/](ipfs://QmZmRjJXcRL1HVbuFBLX23qqmQydzmqGsLmb94qrqTU9A7/)
 
-### 5.114.1 (2025-10-24)
+## 5.115.0 (2025-10-24)
+
+
+### Features
+
+* **web:** special case metamask dual vm connection flow (#24756) (#24789) b21eafd
 
 

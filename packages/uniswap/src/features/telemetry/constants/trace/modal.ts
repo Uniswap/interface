@@ -105,6 +105,7 @@ export const ModalName = {
   OtpScanInput: 'otp-scan-input',
   PasskeyManagement: 'passkey-management-modal',
   PasskeysHelp: 'passkeys-help-modal',
+  PendingWalletConnection: 'pending-connection-modal',
   PriceImpact: 'price-impact-modal',
   PrivacyChoices: 'privacy-choices-modal',
   PermissionsModal: 'permissions-modal',
