@@ -49,6 +49,19 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
       return { state: QuoteState.NOT_FOUND }
     }
 
+    // Convert native ETH to WETH address for quoter
+    // The quoter only understands ERC20 token addresses, not native asset identifiers
+    const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenInAddress as SwapRouterNativeAssets)
+    const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOutAddress as SwapRouterNativeAssets)
+
+    const actualTokenInAddress = tokenInIsNative ? TAIKO_HOODI_ADDRESSES.weth9 : tokenInAddress
+    const actualTokenOutAddress = tokenOutIsNative ? TAIKO_HOODI_ADDRESSES.weth9 : tokenOutAddress
+
+    console.log('🔵 Token addresses (after native conversion):', {
+      tokenIn: actualTokenInAddress,
+      tokenOut: actualTokenOutAddress,
+    })
+
     const quoter = new Contract(quoterAddress, QUOTER_V2_ABI, provider)
 
     // Try common fee tiers in order: 0.3%, 0.05%, 1%, 0.01%
@@ -61,8 +74,8 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
 
         if (tradeType === TradeType.EXACT_INPUT) {
           result = await quoter.callStatic.quoteExactInputSingle({
-            tokenIn: tokenInAddress,
-            tokenOut: tokenOutAddress,
+            tokenIn: actualTokenInAddress,
+            tokenOut: actualTokenOutAddress,
             amountIn: amount,
             fee,
             sqrtPriceLimitX96: 0,
@@ -107,8 +120,8 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
         } else {
           // EXACT_OUTPUT
           result = await quoter.callStatic.quoteExactOutputSingle({
-            tokenIn: tokenInAddress,
-            tokenOut: tokenOutAddress,
+            tokenIn: actualTokenInAddress,
+            tokenOut: actualTokenOutAddress,
             amount,
             fee,
             sqrtPriceLimitX96: 0,
