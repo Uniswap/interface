@@ -103,13 +103,13 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
                 tokenIn: {
                   chainId: tokenInChainId,
                   decimals: args.tokenInDecimals,
-                  address: tokenInAddress,
+                  address: actualTokenInAddress,  // Use actual address (WETH), not 'ETH'
                   symbol: args.tokenInSymbol,
                 },
                 tokenOut: {
                   chainId: tokenOutChainId,
                   decimals: args.tokenOutDecimals,
-                  address: tokenOutAddress,
+                  address: actualTokenOutAddress,  // Use actual address (WETH), not 'ETH'
                   symbol: args.tokenOutSymbol,
                 },
                 fee: fee.toString(),
@@ -157,13 +157,13 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
                 tokenIn: {
                   chainId: tokenInChainId,
                   decimals: args.tokenInDecimals,
-                  address: tokenInAddress,
+                  address: actualTokenInAddress,  // Use actual address (WETH), not 'ETH'
                   symbol: args.tokenInSymbol,
                 },
                 tokenOut: {
                   chainId: tokenOutChainId,
                   decimals: args.tokenOutDecimals,
-                  address: tokenOutAddress,
+                  address: actualTokenOutAddress,  // Use actual address (WETH), not 'ETH'
                   symbol: args.tokenOutSymbol,
                 },
                 fee: fee.toString(),
