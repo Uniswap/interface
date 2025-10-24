@@ -126,22 +126,52 @@ export function usePools(
   return useMemo(() => {
     return poolKeys.map((_key, index) => {
       const tokens = poolTokens[index]
-      if (!tokens) return [PoolState.INVALID, null]
+      if (!tokens) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('❌ INVALID: No tokens at index', index)
+        }
+        return [PoolState.INVALID, null]
+      }
       const [token0, token1, fee] = tokens
 
-      if (!slot0s[index]) return [PoolState.INVALID, null]
+      if (!slot0s[index]) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('❌ INVALID: No slot0s at index', index, { slot0s })
+        }
+        return [PoolState.INVALID, null]
+      }
       const { result: slot0, loading: slot0Loading, valid: slot0Valid } = slot0s[index]
 
-      if (!liquidities[index]) return [PoolState.INVALID, null]
+      if (!liquidities[index]) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('❌ INVALID: No liquidities at index', index, { liquidities })
+        }
+        return [PoolState.INVALID, null]
+      }
       const { result: liquidity, loading: liquidityLoading, valid: liquidityValid } = liquidities[index]
 
-      if (!tokens || !slot0Valid || !liquidityValid) return [PoolState.INVALID, null]
+      if (!tokens || !slot0Valid || !liquidityValid) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('❌ INVALID: Validity check failed', {
+            index,
+            hasTokens: !!tokens,
+            slot0Valid,
+            liquidityValid,
+            slot0,
+            liquidity
+          })
+        }
+        return [PoolState.INVALID, null]
+      }
       if (slot0Loading || liquidityLoading) return [PoolState.LOADING, null]
       if (!slot0 || !liquidity) return [PoolState.NOT_EXISTS, null]
       if (!slot0.sqrtPriceX96 || slot0.sqrtPriceX96.eq(0)) return [PoolState.NOT_EXISTS, null]
 
       try {
         const pool = PoolCache.getPool(token0, token1, fee, slot0.sqrtPriceX96, liquidity[0], slot0.tick)
+        if (process.env.NODE_ENV === 'development') {
+          console.log('✅ EXISTS: Pool found', { token0: token0.symbol, token1: token1.symbol, fee })
+        }
         return [PoolState.EXISTS, pool]
       } catch (error) {
         console.error('Error when constructing the pool', error)
