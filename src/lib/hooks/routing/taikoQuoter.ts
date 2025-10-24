@@ -80,8 +80,6 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
           continue
         }
 
-        let result: any
-
         if (tradeType === TradeType.EXACT_INPUT) {
           // Quoter V1 uses separate parameters, not a struct
           const amountOut = await quoter.callStatic.quoteExactInputSingle(
@@ -92,7 +90,7 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
             0 // sqrtPriceLimitX96
           )
 
-          console.log(`✅ Got quote: amountOut = ${amountOut}`)
+          console.log(`✅ Got quote: amountOut = ${amountOut.toString()}`)
 
           if (amountOut && !BigNumber.from(amountOut).isZero()) {
             return {
@@ -100,7 +98,7 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
               data: {
                 quote: amountOut.toString(),
                 quoteGasAdjusted: amountOut.toString(),
-                gasUseEstimate: result.gasEstimate?.toString() || '200000',
+                gasUseEstimate: '200000', // V1 doesn't return gas estimate
                 route: [[{
                   type: 'v3-pool',
                   tokenIn: {
