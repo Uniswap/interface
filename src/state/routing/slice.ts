@@ -125,26 +125,17 @@ export const routingApi = createApi({
         logSwapQuoteRequest(args.tokenInChainId, args.routerPreference)
         const quoteStartMark = performance.mark(`quote-fetch-start-${Date.now()}`)
 
-        // Use on-chain QuoterV2 for Taiko chains - skip API entirely
-        // The Uniswap API doesn't support custom chains, and AlphaRouter doesn't work in browsers
+        // TODO: Taiko swaps not yet supported
+        // Issue: ClassicTrade constructor conflicts with base Trade class inputTax/outputTax getters
+        // The Uniswap routing API doesn't support Taiko, and client-side AlphaRouter doesn't work in browsers
+        // Possible solutions:
+        // 1. Run your own routing API instance that supports Taiko
+        // 2. Fix the ClassicTrade class to work with the Trade base class properly
+        // 3. Use direct swap router calls without quotes (not ideal UX)
         if (args.tokenInChainId === TAIKO_HOODI_CHAIN_ID) {
-          try {
-            const { getTaikoQuote } = await import('lib/hooks/routing/taikoQuoter')
-            const quoteResult = await getTaikoQuote(args)
-            if (quoteResult.state === QuoteState.SUCCESS) {
-              const trade = await transformRoutesToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE)
-              return {
-                data: { ...trade, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
-              }
-            } else {
-              return { data: { ...quoteResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
-            }
-          } catch (error: any) {
-            console.error(`Taiko quote failed:`, error)
-            console.error(`Error stack:`, error.stack)
-            return {
-              data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
-            }
+          console.warn('Taiko swaps not yet supported - quotes unavailable')
+          return {
+            data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
           }
         }
 
