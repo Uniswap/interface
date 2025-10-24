@@ -105,6 +105,16 @@ export function usePools(
 
   const poolAddresses: (string | undefined)[] = useMemo(() => {
     const v3CoreFactoryAddress = chainId && V3_CORE_FACTORY_ADDRESSES[chainId]
+
+    if (process.env.NODE_ENV === 'development') {
+      console.log('🔍 usePools Debug:', {
+        chainId,
+        v3CoreFactoryAddress,
+        allFactoryAddresses: V3_CORE_FACTORY_ADDRESSES,
+        poolTokensLength: poolTokens.length
+      })
+    }
+
     if (!v3CoreFactoryAddress) return new Array(poolTokens.length)
 
     return poolTokens.map((value) => value && PoolCache.getPoolAddress(v3CoreFactoryAddress, ...value))
