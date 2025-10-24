@@ -1,15 +1,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Contract } from '@ethersproject/contracts'
 import { TradeType } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { TAIKO_HOODI_ADDRESSES, TAIKO_HOODI_CHAIN_ID } from 'config/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { GetQuoteArgs, QuoteResult, QuoteState, SwapRouterNativeAssets } from 'state/routing/types'
-
-const QUOTER_V2_ABI = [
-  'function quoteExactInputSingle((address tokenIn, address tokenOut, uint256 amountIn, uint24 fee, uint160 sqrtPriceLimitX96)) external returns (uint256 amountOut, uint160 sqrtPriceX96After, uint32 initializedTicksCrossed, uint256 gasEstimate)',
-  'function quoteExactOutputSingle((address tokenIn, address tokenOut, uint256 amount, uint24 fee, uint160 sqrtPriceLimitX96)) external returns (uint256 amountIn, uint160 sqrtPriceX96After, uint32 initializedTicksCrossed, uint256 gasEstimate)',
-]
+import { QuoterV2__factory } from 'types/v3/factories/QuoterV2__factory'
 
 /**
  * Get a quote for a simple swap on Taiko using the on-chain QuoterV2 contract
@@ -62,7 +57,7 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
       tokenOut: actualTokenOutAddress,
     })
 
-    const quoter = new Contract(quoterAddress, QUOTER_V2_ABI, provider)
+    const quoter = QuoterV2__factory.connect(quoterAddress, provider)
 
     // Try common fee tiers in order: 0.3%, 0.05%, 1%, 0.01%
     const feeTiers = [FeeAmount.MEDIUM, FeeAmount.LOW, FeeAmount.HIGH, FeeAmount.LOWEST]
@@ -70,6 +65,21 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
     for (const fee of feeTiers) {
       try {
         console.log(`🔵 Trying fee tier: ${fee}`)
+
+        // First check if pool exists
+        const poolAddress = await quoter.factory().then((factoryAddr: string) => {
+          const { Contract } = require('@ethersproject/contracts')
+          const factory = new Contract(factoryAddr, ['function getPool(address,address,uint24) view returns (address)'], provider)
+          return factory.getPool(actualTokenInAddress, actualTokenOutAddress, fee)
+        })
+
+        console.log(`🔵 Pool address for fee ${fee}:`, poolAddress)
+
+        if (!poolAddress || poolAddress === '0x0000000000000000000000000000000000000000') {
+          console.log(`⚠️ No pool for fee tier ${fee}`)
+          continue
+        }
+
         let result: any
 
         if (tradeType === TradeType.EXACT_INPUT) {
