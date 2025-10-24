@@ -27,21 +27,21 @@ export const TAIKO_HOODI_ADDRESSES: ChainAddresses = {
   weth9: '0x3B39685B5495359c892DDD1057B5712F49976835',
   factory: '0x87C772301B2054D47e2b12c4C3C402481158B7f2',
 
-  // Periphery Contracts
-  router: '0x290265ACd21816EE414E64eEC77dd490d8dd9f51', // SwapRouter02
-  positionManager: '0x01715d9e4b69D25dbf1c4047287CF3f47F070d35', // NonfungiblePositionManager
-  quoterV2: '0x95270d42071FA60dEfdb3F8D29ebaAF1754ab225',
+  // Periphery Contracts - UPDATED with new deployments
+  router: '0x482233e4DBD56853530fA1918157CE59B60dF230', // SwapRouter - NEW
+  positionManager: '0x2C745eEDC8493D698545F92E5D69B5E9fA6bCE62', // NonfungiblePositionManager - NEW
+  quoterV2: '0x39d15C3272A54a04C98847302FFF0b44283715F9', // Quoter - NEW
   multicall: '0x323dD97aF6DDc101eF306c5daA6aE34c15EA37B7',
   tickLens: '0x6283971D01E3f34cAa2a7163Bb38499eC01Cc63D',
 
   // Additional Contracts
-  v3Migrator: '0x7812fF6117c838cC025F5cfaD5ac8C300baA0c5D',
+  v3Migrator: '0xB86e3226b2045934B2FEfb1028d75e61795CAD76', // V3Migrator - NEW
   v3Staker: '0xef840140Dd75eC5Fa4Aa0002aEa52a8937da2611', // SwapRouter (v1)
 
   // Governance & Admin
   proxyAdmin: '0x6a794430DC233E3433E8a70d1a900923fd3cB9e3', // NFTDescriptor
-  nftDescriptorProxy: '0xe59A68212b91FfAb07195f95c607A2A3CdAf012B', // NonfungibleTokenPositionDescriptor
-  nftDescriptorImplementation: '0xab32FfaA9D67279Ba685934DD19079F9F3Cd2FC3', // Quoter (v1)
+  nftDescriptorProxy: '0x9c340C8616B4Df5dD49Cc873c4561A45101BF86b', // NonfungibleTokenPositionDescriptor - NEW
+  nftDescriptorImplementation: '0xab32FfaA9D67279Ba685934DD19079F9F3Cd2FC3',
   nftDescriptorLibrary: '0xD80C8Cc7926D670093cd309Ae6Cff9b27b425fC5',
 }
 
