@@ -140,7 +140,8 @@ export const routingApi = createApi({
               return { data: { ...quoteResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
             }
           } catch (error: any) {
-            console.warn(`Taiko quote failed: ${error}`)
+            console.error(`Taiko quote failed:`, error)
+            console.error(`Error stack:`, error.stack)
             return {
               data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
             }
