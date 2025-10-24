@@ -3,6 +3,7 @@ import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent } from 'analytics'
 import { isUniswapXSupportedChain } from 'constants/chains'
+import { TAIKO_HOODI_CHAIN_ID } from 'config/chains'
 import ms from 'ms'
 import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
 import { trace } from 'tracing/trace'
@@ -180,6 +181,29 @@ export const routingApi = createApi({
             )
           }
         }
+
+        // Use on-chain quoter for Taiko chains as AlphaRouter doesn't support browser environments
+        // and Taiko chains aren't supported by the routing API
+        if (args.tokenInChainId === TAIKO_HOODI_CHAIN_ID) {
+          try {
+            const { getTaikoQuote } = await import('lib/hooks/routing/taikoQuoter')
+            const quoteResult = await getTaikoQuote(args)
+            if (quoteResult.state === QuoteState.SUCCESS) {
+              const trade = await transformRoutesToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE)
+              return {
+                data: { ...trade, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
+              }
+            } else {
+              return { data: { ...quoteResult, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
+            }
+          } catch (error: any) {
+            console.warn(`Taiko quote failed: ${error}`)
+            return {
+              data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
+            }
+          }
+        }
+
         try {
           const method = fellBack ? QuoteMethod.CLIENT_SIDE_FALLBACK : QuoteMethod.CLIENT_SIDE
           const { getRouter, getClientSideQuote } = await import('lib/hooks/routing/clientSideSmartOrderRouter')
@@ -195,8 +219,10 @@ export const routingApi = createApi({
           }
         } catch (error: any) {
           console.warn(`GetQuote failed on client: ${error}`)
+          // Return NOT_FOUND instead of CUSTOM_ERROR for unsupported chains or client-side routing failures
+          // This prevents infinite retries and shows "Insufficient liquidity" message to user
           return {
-            error: { status: 'CUSTOM_ERROR', error: error?.detail ?? error?.message ?? error },
+            data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
           }
         }
       },
