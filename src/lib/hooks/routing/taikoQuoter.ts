@@ -3,7 +3,7 @@ import { TradeType } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { TAIKO_HOODI_ADDRESSES, TAIKO_HOODI_CHAIN_ID } from 'config/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
-import { GetQuoteArgs, QuoteResult, QuoteState, SwapRouterNativeAssets } from 'state/routing/types'
+import { GetQuoteArgs, QuoteResult, QuoteState, SwapRouterNativeAssets, URAQuoteType } from 'state/routing/types'
 import { Quoter__factory } from 'types/v3/factories/Quoter__factory'
 
 /**
@@ -93,35 +93,46 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
           console.log(`✅ Got quote: amountOut = ${amountOut.toString()}`)
 
           if (amountOut && !BigNumber.from(amountOut).isZero()) {
+            const blockNumber = await provider.getBlockNumber().then(String)
+            const classicQuote = {
+              quote: amountOut.toString(),
+              quoteGasAdjusted: amountOut.toString(),
+              gasUseEstimate: '200000', // V1 doesn't return gas estimate
+              route: [[{
+                type: 'v3-pool',
+                tokenIn: {
+                  chainId: tokenInChainId,
+                  decimals: args.tokenInDecimals,
+                  address: tokenInAddress,
+                  symbol: args.tokenInSymbol,
+                },
+                tokenOut: {
+                  chainId: tokenOutChainId,
+                  decimals: args.tokenOutDecimals,
+                  address: tokenOutAddress,
+                  symbol: args.tokenOutSymbol,
+                },
+                fee: fee.toString(),
+                liquidity: '0',
+                sqrtRatioX96: '0',
+                tickCurrent: '0',
+                amountIn: amount,
+                amountOut: amountOut.toString(),
+              }]],
+              routeString: `[V3] ${args.tokenInSymbol} --> ${args.tokenOutSymbol}`,
+              blockNumber,
+            }
+
             return {
               state: QuoteState.SUCCESS,
               data: {
-                quote: amountOut.toString(),
-                quoteGasAdjusted: amountOut.toString(),
-                gasUseEstimate: '200000', // V1 doesn't return gas estimate
-                route: [[{
-                  type: 'v3-pool',
-                  tokenIn: {
-                    chainId: tokenInChainId,
-                    decimals: args.tokenInDecimals,
-                    address: tokenInAddress,
-                    symbol: args.tokenInSymbol,
-                  },
-                  tokenOut: {
-                    chainId: tokenOutChainId,
-                    decimals: args.tokenOutDecimals,
-                    address: tokenOutAddress,
-                    symbol: args.tokenOutSymbol,
-                  },
-                  fee: fee.toString(),
-                  liquidity: '0',
-                  sqrtRatioX96: '0',
-                  tickCurrent: '0',
-                  amountIn: amount,
-                  amountOut: amountOut.toString(),
-                }]],
-                routeString: `[V3] ${args.tokenInSymbol} --> ${args.tokenOutSymbol}`,
-                blockNumber: await provider.getBlockNumber().then(String),
+                routing: URAQuoteType.CLASSIC,
+                quote: classicQuote,
+                allQuotes: [{
+                  routing: URAQuoteType.CLASSIC,
+                  quote: classicQuote,
+                  allQuotes: [],
+                }],
               },
             }
           }
@@ -136,35 +147,46 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
           )
 
           if (amountIn && !BigNumber.from(amountIn).isZero()) {
+            const blockNumber = await provider.getBlockNumber().then(String)
+            const classicQuote = {
+              quote: amountIn.toString(),
+              quoteGasAdjusted: amountIn.toString(),
+              gasUseEstimate: '200000',
+              route: [[{
+                type: 'v3-pool',
+                tokenIn: {
+                  chainId: tokenInChainId,
+                  decimals: args.tokenInDecimals,
+                  address: tokenInAddress,
+                  symbol: args.tokenInSymbol,
+                },
+                tokenOut: {
+                  chainId: tokenOutChainId,
+                  decimals: args.tokenOutDecimals,
+                  address: tokenOutAddress,
+                  symbol: args.tokenOutSymbol,
+                },
+                fee: fee.toString(),
+                liquidity: '0',
+                sqrtRatioX96: '0',
+                tickCurrent: '0',
+                amountIn: amountIn.toString(),
+                amountOut: amount,
+              }]],
+              routeString: `[V3] ${args.tokenInSymbol} --> ${args.tokenOutSymbol}`,
+              blockNumber,
+            }
+
             return {
               state: QuoteState.SUCCESS,
               data: {
-                quote: amountIn.toString(),
-                quoteGasAdjusted: amountIn.toString(),
-                gasUseEstimate: '200000',
-                route: [[{
-                  type: 'v3-pool',
-                  tokenIn: {
-                    chainId: tokenInChainId,
-                    decimals: args.tokenInDecimals,
-                    address: tokenInAddress,
-                    symbol: args.tokenInSymbol,
-                  },
-                  tokenOut: {
-                    chainId: tokenOutChainId,
-                    decimals: args.tokenOutDecimals,
-                    address: tokenOutAddress,
-                    symbol: args.tokenOutSymbol,
-                  },
-                  fee: fee.toString(),
-                  liquidity: '0',
-                  sqrtRatioX96: '0',
-                  tickCurrent: '0',
-                  amountIn: amountIn.toString(),
-                  amountOut: amount,
-                }]],
-                routeString: `[V3] ${args.tokenInSymbol} --> ${args.tokenOutSymbol}`,
-                blockNumber: await provider.getBlockNumber().then(String),
+                routing: URAQuoteType.CLASSIC,
+                quote: classicQuote,
+                allQuotes: [{
+                  routing: URAQuoteType.CLASSIC,
+                  quote: classicQuote,
+                  allQuotes: [],
+                }],
               },
             }
           }
