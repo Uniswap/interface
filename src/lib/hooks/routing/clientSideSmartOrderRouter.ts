@@ -9,17 +9,27 @@ import JSBI from 'jsbi'
 import { GetQuoteArgs, QuoteResult, QuoteState, SwapRouterNativeAssets } from 'state/routing/types'
 import { transformSwapRouteToGetQuoteResult } from 'utils/transformSwapRouteToGetQuoteResult'
 
-const routers = new Map<ChainId, AlphaRouter>()
+// Declare routers cache - initialized as empty Map
+let routersCache: Map<ChainId, AlphaRouter> | undefined
+
+function getRoutersCache(): Map<ChainId, AlphaRouter> {
+  if (!routersCache) {
+    routersCache = new Map<ChainId, AlphaRouter>()
+  }
+  return routersCache
+}
+
 export function getRouter(chainId: ChainId): AlphaRouter {
+  const routers = getRoutersCache()
   const router = routers.get(chainId)
   if (router) return router
 
   const supportedChainId = asSupportedChain(chainId)
   if (supportedChainId) {
     const provider = RPC_PROVIDERS[supportedChainId]
-    const router = new AlphaRouter({ chainId, provider })
-    routers.set(chainId, router)
-    return router
+    const newRouter = new AlphaRouter({ chainId, provider })
+    routers.set(chainId, newRouter)
+    return newRouter
   }
 
   throw new Error(`Router does not support this chain (chainId: ${chainId}).`)
