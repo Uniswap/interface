@@ -125,12 +125,12 @@ export const routingApi = createApi({
         logSwapQuoteRequest(args.tokenInChainId, args.routerPreference)
         const quoteStartMark = performance.mark(`quote-fetch-start-${Date.now()}`)
 
-        // Use simple price-based quoter for Taiko chains - skip API entirely
-        // The Uniswap API doesn't support custom chains, QuoterV2 has issues, and AlphaRouter doesn't work in browsers
+        // Use on-chain QuoterV2 for Taiko chains - skip API entirely
+        // The Uniswap API doesn't support custom chains, and AlphaRouter doesn't work in browsers
         if (args.tokenInChainId === TAIKO_HOODI_CHAIN_ID) {
           try {
-            const { getTaikoSimpleQuote } = await import('lib/hooks/routing/taikoSimpleQuoter')
-            const quoteResult = await getTaikoSimpleQuote(args)
+            const { getTaikoQuote } = await import('lib/hooks/routing/taikoQuoter')
+            const quoteResult = await getTaikoQuote(args)
             if (quoteResult.state === QuoteState.SUCCESS) {
               const trade = await transformRoutesToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE)
               return {

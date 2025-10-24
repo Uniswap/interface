@@ -4,7 +4,7 @@ import { FeeAmount } from '@uniswap/v3-sdk'
 import { TAIKO_HOODI_ADDRESSES, TAIKO_HOODI_CHAIN_ID } from 'config/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { GetQuoteArgs, QuoteResult, QuoteState, SwapRouterNativeAssets } from 'state/routing/types'
-import { QuoterV2__factory } from 'types/v3/factories/QuoterV2__factory'
+import { Quoter__factory } from 'types/v3/factories/Quoter__factory'
 
 /**
  * Get a quote for a simple swap on Taiko using the on-chain QuoterV2 contract
@@ -57,7 +57,7 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
       tokenOut: actualTokenOutAddress,
     })
 
-    const quoter = QuoterV2__factory.connect(quoterAddress, provider)
+    const quoter = Quoter__factory.connect(quoterAddress, provider)
 
     // Try common fee tiers in order: 0.3%, 0.05%, 1%, 0.01%
     const feeTiers = [FeeAmount.MEDIUM, FeeAmount.LOW, FeeAmount.HIGH, FeeAmount.LOWEST]
@@ -83,15 +83,15 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
         let result: any
 
         if (tradeType === TradeType.EXACT_INPUT) {
-          result = await quoter.callStatic.quoteExactInputSingle({
-            tokenIn: actualTokenInAddress,
-            tokenOut: actualTokenOutAddress,
-            amountIn: amount,
+          // Quoter V1 uses separate parameters, not a struct
+          const amountOut = await quoter.callStatic.quoteExactInputSingle(
+            actualTokenInAddress,
+            actualTokenOutAddress,
             fee,
-            sqrtPriceLimitX96: 0,
-          })
+            amount,
+            0 // sqrtPriceLimitX96
+          )
 
-          const amountOut = result.amountOut || result[0]
           console.log(`✅ Got quote: amountOut = ${amountOut}`)
 
           if (amountOut && !BigNumber.from(amountOut).isZero()) {
@@ -117,7 +117,7 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
                   },
                   fee: fee.toString(),
                   liquidity: '0',
-                  sqrtRatioX96: result.sqrtPriceX96After?.toString() || '0',
+                  sqrtRatioX96: '0',
                   tickCurrent: '0',
                   amountIn: amount,
                   amountOut: amountOut.toString(),
@@ -128,16 +128,14 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
             }
           }
         } else {
-          // EXACT_OUTPUT
-          result = await quoter.callStatic.quoteExactOutputSingle({
-            tokenIn: actualTokenInAddress,
-            tokenOut: actualTokenOutAddress,
-            amount,
+          // EXACT_OUTPUT - Quoter V1 uses separate parameters
+          const amountIn = await quoter.callStatic.quoteExactOutputSingle(
+            actualTokenInAddress,
+            actualTokenOutAddress,
             fee,
-            sqrtPriceLimitX96: 0,
-          })
-
-          const amountIn = result.amountIn || result[0]
+            amount,
+            0 // sqrtPriceLimitX96
+          )
 
           if (amountIn && !BigNumber.from(amountIn).isZero()) {
             return {
@@ -145,7 +143,7 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
               data: {
                 quote: amountIn.toString(),
                 quoteGasAdjusted: amountIn.toString(),
-                gasUseEstimate: result.gasEstimate?.toString() || '200000',
+                gasUseEstimate: '200000',
                 route: [[{
                   type: 'v3-pool',
                   tokenIn: {
@@ -162,7 +160,7 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
                   },
                   fee: fee.toString(),
                   liquidity: '0',
-                  sqrtRatioX96: result.sqrtPriceX96After?.toString() || '0',
+                  sqrtRatioX96: '0',
                   tickCurrent: '0',
                   amountIn: amountIn.toString(),
                   amountOut: amount,
