@@ -96,29 +96,10 @@ export function usePools(
         const tokenA = currencyA.wrapped
         const tokenB = currencyB.wrapped
         if (tokenA.equals(tokenB)) {
-          if (process.env.NODE_ENV === 'development') {
-            console.log('⚠️ poolTokens: Same token detected', {
-              index,
-              symbol: tokenA.symbol,
-              address: tokenA.address,
-              feeAmount
-            })
-          }
           return undefined
         }
 
         return tokenA.sortsBefore(tokenB) ? [tokenA, tokenB, feeAmount] : [tokenB, tokenA, feeAmount]
-      }
-      if (process.env.NODE_ENV === 'development') {
-        console.log('⚠️ poolTokens: Missing currency or fee', {
-          index,
-          hasCurrencyA: !!currencyA,
-          hasCurrencyB: !!currencyB,
-          hasFeeAmount: !!feeAmount,
-          currencyA: currencyA?.symbol,
-          currencyB: currencyB?.symbol,
-          feeAmount
-        })
       }
       return undefined
     })
@@ -126,15 +107,6 @@ export function usePools(
 
   const poolAddresses: (string | undefined)[] = useMemo(() => {
     const v3CoreFactoryAddress = chainId && V3_CORE_FACTORY_ADDRESSES[chainId]
-
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔍 usePools Debug:', {
-        chainId,
-        v3CoreFactoryAddress,
-        allFactoryAddresses: V3_CORE_FACTORY_ADDRESSES,
-        poolTokensLength: poolTokens.length
-      })
-    }
 
     if (!v3CoreFactoryAddress) return new Array(poolTokens.length)
 
@@ -148,40 +120,21 @@ export function usePools(
     return poolKeys.map((_key, index) => {
       const tokens = poolTokens[index]
       if (!tokens) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('❌ INVALID: No tokens at index', index)
-        }
         return [PoolState.INVALID, null]
       }
       const [token0, token1, fee] = tokens
 
       if (!slot0s[index]) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('❌ INVALID: No slot0s at index', index, { slot0s })
-        }
         return [PoolState.INVALID, null]
       }
       const { result: slot0, loading: slot0Loading, valid: slot0Valid } = slot0s[index]
 
       if (!liquidities[index]) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('❌ INVALID: No liquidities at index', index, { liquidities })
-        }
         return [PoolState.INVALID, null]
       }
       const { result: liquidity, loading: liquidityLoading, valid: liquidityValid } = liquidities[index]
 
       if (!tokens || !slot0Valid || !liquidityValid) {
-        if (process.env.NODE_ENV === 'development') {
-          console.log('❌ INVALID: Validity check failed', {
-            index,
-            hasTokens: !!tokens,
-            slot0Valid,
-            liquidityValid,
-            slot0,
-            liquidity
-          })
-        }
         return [PoolState.INVALID, null]
       }
       if (slot0Loading || liquidityLoading) return [PoolState.LOADING, null]
@@ -190,9 +143,6 @@ export function usePools(
 
       try {
         const pool = PoolCache.getPool(token0, token1, fee, slot0.sqrtPriceX96, liquidity[0], slot0.tick)
-        if (process.env.NODE_ENV === 'development') {
-          console.log('✅ EXISTS: Pool found', { token0: token0.symbol, token1: token1.symbol, fee })
-        }
         return [PoolState.EXISTS, pool]
       } catch (error) {
         console.error('Error when constructing the pool', error)
