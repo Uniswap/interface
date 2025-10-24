@@ -458,7 +458,12 @@ export function useV3DerivedMintInfo(
         currencyBAddress: currencies[Field.CURRENCY_B]?.wrapped.address,
       })
     }
-    errorMessage = errorMessage ?? <Trans>Invalid pair</Trans>
+    // Show better message when fee tier is missing
+    if (!feeAmount) {
+      errorMessage = errorMessage ?? <Trans>Select a fee tier</Trans>
+    } else {
+      errorMessage = errorMessage ?? <Trans>Invalid pair</Trans>
+    }
   }
 
   if (invalidPrice) {
