@@ -113,22 +113,33 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
 
           if (amountOut && !BigNumber.from(amountOut).isZero()) {
             const blockNumber = await provider.getBlockNumber().then(String)
+
+            // Match EXACT ClassicQuoteData structure from API
             const classicQuote = {
+              blockNumber,
+              amount: amount,
+              amountDecimals: amount,
+              gasPriceWei: '1000000000', // 1 gwei default
+              gasUseEstimate: '200000',
+              gasUseEstimateQuote: '200000',
+              gasUseEstimateQuoteDecimals: '200000',
+              gasUseEstimateUSD: '0.5',
               quote: amountOut.toString(),
+              quoteDecimals: amountOut.toString(),
               quoteGasAdjusted: amountOut.toString(),
-              gasUseEstimate: '200000', // V1 doesn't return gas estimate
+              quoteGasAdjustedDecimals: amountOut.toString(),
               route: [[{
                 type: 'v3-pool',
                 tokenIn: {
                   chainId: tokenInChainId,
                   decimals: args.tokenInDecimals,
-                  address: actualTokenInAddress,  // Use actual address (WETH), not 'ETH'
+                  address: actualTokenInAddress,
                   symbol: args.tokenInSymbol,
                 },
                 tokenOut: {
                   chainId: tokenOutChainId,
                   decimals: args.tokenOutDecimals,
-                  address: actualTokenOutAddress,  // Use actual address (WETH), not 'ETH'
+                  address: actualTokenOutAddress,
                   symbol: args.tokenOutSymbol,
                 },
                 fee: fee.toString(),
@@ -139,7 +150,6 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
                 amountOut: amountOut.toString(),
               }]],
               routeString: `[V3] ${args.tokenInSymbol} --> ${args.tokenOutSymbol}`,
-              blockNumber,
             }
 
             return {
@@ -167,22 +177,33 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
 
           if (amountIn && !BigNumber.from(amountIn).isZero()) {
             const blockNumber = await provider.getBlockNumber().then(String)
+
+            // Match EXACT ClassicQuoteData structure from API
             const classicQuote = {
-              quote: amountIn.toString(),
-              quoteGasAdjusted: amountIn.toString(),
+              blockNumber,
+              amount: amount,
+              amountDecimals: amount,
+              gasPriceWei: '1000000000', // 1 gwei default
               gasUseEstimate: '200000',
+              gasUseEstimateQuote: '200000',
+              gasUseEstimateQuoteDecimals: '200000',
+              gasUseEstimateUSD: '0.5',
+              quote: amountIn.toString(),
+              quoteDecimals: amountIn.toString(),
+              quoteGasAdjusted: amountIn.toString(),
+              quoteGasAdjustedDecimals: amountIn.toString(),
               route: [[{
                 type: 'v3-pool',
                 tokenIn: {
                   chainId: tokenInChainId,
                   decimals: args.tokenInDecimals,
-                  address: actualTokenInAddress,  // Use actual address (WETH), not 'ETH'
+                  address: actualTokenInAddress,
                   symbol: args.tokenInSymbol,
                 },
                 tokenOut: {
                   chainId: tokenOutChainId,
                   decimals: args.tokenOutDecimals,
-                  address: actualTokenOutAddress,  // Use actual address (WETH), not 'ETH'
+                  address: actualTokenOutAddress,
                   symbol: args.tokenOutSymbol,
                 },
                 fee: fee.toString(),
@@ -193,7 +214,6 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
                 amountOut: amount,
               }]],
               routeString: `[V3] ${args.tokenInSymbol} --> ${args.tokenOutSymbol}`,
-              blockNumber,
             }
 
             return {
