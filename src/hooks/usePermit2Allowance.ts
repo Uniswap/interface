@@ -132,9 +132,14 @@ export default function usePermit2Allowance(
 
   return useMemo(() => {
     if (token) {
-      if (!tokenAllowance || !permitAllowance) {
+      // If tokenAllowance is loading, wait for it
+      if (!tokenAllowance) {
         return { state: AllowanceState.LOADING }
-      } else if (shouldRequestSignature) {
+      }
+      // If permitAllowance is undefined (Permit2 not deployed), skip permit signature flow
+      // This allows chains without Permit2 to still work with regular ERC20 approvals
+      const permit2Available = permitAllowance !== undefined
+      if (permit2Available && shouldRequestSignature) {
         return {
           token,
           state: AllowanceState.REQUIRED,
