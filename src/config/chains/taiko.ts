@@ -135,8 +135,11 @@ export const TAIKO_MAINNET_METADATA: TaikoChainMetadata = {
  * Universal Router addresses for Taiko networks
  */
 export const TAIKO_UNIVERSAL_ROUTER_ADDRESS = {
-  [TAIKO_MAINNET_CHAIN_ID]: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
-  [TAIKO_HOODI_CHAIN_ID]: '0x290265ACd21816EE414E64eEC77dd490d8dd9f51', // Verified deployment (SwapRouter02)
+  [TAIKO_MAINNET_CHAIN_ID]: '0x0000000000000000000000000000000000000000', // TODO: Deploy UniversalRouter
+  // TODO: Deploy UniversalRouter for Taiko Hoodi
+  // SwapRouter02 is NOT compatible with UniversalRouter SDK
+  // For now, swaps are disabled until UniversalRouter is deployed
+  [TAIKO_HOODI_CHAIN_ID]: '0x0000000000000000000000000000000000000000',
 } as const
 
 /**
