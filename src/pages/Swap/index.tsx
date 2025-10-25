@@ -450,6 +450,7 @@ export function Swap({
   )
 
   const handleContinueToReview = useCallback(() => {
+    console.log('🔍 handleContinueToReview called', { trade, allowance })
     setSwapState({
       tradeToConfirm: trade,
       swapError: undefined,
