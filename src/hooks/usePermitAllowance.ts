@@ -79,6 +79,7 @@ export function useUpdatePermitAllowance(
         sigDeadline: toDeadline(PERMIT_SIG_EXPIRATION),
       }
 
+      const PERMIT2_ADDRESS = getPermit2Address(chainId)
       const { domain, types, values } = AllowanceTransfer.getPermitData(permit, PERMIT2_ADDRESS, chainId)
       const signature = await signTypedData(provider.getSigner(account), domain, types, values)
       onPermitSignature?.({ ...permit, signature })
