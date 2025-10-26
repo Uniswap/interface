@@ -42,7 +42,7 @@ export function NFTViewer(props: Props): JSX.Element {
       <Flex centered fill aspectRatio={1} backgroundColor="$surface2" maxHeight={maxHeight ?? '100%'} p="$spacing8">
         <Text color="$neutral2" textAlign="center" variant="subheading2">
           {isPlaceholderAddress
-            ? shortenAddress(isPlaceholderAddress)
+            ? shortenAddress({ address: placeholderContent })
             : placeholderContent || t('tokens.nfts.error.unavailable')}
         </Text>
       </Flex>

@@ -145,10 +145,12 @@ export function SendReviewModalInner({ onConfirm, isConfirming }: SendModalInner
                   {recipientData.unitag && <Unitag size={18} />}
                 </Flex>
               ) : (
-                shortenAddress(recipientData?.address)
+                shortenAddress({ address: recipientData?.address })
               )
             }
-            subheader={(recipientData?.unitag || recipientData?.ensName) && shortenAddress(recipientData.address)}
+            subheader={
+              (recipientData?.unitag || recipientData?.ensName) && shortenAddress({ address: recipientData.address })
+            }
             image={<AccountIcon address={recipientData?.address} size={36} />}
           />
         </Flex>

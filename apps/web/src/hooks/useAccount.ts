@@ -4,9 +4,9 @@ import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   type Register,
   type UseAccountReturnType as UseAccountReturnTypeWagmi,
-  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
+  // biome-ignore lint/style/noRestrictedImports: wagmi account hook needed for wallet integration
   useAccount as useAccountWagmi,
-  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
+  // biome-ignore lint/style/noRestrictedImports: wagmi chain hook needed for chain management
   useChainId,
 } from 'wagmi'
 
@@ -18,16 +18,22 @@ type ReplaceChainId<T> = T extends { chainId: number }
 
 type UseAccountReturnType = ReplaceChainId<UseAccountReturnTypeWagmi<Register['config']>>
 
+/**
+ * @deprecated use new Account hooks from apps/web/src/features/accounts/store/hooks.ts instead
+ */
 export function useAccount(): UseAccountReturnType {
-  const { chainId, ...rest } = useAccountWagmi()
+  const wagmiAccount = useAccountWagmi()
+
   const fallbackChainId = useChainId()
-  const supportedChainId = useSupportedChainId(chainId ?? fallbackChainId) as EVMUniverseChainId | undefined
+  const supportedChainId = useSupportedChainId(wagmiAccount.chainId ?? fallbackChainId) as
+    | EVMUniverseChainId
+    | undefined
 
   return useMemo(
     () => ({
-      ...rest,
+      ...wagmiAccount,
       chainId: supportedChainId,
     }),
-    [rest, supportedChainId],
+    [wagmiAccount, supportedChainId],
   )
 }

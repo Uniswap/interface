@@ -30,6 +30,12 @@
     },
     {
       "path": "./packages/sessions"
+    },
+    {
+      "path": "./config/vitest-presets"
+    },
+    {
+      "path": "./tools/uniswap-nx"
     }
   ]
 }

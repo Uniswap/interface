@@ -1,5 +1,4 @@
-import { TradingApi } from '@universe/api'
-import { SwapOrderType, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi, TradingApi } from '@universe/api'
 
 import { deriveCurrencyAmountFromAssetResponse } from 'uniswap/src/features/activity/utils/remote'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -22,12 +21,12 @@ export function extractUniswapXOrderDetails(transaction: TransactionListQueryRes
 
   const typeInfo = parseUniswapXOrderTransaction(transaction)
   const routing =
-    transaction.details.swapOrderType === SwapOrderType.Limit
+    transaction.details.swapOrderType === GraphQLApi.SwapOrderType.Limit
       ? TradingApi.Routing.DUTCH_LIMIT
       : TradingApi.Routing.DUTCH_V2
 
   // TODO (MOB-3609): Parse and show pending limit orders in Activity feed
-  if (!typeInfo || transaction.details.swapOrderType === SwapOrderType.Limit) {
+  if (!typeInfo || transaction.details.swapOrderType === GraphQLApi.SwapOrderType.Limit) {
     return null
   }
 
@@ -66,7 +65,7 @@ export default function parseUniswapXOrderTransaction(
     : null
 
   const inputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse({
-    tokenStandard: TokenStandard.Erc20,
+    tokenStandard: GraphQLApi.TokenStandard.Erc20,
     chain: transaction.chain,
     address: transaction.details.inputToken.address,
     decimals: transaction.details.inputToken.decimals,
@@ -74,7 +73,7 @@ export default function parseUniswapXOrderTransaction(
   })
 
   const outputCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse({
-    tokenStandard: TokenStandard.Erc20,
+    tokenStandard: GraphQLApi.TokenStandard.Erc20,
     chain: transaction.chain,
     address: transaction.details.outputToken.address,
     decimals: transaction.details.outputToken.decimals,

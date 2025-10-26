@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { SvgUri } from 'react-native-svg'
-import { Flex } from 'ui/src'
+import { Flex, UniversalImage } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NotificationToast } from 'uniswap/src/components/notifications/NotificationToast'
 import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
@@ -19,7 +18,14 @@ export function ChooseCountryNotification({
       hideDelay={hideDelay}
       icon={
         <Flex borderRadius="$roundedFull" overflow="hidden">
-          <SvgUri height={iconSizes.icon20} uri={countryFlagUrl} width={iconSizes.icon20} />
+          <UniversalImage
+            size={{
+              width: iconSizes.icon20,
+              height: iconSizes.icon20,
+            }}
+            uri={countryFlagUrl}
+            fallback={<Flex height={iconSizes.icon20} width={iconSizes.icon20} />}
+          />
         </Flex>
       }
       title={t('notification.countryChange', { countryName })}

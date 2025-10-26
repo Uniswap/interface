@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import {
   isPoolSearchHistoryResult,
   SearchHistoryResult,
@@ -11,7 +12,7 @@ const SEARCH_HISTORY_LENGTH = 5
 export function searchResultId(searchResult: SearchHistoryResult): string {
   const { type } = searchResult
   const address = isPoolSearchHistoryResult(searchResult) ? searchResult.poolId : searchResult.address
-  const normalizedAddress = address?.toLowerCase() ?? null
+  const normalizedAddress = address ? normalizeTokenAddressForCache(address) : null
 
   switch (type) {
     case SearchHistoryResultType.Token:

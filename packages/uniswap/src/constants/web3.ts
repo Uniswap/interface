@@ -22,6 +22,7 @@ export const CONNECTION_PROVIDER_NAMES = {
   UNISWAP_WALLET: 'Uniswap Wallet',
   PHANTOM: 'Phantom',
   COINBASE_SDK: 'Coinbase Wallet',
+  COINBASE_SOLANA_WALLET_ADAPTER: 'Coinbase Wallet',
   SAFE: 'Safe',
   BINANCE_WALLET: 'Binance Wallet',
 } as const

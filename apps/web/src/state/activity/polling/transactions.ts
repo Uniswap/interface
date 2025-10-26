@@ -22,8 +22,8 @@ import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { TransactionReceipt, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { receiptFromViemReceipt } from 'uniswap/src/features/transactions/utils/receipt'
-import { isValidHexString } from 'uniswap/src/utils/hex'
 import { shouldCheckTransaction } from 'uniswap/src/utils/polling'
+import { isValidHexString } from 'utilities/src/addresses/hex'
 import { usePublicClient } from 'wagmi'
 
 interface ReceiptWithStatus {

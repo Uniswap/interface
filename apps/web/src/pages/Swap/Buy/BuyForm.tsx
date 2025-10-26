@@ -11,7 +11,7 @@ import { FiatOnRampCurrencyModal } from 'pages/Swap/Buy/FiatOnRampCurrencyModal'
 import { fallbackCurrencyInfo, useOffRampTransferDetailsRequest } from 'pages/Swap/Buy/hooks'
 import { OffRampConfirmTransferModal } from 'pages/Swap/Buy/OffRampConfirmTransferModal'
 import { PredefinedAmount } from 'pages/Swap/Buy/PredefinedAmount'
-import { formatFiatOnRampFiatAmount } from 'pages/Swap/Buy/shared'
+import { formatFiatOnRampFiatAmount, getCountryFromLocale } from 'pages/Swap/Buy/shared'
 import { AlternateCurrencyDisplay } from 'pages/Swap/common/AlternateCurrencyDisplay'
 import { SelectTokenPanel } from 'pages/Swap/common/SelectTokenPanel'
 import {
@@ -28,6 +28,7 @@ import { Flex, styled, Text } from 'ui/src'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
@@ -137,19 +138,31 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
     [onSetFontSize, setBuyFormState],
   )
 
+  // Default to device locale to avoid blocking the UI
+  const DEFAULT_COUNTRY = useMemo(() => getCountryFromLocale(), [])
   const { data: countryResult } = useFiatOnRampAggregatorGetCountryQuery()
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +buyFormState.selectedCountry, +selectedCountry
   useEffect(() => {
-    if (!selectedCountry && countryResult) {
+    if (!selectedCountry) {
+      // Use API result if available, otherwise default to locale-based country immediately
+      // This ensures the UI is never blocked by a failed or slow country detection
+      setBuyFormState((state) => ({ ...state, selectedCountry: countryResult ?? DEFAULT_COUNTRY }))
+    } else if (countryResult && selectedCountry.countryCode === DEFAULT_COUNTRY.countryCode) {
+      // Update to API result only if we're currently using the default locale-based country
       setBuyFormState((state) => ({ ...state, selectedCountry: countryResult }))
     }
-  }, [buyFormState.selectedCountry, countryResult, selectedCountry, setBuyFormState])
+  }, [buyFormState.selectedCountry, countryResult, selectedCountry, setBuyFormState, DEFAULT_COUNTRY])
 
   const { useParsedQueryString } = useUrlContext()
   const parsedQs = useParsedQueryString()
   useEffect(() => {
     let supportedToken: Maybe<FiatOnRampCurrency>
-    const quoteCurrencyCode = parsedQs.quoteCurrencyCode as string | undefined
-    const moonpayCurrencyCode = parsedQs.moonpayCurrencyCode as string | undefined
+    const currencyCode = parsedQs.currencyCode as string | undefined
+    const providers = (parsedQs.providers as string | undefined)?.split(',')
+    const hasProviders = providers && providers.length > 0
+    const currencyAmount = parsedQs.value as string | undefined
+    const isTokenInputMode = (parsedQs.isTokenInputMode as string | undefined) === 'true'
 
     if (initialCurrency) {
       const supportedNativeToken = supportedTokens?.find(
@@ -165,16 +178,17 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
             meldToken.currencyInfo.currency.isToken &&
             meldToken.currencyInfo.currency.address === initialCurrency.address,
         ) || supportedNativeToken
-    } else if (moonpayCurrencyCode) {
+    } else if (hasProviders && currencyCode) {
+      // We are using melds currency code here because the chain id will not be set because this is coming from an ad
       supportedToken = supportedTokens?.find(
-        (meldToken) => meldToken.meldCurrencyCode?.toLowerCase() === moonpayCurrencyCode.toLowerCase(),
+        (meldToken) => meldToken.meldCurrencyCode?.toLowerCase() === currencyCode.toLowerCase(),
       )
-    } else if (quoteCurrencyCode) {
+    } else if (currencyCode) {
       // Defaults the quote currency to the initial currency (from query params) if supported
       const chainId = parsedQs.chainId ? Number(parsedQs.chainId) : UniverseChainId.Mainnet
       supportedToken = supportedTokens?.find(
         (meldToken) =>
-          meldToken.currencyInfo?.currency.symbol === quoteCurrencyCode &&
+          meldToken.currencyInfo?.currency.symbol === currencyCode &&
           meldToken.currencyInfo.currency.chainId === chainId,
       )
     } else {
@@ -185,15 +199,16 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
     }
 
     if (supportedToken) {
-      const moonpayState: Partial<{ inputAmount: string; moonpayOnly: boolean }> = {}
-      if (moonpayCurrencyCode) {
-        moonpayState.inputAmount = parsedQs.amount as string | undefined
-        moonpayState.moonpayOnly = true
+      const providerState: Partial<{ inputAmount: string; providers: string[] }> = {}
+      if (hasProviders) {
+        providerState.inputAmount = currencyAmount
+        providerState.providers = providers.map((provider) => provider.toLowerCase())
       }
       setBuyFormState((state) => ({
         ...state,
-        ...moonpayState,
+        ...providerState,
         quoteCurrency: supportedToken,
+        inputInFiat: !isTokenInputMode,
       }))
       return
     }
@@ -205,6 +220,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
       setBuyFormState((state) => ({
         ...state,
         quoteCurrency: supportedNativeToken,
+        inputInFiat: !isTokenInputMode,
       }))
     }
   }, [account.chainId, parsedQs, initialCurrency, setBuyFormState, supportedTokens])
@@ -227,7 +243,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
 
   const balance = useMemo(() => {
     const currentCurrencyId = currencyId(quoteCurrency?.currencyInfo?.currency)
-    return currentCurrencyId ? balancesById?.[currentCurrencyId.toLowerCase()] : undefined
+    return currentCurrencyId ? balancesById?.[normalizeCurrencyIdForMapLookup(currentCurrencyId)] : undefined
   }, [balancesById, quoteCurrency?.currencyInfo?.currency])
 
   const maxContainerWidth = PAGE_WRAPPER_MAX_WIDTH * 0.8

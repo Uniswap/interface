@@ -1,3 +1,4 @@
+import { RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
 import { getBaseAndQuoteCurrencies } from 'components/Liquidity/utils/currency'
 import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import { useTranslation } from 'react-i18next'
@@ -23,31 +24,37 @@ export function D3RangeAmountInput({
   input,
   typedValue,
   displayUserTypedValue,
+  price,
   priceDifference,
   handleDecrement,
   handleIncrement,
+  handleInputModeToggle,
+  handlePriceRangeInput,
   onBlur,
+  inputMode,
   isDisabled,
   isIncrementDisabled,
   isDecrementDisabled,
   showIncrementButtons = true,
   isInvalid = false,
-  handlePriceRangeInput,
 }: {
   value: string
   typedValue: string
   displayUserTypedValue: boolean
   input: RangeSelectionInput
+  price?: number
   priceDifference?: string
   handleDecrement?: () => void
   handleIncrement?: () => void
+  handleInputModeToggle: () => void
+  handlePriceRangeInput: (input: RangeSelectionInput, value: string) => void
   onBlur: () => void
+  inputMode?: RangeAmountInputPriceMode
   isDisabled?: boolean
   isIncrementDisabled?: boolean
   isDecrementDisabled?: boolean
   showIncrementButtons?: boolean
   isInvalid?: boolean
-  handlePriceRangeInput: (input: RangeSelectionInput, value: string) => void
 }) {
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -64,6 +71,7 @@ export function D3RangeAmountInput({
     <Flex
       row
       flex={1}
+      flexBasis={0}
       position="relative"
       backgroundColor="$surface2"
       borderTopLeftRadius={creatingPoolOrPair && input === RangeSelectionInput.MIN ? '$rounded20' : '$none'}
@@ -73,6 +81,7 @@ export function D3RangeAmountInput({
       $lg={{
         borderBottomRightRadius: input === RangeSelectionInput.MAX ? '$rounded20' : '$none',
         borderBottomLeftRadius: input === RangeSelectionInput.MAX ? '$rounded20' : '$none',
+        flexBasis: 'auto',
       }}
       p="$spacing16"
       justifyContent="space-between"
@@ -82,34 +91,65 @@ export function D3RangeAmountInput({
         <Text variant="body3" color="$neutral2">
           {input === RangeSelectionInput.MIN ? t(`pool.minPrice`) : t(`pool.maxPrice`)}
         </Text>
-        <AmountInput
-          disabled={isDisabled}
-          backgroundColor="$transparent"
-          borderWidth="$none"
-          borderRadius="$none"
-          color={isInvalid ? '$statusCritical' : '$neutral1'}
-          fontFamily="$heading"
-          fontSize={fonts.heading3.fontSize}
-          fontWeight={fonts.heading3.fontWeight}
-          maxDecimals={quoteCurrency?.decimals ?? 18}
-          overflow="visible"
-          placeholder="0"
-          placeholderTextColor={colors.neutral3.val}
-          px="$none"
-          py="$none"
-          value={displayUserTypedValue ? typedValue : value}
-          onChange={(e) => handlePriceRangeInput(input, e.nativeEvent.text)}
-          onBlur={onBlur}
-          inputEnforcer={numericInputEnforcerWithInfinity}
-          $md={{
-            fontSize: fonts.subheading2.fontSize,
-            fontWeight: fonts.subheading2.fontWeight,
-          }}
-          testID={`${TestID.RangeInput}-${input}`}
-        />
-        <Text variant="body3" color="$neutral2">
-          {priceDifference ? priceDifference : `${quoteCurrency?.symbol} = 1 ${baseCurrency?.symbol}`}
-        </Text>
+        <Flex row alignItems="center" gap="$spacing4">
+          <AmountInput
+            disabled={isDisabled}
+            backgroundColor="$transparent"
+            borderWidth="$none"
+            borderRadius="$none"
+            color={isInvalid ? '$statusCritical' : '$neutral1'}
+            fontFamily="$heading"
+            fontSize={fonts.heading3.fontSize}
+            fontWeight={fonts.heading3.fontWeight}
+            maxDecimals={quoteCurrency?.decimals ?? 18}
+            overflow="visible"
+            placeholder="0"
+            placeholderTextColor={colors.neutral3.val}
+            px="$none"
+            py="$none"
+            adjustWidthToContent={inputMode === RangeAmountInputPriceMode.PERCENTAGE}
+            value={displayUserTypedValue ? typedValue : value}
+            onChange={(e) => handlePriceRangeInput(input, e.nativeEvent.text)}
+            onBlur={onBlur}
+            inputEnforcer={numericInputEnforcerWithInfinity}
+            $md={{
+              fontSize: fonts.subheading2.fontSize,
+              fontWeight: fonts.subheading2.fontWeight,
+            }}
+            testID={`${TestID.RangeInput}-${input}`}
+          />
+          {inputMode === RangeAmountInputPriceMode.PERCENTAGE && (
+            <Text
+              color={isInvalid ? '$statusCritical' : '$neutral1'}
+              fontFamily="$heading"
+              fontSize={fonts.heading3.fontSize}
+              fontWeight={fonts.heading3.fontWeight}
+              $md={{
+                fontSize: fonts.subheading2.fontSize,
+                fontWeight: fonts.subheading2.fontWeight,
+              }}
+            >
+              %
+            </Text>
+          )}
+        </Flex>
+        {priceDifference ? (
+          <Text
+            variant="body3"
+            color="$neutral2"
+            hoverStyle={{ color: '$neutral2Hovered' }}
+            cursor="pointer"
+            onPress={handleInputModeToggle}
+          >
+            {inputMode === RangeAmountInputPriceMode.PERCENTAGE && price
+              ? `${price} ${quoteCurrency?.symbol} = 1 ${baseCurrency?.symbol}`
+              : priceDifference}
+          </Text>
+        ) : (
+          <Text variant="body3" color="$neutral2">
+            {`${quoteCurrency?.symbol} = 1 ${baseCurrency?.symbol}`}
+          </Text>
+        )}
       </Flex>
       {showIncrementButtons && (
         <Flex gap={10}>

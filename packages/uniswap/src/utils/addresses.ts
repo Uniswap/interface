@@ -2,6 +2,8 @@ import { getAddress } from '@ethersproject/address'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
+import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { HexString } from 'utilities/src/addresses/hex'
 import { isSVMAddress } from 'utilities/src/addresses/svm/svm'
 import { tryCatch } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
@@ -67,7 +69,7 @@ const VALIDATION_FN_MAP = {
  *
  * @returns The normalized address or false if the address is invalid
  */
-export function getValidAddress(params: GetValidAddressParams): Nullable<string> {
+export function getValidAddress(params: GetValidAddressParams): Nullable<HexString | string> {
   const { address, withEVMChecksum, log } = params
   if (!address) {
     return null
@@ -100,18 +102,17 @@ export function getValidAddress(params: GetValidAddressParams): Nullable<string>
  * @returns The normalized address or null if the address is invalid
  * @throws {Error} If the address is invalid
  */
-function getValidEVMAddress({ address, withEVMChecksum }: { address: string; withEVMChecksum?: boolean }): string {
+function getValidEVMAddress({ address, withEVMChecksum }: { address: string; withEVMChecksum?: boolean }): HexString {
   const addressWith0x = ensureLeading0x(address.trim())
 
   if (withEVMChecksum) {
-    return getAddress(addressWith0x)
+    return getAddress(addressWith0x) as HexString
   }
 
-  // TODO(WALL-5160): Note that we do not check for [0-9a-fA-F] due to possible performance
-  if (addressWith0x.length !== 42) {
+  if (!isEVMAddress(addressWith0x)) {
     throw new Error('Address has an invalid format')
   }
-  return normalizeAddress(addressWith0x, AddressStringFormat.Lowercase)
+  return normalizeAddress(addressWith0x, AddressStringFormat.Lowercase) as HexString
 }
 
 /**
@@ -185,9 +186,23 @@ export function areAddressesEqual(params: AreAddressesEqualParams): boolean {
   const platform1 = addressInput1.platform ?? chainIdToPlatform(addressInput1.chainId)
   const platform2 = addressInput2.platform ?? chainIdToPlatform(addressInput2.chainId)
 
-  const validA1 = getValidAddress({ address: addressInput1.address, platform: platform1 })
-  const validA2 = getValidAddress({ address: addressInput2.address, platform: platform2 })
-  return validA1 !== null && validA2 !== null && validA1 === validA2
+  if (platform1 !== platform2) {
+    return false
+  }
+
+  // Solana addresses are Base58 encoded, so they are case-sensitive. Can compare strings directly.
+  if (addressInput1.address === addressInput2.address) {
+    return true
+  }
+
+  if (platform1 === Platform.EVM) {
+    return (
+      normalizeAddress(addressInput1.address ?? '', AddressStringFormat.Lowercase) ===
+      normalizeAddress(addressInput2.address ?? '', AddressStringFormat.Lowercase)
+    )
+  }
+
+  return false
 }
 
 /**

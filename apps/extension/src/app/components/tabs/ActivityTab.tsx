@@ -10,7 +10,7 @@ export const ActivityTab = memo(function _ActivityTab({
   skip?: boolean
 }): JSX.Element {
   const { maybeEmptyComponent, renderActivityItem, sectionData } = useActivityDataWallet({
-    owner: address,
+    evmOwner: address,
     skip,
   })
 

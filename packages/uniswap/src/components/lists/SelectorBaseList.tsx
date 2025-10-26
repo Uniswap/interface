@@ -39,7 +39,7 @@ interface SelectorBaseListProps<T extends OnchainItemListOption> {
   keyExtractor: (item: T, index: number) => string
   expandedItems?: string[]
   focusedRowControl?: Omit<FocusedRowControl, 'rowIndex'>
-  renderedInModal?: boolean
+  renderedInModal: boolean
   contentContainerStyle?: ContentStyle
 }
 
@@ -61,6 +61,7 @@ function _SelectorBaseList<T extends OnchainItemListOption>({
   const { t } = useTranslation()
   const sectionListRef = useRef<OnchainItemListRef>()
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +chainFilter
   useEffect(() => {
     if (sections?.length) {
       sectionListRef.current?.scrollToLocation({

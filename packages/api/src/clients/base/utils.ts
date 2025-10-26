@@ -14,7 +14,7 @@ type TransformRequestInput<TRequest> = {
 
 export function createFetcher<TRequest, TResponse>(ctx: {
   client: FetchClient
-  method: keyof FetchClient
+  method: Extract<keyof FetchClient, 'get' | 'post' | 'put' | 'delete' | 'patch'>
   url: string
   transformRequest?: (request: TransformRequestInput<TRequest>) => Promise<TransformRequestResult>
   on404?: (params: TRequest) => void

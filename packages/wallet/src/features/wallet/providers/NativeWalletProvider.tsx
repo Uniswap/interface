@@ -1,12 +1,13 @@
 import { Store } from '@reduxjs/toolkit'
 import { PropsWithChildren, useMemo } from 'react'
 import { useStore } from 'react-redux'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { WalletProvider } from 'uniswap/src/features/wallet/contexts/WalletProvider'
 import { createEVMWalletService } from 'uniswap/src/features/wallet/services/createEVMWalletService'
 import { WalletService } from 'uniswap/src/features/wallet/services/IWalletService'
 import { WalletMeta } from 'uniswap/src/features/wallet/types/WalletMeta'
-import { HexString } from 'uniswap/src/utils/hex'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
@@ -47,7 +48,11 @@ export function NativeWalletProvider({ children }: PropsWithChildren): JSX.Eleme
     if (!account?.address) {
       return undefined
     }
-    const address = isEVMAddress(account.address)
+    const address = getValidAddress({
+      address: account.address,
+      platform: Platform.EVM,
+      withEVMChecksum: true,
+    }) as Nullable<HexString>
     if (!address) {
       logger.error(new Error('Invalid address stored in wallet state'), {
         tags: { file: 'NativeWalletProvider.tsx', function: 'useNativeWalletService' },

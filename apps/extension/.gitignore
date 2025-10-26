@@ -32,3 +32,6 @@ dist-ssr
 web-ext.config.ts
 
 tsconfig.tsbuildinfo
+
+# E2E test artifacts
+e2e/test-results/

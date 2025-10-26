@@ -125,7 +125,7 @@ export function AnimatedPager({
     } else if (currentIndex < prevIndex) {
       setDirection('backward')
     }
-  }, [currentIndex, prevIndex, setDirection])
+  }, [currentIndex, prevIndex])
   return (
     <AnimateTransition animationType={direction} distance={distance} currentIndex={currentIndex} animation={animation}>
       {children}

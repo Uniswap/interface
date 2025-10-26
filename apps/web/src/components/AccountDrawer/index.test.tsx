@@ -8,6 +8,29 @@ vi.mock('hooks/useIsUniswapExtensionConnected', () => ({
   useIsUniswapExtensionConnected: vi.fn(),
 }))
 
+vi.mock('uniswap/src/features/accounts/store/hooks', () => ({
+  useActiveAddresses: vi.fn(() => ({
+    evmAddress: '0x0000000000000000000000000000000000000000',
+    svmAddress: undefined,
+  })),
+  useConnectionStatus: vi.fn((platform?: any) => {
+    // For Solana (svm), return not connected
+    if (platform === 'svm') {
+      return {
+        isConnected: false,
+        isConnecting: false,
+        isDisconnected: true,
+      }
+    }
+    // For EVM (default), return connected
+    return {
+      isConnected: true,
+      isConnecting: false,
+      isDisconnected: false,
+    }
+  }),
+}))
+
 vi.mock('tamagui', async () => {
   const actual = await vi.importActual('tamagui')
   return {

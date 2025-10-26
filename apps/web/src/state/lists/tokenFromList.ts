@@ -1,6 +1,8 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { Tags, TokenInfo, TokenList } from '@uniswap/token-lists'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 
 type TagDetails = Tags[keyof Tags]
 interface TagInfo extends TagDetails {
@@ -20,7 +22,11 @@ export class TokenFromList implements Token {
   constructor(tokenInfo: TokenInfo, list?: TokenList) {
     this.tokenInfo = tokenInfo
     this.list = list
-    const checksummedAddress = isEVMAddress(this.tokenInfo.address)
+    const checksummedAddress = getValidAddress({
+      address: this.tokenInfo.address,
+      chainId: this.tokenInfo.chainId,
+      withEVMChecksum: true,
+    })
     if (!checksummedAddress) {
       throw new Error(`Invalid token address: ${this.tokenInfo.address}`)
     }
@@ -73,14 +79,21 @@ export class TokenFromList implements Token {
   }
 
   equals(other: Currency): boolean {
-    return other.chainId === this.chainId && other.isToken && other.address.toLowerCase() === this.address.toLowerCase()
+    return (
+      other.chainId === this.chainId &&
+      other.isToken &&
+      areAddressesEqual({
+        addressInput1: { address: this.address, platform: Platform.EVM },
+        addressInput2: { address: other.address, platform: Platform.EVM },
+      })
+    )
   }
 
   sortsBefore(other: Token): boolean {
     if (this.equals(other)) {
       throw new Error('Addresses should not be equal')
     }
-    return this.address.toLowerCase() < other.address.toLowerCase()
+    return normalizeTokenAddressForCache(this.address) < normalizeTokenAddressForCache(other.address)
   }
 
   public get wrapped(): Token {

@@ -22,7 +22,7 @@ export function PrivacyChoicesModal() {
     // Reset the checkbox if a user doesn't save
     setIsOptOutChecked(privacySharingOptOut)
     closeModal()
-  }, [privacySharingOptOut, closeModal, setIsOptOutChecked])
+  }, [privacySharingOptOut, closeModal])
 
   const handleSave = useCallback(() => {
     setPrivacySharingOptOut(isOptOutChecked)

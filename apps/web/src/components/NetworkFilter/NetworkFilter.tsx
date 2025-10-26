@@ -1,4 +1,4 @@
-import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
+import { Dropdown, InternalMenuItem } from 'components/Dropdowns/Dropdown'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { useFilteredChainIds } from 'components/NetworkFilter/useFilteredChains'
 import { useTheme } from 'lib/styled-components'
@@ -81,7 +81,7 @@ export default function NetworkFilter({
   return (
     <Flex>
       <Trace modal={ModalName.NetworkSelector}>
-        <DropdownSelector
+        <Dropdown
           isOpen={isMenuOpen}
           toggleOpen={toggleMenu}
           menuLabel={
@@ -119,7 +119,7 @@ export default function NetworkFilter({
             )}
             {filteredChainIds.map(tableNetworkItemRenderer)}
           </ScrollView>
-        </DropdownSelector>
+        </Dropdown>
       </Trace>
     </Flex>
   )

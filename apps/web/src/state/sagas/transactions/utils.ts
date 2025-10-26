@@ -57,11 +57,11 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getInterfaceTransaction, isInterfaceTransaction } from 'uniswap/src/features/transactions/types/utils'
 import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { HexString, isValidHexString } from 'uniswap/src/utils/hex'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
-import { isSameAddress } from 'utilities/src/addresses'
+import { HexString, isValidHexString } from 'utilities/src/addresses/hex'
 import { noop } from 'utilities/src/react/noop'
 import { signTypedData } from 'utils/signing'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -450,7 +450,12 @@ function* findDuplicativeTx({
   )
 
   const transactionsForAccount = Object.values(transactionMap)
-    .filter((tx) => isSameAddress(tx.from, account.address))
+    .filter((tx) =>
+      areAddressesEqual({
+        addressInput1: { address: tx.from, chainId: tx.chainId },
+        addressInput2: { address: account.address, chainId },
+      }),
+    )
     .filter(isInterfaceTransaction)
 
   // Check all pending and recent transactions

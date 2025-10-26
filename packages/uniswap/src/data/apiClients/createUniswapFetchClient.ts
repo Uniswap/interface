@@ -1,7 +1,8 @@
 import { createFetchClient, type FetchClient } from '@universe/api'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { getVersionHeader, REQUEST_SOURCE } from 'uniswap/src/data/constants'
+import { getVersionHeader } from 'uniswap/src/data/constants'
 import { isMobileApp } from 'utilities/src/platform'
+import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 
 export const BASE_UNISWAP_HEADERS = {
   'x-request-source': REQUEST_SOURCE,
@@ -25,5 +26,6 @@ export function createUniswapFetchClient({
   return createFetchClient({
     baseUrl,
     headers,
+    getSessionServiceBaseUrl: () => uniswapUrls.apiBaseUrlV2,
   })
 }

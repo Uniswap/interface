@@ -5,7 +5,7 @@ import type {
 } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/createSwapReviewStore'
 import { EMPTY_STEPS } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/createSwapReviewStore'
 import { SwapReviewStoreContext } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewStore/SwapReviewContext'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 import { useStore } from 'zustand'
 import { useShallow } from 'zustand/shallow'
 
@@ -40,7 +40,7 @@ export const useSwapReviewActions = (): SwapReviewState['actions'] => {
 export const useShowInterfaceReviewSteps = (): boolean => {
   // By conditionally defining the selector, we're able to avoid subscribing to the store when we're not on interface
   const { currentStep, steps } = useSwapReviewStore(
-    isInterface
+    isWebApp
       ? (s): ShowInterfaceSelectorReturn => ({
           currentStep: s.currentStep,
           steps: s.steps,
@@ -48,5 +48,5 @@ export const useShowInterfaceReviewSteps = (): boolean => {
       : (): ShowInterfaceSelectorReturn => ({ currentStep: undefined, steps: EMPTY_STEPS }),
   )
 
-  return Boolean(isInterface && currentStep && steps.length > 1)
+  return Boolean(isWebApp && currentStep && steps.length > 1)
 }

@@ -32,7 +32,7 @@
     "paths": {
       "ui/src/*": ["../../packages/ui/src/*"],
       "utilities/src/*": ["../../packages/utilities/src/*"],
-      "uniswap/src/*": ["../../packages/uniswap/src/*"],
+      "uniswap/src/*": ["../../packages/uniswap/src/*"]
     }
   },
   "include": [
@@ -42,7 +42,7 @@
     ".storybook/main.ts",
     "vite.config.mts",
     "scripts/*",
-    "vite/*",
+    "vite/*"
   ],
   "references": [
     {

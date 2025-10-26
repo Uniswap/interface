@@ -126,7 +126,7 @@ describe('Swap', () => {
 
     it('should return steps for classic trade with approval and permit required', () => {
       // We only expect `SwapTransactionAsync` step when on interface swap (unsigned w/o a wallet interaction)
-      UserAgentMock.isInterface = true
+      UserAgentMock.isWebApp = true
 
       const swapTxContext = {
         ...baseSwapTxContext,

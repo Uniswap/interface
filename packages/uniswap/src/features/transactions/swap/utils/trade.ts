@@ -173,7 +173,7 @@ export function getRateToDisplay({
       value: price.toSignificant(),
       type: NumberType.SwapPrice,
     })
-  } catch (error) {
+  } catch (_error) {
     // This means the price impact is so high that the rate is basically 0 (an error is thrown because we try to divide by 0)
     formattedPrice = '0'
   }

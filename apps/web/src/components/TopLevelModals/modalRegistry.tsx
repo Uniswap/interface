@@ -7,6 +7,9 @@ import { createLazy } from 'utils/lazyWithRetry'
 
 const AddressClaimModal = createLazy(() => import('components/claim/AddressClaimModal'))
 const ConnectedAccountBlocked = createLazy(() => import('components/ConnectedAccountBlocked'))
+const PendingWalletConnectionModal = createLazy(
+  () => import('components/WalletModal/PendingWalletConnectionModal/PendingWalletConnectionModal'),
+)
 const UniwalletModal = createLazy(() => import('components/AccountDrawer/UniwalletModal'))
 const Banners = createLazy(() =>
   import('components/Banner/shared/Banners').then((module) => ({ default: module.Banners })),
@@ -32,11 +35,7 @@ const PrivacyChoicesModal = createLazy(() =>
   import('components/PrivacyChoices').then((module) => ({ default: module.PrivacyChoicesModal })),
 )
 const FeatureFlagModal = createLazy(() => import('components/FeatureFlagModal/FeatureFlagModal'))
-const SolanaPromoModal = createLazy(() =>
-  import('components/Banner/SolanaPromo/SolanaPromoModal').then((module) => ({
-    default: module.SolanaPromoModal,
-  })),
-)
+const SolanaPromoModal = createLazy(() => import('components/Banner/SolanaPromo/SolanaPromoModal'))
 const DevFlagsBox = createLazy(() => import('dev/DevFlagsBox'))
 const TokenNotFoundModal = createLazy(() => import('components/NotFoundModal/TokenNotFoundModal'))
 const PoolNotFoundModal = createLazy(() => import('components/NotFoundModal/PoolNotFoundModal'))
@@ -126,6 +125,10 @@ export const modalRegistry: ModalRegistry = {
   },
   [ModalName.GetTheApp]: {
     component: GetTheAppModal,
+    shouldMount: () => true,
+  },
+  [ModalName.PendingWalletConnection]: {
+    component: PendingWalletConnectionModal,
     shouldMount: () => true,
   },
   [ModalName.PrivacyPolicy]: {

@@ -11,7 +11,7 @@ import { useTokenBalanceListContext } from 'uniswap/src/features/portfolio/Token
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 /**
  * IMPORTANT: if you modify the UI of this component, make sure to update the corresponding Skeleton component.
@@ -35,7 +35,7 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
   isHidden,
 }: TokenBalanceItemProps) {
   const { currency } = currencyInfo
-  const address = useTokenBalanceListContext().owner
+  const { evmOwner, svmOwner } = useTokenBalanceListContext()
 
   // Ensure items rerender when theme is switched
   useIsDarkMode()
@@ -62,21 +62,27 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
           url={currencyInfo.logoUrl ?? undefined}
         />
         <Flex shrink alignItems="flex-start">
-          <Text ellipsizeMode="tail" numberOfLines={1} variant={isWeb ? 'body2' : 'body1'}>
+          <Text ellipsizeMode="tail" numberOfLines={1} variant={isWebPlatform ? 'body2' : 'body1'}>
             {currency.name ?? shortenedSymbol}
           </Text>
           <Flex row alignItems="center" gap="$spacing8" minHeight={20}>
             <TokenBalanceQuantity
               shortenedSymbol={shortenedSymbol}
               currencyId={currencyInfo.currencyId}
-              address={address}
+              evmAddress={evmOwner}
+              svmAddress={svmOwner}
             />
           </Flex>
         </Flex>
       </Flex>
 
       {currencyInfo.isSpam === true && isHidden ? undefined : (
-        <TokenBalanceRightSideColumn isLoading={isLoading} currencyId={currencyInfo.currencyId} address={address} />
+        <TokenBalanceRightSideColumn
+          isLoading={isLoading}
+          currencyId={currencyInfo.currencyId}
+          evmAddress={evmOwner}
+          svmAddress={svmOwner}
+        />
       )}
     </Flex>
   )
@@ -85,21 +91,27 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
 function TokenBalanceQuantity({
   shortenedSymbol,
   currencyId,
-  address,
+  evmAddress,
+  svmAddress,
 }: {
   shortenedSymbol: Maybe<string>
   currencyId: CurrencyId
-  address?: string
+  evmAddress?: string
+  svmAddress?: string
 }): JSX.Element {
   const { formatNumberOrString } = useLocalizationContext()
 
   // By relying on this cached data we can avoid re-renders unless these specific fields change.
-  const restTokenBalance = useRestTokenBalanceQuantityParts({ currencyId, address })
+  const restTokenBalance = useRestTokenBalanceQuantityParts({
+    currencyId,
+    evmAddress,
+    svmAddress,
+  })
 
   const tokenBalance = restTokenBalance.data
 
   return (
-    <Text color="$neutral2" numberOfLines={1} variant={isWeb ? 'body3' : 'body2'}>
+    <Text color="$neutral2" numberOfLines={1} variant={isWebPlatform ? 'body3' : 'body2'}>
       {`${formatNumberOrString({ value: tokenBalance?.quantity })}`} {shortenedSymbol}
     </Text>
   )
@@ -108,18 +120,24 @@ function TokenBalanceQuantity({
 function TokenBalanceRightSideColumn({
   isLoading,
   currencyId,
-  address,
+  evmAddress,
+  svmAddress,
 }: {
   isLoading?: boolean
   currencyId: CurrencyId
-  address?: string
+  evmAddress?: string
+  svmAddress?: string
 }): JSX.Element {
   const { t } = useTranslation()
   const { isTestnetModeEnabled } = useEnabledChains()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   // By relying on this cached data we can avoid re-renders unless these specific fields change.
-  const restTokenBalance = useRestTokenBalanceMainParts({ currencyId, address })
+  const restTokenBalance = useRestTokenBalanceMainParts({
+    currencyId,
+    evmAddress,
+    svmAddress,
+  })
   const tokenBalance = restTokenBalance.data
 
   const balanceUSD = tokenBalance?.denominatedValue?.value
@@ -140,7 +158,7 @@ function TokenBalanceRightSideColumn({
           </Flex>
         ) : (
           <Flex alignItems="flex-end" pl="$spacing8">
-            <Text color="$neutral1" numberOfLines={1} variant={isWeb ? 'body2' : 'body1'}>
+            <Text color="$neutral1" numberOfLines={1} variant={isWebPlatform ? 'body2' : 'body1'}>
               {balance}
             </Text>
             <RelativeChange
@@ -148,7 +166,7 @@ function TokenBalanceRightSideColumn({
               change={relativeChange24}
               negativeChangeColor="$statusCritical"
               positiveChangeColor="$statusSuccess"
-              variant={isWeb ? 'body3' : 'body2'}
+              variant={isWebPlatform ? 'body3' : 'body2'}
             />
           </Flex>
         )}

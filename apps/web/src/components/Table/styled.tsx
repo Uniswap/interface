@@ -1,4 +1,5 @@
 import { getTokenDetailsURL, unwrapToken } from 'appGraphql/data/util'
+import { GraphQLApi } from '@universe/api'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { Cell } from 'components/Table/Cell'
 import { useTableSize } from 'components/Table/TableSizeProvider'
@@ -14,7 +15,6 @@ import { Link } from 'react-router'
 import { ClickableStyle, ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Flex, styled, Text, TextProps, View } from 'ui/src'
 import { breakpoints, zIndexes } from 'ui/src/theme'
-import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
@@ -200,10 +200,7 @@ export const TableRowLink = deprecatedStyled(Link)`
 
 export const ClickableHeaderRow = styled(Flex, {
   row: true,
-  alignItems: 'center',
   justifyContent: 'flex-end',
-  width: '100%',
-  gap: '$gap4',
 
   ...ClickableTamaguiStyle,
 })
@@ -334,7 +331,7 @@ export const TimestampCell = ({ timestamp, link }: { timestamp: number; link: st
  * @param token
  * @returns JSX.Element showing the Token's Logo, Chain logo if non-mainnet, and Token Symbol
  */
-export const TokenLinkCell = ({ token, hideLogo }: { token: Token; hideLogo?: boolean }) => {
+export const TokenLinkCell = ({ token, hideLogo }: { token: GraphQLApi.Token; hideLogo?: boolean }) => {
   const { t } = useTranslation()
   const { defaultChainId } = useEnabledChains()
   const chainId = fromGraphQLChain(token.chain) ?? defaultChainId

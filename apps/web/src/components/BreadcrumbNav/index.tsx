@@ -89,7 +89,7 @@ export const CurrentPageBreadcrumb = ({
           externalHover={isBreadcrumbHover}
           dataTestId={TestID.BreadcrumbHoverCopy}
         >
-          {shortenAddress(address)}
+          {shortenAddress({ address })}
         </CopyHelper>
       )}
     </CurrentPageBreadcrumbContainer>

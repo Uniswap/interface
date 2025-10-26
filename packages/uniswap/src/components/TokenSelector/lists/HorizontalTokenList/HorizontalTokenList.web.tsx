@@ -24,7 +24,7 @@ export const HorizontalTokenList = memo(function _HorizontalTokenList({
     : suggestedTokens
   const remainingCount = shouldShowExpansion ? suggestedTokens.length - MAX_CARDS_PER_ROW + 1 : 0
 
-  // Hack to animate the height of the container when the tokens get expanded
+  // biome-ignore lint/correctness/useExhaustiveDependencies: hack to animate the height of the container when the tokens get expanded
   useEffect(() => {
     if (containerRef.current) {
       setContainerHeight(containerRef.current.scrollHeight)

@@ -1,4 +1,5 @@
 import { getTokenDetailsURL, gqlToCurrency } from 'appGraphql/data/util'
+import { GraphQLApi } from '@universe/api'
 import Row from 'components/deprecated/Row'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
@@ -18,12 +19,12 @@ import { ExternalLink } from 'theme/components/Links'
 import { ClickableStyle, EllipsisStyle } from 'theme/components/styles'
 import { Flex } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
-import { Token, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { getChainUrlParam } from 'utils/chainParams'
 
 const TokenName = styled(ThemedText.BodyPrimary)`
@@ -86,7 +87,7 @@ const ButtonsRow = styled(Row)`
 interface PoolDetailsLinkProps {
   address?: string
   chainId?: UniverseChainId
-  tokens: (Token | undefined)[]
+  tokens: (GraphQLApi.Token | undefined)[]
   loading?: boolean
 }
 
@@ -96,11 +97,12 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
   const currency = tokens[0] && gqlToCurrency(tokens[0])
   const [isCopied, setCopied] = useCopyClipboard()
   const copy = useCallback(() => {
-    const checksummedAddress = isEVMAddress(address)
+    const checksummedAddress = getValidAddress({ address, platform: Platform.EVM, withEVMChecksum: true })
     checksummedAddress && setCopied(checksummedAddress)
   }, [address, setCopied])
   const isPool = tokens.length === 2
-  const isNative = address === NATIVE_CHAIN_ID || (tokens[0] && !isPool && tokens[0].standard === TokenStandard.Native)
+  const isNative =
+    address === NATIVE_CHAIN_ID || (tokens[0] && !isPool && tokens[0].standard === GraphQLApi.TokenStandard.Native)
   const currencies = isPool && tokens[1] ? [currency, gqlToCurrency(tokens[1])] : [currency]
   const explorerUrl =
     chainId &&
@@ -120,6 +122,7 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
   }, [navigate, tokens, isPool, chainUrlParam])
 
   const [truncateAddress, setTruncateAddress] = useState<false | 'start' | 'both'>(false)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +truncateAddress
   const onTextRender = useCallback(
     (textRef: HTMLElement | undefined) => {
       if (textRef) {
@@ -131,7 +134,6 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
     },
     // This callback must run after it sets truncateAddress to 'start' to see if it needs to 'both'.
     // It checks if the textRef has overflow, and sets truncateAddress accordingly to avoid it.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     [truncateAddress],
   )
 
@@ -180,7 +182,11 @@ export function PoolDetailsLink({ address, chainId, tokens, loading }: PoolDetai
             text={t('common.copied')}
           >
             <CopyAddress data-testid={`copy-address-${address}`} onClick={copy}>
-              {shortenAddress(address, truncateAddress ? 2 : undefined, truncateAddress === 'both' ? 2 : undefined)}
+              {shortenAddress({
+                address,
+                chars: truncateAddress ? 2 : undefined,
+                charsEnd: truncateAddress === 'both' ? 2 : undefined,
+              })}
               <StyledCopyIcon />
             </CopyAddress>
           </MouseoverTooltip>

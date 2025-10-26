@@ -29,7 +29,7 @@ import MigrateV2SettingsTab from 'pages/MigrateV2/Settings'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
-import { Navigate, useNavigate, useParams } from 'react-router'
+import { Navigate, useParams } from 'react-router'
 import { useTokenBalance } from 'state/connection/hooks'
 import { useAppDispatch } from 'state/hooks'
 import { Bound, resetMintState } from 'state/mint/v3/actions'
@@ -44,15 +44,17 @@ import Badge from 'uniswap/src/components/badge/Badge'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { InterfacePageName, LiquidityEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { LiquiditySource } from 'uniswap/src/features/telemetry/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { HexString } from 'utilities/src/addresses/hex'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -812,7 +814,6 @@ export default function MigrateV2Pair() {
   const { address } = useParams<{ address: string }>()
   // reset mint state on component mount, and as a cleanup (on unmount)
   const dispatch = useAppDispatch()
-  const navigate = useNavigate()
   useEffect(() => {
     dispatch(resetMintState())
     return () => {
@@ -823,13 +824,17 @@ export default function MigrateV2Pair() {
   const account = useAccount()
 
   // get pair contract
-  const validatedAddress = isEVMAddress(address)
+  const validatedAddress = getValidAddress({
+    address,
+    platform: Platform.EVM,
+    withEVMChecksum: true,
+  }) as Nullable<HexString>
   const pair = usePairContract(validatedAddress ? validatedAddress : undefined)
 
   const { data: pairAddresses, isLoading: pairAddressesLoading } = useReadContracts({
     contracts: [
-      { address: validatedAddress || undefined, functionName: 'token0', abi: MIGRATE_V2_ABI },
-      { address: validatedAddress || undefined, functionName: 'token1', abi: MIGRATE_V2_ABI },
+      { address: validatedAddress ?? undefined, functionName: 'token0', abi: MIGRATE_V2_ABI },
+      { address: validatedAddress ?? undefined, functionName: 'token1', abi: MIGRATE_V2_ABI },
     ],
   })
 
@@ -870,10 +875,6 @@ export default function MigrateV2Pair() {
 
   const MIGRATE_PAGE_URL = '/migrate/v2'
 
-  const handleNavigateBackToMigrate = useCallback(() => {
-    navigate(MIGRATE_PAGE_URL)
-  }, [navigate])
-
   // redirect for invalid url params
   if (!validatedAddress || !pair || (!pairAddressesLoading && !token0Address && !account.isConnecting)) {
     logger.warn('MigrateV2Pair', 'MigrateV2Pair', 'Invalid pair address', {
@@ -902,7 +903,11 @@ export default function MigrateV2Pair() {
             <TouchableArea
               p="$spacing6"
               borderRadius="$rounded8"
-              onPress={handleNavigateBackToMigrate}
+              tag="a"
+              href={MIGRATE_PAGE_URL}
+              $platform-web={{
+                textDecoration: 'none',
+              }}
               hoverable
               hoverStyle={{
                 backgroundColor: '$backgroundHover',

@@ -15,10 +15,10 @@ import { UNICHAIN_CHAIN_INFO, UNICHAIN_SEPOLIA_CHAIN_INFO } from 'uniswap/src/fe
 import { WORLD_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/worldchain'
 import { ZKSYNC_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/zksync'
 import { ZORA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/zora'
+import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { SOLANA_CHAIN_INFO } from 'uniswap/src/features/chains/svm/info/solana'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
-import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { SolanaToken } from 'uniswap/src/features/tokens/SolanaToken'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -35,14 +35,6 @@ export const { USDC: USDC_SONEIUM } = SONEIUM_CHAIN_INFO.tokens
 export const { DAI } = MAINNET_CHAIN_INFO.tokens
 
 export const { USDC: USDC_SOLANA } = SOLANA_CHAIN_INFO.tokens
-
-export const SOL = new SolanaToken(
-  UniverseChainId.Solana,
-  'So11111111111111111111111111111111111111112',
-  9,
-  'SOL',
-  'Solana',
-)
 
 export const { USDT } = MAINNET_CHAIN_INFO.tokens
 
@@ -80,7 +72,7 @@ export const ETH_BSC = new Token(
   UniverseChainId.Bnb,
   '0x2170Ed0880ac9A755fd29B2688956BD959F933F8',
   18,
-  'ETH',
+  'WETH',
   'Ethereum',
 )
 
@@ -349,6 +341,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     'WETH',
     'Wrapped Ether',
   ),
+  [UniverseChainId.Solana]: new SolanaToken(
+    UniverseChainId.Solana,
+    WRAPPED_SOL_ADDRESS_SOLANA,
+    9,
+    'WSOL',
+    'Wrapped SOL',
+  ),
 }
 
 class NativeCurrencyImpl extends NativeCurrency {
@@ -376,22 +375,18 @@ class NativeCurrencyImpl extends NativeCurrency {
   }
 }
 
-const cachedNativeCurrency: { [chainId: number]: NativeCurrencyImpl | Token } = {}
+const cachedNativeCurrency: { [chainId: number]: NativeCurrencyImpl } = {}
 
 /**
  * @deprecated Prefer obtaining metadata via the non-sdk-based getChainInfo(chainId).nativeCurrency instead.
  *
  * Utility for obtaining an `@uniswap/sdk-core` `NativeCurrency` instance for a given chainId.
  */
-export function nativeOnChain(chainId: number): NativeCurrencyImpl | Token {
+export function nativeOnChain(chainId: number): NativeCurrencyImpl {
   const cached = cachedNativeCurrency[chainId]
 
   if (cached) {
     return cached
-  }
-
-  if (isSVMChain(chainId)) {
-    return SOL
   }
 
   const result = new NativeCurrencyImpl(chainId)

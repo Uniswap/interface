@@ -1,4 +1,4 @@
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 /**
  * List of supported languages in app, represented by ISO 639 language code.
@@ -153,7 +153,7 @@ export const WEB_SUPPORTED_LANGUAGES: Language[] = [
   Language.Vietnamese,
 ]
 
-export const PLATFORM_SUPPORTED_LANGUAGES = isInterface ? WEB_SUPPORTED_LANGUAGES : WALLET_SUPPORTED_LANGUAGES
+export const PLATFORM_SUPPORTED_LANGUAGES = isWebApp ? WEB_SUPPORTED_LANGUAGES : WALLET_SUPPORTED_LANGUAGES
 
 /**
  * External mapping to be used with system locale strings trying to resolve to specific language

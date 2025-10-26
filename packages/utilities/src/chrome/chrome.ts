@@ -1,5 +1,5 @@
 // Disabling this because we need access to `chrome` in the global scope.
-/* eslint-disable no-restricted-globals */
+/* biome-ignore-all lint/style/noRestrictedGlobals: we need access to `chrome` in the global scope */
 
 import { PlatformSplitStubError } from 'utilities/src/errors'
 

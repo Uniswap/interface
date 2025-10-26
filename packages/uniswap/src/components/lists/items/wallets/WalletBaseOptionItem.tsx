@@ -1,6 +1,7 @@
 import { OptionItem, OptionItemProps } from 'uniswap/src/components/lists/items/OptionItem'
 import { WalletOption } from 'uniswap/src/components/lists/items/types'
 import { WalletOptionItemContextMenu } from 'uniswap/src/components/lists/items/wallets/WalletOptionItemContextMenu'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 type WalletBaseOptionItemProps = {
@@ -14,7 +15,14 @@ export function WalletBaseOptionItem({ option, ...optionItemProps }: WalletBaseO
 
   return (
     <WalletOptionItemContextMenu address={address} isOpen={isContextMenuOpen} closeMenu={closeContextMenu}>
-      <OptionItem testID={`wallet-item-${type}-${address}`} onLongPress={openContextMenu} {...optionItemProps} />
+      <OptionItem
+        testID={`wallet-item-${type}-${address}`}
+        onLongPress={() => {
+          dismissNativeKeyboard()
+          openContextMenu()
+        }}
+        {...optionItemProps}
+      />
     </WalletOptionItemContextMenu>
   )
 }

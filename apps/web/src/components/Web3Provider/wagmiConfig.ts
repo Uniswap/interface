@@ -21,8 +21,13 @@ import { coinbaseWallet, injected, mock, safe, walletConnect } from 'wagmi/conne
 // Get the appropriate Binance connector based on the environment
 const getBinanceConnector = () => {
   // Check if Binance extension is installed
-  const isBinanceExtensionInstalled =
+  const isBinanceDetected =
     typeof window !== 'undefined' && (window.BinanceChain || (window.binancew3w && window.binancew3w.ethereum))
+
+  // Check if TrustWallet extension is installed
+  const isTrustWalletExtensionInstalled = typeof window !== 'undefined' && window.BinanceChain?.isTrustWallet
+
+  const isBinanceExtensionInstalled = isBinanceDetected && !isTrustWalletExtensionInstalled
 
   // If extension is installed, use the injected connector directly
   // This avoids issues with the Binance connector's detection logic

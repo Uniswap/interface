@@ -1,9 +1,10 @@
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
 import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import { DownloadWalletOption } from 'components/WalletModal/DownloadWalletOption'
 import { DetectedBadge } from 'components/WalletModal/shared'
+import { useWalletWithId } from 'features/accounts/store/hooks'
 import { useConnectWallet } from 'features/wallet/connection/hooks/useConnectWallet'
-import { useWalletConnectors } from 'features/wallet/connection/hooks/useWalletConnectors'
-import { getConnectorWithId, getConnectorWithIdWithThrow } from 'features/wallet/connection/utils'
 import { useAtom } from 'jotai'
 import { PropsWithChildren } from 'react'
 import { Trans } from 'react-i18next'
@@ -17,6 +18,7 @@ import { iconSizes } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { isMobileWeb, isWebIOS } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 import { openDownloadApp } from 'utils/openDownloadApp'
 
 interface OptionContainerProps extends PropsWithChildren {
@@ -33,7 +35,6 @@ export function OptionContainer({ hideBackground, recent, children, onPress, tes
       p="$spacing16"
       gap="$gap12"
       alignItems="center"
-      justifyContent="space-between"
       borderRadius="$rounded16"
       borderWidth={recent ? 2 : 0}
       borderColor="$accent2"
@@ -52,36 +53,46 @@ export function OptionContainer({ hideBackground, recent, children, onPress, tes
 }
 
 export function UniswapWalletOptions() {
-  const allConnectors = useWalletConnectors()
-  const uniswapExtensionConnector = getConnectorWithId({
-    connectors: allConnectors,
-    id: CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS,
-  })
-  const uniswapWalletConnector = getConnectorWithIdWithThrow({
-    connectors: allConnectors,
-    id: CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
-  })
   const [, setPersistHideMobileAppPromoBanner] = useAtom(persistHideMobileAppPromoBannerAtom)
-  const connect = useConnectWallet()
+
+  const uniswapExtensionWallet = useWalletWithId(CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS)
+  const uniswapMobileWallet = useWalletWithId(CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID)
+
+  const accountDrawer = useAccountDrawer()
+  const setMenu = useSetMenu()
+
+  const onSuccess = useEvent(() => {
+    accountDrawer.close()
+    setMenu({ variant: MenuStateVariant.MAIN })
+  })
+
+  const { connectWallet } = useConnectWallet()
 
   return (
     <Flex gap={16}>
       <Flex gap={8}>
-        {uniswapExtensionConnector ? (
+        {uniswapExtensionWallet ? (
           // If the extension is detected, show the option to connect
-          <OptionContainer onPress={() => connect(uniswapExtensionConnector)} testID="connect-uniswap-extension">
-            <Flex row gap="$gap12" alignItems="center">
-              <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
-              <Text variant="buttonLabel2" color="$neutral1" whiteSpace="nowrap">
-                <Trans i18nKey="common.extension" />
-              </Text>
+          <OptionContainer
+            onPress={() => connectWallet({ wallet: uniswapExtensionWallet, onSuccess })}
+            testID="connect-uniswap-extension"
+          >
+            <Flex row grow justifyContent="space-between" alignItems="center">
+              <Flex row gap="$gap12" alignItems="center">
+                <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
+                <Text variant="buttonLabel2" color="$neutral1" whiteSpace="nowrap">
+                  <Trans i18nKey="common.extension" />
+                </Text>
+              </Flex>
+              <DetectedBadge />
             </Flex>
-            <DetectedBadge />
           </OptionContainer>
         ) : !isMobileWeb ? (
           <DownloadWalletOption />
         ) : null}
-        <OptionContainer onPress={() => connect(uniswapWalletConnector)}>
+        <OptionContainer
+          onPress={() => (uniswapMobileWallet ? connectWallet({ wallet: uniswapMobileWallet, onSuccess }) : undefined)}
+        >
           {isMobileWeb ? (
             <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
           ) : (

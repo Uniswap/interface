@@ -21,6 +21,7 @@ interface Window {
     on?: (event: string, handler: (...args: unknown[]) => void) => void
     removeListener?: (event: string, handler: (...args: unknown[]) => void) => void
     isConnected?: () => boolean
+    isTrustWallet?: boolean
   }
   binancew3w?: {
     ethereum?: {

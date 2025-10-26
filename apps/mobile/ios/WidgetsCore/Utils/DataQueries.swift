@@ -84,11 +84,13 @@ public class DataQueries {
         case .success(let graphQLResult):
           let tokenProject = graphQLResult.data?.tokenProjects?[0]
           let markets = tokenProject?.markets
+          let price = tokenProject?.markets?[0]?.price?.value
+          let pricePercentChange24h = tokenProject?.markets?[0]?.pricePercentChange24h?.value
           let priceHistory = (markets != nil) && !markets!.isEmpty ?
           tokenProject?.markets?[0]?.priceHistory?.map { (result) -> PriceHistory in
             return PriceHistory(timestamp: result?.timestamp ?? 0  * 1000, price: result?.value ?? 0)
           } : []
-          let priceHistoryResponse = TokenPriceHistoryResponse(priceHistory: priceHistory ?? [])
+          let priceHistoryResponse = TokenPriceHistoryResponse(priceHistory: priceHistory ?? [], price: price, pricePercentChange24h: pricePercentChange24h)
           continuation.resume(returning: priceHistoryResponse)
         case .failure(let error):
           continuation.resume(throwing: error)

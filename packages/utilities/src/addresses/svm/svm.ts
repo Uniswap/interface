@@ -9,8 +9,7 @@ import { PublicKey } from '@solana/web3.js'
  */
 export const isSVMAddress = (input: string): boolean => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const test = new PublicKey(input)
+    const _test = new PublicKey(input)
     return true
   } catch {
     return false

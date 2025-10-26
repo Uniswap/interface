@@ -20,7 +20,7 @@ import { useIsQueuedTransaction } from 'uniswap/src/features/transactions/hooks/
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { openTransactionLink } from 'uniswap/src/utils/linking'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
@@ -138,7 +138,7 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
           borderRadius="$rounded16"
           gap="$spacing12"
           hoverStyle={hoverStyle}
-          px={isWeb ? '$spacing8' : '$none'}
+          px={isWebPlatform ? '$spacing8' : '$none'}
           py="$spacing8"
         >
           {icon && (

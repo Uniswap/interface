@@ -27,7 +27,7 @@ export function useRpcTokenBalancesWithLoadingIndicator({
     () =>
       skip
         ? []
-        : (tokens?.filter((t?: Token): t is Token => isEVMAddress(t?.address) !== false && t?.chainId === chainId) ??
+        : (tokens?.filter((t?: Token): t is Token => isEVMAddress(t?.address) !== false && t.chainId === chainId) ??
           []),
     [chainId, tokens, skip],
   )
@@ -160,6 +160,8 @@ function useGqlCurrencyBalances(
 }
 
 /**
+ * @deprecated use usePortfolioBalances & getOnChainBalancesFetch from packages/uniswap instead
+ *
  * Returns balances for tokens on currently-connected chainId via RPC.
  * Falls back to graphql TokenBalances if user is not connected to chain, a.k.a !isSynced.
  */

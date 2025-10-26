@@ -22,7 +22,7 @@ interface HeroProps {
 export function Hero({ scrollToRef, transition }: HeroProps) {
   const media = useMedia()
   const { height: scrollPosition } = useScroll({ enabled: !media.sm })
-  const { defaultChainId } = useEnabledChains()
+  const { defaultChainId, chains } = useEnabledChains()
   const initialInputCurrency = useCurrency({
     address: 'ETH',
     chainId: defaultChainId,
@@ -136,7 +136,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
 
         <RiseIn delay={0.3}>
           <Text variant="body1" textAlign="center" maxWidth={430} color="$neutral2" $short={{ variant: 'body2' }}>
-            <Trans i18nKey="hero.subtitle" />
+            <Trans i18nKey="hero.subtitle" values={{ amount: chains.length }} />
           </Text>
         </RiseIn>
       </Flex>

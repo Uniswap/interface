@@ -3,8 +3,12 @@ import { createPromiseClient } from '@connectrpc/connect'
 import { queryOptions, UseQueryResult, useQuery } from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import { ListTransactionsRequest, ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { transformInput, WithoutWalletAccount } from '@universe/api'
 import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
-import { transformInput, WithoutWalletAccount } from 'uniswap/src/data/rest/utils'
+import {
+  AccountAddressesByPlatform,
+  buildAccountAddressesByPlatform,
+} from 'uniswap/src/data/rest/buildAccountAddressesByPlatform'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import type { QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
@@ -34,7 +38,7 @@ type GetListTransactionsQuery<TSelectData = ListTransactionsResponse> = QueryOpt
   TSelectData,
   readonly [
     ReactQueryCacheKey.ListTransactions,
-    Address | undefined,
+    AccountAddressesByPlatform | undefined,
     PartialMessage<ListTransactionsRequest> | undefined,
   ]
 >
@@ -45,13 +49,13 @@ export const getListTransactionsQuery = <TSelectData = ListTransactionsResponse>
   refetchInterval,
   select,
 }: GetListTransactionsInput<TSelectData>): GetListTransactionsQuery<TSelectData> => {
+  const accountAddressesByPlatform = buildAccountAddressesByPlatform(input)
   const transformedInput = transformInput(input)
 
-  const { walletAccount, ...inputWithoutAddress } = transformedInput ?? {}
-  const address = walletAccount?.platformAddresses[0]?.address
+  const { walletAccount: _walletAccount, ...inputWithoutWalletAccount } = transformedInput ?? {}
 
   return queryOptions({
-    queryKey: [ReactQueryCacheKey.ListTransactions, address, inputWithoutAddress],
+    queryKey: [ReactQueryCacheKey.ListTransactions, accountAddressesByPlatform, inputWithoutWalletAccount],
     queryFn: () =>
       transformedInput ? transactionsClient.listTransactions(transformedInput) : Promise.resolve(undefined),
     placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when refetching

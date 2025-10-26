@@ -3,6 +3,7 @@ import isEqual from 'lodash/isEqual'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ParsedWarnings, Warning } from 'uniswap/src/components/modals/WarningModal/types'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
@@ -100,7 +101,16 @@ export function useParsedSwapWarnings(): ParsedWarnings {
 
   const swapWarnings = useSwapWarnings(derivedSwapInfo)
 
-  const gasWarning = useTransactionGasWarning({ accountAddress, derivedInfo: derivedSwapInfo, gasFee: gasFee.value })
+  // Check if current wallet can pay gas fees in any token
+  const { getCanPayGasInAnyToken } = useUniswapContext()
+  const skipGasCheck = getCanPayGasInAnyToken?.()
+
+  const gasWarning = useTransactionGasWarning({
+    accountAddress,
+    derivedInfo: derivedSwapInfo,
+    gasFee: gasFee.value,
+    skipGasCheck,
+  })
 
   const allWarnings = useMemo(() => {
     return !gasWarning ? swapWarnings : [...swapWarnings, gasWarning]

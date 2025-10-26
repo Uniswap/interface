@@ -25,7 +25,7 @@ export const [GoogleChromeLogo, AnimatedGoogleChromeLogo] = createIcon({
           <Stop offset="1" stopColor="#1a73e8" />
         </LinearGradient>
       </Defs>
-      <_Circle cx="24" cy="23.9947" r="12" fill={'currentColor' ?? '#fff'} />
+      <_Circle cx="24" cy="23.9947" r="12" fill="currentColor" />
       <Path
         d="M3.2154,36A24,24,0,1,0,12,3.2154,24,24,0,0,0,3.2154,36ZM34.3923,18A12,12,0,1,1,18,13.6077,12,12,0,0,1,34.3923,18Z"
         fill="none"

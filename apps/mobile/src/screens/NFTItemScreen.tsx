@@ -1,5 +1,6 @@
 /* eslint-disable complexity, max-lines */
 import { ApolloQueryResult } from '@apollo/client'
+import { GraphQLApi } from '@universe/api'
 import { isAddress } from 'ethers/lib/utils'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -34,11 +35,6 @@ import { ContextMenu } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import {
-  NftActivityType,
-  NftItemScreenQuery,
-  useNftItemScreenQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fromGraphQLChain, getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useNFTContextMenuItems } from 'uniswap/src/features/nfts/hooks/useNftContextMenuItems'
@@ -90,14 +86,14 @@ function NFTItemScreenContents({
     data,
     loading: nftLoading,
     refetch,
-  } = useNftItemScreenQuery({
+  } = GraphQLApi.useNftItemScreenQuery({
     variables: {
       contractAddress: address,
       filter: { tokenIds: [tokenId] },
       activityFilter: {
         address,
         tokenId,
-        activityTypes: [NftActivityType.Sale],
+        activityTypes: [GraphQLApi.NftActivityType.Sale],
       },
     },
     pollInterval: PollingInterval.Slow,
@@ -309,7 +305,7 @@ function NFTItemScreenContents({
                           <BaseCard.ErrorState
                             retryButtonLabel={t('common.button.retry')}
                             title={t('tokens.nfts.details.error.load.title')}
-                            onRetry={(): Promise<ApolloQueryResult<NftItemScreenQuery>> => refetch()}
+                            onRetry={(): Promise<ApolloQueryResult<GraphQLApi.NftItemScreenQuery>> => refetch()}
                           />
                         )}
                       </Flex>
@@ -406,7 +402,7 @@ function NFTItemScreenContents({
                           justifyContent="center"
                           onPress={onPressCopyAddress}
                         >
-                          <Text variant="body2">{shortenAddress(contractAddress)}</Text>
+                          <Text variant="body2">{shortenAddress({ address: contractAddress })}</Text>
                           <CopyAlt color="$neutral3" size="$icon.16" />
                         </TouchableArea>
                       }

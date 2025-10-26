@@ -64,6 +64,7 @@ describe('Web Accounts Store Getters', () => {
       evm: 'evm-connector-1',
       svm: 'svm-connector-1',
     },
+    analyticsWalletType: 'test-analytics-wallet-type',
     ...overrides,
   })
 
@@ -93,6 +94,7 @@ describe('Web Accounts Store Getters', () => {
       evm: createMockEVMConnector(),
       svm: createMockSVMConnector(),
     },
+    connectionQueryIsPending: false,
     ...overrides,
   })
 
@@ -625,9 +627,9 @@ describe('Web Accounts Store Getters', () => {
 
         // Then
         expect(status).toMatchObject({
-          status: ConnectorStatus.Connecting,
-          isConnected: false,
-          isConnecting: true,
+          status: ConnectorStatus.Connected,
+          isConnected: true,
+          isConnecting: false,
           isDisconnected: false,
         }) // Connecting has higher priority than Connected
       })

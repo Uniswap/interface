@@ -1,6 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import type { Currency } from '@uniswap/sdk-core'
-import { DropdownSelector } from 'components/DropdownSelector'
+import { parseRestProtocolVersion } from '@universe/api'
+import { Dropdown } from 'components/Dropdowns/Dropdown'
 import { DynamicFeeTierSpeedbump } from 'components/Liquidity/Create/DynamicFeeTierSpeedbump'
 import { FormStepsWrapper, FormWrapper } from 'components/Liquidity/Create/FormWrapper'
 import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
@@ -10,7 +11,6 @@ import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'components/Liquidity/C
 import { FeeTierSearchModal } from 'components/Liquidity/FeeTierSearchModal'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { LPSettings } from 'components/LPSettings'
-
 import {
   CreateLiquidityContextProvider,
   DEFAULT_PRICE_RANGE_STATE,
@@ -25,7 +25,6 @@ import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { Button, Flex, styled, Text, TouchableArea } from 'ui/src'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
-import { parseRestProtocolVersion } from 'uniswap/src/data/rest/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -151,13 +150,13 @@ const Toolbar = () => {
       setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
       setVersionDropdownOpen(false)
     },
-    [setPositionState, setPriceRangeState, setStep, navigate, setVersionDropdownOpen],
+    [setPositionState, setPriceRangeState, setStep, navigate],
   )
 
   const versionOptions = useMemo(
     () =>
       [ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
-        .filter((version) => version != protocolVersion)
+        .filter((version) => version !== protocolVersion)
         .map((version) => (
           <TouchableArea key={`version-${version}`} onPress={() => handleVersionChange(version)}>
             <Flex p="$spacing8" borderRadius="$rounded8" hoverStyle={{ backgroundColor: '$surface2' }}>
@@ -178,7 +177,7 @@ const Toolbar = () => {
 
       <ToolbarContainer>
         <ResetButton onClickReset={() => setShowResetModal(true)} isDisabled={isNativeTokenAOnly} />
-        <DropdownSelector
+        <Dropdown
           containerStyle={{ width: 'auto' }}
           buttonStyle={{ py: '$spacing8', px: '$spacing12' }}
           dropdownStyle={{ width: 200, borderRadius: '$rounded16' }}
@@ -192,7 +191,7 @@ const Toolbar = () => {
           alignRight
         >
           {versionOptions}
-        </DropdownSelector>
+        </Dropdown>
         <Flex
           borderRadius="$rounded12"
           borderWidth={!customSlippageTolerance ? '$spacing1' : '$none'}

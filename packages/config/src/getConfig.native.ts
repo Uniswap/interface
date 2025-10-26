@@ -13,6 +13,7 @@ import {
   INCLUDE_PROTOTYPE_FEATURES,
   INFURA_KEY,
   IS_E2E_TEST,
+  JUPITER_PROXY_URL,
   ONESIGNAL_APP_ID,
   QUICKNODE_ENDPOINT_NAME,
   QUICKNODE_ENDPOINT_TOKEN,
@@ -57,6 +58,7 @@ export const getConfig = (): Config => {
     graphqlUrlOverride: process.env.GRAPHQL_URL_OVERRIDE || GRAPHQL_URL_OVERRIDE,
     infuraKey: process.env.REACT_APP_INFURA_KEY || INFURA_KEY,
     includePrototypeFeatures: process.env.INCLUDE_PROTOTYPE_FEATURES || INCLUDE_PROTOTYPE_FEATURES,
+    jupiterProxyUrl: process.env.JUPITER_PROXY_URL || JUPITER_PROXY_URL,
     onesignalAppId: process.env.ONESIGNAL_APP_ID || ONESIGNAL_APP_ID,
     quicknodeEndpointName:
       process.env.REACT_APP_QUICKNODE_ENDPOINT_NAME || process.env.QUICKNODE_ENDPOINT_NAME || QUICKNODE_ENDPOINT_NAME,
@@ -84,8 +86,7 @@ export const getConfig = (): Config => {
   }
 
   if (isNonTestDev) {
-    // Cannot use logger here, causes error from circular dep
-    // eslint-disable-next-line no-console
+    // biome-ignore lint/suspicious/noConsole: Cannot use logger here, causes error from circular dep
     console.debug('Using app config:', config)
   }
 

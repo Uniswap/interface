@@ -8,6 +8,7 @@ import { interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
+import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { AssetType } from 'uniswap/src/entities/assets'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSelectHasTokenFavorited } from 'uniswap/src/features/favorites/useSelectHasTokenFavorited'
@@ -20,7 +21,6 @@ import type { CurrencyId } from 'uniswap/src/types/currency'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 
 interface TokenMenuParams {
@@ -89,7 +89,7 @@ export function useExploreTokenContextMenu({
     () => [
       {
         title: isFavorited ? t('explore.tokens.favorite.action.remove') : t('explore.tokens.favorite.action.add'),
-        systemIcon: isFavorited ? 'heart.fill' : 'heart',
+        systemIcon: isFavorited ? 'heart.slash.fill' : 'heart.fill',
         onPress: onPressToggleFavorite,
       },
       ...(onEditFavorites

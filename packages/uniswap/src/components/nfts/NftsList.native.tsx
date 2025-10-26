@@ -33,6 +33,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     renderedInModal = false,
     errorStateStyle,
     emptyStateStyle,
+    customEmptyState,
     ListFooterComponent,
     numColumns = 2,
     renderNFTItem,
@@ -147,20 +148,21 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
             />
           </Flex>
         ) : (
-          // empty view
-          <Flex centered pt="$spacing48" px="$spacing36" style={emptyStateStyle}>
-            <BaseCard.EmptyState
-              buttonLabel={isExternalProfile || !onPressEmptyState ? undefined : t('tokens.nfts.list.none.button')}
-              description={
-                isExternalProfile
-                  ? t('tokens.nfts.list.none.description.external')
-                  : t('tokens.nfts.list.none.description.default')
-              }
-              icon={<NoNfts color="$neutral3" size="$icon.100" />}
-              title={t('tokens.nfts.list.none.title')}
-              onPress={onPressEmptyState}
-            />
-          </Flex>
+          (customEmptyState ?? (
+            <Flex centered pt="$spacing48" px="$spacing36" style={emptyStateStyle}>
+              <BaseCard.EmptyState
+                buttonLabel={isExternalProfile || !onPressEmptyState ? undefined : t('tokens.nfts.list.none.button')}
+                description={
+                  isExternalProfile
+                    ? t('tokens.nfts.list.none.description.external')
+                    : t('tokens.nfts.list.none.description.default')
+                }
+                icon={<NoNfts color="$neutral3" size="$icon.100" />}
+                title={t('tokens.nfts.list.none.title')}
+                onPress={onPressEmptyState}
+              />
+            </Flex>
+          ))
         )
       }
       // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top

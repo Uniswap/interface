@@ -32,12 +32,12 @@ export function useOnSelectCurrency({
 }): ({
   currency,
   field,
-  forceIsBridgePair,
+  allowCrossChainPair,
   isPreselectedAsset,
 }: {
   currency: Currency
   field: CurrencyField
-  forceIsBridgePair: boolean
+  allowCrossChainPair: boolean
   isPreselectedAsset: boolean
 }) => void {
   const { onCurrencyChange } = useTransactionModalContext()
@@ -63,12 +63,12 @@ export function useOnSelectCurrency({
     ({
       currency,
       field,
-      forceIsBridgePair,
+      allowCrossChainPair,
       isPreselectedAsset,
     }: {
       currency: Currency
       field: CurrencyField
-      forceIsBridgePair: boolean
+      allowCrossChainPair: boolean
       isPreselectedAsset: boolean
     }) => {
       const tradeableAsset: TradeableAsset = {
@@ -89,8 +89,7 @@ export function useOnSelectCurrency({
       const otherFieldTokenProjects = otherField === CurrencyField.INPUT ? inputTokenProjects : outputTokenProjects
 
       const isBridgePair =
-        // `forceIsBridgePair` means the user explicitly selected a bridge pair.
-        forceIsBridgePair ||
+        allowCrossChainPair ||
         (otherFieldTradeableAsset
           ? checkIsBridgePair({
               queryClient,

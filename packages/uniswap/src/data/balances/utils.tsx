@@ -1,6 +1,6 @@
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { GraphQLApi } from '@universe/api'
 import { useEffect, useState } from 'react'
-import { PortfolioBalancesQueryResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { logger } from 'utilities/src/logger/logger'
@@ -9,7 +9,7 @@ import { logger } from 'utilities/src/logger/logger'
  * Computes the total balances in USD per chain asynchronously to avoid blocking the main thread.
  */
 export function useTotalBalancesUsdPerChain(
-  portfolioBalances: PortfolioBalancesQueryResult,
+  portfolioBalances: GraphQLApi.PortfolioBalancesQueryResult,
 ): Record<string, number> | undefined {
   const [totalBalancesUsdPerChain, setTotalBalancesUsdPerChain] = useState<Record<string, number> | undefined>(
     undefined,

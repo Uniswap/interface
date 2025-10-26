@@ -1,6 +1,6 @@
+import { GraphQLApi } from '@universe/api'
 import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useFormattedTransactionDataForActivity } from 'uniswap/src/features/activity/hooks/useFormattedTransactionDataForActivity'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
@@ -49,7 +49,7 @@ export function useHomeScreenState(): {
     evmAddress: address,
     skip: hasUsedWalletFromCache,
   })
-  const { data: nftData, loading: areNFTsLoading } = useNftsTabQuery({
+  const { data: nftData, loading: areNFTsLoading } = GraphQLApi.useNftsTabQuery({
     variables: {
       ownerAddress: address,
       first: 1,
@@ -62,7 +62,7 @@ export function useHomeScreenState(): {
     skip: hasUsedWalletFromCache,
   })
   const { hasData: hasActivity, isLoading: isActivityLoading } = useFormattedTransactionDataForActivity({
-    address,
+    evmAddress: address,
     ownerAddresses,
     fiatOnRampParams,
     hideSpamTokens: true,

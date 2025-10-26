@@ -1,10 +1,9 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useRef } from 'react'
 import { cancelAnimation, useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated'
 import { useSelector } from 'react-redux'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { Flex, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatedTouchableArea, useSporeColors } from 'ui/src'
 import { SwapDotted } from 'ui/src/components/icons'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances/balances'
@@ -14,10 +13,13 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { selectFilteredChainIds } from 'uniswap/src/features/transactions/swap/state/selectors'
 import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const ACTIVE_SCALE = 0.96
 const LONG_PRESS_HAPTIC_DELAY = 200 // ms - faster than default long press (usually 500ms)
+
+const shadowOffset = { width: 0, height: 6 }
 
 interface SwapButtonProps {
   onLongPress: () => void
@@ -40,7 +42,7 @@ export function SwapButton({ onLongPress, onClose }: SwapButtonProps): JSX.Eleme
     chainId: persistedFilteredChainIds?.[CurrencyField.INPUT],
   })
 
-  const onPress = useCallback(async () => {
+  const onPress = useEvent(async () => {
     // Close modal if onClose is provided
     onClose?.()
 
@@ -57,25 +59,20 @@ export function SwapButton({ onLongPress, onClose }: SwapButtonProps): JSX.Eleme
     if (!hasTriggeredLongPressHaptic.current) {
       await hapticFeedback.light()
     }
-  }, [inputCurrencyId, defaultChainId, hapticFeedback, persistedFilteredChainIds, navigate, onClose])
+  })
 
-  const handleLongPress = useCallback(() => {
-    // Don't trigger haptic here since timer already handled it
-    onLongPress()
-  }, [onLongPress])
-
-  const clearLongPressTimer = useCallback(() => {
+  const clearLongPressTimer = useEvent(() => {
     if (longPressTimerRef.current) {
       clearTimeout(longPressTimerRef.current)
       longPressTimerRef.current = null
     }
     hasTriggeredLongPressHaptic.current = false
-  }, [])
+  })
 
   const scale = useSharedValue(1)
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])
 
-  const onPressIn = useCallback(() => {
+  const onPressIn = useEvent(() => {
     cancelAnimation(scale)
     scale.value = withSpring(ACTIVE_SCALE, {
       damping: 15,
@@ -89,9 +86,9 @@ export function SwapButton({ onLongPress, onClose }: SwapButtonProps): JSX.Eleme
         hasTriggeredLongPressHaptic.current = true
       }
     }, LONG_PRESS_HAPTIC_DELAY)
-  }, [scale, hapticFeedback])
+  })
 
-  const onPressOut = useCallback(() => {
+  const onPressOut = useEvent(() => {
     scale.value = withSpring(1, {
       damping: 15,
       stiffness: 300,
@@ -99,32 +96,30 @@ export function SwapButton({ onLongPress, onClose }: SwapButtonProps): JSX.Eleme
 
     // Clear the timer when press ends
     clearLongPressTimer()
-  }, [scale, clearLongPressTimer])
+  })
 
   return (
     <Trace logPress element={ElementName.Swap}>
-      <TouchableArea
+      <AnimatedTouchableArea
+        style={animatedStyle}
         testID={ElementName.Swap}
         activeOpacity={1}
+        borderRadius="$roundedFull"
+        backgroundColor="$accent1"
+        px="$spacing24"
+        alignItems="center"
+        justifyContent="center"
+        height="100%"
+        shadowColor="$shadowColor"
+        shadowOffset={shadowOffset}
+        shadowRadius={spacing.spacing12}
         onPress={onPress}
-        onLongPress={handleLongPress}
+        onLongPress={onLongPress}
         onPressIn={onPressIn}
         onPressOut={onPressOut}
       >
-        <AnimatedFlex style={animatedStyle}>
-          <Flex
-            borderRadius="$roundedFull"
-            backgroundColor="$accent1"
-            px="$spacing24"
-            py="$spacing12"
-            shadowColor="$shadowColor"
-            shadowOffset={{ width: 0, height: 6 }}
-            shadowRadius={spacing.spacing12}
-          >
-            <SwapDotted size={iconSizes.icon28} color={colors.white.val} />
-          </Flex>
-        </AnimatedFlex>
-      </TouchableArea>
+        <SwapDotted size={iconSizes.icon28} color={colors.white.val} />
+      </AnimatedTouchableArea>
     </Trace>
   )
 }

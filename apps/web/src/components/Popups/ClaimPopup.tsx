@@ -36,12 +36,11 @@ export default function ClaimPopup() {
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account.address)
 
   // listen for available claim and show popup if needed
+  // biome-ignore lint/correctness/useExhaustiveDependencies: toggleClaimPopup function changes every time the popup changes, so this will cause an infinite loop
   useEffect(() => {
     if (userHasAvailableclaim) {
       toggleClaimPopup()
     }
-    // the toggleShowClaimPopup function changes every time the popup changes, so this will cause an infinite loop.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userHasAvailableclaim])
 
   return (

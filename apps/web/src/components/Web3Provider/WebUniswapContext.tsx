@@ -1,12 +1,14 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { MenuStateVariant, useMenuState } from 'components/AccountDrawer/menuState'
 import { SwitchNetworkAction } from 'components/Popups/types'
-import { ReceiveModalState, receiveCryptoModalStateAtom } from 'components/ReceiveCryptoModal/state'
+import { ReceiveModalState } from 'components/ReceiveCryptoModal/types'
+import { useOpenReceiveCryptoModal } from 'components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { useConnectionStatus } from 'features/accounts/store/hooks'
 import { useAccountsStoreContext } from 'features/accounts/store/provider'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersProvider } from 'hooks/useEthersProvider'
 import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useModalState } from 'hooks/useModalState'
-import { useUpdateAtom } from 'jotai/utils'
 import { useOneClickSwapSetting } from 'pages/Swap/settings/OneClickSwap'
 import React, { PropsWithChildren, useCallback, useEffect } from 'react'
 import { useSelector } from 'react-redux'
@@ -14,6 +16,7 @@ import { useLocation, useNavigate } from 'react-router'
 import { serializeSwapAddressesToURLParameters } from 'state/swap/hooks'
 import { useIsAtomicBatchingSupportedByChainIdCallback } from 'state/walletCapabilities/hooks/useIsAtomicBatchingSupportedByChain'
 import { useHasMismatchCallback, useShowMismatchToast } from 'state/walletCapabilities/hooks/useMismatchAccount'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainDisplayName'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -22,6 +25,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useSetActiveChainId } from 'uniswap/src/features/smartWallet/delegation/hooks/useSetActiveChainId'
 import { DelegatedState } from 'uniswap/src/features/smartWallet/delegation/types'
 import { useHasAccountMismatchCallback } from 'uniswap/src/features/smartWallet/mismatch/hooks'
@@ -49,6 +53,12 @@ export function WebUniswapProvider({ children }: PropsWithChildren): JSX.Element
 
 // Abstracts web-specific transaction flow objects for usage in cross-platform flows in the `uniswap` package.
 function WebUniswapProviderInner({ children }: PropsWithChildren) {
+  const account = useAccount()
+
+  // Check if current wallet can pay gas fees in any token (e.g., Porto wallet)
+  const getCanPayGasInAnyToken = useCallback(() => {
+    return account.connector?.id === CONNECTION_PROVIDER_IDS.PORTO_CONNECTOR_ID
+  }, [account.connector?.id])
   const signer = useEthersSigner()
   const location = useLocation()
   const accountDrawer = useAccountDrawer()
@@ -98,8 +108,9 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
     [openSendModal, closeSearchModal, accountDrawer, navigate, location],
   )
 
-  const setReceiveModalState = useUpdateAtom(receiveCryptoModalStateAtom)
-  const navigateToReceive = useCallback(() => setReceiveModalState(ReceiveModalState.DEFAULT), [setReceiveModalState])
+  const navigateToReceive = useOpenReceiveCryptoModal({
+    modalState: ReceiveModalState.DEFAULT,
+  })
 
   // no-op until we have a share token screen on web
   const handleShareToken = useCallback((_: { currencyId: string }) => {
@@ -175,6 +186,20 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
     },
   )
 
+  const accountDrawerMenu = useMenuState()
+
+  const { isConnected } = useConnectionStatus()
+  const onConnectWallet = useEvent((platform?: Platform) => {
+    accountDrawer.open()
+
+    // If a wallet is already connected, and swap prompts to connect on a specific platform,
+    // then the connect platform menu should be shown
+    if (platform && isConnected) {
+      accountDrawerMenu.setMenuState({ variant: MenuStateVariant.CONNECT_PLATFORM, platform })
+      return
+    }
+  })
+
   const navigateToNftDetails = useNavigateToNftExplorerLink()
 
   useAccountChainIdEffect()
@@ -195,12 +220,13 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       navigateToNftDetails={navigateToNftDetails}
       navigateToPoolDetails={navigateToPoolDetails}
       handleShareToken={handleShareToken}
-      onConnectWallet={accountDrawer.open}
+      onConnectWallet={onConnectWallet}
       getCanSignPermits={getCanSignPermits}
       getIsUniswapXSupported={getIsUniswapXSupported}
       handleOnPressUniswapXUnsupported={handleOpenUniswapXUnsupportedModal}
       getCanBatchTransactions={getCanBatchTransactions}
       useAccountsStoreContextHook={useAccountsStoreContext}
+      getCanPayGasInAnyToken={getCanPayGasInAnyToken}
     >
       {children}
     </UniswapProvider>

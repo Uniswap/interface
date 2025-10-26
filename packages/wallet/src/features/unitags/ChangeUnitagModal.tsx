@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 import { useQuery } from '@tanstack/react-query'
-import { UnitagErrorCodes, UnitagsApiClient } from '@universe/api'
+import { UnitagErrorCodes } from '@universe/api'
 import { useEffect, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
@@ -10,6 +10,7 @@ import { AlertTriangleFilled, Person } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { UnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { useResetUnitagsQueries } from 'uniswap/src/data/apiClients/unitagsApi/useResetUnitagsQueries'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
@@ -23,7 +24,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { uniqueIdQuery } from 'utilities/src/device/uniqueIdQuery'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid, isExtension, isMobileApp } from 'utilities/src/platform'
+import { isAndroid, isExtensionApp, isMobileApp } from 'utilities/src/platform'
 import { ModalBackButton } from 'wallet/src/components/modals/ModalBackButton'
 import { ChangeUnitagConfirmButton } from 'wallet/src/features/unitags/ChangeUnitagConfirmButton'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks/useCanAddressClaimUnitag'
@@ -157,6 +158,7 @@ export function ChangeUnitagModal({
   }
 
   // When useUnitagError completes loading, if unitag is valid then continue to speedbump
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +onFinishEditing
   useEffect(() => {
     if (isCheckingUnitag && !!unitagToCheck && !loadingUnitagErrorCheck) {
       setIsCheckingUnitag(false)
@@ -177,14 +179,14 @@ export function ChangeUnitagModal({
         <ChangeUnitagConfirmModal unitag={newUnitag} onChangeSubmit={onChangeSubmit} onClose={onCloseConfirmModal} />
       )}
       <Modal isDismissible name={ModalName.UnitagsChange} onClose={onClose}>
-        {isExtension && <ModalBackButton onBack={onClose} />}
+        {isExtensionApp && <ModalBackButton onBack={onClose} />}
         <KeyboardAvoidingView>
           <Flex
-            px={isExtension ? undefined : '$spacing24'}
+            px={isExtensionApp ? undefined : '$spacing24'}
             // Since BottomSheetTextInput doesnt work, dynamically set bottom padding based on keyboard height to get a keyboard avoiding view
             pb={keyboardHeight > 0 ? modalKeyboardOffset : '$spacing12'}
           >
-            <Flex centered gap="$spacing12" pt={isExtension ? '$spacing24' : '$spacing12'}>
+            <Flex centered gap="$spacing12" pt={isExtensionApp ? '$spacing24' : '$spacing12'}>
               <Flex
                 centered
                 backgroundColor="$surface2"
@@ -292,8 +294,8 @@ function ChangeUnitagConfirmModal({
   const { t } = useTranslation()
   return (
     <Modal isDismissible name={ModalName.UnitagsChangeConfirm} onClose={onClose}>
-      {isExtension && <ModalBackButton onBack={onClose} />}
-      <Flex centered gap="$spacing12" pb="$spacing12" pt={isExtension ? '$spacing24' : '$spacing12'} px="$spacing24">
+      {isExtensionApp && <ModalBackButton onBack={onClose} />}
+      <Flex centered gap="$spacing12" pb="$spacing12" pt={isExtensionApp ? '$spacing24' : '$spacing12'} px="$spacing24">
         <Flex
           centered
           backgroundColor="$statusCritical2"
@@ -307,7 +309,7 @@ function ChangeUnitagConfirmModal({
         <Text textAlign="center" variant="subheading1">
           {t('unitags.editUsername.confirm.title')}
         </Text>
-        <Text color="$neutral2" textAlign="center" variant={isExtension ? 'body3' : 'body2'}>
+        <Text color="$neutral2" textAlign="center" variant={isExtensionApp ? 'body3' : 'body2'}>
           {t('unitags.editUsername.confirm.subtitle')}
         </Text>
         <Flex py="$spacing32">

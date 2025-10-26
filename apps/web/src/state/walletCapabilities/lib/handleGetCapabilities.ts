@@ -2,7 +2,7 @@ import { getCapabilities as wagmi_getCapabilities } from '@wagmi/core/experiment
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { ensureValidatedCapabilities } from 'state/walletCapabilities/lib/ensureValidatedCapabilities'
 import { ChainCapabilities, GetCapabilitiesResult } from 'state/walletCapabilities/lib/types'
-import { ensure0xHex, numberToHex } from 'uniswap/src/utils/hex'
+import { ensure0xHex, numberToHex } from 'utilities/src/addresses/hex'
 import { getLogger } from 'utilities/src/logger/logger'
 
 const TIMEOUT_MS = 5000

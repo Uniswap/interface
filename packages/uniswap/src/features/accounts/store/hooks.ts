@@ -7,7 +7,7 @@ import {
   createUseConnectionStatus,
 } from 'uniswap/src/features/accounts/store/utils/connection'
 import { createUseAccountsStore } from 'uniswap/src/features/accounts/store/utils/createUseAccountsStore'
-import { createUseActiveWallet } from 'uniswap/src/features/accounts/store/utils/wallets'
+import { createUseActiveWallet, createUseWalletWithId } from 'uniswap/src/features/accounts/store/utils/wallets'
 
 /** Gets AccountsStoreContext for the current app, passed by the app to this package via `UniswapProvider`. */
 function useCurrentAppAccountStoreContext(): AccountsStore {
@@ -28,3 +28,5 @@ export const useActiveConnector = createUseActiveConnector(useCurrentAppAccountS
 export const useActiveWallet = createUseActiveWallet(useCurrentAppAccountStoreContext)
 
 export const useConnectionStatus = createUseConnectionStatus(useCurrentAppAccountStoreContext)
+
+export const useWalletWithId = createUseWalletWithId(useCurrentAppAccountStoreContext)

@@ -17,7 +17,7 @@ import { useClearFlashblocksSwapNotifications } from 'uniswap/src/features/trans
 import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { UnichainPoweredMessage } from 'uniswap/src/features/transactions/TransactionDetails/UnichainPoweredMessage'
-import { isInterface, isInterfaceDesktop, isWeb } from 'utilities/src/platform'
+import { isWebApp, isWebAppDesktop, isWebPlatform } from 'utilities/src/platform'
 
 export function UnichainInstantBalanceModal(): JSX.Element | null {
   const { t } = useTranslation()
@@ -61,7 +61,7 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
     })
 
     // Close the entire swap flow
-    if (isWeb) {
+    if (isWebPlatform) {
       setScreen(TransactionScreen.Form)
     }
     onClose()
@@ -88,7 +88,7 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
       renderBehindBottomInset
       isModalOpen={isModalOpen}
       name={ModalName.UnichainInstantBalanceModal}
-      alignment={isInterface ? 'center' : 'top'}
+      alignment={isWebApp ? 'center' : 'top'}
       padding="$none"
       zIndex={zIndexes.popover}
       onClose={handleClose}
@@ -96,14 +96,14 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
       <GradientContainer toTokenColor={toTokenColor ?? backgroundColor}>
         <Flex alignItems="center" p="$padding8" pt="$padding12">
           {/* TOP-RIGHT CLOSE BUTTON */}
-          {isWeb && (
+          {isWebPlatform && (
             <Flex
               alignItems="center"
               width="100%"
               height="$spacing32"
               flexDirection="row-reverse"
               px="$padding12"
-              pt={isInterfaceDesktop ? '$padding20' : '$none'}
+              pt={isWebAppDesktop ? '$padding20' : '$none'}
             >
               <ModalCloseIcon onClose={handleClose} />
             </Flex>
@@ -130,7 +130,7 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
               <Text variant="subheading1" color="$neutral1">
                 {t('swap.details.completed')}
               </Text>
-              <Text variant={isInterfaceDesktop ? 'heading2' : 'heading3'} color="$neutral1">
+              <Text variant={isWebAppDesktop ? 'heading2' : 'heading3'} color="$neutral1">
                 {`${lastSwapOutputBalance} ${outputCurrencyInfo.currency.symbol}`}
               </Text>
               <UnichainPoweredMessage swappedInTime={confirmTimeSeconds} />
@@ -138,7 +138,7 @@ export function UnichainInstantBalanceModal(): JSX.Element | null {
           </Flex>
 
           {/* PRIMARY CLOSE BUTTON */}
-          <Flex row width="100%" px={isWeb ? '$none' : '$gap16'} mb={isWeb ? '$none' : '$gap16'}>
+          <Flex row width="100%" px={isWebPlatform ? '$none' : '$gap16'} mb={isWebPlatform ? '$none' : '$gap16'}>
             <Button emphasis="tertiary" size="large" borderColor="$surface3" onPress={handleClose}>
               {t('common.button.close')}
             </Button>

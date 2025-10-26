@@ -16,11 +16,14 @@ export const useChartPriceState = () => {
   return useStore(
     store,
     useShallow((s) => ({
+      defaultMinPrice: s.defaultMinPrice,
+      defaultMaxPrice: s.defaultMaxPrice,
       isFullRange: s.isFullRange,
       maxPrice: s.maxPrice,
       minPrice: s.minPrice,
       selectedHistoryDuration: s.selectedHistoryDuration,
       selectedPriceStrategy: s.selectedPriceStrategy,
+      inputMode: s.inputMode,
     })),
   )
 }

@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Playwright fixtures need direct analytics import
 import { test as base } from '@playwright/test'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 
@@ -45,7 +45,6 @@ export const test = base.extend<AmplitudeFixture>({
           },
         })
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.warn('Amplitude intercept error:', error)
         return route.continue()
       }

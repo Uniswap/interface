@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
-  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
+  // biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
   selectIsTestnetModeEnabled,
   selectWalletHideSmallBalancesSetting,
   selectWalletHideSpamTokensSetting,

@@ -34,12 +34,11 @@ export function useNotificationLifecycle({
   const currentNotification = notifications?.[0]
   const hasQueuedNotification = !!notifications?.[1]
 
-  // Run this only once to ensure that if a new notification is created it doesn't show on the next screen
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Run this only once to ensure that if a new notification is created it doesn't show on the next screen
   useEffect(() => {
     if (currentNotification?.shown) {
       dispatch(popNotification({ address }))
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [address, dispatch])
 
   useEffect(() => {

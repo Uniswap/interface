@@ -36,7 +36,7 @@ export function createMigrate(
       const migratedState: PersistedState = migrationKeys.reduce((versionState: PersistedState, versionKey) => {
         logger.debug('redux-persist', 'createMigrate', `running migration for versionKey: ${versionKey}`)
         // Safe non-null assertion because `versionKey` comes from `Object.keys(migrations)`
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        // biome-ignore lint/style/noNonNullAssertion: Safe assertion in test or migration context
         return migrations[versionKey]!(versionState)
       }, state)
 

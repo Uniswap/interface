@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import type { FlexProps } from 'ui/src/components/layout'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { colors, colorsDark, opacify } from 'ui/src/theme/color'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 type ShadowProps = Pick<FlexProps, 'shadowColor' | 'shadowOffset' | 'shadowRadius' | '$platform-web'>
 
@@ -12,7 +12,7 @@ export function useShadowPropsShort(): ShadowProps {
 
   return useMemo(
     () =>
-      isInterface
+      isWebApp
         ? {
             '$platform-web': {
               boxShadow: isDarkMode
@@ -34,7 +34,7 @@ export function useShadowPropsMedium(): ShadowProps {
 
   return useMemo(
     () =>
-      isInterface
+      isWebApp
         ? {
             '$platform-web': {
               boxShadow: isDarkMode

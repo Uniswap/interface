@@ -14,7 +14,7 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { EthMethod, EthSignMethod, WalletConnectEthMethod } from 'uniswap/src/features/dappRequests/types'
 import { DappRequestInfo, DappRequestType } from 'uniswap/src/types/walletConnect'
-import { hexToNumber } from 'uniswap/src/utils/hex'
+import { hexToNumber } from 'utilities/src/addresses/hex'
 import { generateBatchId } from 'wallet/src/features/batchedTransactions/utils'
 import { GetCallsStatusParams, SendCallsParams } from 'wallet/src/features/dappRequests/types'
 /**

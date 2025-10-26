@@ -37,7 +37,7 @@ import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactio
 import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { DEFAULT_PROTOCOL_OPTIONS } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isExtension, isInterface, isMobileApp, isMobileWeb, isWeb } from 'utilities/src/platform'
+import { isExtensionApp, isMobileApp, isMobileWeb, isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function TradeRoutingPreferenceScreen(): JSX.Element {
@@ -194,7 +194,7 @@ function createGetProtocolTitle(ctx: {
 function UniswapXTitleInfoTooltip(): JSX.Element {
   const [forceCloseTooltip, setForceCloseTooltip] = useState(undefined as undefined | true)
   const [showModal, setShowModal] = useState(false)
-  if (isWeb) {
+  if (isWebPlatform) {
     return (
       <InfoTooltip
         text={<UniswapXInfoTooltipText onPress={() => setForceCloseTooltip(true)} />}
@@ -364,7 +364,7 @@ const UniswapXNotSupportedDescription = (): JSX.Element => {
     </Flex>
   )
 
-  if (isWeb) {
+  if (isWebPlatform) {
     return (
       <InfoTooltip
         open={forceCloseTooltip === undefined ? undefined : !forceCloseTooltip}
@@ -395,7 +395,7 @@ function UniswapXInfoTooltipText(props?: { onPress?: () => void }): JSX.Element 
   const handleHideTransactionSettingsModal = useModalHide(TransactionSettingsModalId.TransactionSettings)
 
   const onPress = useEvent(() => {
-    if (isExtension) {
+    if (isExtensionApp) {
       openUri({ uri: uniswapUrls.helpArticleUrls.multichainDelegation }).catch(() => {})
     } else {
       handleOnPressUniswapXUnsupported?.()
@@ -404,7 +404,7 @@ function UniswapXInfoTooltipText(props?: { onPress?: () => void }): JSX.Element 
     props?.onPress?.()
   })
 
-  const body = isExtension ? t('uniswapx.description.unsupported') : t('wallet.mismatch.popup.description')
+  const body = isExtensionApp ? t('uniswapx.description.unsupported') : t('wallet.mismatch.popup.description')
 
   return (
     <TouchableArea onPress={onPress}>
@@ -413,7 +413,7 @@ function UniswapXInfoTooltipText(props?: { onPress?: () => void }): JSX.Element 
           {body}
         </Text>
         <Text color="$accent1" variant="body3">
-          {isInterface ? t('common.button.viewDetails') : t('common.button.learn')}
+          {isWebApp ? t('common.button.viewDetails') : t('common.button.learn')}
         </Text>
       </Flex>
     </TouchableArea>
@@ -469,7 +469,7 @@ function UniswapXInfoModal({ isOpen, onClose }: { isOpen: boolean; onClose: () =
       }}
     >
       <LearnMoreLink
-        textVariant={isWeb ? 'body4' : 'buttonLabel3'}
+        textVariant={isWebPlatform ? 'body4' : 'buttonLabel3'}
         url={uniswapUrls.helpArticleUrls.multichainDelegation}
       />
     </WarningModal>

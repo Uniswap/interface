@@ -8,8 +8,8 @@ export const [Dot, AnimatedDot] = createIcon({
   getIcon: (props) => (
     <Svg viewBox="0 0 16 16" fill="none" {...props}>
       <G id="Dot">
-        <_Circle id="Ellipse 4" cx="8" cy="8" r="6" fill={'currentColor' ?? '#131313'} fillOpacity="0.08" />
-        <_Circle id="Ellipse 5" cx="8" cy="8" r="2" fill={'currentColor' ?? '#131313'} fillOpacity="0.63" />
+        <_Circle id="Ellipse 4" cx="8" cy="8" r="6" fill="currentColor" fillOpacity="0.08" />
+        <_Circle id="Ellipse 5" cx="8" cy="8" r="2" fill="currentColor" fillOpacity="0.63" />
       </G>
     </Svg>
   ),

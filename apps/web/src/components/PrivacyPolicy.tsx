@@ -9,7 +9,7 @@ import { ArrowDown, Info } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
-import { ModalCloseIcon } from 'ui/src'
+import { ModalCloseIcon, Text, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -56,7 +56,7 @@ export function PrivacyPolicyModal() {
     <Modal name={ModalName.Legal} isModalOpen={isOpen} onClose={() => closeModal()} padding={0}>
       <AutoColumn gap="md" ref={node as any}>
         <RowBetween padding="1rem 1rem 0.5rem 1rem">
-          <ThemedText.DeprecatedMediumHeader>{t('common.legalAndPrivacy')}</ThemedText.DeprecatedMediumHeader>
+          <Text variant="subheading1">{t('common.legalAndPrivacy')}</Text>
           <ModalCloseIcon onClose={closeModal} />
         </RowBetween>
         <PrivacyPolicy />
@@ -67,6 +67,7 @@ export function PrivacyPolicyModal() {
 
 function PrivacyPolicy() {
   const { t } = useTranslation()
+  const colors = useSporeColors()
   const EXTERNAL_APIS = useMemo(
     () => [
       {
@@ -141,7 +142,7 @@ function PrivacyPolicy() {
             <DarkGrayCard key={i}>
               <AutoColumn gap="sm">
                 <AutoRow gap="4px">
-                  <Info size={18} />
+                  <Info size={18} color={colors.neutral1.val} />
                   <ThemedText.DeprecatedMain fontSize={14} color="neutral1">
                     {name}
                   </ThemedText.DeprecatedMain>

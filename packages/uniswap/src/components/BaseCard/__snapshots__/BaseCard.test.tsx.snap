@@ -122,7 +122,9 @@ exports[`ErrorState renders without error 1`] = `
   <View
     style={
       {
-        "flexDirection": "row",
+        "alignItems": "center",
+        "flexDirection": "column",
+        "gap": 16,
       }
     }
   />

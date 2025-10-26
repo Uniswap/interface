@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AttackType, CurrencyInfo, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import {
   getFeeColor,
@@ -35,7 +35,7 @@ const mockCurrency = {
 const mockNativeCurrency = { isNative: true } as NativeCurrency
 const mockSafetyInfo: SafetyInfo = {
   tokenList: TokenList.Default,
-  protectionResult: ProtectionResult.Benign,
+  protectionResult: GraphQLApi.ProtectionResult.Benign,
   attackType: AttackType.Other,
 }
 const mockCurrencyInfo = {
@@ -69,7 +69,7 @@ describe('getTokenWarningSeverity', () => {
       ...mockCurrencyInfo,
       safetyInfo: {
         ...mockSafetyInfo,
-        protectionResult: ProtectionResult.Spam,
+        protectionResult: GraphQLApi.ProtectionResult.Spam,
         attackType: AttackType.Airdrop,
       },
     }
@@ -109,7 +109,7 @@ describe('getTokenWarningSeverity', () => {
       ...mockCurrencyInfo,
       safetyInfo: {
         ...mockSafetyInfo,
-        protectionResult: ProtectionResult.Malicious,
+        protectionResult: GraphQLApi.ProtectionResult.Malicious,
         attackType: AttackType.Impersonator,
       },
     }
@@ -128,7 +128,7 @@ describe('getTokenWarningSeverity', () => {
     expect(getTokenWarningSeverity(highFeeCurrencyInfo)).toBe(WarningSeverity.High)
   })
 
-  it('should return High for very high fee on transfer even if our fees DB doesnt have fees data & if Blockaid hasnt properly updated their ProtectionResult to malicious lol', () => {
+  it('should return High for very high fee on transfer even if our fees DB doesnt have fees data & if Blockaid hasnt properly updated their GraphQLApi.ProtectionResult to malicious lol', () => {
     const highFeeCurrencyInfo = {
       ...mockCurrencyInfo,
       safetyInfo: {
@@ -137,7 +137,7 @@ describe('getTokenWarningSeverity', () => {
           sellFeePercent: 100,
         },
         tokenList: TokenList.NonDefault,
-        protectionResult: ProtectionResult.Benign,
+        protectionResult: GraphQLApi.ProtectionResult.Benign,
       },
       currency: {
         ...mockCurrency,
@@ -186,7 +186,7 @@ describe('getShouldHaveCombinedPluralTreatment', () => {
     }
     const highCurrencyInfo = {
       ...mockCurrencyInfo,
-      safetyInfo: { ...mockSafetyInfo, protectionResult: ProtectionResult.Malicious },
+      safetyInfo: { ...mockSafetyInfo, protectionResult: GraphQLApi.ProtectionResult.Malicious },
     }
     expect(getShouldHaveCombinedPluralTreatment(lowCurrencyInfo, highCurrencyInfo)).toBe(false)
   })
@@ -303,7 +303,7 @@ describe('getTokenProtectionWarning', () => {
         ...mockCurrencyInfo,
         safetyInfo: {
           ...mockSafetyInfo,
-          protectionResult: ProtectionResult.Malicious,
+          protectionResult: GraphQLApi.ProtectionResult.Malicious,
           attackType: AttackType.Impersonator,
         },
       },
@@ -315,7 +315,7 @@ describe('getTokenProtectionWarning', () => {
         ...mockCurrencyInfo,
         safetyInfo: {
           ...mockSafetyInfo,
-          protectionResult: ProtectionResult.Spam,
+          protectionResult: GraphQLApi.ProtectionResult.Spam,
           attackType: AttackType.Airdrop,
         },
       },
@@ -327,7 +327,7 @@ describe('getTokenProtectionWarning', () => {
         ...mockCurrencyInfo,
         safetyInfo: {
           ...mockSafetyInfo,
-          protectionResult: ProtectionResult.Malicious,
+          protectionResult: GraphQLApi.ProtectionResult.Malicious,
           attackType: AttackType.Other,
         },
       },
@@ -369,7 +369,7 @@ describe('getTokenProtectionWarning', () => {
         ...mockCurrencyInfo,
         safetyInfo: {
           ...mockSafetyInfo,
-          protectionResult: ProtectionResult.Unknown,
+          protectionResult: GraphQLApi.ProtectionResult.Unknown,
           attackType: undefined,
         },
       } satisfies CurrencyInfo,
@@ -381,7 +381,7 @@ describe('getTokenProtectionWarning', () => {
         ...mockCurrencyInfo,
         safetyInfo: {
           ...mockSafetyInfo,
-          protectionResult: ProtectionResult.Spam,
+          protectionResult: GraphQLApi.ProtectionResult.Spam,
           attackType: AttackType.HighFees,
         },
       },
@@ -393,7 +393,7 @@ describe('getTokenProtectionWarning', () => {
         ...mockCurrencyInfo,
         safetyInfo: {
           ...mockSafetyInfo,
-          protectionResult: ProtectionResult.Malicious,
+          protectionResult: GraphQLApi.ProtectionResult.Malicious,
           attackType: AttackType.HighFees,
         },
       },
@@ -527,7 +527,11 @@ describe('useTokenWarningCardText', () => {
     expect(
       useTokenWarningCardText({
         ...mockCurrencyInfo,
-        safetyInfo: { ...mockSafetyInfo, protectionResult: ProtectionResult.Spam, attackType: AttackType.Airdrop },
+        safetyInfo: {
+          ...mockSafetyInfo,
+          protectionResult: GraphQLApi.ProtectionResult.Spam,
+          attackType: AttackType.Airdrop,
+        },
       }),
     ).toEqual({ heading: 'token.safety.warning.spam.title', description: 'token.safety.warning.spam.message' })
   })
@@ -542,7 +546,7 @@ describe('useTokenWarningCardText', () => {
       } as Token,
       safetyInfo: {
         ...mockSafetyInfo,
-        protectionResult: ProtectionResult.Malicious,
+        protectionResult: GraphQLApi.ProtectionResult.Malicious,
         attackType: AttackType.HighFees,
         blockaidFees: {
           sellFeePercent: 15,

@@ -1,4 +1,4 @@
-/* eslint-disable no-restricted-globals */
+/* biome-ignore-all lint/style/noRestrictedGlobals: we need access to `chrome` in the global scope */
 import {
   getChrome,
   getChromeRuntime,
@@ -11,7 +11,7 @@ describe('Chrome utilities', () => {
 
   beforeEach(() => {
     // Reset the global chrome object before each test
-    jest.resetAllMocks()
+    vi.resetAllMocks()
   })
 
   afterAll(() => {

@@ -1,3 +1,5 @@
+const biomeSupportedRules = require('@uniswap/eslint-config/biome-supported')
+const { reactNative: reactNativeImports } = require('@uniswap/eslint-config/restrictedImports')
 const rulesDirPlugin = require('eslint-plugin-rulesdir')
 rulesDirPlugin.RULES_DIR = 'eslint_rules'
 
@@ -7,7 +9,7 @@ module.exports = {
   plugins: ['rulesdir'],
   ignorePatterns: ['node_modules', '.turbo', '.eslintrc.js', 'codegen.ts', '.nx'],
   parserOptions: {
-    project: 'tsconfig.json',
+    project: 'tsconfig.eslint.json',
     tsconfigRootDir: __dirname,
     ecmaFeatures: {
       jsx: true,
@@ -19,6 +21,20 @@ module.exports = {
     'rulesdir/i18n': 'error',
   },
   overrides: [
+    {
+      files: ['**'],
+      rules: {
+        // Disable all ESLint rules that have been migrated to Biome
+        ...biomeSupportedRules,
+      },
+    },
+    {
+      files: ['**/*.{ts,tsx}'],
+      excludedFiles: ['**/*.native.*', '**/*.ios.*', '**/*.android.*'],
+      rules: {
+        '@typescript-eslint/no-restricted-imports': ['error', reactNativeImports],
+      },
+    },
     {
       files: [
         'src/index.ts',

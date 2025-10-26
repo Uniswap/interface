@@ -2,9 +2,9 @@ import { skipToken, type UseQueryResult, useQuery } from '@tanstack/react-query'
 import {
   type UnitagClaimEligibilityRequest,
   type UnitagClaimEligibilityResponse,
-  UnitagsApiClient,
   type UseQueryApiHelperHookArgs,
 } from '@universe/api'
+import { UnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 

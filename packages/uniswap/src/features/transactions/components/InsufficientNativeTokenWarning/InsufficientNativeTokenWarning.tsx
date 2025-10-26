@@ -21,7 +21,7 @@ import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { Wallet } from 'uniswap/src/features/wallet/types/Wallet'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { isExtension, isWeb } from 'utilities/src/platform'
+import { isExtensionApp, isWebPlatform } from 'utilities/src/platform'
 
 export function InsufficientNativeTokenWarning({
   warnings,
@@ -126,7 +126,7 @@ function InsufficientNativeTokenWarningContent({
                   tokenSymbol: nativeCurrency.symbol ?? '',
                 })
           }
-          showCloseButton={isExtension || isWeb}
+          showCloseButton={isExtensionApp || isWebPlatform}
           onClose={onClose}
         >
           <Text color="$neutral2" textAlign="center" variant="body3">

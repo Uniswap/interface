@@ -13,6 +13,7 @@ import { useContext, useMemo } from 'react'
 import { ExploreContext, giveExploreStatDefaultValue } from 'state/explore'
 import { PoolStat } from 'state/explore/types'
 import { DEFAULT_TICK_SPACING, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 
 function useFilteredPools(pools?: PoolStat[]) {
   const filterString = useAtomValue(exploreSearchStringAtom)
@@ -25,8 +26,10 @@ function useFilteredPools(pools?: PoolStat[]) {
         const addressIncludesFilterString = pool.id.toLowerCase().includes(lowercaseFilterString)
         const token0IncludesFilterString = pool.token0?.symbol?.toLowerCase().includes(lowercaseFilterString)
         const token1IncludesFilterString = pool.token1?.symbol?.toLowerCase().includes(lowercaseFilterString)
-        const token0HashIncludesFilterString = pool.token0?.address.toLowerCase().includes(lowercaseFilterString)
-        const token1HashIncludesFilterString = pool.token1?.address.toLowerCase().includes(lowercaseFilterString)
+        const token0HashIncludesFilterString =
+          pool.token0?.address && normalizeTokenAddressForCache(pool.token0.address).includes(lowercaseFilterString)
+        const token1HashIncludesFilterString =
+          pool.token1?.address && normalizeTokenAddressForCache(pool.token1.address).includes(lowercaseFilterString)
         const poolName = `${pool.token0?.symbol}/${pool.token1?.symbol}`.toLowerCase()
         const poolNameIncludesFilterString = poolName.includes(lowercaseFilterString)
         return (

@@ -38,7 +38,6 @@ export enum HomeQueryParams {
 export enum SettingsRoutes {
   BackupRecoveryPhrase = 'backup-recovery-phrase',
   BiometricUnlockSetUp = 'biometric-unlock-set-up',
-  ChangePassword = 'change-password',
   DevMenu = 'dev-menu',
   DeviceAccess = 'device-access',
   ManageConnections = 'manage-connections',

@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
-import { BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
+import { ESTIMATED_BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
 import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -81,7 +81,7 @@ export const ExploreScreenSearchResultsList = memo(function _ExploreScreenSearch
 
   const contentContainerStyle = useMemo(
     () => ({
-      paddingBottom: (isBottomTabsEnabled ? BOTTOM_TABS_HEIGHT + spacing.spacing32 : 0) + insets.bottom,
+      paddingBottom: (isBottomTabsEnabled ? ESTIMATED_BOTTOM_TABS_HEIGHT + spacing.spacing32 : 0) + insets.bottom,
     }),
     [insets.bottom, isBottomTabsEnabled],
   )
@@ -108,12 +108,14 @@ export const ExploreScreenSearchResultsList = memo(function _ExploreScreenSearch
             debouncedSearchFilter={debouncedSearchQuery}
             searchFilter={searchQuery}
             activeTab={activeTab}
+            renderedInModal={!isBottomTabsEnabled}
             contentContainerStyle={contentContainerStyle}
           />
         ) : (
           <SearchModalNoQueryList
             chainFilter={chainFilter}
             activeTab={activeTab}
+            renderedInModal={!isBottomTabsEnabled}
             contentContainerStyle={contentContainerStyle}
           />
         )}

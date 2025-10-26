@@ -5,6 +5,7 @@ import { createContext, ReactNode, useCallback, useContext, useMemo, useState } 
 import { useTranslation } from 'react-i18next'
 import { ParsedWarnings, WarningAction } from 'uniswap/src/components/modals/WarningModal/types'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -73,6 +74,7 @@ export function SendContextProvider({
     isExtraTx: true,
   })?.toExact()
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: -setSendForm
   const updateSendForm = useCallback(
     (passedNewState: Parameters<SendContextState['updateSendForm']>[0]): void => {
       const newState = { ...passedNewState }
@@ -106,10 +108,15 @@ export function SendContextProvider({
     (): providers.TransactionRequest => ({ ...txRequest, ...gasFee.params }),
     [gasFee.params, txRequest],
   )
+  // Check if current wallet can pay gas fees in any token
+  const { getCanPayGasInAnyToken } = useUniswapContext()
+  const skipGasCheck = getCanPayGasInAnyToken?.()
+
   const gasWarning = useTransactionGasWarning({
     accountAddress: account.address,
     derivedInfo: derivedSendInfo,
     gasFee: gasFee.value,
+    skipGasCheck,
   })
   const allSendWarnings = useMemo(() => {
     return !gasWarning ? warnings : [...warnings, gasWarning]

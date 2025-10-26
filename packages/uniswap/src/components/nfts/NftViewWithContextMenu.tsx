@@ -6,7 +6,7 @@ import { NftView, NftViewProps } from 'uniswap/src/components/nfts/NftView'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useNFTContextMenuItems } from 'uniswap/src/features/nfts/hooks/useNftContextMenuItems'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 import { noop } from 'utilities/src/react/noop'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
@@ -41,8 +41,8 @@ export function NftViewWithContextMenu(props: NftViewWithContextMenuProps): JSX.
 
   const nftViewWithTriggers = useMemo(() => {
     const nftView = <NftView {...props} openContextMenu={openContextMenuWithHaptics} />
-    return isWeb ? (
-      // eslint-disable-next-line react/forbid-elements
+    return isWebPlatform ? (
+      // biome-ignore  lint/correctness/noRestrictedElements: needed here
       <div onContextMenu={onOpenContextMenu}>{nftView}</div>
     ) : (
       nftView
@@ -53,7 +53,7 @@ export function NftViewWithContextMenu(props: NftViewWithContextMenuProps): JSX.
     <Flex>
       <ContextMenu
         menuItems={menuItems}
-        triggerMode={isWeb ? ContextMenuTriggerMode.Primary : ContextMenuTriggerMode.Secondary}
+        triggerMode={isWebPlatform ? ContextMenuTriggerMode.Primary : ContextMenuTriggerMode.Secondary}
         isOpen={contextMenuIsOpen}
         closeMenu={closeContextMenu}
       >

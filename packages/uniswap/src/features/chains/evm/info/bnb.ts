@@ -1,8 +1,9 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { BNB_LOGO } from 'ui/src/assets'
-import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { DEFAULT_NATIVE_ADDRESS_LEGACY, getQuicknodeEndpointUrl } from 'uniswap/src/features/chains/evm/rpc'
 import { buildChainTokens } from 'uniswap/src/features/chains/evm/tokens'
+import { GENERIC_L2_GAS_CONFIG } from 'uniswap/src/features/chains/gasDefaults'
 import {
   GqlChainId,
   NetworkLayer,
@@ -29,7 +30,7 @@ export const BNB_CHAIN_INFO = {
   platform: Platform.EVM,
   assetRepoNetworkName: 'smartchain',
   backendChain: {
-    chain: BackendChainId.Bnb as GqlChainId,
+    chain: GraphQLApi.Chain.Bnb as GqlChainId,
     backendSupported: true,
     nativeTokenBackendAddress: undefined,
   },
@@ -72,5 +73,6 @@ export const BNB_CHAIN_INFO = {
     decimals: 18,
     address: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
   },
+  gasConfig: GENERIC_L2_GAS_CONFIG,
   tradingApiPollingIntervalMs: 200,
 } as const satisfies UniverseChainInfo

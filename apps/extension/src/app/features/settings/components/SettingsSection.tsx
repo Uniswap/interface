@@ -9,7 +9,7 @@ export function SettingsSection({
   children: JSX.Element | JSX.Element[]
 }): JSX.Element {
   return (
-    <Flex gap="$spacing4">
+    <Flex gap="$spacing8">
       <Text color="$neutral2" px={SCREEN_ITEM_HORIZONTAL_PAD} variant="subheading2">
         {title}
       </Text>

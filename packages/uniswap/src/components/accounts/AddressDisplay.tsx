@@ -2,16 +2,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { PropsWithChildren, useMemo, useState } from 'react'
 import type { FlexAlignType, LayoutChangeEvent } from 'react-native'
 import { useDispatch } from 'react-redux'
-import {
-  AnimatableCopyIcon,
-  ColorTokens,
-  Flex,
-  HeightAnimator,
-  SpaceTokens,
-  Text,
-  TextProps,
-  TouchableArea,
-} from 'ui/src'
+import { AnimatableCopyIcon, ColorTokens, Flex, SpaceTokens, Text, TextProps, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -25,7 +16,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { shortenAddress } from 'utilities/src/addresses'
-import { isInterface, isWeb } from 'utilities/src/platform'
+import { isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
@@ -44,6 +35,7 @@ type AddressDisplayProps = {
   captionVariant?: keyof typeof fonts
   centered?: boolean
   direction?: 'row' | 'column'
+  flexGrow?: boolean
   showCopy?: boolean
   showCopyWrapperButton?: boolean
   showAccountIcon?: boolean
@@ -97,6 +89,7 @@ export function AddressDisplay({
   centered,
   hideAddressInSubtitle,
   direction = 'row',
+  flexGrow = true,
   showCopy = false,
   showCopyWrapperButton = false,
   showAccountIcon = true,
@@ -166,12 +159,12 @@ export function AddressDisplay({
       alignItems={alignItems}
       gap={horizontalGap}
       onLayout={(e: LayoutChangeEvent) => {
-        isWeb && setWrapperWidth(e.nativeEvent.layout.width)
+        isWebPlatform && setWrapperWidth(e.nativeEvent.layout.width)
       }}
     >
       {showAccountIcon &&
         (notificationsBadgeContainer ? notificationsBadgeContainer({ children: icon, address }) : icon)}
-      <Flex flexGrow={1} gap={gapBetweenLines}>
+      <Flex flexGrow={flexGrow ? 1 : undefined} gap={gapBetweenLines}>
         <CopyButtonWrapper onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
           <Flex row centered={centered} gap="$spacing12">
             <DisplayNameText
@@ -197,11 +190,12 @@ export function AddressDisplay({
               centered={centered}
             />
             {showCopy && !showAddressAsSubtitle && (
-              <AnimatableCopyIcon isAnimated={isInterface} isCopied={isCopied} size={mainSize} textColor="$neutral1" />
+              <AnimatableCopyIcon isAnimated={isWebApp} isCopied={isCopied} size={mainSize} textColor="$neutral1" />
             )}
           </Flex>
         </CopyButtonWrapper>
-        <HeightAnimator useInitialHeight open={showAddressAsSubtitle}>
+        {/* TODO(PORT-453): re-add HeightAnimator on web */}
+        {showAddressAsSubtitle && (
           <AddressSubtitle
             address={address}
             captionSize={captionSize}
@@ -214,7 +208,7 @@ export function AddressDisplay({
             isCopied={isCopied}
             onPressCopyAddress={onPressCopyAddress}
           />
-        </HeightAnimator>
+        )}
       </Flex>
     </Flex>
   )
@@ -260,15 +254,10 @@ const AddressSubtitle = ({
       py={showCopyWrapperButton ? '$spacing4' : '$none'}
     >
       <Text color={captionTextColor} variant={captionVariant}>
-        {sanitizeAddressText(shortenAddress(address, addressNumVisibleCharacters))}
+        {sanitizeAddressText(shortenAddress({ address, chars: addressNumVisibleCharacters }))}
       </Text>
       {showCopy && (
-        <AnimatableCopyIcon
-          isAnimated={isInterface}
-          isCopied={isCopied}
-          size={captionSize}
-          textColor={captionTextColor}
-        />
+        <AnimatableCopyIcon isAnimated={isWebApp} isCopied={isCopied} size={captionSize} textColor={captionTextColor} />
       )}
     </Flex>
   </CopyButtonWrapper>

@@ -23,6 +23,7 @@ export enum DynamicConfigs {
   DatadogIgnoredErrors = 'datadog_ignored_errors',
   EmbeddedWalletConfig = 'embedded_wallet_config',
   ExtensionBiometricUnlock = 'extension_biometric_unlock_config',
+  DeepLinkUrlAllowlist = 'deep_link_url_allowlist',
 
   // Web
   AstroChain = 'astro_chain',
@@ -30,6 +31,7 @@ export enum DynamicConfigs {
   ExternallyConnectableExtension = 'externally_connectable_extension',
   LPConfig = 'lp_config',
   AllowedV4WethHookAddresses = 'allowed_v4_weth_hook_addresses',
+  OutageBannerChainId = 'outage_banner_chain_id',
 }
 
 // Config values go here for easy access
@@ -53,6 +55,8 @@ export enum SwapConfigKey {
   CeloSendMinGasAmount = 'celoSendMinGasAmount',
   MonSwapMinGasAmount = 'monSwapMinGasAmount',
   MonSendMinGasAmount = 'monSendMinGasAmount',
+  SolanaSwapMinGasAmount = 'solanaSwapMinGasAmount',
+  SolanaSendMinGasAmount = 'solanaSendMinGasAmount',
   GenericL2SwapMinGasAmount = 'genericL2SwapMinGasAmount',
   GenericL2SendMinGasAmount = 'genericL2SendMinGasAmount',
 
@@ -93,6 +97,10 @@ export enum ExtensionBiometricUnlockConfigKey {
   EnableOnboardingEnrollment = 'enableOnboardingEnrollment',
   EnableSettingsEnrollment = 'enableSettingsEnrollment',
   EnableUnlocking = 'enableUnlocking',
+}
+
+export enum DeepLinkUrlAllowlistConfigKey {
+  AllowedUrls = 'allowedUrls',
 }
 
 export enum SyncTransactionSubmissionChainIdsConfigKey {
@@ -173,6 +181,10 @@ export enum AllowedV4WethHookAddressesConfigKey {
   HookAddresses = 'hookAddresses',
 }
 
+export enum OutageBannerChainIdConfigKey {
+  ChainId = 'chainId',
+}
+
 export type DynamicConfigKeys = {
   // Shared
   [DynamicConfigs.Swap]: SwapConfigKey
@@ -188,6 +200,7 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.DatadogSessionSampleRate]: DatadogSessionSampleRateKey
   [DynamicConfigs.EmbeddedWalletConfig]: EmbeddedWalletConfigKey
   [DynamicConfigs.ExtensionBiometricUnlock]: ExtensionBiometricUnlockConfigKey
+  [DynamicConfigs.DeepLinkUrlAllowlist]: DeepLinkUrlAllowlistConfigKey
   [DynamicConfigs.SyncTransactionSubmissionChainIds]: SyncTransactionSubmissionChainIdsConfigKey
 
   // Web
@@ -197,6 +210,7 @@ export type DynamicConfigKeys = {
   [DynamicConfigs.LPConfig]: LPConfigKey
   [DynamicConfigs.AllowedV4WethHookAddresses]: AllowedV4WethHookAddressesConfigKey
   [DynamicConfigs.BlockedAsyncSubmissionChainIds]: BlockedAsyncSubmissionChainIdsConfigKey
+  [DynamicConfigs.OutageBannerChainId]: OutageBannerChainIdConfigKey
 }
 
 // This type must match the format in statsig dynamic config for uwulink
@@ -214,4 +228,14 @@ export type UwULinkAllowlistItem = {
 export type UwULinkAllowlist = {
   contracts: UwULinkAllowlistItem[]
   tokenRecipients: UwULinkAllowlistItem[]
+}
+
+export type DeepLinkUrlAllowlistItem = {
+  url: string
+  description?: string
+  openInApp?: boolean // If true, opens in in-app browser; if false, opens in external browser
+}
+
+export type DeepLinkUrlAllowlist = {
+  allowedUrls: DeepLinkUrlAllowlistItem[]
 }

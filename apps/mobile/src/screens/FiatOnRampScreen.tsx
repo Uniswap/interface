@@ -61,7 +61,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
-import { isIOS, isWeb } from 'utilities/src/platform'
+import { isIOS, isWebPlatform } from 'utilities/src/platform'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
@@ -81,6 +81,9 @@ function preloadServiceProviderLogos(serviceProviders: FORServiceProvider[], isD
 
 const PREDEFINED_AMOUNTS_SUPPORTED_CURRENCIES = ['usd', 'eur', 'gbp', 'aud', 'cad', 'sgd']
 const US_STATES_WITH_RESTRICTIONS = 'US-NY'
+
+// TokenSelectorBalanceDisplay height: 85 + FiatOnRampCtaButton height: 30 + padding: 10
+const DECIMAL_PAD_EXTRA_ELEMENTS_HEIGHT = 125
 
 export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   const [showUnsupportedTokenModal, setShowUnsupportedTokenModal] = useState(false)
@@ -139,12 +142,12 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
   // passed to memo(...) component
   const onDecimalPadTriggerInputShake = useCallback(() => {
     inputRef.current?.triggerShakeAnimation()
-  }, [inputRef])
+  }, [])
 
   // passed to memo(...) component
   const resetSelection = useCallback(({ start, end }: { start: number; end?: number }): void => {
     selectionRef.current = { start, end }
-    if (!isWeb && inputRef.current) {
+    if (!isWebPlatform && inputRef.current) {
       setTimeout(() => {
         inputRef.current?.textInputRef.current?.setNativeProps({ selection: { start, end } })
       }, 0)
@@ -448,21 +451,18 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     noQuotesReturned: filteredQuotes?.length === 0,
   })
 
-  const onSelectionChange = useCallback(
-    (start: number, end: number) => {
-      if (Date.now() - amountUpdatedTimeRef.current < ON_SELECTION_CHANGE_WAIT_TIME_MS) {
-        // We only want to trigger this callback when the user is manually moving the cursor,
-        // but this function is also triggered when the input value is updated,
-        // which causes issues on Android.
-        // We use `amountUpdatedTimeRef` to check if the input value was updated recently,
-        // and if so, we assume that the user is actually typing and not manually moving the cursor.
-        return
-      }
-      selectionRef.current = { start, end }
-      decimalPadRef.current?.updateDisabledKeys()
-    },
-    [amountUpdatedTimeRef],
-  )
+  const onSelectionChange = useCallback((start: number, end: number) => {
+    if (Date.now() - amountUpdatedTimeRef.current < ON_SELECTION_CHANGE_WAIT_TIME_MS) {
+      // We only want to trigger this callback when the user is manually moving the cursor,
+      // but this function is also triggered when the input value is updated,
+      // which causes issues on Android.
+      // We use `amountUpdatedTimeRef` to check if the input value was updated recently,
+      // and if so, we assume that the user is actually typing and not manually moving the cursor.
+      return
+    }
+    selectionRef.current = { start, end }
+    decimalPadRef.current?.updateDisabledKeys()
+  }, [])
 
   const { navigateToSwapFlow } = useWalletNavigation()
   const onAcceptUnsupportedTokenSwap = useCallback(() => {
@@ -488,7 +488,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     valueRef.current = ''
     resetSelection({ start: 0 })
     setSelectedQuote(undefined)
-  }, [setValue, setFiatAmount, setTokenAmount, valueRef, resetSelection, setSelectedQuote])
+  }, [setFiatAmount, setTokenAmount, resetSelection, setSelectedQuote])
 
   const onPillToggle = (option: string | number): void => {
     setIsOffRamp(option === RampToggle.SELL)
@@ -565,8 +565,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
             <DecimalPadCalculateSpace
               id={DecimalPadCalculatedSpaceId.FiatOnRamp}
               decimalPadRef={decimalPadRef}
-              // TODO(WALL-6347): pass in the correct height of the additional elements in the AnimatedFlex below.
-              additionalElementsHeight={0}
+              additionalElementsHeight={DECIMAL_PAD_EXTRA_ELEMENTS_HEIGHT}
             />
 
             <AnimatedFlex

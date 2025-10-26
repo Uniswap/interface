@@ -7,7 +7,7 @@ import {
   useExperimentValueFromLayer,
   useFeatureFlag,
 } from 'uniswap/src/features/gating/hooks'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 /**
  * Hook to determine if Unichain flashblocks feature should be enabled
@@ -34,7 +34,7 @@ export function useIsUnichainFlashblocksEnabled(chainId?: UniverseChainId): bool
   }
 
   // Only check experiment on interface platform
-  if (isInterface && !flashblocksExperiment) {
+  if (isWebApp && !flashblocksExperiment) {
     return false
   }
 
@@ -66,7 +66,7 @@ export function getIsFlashblocksEnabled(chainId?: UniverseChainId): boolean {
   }
 
   // Only check experiment on interface platform
-  if (isInterface && !flashblocksExperiment) {
+  if (isWebApp && !flashblocksExperiment) {
     return false
   }
 

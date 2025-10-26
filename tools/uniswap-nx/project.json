@@ -1,0 +1,8 @@
+{
+  "targets": {
+    "lint:biome": {},
+    "lint:biome:fix": {},
+    "lint": {},
+    "lint:fix": {}
+  }
+}

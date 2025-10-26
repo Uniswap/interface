@@ -1,11 +1,11 @@
 import { NetworkStatus } from '@apollo/client'
 import { useScrollToTop } from '@react-navigation/native'
-import { isError } from '@universe/api'
-import React, { ReactElement, useCallback, useMemo, useRef } from 'react'
+import { GraphQLApi, isError } from '@universe/api'
+import React, { type ReactElement, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ListRenderItemInfo } from 'react-native'
+import { type ListRenderItemInfo } from 'react-native'
 import { useAnimatedScrollHandler, useSharedValue, withTiming } from 'react-native-reanimated'
-import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
+import { type AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
 import { Loader } from 'src/components/loading/loaders'
@@ -19,11 +19,7 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
-import {
-  NftCollectionScreenQuery,
-  useNftCollectionScreenQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { NFTItem } from 'uniswap/src/features/nfts/types'
+import { type NFTItem } from 'uniswap/src/features/nfts/types'
 import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -41,7 +37,7 @@ const LOADING_ITEMS_ARRAY: NFTItem[] = Array(LOADING_BUFFER_AMOUNT).fill(LOADING
 const keyExtractor = (item: NFTItem | string, index: number): string =>
   typeof item === 'string' ? `${LOADING_ITEM}-${index}` : getNFTAssetKey(item.contractAddress ?? '', item.tokenId ?? '')
 
-function gqlNFTAssetToNFTItem(data: NftCollectionScreenQuery | undefined): NFTItem[] | undefined {
+function gqlNFTAssetToNFTItem(data: GraphQLApi.NftCollectionScreenQuery | undefined): NFTItem[] | undefined {
   const items = data?.nftAssets?.edges.flatMap((item) => item.node)
   if (!items) {
     return undefined
@@ -80,7 +76,7 @@ export function NFTCollectionScreen({
   const navigation = useAppStackNavigation()
 
   // Collection overview data and paginated grid items
-  const { data, networkStatus, fetchMore, refetch } = useNftCollectionScreenQuery({
+  const { data, networkStatus, fetchMore, refetch } = GraphQLApi.useNftCollectionScreenQuery({
     variables: { contractAddress: collectionAddress, first: ASSET_FETCH_PAGE_SIZE },
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'cache-and-network',
@@ -109,7 +105,7 @@ export function NFTCollectionScreen({
   }, [data?.nftAssets?.pageInfo.endCursor, data?.nftAssets?.pageInfo.hasNextPage, fetchMore])
 
   // Scroll behavior for fixed scroll header
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // biome-ignore lint/suspicious/noExplicitAny: FlashList ref type is complex and any is acceptable here
   const listRef = useRef<any>(null)
   useScrollToTop(listRef)
   const scrollY = useSharedValue(0)

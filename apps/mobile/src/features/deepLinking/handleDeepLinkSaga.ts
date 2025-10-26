@@ -8,12 +8,14 @@ import {
   isAllowedUwuLinkRequest,
   parseUwuLinkDataFromDeeplink,
 } from 'src/components/Requests/Uwulink/utils'
+import { getUwuLinkAllowlist } from 'src/features/deepLinking/configUtils'
 import {
   DeepLinkAction,
   DeepLinkActionResult,
   PayloadWithFiatOnRampParams,
   parseDeepLinkUrl,
 } from 'src/features/deepLinking/deepLinkUtils'
+import { handleInAppBrowser } from 'src/features/deepLinking/handleInAppBrowserSaga'
 import { handleOffRampReturnLink } from 'src/features/deepLinking/handleOffRampReturnLinkSaga'
 import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
@@ -27,11 +29,8 @@ import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/walletCon
 import { addRequest, setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { DynamicConfigs, UwuLinkConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
-import { isUwULinkAllowlistType } from 'uniswap/src/features/gating/typeGuards'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n'
@@ -64,102 +63,109 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
     const { coldStart } = action.payload
     const deepLinkAction = parseDeepLinkUrl(action.payload.url)
     const activeAccount = yield* select(selectActiveAccount)
+
     if (!activeAccount) {
       if (deepLinkAction.action === DeepLinkAction.UniswapWebLink) {
         yield* call(openUri, { uri: deepLinkAction.data.url.toString(), openExternalBrowser: true })
-        yield* _sendAnalyticsEvent(deepLinkAction, coldStart)
+      } else if (deepLinkAction.action === DeepLinkAction.InAppBrowser) {
+        yield* call(handleInAppBrowser, deepLinkAction.data.targetUrl, deepLinkAction.data.openInApp)
       }
-      // If there is no active account, we don't want to handle the deep link
-      return
-    }
-
-    switch (deepLinkAction.action) {
-      case DeepLinkAction.UniswapWebLink: {
-        yield* call(handleUniswapAppDeepLink, {
-          path: deepLinkAction.data.urlPath,
-          url: deepLinkAction.data.url.href,
-          linkSource: LinkSource.Share,
-        })
-        break
-      }
-      case DeepLinkAction.WalletConnectAsParam:
-      case DeepLinkAction.UniswapWalletConnect: {
-        yield* call(handleWalletConnectDeepLink, deepLinkAction.data.wcUri)
-        break
-      }
-      case DeepLinkAction.UniswapWidget: {
-        yield* call(handleUniswapAppDeepLink, {
-          path: deepLinkAction.data.url.hash,
-          url: deepLinkAction.data.url.toString(),
-          linkSource: LinkSource.Widget,
-        })
-        break
-      }
-      case DeepLinkAction.Scantastic: {
-        yield* call(handleScantasticDeepLink, deepLinkAction.data.scantasticQueryParams)
-        break
-      }
-      case DeepLinkAction.UwuLink: {
-        yield* call(handleUwuLinkDeepLink, deepLinkAction.data.url.toString())
-        break
-      }
-      case DeepLinkAction.TransactionScreen:
-      case DeepLinkAction.ShowTransactionAfterFiatOnRamp:
-      case DeepLinkAction.ShowTransactionAfterFiatOffRampScreen:
-      case DeepLinkAction.SwapScreen: {
-        const validUserAddress = yield* call(parseAndValidateUserAddress, deepLinkAction.data.userAddress)
-        yield* put(setAccountAsActive(validUserAddress))
-        switch (deepLinkAction.action) {
-          case DeepLinkAction.TransactionScreen: {
-            yield* call(handleTransactionLink)
-            break
-          }
-          case DeepLinkAction.ShowTransactionAfterFiatOnRamp: {
-            yield* call(handleOnRampReturnLink)
-            break
-          }
-          case DeepLinkAction.ShowTransactionAfterFiatOffRampScreen: {
-            yield* call(handleOffRampReturnLink, deepLinkAction.data.url)
-            break
-          }
-          case DeepLinkAction.SwapScreen: {
-            yield* call(handleSwapLink, deepLinkAction.data.url, parseSwapLinkMobileFormatOrThrow)
-            break
-          }
+      // If there is no active account, we don't want to handle other deep links
+    } else {
+      switch (deepLinkAction.action) {
+        case DeepLinkAction.UniswapWebLink: {
+          yield* call(handleUniswapAppDeepLink, {
+            path: deepLinkAction.data.urlPath,
+            url: deepLinkAction.data.url.href,
+            linkSource: LinkSource.Share,
+          })
+          break
         }
-        break
-      }
-      case DeepLinkAction.SkipNonWalletConnect: {
-        // Set didOpenFromDeepLink so that `returnToPreviousApp()` is enabled during WalletConnect flows
-        yield* put(setDidOpenFromDeepLink(true))
-        break
-      }
-      case DeepLinkAction.UniversalWalletConnectLink: {
-        yield* call(handleWalletConnectDeepLink, deepLinkAction.data.wcUri)
-        break
-      }
-      case DeepLinkAction.WalletConnect: {
-        yield* call(handleWalletConnectDeepLink, deepLinkAction.data.wcUri)
-        break
-      }
-      case DeepLinkAction.FiatOnRampScreen: {
-        if (deepLinkAction.data.userAddress) {
+        case DeepLinkAction.WalletConnectAsParam:
+        case DeepLinkAction.UniswapWalletConnect: {
+          yield* call(handleWalletConnectDeepLink, deepLinkAction.data.wcUri)
+          break
+        }
+        case DeepLinkAction.UniswapWidget: {
+          yield* call(handleUniswapAppDeepLink, {
+            path: deepLinkAction.data.url.hash,
+            url: deepLinkAction.data.url.toString(),
+            linkSource: LinkSource.Widget,
+          })
+          break
+        }
+        case DeepLinkAction.Scantastic: {
+          yield* call(handleScantasticDeepLink, deepLinkAction.data.scantasticQueryParams)
+          break
+        }
+        case DeepLinkAction.UwuLink: {
+          yield* call(handleUwuLinkDeepLink, deepLinkAction.data.url.toString())
+          break
+        }
+        case DeepLinkAction.InAppBrowser: {
+          yield* call(handleInAppBrowser, deepLinkAction.data.targetUrl, deepLinkAction.data.openInApp)
+          break
+        }
+        case DeepLinkAction.TransactionScreen:
+        case DeepLinkAction.ShowTransactionAfterFiatOnRamp:
+        case DeepLinkAction.ShowTransactionAfterFiatOffRampScreen:
+        case DeepLinkAction.SwapScreen: {
           const validUserAddress = yield* call(parseAndValidateUserAddress, deepLinkAction.data.userAddress)
           yield* put(setAccountAsActive(validUserAddress))
+          switch (deepLinkAction.action) {
+            case DeepLinkAction.TransactionScreen: {
+              yield* call(handleTransactionLink)
+              break
+            }
+            case DeepLinkAction.ShowTransactionAfterFiatOnRamp: {
+              yield* call(handleOnRampReturnLink)
+              break
+            }
+            case DeepLinkAction.ShowTransactionAfterFiatOffRampScreen: {
+              yield* call(handleOffRampReturnLink, deepLinkAction.data.url)
+              break
+            }
+            case DeepLinkAction.SwapScreen: {
+              yield* call(handleSwapLink, deepLinkAction.data.url, parseSwapLinkMobileFormatOrThrow)
+              break
+            }
+          }
+          break
         }
-        yield* call(handleGoToFiatOnRampDeepLink, deepLinkAction.data)
-        break
-      }
-      case DeepLinkAction.TokenDetails: {
-        yield* put(closeAllModals())
-        yield* call(handleGoToTokenDetailsDeepLink, deepLinkAction.data.currencyId)
-        break
-      }
-      case DeepLinkAction.Unknown:
-      case DeepLinkAction.Error: {
-        break
+        case DeepLinkAction.SkipNonWalletConnect: {
+          // Set didOpenFromDeepLink so that `returnToPreviousApp()` is enabled during WalletConnect flows
+          yield* put(setDidOpenFromDeepLink(true))
+          break
+        }
+        case DeepLinkAction.UniversalWalletConnectLink: {
+          yield* call(handleWalletConnectDeepLink, deepLinkAction.data.wcUri)
+          break
+        }
+        case DeepLinkAction.WalletConnect: {
+          yield* call(handleWalletConnectDeepLink, deepLinkAction.data.wcUri)
+          break
+        }
+        case DeepLinkAction.FiatOnRampScreen: {
+          if (deepLinkAction.data.userAddress) {
+            const validUserAddress = yield* call(parseAndValidateUserAddress, deepLinkAction.data.userAddress)
+            yield* put(setAccountAsActive(validUserAddress))
+          }
+          yield* call(handleGoToFiatOnRampDeepLink, deepLinkAction.data)
+          break
+        }
+        case DeepLinkAction.TokenDetails: {
+          yield* put(closeAllModals())
+          yield* call(handleGoToTokenDetailsDeepLink, deepLinkAction.data.currencyId)
+          break
+        }
+        case DeepLinkAction.Unknown:
+        case DeepLinkAction.Error: {
+          break
+        }
       }
     }
+
+    // Send analytics event consistently regardless of whether there's an active account
     yield* _sendAnalyticsEvent(deepLinkAction, coldStart)
   } catch (error) {
     yield* call(logger.error, error, {
@@ -280,15 +286,7 @@ function* handleUwuLinkDeepLink(uri: string): Generator {
     const uwulinkData = parseUwuLinkDataFromDeeplink(decodedUri)
     const parsedUwulinkRequest: UwULinkRequest = JSON.parse(uwulinkData)
 
-    const uwuLinkAllowList = getDynamicConfigValue({
-      config: DynamicConfigs.UwuLink,
-      key: UwuLinkConfigKey.Allowlist,
-      defaultValue: {
-        contracts: [],
-        tokenRecipients: [],
-      },
-      customTypeGuard: isUwULinkAllowlistType,
-    })
+    const uwuLinkAllowList = getUwuLinkAllowlist()
 
     const activeAccount = yield* select(selectActiveAccount)
     const isSignerAccount = activeAccount?.type === AccountType.SignerMnemonic

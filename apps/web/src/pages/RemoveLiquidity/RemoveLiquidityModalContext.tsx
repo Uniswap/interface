@@ -88,16 +88,7 @@ export function RemoveLiquidityModalContextProvider({ children }: PropsWithChild
       currentTransactionStep,
       setCurrentTransactionStep,
     }),
-    [
-      percent,
-      step,
-      positionInfo,
-      currencies,
-      percentInvalid,
-      unwrapNativeCurrency,
-      setUnwrapNativeCurrency,
-      currentTransactionStep,
-    ],
+    [percent, step, positionInfo, currencies, percentInvalid, unwrapNativeCurrency, currentTransactionStep],
   )
 
   return <RemoveLiquidityModalContext.Provider value={ctx}>{children}</RemoveLiquidityModalContext.Provider>

@@ -67,3 +67,19 @@ export function createUseActiveWallet<TAccountsState extends AccountsState>(
     )
   }
 }
+
+/**
+ * Factory function that creates a useWalletWithId hook for a specific accounts store context.
+ * Returns the wallet with the specified ID with optimized re-render handling.
+ */
+export function createUseWalletWithId<TWalletType extends Wallet>(
+  useAccountsStoreCtx: () => UseBoundStore<StoreApi<{ wallets: Record<string, TWalletType> }>>,
+): (id: string) => TWalletType | undefined {
+  return (id: string) => {
+    const store = useAccountsStoreCtx()
+    return useStore(
+      store,
+      useShallowWalletComparison(({ wallets }) => wallets[id]),
+    )
+  }
+}

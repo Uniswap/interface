@@ -1,5 +1,5 @@
-import { OnChainTransaction, SpamCode } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { AssetCase } from 'uniswap/src/features/activity/utils/remote'
+import { OnChainTransaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { AssetCase, isRestTokenSpam } from 'uniswap/src/features/activity/utils/remote'
 import { TransactionType, UnknownTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 /**
@@ -18,7 +18,7 @@ export function parseRestUnknownTransaction(transaction: OnChainTransaction): Un
 
   if (firstTransfer?.asset.case === AssetCase.Token) {
     const token = firstTransfer.asset.value
-    isSpam = token.metadata?.spamCode === SpamCode.SPAM
+    isSpam = isRestTokenSpam(token.metadata?.spamCode)
     tokenAddress = token.address
   }
 

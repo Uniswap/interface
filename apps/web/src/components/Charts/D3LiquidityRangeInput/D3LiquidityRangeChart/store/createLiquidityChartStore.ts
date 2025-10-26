@@ -1,3 +1,4 @@
+import { GraphQLApi } from '@universe/api'
 import { CHART_BEHAVIOR } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
 import { createDragActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/dragActions'
 import { createPriceActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/priceActions'
@@ -5,7 +6,7 @@ import { createRenderActions } from 'components/Charts/D3LiquidityRangeInput/D3L
 import { createViewActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/actions/viewActions'
 import { ChartState, ChartStoreState } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
 import type { StoreApi, UseBoundStore } from 'zustand'
 import { create } from 'zustand'
 import { devtools, subscribeWithSelector } from 'zustand/middleware'
@@ -18,6 +19,7 @@ const INITIAL_VIEW_STATE = {
   },
   dynamicZoomMin: CHART_BEHAVIOR.ZOOM_MIN,
   initialViewSet: false,
+  inputMode: RangeAmountInputPriceMode.PRICE,
   panY: 0,
   zoomLevel: 1,
 }
@@ -27,7 +29,7 @@ const INITIAL_PRICE_STATE = {
   maxPrice: undefined,
   minPrice: undefined,
   panY: 0,
-  selectedHistoryDuration: HistoryDuration.Month,
+  selectedHistoryDuration: GraphQLApi.HistoryDuration.Month,
   selectedPriceStrategy: undefined,
   zoomLevel: 1,
 }
@@ -48,26 +50,31 @@ const INITIAL_HOVER_STATE = {
 export type ChartStore = UseBoundStore<StoreApi<ChartStoreState>>
 
 export const createLiquidityChartStore = ({
+  inputMode,
   minPrice,
   maxPrice,
   isFullRange,
   selectedHistoryDuration,
+  onInputModeChange,
   onMinPriceChange,
   onMaxPriceChange,
   onTimePeriodChange,
   setIsFullRange,
 }: {
+  inputMode?: RangeAmountInputPriceMode
   minPrice?: number
   maxPrice?: number
   isFullRange?: boolean
-  selectedHistoryDuration?: HistoryDuration
+  selectedHistoryDuration?: GraphQLApi.HistoryDuration
+  onInputModeChange: (inputMode: RangeAmountInputPriceMode) => void
   onMinPriceChange: (price?: number) => void
   onMaxPriceChange: (price?: number) => void
-  onTimePeriodChange?: (timePeriod: HistoryDuration) => void
+  onTimePeriodChange?: (timePeriod: GraphQLApi.HistoryDuration) => void
   setIsFullRange: (isFullRange: boolean) => void
 }) => {
   // Group callbacks for action creators
   const callbacks = {
+    onInputModeChange,
     onMinPriceChange,
     onMaxPriceChange,
     onTimePeriodChange,
@@ -77,7 +84,7 @@ export const createLiquidityChartStore = ({
     devtools(
       subscribeWithSelector((set, get) => {
         // Create all action groups
-        const viewActions = createViewActions(set, get)
+        const viewActions = createViewActions({ set, get, callbacks })
         const priceActions = createPriceActions({ set, get, callbacks })
         const dragActions = createDragActions(get)
         const renderActions = createRenderActions(set, get)
@@ -91,6 +98,7 @@ export const createLiquidityChartStore = ({
 
           // View state
           ...INITIAL_VIEW_STATE,
+          inputMode: inputMode ?? INITIAL_VIEW_STATE.inputMode,
 
           // Drag state
           ...INITIAL_DRAG_STATE,
@@ -119,7 +127,7 @@ export const createLiquidityChartStore = ({
             },
 
             // Core actions that stay in main file
-            setTimePeriod: (timePeriod: HistoryDuration) => {
+            setTimePeriod: (timePeriod: GraphQLApi.HistoryDuration) => {
               set((state) => ({ ...state, selectedHistoryDuration: timePeriod }))
               if (callbacks.onTimePeriodChange) {
                 callbacks.onTimePeriodChange(timePeriod)
@@ -163,12 +171,11 @@ export const createLiquidityChartStore = ({
     },
   )
 
-  // Reset when isFullRange changes
+  // Sync isFullRange changes back to parent
   store.subscribe(
     (state) => state.isFullRange,
     (isFullRange) => {
       setIsFullRange(isFullRange)
-      store.getState().actions.reset({ animate: false })
     },
   )
 

@@ -99,7 +99,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
 
   const displayName = useDisplayName(address)
   const walletHasName = displayName && displayName.type !== DisplayNameType.Address
-  const formattedAddress = sanitizeAddressText(shortenAddress(address))
+  const formattedAddress = sanitizeAddressText(shortenAddress({ address }))
   const { isOpen: isPopupOpen } = useSelector(selectPopupState(PopupName.Connect))
 
   // Used to delay popup showing on initial render, which leads to improper anchoring

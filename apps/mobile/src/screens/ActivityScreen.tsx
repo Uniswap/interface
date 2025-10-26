@@ -1,15 +1,15 @@
 import { useApolloClient } from '@apollo/client'
 import { useScrollToTop } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
+import { GQLQueries } from '@universe/api'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
+import { ESTIMATED_BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
 import { ActivityContent } from 'src/components/activity/ActivityContent'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
@@ -55,7 +55,7 @@ export function ActivityScreen(): JSX.Element {
   const containerProps = useMemo(
     () => ({
       contentContainerStyle: {
-        paddingBottom: isBottomTabsEnabled ? BOTTOM_TABS_HEIGHT + insets.bottom + spacing.spacing32 : 0,
+        paddingBottom: isBottomTabsEnabled ? ESTIMATED_BOTTOM_TABS_HEIGHT + insets.bottom + spacing.spacing32 : 0,
       },
     }),
     [isBottomTabsEnabled, insets.bottom],

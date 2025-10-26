@@ -11,7 +11,7 @@ import {
   PLATFORM_SUPPORTED_LANGUAGES,
 } from 'uniswap/src/features/language/constants'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 export type LanguageInfo = {
   displayName: string
@@ -464,7 +464,7 @@ export function useCurrentLocale(): Locale {
   const currentLocale = getLocale(currentLanguage)
 
   return useMemo(() => {
-    if (isInterface) {
+    if (isWebApp) {
       return urlLocale ?? currentLocale
     } else {
       return currentLocale

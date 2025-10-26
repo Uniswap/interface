@@ -35,6 +35,8 @@ export function getQuicknodeChainId(chainId: UniverseChainId): string {
       return 'matic'
     case UniverseChainId.Sepolia:
       return 'ethereum-sepolia'
+    case UniverseChainId.Solana:
+      return 'solana-mainnet'
     case UniverseChainId.Unichain:
       return 'unichain-mainnet'
     case UniverseChainId.UnichainSepolia:

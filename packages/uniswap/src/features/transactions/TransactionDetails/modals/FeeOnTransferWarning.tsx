@@ -10,7 +10,7 @@ import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { WarningModalInfoContainer } from 'uniswap/src/features/tokens/WarningInfoModalContainer'
 import { FoTFeeType, TokenFeeInfo } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { getFeeSeverity } from 'uniswap/src/features/transactions/TransactionDetails/utils/getFeeSeverity'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 export function FeeOnTransferWarning({
   children,
@@ -32,7 +32,7 @@ export function FeeOnTransferWarning({
       sellFeePercent: feeType === 'sell' ? feePercent : undefined,
     }) ?? ''
 
-  if (isInterface) {
+  if (isWebApp) {
     return (
       <InfoTooltip
         {...{

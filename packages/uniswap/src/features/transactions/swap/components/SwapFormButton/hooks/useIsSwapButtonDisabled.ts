@@ -19,7 +19,7 @@ const useIsReviewButtonDisabled = (): boolean => {
   }))
 
   const activeAccountAddress = useActiveAddress(chainId)
-  const { isMissingPlatformWallet: isWrongWalletPlatform } = useIsMissingPlatformWallet()
+  const isMissingPlatformWallet = useIsMissingPlatformWallet(chainId)
 
   const { blockingWarning } = useParsedSwapWarnings()
   const { isBlocked: isBlockedAccount, isBlockedLoading: isBlockedAccountLoading } = useIsBlocked(activeAccountAddress)
@@ -36,7 +36,7 @@ const useIsReviewButtonDisabled = (): boolean => {
     isSubmitting ||
     isTradeMissing ||
     isWrapDisabled ||
-    isWrongWalletPlatform
+    isMissingPlatformWallet
   )
 }
 

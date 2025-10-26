@@ -1,22 +1,26 @@
 {
   "extends": "../../config/tsconfig/app.json",
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.json"],
-  "exclude": [
-    "src/**/*.spec.ts",
-    "src/**/*.spec.tsx",
-    "src/**/*.test.ts",
-    "src/**/*.test.tsx"
-  ],
+  "exclude": ["src/**/*.spec.ts", "src/**/*.spec.tsx", "src/**/*.test.ts", "src/**/*.test.tsx"],
   "compilerOptions": {
     "noEmit": false,
     "emitDeclarationOnly": true,
     "types": ["chrome", "node"],
-    "paths": {}
+    "baseUrl": ".",
+    "paths": {
+      "@universe/api/*": ["./src/*"]
+    }
   },
   "types": ["vitest/globals"],
   "references": [
     {
       "path": "../utilities"
+    },
+    {
+      "path": "../sessions"
+    },
+    {
+      "path": "../config"
     }
   ]
 }

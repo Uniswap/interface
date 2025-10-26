@@ -171,7 +171,7 @@ describe(parseSignRequest, () => {
     icons: ['https://test.com/icon.png'],
   }
 
-  it('parses personal_sign request correctly', () => {
+  it('parses personal_sign request correctly (standard hex-encoded message)', () => {
     const message = '0x48656c6c6f20576f726c64' // "Hello World" in hex
     const params = [message, TEST_ADDRESS]
 
@@ -406,6 +406,55 @@ describe(parseSendCallsRequest, () => {
 
     expect(result.account).toBe(fallbackAddress)
     expect(result.id).toBeTruthy() // Should generate a mock ID
+  })
+})
+
+describe('personal_sign signAsString flag behavior', () => {
+  it('should handle hex-encoded UTF-8 messages for personal_sign', () => {
+    const hexEncodedMessage = '0x48656c6c6f20576f726c64' // "Hello World"
+    const params = [hexEncodedMessage, TEST_ADDRESS]
+
+    const result = parseSignRequest({
+      method: EthMethod.PersonalSign,
+      topic: 'test-topic',
+      internalId: 123,
+      chainId: UniverseChainId.Mainnet,
+      dapp: {
+        name: 'Test Dapp',
+        description: 'Test Description',
+        url: 'https://test.com',
+        icons: ['https://test.com/icon.png'],
+      },
+      requestParams: params,
+    })
+
+    // rawMessage stays as hex for signing
+    expect(result.rawMessage).toBe(hexEncodedMessage)
+    // message is decoded for UI display
+    expect(result.message).toBe('Hello World')
+  })
+
+  it('should handle plain text messages for personal_sign', () => {
+    const plainText = 'Sign this message to authenticate'
+    const params = [plainText, TEST_ADDRESS]
+
+    const result = parseSignRequest({
+      method: EthMethod.PersonalSign,
+      topic: 'test-topic',
+      internalId: 123,
+      chainId: UniverseChainId.Mainnet,
+      dapp: {
+        name: 'Test Dapp',
+        description: 'Test Description',
+        url: 'https://test.com',
+        icons: ['https://test.com/icon.png'],
+      },
+      requestParams: params,
+    })
+
+    // Plain text stays unchanged in both fields
+    expect(result.rawMessage).toBe(plainText)
+    expect(result.message).toBe(plainText)
   })
 })
 

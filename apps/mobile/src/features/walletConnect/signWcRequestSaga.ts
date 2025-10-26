@@ -58,7 +58,13 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
     const signerManager = yield* call(getSignerManager)
     let result: string | SendCallsResult = ''
     if (method === EthMethod.PersonalSign || method === EthMethod.EthSign) {
-      result = yield* call(signMessage, { message: params.message, account, signerManager })
+      // For personal_sign, pass signAsString=true to keep the message as a string for proper EIP-191 hashing
+      result = yield* call(signMessage, {
+        message: params.message,
+        account,
+        signerManager,
+        signAsString: method === EthMethod.PersonalSign,
+      })
 
       // TODO: add `isCheckIn` type to uwulink request info so that this can be generalized
       if (

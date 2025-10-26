@@ -21,7 +21,7 @@ exports[`UniswapWalletOptions Test > Download wallet option should be visible if
             style="background: url(/images/extension_promo/background_connector.png); background-repeat: no-repeat; background-size: cover;"
           />
           <div
-            class="_backgroundColor-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1569 _alignItems-center _justifyContent-space-betwe3241 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _borderTopColor-accent2 _borderRightColor-accent2 _borderBottomColor-accent2 _borderLeftColor-accent2 _overflowX-hidden _overflowY-hidden _maxHeight-72px _cursor-pointer _zIndex-t-zIndex-de97204770 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+            class="_backgroundColor-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1569 _alignItems-center _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _borderTopColor-accent2 _borderRightColor-accent2 _borderBottomColor-accent2 _borderLeftColor-accent2 _overflowX-hidden _overflowY-hidden _maxHeight-72px _cursor-pointer _zIndex-t-zIndex-de97204770 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
           >
             <div
               class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -61,7 +61,7 @@ exports[`UniswapWalletOptions Test > Download wallet option should be visible if
           </div>
         </div>
         <div
-          class="_backgroundColor-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1569 _alignItems-center _justifyContent-space-betwe3241 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _borderTopColor-accent2 _borderRightColor-accent2 _borderBottomColor-accent2 _borderLeftColor-accent2 _overflowX-hidden _overflowY-hidden _maxHeight-72px _cursor-pointer _zIndex-t-zIndex-de97204770 _backgroundColor-surface2 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+          class="_backgroundColor-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1569 _alignItems-center _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _borderTopColor-accent2 _borderRightColor-accent2 _borderBottomColor-accent2 _borderLeftColor-accent2 _overflowX-hidden _overflowY-hidden _maxHeight-72px _cursor-pointer _zIndex-t-zIndex-de97204770 _backgroundColor-surface2 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
         >
           <svg
             fill="none"
@@ -120,47 +120,51 @@ exports[`UniswapWalletOptions Test > Extension connecter should be shown if dete
         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-8px"
       >
         <div
-          class="_backgroundColor-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1569 _alignItems-center _justifyContent-space-betwe3241 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _borderTopColor-accent2 _borderRightColor-accent2 _borderBottomColor-accent2 _borderLeftColor-accent2 _overflowX-hidden _overflowY-hidden _maxHeight-72px _cursor-pointer _zIndex-t-zIndex-de97204770 _backgroundColor-surface2 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+          class="_backgroundColor-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1569 _alignItems-center _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _borderTopColor-accent2 _borderRightColor-accent2 _borderBottomColor-accent2 _borderLeftColor-accent2 _overflowX-hidden _overflowY-hidden _maxHeight-72px _cursor-pointer _zIndex-t-zIndex-de97204770 _backgroundColor-surface2 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
           data-testid="connect-uniswap-extension"
         >
           <div
-            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center"
+            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexGrow-1 _justifyContent-space-betwe3241 _alignItems-center"
           >
             <div
-              class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
-              style="height: 40px; width: 40px;"
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center"
             >
               <div
-                class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                style="background-image: url(uniswap-logo.png);"
-              />
-              <img
-                alt=""
-                class="css-accessibilityImage-9pa8cd"
-                draggable="false"
-                src="uniswap-logo.png"
-              />
+                class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                style="height: 40px; width: 40px;"
+              >
+                <div
+                  class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
+                  style="background-image: url(uniswap-logo.png);"
+                />
+                <img
+                  alt=""
+                  class="css-accessibilityImage-9pa8cd"
+                  draggable="false"
+                  src="uniswap-logo.png"
+                />
+              </div>
+              <span
+                class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
+                data-disable-theme="true"
+              >
+                Uniswap Extension
+              </span>
             </div>
-            <span
-              class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741 _whiteSpace-nowrap"
-              data-disable-theme="true"
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
             >
-              Uniswap Extension
-            </span>
-          </div>
-          <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
-          >
-            <span
-              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-12px _lineHeight-16px _fontWeight-f-weight-bo3548"
-              data-disable-theme="true"
-            >
-              Detected
-            </span>
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-12px _lineHeight-16px _fontWeight-f-weight-bo3548"
+                data-disable-theme="true"
+              >
+                Detected
+              </span>
+            </div>
           </div>
         </div>
         <div
-          class="_backgroundColor-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1569 _alignItems-center _justifyContent-space-betwe3241 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _borderTopColor-accent2 _borderRightColor-accent2 _borderBottomColor-accent2 _borderLeftColor-accent2 _overflowX-hidden _overflowY-hidden _maxHeight-72px _cursor-pointer _zIndex-t-zIndex-de97204770 _backgroundColor-surface2 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+          class="_backgroundColor-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pb-t-space-spa1360334076 _pl-t-space-spa1360334076 _gap-t-space-gap1569 _alignItems-center _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _borderTopColor-accent2 _borderRightColor-accent2 _borderBottomColor-accent2 _borderLeftColor-accent2 _overflowX-hidden _overflowY-hidden _maxHeight-72px _cursor-pointer _zIndex-t-zIndex-de97204770 _backgroundColor-surface2 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
         >
           <svg
             fill="none"

@@ -1,16 +1,9 @@
-import { noop } from '@tanstack/react-query'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { useConnectCustomWalletsMap } from 'features/wallet/connection/connectors/custom'
-import { useConnectSolanaWallet } from 'features/wallet/connection/connectors/solana'
-import { wrapConnectWalletServiceWithStateTracking } from 'features/wallet/connection/connectors/state'
-import { connectWagmiWallet } from 'features/wallet/connection/connectors/wagmi'
 import {
-  ConnectWalletService,
-  createConnectWalletService,
-} from 'features/wallet/connection/services/ConnectWalletService'
-import { WalletConnectorMeta } from 'features/wallet/connection/types/WalletConnectorMeta'
-import { useMemo } from 'react'
-import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
+  ConnectWalletMutationParams,
+  useConnectWalletMutation,
+} from 'features/wallet/connection/hooks/useConnectWalletMutation'
+import { useGetConnectionService } from 'features/wallet/connection/services/getConnectionService'
+import { ConnectionService } from 'features/wallet/connection/services/IConnectionService'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WalletConnectionResult } from 'uniswap/src/features/telemetry/types'
@@ -19,62 +12,30 @@ import { pipe } from 'utilities/src/primitives/array'
 import { useEvent } from 'utilities/src/react/hooks'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 
-function useConnectWalletService(): ConnectWalletService {
-  const connectSolanaWallet = useConnectSolanaWallet()
-  const connectCustomWalletsMap = useConnectCustomWalletsMap()
-
-  return useMemo(
-    () =>
-      createConnectWalletService({
-        connectSolanaWallet,
-        connectWagmiWallet,
-        connectCustomWalletsMap,
-      }),
-    [connectSolanaWallet, connectCustomWalletsMap],
-  )
-}
-
-function createWrapConnectWalletServiceWithUIUpdates(accountDrawer: ReturnType<typeof useAccountDrawer>) {
-  /** Wraps a connect wallet service with functionality to update the account drawer upon connection. */
-  return function wrapConnectWalletServiceWithUIUpdates(service: ConnectWalletService) {
-    return {
-      connect: async (params: { walletConnector: WalletConnectorMeta }) => {
-        await service.connect(params)
-
-        // Open the drawer if the user is connecting an embedded wallet, otherwise close
-        if (params.walletConnector.customConnectorId === CONNECTION_PROVIDER_IDS.EMBEDDED_WALLET_CONNECTOR_ID) {
-          accountDrawer.open()
-        } else {
-          accountDrawer.close()
-        }
-
-        return
-      },
-    }
-  }
-}
-
 /** Wraps a connect wallet service with functionality to log connection events. */
-function wrapConnectWalletServiceWithLogging(service: ConnectWalletService): ConnectWalletService {
+function wrapConnectionServiceWithLogging(baseService: ConnectionService): ConnectionService {
   return {
-    connect: async (params: { walletConnector: WalletConnectorMeta }) => {
+    connect: async (params) => {
       logger.debug(
         'wrapConnectWalletServiceWithLogging',
         'features/wallet/connection/hooks/useConnectWallet',
-        `Connection activating: ${params.walletConnector.name}`,
+        `Connection activating: ${params.wallet.name}`,
       )
       try {
-        await service.connect(params)
-        logger.debug(
-          'wrapConnectWalletServiceWithLogging',
-          'features/wallet/connection/hooks/useConnectWallet',
-          `Connection activated: ${params.walletConnector.name}`,
-        )
+        const result = await baseService.connect(params)
+        if (result.connected) {
+          logger.debug(
+            'wrapConnectWalletServiceWithLogging',
+            'features/wallet/connection/hooks/useConnectWallet',
+            `Connection activated: ${params.wallet.name}`,
+          )
+        }
+        return result
       } catch (error) {
         logger.warn(
           'wrapConnectWalletServiceWithLogging',
           'features/wallet/connection/hooks/useConnectWallet',
-          `Connection failed: ${params.walletConnector.name}. Error: ${error.message}`,
+          `Connection failed: ${params.wallet.name}. Error: ${error.message}`,
         )
         throw error
       }
@@ -83,17 +44,16 @@ function wrapConnectWalletServiceWithLogging(service: ConnectWalletService): Con
 }
 
 /** Wraps a connect wallet service with functionality to send analytics events. */
-function wrapConnectWalletServiceWithAnalytics(service: ConnectWalletService): ConnectWalletService {
+function wrapConnectionServiceWithAnalytics(service: ConnectionService): ConnectionService {
   return {
-    connect: async (params: { walletConnector: WalletConnectorMeta }) => {
-      // eslint-disable-next-line no-useless-catch
+    connect: async (params) => {
       try {
-        await service.connect(params)
+        return await service.connect(params)
       } catch (error) {
         sendAnalyticsEvent(InterfaceEventName.WalletConnected, {
           result: WalletConnectionResult.Failed,
-          wallet_name: params.walletConnector.name,
-          wallet_type: params.walletConnector.analyticsWalletType,
+          wallet_name: params.wallet.name,
+          wallet_type: params.wallet.analyticsWalletType,
           page: getCurrentPageFromLocation(window.location.pathname),
           error: error.message,
         })
@@ -103,26 +63,21 @@ function wrapConnectWalletServiceWithAnalytics(service: ConnectWalletService): C
   }
 }
 
-/**
- * Hook that returns a connect function for wallet connectors.
- * @returns A function that connects to a wallet using WalletConnectorMeta
- */
-export function useConnectWallet(): (walletConnector: WalletConnectorMeta) => Promise<void> {
-  const baseService = useConnectWalletService()
-  const accountDrawer = useAccountDrawer()
+export function useConnectWallet() {
+  const getConnectionService = useGetConnectionService()
 
-  const wrappedService = useMemo(() => {
-    const wrapConnectWalletServiceWithUIUpdates = createWrapConnectWalletServiceWithUIUpdates(accountDrawer)
+  const { mutate, ...rest } = useConnectWalletMutation()
 
-    return pipe(baseService, [
-      wrapConnectWalletServiceWithUIUpdates,
-      wrapConnectWalletServiceWithStateTracking,
-      wrapConnectWalletServiceWithLogging,
-      wrapConnectWalletServiceWithAnalytics,
-    ])
-  }, [baseService, accountDrawer])
+  const connectWallet = useEvent((params: Omit<ConnectWalletMutationParams, 'connectionService'>) => {
+    // 1) Get the proper connection service based on input
+    const baseService = getConnectionService(params)
 
-  return useEvent(async (walletConnector: WalletConnectorMeta) =>
-    wrappedService.connect({ walletConnector }).catch(noop),
-  )
+    // 2) Wrap the connection service with logging decorator
+    const wrappedService = pipe(baseService, [wrapConnectionServiceWithLogging, wrapConnectionServiceWithAnalytics])
+
+    // 3) Initiate Connection
+    mutate({ ...params, connectionService: wrappedService })
+  })
+
+  return { connectWallet, ...rest }
 }

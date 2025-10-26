@@ -21,11 +21,12 @@ import { FormattedUniswapXGasFeeInfo } from 'uniswap/src/features/gas/types'
 import { NetworkCostBanner } from 'uniswap/src/features/smartWallet/banner/NetworkCostBanner'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
-import { isInterface, isMobileApp, isWeb } from 'utilities/src/platform'
+import { isMobileApp, isWebApp, isWebPlatform } from 'utilities/src/platform'
 
 export function NetworkFeeWarning({
   gasFeeHighRelativeToValue,
   children,
+  disabled = false,
   tooltipTrigger,
   placement = 'top',
   uniswapXGasFeeInfo,
@@ -33,6 +34,7 @@ export function NetworkFeeWarning({
   includesDelegation,
 }: PropsWithChildren<{
   gasFeeHighRelativeToValue?: boolean
+  disabled?: boolean
   tooltipTrigger?: InfoTooltipProps['trigger']
   placement?: InfoTooltipProps['placement']
   uniswapXGasFeeInfo?: FormattedUniswapXGasFeeInfo
@@ -43,7 +45,7 @@ export function NetworkFeeWarning({
   const { t } = useTranslation()
   const priceUxEnabled = usePriceUXEnabled()
 
-  const showHighGasFeeUI = gasFeeHighRelativeToValue && !uniswapXGasFeeInfo && !isInterface // Avoid high gas UI on interface
+  const showHighGasFeeUI = gasFeeHighRelativeToValue && !uniswapXGasFeeInfo && !isWebApp // Avoid high gas UI on interface
 
   return (
     <WarningInfo
@@ -103,7 +105,7 @@ export function NetworkFeeWarning({
         placement,
         icon: null,
         maxWidth: priceUxEnabled ? 300 : undefined,
-        enabled: !!tooltipTrigger,
+        enabled: !disabled,
       }}
       trigger={tooltipTrigger}
       analyticsTitle="Network cost"
@@ -126,7 +128,7 @@ function InfoButton({
     return (
       <Flex mb="$spacing8">
         <LearnMoreLink
-          textVariant={isWeb ? 'body4' : 'buttonLabel3'}
+          textVariant={isWebPlatform ? 'body4' : 'buttonLabel3'}
           url={uniswapUrls.helpArticleUrls.networkFeeInfo}
         />
       </Flex>
@@ -141,7 +143,9 @@ function InfoButton({
     return <UniswapXFeeContent uniswapXGasFeeInfo={uniswapXGasFeeInfo} />
   }
 
-  return <LearnMoreLink textVariant={isWeb ? 'body4' : undefined} url={uniswapUrls.helpArticleUrls.networkFeeInfo} />
+  return (
+    <LearnMoreLink textVariant={isWebPlatform ? 'body4' : undefined} url={uniswapUrls.helpArticleUrls.networkFeeInfo} />
+  )
 }
 
 function NetworkFeeText({
@@ -157,16 +161,16 @@ function NetworkFeeText({
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const variant: keyof typeof fonts = isWeb ? 'body4' : 'body2'
+  const variant: keyof typeof fonts = isWebPlatform ? 'body4' : 'body2'
   // we need to remove `NATIVE_LINE_HEIGHT_SCALE` if we switch to a button label font
-  const lineHeight = fonts[variant].lineHeight / (isWeb ? 1 : NATIVE_LINE_HEIGHT_SCALE)
+  const lineHeight = fonts[variant].lineHeight / (isWebPlatform ? 1 : NATIVE_LINE_HEIGHT_SCALE)
 
   if (uniswapXGasFeeInfo) {
     // TODO(WEB-4313): Remove need to manually adjust the height of the UniswapXText component for mobile.
     const components = { gradient: <UniswapXText height={lineHeight} variant={variant} /> }
 
     return (
-      <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={variant}>
+      <Text color="$neutral2" textAlign={isWebPlatform ? 'left' : 'center'} variant={variant}>
         {/* TODO(WALL-5311): Investigate Trans component vertical alignment on android */}
         {chainId === UniverseChainId.Unichain ? (
           <Trans components={components} i18nKey="swap.warning.networkFee.message.uniswapX.unichain" />
@@ -179,14 +183,14 @@ function NetworkFeeText({
 
   if (includesDelegation) {
     return (
-      <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant="body3">
+      <Text color="$neutral2" textAlign={isWebPlatform ? 'left' : 'center'} variant="body3">
         {t('swap.warning.networkFee.delegation.message')}
       </Text>
     )
   }
 
   return (
-    <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={variant}>
+    <Text color="$neutral2" textAlign={isWebPlatform ? 'left' : 'center'} variant={variant}>
       {showHighGasFeeUI
         ? chainId === UniverseChainId.Unichain
           ? t('swap.warning.networkFee.highRelativeToValue.unichain')
@@ -205,7 +209,10 @@ function UniswapXFeeContent({ uniswapXGasFeeInfo }: { uniswapXGasFeeInfo: Format
   return (
     <Flex gap="$spacing12">
       <Flex row centered={isMobileApp} width="100%">
-        <LearnMoreLink textVariant={isWeb ? 'body4' : undefined} url={uniswapUrls.helpArticleUrls.uniswapXInfo} />
+        <LearnMoreLink
+          textVariant={isWebPlatform ? 'body4' : undefined}
+          url={uniswapUrls.helpArticleUrls.uniswapXInfo}
+        />
       </Flex>
       <Separator />
       {approvalFeeFormatted && (

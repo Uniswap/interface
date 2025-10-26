@@ -30,6 +30,7 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
 
   const removeLiquidityTxInfo = useRemoveLiquidityTxAndGasInfo({ account: account?.address })
   const { approvalLoading, decreaseCalldataLoading, decreaseCalldata, error, refetch } = removeLiquidityTxInfo
+  const { sqrtRatioX96 } = decreaseCalldata || {}
 
   useEffect(() => {
     logContextUpdate('RemoveLiquidityTxContext', removeLiquidityTxInfo)
@@ -75,6 +76,7 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
       token1PermitTransaction: undefined,
       positionTokenPermitTransaction: undefined,
       permit: undefined,
+      sqrtRatioX96,
     }
   }, [
     positionInfo,
@@ -85,6 +87,7 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
     currency1,
     removeLiquidityTxInfo.v2LpTokenApproval?.positionTokenApproval,
     percent,
+    sqrtRatioX96,
   ])
 
   return (

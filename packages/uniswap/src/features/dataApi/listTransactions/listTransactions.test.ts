@@ -35,7 +35,7 @@ describe('useListTransactions', () => {
   it('should call REST API with correct parameters and return expected properties', () => {
     const { result } = renderHook(() =>
       useListTransactions({
-        address: mockAddress,
+        evmAddress: mockAddress,
         pageSize: mockPageSize,
       }),
     )
@@ -75,7 +75,8 @@ describe('useListTransactions', () => {
     // Verify REST hook was called with enabled: false
     expect(mockUseListTransactionsQuery).toHaveBeenCalledWith({
       input: {
-        evmAddress: '',
+        evmAddress: undefined,
+        svmAddress: undefined,
         chainIds: [1],
         pageSize: mockPageSize,
         fiatOnRampParams: undefined,
@@ -99,7 +100,7 @@ describe('useListTransactions', () => {
 
     const { result } = renderHook(() =>
       useListTransactions({
-        address: mockAddress,
+        evmAddress: mockAddress,
         pageSize: mockPageSize,
         skip: true,
       }),
@@ -126,7 +127,7 @@ describe('useListTransactions', () => {
 
     renderHook(() =>
       useListTransactions({
-        address: mockAddress,
+        evmAddress: mockAddress,
         pageSize: mockPageSize,
         fiatOnRampParams: mockFiatOnRampParams,
       }),
@@ -150,7 +151,7 @@ describe('useListTransactions', () => {
 
     renderHook(() =>
       useListTransactions({
-        address: mockAddress,
+        evmAddress: mockAddress,
         pageSize: mockPageSize,
         chainIds: customChainIds,
       }),

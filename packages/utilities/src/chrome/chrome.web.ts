@@ -1,7 +1,7 @@
 // Disabling this because we need access to `chrome` in the global scope.
-/* eslint-disable no-restricted-globals */
+/* biome-ignore-all lint/style/noRestrictedGlobals: we need access to `chrome` in the global scope */
 
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 
 /**
  * Returns the Chrome API if available in the current context, or undefined otherwise.
@@ -64,8 +64,8 @@ export function getChromeRuntimeWithThrow(): typeof chrome.runtime {
 }
 
 function warnIfChromeIsAccessedInContentScript(): void {
-  if (isExtension) {
-    // eslint-disable-next-line no-console
+  if (isExtensionApp) {
+    // biome-ignore lint/suspicious/noConsole: Console logging needed for debugging
     console.warn(
       'You are trying to access `chrome.runtime` inside the injected content script ' +
         'even though it does not exist in this context. ' +

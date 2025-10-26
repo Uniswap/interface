@@ -17,6 +17,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 
 export const SWAP_BUTTON_TEXT_VARIANT = 'buttonLabel1'
 
+// TODO(SWAP-573): Co-locate button action/color/text logic instead of separating the very-coupled UI state
 export function SwapFormButton({ tokenColor }: { tokenColor?: string }): JSX.Element {
   const isShortMobileDevice = useIsShortMobileDevice()
   const indicative = useIsTradeIndicative()

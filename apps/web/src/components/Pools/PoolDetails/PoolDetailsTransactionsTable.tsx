@@ -8,6 +8,7 @@ import {
 } from 'appGraphql/data/pools/usePoolTransactions'
 import { supportedChainIdFromGQLChain } from 'appGraphql/data/util'
 import { createColumnHelper } from '@tanstack/react-table'
+import { GraphQLApi } from '@universe/api'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
@@ -19,10 +20,11 @@ import { Trans } from 'react-i18next'
 import { ExternalLink } from 'theme/components/Links'
 import { Flex, Text, useMedia } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
@@ -55,12 +57,21 @@ const PoolTransactionColumnWidth: { [key in PoolTransactionColumn]: number } = {
   [PoolTransactionColumn.OutputAmount]: 125,
 }
 
-function comparePoolTokens(tokenA: PoolTableTransaction['pool']['token0'], tokenB?: Token) {
+function comparePoolTokens(tokenA: PoolTableTransaction['pool']['token0'], tokenB?: GraphQLApi.Token) {
   if (tokenB?.address === NATIVE_CHAIN_ID) {
     const chainId = supportedChainIdFromGQLChain(tokenB.chain)
-    return chainId && tokenA.id?.toLowerCase() === WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
+    return (
+      chainId &&
+      areAddressesEqual({
+        addressInput1: { address: tokenA.id, chainId },
+        addressInput2: { address: WRAPPED_NATIVE_CURRENCY[chainId]?.address, chainId },
+      })
+    )
   }
-  return tokenA.id?.toLowerCase() === tokenB?.address?.toLowerCase()
+  return areAddressesEqual({
+    addressInput1: { address: tokenA.id, platform: Platform.EVM },
+    addressInput2: { address: tokenB?.address, platform: Platform.EVM },
+  })
 }
 
 export function PoolDetailsTransactionsTable({
@@ -70,9 +81,9 @@ export function PoolDetailsTransactionsTable({
   protocolVersion,
 }: {
   poolAddress: string
-  token0?: Token
-  token1?: Token
-  protocolVersion?: ProtocolVersion
+  token0?: GraphQLApi.Token
+  token1?: GraphQLApi.Token
+  protocolVersion?: GraphQLApi.ProtocolVersion
 }) {
   const chainId = useChainIdFromUrlParam() ?? UniverseChainId.Mainnet
   const activeLocalCurrency = useAppFiatCurrency()
@@ -260,7 +271,7 @@ export function PoolDetailsTransactionsTable({
                 type: ExplorerDataType.ADDRESS,
               })}
             >
-              <TableText>{shortenAddress(makerAddress.getValue?.(), 4, 4)}</TableText>
+              <TableText>{shortenAddress({ address: makerAddress.getValue?.(), chars: 4, charsEnd: 4 })}</TableText>
             </StyledExternalLink>
           </Cell>
         ),

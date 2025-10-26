@@ -1,5 +1,5 @@
 // Type information currently gets lost after a migration
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// biome-ignore-all lint/suspicious/noExplicitAny: Migration logic requires flexible typing
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable max-lines */
 
@@ -1073,9 +1073,7 @@ export const migrations = {
 
   92: function migrateAndRemoveCloudBackupSlice(state: any) {
     const newState = { ...state }
-    const activeAccountAddress = newState.wallet.activeAccountAddress
-    const backups = newState.cloudBackup.backupsFound
-    const backupEmail = backups?.find((backup: any) => backup.mnemonicId === activeAccountAddress)?.email
+    const backupEmail = newState.cloudBackup?.backupsFound?.find((backup: any) => backup.email)?.email
     if (backupEmail) {
       newState.wallet.androidCloudBackupEmail = backupEmail
     }

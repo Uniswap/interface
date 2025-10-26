@@ -27,7 +27,7 @@ import { ElementName, ModalName, ModalNameType } from 'uniswap/src/features/tele
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useDismissedBridgedAssetWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { openUri } from 'uniswap/src/utils/linking'
-import { isInterfaceDesktop } from 'utilities/src/platform'
+import { isWebAppDesktop } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type BridgedAssetModalProps = {
@@ -146,6 +146,7 @@ export function BridgedAssetModal({
     return getContrastPassingTextColor(validTokenColor ?? colors.accent1.val)
   }, [colors.accent1.val, validTokenColor])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +isOpen
   useEffect(() => {
     setShowingSecondCurrency(false)
   }, [isOpen])
@@ -188,7 +189,7 @@ export function BridgedAssetModal({
             justifyContent="flex-end"
             alignItems="center"
             gap={10}
-            display={isInterfaceDesktop ? 'flex' : 'none'}
+            display={isWebAppDesktop ? 'flex' : 'none'}
           >
             <Trace logPress element={ElementName.GetHelp}>
               <TouchableArea onPress={onPressGetHelp}>

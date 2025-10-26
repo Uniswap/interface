@@ -1,13 +1,6 @@
+import { GraphQLApi } from '@universe/api'
 import client from 'functions/client'
 import { Data } from 'functions/utils/cache'
-import {
-  V2PairDocument,
-  V2PairQuery,
-  V3PoolDocument,
-  V3PoolQuery,
-  V4PoolDocument,
-  V4PoolQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export default async function getPool({
   networkName,
@@ -22,24 +15,24 @@ export default async function getPool({
   const image = origin + '/api/image/pools/' + networkName + '/' + poolAddress
   const uppercaseNetworkName = networkName.toUpperCase()
   const [v4Result, v3Result, v2Result] = await Promise.allSettled([
-    client.query<V4PoolQuery>({
-      query: V4PoolDocument,
+    client.query<GraphQLApi.V4PoolQuery>({
+      query: GraphQLApi.V4PoolDocument,
       variables: {
         chain: uppercaseNetworkName,
         poolId: poolAddress,
       },
       errorPolicy: 'all',
     }),
-    client.query<V3PoolQuery>({
-      query: V3PoolDocument,
+    client.query<GraphQLApi.V3PoolQuery>({
+      query: GraphQLApi.V3PoolDocument,
       variables: {
         chain: uppercaseNetworkName,
         address: poolAddress,
       },
       errorPolicy: 'all',
     }),
-    client.query<V2PairQuery>({
-      query: V2PairDocument,
+    client.query<GraphQLApi.V2PairQuery>({
+      query: GraphQLApi.V2PairDocument,
       variables: {
         chain: uppercaseNetworkName,
         address: poolAddress,

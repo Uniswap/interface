@@ -10,7 +10,7 @@ import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/tran
 import { POLLING_CONSTANTS, shouldCheckTransaction, withTimeout } from 'uniswap/src/utils/polling'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { buildNetworkFeeFromReceipt } from 'wallet/src/features/transactions/utils'
+import { processTransactionReceipt } from 'wallet/src/features/transactions/utils'
 import {
   FINALIZED_SWAP_STATUS,
   SWAP_STATUS_TO_TX_STATUS,
@@ -131,23 +131,25 @@ function* waitForTransactionInStore(
   throw new Error('Transaction not found in store after timeout')
 }
 
-export function* updateTransactionStatusNetworkFee(
+/**
+ * Fetches the transaction receipt onchain and updates the transaction with
+ * network fee and receipt data. Used when Trading API provides status but not receipt details.
+ */
+export function* updateTransactionWithReceipt(
   transaction: RequireNonNullable<TransactionDetails, 'hash'>,
   provider: providers.Provider,
 ) {
   const ethersReceipt = yield* call(waitForReceipt, transaction.hash, provider)
-  const { nativeCurrency } = getChainInfo(transaction.chainId)
 
-  const networkFee = buildNetworkFeeFromReceipt({
-    receipt: ethersReceipt,
-    nativeCurrency,
-    chainId: transaction.chainId,
+  // Wait for trading api to update the transaction status first
+  const updatedTransaction = yield* call(waitForTransactionInStore, transaction)
+
+  const transactionWithReceipt = processTransactionReceipt({
+    ethersReceipt,
+    transaction: updatedTransaction,
   })
 
-  // wait for trading api to update the transaction status
-  const updatedTransactionWithoutNetworkFee = yield* call(waitForTransactionInStore, transaction)
-  const updatedTransaction = { ...updatedTransactionWithoutNetworkFee, networkFee }
-  yield* put(transactionActions.updateTransactionWithoutWatch(updatedTransaction))
+  yield* put(transactionActions.updateTransactionWithoutWatch(transactionWithReceipt))
 }
 
 /**

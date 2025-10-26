@@ -9,6 +9,7 @@ import {
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
+import { GraphQLApi } from '@universe/api'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
@@ -25,10 +26,6 @@ import { useFilteredTransactions } from 'pages/Explore/tables/useFilterTransacti
 import { memo, useMemo, useReducer, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, styled, Text, useMedia } from 'ui/src'
-import {
-  PoolTransaction,
-  PoolTransactionType,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -70,7 +67,7 @@ const RecentTransactions = memo(function RecentTransactions() {
   // TODO(WEB-3236): once GQL BE Transaction query is supported add usd, token0 amount, and token1 amount sort support
   const media = useMedia()
   const columns = useMemo(() => {
-    const columnHelper = createColumnHelper<PoolTransaction>()
+    const columnHelper = createColumnHelper<GraphQLApi.PoolTransaction>()
     const filteredColumns = [
       !media.lg
         ? columnHelper.accessor((transaction) => transaction, {
@@ -140,7 +137,7 @@ const RecentTransactions = memo(function RecentTransactions() {
               </TableText>
               <TokenLinkCell token={transaction.getValue?.().token0} hideLogo={media.lg} />
               <Text color="$neutral2">
-                {transaction.getValue?.().type === PoolTransactionType.Swap
+                {transaction.getValue?.().type === GraphQLApi.PoolTransactionType.Swap
                   ? t('common.for').toLowerCase()
                   : t('common.and').toLowerCase()}
               </Text>
@@ -232,7 +229,7 @@ const RecentTransactions = memo(function RecentTransactions() {
                 type: ExplorerDataType.ADDRESS,
               })}
             >
-              <TableText>{shortenAddress(makerAddress.getValue?.())}</TableText>
+              <TableText>{shortenAddress({ address: makerAddress.getValue?.() })}</TableText>
             </StyledExternalLink>
           </Cell>
         ),

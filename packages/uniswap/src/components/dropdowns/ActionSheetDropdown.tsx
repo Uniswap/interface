@@ -20,7 +20,7 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { Scrollbar } from 'uniswap/src/components/misc/Scrollbar'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isAndroid, isInterface, isTouchable, isWeb } from 'utilities/src/platform'
+import { isAndroid, isTouchable, isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { executeWithFrameDelay } from 'utilities/src/react/delayUtils'
 import { useTimeout } from 'utilities/src/time/timing'
 
@@ -91,8 +91,9 @@ export function ActionSheetDropdown({
     }
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +toggleMeasurements?.sticky, insets.top
   useEffect(() => {
-    if (!isWeb) {
+    if (!isWebPlatform) {
       return undefined
     }
 
@@ -116,6 +117,7 @@ export function ActionSheetDropdown({
     }
   }, [toggleMeasurements?.sticky, insets.top])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +setOpen, setToggleMeasurements
   const closeDropdown = useCallback(
     (event: GestureResponderEvent): void => {
       setOpen(false)
@@ -199,10 +201,7 @@ const ActionSheetBackdropWithContent = memo(function ActionSheetBackdropWithCont
         {toggleMeasurements && (
           <>
             <OverKeyboardContent visible={isOpen}>
-              <Backdrop
-                handleClose={closeDropdown}
-                opacity={!isInterface || isTouchable ? styles?.backdropOpacity : 0}
-              />
+              <Backdrop handleClose={closeDropdown} opacity={!isWebApp || isTouchable ? styles?.backdropOpacity : 0} />
               <DropdownContent
                 {...contentProps}
                 alignment={styles?.alignment}
@@ -272,7 +271,7 @@ function DropdownContent({
     // There seems to be a bug in `reanimated` that's causing the dependency array to not be automatically injected by the babel plugin,
     // but it causes a crash when manually added on web. This is a workaround until the bug is fixed.
     // The performance impact of not having the array is minimal on web, so this should be fine for now.
-    isWeb ? undefined : [scrollOffset],
+    isWebPlatform ? undefined : [scrollOffset],
   )
 
   const containerProps = useMemo<FlexProps>(() => {
@@ -292,14 +291,14 @@ function DropdownContent({
 
   const bottomOffset = insets.bottom + spacing.spacing12
   const maxHeight =
-    (isInterface && dropdownMaxHeight) ||
+    (isWebApp && dropdownMaxHeight) ||
     Math.max(fullHeight - toggleMeasurements.y - toggleMeasurements.height - bottomOffset, MIN_HEIGHT)
   const overflowsContainer = contentHeight > maxHeight
 
   const initialScrollY = useMemo(() => window.scrollY, [])
   const [windowScrollY, setWindowScrollY] = useState(0)
   useEffect(() => {
-    if (!isWeb) {
+    if (!isWebPlatform) {
       return undefined
     }
 
@@ -314,6 +313,7 @@ function DropdownContent({
     }
   }, [initialScrollY, toggleMeasurements.sticky])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +toggleMeasurements
   useEffect(() => {
     setWindowScrollY(0)
   }, [toggleMeasurements])
@@ -360,7 +360,7 @@ function DropdownContent({
             }}
             scrollEnabled={overflowsContainer}
             scrollEventThrottle={16}
-            showsVerticalScrollIndicator={isWeb}
+            showsVerticalScrollIndicator={isWebPlatform}
             onScroll={scrollHandler}
           >
             <Flex
@@ -397,7 +397,7 @@ function DropdownContent({
 
           {/* Custom scrollbar to ensure it is visible on iOS and Android even if not scrolling
         and to be able to customize its appearance */}
-          {overflowsContainer && !isWeb && (
+          {overflowsContainer && !isWebPlatform && (
             <Scrollbar
               contentHeight={contentHeight}
               mr="$spacing4"

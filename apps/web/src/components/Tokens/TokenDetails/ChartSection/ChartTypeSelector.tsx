@@ -1,5 +1,5 @@
 import { CHART_TYPE_LABELS, ChartType, PriceChartType } from 'components/Charts/utils'
-import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
+import { Dropdown, InternalMenuItem } from 'components/Dropdowns/Dropdown'
 import { MouseoverTooltip } from 'components/Tooltip'
 import { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
@@ -49,7 +49,7 @@ export function ChartTypeDropdown<T extends ChartType | PriceChartType>({
   const [isMenuOpen, toggleMenu] = useState(false)
 
   return (
-    <DropdownSelector
+    <Dropdown
       isOpen={isMenuOpen}
       toggleOpen={toggleMenu}
       menuLabel={menuLabel ?? CHART_TYPE_LABELS[currentChartType]}
@@ -86,6 +86,6 @@ export function ChartTypeDropdown<T extends ChartType | PriceChartType>({
           </MouseoverTooltip>
         )
       })}
-    </DropdownSelector>
+    </Dropdown>
   )
 }

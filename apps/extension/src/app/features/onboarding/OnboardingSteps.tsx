@@ -58,6 +58,7 @@ export function OnboardingStepsProvider({
   const isOnboarded = useSelector(isOnboardedSelector)
   const wasAlreadyOnboardedWhenPageLoaded = useRef(isOnboarded)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we also want to run this effect if isOnboarded changes
   useEffect(() => {
     if (!isResetting && wasAlreadyOnboardedWhenPageLoaded.current && !disableRedirect) {
       // Redirect to the intro screen screen if user is already onboarded.
@@ -115,6 +116,7 @@ export function OnboardingStepsProvider({
     setState((prev) => ({ ...prev, step: nextStep }))
   }, [])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: onboardingScreenKey is a helper function defined below that doesn't need to be a dependency
   const setOnboardingScreen = useCallback((next: OnboardingScreenProps) => {
     clearTimeout(clearScreenTimeout)
     setState((prev) => {
@@ -133,6 +135,7 @@ export function OnboardingStepsProvider({
     currentOnboardingScreen = next
   }, [])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: onboardingScreenKey is a helper function defined below that doesn't need to be a dependency
   const clearOnboardingScreen = useCallback((next: OnboardingScreenProps) => {
     // delay clear so the next screen can beat clearing the old one to avoid flickering
     clearScreenTimeout = setTimeout(() => {
@@ -226,7 +229,7 @@ export function OnboardingStepsProvider({
         {onboardingScreen && (
           <>
             {/* render actual screen contents "offscreen", we use context and put it on onboardingScreen */}
-            {/* eslint-disable-next-line react/forbid-elements */}
+            {/* biome-ignore lint/correctness/noRestrictedElements: probably we can replace it here */}
             <div style={{ height: 0, opacity: 0, pointerEvents: 'none' }}>{stepContents}</div>
             <Frame
               animation="stiff"

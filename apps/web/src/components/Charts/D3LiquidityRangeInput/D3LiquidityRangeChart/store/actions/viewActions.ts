@@ -8,11 +8,21 @@ import { calculateDynamicZoomMin } from 'components/Charts/D3LiquidityRangeInput
 import { getClosestTick } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/getClosestTick'
 import { calculateRangeViewport } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/rangeViewportUtils'
 import { getCandlestickPriceBounds } from 'components/Charts/PriceChart/utils'
+import { RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
 
-export const createViewActions = (
-  set: (fn: (state: ChartStoreState) => ChartStoreState) => void,
-  get: () => ChartStoreState,
-) => ({
+interface ViewActionCallbacks {
+  onInputModeChange: (inputMode: RangeAmountInputPriceMode) => void
+}
+
+export const createViewActions = ({
+  set,
+  get,
+  callbacks,
+}: {
+  set: (fn: (state: ChartStoreState) => ChartStoreState) => void
+  get: () => ChartStoreState
+  callbacks: ViewActionCallbacks
+}) => ({
   zoom: (targetZoom: number) => {
     const { zoomLevel, panY, actions, dimensions, renderingContext } = get()
 
@@ -91,7 +101,7 @@ export const createViewActions = (
   },
 
   reset: (params?: { animate?: boolean; minPrice?: number | null; maxPrice?: number | null }) => {
-    const { animate = true, minPrice, maxPrice } = params ?? {}
+    const { animate = true, minPrice: providedMinPrice, maxPrice: providedMaxPrice } = params ?? {}
     const { actions, isFullRange, dynamicZoomMin, renderingContext } = get()
 
     if (!renderingContext) {
@@ -141,12 +151,32 @@ export const createViewActions = (
 
     // Take 20%-80% of the viewport range (middle 60%)
     const visibleRange = maxVisiblePrice - minVisiblePrice
-    const defaultMinPrice = minPrice ?? minVisiblePrice + visibleRange * 0.2
-    const defaultMaxPrice = maxPrice ?? minVisiblePrice + visibleRange * 0.8
 
-    // Find ticks that correspond to the default min and max prices
-    const { index: minTickIndex } = getClosestTick(liquidityData, defaultMinPrice)
-    const { index: maxTickIndex } = getClosestTick(liquidityData, defaultMaxPrice)
+    // Calculate and store the default 20%-80% range
+    const calculatedDefaultMinPrice = minVisiblePrice + visibleRange * 0.2
+    const calculatedDefaultMaxPrice = minVisiblePrice + visibleRange * 0.8
+
+    // Find ticks for calculated default prices
+    const { index: defaultMinTickIndex } = getClosestTick(liquidityData, calculatedDefaultMinPrice)
+    const { index: defaultMaxTickIndex } = getClosestTick(liquidityData, calculatedDefaultMaxPrice)
+    const defaultMinPrice = liquidityData[defaultMinTickIndex].price0
+    const defaultMaxPrice = liquidityData[defaultMaxTickIndex].price0
+
+    // Store default prices in state
+    set((state) => ({
+      ...state,
+      defaultMinPrice,
+      defaultMaxPrice,
+      selectedPriceStrategy: undefined,
+    }))
+
+    // For the actual position, use provided prices or fall back to defaults
+    const minPrice = providedMinPrice ?? defaultMinPrice
+    const maxPrice = providedMaxPrice ?? defaultMaxPrice
+
+    // Find ticks for the actual position
+    const { index: minTickIndex } = getClosestTick(liquidityData, minPrice)
+    const { index: maxTickIndex } = getClosestTick(liquidityData, maxPrice)
 
     const resetDimensions = { width: 0, height: CHART_DIMENSIONS.LIQUIDITY_CHART_HEIGHT }
 
@@ -174,23 +204,23 @@ export const createViewActions = (
       actions.animateToState({
         targetZoom: desiredZoom,
         targetPan: centerPanY,
-        targetMinPrice: defaultMinPrice,
-        targetMaxPrice: defaultMaxPrice,
+        targetMinPrice: minPrice,
+        targetMaxPrice: maxPrice,
       })
     } else {
       actions.setChartState({
         zoomLevel: desiredZoom,
         panY: centerPanY,
-        minPrice: defaultMinPrice,
-        maxPrice: defaultMaxPrice,
+        minPrice,
+        maxPrice,
       })
     }
 
     // Wait until animation is complete before calling handlePriceChange
     setTimeout(
       () => {
-        actions.handlePriceChange('min', defaultMinPrice)
-        actions.handlePriceChange('max', defaultMaxPrice)
+        actions.handlePriceChange('min', minPrice)
+        actions.handlePriceChange('max', maxPrice)
       },
       animate ? CHART_BEHAVIOR.ANIMATION_DURATION : 0,
     )
@@ -222,5 +252,18 @@ export const createViewActions = (
     set((state) => ({ ...state, dimensions }))
     const { actions } = get()
     actions.drawAll()
+  },
+
+  toggleInputMode: () => {
+    const newMode =
+      get().inputMode === RangeAmountInputPriceMode.PRICE
+        ? RangeAmountInputPriceMode.PERCENTAGE
+        : RangeAmountInputPriceMode.PRICE
+    set((state) => ({
+      ...state,
+      inputMode: newMode,
+    }))
+
+    callbacks.onInputModeChange(newMode)
   },
 })

@@ -24,7 +24,7 @@ import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/de
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export { getActiveGasStrategy }
@@ -182,10 +182,12 @@ export function useTransactionGasWarning({
   accountAddress,
   derivedInfo,
   gasFee,
+  skipGasCheck = false,
 }: {
   accountAddress?: Address
   derivedInfo: DerivedSwapInfo | DerivedSendInfo
   gasFee?: string
+  skipGasCheck?: boolean
 }): Warning | undefined {
   const { chainId, currencyAmounts, currencyBalances } = derivedInfo
   const { t } = useTranslation()
@@ -207,6 +209,11 @@ export function useTransactionGasWarning({
   const balanceInsufficient = currencyAmountIn && currencyBalanceIn?.lessThan(currencyAmountIn)
 
   return useMemo(() => {
+    // Skip gas check if explicitly requested (e.g., for wallets that can pay fees in any token)
+    if (skipGasCheck) {
+      return undefined
+    }
+
     // if balance is already insufficient, dont need to show warning about network fee
     if (
       gasFee === undefined ||
@@ -226,7 +233,7 @@ export function useTransactionGasWarning({
       title: t('swap.warning.insufficientGas.title', {
         currencySymbol,
       }),
-      buttonText: isWeb
+      buttonText: isWebPlatform
         ? t('swap.warning.insufficientGas.button', {
             currencySymbol,
           })
@@ -234,7 +241,7 @@ export function useTransactionGasWarning({
       message: undefined,
       currency: nativeCurrencyBalance.currency,
     }
-  }, [gasFee, isSmartContractAddress, balanceInsufficient, nativeCurrencyBalance, hasGasFunds, t])
+  }, [gasFee, isSmartContractAddress, balanceInsufficient, nativeCurrencyBalance, hasGasFunds, t, skipGasCheck])
 }
 
 type GasFeeFormattedAmounts<T extends string | undefined> = T extends string

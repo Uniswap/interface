@@ -38,10 +38,6 @@ const defaultState = {
   searchHistory: {
     results: [],
   },
-  wallets: {
-    connectedWallets: [],
-    switchingChain: false,
-  },
   userSettings: {
     currentLanguage: 'en',
     currentCurrency: 'USD',

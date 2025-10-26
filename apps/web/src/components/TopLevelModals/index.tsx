@@ -22,7 +22,7 @@ export default function TopLevelModals() {
   const evmAccountName = unitag?.username
     ? unitag.username + '.uni.eth'
     : evmAddress
-      ? shortenAddress(evmAddress)
+      ? shortenAddress({ address: evmAddress })
       : undefined
   const blockedAddress = useAccountRiskCheck({ evmAddress, svmAddress })
   const passkeysHelpModalType = useAtomValue(PasskeysHelpModalTypeAtom)
@@ -48,6 +48,7 @@ export default function TopLevelModals() {
         <ModalRenderer modalName={ModalName.Help} />
         <ModalRenderer modalName={ModalName.OffchainActivity} />
         <ModalRenderer modalName={ModalName.ReceiveCryptoModal} />
+        <ModalRenderer modalName={ModalName.PendingWalletConnection} />
       </>
     )
   }
@@ -81,6 +82,7 @@ export default function TopLevelModals() {
       <ModalRenderer modalName={ModalName.Send} />
       <ModalRenderer modalName={ModalName.BridgedAsset} componentProps={bridgedAssetModalProps} />
       <ModalRenderer modalName={ModalName.Wormhole} componentProps={wormholeModalProps} />
+      <ModalRenderer modalName={ModalName.PendingWalletConnection} />
     </>
   )
 }

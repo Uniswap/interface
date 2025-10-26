@@ -1,11 +1,11 @@
+import { GraphQLApi } from '@universe/api'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
-import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { token } from 'uniswap/src/test/fixtures'
 import { createFixture } from 'uniswap/src/test/utils'
 
 type TokenItemDataOptions = {
-  token: Token | null
+  token: GraphQLApi.Token | null
 }
 
 export const tokenItemData = createFixture<TokenItemData, TokenItemDataOptions>({

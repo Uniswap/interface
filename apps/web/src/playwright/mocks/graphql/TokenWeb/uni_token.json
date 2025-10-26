@@ -1,0 +1,71 @@
+{
+  "data": {
+    "token": {
+      "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "decimals": 18,
+      "name": "Uniswap",
+      "chain": "ETHEREUM",
+      "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "symbol": "UNI",
+      "standard": "ERC20",
+      "market": {
+        "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD",
+        "price": {
+          "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD-1234567890",
+          "value": 10.5,
+          "__typename": "Amount"
+        },
+        "pricePercentChange24h": {
+          "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD-24h",
+          "value": 5.2,
+          "__typename": "Amount"
+        },
+        "volume24h": {
+          "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD-volume-24h",
+          "value": 100000000,
+          "__typename": "Amount"
+        },
+        "totalValueLocked": {
+          "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD-tvl",
+          "value": 500000000,
+          "__typename": "Amount"
+        },
+        "__typename": "TokenMarket"
+      },
+      "project": {
+        "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+        "name": "Uniswap",
+        "description": "UNI is the governance token for Uniswap",
+        "homepageUrl": "https://uniswap.org",
+        "twitterName": "Uniswap",
+        "logoUrl": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png",
+        "tokens": [
+          {
+            "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+            "chain": "ETHEREUM",
+            "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+            "__typename": "Token"
+          }
+        ],
+        "markets": [
+          {
+            "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD",
+            "fullyDilutedValuation": {
+              "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD-fdv",
+              "value": 10500000000,
+              "__typename": "Amount"
+            },
+            "marketCap": {
+              "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD-marketcap",
+              "value": 6300000000,
+              "__typename": "Amount"
+            },
+            "__typename": "TokenProjectMarket"
+          }
+        ],
+        "__typename": "TokenProject"
+      },
+      "__typename": "Token"
+    }
+  }
+}

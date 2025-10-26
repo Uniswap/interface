@@ -226,233 +226,206 @@ exports[`AccountSwitcher renders correctly 1`] = `
         </View>
         <View
           collapsable={false}
+          focusVisibleStyle={{}}
           forwardedRef={[Function]}
+          hitSlop={16}
           jestAnimatedStyle={
             {
               "value": {},
             }
           }
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onLayout={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          role="button"
           style={
             {
-              "opacity": 0,
-              "overflow": "hidden",
-              "width": "100%",
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 12,
+              "borderBottomRightRadius": 12,
+              "borderTopLeftRadius": 12,
+              "borderTopRightRadius": 12,
+              "flexDirection": "column",
+              "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
             }
           }
+          testID="copy"
         >
           <View
-            onLayout={[Function]}
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
-                "position": "absolute",
-                "width": "100%",
+                "alignItems": "center",
+                "backgroundColor": {
+                  "dynamic": {
+                    "dark": "transparent",
+                    "light": "transparent",
+                  },
+                },
+                "borderBottomLeftRadius": 999999,
+                "borderBottomRightRadius": 999999,
+                "borderTopLeftRadius": 999999,
+                "borderTopRightRadius": 999999,
+                "flexDirection": "row",
+                "gap": 4,
+                "justifyContent": "center",
+                "marginTop": 0,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+                "paddingTop": 0,
               }
             }
           >
-            <View
-              collapsable={false}
-              focusVisibleStyle={{}}
-              forwardedRef={[Function]}
-              hitSlop={16}
-              jestAnimatedStyle={
-                {
-                  "value": {},
-                }
-              }
+            <Text
+              allowFontScaling={true}
+              maxFontSizeMultiplier={1.4}
               onBlur={[Function]}
-              onClick={[Function]}
               onFocus={[Function]}
-              onLayout={[Function]}
-              onResponderGrant={[Function]}
-              onResponderMove={[Function]}
-              onResponderRelease={[Function]}
-              onResponderTerminate={[Function]}
-              onResponderTerminationRequest={[Function]}
-              onStartShouldSetResponder={[Function]}
-              role="button"
               style={
                 {
-                  "backgroundColor": "transparent",
-                  "borderBottomLeftRadius": 12,
-                  "borderBottomRightRadius": 12,
-                  "borderTopLeftRadius": 12,
-                  "borderTopRightRadius": 12,
-                  "flexDirection": "column",
-                  "opacity": 1,
-                  "transform": [
-                    {
-                      "scale": 1,
+                  "color": {
+                    "dynamic": {
+                      "dark": "rgba(255, 255, 255, 0.65)",
+                      "light": "rgba(19, 19, 19, 0.63)",
                     },
-                  ],
+                  },
+                  "fontFamily": "Basel Grotesk",
+                  "fontSize": 17,
+                  "fontWeight": "400",
+                  "lineHeight": 20,
                 }
               }
-              testID="copy"
+              suppressHighlighting={true}
+            >
+              0x​82D56A...373Fa6
+            </Text>
+            <View
+              onBlur={[Function]}
+              onFocus={[Function]}
+              style={
+                {
+                  "flexDirection": "column",
+                  "height": 17,
+                  "position": "relative",
+                  "width": 17,
+                }
+              }
             >
               <View
                 onBlur={[Function]}
                 onFocus={[Function]}
                 style={
                   {
-                    "alignItems": "center",
-                    "backgroundColor": {
-                      "dynamic": {
-                        "dark": "transparent",
-                        "light": "transparent",
-                      },
-                    },
-                    "borderBottomLeftRadius": 999999,
-                    "borderBottomRightRadius": 999999,
-                    "borderTopLeftRadius": 999999,
-                    "borderTopRightRadius": 999999,
-                    "flexDirection": "row",
-                    "gap": 4,
-                    "justifyContent": "center",
-                    "marginTop": 0,
-                    "paddingBottom": 0,
-                    "paddingLeft": 0,
-                    "paddingRight": 0,
-                    "paddingTop": 0,
+                    "flexDirection": "column",
+                    "left": 0,
+                    "position": "absolute",
+                    "top": 0,
                   }
                 }
               >
-                <Text
-                  allowFontScaling={true}
-                  maxFontSizeMultiplier={1.4}
-                  onBlur={[Function]}
-                  onFocus={[Function]}
-                  style={
+                <View
+                  collapsable={false}
+                  forwardedRef={[Function]}
+                  jestAnimatedStyle={
                     {
-                      "color": {
-                        "dynamic": {
-                          "dark": "rgba(255, 255, 255, 0.65)",
-                          "light": "rgba(19, 19, 19, 0.63)",
-                        },
+                      "value": {
+                        "opacity": 1,
+                        "transform": [
+                          {
+                            "translateX": 0,
+                          },
+                        ],
+                        "width": "100%",
                       },
-                      "fontFamily": "Basel Grotesk",
-                      "fontSize": 17,
-                      "fontWeight": "400",
-                      "lineHeight": 20,
                     }
                   }
-                  suppressHighlighting={true}
-                >
-                  0x​82D56A...373Fa6
-                </Text>
-                <View
                   onBlur={[Function]}
                   onFocus={[Function]}
                   style={
                     {
                       "flexDirection": "column",
-                      "height": 17,
-                      "position": "relative",
-                      "width": 17,
+                      "flexGrow": 1,
+                      "opacity": 1,
+                      "transform": [
+                        {
+                          "translateX": 0,
+                        },
+                      ],
+                      "width": "100%",
                     }
                   }
                 >
-                  <View
-                    onBlur={[Function]}
-                    onFocus={[Function]}
+                  <RNSVGSvgView
+                    align="xMidYMid"
+                    bbHeight={17}
+                    bbWidth={17}
+                    fill="none"
+                    focusable={false}
+                    meetOrSlice={0}
+                    minX={0}
+                    minY={0}
+                    strokeWidth={8}
                     style={
-                      {
-                        "flexDirection": "column",
-                        "left": 0,
-                        "position": "absolute",
-                        "top": 0,
-                      }
+                      [
+                        {
+                          "backgroundColor": "transparent",
+                          "borderWidth": 0,
+                        },
+                        {
+                          "color": "rgba(19, 19, 19, 0.63)",
+                          "height": 17,
+                          "width": 17,
+                        },
+                        {
+                          "flex": 0,
+                          "height": 17,
+                          "width": 17,
+                        },
+                      ]
                     }
+                    vbHeight={24}
+                    vbWidth={24}
                   >
-                    <View
-                      collapsable={false}
-                      forwardedRef={[Function]}
-                      jestAnimatedStyle={
-                        {
-                          "value": {
-                            "opacity": 1,
-                            "transform": [
-                              {
-                                "translateX": 0,
-                              },
-                            ],
-                            "width": "100%",
-                          },
-                        }
+                    <RNSVGGroup
+                      color="rgba(19, 19, 19, 0.63)"
+                      fill={null}
+                      propList={
+                        [
+                          "fill",
+                          "strokeWidth",
+                        ]
                       }
-                      onBlur={[Function]}
-                      onFocus={[Function]}
-                      style={
-                        {
-                          "flexDirection": "column",
-                          "flexGrow": 1,
-                          "opacity": 1,
-                          "transform": [
-                            {
-                              "translateX": 0,
-                            },
-                          ],
-                          "width": "100%",
-                        }
-                      }
+                      strokeWidth={8}
                     >
-                      <RNSVGSvgView
-                        align="xMidYMid"
-                        bbHeight={17}
-                        bbWidth={17}
-                        fill="none"
-                        focusable={false}
-                        meetOrSlice={0}
-                        minX={0}
-                        minY={0}
-                        strokeWidth={8}
-                        style={
+                      <RNSVGPath
+                        d="M18.375 6.25H9.625C7.448 6.25 6.25 7.448 6.25 9.625V18.375C6.25 20.552 7.448 21.75 9.625 21.75H18.375C20.552 21.75 21.75 20.552 21.75 18.375V9.625C21.75 7.448 20.552 6.25 18.375 6.25ZM20.25 18.375C20.25 19.707 19.707 20.25 18.375 20.25H9.625C8.293 20.25 7.75 19.707 7.75 18.375V9.625C7.75 8.293 8.293 7.75 9.625 7.75H18.375C19.707 7.75 20.25 8.293 20.25 9.625V18.375ZM3.75 5.62V14.38C3.75 15.578 4.23309 15.873 4.39209 15.971C4.74609 16.187 4.85589 16.649 4.63989 17.002C4.49789 17.233 4.25202 17.36 3.99902 17.36C3.86602 17.36 3.72991 17.324 3.60791 17.25C2.70691 16.698 2.25 15.733 2.25 14.38V5.62C2.25 3.478 3.47912 2.25 5.62012 2.25H14.3799C16.0649 2.25 16.87 2.98897 17.25 3.60797C17.466 3.96097 17.355 4.42298 17.002 4.63898C16.648 4.85598 16.1879 4.74399 15.9709 4.39099C15.8739 4.23199 15.5779 3.74902 14.3799 3.74902H5.62012C4.29212 3.75002 3.75 4.292 3.75 5.62Z"
+                        fill={
+                          {
+                            "type": 2,
+                          }
+                        }
+                        propList={
                           [
-                            {
-                              "backgroundColor": "transparent",
-                              "borderWidth": 0,
-                            },
-                            {
-                              "color": "rgba(19, 19, 19, 0.63)",
-                              "height": 17,
-                              "width": 17,
-                            },
-                            {
-                              "flex": 0,
-                              "height": 17,
-                              "width": 17,
-                            },
+                            "fill",
                           ]
                         }
-                        vbHeight={24}
-                        vbWidth={24}
-                      >
-                        <RNSVGGroup
-                          color="rgba(19, 19, 19, 0.63)"
-                          fill={null}
-                          propList={
-                            [
-                              "fill",
-                              "strokeWidth",
-                            ]
-                          }
-                          strokeWidth={8}
-                        >
-                          <RNSVGPath
-                            d="M18.375 6.25H9.625C7.448 6.25 6.25 7.448 6.25 9.625V18.375C6.25 20.552 7.448 21.75 9.625 21.75H18.375C20.552 21.75 21.75 20.552 21.75 18.375V9.625C21.75 7.448 20.552 6.25 18.375 6.25ZM20.25 18.375C20.25 19.707 19.707 20.25 18.375 20.25H9.625C8.293 20.25 7.75 19.707 7.75 18.375V9.625C7.75 8.293 8.293 7.75 9.625 7.75H18.375C19.707 7.75 20.25 8.293 20.25 9.625V18.375ZM3.75 5.62V14.38C3.75 15.578 4.23309 15.873 4.39209 15.971C4.74609 16.187 4.85589 16.649 4.63989 17.002C4.49789 17.233 4.25202 17.36 3.99902 17.36C3.86602 17.36 3.72991 17.324 3.60791 17.25C2.70691 16.698 2.25 15.733 2.25 14.38V5.62C2.25 3.478 3.47912 2.25 5.62012 2.25H14.3799C16.0649 2.25 16.87 2.98897 17.25 3.60797C17.466 3.96097 17.355 4.42298 17.002 4.63898C16.648 4.85598 16.1879 4.74399 15.9709 4.39099C15.8739 4.23199 15.5779 3.74902 14.3799 3.74902H5.62012C4.29212 3.75002 3.75 4.292 3.75 5.62Z"
-                            fill={
-                              {
-                                "type": 2,
-                              }
-                            }
-                            propList={
-                              [
-                                "fill",
-                              ]
-                            }
-                          />
-                        </RNSVGGroup>
-                      </RNSVGSvgView>
-                    </View>
-                  </View>
+                      />
+                    </RNSVGGroup>
+                  </RNSVGSvgView>
                 </View>
               </View>
             </View>

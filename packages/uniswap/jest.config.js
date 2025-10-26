@@ -23,9 +23,7 @@ module.exports = {
     defaultPlatform: 'ios',
     platforms: ['ios', 'native'],
   },
-  setupFiles: [
-    './jest-setup.js',
-  ],
+  setupFiles: ['./jest-setup.js'],
   // we map core to tamagui's test bundle, this just makes setup simpler for jest
   moduleNameMapper: {
     ...preset.moduleNameMapper,

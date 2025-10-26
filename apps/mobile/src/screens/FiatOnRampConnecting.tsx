@@ -160,7 +160,6 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
       navigateToWidget(offRampWidgetData.widgetUrl).catch(() => undefined)
     }
   }, [
-    navigation,
     timeoutElapsed,
     widgetData,
     offRampWidgetData,

@@ -1,5 +1,6 @@
 import { useApolloClient } from '@apollo/client'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
+import { GQLQueries, GraphQLApi } from '@universe/api'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
@@ -28,21 +29,16 @@ import { getBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import type { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
-import type { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useTokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/fragments'
-import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -93,7 +89,7 @@ function TokenDetailsWrapper(): JSX.Element {
 const TokenDetailsQuery = memo(function _TokenDetailsQuery(): JSX.Element {
   const { currencyId, setError } = useTokenDetailsContext()
 
-  const { error } = useTokenDetailsScreenQuery({
+  const { error } = GraphQLApi.useTokenDetailsScreenQuery({
     variables: currencyIdToContractInput(currencyId),
     pollInterval: PollingInterval.Normal,
     notifyOnNetworkStatusChange: true,
@@ -109,8 +105,7 @@ const TokenDetails = memo(function _TokenDetails(): JSX.Element {
   const centerElement = useMemo(() => <HeaderTitleElement />, [])
   const rightElement = useMemo(() => <HeaderRightElement />, [])
 
-  const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
-  const inModal = useIsInModal(isBottomTabsEnabled ? MobileScreens.Explore : ModalName.Explore, true)
+  const inModal = useIsInModal(MobileScreens.Explore, true)
 
   return (
     <>
@@ -359,26 +354,16 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     onPressBuyFiatOnRamp,
   ])
 
-  const hideActionButtons = useMemo(() => {
-    return (
-      !isScreenNavigationReady ||
-      tokenColorLoading ||
-      isNativeCurrencyBalanceLoading ||
-      isNativeFiatOnRampCurrencyLoading ||
-      isFiatOnRampCurrencyLoading ||
-      isBridgingTokenLoading
-    )
-  }, [
-    isScreenNavigationReady,
-    tokenColorLoading,
-    isNativeCurrencyBalanceLoading,
-    isNativeFiatOnRampCurrencyLoading,
-    isFiatOnRampCurrencyLoading,
-    isBridgingTokenLoading,
-  ])
+  const hideActionButtons =
+    !isScreenNavigationReady ||
+    tokenColorLoading ||
+    isNativeCurrencyBalanceLoading ||
+    isNativeFiatOnRampCurrencyLoading ||
+    isFiatOnRampCurrencyLoading ||
+    isBridgingTokenLoading
 
   return hideActionButtons ? null : (
-    <AnimatedFlex backgroundColor="$surface1" entering={FadeInDown} style={{ marginBottom: insets.bottom }}>
+    <AnimatedFlex mb={insets.bottom} backgroundColor="$surface1" entering={FadeInDown}>
       <TokenDetailsActionButtons
         ctaButton={getCTAVariant}
         actionMenuOptions={actionMenuOptions}
@@ -405,7 +390,7 @@ const TokenBalancesWrapper = memo(function _TokenBalancesWrapper(): JSX.Element 
 
   const crossChainTokens: Array<{
     address: string | null
-    chain: Chain
+    chain: GraphQLApi.Chain
   }> = []
 
   for (const token of projectTokens ?? []) {

@@ -1,7 +1,7 @@
 import { PersistState } from 'redux-persist'
 import { Language } from 'uniswap/src/features/language/constants'
 import { getCurrentLanguageFromNavigator } from 'uniswap/src/features/language/utils'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 type PersistAppStateV22 = {
   _persist: PersistState
@@ -20,7 +20,7 @@ export const migration22 = (state: PersistAppStateV22 | undefined) => {
 
   const newState: any = { ...state }
 
-  if (newState.userSettings.currentLanguage === Language.English && isInterface) {
+  if (newState.userSettings.currentLanguage === Language.English && isWebApp) {
     newState.userSettings.currentLanguage = getCurrentLanguageFromNavigator()
   }
 

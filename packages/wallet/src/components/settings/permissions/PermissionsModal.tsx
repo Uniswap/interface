@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 import { AnalyticsToggleLineSwitch } from 'wallet/src/components/settings/AnalyticsToggleLineSwitch'
 import { DefaultWalletLineSwitch } from 'wallet/src/components/settings/permissions/DefaultWalletLineSwitch'
 
@@ -38,9 +38,9 @@ export function PermissionsModal({
       <Flex
         animation="fast"
         gap="$spacing16"
-        pb={isExtension ? undefined : '$spacing60'}
-        py={isExtension ? '$spacing16' : undefined}
-        px={isExtension ? '$spacing12' : '$spacing24'}
+        pb={isExtensionApp ? undefined : '$spacing60'}
+        py={isExtensionApp ? '$spacing16' : undefined}
+        px={isExtensionApp ? '$spacing12' : '$spacing24'}
         width="100%"
       >
         <Flex centered>
@@ -51,7 +51,7 @@ export function PermissionsModal({
 
         <AnalyticsToggleLineSwitch />
 
-        {isExtension && (
+        {isExtensionApp && (
           <DefaultWalletLineSwitch
             title={t('extension.settings.defaultWallet.title')}
             description={t('extension.settings.defaultWallet.message')}

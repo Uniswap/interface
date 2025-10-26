@@ -179,7 +179,7 @@ export function AddHook() {
                 px="$padding12"
               >
                 <DocumentList size="$icon.20" color="$neutral1" />
-                <Text variant="buttonLabel3">{shortenAddress(hook)}</Text>
+                <Text variant="buttonLabel3">{shortenAddress({ address: hook })}</Text>
               </Flex>
             </TouchableArea>
             <TouchableArea onPress={onClearHook}>

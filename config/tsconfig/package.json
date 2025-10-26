@@ -1,12 +1,6 @@
 {
   "name": "tsconfig",
   "version": "0.0.0",
-  "files": [
-    "app.json",
-    "expo.json",
-    "nextjs.json",
-    "storybook.json",
-    "ui.json"
-  ],
+  "files": ["app.json", "expo.json", "nextjs.json", "storybook.json", "ui.json"],
   "private": true
 }

@@ -16,6 +16,7 @@ export default function Updater(): null {
 
   const [activeChainId, setActiveChainId] = useState(account.chainId)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +dispatch
   useEffect(() => {
     if (provider && account.chainId && windowVisible) {
       setActiveChainId(account.chainId)

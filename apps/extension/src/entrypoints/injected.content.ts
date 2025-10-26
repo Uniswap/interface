@@ -42,6 +42,7 @@ import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { arraysAreEqual } from 'utilities/src/primitives/array'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -90,9 +91,9 @@ function makeInjected(): void {
 
   const setConnectedAddressesAndMaybeEmit = (newConnectedAddresses: Address[]): void => {
     // Only emit if the addresses have changed, and it's not the first time
-    const normalizedNewAddresses: Address[] = newConnectedAddresses
+    const normalizedNewAddresses: HexString[] = newConnectedAddresses
       .map((address) => getValidAddress({ address, platform: Platform.EVM }))
-      .filter((normalizedAddress): normalizedAddress is Address => normalizedAddress !== null)
+      .filter((normalizedAddress): normalizedAddress is HexString => normalizedAddress !== null)
 
     if (!connectedAddresses || !arraysAreEqual(connectedAddresses, normalizedNewAddresses)) {
       emitAccountsChanged(normalizedNewAddresses)
@@ -301,7 +302,10 @@ function makeInjected(): void {
 
 // eslint-disable-next-line import/no-unused-modules
 export default defineContentScript({
-  matches: ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*'],
+  matches:
+    __DEV__ || process.env.BUILD_ENV === 'dev'
+      ? ['http://127.0.0.1/*', 'http://localhost/*', 'https://*/*']
+      : ['https://*/*'],
   runAt: 'document_start',
   main() {
     makeInjected()

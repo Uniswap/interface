@@ -1,3 +1,4 @@
+import { CoinbaseWalletAdapter } from '@solana/wallet-adapter-coinbase'
 import { WalletProvider as SolanaWalletProvider } from '@solana/wallet-adapter-react'
 import { SolanaSignerUpdater } from 'components/Web3Provider/signSolanaTransaction'
 import React, { PropsWithChildren, ReactNode, useMemo } from 'react'
@@ -31,8 +32,8 @@ export function createWeb3Provider(params: {
 }
 
 function SolanaProvider({ children }: PropsWithChildren) {
-  // WalletProvider has most wallet adapters built in
-  const wallets = useMemo(() => [], [])
+  // WalletProvider has built-in support for SolanaStandard wallets;
+  const wallets = useMemo(() => [new CoinbaseWalletAdapter()], [])
 
   return (
     <SolanaWalletProvider wallets={wallets} autoConnect>

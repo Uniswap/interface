@@ -330,14 +330,16 @@ export function SelectTokensStep({
   }, [hasExistingFeeTiers, feeTierData])
 
   // If the userApprovedHook changes, we want to reset the default fee tier in the useEffect below.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +userApprovedHook
   useEffect(() => {
     setDefaultFeeTierSelected(false)
   }, [userApprovedHook])
 
   useEffect(() => {
     // Don't auto-select recommended fee if user provided either legacy feeTier param or modern fee param
+    // or if the user is migrating a position
     const hasUserProvidedFee = parsedQs.feeTier || parsedQs.fee
-    if (mostUsedFeeTier && !defaultFeeTierSelected && !hasUserProvidedFee) {
+    if (mostUsedFeeTier && !defaultFeeTierSelected && !hasUserProvidedFee && !tokensLocked) {
       setDefaultFeeTierSelected(true)
       setPositionState((prevState) => ({
         ...prevState,
@@ -349,7 +351,7 @@ export function SelectTokensStep({
         ...trace,
       })
     }
-  }, [mostUsedFeeTier, defaultFeeTierSelected, parsedQs, setPositionState, trace])
+  }, [tokensLocked, mostUsedFeeTier, defaultFeeTierSelected, parsedQs, setPositionState, trace])
 
   const { chains } = useEnabledChains({ platform: Platform.EVM })
   const supportedChains = useMemo(() => {

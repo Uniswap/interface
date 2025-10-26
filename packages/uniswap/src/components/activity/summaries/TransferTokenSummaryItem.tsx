@@ -93,7 +93,7 @@ function _TransferTokenSummaryItem({
   const { data: unitag } = useUnitagsAddressQuery({
     params: otherAddress ? { address: otherAddress } : undefined,
   })
-  const personDisplayName = unitag?.username ?? ensName ?? shortenAddress(otherAddress)
+  const personDisplayName = unitag?.username ?? ensName ?? shortenAddress({ address: otherAddress })
 
   const tokenAmountWithSymbol = isCurrency
     ? (currencyAmount ?? '') + (getSymbolDisplayText(currencyInfo?.currency.symbol) ?? '')

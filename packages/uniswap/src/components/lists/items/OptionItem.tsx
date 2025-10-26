@@ -4,7 +4,7 @@ import useIsKeyboardOpen from 'uniswap/src/hooks/useIsKeyboardOpen'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { KeyAction } from 'utilities/src/device/keyboard/types'
 import { useKeyDown } from 'utilities/src/device/keyboard/useKeyDown'
-import { isInterface, isWeb } from 'utilities/src/platform'
+import { isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { noop } from 'utilities/src/react/noop'
 
 // Props for manually managing the focused row index of a list
@@ -61,7 +61,7 @@ function _OptionItem({
     if (modalShouldShow && modal) {
       // On mobile web we need to wait for the keyboard to hide
       // before showing the modal to avoid height issues
-      if (isKeyboardOpen && isInterface) {
+      if (isKeyboardOpen && isWebApp) {
         const activeElement = document.activeElement as HTMLElement | null
         activeElement?.blur()
         setTimeout(handleShowModal, 700)
@@ -76,7 +76,7 @@ function _OptionItem({
 
   // Custom keyboard list nav behavior using arrow + enter keys
   const { focusedRowIndex, rowIndex, setFocusedRowIndex } = focusedRowControl ?? {}
-  const keyboardNavEnabled = isWeb && focusedRowControl && setFocusedRowIndex
+  const keyboardNavEnabled = isWebPlatform && focusedRowControl && setFocusedRowIndex
   const isFocused = focusedRowIndex !== undefined && focusedRowIndex === rowIndex
   useKeyDown({
     keys: ['Enter'],

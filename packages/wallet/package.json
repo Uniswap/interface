@@ -2,13 +2,17 @@
   "name": "wallet",
   "version": "0.0.0",
   "scripts": {
-    "check:deps:usage": "depcheck",
-    "format": "biome check . --linter-enabled=false",
-    "lint": "eslint . --ext ts,tsx --max-warnings=0",
-    "lint:fix": "eslint . --ext ts,tsx --fix",
-    "test": "jest",
-    "snapshots": "jest -u",
-    "typecheck": "tsc -b"
+    "check:deps:usage": "nx check:deps:usage wallet",
+    "lint:biome": "nx lint:biome wallet",
+    "lint:biome:fix": "nx lint:biome:fix wallet",
+    "lint": "nx lint wallet",
+    "lint:fix": "nx lint:fix wallet",
+    "test": "nx test wallet",
+    "snapshots": "nx snapshots wallet",
+    "typecheck": "nx typecheck wallet"
+  },
+  "nx": {
+    "includedScripts": []
   },
   "dependencies": {
     "@apollo/client": "3.10.4",
@@ -83,7 +87,5 @@
   },
   "main": "src/index.ts",
   "private": true,
-  "sideEffects": [
-    "*.css"
-  ]
+  "sideEffects": ["*.css"]
 }

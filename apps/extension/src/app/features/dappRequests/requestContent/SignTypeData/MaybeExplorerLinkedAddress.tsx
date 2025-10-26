@@ -10,7 +10,7 @@ export const MaybeExplorerLinkedAddress = ({ address, link }: MaybeExplorerLinke
   if (!link) {
     return (
       <Text color="$neutral1" variant="body4">
-        {shortenAddress(address)}
+        {shortenAddress({ address })}
       </Text>
     )
   }
@@ -27,7 +27,7 @@ export const MaybeExplorerLinkedAddress = ({ address, link }: MaybeExplorerLinke
       textDecorationLine="none"
     >
       <Text color="$neutral1" variant="body4">
-        {shortenAddress(address)}
+        {shortenAddress({ address })}
       </Text>
       <ExternalLink color="$neutral2" size="$icon.16" />
     </Anchor>

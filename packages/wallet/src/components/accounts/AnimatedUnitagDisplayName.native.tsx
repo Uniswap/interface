@@ -16,7 +16,7 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText } from 'uniswap/src/utils/addresses'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { shortenAddress } from 'utilities/src/addresses'
-import { isExtension, isMobileApp } from 'utilities/src/platform'
+import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
 import { AnimatedUnitagDisplayNameProps } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 
 /**
@@ -57,7 +57,7 @@ function _AnimatedUnitagDisplayName({
       )
       sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
         element: ElementName.CopyAddress,
-        screen: isExtension ? ExtensionScreens.Home : isMobileApp ? MobileScreens.Home : undefined,
+        screen: isExtensionApp ? ExtensionScreens.Home : isMobileApp ? MobileScreens.Home : undefined,
       })
     },
     [address, dispatch],
@@ -132,7 +132,7 @@ function _AnimatedUnitagDisplayName({
         <TouchableArea testID={TestID.AccountHeaderCopyAddress} onPress={onPressCopyAddress}>
           <Flex row alignItems="center" gap="$spacing4">
             <Text color="$neutral2" numberOfLines={1} variant="body2">
-              {sanitizeAddressText(shortenAddress(address))}
+              {sanitizeAddressText(shortenAddress({ address }))}
             </Text>
             <CopyAlt color="$neutral3" size="$icon.16" />
           </Flex>

@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Ether } from '@uniswap/sdk-core'
 import { WBTC } from 'uniswap/src/constants/tokens'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId as idFromCurrency } from 'uniswap/src/utils/currencyId'
@@ -11,9 +12,9 @@ export interface FavoritesState {
   watchedAddresses: Address[]
 }
 
-// Default currency ids, need to be in lowercase to match slice add and remove behavior
-const WBTC_CURRENCY_ID = idFromCurrency(WBTC).toLowerCase()
-const ETH_CURRENCY_ID = idFromCurrency(Ether.onChain(UniverseChainId.Mainnet)).toLowerCase()
+// Default currency ids, need to be normalized to match slice add and remove behavior
+const WBTC_CURRENCY_ID = normalizeCurrencyIdForMapLookup(idFromCurrency(WBTC))
+const ETH_CURRENCY_ID = normalizeCurrencyIdForMapLookup(idFromCurrency(Ether.onChain(UniverseChainId.Mainnet)))
 
 export const initialFavoritesState: FavoritesState = {
   tokens: [ETH_CURRENCY_ID, WBTC_CURRENCY_ID],
@@ -26,7 +27,7 @@ export const slice = createSlice({
   reducers: {
     addFavoriteToken: (state, { payload: { currencyId } }: PayloadAction<{ currencyId: string }>) => {
       if (state.tokens.indexOf(currencyId) === -1) {
-        state.tokens.push(currencyId.toLowerCase()) // normalize all IDs
+        state.tokens.push(normalizeCurrencyIdForMapLookup(currencyId)) // normalize all IDs
       } else {
         logger.warn('slice', 'addFavoriteToken', `Attempting to favorite a token twice (${currencyId})`)
       }

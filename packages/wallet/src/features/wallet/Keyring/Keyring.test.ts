@@ -31,7 +31,6 @@ const mockSessionStorage = (): unknown => {
 
   return {
     get: async (
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       key: string | string[] | { [key: string]: any } | null,
       _callback: (items: { [key: string]: unknown }) => void,
     ): Promise<Record<string, unknown>> => {

@@ -1,5 +1,5 @@
 import { isBetaEnv, isDevEnv, isPlaywrightEnv, isTestEnv } from 'utilities/src/environment/env'
-import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
+import { isAndroid, isExtensionApp, isMobileApp, isWebApp } from 'utilities/src/platform'
 
 export enum TrafficFlows {
   GraphQL = 'graphql',
@@ -26,11 +26,11 @@ export function getCloudflarePrefix(flow?: TrafficFlows): string {
     return `${isAndroid ? 'android' : 'ios'}.wallet`
   }
 
-  if (isExtension) {
+  if (isExtensionApp) {
     return 'extension'
   }
 
-  if (isPlaywrightEnv() || isInterface) {
+  if (isPlaywrightEnv() || isWebApp) {
     return 'interface'
   }
 
@@ -54,6 +54,6 @@ export function getCloudflareApiBaseUrl(flow?: TrafficFlows): string {
 }
 
 export function createHelpArticleUrl(resourceId: string, path: string = 'articles'): string {
-  const product = isMobileApp ? 'mobileApp' : isExtension ? 'extension' : 'web'
+  const product = isMobileApp ? 'mobileApp' : isExtensionApp ? 'extension' : 'web'
   return `${helpUrl}/${path}/${resourceId}?product_link=${product}`
 }

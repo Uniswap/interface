@@ -10,6 +10,7 @@ import {
   PositionFlowStep,
   type PositionState,
   type PriceRangeState,
+  RangeAmountInputPriceMode,
 } from 'components/Liquidity/Create/types'
 import type { DepositState } from 'components/Liquidity/types'
 import { getPriceRangeInfo } from 'components/Liquidity/utils/priceRangeInfo'
@@ -26,6 +27,7 @@ export const DEFAULT_PRICE_RANGE_STATE: PriceRangeState = {
   minPrice: '',
   maxPrice: '',
   initialPrice: '',
+  inputMode: RangeAmountInputPriceMode.PRICE,
 }
 
 export const DEFAULT_DEPOSIT_STATE: DepositState = {

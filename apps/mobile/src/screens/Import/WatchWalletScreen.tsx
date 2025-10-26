@@ -163,6 +163,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     setValue(text?.trim())
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Only want to reset timer on value change
   useEffect(() => {
     const delayFn = setTimeout(() => {
       setShowLiveCheck(true)

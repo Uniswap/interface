@@ -191,7 +191,7 @@ export class WebKeyring implements IKeyring {
       const passwordPasswordEncryptionKey = await getEncryptionKeyFromPassword({ password, secretPayload })
       const passwordPasswordBase64String = await exportKey(passwordPasswordEncryptionKey)
       return currentPasswordBase64String === passwordPasswordBase64String
-    } catch (e) {
+    } catch (_e) {
       return false
     }
   }
@@ -483,7 +483,7 @@ export class WebKeyring implements IKeyring {
     try {
       await this.storage.removeItem(key)
       return true
-    } catch (e) {
+    } catch (_e) {
       return false
     }
   }

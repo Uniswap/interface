@@ -28,7 +28,7 @@ import type {
   TokenWarningProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/types'
 import { UserReceiveAmount } from 'uniswap/src/features/transactions/TransactionDetails/UserReceiveAmount'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 interface TransactionDetailsProps {
   banner?: ReactNode
@@ -181,7 +181,7 @@ export function TransactionDetails({
       {showWarning && warning && onShowWarning && (
         <TransactionWarning warning={warning} onShowWarning={onShowWarning} />
       )}
-      {!isInterface && isSwap && (
+      {!isWebApp && isSwap && (
         <TransactionSettingsModal
           settings={[SlippageUpdate]}
           initialSelectedSetting={SlippageUpdate}

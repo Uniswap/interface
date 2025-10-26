@@ -1,6 +1,5 @@
 import { ethCurrencyInfo } from 'pages/Swap/Buy/BuyFormContext'
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 
 export const mockServiceProvider = {

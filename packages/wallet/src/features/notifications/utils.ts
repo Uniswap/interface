@@ -50,7 +50,7 @@ export function formApproveNotificationTitle({
   spender: Address
 }): string {
   const currencyDisplayText = getCurrencyDisplayText(currency, tokenAddress)
-  const address = shortenAddress(spender)
+  const address = shortenAddress({ address: spender })
   return txStatus === TransactionStatus.Success
     ? i18n.t('notification.transaction.approve.success', {
         currencySymbol: currencyDisplayText,
@@ -248,7 +248,7 @@ export const formTransferNFTNotificationTitle = ({
   tokenId: string
   senderOrRecipient: string
 }): string => {
-  const nftName = nft?.name ?? `NFT ${shortenAddress(tokenAddress)} #${tokenId}`
+  const nftName = nft?.name ?? `NFT ${shortenAddress({ address: tokenAddress })} #${tokenId}`
   const shortenedAddressOrENS = getShortenedAddressOrEns(senderOrRecipient)
   return formTransferTxTitle({
     txType,
@@ -267,7 +267,7 @@ export function formUnknownTxTitle({
   tokenAddress: Address | undefined
   ensName: string | null
 }): string {
-  const address = tokenAddress && shortenAddress(tokenAddress)
+  const address = tokenAddress && shortenAddress({ address: tokenAddress })
   const target = ensName ?? address
 
   if (txStatus === TransactionStatus.Success) {
@@ -319,5 +319,5 @@ function formTransferTxTitle({
 const getShortenedAddressOrEns = (addressOrENS: string): string => {
   // TODO(WALL-7065): Update to support Solana
   const addressIsValid = Boolean(getValidAddress({ address: addressOrENS, platform: Platform.EVM }))
-  return addressIsValid ? shortenAddress(addressOrENS) : addressOrENS
+  return addressIsValid ? shortenAddress({ address: addressOrENS }) : addressOrENS
 }

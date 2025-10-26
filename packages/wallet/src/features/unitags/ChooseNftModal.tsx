@@ -11,7 +11,7 @@ import { NftViewWithContextMenu } from 'uniswap/src/components/nfts/NftViewWithC
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { isMobileApp, isWeb } from 'utilities/src/platform'
+import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { ChoosePhotoOptionsProps } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -80,11 +80,11 @@ export const ChooseNftModal = ({
       isDismissible={renderedInBottomSheet}
       name={ModalName.NftCollection}
       maxWidth={modalMaxWidth}
-      padding={isWeb ? spacing.spacing24 : undefined}
+      padding={isWebPlatform ? spacing.spacing24 : undefined}
       onClose={onClose}
     >
       <Flex fill gap="$spacing24">
-        {isWeb ? (
+        {isWebPlatform ? (
           <Flex row centered>
             <Flex grow centered>
               <Text color="$neutral1" variant="subheading1">

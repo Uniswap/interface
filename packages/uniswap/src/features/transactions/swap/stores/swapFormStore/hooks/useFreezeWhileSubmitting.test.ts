@@ -1,4 +1,4 @@
-import { act, renderHook } from '@testing-library/react-hooks'
+import { act, renderHook } from '@testing-library/react'
 import { useFreezeWhileSubmitting } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/hooks/useFreezeWhileSubmitting'
 
 describe('useFreezeWhileSubmitting', () => {
@@ -133,8 +133,7 @@ describe('useFreezeWhileSubmitting', () => {
   })
 
   it('should handle undefined values', () => {
-    // eslint-disable-next-line no-undef-init
-    let latestValue: string | undefined = undefined
+    let latestValue: string | undefined
     let isSubmitting = false
 
     const { result, rerender } = renderHook(() => useFreezeWhileSubmitting(latestValue, isSubmitting))

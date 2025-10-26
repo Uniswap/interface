@@ -14,7 +14,8 @@ const DEFAULT_PAGE_SIZE = 100
 
 export type TransactionListDataResult = BaseResult<TransactionDetails[]>
 type ListTransactionsQueryArgs = {
-  address?: Address
+  evmAddress?: Address
+  svmAddress?: Address
   pageSize?: number
   hideSpamTokens?: boolean
   tokenVisibilityOverrides?: CurrencyIdToVisibility
@@ -27,7 +28,8 @@ type ListTransactionsQueryArgs = {
  * REST implementation for fetching transaction activity data
  */
 export function useListTransactions({
-  address,
+  evmAddress,
+  svmAddress,
   pageSize,
   hideSpamTokens = false,
   tokenVisibilityOverrides,
@@ -63,12 +65,13 @@ export function useListTransactions({
     status: restStatus,
   } = useListTransactionsQuery({
     input: {
-      evmAddress: address || '',
+      evmAddress,
+      svmAddress,
       chainIds: finalChainIds,
       pageSize: finalPageSize,
       fiatOnRampParams,
     },
-    enabled: !!address && !skip,
+    enabled: !!(evmAddress || svmAddress) && !skip,
     select: selectFormattedData,
   })
 

@@ -20,7 +20,7 @@ const tokenListAjv = new Ajv({
 addFormats(tokenListAjv)
 const validateTokenList = tokenListAjv.compile(schema)
 
-let tokenListModuleCode = standaloneCode(tokenListAjv, validateTokenList)
+const tokenListModuleCode = standaloneCode(tokenListAjv, validateTokenList)
 
 const tokenListOutputPath = path.join(__dirname, '../src/utils/__generated__/validateTokenList.js')
 fs.mkdirSync(path.dirname(tokenListOutputPath), { recursive: true })
@@ -38,7 +38,7 @@ const tokensAjv = new Ajv({
 addFormats(tokensAjv)
 const validateTokens = tokensAjv.compile({ ...schema, required: ['tokens'] })
 
-let tokensModuleCode = standaloneCode(tokensAjv, validateTokens)
+const tokensModuleCode = standaloneCode(tokensAjv, validateTokens)
 
 const tokensOutputPath = path.join(__dirname, '../src/utils/__generated__/validateTokens.js')
 fs.mkdirSync(path.dirname(tokensOutputPath), { recursive: true })

@@ -1,6 +1,6 @@
-import { useScrollToTop } from '@react-navigation/native'
+import { useIsFocused, useNavigation, useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type TextInput } from 'react-native'
 import type { FlatList } from 'react-native-gesture-handler'
@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux'
 import { ExploreSections } from 'src/components/explore/ExploreSections/ExploreSections'
 import { ExploreScreenSearchResultsList } from 'src/components/explore/search/ExploreScreenSearchResultsList'
 import { Screen } from 'src/components/layout/Screen'
-import { Flex } from 'ui/src'
+import { Flex, useLayoutAnimationOnChange } from 'ui/src'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { NetworkFilter, type NetworkFilterProps } from 'uniswap/src/components/network/NetworkFilter'
@@ -38,6 +38,7 @@ const networkFilterStyles: NetworkFilterProps['styles'] = { buttonPaddingY: '$no
 export function ExploreScreen(): JSX.Element {
   const { chains } = useEnabledChains()
   const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
+  const navigation = useNavigation()
 
   const { isSheetReady } = useBottomSheetContext({ forceSafeReturn: isBottomTabsEnabled })
 
@@ -46,10 +47,58 @@ export function ExploreScreen(): JSX.Element {
 
   const textInputRef = useRef<TextInput>(null)
   const listRef = useAnimatedRef<FlatList<unknown>>()
+  const isFocused = useIsFocused()
 
-  useScrollToTop(listRef)
+  const [isAtTop, setIsAtTop] = useState<boolean>(true)
+
+  // Use refs to avoid stale closures in the event listener
+  const isAtTopRef = useRef(isAtTop)
+  const isFocusedRef = useRef(isFocused)
+
+  isAtTopRef.current = isAtTop
+  isFocusedRef.current = isFocused
+
+  // Disable default scroll-to-top behavior when bottom tabs are enabled
+  // We'll implement custom behavior that focuses search input if already at top
+  useScrollToTop(isBottomTabsEnabled ? { current: null } : listRef)
 
   const [isSearchMode, setIsSearchMode] = useState<boolean>(false)
+
+  useLayoutAnimationOnChange(isSearchMode, {
+    duration: 125,
+  })
+
+  // Custom tab press handler for double-tap behavior (only when bottom tabs enabled)
+  // This effect only runs when isBottomTabsEnabled or navigation changes
+  useEffect((): (() => void) | undefined => {
+    if (!isBottomTabsEnabled) {
+      return undefined
+    }
+
+    const unsubscribe = navigation.addListener('state', (e) => {
+      const currentRouteName = e.data.state.routeNames[e.data.state.index] as unknown as string | undefined
+
+      // Check if we're navigating to the Explore screen
+      const isOnExploreScreen = currentRouteName === MobileScreens.Explore
+
+      // Only handle this if:
+      // 1. We were already focused before the state change (i.e., tab was pressed while already on this screen)
+      // 2. The current route is the Explore screen
+      // 3. The screen is currently focused
+      if (!isOnExploreScreen || !isFocusedRef.current) {
+        return
+      }
+
+      if (isAtTopRef.current) {
+        textInputRef.current?.focus()
+      } else {
+        // If not at top, scroll to top
+        listRef.current?.scrollToOffset({ offset: 0, animated: true })
+      }
+    })
+
+    return unsubscribe
+  }, [isBottomTabsEnabled, navigation, listRef])
 
   // TODO(WALL-5482): investigate list rendering performance/scrolling issue
   const canRenderList = useRenderNextFrame(isSheetReady && !isSearchMode)
@@ -126,7 +175,7 @@ export function ExploreScreen(): JSX.Element {
           parsedChainFilter={parsedChainFilter}
         />
       ) : isSheetReady && canRenderList ? (
-        <ExploreSections listRef={listRef} />
+        <ExploreSections listRef={listRef} setIsAtTopOnScroll={isBottomTabsEnabled ? setIsAtTop : undefined} />
       ) : null}
     </Screen>
   )

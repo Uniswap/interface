@@ -1,10 +1,6 @@
 import { skipToken, type UseQueryResult, useQuery } from '@tanstack/react-query'
-import {
-  UnitagsApiClient,
-  type UnitagUsernameRequest,
-  type UnitagUsernameResponse,
-  type UseQueryApiHelperHookArgs,
-} from '@universe/api'
+import { type UnitagUsernameRequest, type UnitagUsernameResponse, type UseQueryApiHelperHookArgs } from '@universe/api'
+import { UnitagsApiClient } from 'uniswap/src/data/apiClients/unitagsApi/UnitagsApiClient'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { MAX_REACT_QUERY_CACHE_TIME_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 

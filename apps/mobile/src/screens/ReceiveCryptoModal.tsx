@@ -9,12 +9,12 @@ import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { CopySheets, QrCode } from 'ui/src/components/icons'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 const ACCOUNT_IMAGE_SIZE = 52
@@ -115,7 +115,7 @@ export function ReceiveCryptoModal({ route }: AppStackScreenProp<typeof ModalNam
             {t('home.upsell.receive.title')}
           </Text>
           <Text color="$neutral2" mt="$spacing2" textAlign="center" variant="body3">
-            {t('home.upsell.receive.description')}
+            {t('fiatOnRamp.receiveCrypto.transferFunds')}
           </Text>
         </Flex>
         <AccountCardItem onClose={onClose} />

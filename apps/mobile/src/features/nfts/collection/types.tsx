@@ -1,5 +1,5 @@
-import { NftCollectionScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 
-export type NFTCollectionData = Maybe<
-  NonNullable<NonNullable<NftCollectionScreenQuery['nftCollections']>['edges']>[0]['node']
+export type NFTCollectionData = GraphQLApi.Maybe<
+  NonNullable<NonNullable<GraphQLApi.NftCollectionScreenQuery['nftCollections']>['edges']>[0]['node']
 >

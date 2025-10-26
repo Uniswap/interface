@@ -31,11 +31,13 @@ export function ImageUri({
     ...(isLoaded.value ? loadedImageContainerStyle : {}),
   }))
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +uri
   useEffect(() => {
     isLoaded.value = false
     setIsError(false)
   }, [isLoaded, uri])
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +aspectRatio
   useEffect(() => {
     setAspectRatio(inputImageAspectRatio)
   }, [aspectRatio, inputImageAspectRatio])

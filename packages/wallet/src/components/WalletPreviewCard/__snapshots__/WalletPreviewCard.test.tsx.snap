@@ -260,85 +260,54 @@ exports[`renders wallet preview card 1`] = `
             </View>
           </View>
           <View
-            collapsable={false}
-            forwardedRef={[Function]}
-            jestAnimatedStyle={
-              {
-                "value": {},
-              }
-            }
             onBlur={[Function]}
             onFocus={[Function]}
             style={
               {
-                "opacity": 1,
-                "overflow": "hidden",
-                "width": "100%",
+                "alignItems": "center",
+                "backgroundColor": {
+                  "dynamic": {
+                    "dark": "transparent",
+                    "light": "transparent",
+                  },
+                },
+                "borderBottomLeftRadius": 999999,
+                "borderBottomRightRadius": 999999,
+                "borderTopLeftRadius": 999999,
+                "borderTopRightRadius": 999999,
+                "flexDirection": "row",
+                "gap": 4,
+                "marginTop": 0,
+                "paddingBottom": 0,
+                "paddingLeft": 0,
+                "paddingRight": 0,
+                "paddingTop": 0,
               }
             }
           >
-            <View
+            <Text
+              allowFontScaling={false}
+              maxFontSizeMultiplier={1.4}
               onBlur={[Function]}
               onFocus={[Function]}
-              onLayout={[Function]}
               style={
                 {
-                  "position": "absolute",
-                  "width": "100%",
+                  "color": {
+                    "dynamic": {
+                      "dark": "rgba(255, 255, 255, 0.65)",
+                      "light": "rgba(19, 19, 19, 0.63)",
+                    },
+                  },
+                  "fontFamily": "Basel Grotesk",
+                  "fontSize": 16,
+                  "fontWeight": "400",
+                  "lineHeight": 20.8,
                 }
               }
+              suppressHighlighting={true}
             >
-              <View
-                onBlur={[Function]}
-                onFocus={[Function]}
-                style={
-                  {
-                    "alignItems": "center",
-                    "backgroundColor": {
-                      "dynamic": {
-                        "dark": "transparent",
-                        "light": "transparent",
-                      },
-                    },
-                    "borderBottomLeftRadius": 999999,
-                    "borderBottomRightRadius": 999999,
-                    "borderTopLeftRadius": 999999,
-                    "borderTopRightRadius": 999999,
-                    "flexDirection": "row",
-                    "gap": 4,
-                    "marginTop": 0,
-                    "paddingBottom": 0,
-                    "paddingLeft": 0,
-                    "paddingRight": 0,
-                    "paddingTop": 0,
-                  }
-                }
-              >
-                <Text
-                  allowFontScaling={false}
-                  maxFontSizeMultiplier={1.4}
-                  onBlur={[Function]}
-                  onFocus={[Function]}
-                  style={
-                    {
-                      "color": {
-                        "dynamic": {
-                          "dark": "rgba(255, 255, 255, 0.65)",
-                          "light": "rgba(19, 19, 19, 0.63)",
-                        },
-                      },
-                      "fontFamily": "Basel Grotesk",
-                      "fontSize": 16,
-                      "fontWeight": "400",
-                      "lineHeight": 20.8,
-                    }
-                  }
-                  suppressHighlighting={true}
-                >
-                  0x​82D56A...373Fa6
-                </Text>
-              </View>
-            </View>
+              0x​82D56A...373Fa6
+            </Text>
           </View>
         </View>
       </View>

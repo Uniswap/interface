@@ -24,6 +24,7 @@ export function useIncreasePositionDependentAmountFallback(
     enabled: isQueryEnabled && queryParams?.simulateTransaction,
   })
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +queryParams
   useEffect(() => {
     setHasErrorResponse(!!error)
   }, [error, queryParams])
@@ -47,6 +48,7 @@ export function useCreatePositionDependentAmountFallback(
     enabled: isQueryEnabled && queryParams?.simulateTransaction,
   })
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +queryParams
   useEffect(() => {
     setHasErrorResponse(!!error)
   }, [error, queryParams])

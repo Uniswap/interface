@@ -1,4 +1,4 @@
-import { isNonPollingRequestInFlight } from '@universe/api'
+import { GraphQLApi, isNonPollingRequestInFlight } from '@universe/api'
 import React, { memo, useMemo } from 'react'
 import type { StyleProp, ViewProps, ViewStyle } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
@@ -13,10 +13,6 @@ import { borderRadii, fonts, imageSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import {
-  type FavoriteTokenCardQuery,
-  useFavoriteTokenCardQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
@@ -58,7 +54,7 @@ function FavoriteTokenCard({
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
 
-  const { data, loading, networkStatus, startPolling, stopPolling } = useFavoriteTokenCardQuery({
+  const { data, loading, networkStatus, startPolling, stopPolling } = GraphQLApi.useFavoriteTokenCardQuery({
     variables: currencyIdToContractInput(currencyId),
     // Rely on cache for fast favoriting UX, and poll for updates.
     fetchPolicy: 'cache-and-network',
@@ -191,7 +187,7 @@ function FavoriteTokenCard({
   )
 }
 
-function getCoingeckoPrice(token?: FavoriteTokenCardQuery['token']): {
+function getCoingeckoPrice(token?: GraphQLApi.FavoriteTokenCardQuery['token']): {
   price: number | undefined
   pricePercentChange: number | undefined
 } | null {
@@ -206,7 +202,7 @@ function getCoingeckoPrice(token?: FavoriteTokenCardQuery['token']): {
   }
 }
 
-function getUniswapPrice(token?: FavoriteTokenCardQuery['token']): {
+function getUniswapPrice(token?: GraphQLApi.FavoriteTokenCardQuery['token']): {
   price: number | undefined
   pricePercentChange: number | undefined
 } {

@@ -6,7 +6,7 @@ exports[`FavoriteTokenCard renders without error 1`] = `
     [
       {
         "onPress": [Function],
-        "systemIcon": "heart",
+        "systemIcon": "heart.fill",
         "title": "Favorite token",
       },
       {

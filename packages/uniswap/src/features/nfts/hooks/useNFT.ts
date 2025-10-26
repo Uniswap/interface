@@ -1,7 +1,6 @@
-import { GqlResult } from '@universe/api'
+import { GqlResult, GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { useNftsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
 
 export function useNFT({
@@ -14,7 +13,7 @@ export function useNFT({
   tokenId?: string
 }): GqlResult<GQLNftAsset> {
   // TODO: [MOB-227] do a direct cache lookup in Apollo using id instead of re-querying
-  const { data, loading, refetch } = useNftsQuery({
+  const { data, loading, refetch } = GraphQLApi.useNftsQuery({
     variables: { ownerAddress: owner },
     pollInterval: PollingInterval.Slow,
     skip: !owner,

@@ -16,51 +16,54 @@ Most screen-based deep links require a valid `userAddress` parameter since the w
 
 ## Universal Links (Uniswap Web App Share Links)
 
-These links allow sharing specific content from the Uniswap web app that opens directly in the mobile app.
+These links allow sharing specific content from the Uniswap web app that opens directly in the mobile app if the app is installed.
 
 ### NFT Item Share Links
 
-Opens a specific NFT item page.
+Mainnet only. Opens a specific NFT item page.
 
 Format: `https://app.uniswap.org/nfts/asset/{contractAddress}/{tokenId}`
 
 Example:
 
 ```url
-https://app.uniswap.org/nfts/asset/0x1234567890123456789012345678901234567890/123
+https://app.uniswap.org/nfts/asset/0xbd3531da5cf5857e7cfaa92426877b022e612cf8/1
 ```
 
 ### NFT Collection Share Links
 
-Opens an NFT collection page.
+Mainnet only. Opens an NFT collection page.
 
 Format: `https://app.uniswap.org/nfts/collection/{contractAddress}`
 
 Example:
 
 ```url
-https://app.uniswap.org/nfts/collection/0x1234567890123456789012345678901234567890
+https://app.uniswap.org/nfts/collection/0xbd3531da5cf5857e7cfaa92426877b022e612cf8
 ```
 
 ### Token Share Links
 
 Opens a token details page. Supports both `/tokens/` and `/explore/tokens/` paths.
 
-Format: `https://app.uniswap.org/tokens/{network}/{contractAddress}`
-Format: `https://app.uniswap.org/explore/tokens/{network}/{contractAddress}`
+Format: `https://app.uniswap.org/tokens/{network}/{contractAddress}` or `https://app.uniswap.org/explore/tokens/{network}/{contractAddress}`
 
 Example:
 
 ```url
 https://app.uniswap.org/tokens/ethereum/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984
-https://app.uniswap.org/explore/tokens/arbitrum/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984
+https://app.uniswap.org/explore/tokens/unichain/0x8f187aA05619a017077f5308904739877ce9eA21
 ```
 
 ### Top Tokens Explore Page
 
 Opens the top tokens page for a specific network with optional metric filtering.
 
-Format: `https://app.uniswap.org/explore/tokens/{network}?metric={metric}`
+Format: `https://app.uniswap.org/tokens/{network}?metric={metric}` or `https://app.uniswap.org/explore/tokens/{network}?metric={metric}`
+
+Parameters:
+
+- `metric`: the metric to filter the top tokens by. Can be `volume`, `market_cap`, `total_value_locked`, `price_percent_change_1_day_asc`, or `price_percent_change_1_day_desc`
 
 Example:
 
@@ -78,6 +81,48 @@ Example:
 
 ```url
 https://app.uniswap.org/address/0x1234567890123456789012345678901234567890
+```
+
+### Swap Share Links
+
+Opens the swap interface with pre-filled token pairs and amounts from the web app.
+
+Format: `https://app.uniswap.org/swap?inputCurrency={currency}&outputCurrency={currency}&chain={network}&value={amount}&field={INPUT|OUTPUT}`
+
+Parameters:
+
+- `inputCurrency`: Input token address, "ETH", "NATIVE", or native token representation
+- `outputCurrency`: Output token address, "ETH", "NATIVE", or native token representation  
+- `chain`: Network name (e.g., "ethereum", "polygon", "arbitrum", "unichain")
+- `outputChain`: (Optional) Different output chain for cross-chain swaps
+- `value`: (Optional) Amount to swap
+- `field`: (Optional) Whether the amount refers to "INPUT" or "OUTPUT" token
+
+Examples:
+
+```url
+https://app.uniswap.org/swap?inputCurrency=ETH&outputCurrency=0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&chain=ethereum&value=1&field=INPUT
+https://app.uniswap.org/swap?inputCurrency=0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359&outputCurrency=NATIVE&chain=polygon&value=100&field=OUTPUT
+```
+
+### Buy Share Links
+
+Opens the fiat on-ramp interface with pre-filled purchase parameters.
+
+Format: `https://app.uniswap.org/buy?value={amount}&currencyCode={currency}&isTokenInputMode={boolean}&providers={providers}`
+
+Parameters:
+
+- `value`: (Optional) Pre-filled purchase amount
+- `currencyCode`: (Optional) Target currency code (e.g., "USD", "EUR", "ETH")
+- `isTokenInputMode`: (Optional) Set to "true" for token input mode, "false" for fiat input mode
+- `providers`: (Optional) Comma-separated list of preferred providers. We'll show only quotes from these providers. If no quotes are available from these providers, we'll show quotes from all available providers.
+
+Examples:
+
+```url
+https://app.uniswap.org/buy?value=100&currencyCode=USD&isTokenInputMode=true
+https://app.uniswap.org/buy?value=0.5&currencyCode=ETH&providers=moonpay,coinbase
 ```
 
 ## Screen-based Deep Links
@@ -137,6 +182,59 @@ Example (swap Polygon DAI for 100 Polygon UNI):
 https://uniswap.org/app?screen=swap&userAddress=0x123...789&inputCurrencyId=137-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrencyId=137-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=output&amount=100
 ```
 
+### Swap Link Handling
+
+The app processes swap links through `handleSwapLinkSaga.ts`, which provides robust handling for swap-related deep links with automatic testnet mode detection and error recovery.
+
+#### Features
+
+- **Automatic Parameter Parsing**: Extracts and validates swap parameters from URLs
+- **Testnet Mode Alignment**: Automatically detects if the swap involves testnet tokens and prompts for testnet mode switch if needed
+- **Graceful Error Handling**: Falls back to opening an empty swap modal if parsing fails
+- **Transaction State Creation**: Builds complete swap form state from parsed parameters
+
+#### Process Flow
+
+1. **Parse URL**: Extracts swap parameters using the provided parsing function
+2. **Create Form State**: Builds swap transaction state from parsed parameters
+3. **Testnet Detection**: Checks if input/output assets are on testnet chains
+4. **Mode Alignment**: Compares current testnet mode with required mode
+5. **Navigation**: Opens swap modal with pre-filled parameters
+6. **Mode Switch**: Prompts testnet switch modal if alignment is needed
+
+#### Error Recovery
+
+If swap link parsing fails, the saga will:
+
+- Log the error with appropriate context
+- Navigate to an empty swap modal as fallback
+- Ensure the user can still perform swaps manually
+
+### Buy Link Handling
+
+The app supports fiat on-ramp deep links through the `handleBuyLink()` function, which opens the FiatOnRampAggregator modal with pre-filled purchase parameters.
+
+#### Supported Parameters
+
+- `value`: Pre-filled purchase amount
+- `currencyCode`: Target currency code (e.g., "USD", "EUR")
+- `isTokenInputMode`: Whether to show token input mode (`"true"` or `"false"`)
+- `providers`: Comma-separated list of preferred providers (converted to uppercase)
+
+#### Buy Link Features
+
+- **Provider Filtering**: Supports specifying preferred fiat on-ramp providers
+- **Amount Pre-filling**: Can pre-populate purchase amounts
+- **Currency Selection**: Supports different fiat currencies
+- **Input Mode Control**: Can specify token vs fiat input mode
+- **Modal Management**: Properly dismisses existing modals before navigation
+
+#### Example Buy Links
+
+```url
+https://uniswap.org/app/buy?value=100&currencyCode=USD&isTokenInputMode=true&providers=moonpay,coinbase
+```
+
 ## Special Function Deep Links
 
 ### Token Details
@@ -151,9 +249,9 @@ Example:
 https://uniswap.org/app/tokendetails?currencyId=1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984
 ```
 
-### Fiat On-ramp
+### Fiat On-ramp (Legacy)
 
-Opens the fiat on-ramp modal for purchasing crypto.
+Opens the fiat on-ramp modal for purchasing crypto using the legacy format with user address requirements.
 
 Format: `https://uniswap.org/app/fiatonramp?userAddress={address}&moonpayOnly={boolean}&moonpayCurrencyCode={currency}&amount={amount}`
 
@@ -169,6 +267,8 @@ Example:
 ```url
 https://uniswap.org/app/fiatonramp?userAddress=0x123...789&moonpayCurrencyCode=eth&amount=100
 ```
+
+**Note**: For universal buy links from the web app, see [Buy Share Links](#buy-share-links) in the Universal Links section.
 
 ## Protocol Deep Links
 

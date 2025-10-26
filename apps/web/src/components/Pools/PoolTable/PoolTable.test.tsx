@@ -1,13 +1,13 @@
 import 'test-utils/tokens/mocks'
 
 import { Percent } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { ExploreTopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { useExploreContextTopPools } from 'state/explore/topPools'
 import { mocked } from 'test-utils/mocked'
 import { validRestPoolToken0, validRestPoolToken1 } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
-import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 vi.mock('state/explore/topPools')
 vi.mock('react-router', async () => {
@@ -67,7 +67,7 @@ describe('PoolTable', () => {
         volumeWeek: 500,
         apr: new Percent(6, 100),
         volOverTvl: 1.84,
-        protocolVersion: ProtocolVersion.V3,
+        protocolVersion: GraphQLApi.ProtocolVersion.V3,
       },
     ]
     mocked(useExploreContextTopPools).mockReturnValue({

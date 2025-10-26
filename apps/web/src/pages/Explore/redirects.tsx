@@ -2,8 +2,11 @@ import { ExploreTab } from 'pages/Explore/constants'
 import { lazy, Suspense } from 'react'
 import { Navigate, useLocation, useParams } from 'react-router'
 import { Loader } from 'ui/src/loading/Loader'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const Explore = lazy(() => import('pages/Explore'))
+const Toucan = lazy(() => import('pages/Explore/Toucan'))
 
 // This function is needed to disambiguate URL params because useParams struggles to distinguish between /explore/:chainName and /explore/:tab
 export function useExploreParams(): {
@@ -35,6 +38,7 @@ export function useExploreParams(): {
 export default function RedirectExplore() {
   const { tab, chainName, tokenAddress } = useExploreParams()
   const isLegacyUrl = !useLocation().pathname.includes('explore')
+  const isToucanEnabled = useFeatureFlag(FeatureFlags.Toucan)
 
   if (isLegacyUrl) {
     if (tab && chainName && tokenAddress) {
@@ -44,6 +48,18 @@ export default function RedirectExplore() {
     } else if (tab && chainName) {
       return <Navigate to={`/explore/${tab}/${chainName}`} replace />
     }
+  }
+
+  if (tab === ExploreTab.Toucan) {
+    if (!isToucanEnabled) {
+      return <Navigate to="/explore" replace />
+    }
+
+    return (
+      <Suspense fallback={<Loader.Box />}>
+        <Toucan />
+      </Suspense>
+    )
   }
 
   return (

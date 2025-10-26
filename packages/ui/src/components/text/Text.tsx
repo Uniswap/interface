@@ -5,7 +5,7 @@ import { HiddenFromScreenReaders } from 'ui/src/components/text/HiddenFromScreen
 import { useEnableFontScaling } from 'ui/src/components/text/useEnableFontScaling'
 import { Skeleton } from 'ui/src/loading/Skeleton'
 import { fonts } from 'ui/src/theme/fonts'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 export const TextFrame = styled(TamaguiText, {
   fontFamily: '$body',
@@ -158,7 +158,7 @@ export const TextPlaceholder = ({ children }: PropsWithChildren<unknown>): JSX.E
       <Flex row alignItems="center" position="relative">
         <HiddenFromScreenReaders>{children}</HiddenFromScreenReaders>
         <Flex
-          backgroundColor={isWeb ? '$surface3' : '$surface2'}
+          backgroundColor={isWebPlatform ? '$surface3' : '$surface2'}
           borderRadius="$roundedFull"
           bottom="5%"
           left={0}

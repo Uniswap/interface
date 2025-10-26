@@ -1,5 +1,5 @@
 import { providers, utils } from 'ethers'
-import { ensure0xHex, HexString, isValidHexString } from 'uniswap/src/utils/hex'
+import { ensure0xHex, HexString, isValidHexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import {
   Address,

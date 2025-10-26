@@ -16,7 +16,7 @@ const Tile = styled(Flex, {
   gap: '$gap12',
   userSelect: 'none',
   height: '100%',
-  width: 'calc((100% - 8px) / 2)',
+  flex: 1,
   display: 'flex',
   justifyContent: 'flex-start',
   p: '$padding12',

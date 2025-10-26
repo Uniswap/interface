@@ -10,6 +10,7 @@ import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { Token } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
@@ -26,10 +27,11 @@ import {
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, styled, Text, useMedia } from 'ui/src'
-import { Token as GQLToken } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
@@ -52,7 +54,7 @@ interface SwapLeg {
   address?: string
   symbol?: string
   amount: number
-  token: GQLToken
+  token: GraphQLApi.Token
 }
 
 export function TransactionsTable({ chainId, referenceToken }: { chainId: UniverseChainId; referenceToken: Token }) {
@@ -165,7 +167,10 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
           </HeaderCell>
         ),
         cell: (outputTokenAddress) => {
-          const isBuy = String(outputTokenAddress.getValue?.()).toLowerCase() === referenceToken.address.toLowerCase()
+          const isBuy = areAddressesEqual({
+            addressInput1: { address: String(outputTokenAddress.getValue?.()), platform: Platform.EVM },
+            addressInput2: { address: referenceToken.address, platform: Platform.EVM },
+          })
           return (
             <Cell loading={showLoadingSkeleton} justifyContent="flex-start" grow>
               <TableText color={isBuy ? '$statusSuccess' : '$statusCritical'}>
@@ -177,7 +182,10 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
       }),
       columnHelper.accessor(
         (row) =>
-          row.input.address?.toLowerCase() === referenceToken.address.toLowerCase()
+          areAddressesEqual({
+            addressInput1: { address: row.input.address, platform: Platform.EVM },
+            addressInput2: { address: referenceToken.address, platform: Platform.EVM },
+          })
             ? row.input.amount
             : row.output.amount,
         {
@@ -204,8 +212,12 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
       ),
       columnHelper.accessor(
         (row) => {
-          const nonReferenceSwapLeg =
-            row.input.address?.toLowerCase() === referenceToken.address.toLowerCase() ? row.output : row.input
+          const nonReferenceSwapLeg = areAddressesEqual({
+            addressInput1: { address: row.input.address, platform: Platform.EVM },
+            addressInput2: { address: referenceToken.address, platform: Platform.EVM },
+          })
+            ? row.output
+            : row.input
           return (
             <Flex row gap="$gap8" justifyContent="flex-end" alignItems="center">
               <EllipsisText maxWidth={75}>
@@ -270,7 +282,7 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
                 type: ExplorerDataType.ADDRESS,
               })}
             >
-              <TableText>{shortenAddress(makerAddress.getValue?.())}</TableText>
+              <TableText>{shortenAddress({ address: makerAddress.getValue?.() })}</TableText>
             </StyledExternalLink>
           </Cell>
         ),

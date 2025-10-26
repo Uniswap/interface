@@ -10,7 +10,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
 import { TransactionSettingsButtonWithTooltip } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsButton'
 import { getSlippageWarningColor } from 'uniswap/src/features/transactions/swap/utils/styleHelpers'
-import { isExtension, isInterface, isMobileWeb } from 'utilities/src/platform'
+import { isExtensionApp, isMobileWeb, isWebApp } from 'utilities/src/platform'
 
 const getSettingsIconBackgroundColor = (autoSlippageTolerance: number, slippageTolerance?: number): ColorTokens => {
   if (!slippageTolerance) {
@@ -45,7 +45,7 @@ export function TransactionSettingsButtonWithSlippage({
 
   const shouldShowCustomSlippage = customSlippageTolerance && !isZeroSlippage
 
-  const meetsPlatformConditions = (isInterface || isExtension) && !isMobileWeb
+  const meetsPlatformConditions = (isWebApp || isExtensionApp) && !isMobileWeb
   const exceedsSlippageTolerance = !!customSlippageTolerance && customSlippageTolerance > autoSlippageTolerance
 
   const shouldShowSettingsIconTooltip = meetsPlatformConditions && exceedsSlippageTolerance

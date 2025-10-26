@@ -1,4 +1,5 @@
 import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { GraphQLApi } from '@universe/api'
 import { FeeData } from 'components/Liquidity/Create/types'
 import { isDynamicFeeTier } from 'components/Liquidity/utils/feeTiers'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
@@ -9,7 +10,6 @@ import { Flex, styled, Text, Tooltip } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
 import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
-import { ProtocolVersion as GraphQLProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 
@@ -73,7 +73,7 @@ export function LiquidityPositionInfoBadges({
   size = 'default',
   cta,
 }: {
-  version?: RestProtocolVersion | GraphQLProtocolVersion | string
+  version?: RestProtocolVersion | GraphQLApi.ProtocolVersion | string
   v4hook?: string
   feeTier?: FeeData
   size: 'small' | 'default'
@@ -116,7 +116,7 @@ export function LiquidityPositionInfoBadges({
     <>
       {badges.map((badge, index) => {
         const { label, copyable, icon, iconAfter, tooltipContent } = badge
-        const displayLabel = isEVMAddress(label) ? shortenAddress(label) : label
+        const displayLabel = isEVMAddress(label) ? shortenAddress({ address: label }) : label
         const key = label + index
         const content = (
           <PositionInfoBadge

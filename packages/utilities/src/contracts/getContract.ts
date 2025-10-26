@@ -2,7 +2,7 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { AddressZero } from '@ethersproject/constants'
 import { Contract, ContractInterface } from '@ethersproject/contracts'
 import { JsonRpcProvider, Provider } from '@ethersproject/providers'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
+import { isEVMAddressWithChecksum } from 'utilities/src/addresses/evm/evm'
 
 export function getContract({
   address,
@@ -15,7 +15,7 @@ export function getContract({
   provider: JsonRpcProvider
   account?: string
 }): Contract {
-  if (!isEVMAddress(address) || address === AddressZero) {
+  if (!isEVMAddressWithChecksum(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`)
   }
 

@@ -49,7 +49,7 @@ export async function getApproveInfo({
     if (allowance.gte(amount)) {
       return { needsApprove: false }
     }
-  } catch (_) {
+  } catch {
     // If contract lookup fails (eg if Infura goes down), then don't show gas info for approving the token
     return { needsApprove: false }
   }
@@ -57,7 +57,7 @@ export async function getApproveInfo({
   try {
     const approveTx = await tokenContract.populateTransaction.approve(permit2Address(currency.chainId), MaxUint256)
     approveGasUseEstimate = (await provider.estimateGas({ from: account, ...approveTx })).toNumber()
-  } catch (_) {
+  } catch {
     // estimateGas will error if the account doesn't have sufficient token balance, but we should show an estimated cost anyway
     approveGasUseEstimate = APPROVE_FALLBACK_GAS_LIMIT_IN_GWEI
   }
@@ -96,7 +96,7 @@ export async function getWrapInfo({
 
     // estimateGas will error if the account doesn't have sufficient ETH balance, but we should show an estimated cost anyway
     wrapGasUseEstimate = (await provider.estimateGas({ from: account, ...wethTx })).toNumber()
-  } catch (_) {
+  } catch {
     wrapGasUseEstimate = WRAP_FALLBACK_GAS_LIMIT_IN_GWEI
   }
 

@@ -93,7 +93,7 @@ export function useUSDCValue(
     }
     try {
       return price.quote(currencyAmount)
-    } catch (error) {
+    } catch (_error) {
       return null
     }
   }, [currencyAmount, price])
@@ -115,7 +115,7 @@ export function useUSDCValueWithStatus(currencyAmount: CurrencyAmount<Currency> 
     }
     try {
       return { value: price.quote(currencyAmount), isLoading }
-    } catch (error) {
+    } catch (_error) {
       return {
         value: null,
         isLoading: false,

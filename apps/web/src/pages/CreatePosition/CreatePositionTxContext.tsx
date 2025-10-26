@@ -315,6 +315,7 @@ export function generateCreatePositionTxRequest({
     token0PermitTransaction: validatedToken0PermitTransaction,
     token1PermitTransaction: validatedToken1PermitTransaction,
     positionTokenPermitTransaction: undefined,
+    sqrtRatioX96: createCalldata.sqrtRatioX96,
   } satisfies CreatePositionTxAndGasInfo
 }
 
@@ -476,6 +477,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     enabled: isQueryEnabled,
   })
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +createCalldataQueryParams, +addLiquidityApprovalParams
   useEffect(() => {
     setRefetch(() => (approvalError ? approvalRefetch : createError ? createRefetch : undefined)) // this must set it as a function otherwise it will actually call createRefetch immediately
   }, [
@@ -491,7 +493,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
 
   useEffect(() => {
     setTransactionError(getErrorMessageToDisplay({ approvalError, calldataError: createError }))
-  }, [approvalError, createError, setTransactionError])
+  }, [approvalError, createError])
 
   if (createError) {
     const message = parseErrorMessageTitle(createError, { defaultTitle: 'unknown CreateLpPositionCalldataQuery' })
@@ -569,7 +571,6 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       txInfo,
       totalGasFee,
       transactionError,
-      setTransactionError,
       createError,
       dependentAmountFallback,
       createCalldata?.dependentAmount,

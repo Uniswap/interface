@@ -10,8 +10,8 @@ import {
   useCurrencyInfo as useUniswapCurrencyInfo,
   useCurrencyInfoWithLoading as useUniswapCurrencyInfoWithLoading,
 } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { AddressStringFormat, getValidAddress, normalizeAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 
 type Maybe<T> = T | undefined
 
@@ -119,7 +119,7 @@ function useCurrencyInfoWithLoading(
 
 export function checkIsNative(addressOrCurrency?: string | Currency): boolean {
   return typeof addressOrCurrency === 'string'
-    ? [NATIVE_CHAIN_ID, 'native', 'eth'].includes(addressOrCurrency.toLowerCase())
+    ? [NATIVE_CHAIN_ID, 'native', 'eth'].includes(normalizeAddress(addressOrCurrency, AddressStringFormat.Lowercase))
     : (addressOrCurrency?.isNative ?? false)
 }
 
@@ -152,8 +152,13 @@ function getAddress({
 }
 
 export function useToken(tokenAddress?: string, chainId?: UniverseChainId): Maybe<Token> {
-  const formattedAddress = isEVMAddress(tokenAddress)
   const { chainId: connectedChainId } = useAccount()
+
+  const formattedAddress = getValidAddress({
+    address: tokenAddress,
+    chainId: chainId ?? connectedChainId ?? UniverseChainId.Mainnet,
+    withEVMChecksum: true,
+  })
   const currency = useCurrency({
     address: formattedAddress ? formattedAddress : undefined,
     chainId: chainId ?? connectedChainId,

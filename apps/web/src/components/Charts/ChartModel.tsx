@@ -81,7 +81,7 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
     this.api = createChart(chartDiv)
 
     this.api.subscribeCrosshairMove((param) => {
-      let newHoverData: ChartHoverData<TDataType> | undefined = undefined
+      let newHoverData: ChartHoverData<TDataType> | undefined
       const logical = param.logical
       const x = param.point?.x
       const y = param.point?.y

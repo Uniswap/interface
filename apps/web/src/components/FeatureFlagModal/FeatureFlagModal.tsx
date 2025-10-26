@@ -179,7 +179,9 @@ export default function FeatureFlagModal() {
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Swap Features">
+            <FeatureFlagOption flag={FeatureFlags.ChainedActions} label="Enable Chained Actions" />
             <FeatureFlagOption flag={FeatureFlags.BatchedSwaps} label="Enable Batched Swaps" />
+            <FeatureFlagOption flag={FeatureFlags.EthAsErc20UniswapX} label="Enable Eth as ERC20 for UniswapX " />
             <FeatureFlagOption flag={FeatureFlags.UnichainFlashblocks} label="Enable Unichain Flashblocks" />
             <FeatureFlagOption flag={FeatureFlags.UniquoteEnabled} label="Enable Uniquote" />
             <FeatureFlagOption flag={FeatureFlags.ViemProviderEnabled} label="Enable Viem Provider" />
@@ -220,6 +222,9 @@ export default function FeatureFlagModal() {
               label="Enable create flow with new PoolInfo endpoint"
             />
           </FeatureFlagGroup>
+          <FeatureFlagGroup name="Toucan">
+            <FeatureFlagOption flag={FeatureFlags.Toucan} label="Enable Toucan" />
+          </FeatureFlagGroup>
           <FeatureFlagGroup name="FOR">
             <FeatureFlagOption flag={FeatureFlags.FiatOffRamp} label="Enable Fiat OffRamp" />
           </FeatureFlagGroup>
@@ -236,10 +241,6 @@ export default function FeatureFlagModal() {
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Mini Portfolio">
-            <FeatureFlagOption
-              flag={FeatureFlags.SharedPortfolioUI}
-              label="Enable new mini portfolio UI shared across platforms"
-            />
             <FeatureFlagOption flag={FeatureFlags.SelfReportSpamNFTs} label="Report spam NFTs" />
             <FeatureFlagOption
               flag={FeatureFlags.DisableExtensionDeeplinks}

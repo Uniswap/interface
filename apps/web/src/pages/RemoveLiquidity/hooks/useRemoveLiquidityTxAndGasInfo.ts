@@ -147,6 +147,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
         (!v2ApprovalLoading && !approvalError && Boolean(v2LpTokenApproval))),
   })
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +decreaseCalldataQueryParams
   useEffect(() => {
     setTransactionError(getErrorMessageToDisplay({ approvalError, calldataError }))
   }, [calldataError, decreaseCalldataQueryParams, approvalError])

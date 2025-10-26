@@ -70,14 +70,7 @@ export function SettingsCloudBackupStatus({
         }),
       )
       setShowBackupDeleteWarning(false)
-      navigation.reset({
-        index: 0,
-        routes: [
-          {
-            name: MobileScreens.Settings,
-          },
-        ],
-      })
+      navigation.goBack()
     } catch (error) {
       setShowBackupDeleteWarning(false)
       logger.error(error, { tags: { file: 'SettingsCloudBackupStatus', function: 'deleteBackup' } })
@@ -94,14 +87,7 @@ export function SettingsCloudBackupStatus({
   const { trigger: biometricTrigger } = useBiometricPrompt(deleteBackup)
 
   const onPressBack = (): void => {
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: MobileScreens.Settings,
-        },
-      ],
-    })
+    navigation.goBack()
   }
 
   const renderItem = ({ item, index }: { item: Account; index: number }): JSX.Element => (

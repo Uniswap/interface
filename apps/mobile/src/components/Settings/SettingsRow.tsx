@@ -110,10 +110,10 @@ export const SettingsRow = memo(
       if (onToggle) {
         return
       } else if (screen) {
-        /* eslint-disable @typescript-eslint/no-explicit-any */
         // Type assignment to `any` is a workaround until we figure out how to
         // properly type screen param. `navigate` function also brings some issues,
         // where it accepts other screen's params, and not throws an error on required ones.
+        // biome-ignore lint/suspicious/noExplicitAny: Navigation types don't properly handle dynamic screen names
         navigation.navigate(screen as any, screenProps)
       } else if (navigationModal) {
         navigate(navigationModal, navigationProps)

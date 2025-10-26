@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Percent } from '@uniswap/sdk-core'
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks/useAllFeeTierPoolData'

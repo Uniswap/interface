@@ -46,7 +46,11 @@ const ESTIMATED_TOKEN_ITEM_HEIGHT = 64
 export const TokenBalanceList = forwardRef<FlatList<TokenBalanceListRow>, TokenBalanceListProps>(
   function _TokenBalanceList({ owner, onPressToken, isExternalProfile = false, ...rest }, ref): JSX.Element {
     return (
-      <TokenBalanceListContextProvider isExternalProfile={isExternalProfile} owner={owner} onPressToken={onPressToken}>
+      <TokenBalanceListContextProvider
+        isExternalProfile={isExternalProfile}
+        evmOwner={owner}
+        onPressToken={onPressToken}
+      >
         <TokenBalanceListInner
           ref={ref}
           isExternalProfile={isExternalProfile}

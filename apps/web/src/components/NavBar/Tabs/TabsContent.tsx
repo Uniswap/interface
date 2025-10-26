@@ -32,6 +32,7 @@ export const useTabsContent = (): TabsSection[] => {
   const theme = useTheme()
   const isFiatOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
   const isPortfolioPageEnabled = useFeatureFlag(FeatureFlags.PortfolioPage)
+  const isToucanEnabled = useFeatureFlag(FeatureFlags.Toucan)
 
   return [
     {
@@ -83,6 +84,7 @@ export const useTabsContent = (): TabsSection[] => {
           href: '/explore/transactions',
           internal: true,
         },
+        ...(isToucanEnabled ? [{ label: 'Toucan', href: '/explore/toucan', internal: true }] : []),
       ],
     },
     {

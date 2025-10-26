@@ -4,7 +4,7 @@ import { TransactionRequest as EthersTransactionRequest } from '@ethersproject/p
 import { SerializedError } from '@reduxjs/toolkit'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { SharedEventName } from '@uniswap/analytics-events'
-import { Protocol } from '@uniswap/router-sdk'
+import { OnChainStatus } from '@uniswap/client-trading/dist/trading/v1/api_pb'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { TradingApi, UnitagClaimContext } from '@universe/api'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
@@ -12,6 +12,7 @@ import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItem
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import {
   ExtensionEventName,
   FiatOffRampEventName,
@@ -21,6 +22,7 @@ import {
   LiquidityEventName,
   MobileAppsFlyerEvents,
   MobileEventName,
+  SwapBlockedCategory,
   SwapEventName,
   UniswapEventName,
   UnitagEventName,
@@ -123,6 +125,7 @@ type OnboardingCompletedProps = {
 }
 
 export type SwapRouting =
+  | 'jupiter'
   | 'classic'
   | 'uniswap_x'
   | 'uniswap_x_v2'
@@ -211,7 +214,8 @@ type BaseSwapTransactionResultProperties = {
   route?: string
   quoteId?: string
   submitViaPrivateRpc?: boolean
-  protocol?: Protocol
+  /** For Uniswap data sources, this should be of type Protocol from @uniswap/router-sdk. For other sources like Jupiter, this could be unknown values from their orderResponse.router field.*/
+  protocol?: string
   transactedUSDValue?: number
   simulation_failure_reasons?: TradingApi.TransactionFailureReason[]
   includes_delegation?: SwapTradeBaseProperties['includes_delegation']
@@ -230,6 +234,8 @@ type FailedUniswapXOrderResultProperties = Omit<UniswapXTransactionResultPropert
 
 type FailedClassicSwapResultProperties = Omit<ClassicSwapTransactionResultProperties, 'hash'> & {
   hash: string | undefined
+  error_message?: string
+  error_code?: number
 }
 
 type FailedBridgeSwapResultProperties = Omit<BridgeSwapTransactionResultProperties, 'hash'> & {
@@ -368,6 +374,7 @@ export enum OnboardingCardLoggingName {
   RecoveryBackup = 'recovery_backup',
   ClaimUnitag = 'claim_unitag',
   EnablePushNotifications = 'enable_push_notifications',
+  BridgedAsset = 'bridged_asset',
 }
 
 export enum DappRequestCardLoggingName {
@@ -435,6 +442,21 @@ export type FORPaymentMethodFilterSelectedProperties = ITraceContext & {
   paymentMethodFilter: string
 }
 
+export type WalletConnectedProperties = {
+  result: WalletConnectionResult
+  wallet_name?: string // evm
+  wallet_type?: string // evm
+  wallet_name_svm?: string
+  wallet_type_svm?: string
+  wallet_address?: string // evm
+  wallet_address_svm?: string
+  is_reconnect?: boolean
+  peer_wallet_agent?: string
+  page?: InterfacePageName
+  error?: string
+  connected_VM?: 'EVM' | 'SVM' | 'EVM+SVM' | undefined
+}
+
 type DappRequestCardEventProperties = ITraceContext & {
   card_name: DappRequestCardLoggingName
 }
@@ -490,6 +512,7 @@ export type UniverseEventProperties = {
     previousChainId?: number
     newChainId: number
   }
+  [ExtensionEventName.SidebarConnect]: Pick<DappContextProperties, 'dappUrl'>
   [ExtensionEventName.SidebarDisconnect]: undefined
   [ExtensionEventName.UnknownMethodRequest]: WindowEthereumRequestProperties
   [FiatOffRampEventName.FORBuySellToggled]: ITraceContext & {
@@ -512,16 +535,7 @@ export type UniverseEventProperties = {
     externalTransactionId: string
     serviceProvider: string
   }
-  [InterfaceEventName.WalletConnected]: {
-    result: WalletConnectionResult
-    wallet_name: string
-    wallet_type: string
-    wallet_address?: string
-    is_reconnect?: boolean
-    peer_wallet_agent?: string
-    page?: InterfacePageName
-    error?: string
-  }
+  [InterfaceEventName.WalletConnected]: WalletConnectedProperties
   [InterfaceEventName.ApproveTokenTxnSubmitted]: {
     chain_id: number
     token_address: string
@@ -559,7 +573,7 @@ export type UniverseEventProperties = {
     wallet_name: string
     wallet_type: string
   }
-  [InterfaceEventName.PortfolioMenuOpened]: { name: string }
+  [InterfaceEventName.PortfolioMenuOpened]: { name: string } | { name: string; platform: Platform }
   [InterfaceEventName.UniswapXOrderDetailsSheetOpened]: {
     order: string
   }
@@ -682,6 +696,7 @@ export type UniverseEventProperties = {
     createPosition?: boolean
     expectedAmountBaseRaw: string
     expectedAmountQuoteRaw: string
+    price_discrepancy?: string
   } & LiquidityAnalyticsProperties
   [LiquidityEventName.RemoveLiquiditySubmitted]: {
     expectedAmountBaseRaw: string
@@ -691,6 +706,12 @@ export type UniverseEventProperties = {
   [LiquidityEventName.TransactionModifiedInWallet]: {
     expected?: string
     actual: string
+  } & LiquidityAnalyticsProperties
+  [LiquidityEventName.PriceDiscrepancyChecked]: {
+    status: OnChainStatus
+    price_discrepancy: string
+    sqrt_ratio_x96_before: string
+    sqrt_ratio_x96_after: string
   } & LiquidityAnalyticsProperties
   [MobileEventName.AutomatedOnDeviceRecoveryTriggered]: {
     showNotificationScreen: boolean
@@ -824,8 +845,18 @@ export type UniverseEventProperties = {
     | CancelledBridgeSwapResultProperties
   [SwapEventName.SwapDetailsExpanded]: ITraceContext | undefined
   [SwapEventName.SwapAutorouterVisualizationExpanded]: ITraceContext
+  [SwapEventName.SwapQuoteFailed]: {
+    error_message?: string
+  } & SwapTradeBaseProperties
   [SwapEventName.SwapQuoteReceived]: {
     quote_latency_milliseconds?: number
+  } & SwapTradeBaseProperties
+  [SwapEventName.SwapBlocked]: {
+    category?: SwapBlockedCategory
+    error_code?: number
+    error_message?: string
+    protocol?: string
+    simulation_failure_reasons?: TradingApi.TransactionFailureReason[]
   } & SwapTradeBaseProperties
   [SwapEventName.SwapSubmittedButtonClicked]: {
     estimated_network_fee_wei?: string

@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import {
   CurrencyIdToVisibility,
   NFTKeyToVisibility,
@@ -23,7 +24,7 @@ export const selectNftsVisibility = (state: UniswapRootState): NFTKeyToVisibilit
  */
 export function useTokenVisibility(currencyId: CurrencyId, cachedIsHidden?: boolean | null): boolean {
   const tokensVisibility = useSelector(selectTokensVisibility)
-  const normalizedCurrencyId = useMemo(() => currencyId.toLowerCase(), [currencyId])
+  const normalizedCurrencyId = useMemo(() => normalizeCurrencyIdForMapLookup(currencyId), [currencyId])
   const manualVisibility = tokensVisibility[normalizedCurrencyId]
 
   // Check Redux state first, then fall back to cached isHidden flag

@@ -1,29 +1,12 @@
-import { gqlToCurrency } from 'appGraphql/data/util'
 import { BigNumber } from '@ethersproject/bignumber'
-import { TradeType } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
+import { GraphQLApi, TradingApi } from '@universe/api'
 import { Activity, ActivityMap } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { parseUnits } from 'ethers/lib/utils'
-import { OrderActivity } from 'state/activity/types'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import {
-  type TokenAssetPartsFragment,
-  TransactionStatus as TransactionStatusGQL,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import {
-  ExactInputSwapTransactionInfo,
-  InterfaceTransactionDetails,
-  QueuedOrderStatus,
-  TransactionOriginType,
-  TransactionStatus,
-  TransactionType,
-  UniswapXOrderDetails,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
-import { convertSwapOrderTypeToRouting } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
@@ -36,7 +19,7 @@ interface ActivityGroup {
 /**
  * Helper function to get currency address with proper fallback for native tokens
  */
-export function getCurrencyAddress(token: TokenAssetPartsFragment, chainId: UniverseChainId): string {
+export function getCurrencyAddress(token: GraphQLApi.TokenAssetPartsFragment, chainId: UniverseChainId): string {
   return token.address || getNativeAddress(chainId) || ''
 }
 
@@ -48,73 +31,6 @@ export function parseTokenAmount(quantity: string, decimals?: number | null): st
 }
 
 const sortActivities = (a: Activity, b: Activity) => b.timestamp - a.timestamp
-
-export function convertGQLTransactionStatus(status: TransactionStatusGQL): TransactionStatus {
-  switch (status) {
-    case TransactionStatusGQL.Confirmed:
-      return TransactionStatus.Success
-    case TransactionStatusGQL.Failed:
-      return TransactionStatus.Failed
-    case TransactionStatusGQL.Pending:
-      return TransactionStatus.Pending
-    default:
-      throw new Error(`Unknown transaction status: ${status}`)
-  }
-}
-
-/**
- * Converts an UniswapX OrderActivity (from GraphQL) into an InterfaceTransactionDetails
- * for dispatch to the Redux store
- */
-export function uniswapXActivityToTransactionDetails(
-  activity: OrderActivity,
-  chainId: UniverseChainId,
-): InterfaceTransactionDetails | undefined {
-  const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity, swapOrderType } = activity.details
-
-  const inputCurrency = gqlToCurrency(inputToken)
-  const outputCurrency = gqlToCurrency(outputToken)
-
-  if (!inputCurrency || !outputCurrency) {
-    return undefined
-  }
-
-  // Convert GraphQL order to transaction using ExactInputSwapTransactionInfo shape
-  const typeInfo: ExactInputSwapTransactionInfo = {
-    type: TransactionType.Swap,
-    tradeType: TradeType.EXACT_INPUT,
-    inputCurrencyId: buildCurrencyId(
-      chainId,
-      inputCurrency.isNative ? getNativeAddress(chainId) : inputCurrency.address,
-    ),
-    outputCurrencyId: buildCurrencyId(
-      chainId,
-      outputCurrency.isNative ? getNativeAddress(chainId) : outputCurrency.address,
-    ),
-    inputCurrencyAmountRaw: parseUnits(inputTokenQuantity, inputCurrency.decimals).toString(),
-    expectedOutputCurrencyAmountRaw: parseUnits(outputTokenQuantity, outputCurrency.decimals).toString(),
-    minimumOutputCurrencyAmountRaw: '0', // Will be populated when order details are available
-  }
-
-  const transaction: InterfaceTransactionDetails = {
-    // Using hash as ID prevents duplicates by making sure local + remote orders match IDs
-    id: activity.details.hash,
-    orderHash: activity.details.hash,
-    routing: convertSwapOrderTypeToRouting(swapOrderType),
-    chainId,
-    from: activity.details.offerer,
-    typeInfo,
-    status: TransactionStatus.Pending,
-    queueStatus: QueuedOrderStatus.Submitted,
-    transactionOriginType: TransactionOriginType.External,
-    addedTime: activity.timestamp * ONE_SECOND_MS, // GraphQL returns seconds, we need milliseconds
-    encodedOrder: activity.details.encodedOrder,
-    expiry: activity.details.expiry,
-  }
-
-  return transaction
-}
-
 export const createGroups = (activities: Array<Activity> = [], hideSpam = false) => {
   if (activities.length === 0) {
     return []
@@ -174,15 +90,6 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
   ]
 
   return transactionGroups.filter(({ transactions }) => transactions.length > 0)
-}
-
-/**
- * Type guard to check if a UniswapX order has the encoded order data needed for cancellation.
- * Orders that have been filled won't have encodedOrder, and it's only present for orders
- * that haven't been submitted yet or are still pending.
- */
-export function hasEncodedOrder(order: UniswapXOrderDetails): order is UniswapXOrderDetails & { encodedOrder: string } {
-  return 'encodedOrder' in order && typeof order.encodedOrder === 'string'
 }
 
 /**

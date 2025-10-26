@@ -1,12 +1,12 @@
 import { flush, getUserId, Identify, identify, init, setDeviceId, track } from '@amplitude/analytics-browser'
 import { ANONYMOUS_DEVICE_ID } from '@uniswap/analytics'
 import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import {
   Analytics,
   AnalyticsInitConfig,
   TestnetModeConfig,
   UserPropertyValue,
+  // biome-ignore lint/style/noRestrictedImports: needed here
 } from 'utilities/src/telemetry/analytics/analytics'
 import {
   ALLOW_ANALYTICS_ATOM_KEY,

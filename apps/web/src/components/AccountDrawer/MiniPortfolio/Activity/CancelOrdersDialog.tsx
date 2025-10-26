@@ -2,11 +2,9 @@ import { CurrencyAmount } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import { useCancelOrdersGasEstimate } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { ConfirmedIcon, LogoContainer, SubmittedIcon } from 'components/AccountDrawer/MiniPortfolio/Activity/Logos'
-import { Dialog } from 'components/Dialog/Dialog'
 import { ColumnCenter } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
@@ -14,6 +12,8 @@ import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { Flex, Text } from 'ui/src'
+import { Dialog } from 'uniswap/src/components/dialog/Dialog'
+import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -97,7 +97,7 @@ export function CancelOrdersDialog(props: CancelOrdersDialogProps) {
 
   const { title, icon } = useCancelOrdersDialogContent(cancelState, orders)
 
-  const gasEstimate = useCancelOrdersGasEstimate(orders)
+  const cancellationGasFeeInfo = useCancelOrdersGasEstimate(orders)
   if (
     [CancellationState.PENDING_SIGNATURE, CancellationState.PENDING_CONFIRMATION, CancellationState.CANCELLED].includes(
       cancelState,
@@ -169,7 +169,7 @@ export function CancelOrdersDialog(props: CancelOrdersDialogProps) {
         hasIconBackground
       >
         {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-        <GasEstimateDisplay chainId={orders[0].chainId} gasEstimateValue={gasEstimate?.value} />
+        <GasEstimateDisplay chainId={orders[0].chainId} gasEstimateValue={cancellationGasFeeInfo?.gasFeeDisplayValue} />
       </Dialog>
     )
   } else {

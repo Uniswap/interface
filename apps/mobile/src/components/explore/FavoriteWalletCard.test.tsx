@@ -110,7 +110,7 @@ describe('FavoriteWalletCard', () => {
     it('renders wallet address in other cases', () => {
       const { queryByText } = render(<FavoriteWalletCard {...defaultProps} />)
 
-      const displayedAddress = sanitizeAddressText(shortenAddress(defaultProps.address))!
+      const displayedAddress = sanitizeAddressText(shortenAddress({ address: defaultProps.address }))!
 
       expect(queryByText(displayedAddress)).toBeTruthy()
     })

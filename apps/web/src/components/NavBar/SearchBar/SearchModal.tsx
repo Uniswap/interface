@@ -136,6 +136,7 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
               searchFilter={searchFilter}
               activeTab={activeTab}
               onSelect={onSelect}
+              renderedInModal={false}
             />
           ) : (
             <SearchModalNoQueryList

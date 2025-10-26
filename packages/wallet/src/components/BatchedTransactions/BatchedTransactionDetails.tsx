@@ -20,7 +20,7 @@ import { ContentRow } from 'uniswap/src/components/transactions/requests/Content
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isExtension, isMobileApp } from 'utilities/src/platform'
+import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
 import { trimToLength } from 'utilities/src/primitives/string'
 import { useEvent } from 'utilities/src/react/hooks'
 import { AddressButton } from 'wallet/src/components/buttons/AddressButton'
@@ -122,12 +122,12 @@ export function BatchedTransactionDetails({
   const cardGap = spacing.spacing16 // Gap between cards
 
   const arrowSpace =
-    isExtension && hasMultipleCalls ? iconSize * 2 + iconHorizontalPadding * 2 + spacing.spacing12 * 2 : 0
+    isExtensionApp && hasMultipleCalls ? iconSize * 2 + iconHorizontalPadding * 2 + spacing.spacing12 * 2 : 0
 
-  const horizontalShift = isExtension ? arrowSpace : hasMultipleCalls ? spacing.spacing48 : 0
+  const horizontalShift = isExtensionApp ? arrowSpace : hasMultipleCalls ? spacing.spacing48 : 0
 
   const layoutMeasurements = useMemo(() => {
-    const baseHorizontalPadding = isExtension ? spacing.spacing12 * 2 : spacing.spacing24 * 2
+    const baseHorizontalPadding = isExtensionApp ? spacing.spacing12 * 2 : spacing.spacing24 * 2
     const totalPadding = baseHorizontalPadding + horizontalShift
 
     const cardWidth = parentWidth - totalPadding
@@ -229,12 +229,12 @@ export function BatchedTransactionDetails({
   return (
     <Flex row alignItems="center" position="relative" pt="$spacing4">
       {/* Left arrow button - visible only on extension with multiple calls */}
-      {isExtension && hasMultipleCalls && currentIndex > 0 && (
+      {isExtensionApp && hasMultipleCalls && currentIndex > 0 && (
         <ScrollArrow side="left" onPress={() => scrollToIndex(currentIndex - 1)} />
       )}
 
       {/* Scrollable Content Area for extension */}
-      {isExtension ? (
+      {isExtensionApp ? (
         <Flex
           ref={scrollRef as React.RefObject<HTMLDivElement>}
           {...{
@@ -284,7 +284,7 @@ export function BatchedTransactionDetails({
       )}
 
       {/* Right arrow button - visible only on extension with multiple calls */}
-      {isExtension && hasMultipleCalls && currentIndex < calls.length - 1 && (
+      {isExtensionApp && hasMultipleCalls && currentIndex < calls.length - 1 && (
         <ScrollArrow side="right" onPress={() => scrollToIndex(currentIndex + 1)} />
       )}
 

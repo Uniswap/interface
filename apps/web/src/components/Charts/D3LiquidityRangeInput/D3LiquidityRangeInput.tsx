@@ -1,5 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { D3LiquidityChartHeader } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/D3LiquidityChartHeader'
 import { D3LiquidityMinMaxInput } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/D3LiquidityMinMaxInput'
 import { DefaultPriceStrategies } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/DefaultPriceStrategies'
@@ -12,13 +13,13 @@ import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { ChartType } from 'components/Charts/utils'
+import { RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, SegmentedControlOption, Shine, Text } from 'ui/src'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 
 const MIN_DATA_POINTS = 5
@@ -44,6 +45,8 @@ export function D3LiquidityRangeInput({
   isFullRange,
   minPrice,
   maxPrice,
+  inputMode,
+  setInputMode,
   setMinPrice,
   setMaxPrice,
   setIsFullRange,
@@ -69,6 +72,8 @@ export function D3LiquidityRangeInput({
   isFullRange?: boolean
   minPrice?: number
   maxPrice?: number
+  inputMode?: RangeAmountInputPriceMode
+  setInputMode: (inputMode: RangeAmountInputPriceMode) => void
   setMinPrice: (minPrice?: number | null) => void
   setMaxPrice: (maxPrice?: number | null) => void
   setIsFullRange: (isFullRange: boolean) => void
@@ -78,7 +83,9 @@ export function D3LiquidityRangeInput({
   const chainInfo = getChainInfo(quoteCurrency.chainId)
 
   // TODO: consider moving this to the store - requires rearranging loading and error states
-  const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<HistoryDuration>(HistoryDuration.Month)
+  const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<GraphQLApi.HistoryDuration>(
+    GraphQLApi.HistoryDuration.Month,
+  )
 
   // Fetch price data for the chart
   const priceData = usePoolPriceChartData({
@@ -156,12 +163,13 @@ export function D3LiquidityRangeInput({
         minPrice={minPrice}
         maxPrice={maxPrice}
         isFullRange={isFullRange}
+        inputMode={inputMode}
+        onInputModeChange={setInputMode}
         onMinPriceChange={setMinPrice}
         onMaxPriceChange={setMaxPrice}
         onTimePeriodChange={setSelectedHistoryDuration}
         setIsFullRange={setIsFullRange}
       >
-        <DefaultPriceStrategies isLoading={isLoading} />
         <Flex
           backgroundColor="$surface2"
           gap="$gap16"
@@ -206,6 +214,7 @@ export function D3LiquidityRangeInput({
           )}
           <LiquidityRangeActionButtons />
         </Flex>
+        <DefaultPriceStrategies isLoading={isLoading} />
         <D3LiquidityMinMaxInput />
       </LiquidityChartStoreProvider>
     </Flex>

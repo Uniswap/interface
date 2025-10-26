@@ -1,9 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { NativeCurrency, Token } from '@uniswap/sdk-core'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
+import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
+import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SolanaToken } from 'uniswap/src/features/tokens/SolanaToken'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { sortKeysRecursively } from 'utilities/src/primitives/objects'
@@ -40,6 +43,7 @@ const CURRENCY_CACHE = new Map<string, Token | NativeCurrency | undefined>()
  * @param params.sellFeeBps The sell fee in basis points. This parameter is optional.
  * @returns A new instance of Token or NativeCurrency if the parameters are valid, otherwise returns undefined.
  */
+// eslint-disable-next-line complexity
 export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency | undefined {
   const { chainId, address, decimals, symbol, name, bypassChecksum = true, buyFeeBps, sellFeeBps } = args
 
@@ -47,7 +51,9 @@ export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency
     return undefined
   }
 
-  const cacheKey = JSON.stringify(sortKeysRecursively(args))
+  const cacheKey = JSON.stringify(
+    sortKeysRecursively({ ...args, address: normalizeTokenAddressForCache(address ?? null) }),
+  )
 
   if (CURRENCY_CACHE.has(cacheKey)) {
     // This allows us to better memoize components that use a `Currency` as a dependency.
@@ -57,9 +63,21 @@ export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency
   let result: Token | NativeCurrency | undefined
   if (chainId === UniverseChainId.Solana && address) {
     try {
-      result = isNonNativeAddress(chainId, address)
-        ? new SolanaToken(chainId, address, decimals, symbol ?? undefined, name ?? undefined)
-        : nativeOnChain(chainId)
+      if (isNativeCurrencyAddress(chainId, address)) {
+        // Return native SOL for native addresses
+        result = nativeOnChain(chainId)
+      } else if (
+        areAddressesEqual({
+          addressInput1: { address, chainId },
+          addressInput2: { address: WRAPPED_SOL_ADDRESS_SOLANA, chainId: UniverseChainId.Solana },
+        })
+      ) {
+        // Return singleton WSOL for wrapped address
+        result = WRAPPED_NATIVE_CURRENCY[chainId]
+      } else {
+        // Return regular SPL token for other addresses
+        result = new SolanaToken(chainId, address, decimals, symbol ?? undefined, name ?? undefined)
+      }
     } catch (error) {
       // TODO(SWAP-262): Investigate remaining source of lowercased SPL token addresses
       const isLowercasedAddress = address.toLowerCase() === address

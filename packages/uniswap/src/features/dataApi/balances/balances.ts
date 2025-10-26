@@ -1,16 +1,10 @@
 import { NetworkStatus } from '@apollo/client'
 import { QueryHookOptions } from '@apollo/client/react/types/types'
-import { GqlResult, SpamCode } from '@universe/api'
+import { GqlResult, GraphQLApi, SpamCode } from '@universe/api'
 import isEqual from 'lodash/isEqual'
 import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
-import {
-  ContractInput,
-  PortfolioBalancesQuery,
-  PortfolioBalancesQueryVariables,
-  PortfolioValueModifier,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioData } from 'uniswap/src/features/dataApi/balances/balancesRest'
@@ -48,7 +42,10 @@ export function usePortfolioBalances({
 }: {
   evmAddress?: Address
   svmAddress?: Address
-} & QueryHookOptions<PortfolioBalancesQuery, PortfolioBalancesQueryVariables>): PortfolioDataResult {
+} & QueryHookOptions<
+  GraphQLApi.PortfolioBalancesQuery,
+  GraphQLApi.PortfolioBalancesQueryVariables
+>): PortfolioDataResult {
   return usePortfolioData({
     evmAddress: evmAddress || '',
     svmAddress: svmAddress || '',
@@ -84,11 +81,13 @@ export function buildPortfolioBalance(args: PortfolioBalance): PortfolioBalance 
 }
 
 interface TokenOverrides {
-  tokenIncludeOverrides: ContractInput[]
-  tokenExcludeOverrides: ContractInput[]
+  tokenIncludeOverrides: GraphQLApi.ContractInput[]
+  tokenExcludeOverrides: GraphQLApi.ContractInput[]
 }
 
-export function usePortfolioValueModifiers(addresses?: Address | Address[]): PortfolioValueModifier[] | undefined {
+export function usePortfolioValueModifiers(
+  addresses?: Address | Address[],
+): GraphQLApi.PortfolioValueModifier[] | undefined {
   // Memoize array creation if passed a string to avoid recomputing at every render
   const addressArray = useMemo(
     () => (!addresses ? [] : Array.isArray(addresses) ? addresses : [addresses]),
@@ -99,7 +98,7 @@ export function usePortfolioValueModifiers(addresses?: Address | Address[]): Por
   const hideSpamTokens = useHideSpamTokensSetting()
   const hideSmallBalances = useHideSmallBalancesSetting()
 
-  const modifiers = useMemo<PortfolioValueModifier[]>(() => {
+  const modifiers = useMemo<GraphQLApi.PortfolioValueModifier[]>(() => {
     const { tokenIncludeOverrides, tokenExcludeOverrides } = Object.entries(currencyIdToTokenVisibility).reduce(
       (acc: TokenOverrides, [key, tokenVisibility]) => {
         const contractInput = currencyIdToContractInput(key)

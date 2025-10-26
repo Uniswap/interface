@@ -1,4 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Trading API fixtures need direct Playwright imports
 import { test as base } from '@playwright/test'
 import { Page } from 'playwright/test'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -10,7 +10,6 @@ const shouldIgnorePageError = (error: Error): { ignored: boolean } => {
     error.message.includes('Target page, context or browser has been closed') ||
     error.message.includes('Test ended')
   ) {
-    // eslint-disable-next-line no-console
     console.log(`🟡 Ignored route error after page close: ${error.message}`)
     return { ignored: true }
   }
@@ -126,7 +125,6 @@ export const test = base.extend<TradingApiFixture>({
 
         await use(undefined)
       } catch (e) {
-        // eslint-disable-next-line no-console
         console.warn('[txPolling fixture] Failed to set up route interception:', e)
         await use(undefined)
       }

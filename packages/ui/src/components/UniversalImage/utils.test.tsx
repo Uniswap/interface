@@ -1,4 +1,5 @@
 import { fetchSVG } from 'ui/src/components/UniversalImage/utils'
+import { describe, expect, it, vi } from 'vitest'
 
 const REGULAR_SVG = '<svg viewBox="0 0 10 20"></svg>'
 
@@ -7,11 +8,11 @@ const SVG_WITH_ANIMATES_STRIPPED = '<svg viewBox="100 20 15 25"><text>hello</tex
 
 describe(fetchSVG, () => {
   it('fetches SVGs', async () => {
-    globalThis.fetch = jest.fn(() =>
+    globalThis.fetch = vi.fn(() =>
       Promise.resolve({
         text: () => Promise.resolve(REGULAR_SVG),
       }),
-    ) as jest.Mock
+    ) as any
 
     const result = await fetchSVG({ uri: 'regular.svg', autoplay: false })
 
@@ -20,11 +21,11 @@ describe(fetchSVG, () => {
   })
 
   it('removes <animate>', async () => {
-    globalThis.fetch = jest.fn(() =>
+    globalThis.fetch = vi.fn(() =>
       Promise.resolve({
         text: () => Promise.resolve(SVG_WITH_ANIMATES),
       }),
-    ) as jest.Mock
+    ) as any
 
     const result = await fetchSVG({ uri: 'with-animate.svg', autoplay: false })
 

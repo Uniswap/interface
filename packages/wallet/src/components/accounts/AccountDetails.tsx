@@ -30,7 +30,7 @@ export function AccountDetails({
       </Flex>
       <Flex fill row shrink alignItems="center" gap="$spacing4" justifyContent="flex-end">
         <Text allowFontScaling={allowFontScaling} color="$neutral2" variant="body3">
-          {shortenAddress(address)}
+          {shortenAddress({ address })}
         </Text>
         {chevron && <RotatableChevron color={chevronColor} direction="end" height={iconSize} width={iconSize} />}
       </Flex>

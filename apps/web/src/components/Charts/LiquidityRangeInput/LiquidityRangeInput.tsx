@@ -1,5 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { ActiveLiquidityChart } from 'components/Charts/ActiveLiquidityChart/ActiveLiquidityChart'
 import { Chart } from 'components/Charts/ChartModel'
 import { LPPriceChartModel } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
@@ -9,7 +10,7 @@ import { ChartErrorView } from 'components/Charts/LoadingState'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { getCandlestickPriceBounds, getEffectivePrice } from 'components/Charts/PriceChart/utils'
 import { PriceChartType } from 'components/Charts/utils'
-import { DropdownSelector } from 'components/DropdownSelector'
+import { Dropdown } from 'components/Dropdowns/Dropdown'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { UTCTimestamp } from 'lightweight-charts'
@@ -35,7 +36,6 @@ import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { SearchMinus } from 'ui/src/components/icons/SearchMinus'
 import { SearchPlus } from 'ui/src/components/icons/SearchPlus'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isMobileWeb } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -109,7 +109,9 @@ export function LiquidityRangeInput({
   const colors = useSporeColors()
   const { t } = useTranslation()
 
-  const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<HistoryDuration>(HistoryDuration.Month)
+  const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<GraphQLApi.HistoryDuration>(
+    GraphQLApi.HistoryDuration.Month,
+  )
 
   const priceData = usePoolPriceChartData({
     // If the Pool doesn't exist, the poolId is undefined and we skip this query.
@@ -273,30 +275,30 @@ export function LiquidityRangeInput({
   }, [formattedData])
 
   const timePeriodOptions = useMemo(() => {
-    const options: Array<SegmentedControlOption<HistoryDuration> & { verboseDisplay: JSX.Element }> = [
+    const options: Array<SegmentedControlOption<GraphQLApi.HistoryDuration> & { verboseDisplay: JSX.Element }> = [
       [
-        HistoryDuration.Day,
+        GraphQLApi.HistoryDuration.Day,
         t('token.priceExplorer.timeRangeLabel.day'),
         t('token.priceExplorer.timeRangeLabel.day.verbose'),
       ],
       [
-        HistoryDuration.Week,
+        GraphQLApi.HistoryDuration.Week,
         t('token.priceExplorer.timeRangeLabel.week'),
         t('token.priceExplorer.timeRangeLabel.week.verbose'),
       ],
       [
-        HistoryDuration.Month,
+        GraphQLApi.HistoryDuration.Month,
         t('token.priceExplorer.timeRangeLabel.month'),
         t('token.priceExplorer.timeRangeLabel.month.verbose'),
       ],
       [
-        HistoryDuration.Year,
+        GraphQLApi.HistoryDuration.Year,
         t('token.priceExplorer.timeRangeLabel.year'),
         t('token.priceExplorer.timeRangeLabel.year.verbose'),
       ],
-      [HistoryDuration.Max, t('token.priceExplorer.timeRangeLabel.all')],
+      [GraphQLApi.HistoryDuration.Max, t('token.priceExplorer.timeRangeLabel.all')],
     ].map((timePeriod) => ({
-      value: timePeriod[0] as HistoryDuration,
+      value: timePeriod[0] as GraphQLApi.HistoryDuration,
       display: <Text variant="buttonLabel3">{timePeriod[1]}</Text>,
       verboseDisplay: <Text variant="buttonLabel3">{timePeriod[2] ?? timePeriod[1]}</Text>,
     }))
@@ -312,6 +314,7 @@ export function LiquidityRangeInput({
     (!liquidityDataLoading && !sortedFormattedData) ||
     (!liquidityDataLoading && sortedFormattedData && sortedFormattedData.length < MIN_DATA_POINTS)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: +midPrice
   useEffect(() => {
     const container = containerRef.current
     if (container && !disableBrushInteraction) {
@@ -470,7 +473,7 @@ export function LiquidityRangeInput({
       >
         <Flex row alignItems="center" gap="$gap8" $sm={{ row: false, alignItems: 'flex-start' }}>
           {isMobileWeb ? (
-            <DropdownSelector
+            <Dropdown
               containerStyle={{ width: 'auto' }}
               menuLabel={
                 <Flex
@@ -519,12 +522,12 @@ export function LiquidityRangeInput({
                   {p.verboseDisplay}
                 </Flex>
               ))}
-            </DropdownSelector>
+            </Dropdown>
           ) : (
             <SegmentedControl
               options={timePeriodOptions.options}
               selectedOption={timePeriodOptions.selected}
-              onSelectOption={(option: HistoryDuration) => {
+              onSelectOption={(option: GraphQLApi.HistoryDuration) => {
                 setSelectedHistoryDuration(option)
                 setZoomFactor(1)
                 setBoundaryPrices(undefined)

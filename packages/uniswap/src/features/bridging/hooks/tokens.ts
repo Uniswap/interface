@@ -1,4 +1,4 @@
-import { GqlResult, TradingApi } from '@universe/api'
+import { GqlResult, GraphQLApi, TradingApi } from '@universe/api'
 import { useCallback, useMemo } from 'react'
 import { OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
@@ -7,7 +7,7 @@ import { createEmptyTokenOptionFromBridgingToken } from 'uniswap/src/components/
 import { useTradingApiSwappableTokensQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
-import { useTokenProjectsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -46,7 +46,7 @@ export function useBridgingTokenWithHighestBalance({
   const tokenIn = currencyAddress ? getTokenAddressFromChainForTradingApi(currencyAddress, currencyChainId) : undefined
   const tokenInChainId = toTradingApiSupportedChainId(currencyChainId)
 
-  const { data: tokenProjectsData, loading: tokenProjectsLoading } = useTokenProjectsQuery({
+  const { data: tokenProjectsData, loading: tokenProjectsLoading } = GraphQLApi.useTokenProjectsQuery({
     variables: { contracts: [currencyIdToContractInput(currencyId)] },
   })
 
@@ -215,7 +215,8 @@ function useBridgingTokensToTokenOptions(
         const isNative = token.address === NATIVE_ADDRESS_FOR_TRADING_API
         const currencyId = isNative ? buildNativeCurrencyId(chainId) : buildCurrencyId(chainId, token.address)
         return {
-          ...(portfolioBalancesById?.[currencyId.toLowerCase()] ?? createEmptyTokenOptionFromBridgingToken(token)),
+          ...(portfolioBalancesById?.[normalizeCurrencyIdForMapLookup(currencyId)] ??
+            createEmptyTokenOptionFromBridgingToken(token)),
           type: OnchainItemListOptionType.Token,
         }
       })

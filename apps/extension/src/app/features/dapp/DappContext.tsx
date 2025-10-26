@@ -60,7 +60,7 @@ export function DappContextProvider({ children }: { children: ReactNode }): JSX.
         dispatch(closePopup(PopupName.Connect))
       },
     )
-  }, [setDappIconUrl, setDappUrl, dispatch])
+  }, [dispatch])
 
   const value = { dappUrl, dappIconUrl, isConnected, lastChainId }
 

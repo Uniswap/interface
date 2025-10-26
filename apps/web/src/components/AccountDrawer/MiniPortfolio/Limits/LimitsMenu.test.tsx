@@ -3,7 +3,6 @@ import 'test-utils/tokens/mocks'
 import { WETH9 } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitsMenu'
 import { mocked } from 'test-utils/mocked'
 import { act, fireEvent, render, screen } from 'test-utils/render'
@@ -57,17 +56,6 @@ const mockOrderDetails: UniswapXOrderDetails = {
   transactionOriginType: TransactionOriginType.Internal,
 }
 
-const mockLimitActivity: Activity = {
-  id: '0x123',
-  hash: '0x123',
-  chainId: UniverseChainId.Mainnet,
-  status: TransactionStatus.Pending,
-  timestamp: 1,
-  title: 'Limit pending',
-  from: '0x456',
-  offchainOrderDetails: mockOrderDetails,
-}
-
 describe('LimitsMenu', () => {
   it('should render when there is one open order', async () => {
     // Addresses a console.error -- `Warning: React does not recognize the `scaleIcon` prop on a DOM element. If you intentionally want it to appear in the DOM as a custom attribute, spell it as lowercase `scaleicon` instead. If you accidentally passed it from a parent component, remove it from the DOM element.
@@ -75,7 +63,7 @@ describe('LimitsMenu', () => {
     vi.spyOn(console, 'error').mockImplementation(() => {})
 
     mocked(useOpenLimitOrders).mockReturnValue({
-      openLimitOrders: [mockLimitActivity],
+      openLimitOrders: [mockOrderDetails],
       loading: false,
     })
 
@@ -90,7 +78,7 @@ describe('LimitsMenu', () => {
 
   it('should render when there are two open orders', async () => {
     mocked(useOpenLimitOrders).mockReturnValue({
-      openLimitOrders: [mockLimitActivity, { ...mockLimitActivity, id: '0x456', hash: '0x456' }],
+      openLimitOrders: [mockOrderDetails, { ...mockOrderDetails, id: '0x456', orderHash: '0x456', hash: '0x456' }],
       loading: false,
     })
     await act(async () => {
@@ -105,7 +93,7 @@ describe('LimitsMenu', () => {
   it('should call the close callback', async () => {
     const onClose = vi.fn()
     mocked(useOpenLimitOrders).mockReturnValue({
-      openLimitOrders: [mockLimitActivity],
+      openLimitOrders: [mockOrderDetails],
       loading: false,
     })
     await act(async () => {

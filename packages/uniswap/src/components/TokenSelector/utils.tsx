@@ -1,10 +1,13 @@
-import { TradingApi } from '@universe/api'
-import { OnchainItemListOption, OnchainItemListOptionType, TokenOption } from 'uniswap/src/components/lists/items/types'
+import { GraphQLApi, TradingApi } from '@universe/api'
+import {
+  type OnchainItemListOption,
+  OnchainItemListOptionType,
+  type TokenOption,
+} from 'uniswap/src/components/lists/items/types'
 import { type OnchainItemSection, OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
-import { SafetyLevel as GqlSafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { ModalName, type ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
 import { differenceWith } from 'utilities/src/primitives/array'
 
@@ -25,16 +28,16 @@ export function createEmptyTokenOptionFromBridgingToken(
   }
 }
 
-export function toGqlSafetyLevel(safetyLevel: TradingApi.SafetyLevel): GqlSafetyLevel | null {
+export function toGqlSafetyLevel(safetyLevel: TradingApi.SafetyLevel): GraphQLApi.SafetyLevel | null {
   switch (safetyLevel) {
     case TradingApi.SafetyLevel.BLOCKED:
-      return GqlSafetyLevel.Blocked
+      return GraphQLApi.SafetyLevel.Blocked
     case TradingApi.SafetyLevel.MEDIUM_WARNING:
-      return GqlSafetyLevel.MediumWarning
+      return GraphQLApi.SafetyLevel.MediumWarning
     case TradingApi.SafetyLevel.STRONG_WARNING:
-      return GqlSafetyLevel.StrongWarning
+      return GraphQLApi.SafetyLevel.StrongWarning
     case TradingApi.SafetyLevel.VERIFIED:
-      return GqlSafetyLevel.Verified
+      return GraphQLApi.SafetyLevel.Verified
     default:
       return null
   }

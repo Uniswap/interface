@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* biome-ignore-all lint/suspicious/noExplicitAny: legacy code needs review */
 import { SearchHistoryResultType } from 'uniswap/src/features/search/SearchHistoryResult'
 import { PreV55SearchResultType } from 'uniswap/src/state/oldTypes'
 import { migrateSearchHistory, removeThaiBahtFromFiatCurrency } from 'uniswap/src/state/uniswapMigrations'

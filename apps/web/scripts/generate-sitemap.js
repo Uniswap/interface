@@ -3,6 +3,22 @@
 const fs = require('fs')
 const { parseStringPromise, Builder } = require('xml2js')
 
+// Inline version of normalizeTokenAddressForCache to avoid PNG import issues
+// Copied from uniswap/src/data/cache.ts
+function normalizeTokenAddressForCache(address) {
+  if (address === 'NATIVE' || address === 'native') {
+    return 'native'
+  }
+
+  // Simple EVM address validation and normalization
+  if (address && typeof address === 'string' && address.startsWith('0x') && address.length === 42) {
+    return address.toLowerCase()
+  }
+
+  // For non-EVM addresses (like Solana), return as-is
+  return address
+}
+
 const weekMs = 7 * 24 * 60 * 60 * 1000
 const nowISO = new Date().toISOString()
 
@@ -64,11 +80,11 @@ fs.readFile('./public/tokens-sitemap.xml', 'utf8', async (_err, data) => {
 
     const tokensJSON = await tokensResponse.json()
     const tokenAddresses = tokensJSON.tokenRankings.TRENDING.tokens.map((token) => {
-      return { chainName: token.chain.toLowerCase(), address: token.address ? token.address.toLowerCase() : 'NATIVE' }
+      return { chainName: token.chain.toLowerCase(), address: token.address ? token.address : 'NATIVE' }
     })
 
     tokenAddresses.forEach(({ chainName, address }) => {
-      const tokenURL = `https://app.uniswap.org/explore/tokens/${chainName}/${address}`
+      const tokenURL = `https://app.uniswap.org/explore/tokens/${chainName}/${normalizeTokenAddressForCache(address)}`
       if (!(tokenURL in tokenURLs)) {
         sitemap.urlset.url.push({
           loc: [tokenURL],
@@ -123,12 +139,12 @@ fs.readFile('./public/pools-sitemap.xml', 'utf8', async (_err, data) => {
         body: JSON.stringify({ query: getTopPoolsQuery(chainName) }),
       })
       const poolsJSON = await poolsResponse.json()
-      const v3PoolAddresses = poolsJSON.data.topV3Pools?.map((pool) => pool.address.toLowerCase()) ?? []
-      const v2PoolAddresses = poolsJSON.data.topV2Pairs?.map((pool) => pool.address.toLowerCase()) ?? []
+      const v3PoolAddresses = poolsJSON.data.topV3Pools?.map((pool) => pool.address) ?? []
+      const v2PoolAddresses = poolsJSON.data.topV2Pairs?.map((pool) => pool.address) ?? []
       const poolAddresses = v3PoolAddresses.concat(v2PoolAddresses)
 
       poolAddresses.forEach((address) => {
-        const poolUrl = `https://app.uniswap.org/explore/pools/${chainName.toLowerCase()}/${address}`
+        const poolUrl = `https://app.uniswap.org/explore/pools/${chainName.toLowerCase()}/${normalizeTokenAddressForCache(address)}`
         if (!(poolUrl in poolURLs)) {
           sitemap.urlset.url.push({
             loc: [poolUrl],

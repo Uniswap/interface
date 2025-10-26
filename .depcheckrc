@@ -3,6 +3,7 @@ ignores: [
     '@graphql-codegen/*',
     '@commitlint/*',
     '@uniswap/eslint-config',
+    '@uniswap/biome-config',
     'i18next',
     'moti',
     'wrangler',

@@ -7,7 +7,7 @@ import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wal
 import { createAccountsStoreContextProvider } from 'uniswap/src/features/accounts/store/utils/createAccountsStoreContextProvider'
 import { AccountType as ReduxAccountType } from 'uniswap/src/features/accounts/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { ensure0xHex } from 'uniswap/src/utils/hex'
+import { ensure0xHex } from 'utilities/src/addresses/hex'
 import { isNonEmptyArray, NonEmptyArray } from 'utilities/src/primitives/array'
 import { createAccountsStoreGetters } from 'wallet/src/features/accounts/store/getters'
 import {

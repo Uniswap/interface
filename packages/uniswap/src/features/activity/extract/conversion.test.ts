@@ -1,15 +1,7 @@
 /* eslint-disable max-lines */
+import { GraphQLApi } from '@universe/api'
 import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI } from 'uniswap/src/constants/tokens'
-import {
-  Chain,
-  Currency,
-  NftStandard,
-  TransactionType as RemoteTransactionType,
-  TokenStandard,
-  TransactionDirection,
-  TransactionStatus,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { extractOnRampTransactionDetails } from 'uniswap/src/features/activity/extract/extractFiatOnRampTransactionDetails'
 import extractTransactionDetails from 'uniswap/src/features/activity/extract/extractTransactionDetails'
 import parseApproveTransaction from 'uniswap/src/features/activity/parse/parseApproveTransaction'
@@ -19,11 +11,8 @@ import parseReceiveTransaction from 'uniswap/src/features/activity/parse/parseRe
 import parseSendTransaction from 'uniswap/src/features/activity/parse/parseSendTransaction'
 import parseTradeTransaction from 'uniswap/src/features/activity/parse/parseTradeTransaction'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import {
-  NFTTradeType,
-  TransactionListQueryResponse,
-  TransactionType,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+import type { TransactionListQueryResponse } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { NFTTradeType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures'
 
 /**
@@ -39,17 +28,17 @@ const WRAPPED_NATIVE_ADDRESS = getWrappedNativeAddress(UniverseChainId.Mainnet)
 
 const RESPONSE_BASE = {
   id: 'base_id',
-  chain: Chain.Ethereum,
+  chain: GraphQLApi.Chain.Ethereum,
   timestamp: 1,
   details: {
     __typename: 'TransactionDetails' as const,
     id: 'base_tranaction_id',
     hash: TEST_HASH,
-    status: TransactionStatus.Confirmed,
+    status: GraphQLApi.TransactionStatus.Confirmed,
     to: TO_ADDRESS,
     from: FROM_ADDRESS,
     assetChanges: [], // override per test
-    type: RemoteTransactionType.Unknown, // override per test.
+    type: GraphQLApi.TransactionType.Unknown, // override per test.
   },
 }
 
@@ -63,9 +52,9 @@ const ERC20_APPROVE_ASSET_CHANGE = {
     symbol: 'asset_symbol',
     decimals: 18,
     address: ERC20_ASSET_ADDRESS,
-    chain: Chain.Ethereum,
+    chain: GraphQLApi.Chain.Ethereum,
   },
-  tokenStandard: TokenStandard.Erc20,
+  tokenStandard: GraphQLApi.TokenStandard.Erc20,
   approvedAddress: 'approved_address',
   quantity: '1',
 }
@@ -78,23 +67,23 @@ const ERC20_TRANSFER_OUT_ASSET_CHANGE = {
     symbol: 'asset_symbol',
     decimals: 18,
     address: ERC20_ASSET_ADDRESS,
-    chain: Chain.Ethereum,
+    chain: GraphQLApi.Chain.Ethereum,
   },
-  tokenStandard: TokenStandard.Erc20,
+  tokenStandard: GraphQLApi.TokenStandard.Erc20,
   quantity: '1',
   sender: FROM_ADDRESS,
   recipient: TO_ADDRESS,
-  direction: TransactionDirection.Out,
+  direction: GraphQLApi.TransactionDirection.Out,
   transactedValue: {
     id: 'transacted_value_id',
-    currency: Currency.Usd,
+    currency: GraphQLApi.Currency.Usd,
     value: 1,
   },
 }
 
 const ERC20_TRANSFER_IN_ASSET_CHANGE = {
   ...ERC20_TRANSFER_OUT_ASSET_CHANGE,
-  direction: TransactionDirection.In,
+  direction: GraphQLApi.TransactionDirection.In,
 }
 
 const ERC20_WRAPPED_TRANSFER_IN_ASSET_CHANGE = {
@@ -103,7 +92,7 @@ const ERC20_WRAPPED_TRANSFER_IN_ASSET_CHANGE = {
     ...ERC20_TRANSFER_OUT_ASSET_CHANGE.asset,
     address: WRAPPED_NATIVE_ADDRESS,
   },
-  direction: TransactionDirection.In,
+  direction: GraphQLApi.TransactionDirection.In,
 }
 
 const NATIVE_TRANSFER_OUT_ASSET_CHANGE = {
@@ -112,7 +101,7 @@ const NATIVE_TRANSFER_OUT_ASSET_CHANGE = {
     ...ERC20_TRANSFER_OUT_ASSET_CHANGE.asset,
     address: getNativeAddress(UniverseChainId.Mainnet),
   },
-  tokenbStandard: TokenStandard.Native,
+  tokenbStandard: GraphQLApi.TokenStandard.Native,
 }
 
 const ERC721_TRANSFER_IN_ASSET_CHANGE = {
@@ -123,7 +112,7 @@ const ERC721_TRANSFER_IN_ASSET_CHANGE = {
     isSpam: false,
     nftContract: {
       id: 'nft_contract_id',
-      chain: Chain.Ethereum,
+      chain: GraphQLApi.Chain.Ethereum,
       address: 'nft_contract_address',
     },
     tokenId: 'token_id',
@@ -136,15 +125,15 @@ const ERC721_TRANSFER_IN_ASSET_CHANGE = {
       name: 'collection_name',
     },
   },
-  nftStandard: NftStandard.Erc721,
+  nftStandard: GraphQLApi.NftStandard.Erc721,
   sender: FROM_ADDRESS,
   recipient: TO_ADDRESS,
-  direction: TransactionDirection.In,
+  direction: GraphQLApi.TransactionDirection.In,
 }
 
 const ERC721_TRANSFER_OUT_ASSET_CHANGE = {
   ...ERC721_TRANSFER_IN_ASSET_CHANGE,
-  direction: TransactionDirection.Out,
+  direction: GraphQLApi.TransactionDirection.Out,
 }
 
 const ONRAMP_TRANSFER_ASSET_CHANGE = {
@@ -157,9 +146,9 @@ const ONRAMP_TRANSFER_ASSET_CHANGE = {
     symbol: 'asset_symbol',
     decimals: 18,
     address: ERC20_ASSET_ADDRESS,
-    chain: Chain.Ethereum,
+    chain: GraphQLApi.Chain.Ethereum,
   },
-  tokenStandard: TokenStandard.Erc20,
+  tokenStandard: GraphQLApi.TokenStandard.Erc20,
   amount: 1,
   sourceCurrency: undefined,
   sourceAmount: 1,
@@ -178,7 +167,7 @@ const ONRAMP_TRANSFER_ASSET_CHANGE = {
 
 const ONRAMP_PURCHASE_ASSET_CHANGE = {
   ...ONRAMP_TRANSFER_ASSET_CHANGE,
-  sourceCurrency: Currency.Usd,
+  sourceCurrency: GraphQLApi.Currency.Usd,
 }
 
 /** ERC20 Approve */
@@ -187,7 +176,7 @@ const MOCK_ERC20_APPROVE: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.Approve,
+    type: GraphQLApi.TransactionType.Approve,
     assetChanges: [{ ...ERC20_APPROVE_ASSET_CHANGE, __typename: 'TokenApproval' }],
   },
 }
@@ -212,7 +201,7 @@ const MOCK_721_MINT: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.Mint,
+    type: GraphQLApi.TransactionType.Mint,
     assetChanges: [
       { ...ERC721_TRANSFER_IN_ASSET_CHANGE, __typename: 'NftTransfer' },
       { ...ERC20_TRANSFER_OUT_ASSET_CHANGE, __typename: 'TokenTransfer' },
@@ -224,7 +213,7 @@ const MOCK_721_MINT_WTIH_NATIVE: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.Mint,
+    type: GraphQLApi.TransactionType.Mint,
     assetChanges: [
       { ...ERC721_TRANSFER_IN_ASSET_CHANGE, __typename: 'NftTransfer' },
       { ...NATIVE_TRANSFER_OUT_ASSET_CHANGE, __typename: 'TokenTransfer' },
@@ -276,7 +265,7 @@ const MOCK_ERC20_RECEIVE: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.Receive,
+    type: GraphQLApi.TransactionType.Receive,
     assetChanges: [{ ...ERC20_TRANSFER_IN_ASSET_CHANGE, __typename: 'TokenTransfer' }],
   },
 }
@@ -285,7 +274,7 @@ const MOCK_ERC20_RECEIVE_SPAM: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.Receive,
+    type: GraphQLApi.TransactionType.Receive,
     assetChanges: [
       {
         ...ERC20_TRANSFER_IN_ASSET_CHANGE,
@@ -303,7 +292,7 @@ const MOCK_ERC721_RECEIVE: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.Receive,
+    type: GraphQLApi.TransactionType.Receive,
     assetChanges: [{ ...ERC721_TRANSFER_IN_ASSET_CHANGE, __typename: 'NftTransfer' }],
   },
 }
@@ -358,7 +347,7 @@ const MOCK_ERC20_SEND: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.Send,
+    type: GraphQLApi.TransactionType.Send,
     assetChanges: [{ ...ERC20_TRANSFER_OUT_ASSET_CHANGE, __typename: 'TokenTransfer' }],
   },
 }
@@ -367,7 +356,7 @@ const MOCK_ERC721_SEND: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.Send,
+    type: GraphQLApi.TransactionType.Send,
     assetChanges: [{ ...ERC721_TRANSFER_OUT_ASSET_CHANGE, __typename: 'NftTransfer' }],
   },
 }
@@ -411,7 +400,7 @@ const MOCK_ERC20_SWAP: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.Swap,
+    type: GraphQLApi.TransactionType.Swap,
     assetChanges: [
       { ...ERC20_TRANSFER_OUT_ASSET_CHANGE, __typename: 'TokenTransfer' },
       { ...ERC20_TRANSFER_IN_ASSET_CHANGE, __typename: 'TokenTransfer' },
@@ -423,7 +412,7 @@ const MOCK_NATIVE_SWAP: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.Swap,
+    type: GraphQLApi.TransactionType.Swap,
     assetChanges: [
       { ...NATIVE_TRANSFER_OUT_ASSET_CHANGE, __typename: 'TokenTransfer' },
       { ...ERC20_TRANSFER_IN_ASSET_CHANGE, __typename: 'TokenTransfer' },
@@ -437,7 +426,7 @@ const MOCK_NFT_BUY: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.Swap,
+    type: GraphQLApi.TransactionType.Swap,
     assetChanges: [
       { ...ERC721_TRANSFER_IN_ASSET_CHANGE, __typename: 'NftTransfer' },
       { ...ERC20_TRANSFER_OUT_ASSET_CHANGE, __typename: 'TokenTransfer' },
@@ -448,7 +437,7 @@ const MOCK_NFT_SELL: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.Swap,
+    type: GraphQLApi.TransactionType.Swap,
     assetChanges: [
       { ...ERC721_TRANSFER_OUT_ASSET_CHANGE, __typename: 'NftTransfer' },
       { ...ERC20_TRANSFER_IN_ASSET_CHANGE, __typename: 'TokenTransfer' },
@@ -460,7 +449,7 @@ const MOCK_NATIVE_WRAP: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.Swap,
+    type: GraphQLApi.TransactionType.Swap,
     assetChanges: [
       { ...NATIVE_TRANSFER_OUT_ASSET_CHANGE, __typename: 'TokenTransfer' },
       { ...ERC20_WRAPPED_TRANSFER_IN_ASSET_CHANGE, __typename: 'TokenTransfer' },
@@ -539,7 +528,7 @@ const MOCK_ONRAMP_TRANSFER: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.OnRamp,
+    type: GraphQLApi.TransactionType.OnRamp,
     assetChanges: [ONRAMP_TRANSFER_ASSET_CHANGE],
   },
 }
@@ -548,7 +537,7 @@ const MOCK_ONRAMP_PURCHASE: TransactionListQueryResponse = {
   ...RESPONSE_BASE,
   details: {
     ...RESPONSE_BASE.details,
-    type: RemoteTransactionType.OnRamp,
+    type: GraphQLApi.TransactionType.OnRamp,
     assetChanges: [ONRAMP_PURCHASE_ASSET_CHANGE],
   },
 }
@@ -650,13 +639,13 @@ describe(extractTransactionDetails, () => {
 
 const RESPONSE_PENDING_ONRAMP_TRANSFER = {
   id: 'base_id',
-  chain: Chain.Ethereum,
+  chain: GraphQLApi.Chain.Ethereum,
   timestamp: 1,
   details: {
     __typename: 'OnRampTransactionDetails' as const,
-    type: RemoteTransactionType.OnRamp,
+    type: GraphQLApi.TransactionType.OnRamp,
     id: 'base_transaction_id',
-    status: TransactionStatus.Pending,
+    status: GraphQLApi.TransactionStatus.Pending,
     receiverAddress: TO_ADDRESS,
     onRampTransfer: ONRAMP_TRANSFER_ASSET_CHANGE,
   },
@@ -664,13 +653,13 @@ const RESPONSE_PENDING_ONRAMP_TRANSFER = {
 
 const RESPONSE_PENDING_ONRAMP_PURCHASE = {
   id: 'base_id',
-  chain: Chain.Ethereum,
+  chain: GraphQLApi.Chain.Ethereum,
   timestamp: 1,
   details: {
     __typename: 'OnRampTransactionDetails' as const,
-    type: RemoteTransactionType.OnRamp,
+    type: GraphQLApi.TransactionType.OnRamp,
     id: 'base_transaction_id',
-    status: TransactionStatus.Pending,
+    status: GraphQLApi.TransactionStatus.Pending,
     receiverAddress: TO_ADDRESS,
     onRampTransfer: ONRAMP_PURCHASE_ASSET_CHANGE,
   },

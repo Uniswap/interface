@@ -1,27 +1,8 @@
-import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker'
+import { GraphQLApi } from '@universe/api'
 import { NUM_FIRST_NFTS } from 'uniswap/src/components/nfts/constants'
-import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { formatNftItems } from 'uniswap/src/features/nfts/utils'
-
-// Selected image will be shrunk to max width/height
-// URI will then be for an image of those dimensions
-const IMAGE_OPTIONS: ImageLibraryOptions = {
-  mediaType: 'photo',
-  maxWidth: 500,
-  maxHeight: 500,
-  quality: 1, // best quality
-  includeBase64: false,
-  selectionLimit: 1,
-}
-
-export async function selectPhotoFromLibrary(): Promise<string | undefined> {
-  const response = await launchImageLibrary(IMAGE_OPTIONS)
-  if (!response.didCancel && !response.errorCode && response.assets) {
-    return response.assets[0]?.uri
-  }
-  return undefined
-}
+import { selectPhotoFromLibrary } from 'wallet/src/features/unitags/photoSelection'
 
 export function useAvatarSelectionHandler({
   address,
@@ -36,7 +17,7 @@ export function useAvatarSelectionHandler({
 }): { avatarSelectionHandler: () => Promise<void>; hasNFTs: boolean } {
   const { gqlChains } = useEnabledChains()
 
-  const { data: nftsData } = useNftsTabQuery({
+  const { data: nftsData } = GraphQLApi.useNftsTabQuery({
     variables: {
       ownerAddress: address,
       first: NUM_FIRST_NFTS,

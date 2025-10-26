@@ -21,9 +21,5 @@
     "baseUrl": "./",
     "types": ["jest", "node"]
   },
-  "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    "global.d.ts"
-  ]
+  "include": ["**/*.ts", "**/*.tsx", "global.d.ts"]
 }

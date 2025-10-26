@@ -1,4 +1,9 @@
-import type { PoolInfoRequest, PoolInfoResponse } from '@uniswap/client-trading/dist/trading/v1/api_pb'
+import type {
+  GetLPPriceDiscrepancyRequest,
+  GetLPPriceDiscrepancyResponse,
+  PoolInfoRequest,
+  PoolInfoResponse,
+} from '@uniswap/client-trading/dist/trading/v1/api_pb'
 import type { FetchClient } from '@universe/api/src/clients/base/types'
 import { createFetcher } from '@universe/api/src/clients/base/utils'
 import type {
@@ -53,6 +58,7 @@ import { logger } from 'utilities/src/logger/logger'
 export const TRADING_API_PATHS = {
   approval: 'check_approval',
   lp: {
+    priceDiscrepancy: 'lp/price_discrepancy',
     claimFees: 'lp/claim',
     claimRewards: 'lp/claim_rewards',
     create: 'lp/create',
@@ -80,6 +86,7 @@ export const TRADING_API_PATHS = {
 export interface TradingClientContext {
   fetchClient: FetchClient
   getFeatureFlagHeaders: () => HeadersInit
+  getQuoteHeaders: () => HeadersInit
   getV4Headers: () => HeadersInit
   getApiPathPrefix: () => string
 }
@@ -100,6 +107,7 @@ export interface TradingApiClient {
     orderStatus: OrderStatus
   }) => Promise<GetOrdersResponse>
   fetchSwappableTokens: (params: SwappableTokensParams) => Promise<GetSwappableTokensResponse>
+  getLPPriceDiscrepancy: (params: GetLPPriceDiscrepancyRequest) => Promise<GetLPPriceDiscrepancyResponse>
   createLpPosition: (params: CreateLPPositionRequest) => Promise<CreateLPPositionResponse>
   decreaseLpPosition: (params: DecreaseLPPositionRequest) => Promise<DecreaseLPPositionResponse>
   increaseLpPosition: (params: IncreaseLPPositionRequest) => Promise<IncreaseLPPositionResponse>
@@ -124,8 +132,13 @@ type IndicativeQuoteRequest = Pick<
 >
 
 export function createTradingApiClient(ctx: TradingClientContext): TradingApiClient {
-  const { fetchClient: client, getFeatureFlagHeaders, getV4Headers, getApiPathPrefix } = ctx
+  const { fetchClient: client, getFeatureFlagHeaders, getQuoteHeaders, getV4Headers, getApiPathPrefix } = ctx
   const getCombinedHeaders = (): HeadersInit => ({ ...getFeatureFlagHeaders(), ...getV4Headers() })
+  const getQuoteSpecificHeaders = (): HeadersInit => ({
+    ...getFeatureFlagHeaders(),
+    ...getQuoteHeaders(),
+    ...getV4Headers(),
+  })
   const getApiPath = (path: string): string => `${getApiPathPrefix()}/${path}`
 
   const fetchQuote = createFetcher<QuoteRequest & { isUSDQuote?: boolean }, DiscriminatedQuoteResponse>({
@@ -133,7 +146,7 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     url: getApiPath(TRADING_API_PATHS.quote),
     method: 'post',
     transformRequest: async () => ({
-      headers: getCombinedHeaders(),
+      headers: getQuoteSpecificHeaders(),
     }),
     on404: (params: QuoteRequest & { isUSDQuote?: boolean }) => {
       logger.warn('TradingApiClient', 'fetchQuote', 'Quote 404', {
@@ -239,6 +252,19 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     method: 'get',
     transformRequest: async () => ({
       headers: getFeatureFlagHeaders(),
+    }),
+  })
+
+  const getLPPriceDiscrepancy = createFetcher<GetLPPriceDiscrepancyRequest, GetLPPriceDiscrepancyResponse>({
+    client,
+    url: getApiPath(TRADING_API_PATHS.lp.priceDiscrepancy),
+    method: 'post',
+    transformRequest: async ({ params }) => ({
+      headers: { ...getFeatureFlagHeaders(), 'x-uniquote-enabled': 'true' },
+      params: {
+        // this needs to be destructured because otherwise the enums get stringified to the key and the backend expects the value.
+        ...params,
+      },
     }),
   })
 
@@ -415,6 +441,7 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     fetchOrders,
     fetchOrdersWithoutIds,
     fetchSwappableTokens,
+    getLPPriceDiscrepancy,
     createLpPosition,
     decreaseLpPosition,
     increaseLpPosition,

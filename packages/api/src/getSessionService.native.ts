@@ -3,18 +3,20 @@ import { getIsSessionServiceEnabled } from '@universe/api/src/getIsSessionServic
 import {
   createDeviceIdService,
   createNoopSessionService,
+  createSessionClient,
   createSessionRepository,
   createSessionService,
   createSessionStorage,
+  createTransport,
   type SessionService,
 } from '@universe/sessions'
 import * as SecureStore from 'expo-secure-store'
 
-function getSessionService(): SessionService {
+function getSessionService(ctx: { getBaseUrl: () => string }): SessionService {
   if (!getIsSessionServiceEnabled()) {
     return createNoopSessionService()
   }
-  return getMobileSessionService()
+  return getMobileSessionService(ctx)
 }
 
 const SESSION_ID_KEY = 'UNISWAP_SESSION_ID'
@@ -36,11 +38,18 @@ const deviceIdService = createDeviceIdService({
   queryClient: SharedQueryClient,
 })
 
-const sessionRepository = createSessionRepository()
+function getMobileSessionService(ctx: { getBaseUrl: () => string }): SessionService {
+  const sessionClient = createSessionClient({
+    transport: createTransport({
+      getBaseUrl: ctx.getBaseUrl,
+      getSessionId: (): Promise<string | null> => mobileSessionStorage.get().then((state) => state?.sessionId ?? null),
+      getDeviceId: deviceIdService.getDeviceId,
+    }),
+  })
 
-function getMobileSessionService(): SessionService {
+  const sessionRepository = createSessionRepository({ client: sessionClient })
+
   return createSessionService({
-    deviceIdService,
     sessionStorage: mobileSessionStorage,
     sessionRepository,
   })

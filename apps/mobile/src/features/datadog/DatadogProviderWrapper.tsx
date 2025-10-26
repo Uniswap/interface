@@ -17,7 +17,7 @@ import {
   DynamicConfigs,
 } from 'uniswap/src/features/gating/configs'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { datadogEnabledBuild, isJestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
+import { datadogEnabledBuild, isTestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { getDatadogEnvironment } from 'utilities/src/logger/datadog/env'
 import { logger } from 'utilities/src/logger/logger'
@@ -111,7 +111,7 @@ export function DatadogProviderWrapper({
     }
   }, [sessionSampleRate])
 
-  if (isJestRun) {
+  if (isTestRun) {
     return <>{children}</>
   }
   logger.setDatadogEnabled(true)

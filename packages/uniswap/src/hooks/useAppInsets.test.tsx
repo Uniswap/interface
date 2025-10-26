@@ -1,5 +1,4 @@
 import { renderHook } from '@testing-library/react'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useDeviceInsets } from 'ui/src/hooks/useDeviceInsets'
 import { useTestnetModeBannerHeight } from 'uniswap/src/features/settings/hooks'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'

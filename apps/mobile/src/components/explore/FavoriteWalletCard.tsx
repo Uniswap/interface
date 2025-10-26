@@ -42,7 +42,7 @@ function FavoriteWalletCard({ address, isEditing, setIsEditing, ...rest }: Favor
   /// Options for long press context menu
   const menuActions = useMemo(() => {
     return [
-      { title: t('explore.wallets.favorite.action.remove'), systemIcon: 'heart.fill' },
+      { title: t('explore.wallets.favorite.action.remove'), systemIcon: 'heart.slash.fill' },
       { title: t('explore.wallets.favorite.action.edit'), systemIcon: 'square.and.pencil' },
     ]
   }, [t])

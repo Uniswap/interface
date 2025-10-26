@@ -1,136 +1,137 @@
-import { BigNumber } from '@ethersproject/bignumber'
 import { useQuery } from '@tanstack/react-query'
-import { FeeType } from '@universe/api'
 import { providers } from 'ethers/lib/ethers'
 import { useCallback, useMemo } from 'react'
-import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'uniswap/src/constants/transactions'
-import { FeeDetails, getAdjustedGasFeeDetails } from 'uniswap/src/features/gas/adjustGasFee'
 import { CancellationGasFeeDetails, useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
+import {
+  CancellationType,
+  calculateCancellationGasFee,
+  createClassicCancelRequest,
+  getCancellationType,
+} from 'uniswap/src/features/gas/utils/cancel'
+import {
+  extractCancellationData,
+  getCancelMultipleUniswapXOrdersTransaction,
+} from 'uniswap/src/features/transactions/cancel/cancelMultipleOrders'
 import { getCancelOrderTxRequest } from 'uniswap/src/features/transactions/cancel/getCancelOrderTxRequest'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { logger } from 'utilities/src/logger/logger'
+import { TransactionDetails, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
-export const CANCELLATION_TX_VALUE = '0x0'
+/**
+ * Hook to calculate cancellation gas fees
+ * Supports both single transaction cancellation and batch UniswapX order cancellation
+ *
+ * @param transaction - The transaction to cancel
+ * @param orders - Optional array of UniswapX orders for batch cancellation
+ * @returns Cancellation gas fee details or undefined
+ */
+export function useCancellationGasFeeInfo(
+  transaction: TransactionDetails,
+  orders?: UniswapXOrderDetails[],
+): CancellationGasFeeDetails | undefined {
+  // Determine cancellation type
+  const cancellationType = useMemo(() => {
+    return getCancellationType(transaction, orders)
+  }, [transaction, orders])
+
+  // Create classic cancel request (always needed for comparison)
+  const classicCancelRequest = useMemo(() => {
+    return createClassicCancelRequest(transaction)
+  }, [transaction])
+
+  // Get UniswapX cancel request (single or batch)
+  const uniswapXCancelRequest = useUniswapXCancelRequest({
+    transaction,
+    orders,
+    cancellationType,
+  })
+
+  // Calculate gas fees based on type
+  const isUniswapXCancellation = cancellationType === CancellationType.UniswapX
+  const cancelRequest = isUniswapXCancellation ? uniswapXCancelRequest : classicCancelRequest
+
+  const gasFee = useTransactionGasFee({
+    tx: cancelRequest,
+    skip: isUniswapXCancellation && !uniswapXCancelRequest,
+  })
+
+  return useMemo(() => {
+    return calculateCancellationGasFee({
+      type: cancellationType,
+      transaction,
+      gasFee,
+      cancelRequest,
+      orders,
+    })
+  }, [cancellationType, transaction, gasFee, cancelRequest, orders])
+}
 
 /**
- * Construct cancellation transaction with increased gas (based on current network conditions),
- * then use it to compute new gas info.
+ * Internal hook to get UniswapX cancellation request
+ * Handles both single transaction and batch order cancellation
  */
-export function useCancellationGasFeeInfo(transaction: TransactionDetails): CancellationGasFeeDetails | undefined {
-  const classicCancelRequest = useMemo(() => {
-    return {
-      chainId: transaction.chainId,
-      from: transaction.from,
-      to: transaction.from,
-      value: CANCELLATION_TX_VALUE,
-    }
-  }, [transaction])
-
-  const isUniswapXTx = isUniswapX(transaction)
-
-  const uniswapXCancelRequest = useUniswapXCancelRequest(transaction)
-  const uniswapXGasFee = useTransactionGasFee({ tx: uniswapXCancelRequest, skip: !isUniswapXTx })
-
-  const baseTxGasFee = useTransactionGasFee({ tx: classicCancelRequest, skip: isUniswapXTx })
-  return useMemo(() => {
-    if (isUniswapXTx) {
-      if (!uniswapXCancelRequest || !uniswapXGasFee.value || !uniswapXGasFee.displayValue) {
-        return undefined
-      }
-      return {
-        cancelRequest: uniswapXCancelRequest,
-        gasFeeDisplayValue: uniswapXGasFee.displayValue,
-      }
-    }
-
-    if (!baseTxGasFee.params || !baseTxGasFee.value || !baseTxGasFee.displayValue) {
-      return undefined
-    }
-
-    let adjustedFeeDetails: FeeDetails | undefined
-    try {
-      adjustedFeeDetails = getAdjustedGasFeeDetails({
-        request: transaction.options.request,
-        currentGasFeeParams: baseTxGasFee.params,
-        adjustmentFactor: TRANSACTION_CANCELLATION_GAS_FACTOR,
-      })
-    } catch (error) {
-      logger.error(error, {
-        tags: { file: 'features/gas/hooks.ts', function: 'getAdjustedGasFeeDetails' },
-        extra: { request: transaction.options.request, currentGasFeeParams: baseTxGasFee.params },
-      })
-      return undefined
-    }
-
-    const cancelRequest = {
-      ...classicCancelRequest,
-      ...adjustedFeeDetails.params,
-      gasLimit: baseTxGasFee.params.gasLimit,
-    }
-
-    const gasFeeDisplayValue = getCancellationGasFeeDisplayValue({
-      adjustedFeeDetails,
-      gasLimit: baseTxGasFee.params.gasLimit,
-      previousValue: baseTxGasFee.value,
-      previousDisplayValue: baseTxGasFee.displayValue,
-    })
-
-    return {
-      cancelRequest,
-      gasFeeDisplayValue,
-    }
-  }, [
-    isUniswapXTx,
-    baseTxGasFee.params,
-    baseTxGasFee.value,
-    baseTxGasFee.displayValue,
-    classicCancelRequest,
-    transaction,
-    uniswapXCancelRequest,
-    uniswapXGasFee.value,
-    uniswapXGasFee.displayValue,
-  ])
-}
-
-function getCancellationGasFeeDisplayValue({
-  adjustedFeeDetails,
-  gasLimit,
-  previousValue,
-  previousDisplayValue,
+function useUniswapXCancelRequest({
+  transaction,
+  orders,
+  cancellationType,
 }: {
-  adjustedFeeDetails: FeeDetails
-  gasLimit: string
-  previousValue: string
-  previousDisplayValue: string
-}): string {
-  // Use the original ratio of displayValue to value to maintain consistency with original gas fees
-  return getCancelationGasFee(adjustedFeeDetails, gasLimit).mul(previousDisplayValue).div(previousValue).toString()
-}
-
-function getCancelationGasFee(adjustedFeeDetails: FeeDetails, gasLimit: string): BigNumber {
-  // doing object destructuring here loses ts checks based on FeeDetails.type >:(
-  if (adjustedFeeDetails.type === FeeType.LEGACY) {
-    return BigNumber.from(gasLimit).mul(adjustedFeeDetails.params.gasPrice)
-  }
-
-  return BigNumber.from(adjustedFeeDetails.params.maxFeePerGas).mul(gasLimit)
-}
-
-function useUniswapXCancelRequest(transaction: TransactionDetails): providers.TransactionRequest | undefined {
+  transaction: TransactionDetails
+  orders: UniswapXOrderDetails[] | undefined
+  cancellationType: CancellationType
+}): providers.TransactionRequest | undefined {
   const cancelRequestFetcher = useCallback(async (): Promise<providers.TransactionRequest | null> => {
-    if (!isUniswapX(transaction)) {
+    if (cancellationType !== CancellationType.UniswapX) {
       return null
     }
-    const cancelRequest: providers.TransactionRequest | null = await getCancelOrderTxRequest(transaction)
+    if (orders && orders.length > 0) {
+      const ordersWithEncodedData = extractCancellationData(orders)
+      if (ordersWithEncodedData.length === 0) {
+        return null
+      }
 
-    return cancelRequest
-  }, [transaction])
+      try {
+        const cancelRequest = await getCancelMultipleUniswapXOrdersTransaction({
+          orders: ordersWithEncodedData.map((order) => ({
+            encodedOrder: order.encodedOrder,
+            routing: order.routing,
+          })),
+          chainId: transaction.chainId,
+          from: transaction.from,
+        })
+        return cancelRequest ?? null
+      } catch {
+        return null
+      }
+    }
+
+    if (isUniswapX(transaction)) {
+      try {
+        const cancelRequest = await getCancelOrderTxRequest(transaction as UniswapXOrderDetails)
+        return cancelRequest
+      } catch {
+        return null
+      }
+    }
+
+    return null
+  }, [cancellationType, orders, transaction])
+
+  const queryKey = useMemo(() => {
+    if (orders && orders.length > 0) {
+      const orderHashes = orders
+        .map((o) => o.orderHash)
+        .filter(Boolean)
+        .sort()
+      return [ReactQueryCacheKey.CancelUniswapXTransactionRequest, 'batch', ...orderHashes]
+    }
+    return [ReactQueryCacheKey.CancelUniswapXTransactionRequest, transaction.id]
+  }, [orders, transaction.id])
 
   const { data: cancelRequest } = useQuery({
-    queryKey: [ReactQueryCacheKey.CancelUniswapXTransactionRequest, transaction.id],
+    queryKey,
     queryFn: cancelRequestFetcher,
+    enabled: cancellationType === CancellationType.UniswapX,
   })
+
   return cancelRequest ?? undefined
 }

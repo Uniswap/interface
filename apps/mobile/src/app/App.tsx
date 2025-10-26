@@ -52,6 +52,7 @@ import { flexStyles, useIsDarkMode } from 'ui/src'
 import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { config } from 'uniswap/src/config'
 import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
+import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { DatadogSessionSampleRateKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
@@ -78,7 +79,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
 import { AnalyticsNavigationContextProvider } from 'utilities/src/telemetry/trace/AnalyticsNavigationContext'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
+// biome-ignore lint/style/noRestrictedImports: Required for Apollo client initialization at app root
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { AccountsStoreContextProvider } from 'wallet/src/features/accounts/store/provider'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
@@ -238,6 +239,12 @@ function AppOuter(): JSX.Element | null {
       })
     }
   }, [])
+
+  useEffect(() => {
+    if (client) {
+      initializePortfolioQueryOverrides({ store, apolloClient: client })
+    }
+  }, [client])
 
   if (!client) {
     return null

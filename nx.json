@@ -4,145 +4,125 @@
   "defaultBase": "main",
   "targetDefaults": {
     "prepare": {
-      "inputs": [
-        "dependencies"
-      ],
+      "inputs": ["default", "dependencies"],
       "cache": true
     },
     "build": {
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "dependencies",
-        "sourceFiles",
-        "tsConfig"
-      ],
-      "outputs": [
-        "{projectRoot}/dist",
-        "{projectRoot}/build",
-        "{projectRoot}/.next",
-        "{projectRoot}/types"
-      ],
+      "dependsOn": ["^prepare", "prepare", "^build"],
+      "inputs": ["dependencies", "sourceFiles", "tsConfig"],
+      "outputs": ["{projectRoot}/dist", "{projectRoot}/build", "{projectRoot}/.next", "{projectRoot}/types"],
       "cache": true
     },
     "build:production": {
-      "dependsOn": [
-        "prepare"
-      ],
-      "inputs": [
-        "dependencies",
-        "default"
-      ],
-      "outputs": [
-        "{projectRoot}/build"
-      ],
+      "dependsOn": ["prepare"],
+      "inputs": ["dependencies", "default"],
+      "outputs": ["{projectRoot}/build"],
       "cache": true
     },
     "typecheck": {
-      "dependsOn": [
-        "prepare",
-        "^typecheck"
-      ],
+      "command": "tsc -b",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["prepare", "^typecheck"],
       "inputs": [
-        "sourceFiles"
+        "{projectRoot}/package.json",
+        "{workspaceRoot}/config/tsconfig/app.json",
+        "{workspaceRoot}/tsconfig.base.json",
+        "{projectRoot}/tsconfig.json",
+        "{projectRoot}/src/**/*.ts",
+        "{projectRoot}/src/**/*.tsx",
+        "{projectRoot}/src/**/*.json",
+        "!{projectRoot}/src/**/*.spec.ts",
+        "!{projectRoot}/src/**/*.spec.tsx",
+        "!{projectRoot}/src/**/*.test.ts",
+        "!{projectRoot}/src/**/*.test.tsx",
+        {
+          "dependentTasksOutputFiles": "**/*.d.ts"
+        }
       ],
       "outputs": [],
       "cache": true
     },
-    "lint": {
+    "lint:biome": {
+      "command": "biome check --error-on-warnings .",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
       "dependsOn": [
-        "typecheck"
-      ],
-      "inputs": [
-        "default"
-      ],
+        "@uniswap/biome-config:prepare"
+      ]
+    },
+    "lint:biome:fix": {
+      "command": "biome check . --write",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": [
+        "@uniswap/biome-config:prepare"
+      ]
+    },
+    "lint:eslint": {
+      "command": "eslint . --ext ts,tsx --max-warnings=0",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint:eslint:fix": {
+      "command": "eslint . --ext ts,tsx --fix",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "lint": {
+      "executor": "nx:noop",
+      "dependsOn": ["typecheck", "check:circular", "lint:eslint", "lint:biome"],
+      "inputs": ["default"],
       "cache": true
     },
     "lint:fix": {
+      "executor": "nx:noop",
       "dependsOn": [
-        "typecheck"
+        "lint:biome:fix",
+        "lint:eslint:fix"
       ],
       "cache": false
     },
     "test": {
-      "dependsOn": [
-        "^prepare"
-      ],
-      "inputs": [
-        "sourceFiles",
-        "^production",
-        "{projectRoot}/**/*.test.*",
-        "{projectRoot}/**/*.spec.*"
-      ],
+      "dependsOn": ["^prepare"],
+      "inputs": ["sourceFiles", "^production", "{projectRoot}/**/*.test.*", "{projectRoot}/**/*.spec.*"],
       "cache": true
     },
     "test:set1": {
-      "dependsOn": [
-        "^prepare"
-      ],
-      "inputs": [
-        "sourceFiles",
-        "^production",
-        "{projectRoot}/**/*.test.*",
-        "{projectRoot}/**/*.spec.*"
-      ],
+      "dependsOn": ["^prepare"],
+      "inputs": ["sourceFiles", "^production", "{projectRoot}/**/*.test.*", "{projectRoot}/**/*.spec.*"],
       "cache": true
     },
     "test:set2": {
-      "dependsOn": [
-        "^prepare"
-      ],
-      "inputs": [
-        "sourceFiles",
-        "^production",
-        "{projectRoot}/**/*.test.*",
-        "{projectRoot}/**/*.spec.*"
-      ],
+      "dependsOn": ["^prepare"],
+      "inputs": ["sourceFiles", "^production", "{projectRoot}/**/*.test.*", "{projectRoot}/**/*.spec.*"],
       "cache": true
     },
     "test:set3": {
-      "dependsOn": [
-        "^prepare"
-      ],
-      "inputs": [
-        "sourceFiles",
-        "^production",
-        "{projectRoot}/**/*.test.*",
-        "{projectRoot}/**/*.spec.*"
-      ],
+      "dependsOn": ["^prepare"],
+      "inputs": ["sourceFiles", "^production", "{projectRoot}/**/*.test.*", "{projectRoot}/**/*.spec.*"],
       "cache": true
     },
     "test:set4": {
-      "dependsOn": [
-        "^prepare"
-      ],
-      "inputs": [
-        "sourceFiles",
-        "^production",
-        "{projectRoot}/**/*.test.*",
-        "{projectRoot}/**/*.spec.*"
-      ],
+      "dependsOn": ["^prepare"],
+      "inputs": ["sourceFiles", "^production", "{projectRoot}/**/*.test.*", "{projectRoot}/**/*.spec.*"],
       "cache": true
     },
     "format": {
       "cache": true,
-      "inputs": [
-        "default"
-      ]
+      "inputs": ["default"]
     },
     "start": {
-      "dependsOn": [
-        "prepare"
-      ],
+      "dependsOn": ["^prepare", "prepare"],
       "cache": false
     },
     "snapshots": {
-      "dependsOn": [
-        "prepare",
-        "typecheck",
-        "lint"
-      ],
+      "dependsOn": ["prepare", "typecheck", "lint"],
       "cache": true
     },
     "check:circular": {
@@ -152,25 +132,16 @@
       "cache": true
     },
     "storybook:test:standalone": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "cache": false
     },
     "storybook:build": {
-      "dependsOn": [
-        "^build"
-      ],
+      "dependsOn": ["^build"],
       "cache": false
     },
     "graphql:schema": {
-      "inputs": [
-        "{workspaceRoot}/.env.production",
-        "{projectRoot}/graphql.*.ts"
-      ],
-      "outputs": [
-        "{projectRoot}/schema.graphql"
-      ],
+      "inputs": ["{workspaceRoot}/.env.production", "{projectRoot}/graphql.*.ts"],
+      "outputs": ["{projectRoot}/schema.graphql"],
       "cache": true
     },
     "graphql:generate": {
@@ -193,24 +164,24 @@
       "cache": true
     },
     "vite:build:production": {
+      "dependsOn": ["prepare"],
+      "inputs": ["dependencies", "sourceFiles"],
+      "outputs": ["{projectRoot}/dist"],
+      "cache": true
+    },
+    "@nx/js:tsc": {
+      "cache": true,
       "dependsOn": [
-        "prepare"
+        "^build"
       ],
       "inputs": [
-        "dependencies",
-        "sourceFiles"
-      ],
-      "outputs": [
-        "{projectRoot}/dist"
-      ],
-      "cache": true
+        "production",
+        "^production"
+      ]
     }
   },
   "namedInputs": {
-    "default": [
-      "sharedGlobals",
-      "{projectRoot}/**/*"
-    ],
+    "default": ["sharedGlobals", "{projectRoot}/**/*"],
     "production": [
       "default",
       "!{projectRoot}/**/*.spec.tsx",
@@ -244,18 +215,15 @@
       "{projectRoot}/**/*.js",
       "{projectRoot}/**/*.jsx"
     ],
-    "dependencies": [
-      "{workspaceRoot}/bun.lock",
-      "{workspaceRoot}/package.json",
-      "{projectRoot}/package.json"
-    ],
-    "tsConfig": [
-      "{projectRoot}/tsconfig*.json"
-    ]
+    "dependencies": ["{workspaceRoot}/bun.lock", "{workspaceRoot}/package.json", "{projectRoot}/package.json"],
+    "tsConfig": ["{projectRoot}/tsconfig*.json"]
   },
   "workspaceLayout": {
     "appsDir": "apps",
     "libsDir": "packages"
+  },
+  "sync": {
+    "applyChanges": true
   },
   "parallel": 3,
   "defaultProject": "@universe/web",

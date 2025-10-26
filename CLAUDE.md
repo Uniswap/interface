@@ -52,10 +52,10 @@ bun mobile e2e                  # Mobile E2E tests
 ### Code Quality
 
 ```bash
-bun g:lint:fix                  # Fix linting issues
+bun g:lint:fix                  # Fix linting issues for both eslint and biome, slow
 bun g:typecheck                 # Type check all packages
-bun g:format:fix                # Fix formatting
-bun g:fix                       # Run both lint and format fix
+bun g:format                    # Fix formatting using Biome, quick
+bun i18n:extract                # Extract localized strings (run after changing translations)
 ```
 
 ## Architecture Overview
@@ -114,6 +114,7 @@ bun g:fix                       # Run both lint and format fix
 - Always update existing unit tests related to changes made
 - Run tests before considering a task to be 'complete'
 - Also run linting and typecheck before considering a task to be 'complete'
+- Run `bun i18n:extract` after making changes to localized strings (e.g., using translation hooks like `useTranslation`)
 
 ## Critical Development Notes
 
@@ -142,3 +143,19 @@ Core shared packages:
 ## Other Considerations
 
 Be cognizant of the app or package within which a given change is being made. Be sure to reference that app or package's respective `CLAUDE.md` file and other local configuration files, including (but not limited to): `package.json`, `tsconfig.json`, etc.
+
+
+<!-- nx configuration start-->
+<!-- Leave the start & end comments to automatically receive updates. -->
+
+# General Guidelines for working with Nx
+
+- When running tasks (for example build, lint, test, e2e, etc.), always prefer running the task through `nx` (i.e. `nx run`, `nx run-many`, `nx affected`) instead of using the underlying tooling directly
+- You have access to the Nx MCP server and its tools, use them to help the user
+- When answering questions about the repository, use the `nx_workspace` tool first to gain an understanding of the workspace architecture where applicable.
+- When working in individual projects, use the `nx_project_details` mcp tool to analyze and understand the specific project structure and dependencies
+- For questions around nx configuration, best practices or if you're unsure, use the `nx_docs` tool to get relevant, up-to-date docs. Always use this instead of assuming things about nx configuration
+- If the user needs help with an Nx configuration or project graph error, use the `nx_workspace` tool to get any errors
+
+
+<!-- nx configuration end-->

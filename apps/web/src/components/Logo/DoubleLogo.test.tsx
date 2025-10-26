@@ -1,10 +1,10 @@
 import { Token } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
 import { Flex } from 'ui/src'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils/getCurrencySafetyInfo'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -46,7 +46,7 @@ describe('DoubleLogo', () => {
           logoUrl:
             'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png',
           currencyId: UNI[UniverseChainId.Mainnet].address,
-          safetyInfo: getCurrencySafetyInfo(SafetyLevel.Verified, undefined),
+          safetyInfo: getCurrencySafetyInfo(GraphQLApi.SafetyLevel.Verified, undefined),
         }
       }
 
@@ -56,7 +56,7 @@ describe('DoubleLogo', () => {
           logoUrl:
             'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260fac5e5542a773aa44fbcfeDf7c193bc2c599/logo.png',
           currencyId: WBTC.address,
-          safetyInfo: getCurrencySafetyInfo(SafetyLevel.Verified, undefined),
+          safetyInfo: getCurrencySafetyInfo(GraphQLApi.SafetyLevel.Verified, undefined),
         }
       }
 

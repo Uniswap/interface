@@ -14,7 +14,8 @@ import { OnboardingMessageType } from 'src/background/messagePassing/types/Exten
 import { ExtensionAppLocation, StoreSynchronization } from 'src/store/storeSynchronization'
 import { initializeScrollWatcher } from 'uniswap/src/components/modals/ScrollLock'
 import { logger } from 'utilities/src/logger/logger'
-;(globalThis as any).regeneratorRuntime = undefined // eslint-disable-line @typescript-eslint/no-explicit-any
+// biome-ignore lint/suspicious/noExplicitAny: Global polyfill cleanup requires any type for runtime modification
+;(globalThis as any).regeneratorRuntime = undefined
 
 export function makeSidebar(): void {
   function initSidebar(): void {
@@ -31,7 +32,7 @@ export function makeSidebar(): void {
         })
       })
 
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    // biome-ignore lint/style/noNonNullAssertion: DOM root element guaranteed to exist in extension context
     const container = window.document.querySelector('#root')!
     const root = createRoot(container)
 

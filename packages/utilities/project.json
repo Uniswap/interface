@@ -1,0 +1,39 @@
+{
+  "targets": {
+    "build": {
+      "command": "tsc -b",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["^build", "prepare"]
+    },
+    "check:deps:usage": {
+      "command": "depcheck",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["check-promise-version"]
+    },
+    "check-promise-version": {
+      "command": "../../scripts/check-promise-version.sh",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": ["{workspaceRoot}/scripts/check-promise-version.sh", "dependencies"]
+    },
+    "typecheck": {},
+    "lint:biome": {},
+    "lint:biome:fix": {},
+    "lint:eslint": {},
+    "lint:eslint:fix": {},
+    "lint": {},
+    "lint:fix": {},
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

@@ -7,11 +7,11 @@ import { PageWrapper } from 'components/swap/styled'
 import { useAccount } from 'hooks/useAccount'
 import { useDeferredComponent } from 'hooks/useDeferredComponent'
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import { useMissingPlatformWalletPopup } from 'hooks/useMissingPlatformWalletPopup'
 import { useModalState } from 'hooks/useModalState'
 import { useResetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
 import { useWebSwapSettings } from 'pages/Swap/settings/useWebSwapSettings'
-import { useCallback, useEffect, useMemo } from 'react'
+import { TDPContext } from 'pages/TokenDetails/TDPContext'
+import { useCallback, useContext, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router'
@@ -134,7 +134,7 @@ export function Swap({
   usePersistedFilteredChainIds?: boolean
   passkeyAuthStatus?: PasskeyAuthStatus
 }) {
-  useMissingPlatformWalletPopup()
+  const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
 
   const isExplorePage = useIsPage(PageType.EXPLORE)
   const isModeMismatch = useIsModeMismatch(chainId)
@@ -143,7 +143,6 @@ export function Swap({
   const input = currencyToAsset(initialInputCurrency)
   const output = currencyToAsset(initialOutputCurrency)
 
-  const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
   const persistedFilteredChainIds = useSelector(selectFilteredChainIds)
 
   const prefilledState = useSwapPrefilledState({
@@ -227,6 +226,10 @@ function UniversalSwapFlow({
   tokenColor?: string
 }) {
   const { currentTab, setCurrentTab } = useSwapAndLimitContext()
+
+  // Get TDP currency if available (will be null if not in TDP context)
+  const tdpCurrency = currencyToAsset(useContext(TDPContext)?.currency)
+
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { t } = useTranslation()
@@ -258,7 +261,7 @@ function UniversalSwapFlow({
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       setCurrentTab(PATHNAME_TO_TAB[pathname] ?? SwapTab.Swap)
     }
-  }, [pathname, setCurrentTab, openSendFormModal])
+  }, [pathname, openSendFormModal, setCurrentTab])
 
   const onTabClick = useCallback(
     (tab: SwapTab) => {
@@ -339,14 +342,14 @@ function UniversalSwapFlow({
         <BuyForm
           rampDirection={RampDirection.ONRAMP}
           disabled={disableTokenInputs}
-          initialCurrency={prefilledState?.output}
+          initialCurrency={tdpCurrency ?? prefilledState?.output}
         />
       )}
       {currentTab === SwapTab.Sell && BuyForm && (
         <BuyForm
           rampDirection={RampDirection.OFFRAMP}
           disabled={disableTokenInputs}
-          initialCurrency={prefilledState?.output}
+          initialCurrency={tdpCurrency ?? prefilledState?.output}
         />
       )}
     </Flex>

@@ -49,6 +49,7 @@ export function useAdaptiveFooter(contentContainerStyle?: StyleProp<ViewStyle>):
     [footerHeight, contentContainerStyle, maxContentHeight],
   )
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we want to recalculate this when activeAccount changes
   useEffect(() => {
     // Reset footer height to the initial value when the active account changes
     // (the fullHeight value is used for the same reason as the initial value)

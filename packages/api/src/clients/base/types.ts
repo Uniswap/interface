@@ -5,7 +5,14 @@ export type CustomOptions = StandardFetchOptions & {
   on404?: () => void
 }
 
+export interface FetchClientContext {
+  baseUrl: string
+  headers?: HeadersInit
+  getSessionServiceBaseUrl: () => string
+}
+
 export interface FetchClient {
+  readonly context: () => FetchClientContext
   readonly fetch: <T = Response>(path: string, options: StandardFetchOptions) => Promise<T>
   readonly get: <T>(path: string, options?: CustomOptions) => Promise<T>
   readonly post: <T>(path: string, options: CustomOptions) => Promise<T>

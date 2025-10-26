@@ -1,5 +1,5 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable no-console */
+/** biome-ignore-all lint/suspicious/noConsole: misc script, so it's okay */
+/** biome-ignore-all lint/suspicious/noExplicitAny: misc script, so it's okay */
 
 import path, { join } from 'node:path'
 import camelcase from 'camelcase'
@@ -46,7 +46,7 @@ async function createSVGComponents(dirs: DirectoryPair, skipExisting: boolean): 
   ensureDirSync(dirs.output)
 
   let indexFile = ``
-  const fileNames = readdirSync(dirs.input).filter((name) => name.endsWith('.svg'))
+  const fileNames = readdirSync(dirs.input).filter((name: string) => name.endsWith('.svg'))
 
   for (const fileName of fileNames) {
     const className = generateClassName(fileName)
@@ -87,7 +87,7 @@ function generateSVGComponentString(svg: string, fileName: string): string {
   // Because CSS does not exist on Native platforms
   // We need to duplicate the styles applied to the
   // SVG to its children
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  // biome-ignore lint/style/noNonNullAssertion: SVG element is guaranteed to exist after cheerio parsing
   const svgAttribs = $('svg')[0]!.attribs
   delete svgAttribs.xmlns
   const attribsOfInterest: Record<string, any> = {}
@@ -200,7 +200,7 @@ getIcon: (props) => (
 ${defaultFill ? `defaultFill: '${defaultFill}'` : ''}
 })
 `
-    .replace(/fill="(#[a-z0-9]+)"/gi, `fill={"currentColor" ?? '$1'}`)
+    .replace(/fill="(#[a-z0-9]+)"/gi, `fill="currentColor"`)
     .replaceAll(`xmlns:xlink="http://www.w3.org/1999/xlink"`, '')
     .replaceAll(`xlink:href`, 'xlinkHref')
 }

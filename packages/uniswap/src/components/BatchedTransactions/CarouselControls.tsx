@@ -1,7 +1,7 @@
 import { Flex, LinearGradient, TouchableArea, useSporeColors } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes, opacify, spacing, zIndexes } from 'ui/src/theme'
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 
 export const ScrollArrow = ({ onPress, side }: { onPress: () => void; side: 'left' | 'right' }): JSX.Element => {
   const colors = useSporeColors()
@@ -46,7 +46,7 @@ export const GradientOverlay = ({
     return null
   }
 
-  if (isExtension) {
+  if (isExtensionApp) {
     // For extension, use CSS gradient
     return (
       <Flex

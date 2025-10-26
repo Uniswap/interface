@@ -8,13 +8,6 @@ enum BotDetectionType {
 }
 
 /**
- * Request to initialize a session
- */
-interface InitSessionRequest {
-  deviceId: string
-}
-
-/**
  * Response from session initialization
  */
 interface InitSessionResponse {
@@ -36,10 +29,9 @@ interface InitSessionResponse {
  * Request for a bot detection challenge
  * Empty - session identified via cookie or header
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface ChallengeRequest {
-  // Empty per proto
-}
+
+// biome-ignore lint/complexity/noBannedTypes: Empty per proto
+type ChallengeRequest = {}
 
 /**
  * Bot detection challenge response
@@ -81,18 +73,16 @@ interface UpgradeSessionResponse {
  * Request to delete a session
  * Empty - session identified via cookie or header
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface DeleteSessionRequest {
-  // Empty per proto
-}
+
+// biome-ignore lint/complexity/noBannedTypes: Empty per proto
+type DeleteSessionRequest = {}
 
 /**
  * Response from session deletion
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-interface DeleteSessionResponse {
-  // Empty per proto
-}
+
+// biome-ignore lint/complexity/noBannedTypes: Empty per proto
+type DeleteSessionResponse = {}
 
 /**
  * Introspect request - Entry Gateway only
@@ -134,7 +124,7 @@ interface SessionRepository {
    * so then it implicitly returns a session ID via the Set-Cookie header
    *
    */
-  initSession(request: InitSessionRequest): Promise<InitSessionResponse>
+  initSession(): Promise<InitSessionResponse>
 
   /**
    * Request a bot detection challenge

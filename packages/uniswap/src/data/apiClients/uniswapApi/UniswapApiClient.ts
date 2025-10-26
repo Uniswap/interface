@@ -11,14 +11,14 @@ import type {
   TransactionLegacyFeeParams,
 } from 'uniswap/src/features/gas/types'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 const UniswapFetchClient = createUniswapFetchClient({
   baseUrl: uniswapUrls.apiBaseUrl,
   additionalHeaders: {
     'x-api-key': config.uniswapApiKey,
   },
-  includeBaseUniswapHeaders: !isInterface,
+  includeBaseUniswapHeaders: !isWebApp,
 })
 
 type FetchGasFn = ({
@@ -77,7 +77,7 @@ export function createFetchGasFee({
         value: gasUseEstimate.toString(),
         displayValue: gasUseEstimate.toString(),
       }
-    } catch (e) {
+    } catch (_e) {
       // provider.estimateGas will error if the account doesn't have sufficient ETH balance, but we should show an estimated cost anyway
       return {
         value: fallbackGasLimit?.toString(),
@@ -101,7 +101,7 @@ export function createFetchGasFee({
       })
       return processGasFeeResponse(gasFeeResponse)
     } catch (error) {
-      if (isInterface) {
+      if (isWebApp) {
         // Gas Fee API currently errors on gas estimations on disconnected state & insufficient funds
         // Fallback to clientside estimate using provider.estimateGas
         return tryClientSideFallback({ tx, fallbackGasLimit })

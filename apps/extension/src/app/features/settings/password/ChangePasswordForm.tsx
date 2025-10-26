@@ -1,18 +1,14 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { PADDING_STRENGTH_INDICATOR, PasswordInput } from 'src/app/components/PasswordInput'
 import { Button, Flex, Text } from 'ui/src'
-import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
-import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { usePasswordForm } from 'wallet/src/utils/password'
 
-export function ChangePasswordForm({ onNext }: { onNext: () => void }): JSX.Element {
+export function ChangePasswordForm({ onNext }: { onNext: (password: string) => void }): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
 
   const {
     enableNext,
@@ -30,16 +26,16 @@ export function ChangePasswordForm({ onNext }: { onNext: () => void }): JSX.Elem
 
   const onSubmit = useCallback(async () => {
     if (checkSubmit()) {
+      // Just change the password and pass it to the parent
       await Keyring.changePassword(password)
-      onNext()
-      dispatch(pushNotification({ type: AppNotificationType.PasswordChanged }))
       sendAnalyticsEvent(ExtensionEventName.PasswordChanged)
+      onNext(password)
     }
-  }, [checkSubmit, password, onNext, dispatch])
+  }, [checkSubmit, password, onNext])
 
   return (
-    <Flex grow pt="$spacing24">
-      <Flex grow alignItems="center" gap="$spacing16" px="$spacing12">
+    <Flex grow width="100%">
+      <Flex grow alignItems="center" gap="$spacing16" pb="$spacing12">
         <PasswordInput
           autoFocus
           large
@@ -63,13 +59,19 @@ export function ChangePasswordForm({ onNext }: { onNext: () => void }): JSX.Elem
           onSubmitEditing={onSubmit}
           onToggleHideInput={setHideInput}
         />
-        <Text color="$statusCritical" opacity={errorText ? 1 : 0} textAlign="center" variant="body2">
-          {errorText || 'Placeholder text'}
+        <Text
+          color="$statusCritical"
+          opacity={errorText ? 1 : 0}
+          textAlign="center"
+          variant="body3"
+          minHeight="$spacing20"
+        >
+          {errorText}
         </Text>
       </Flex>
-      <Flex row>
-        <Button isDisabled={!enableNext} emphasis="secondary" onPress={onSubmit}>
-          {t('common.button.save')}
+      <Flex row width="100%">
+        <Button size="medium" isDisabled={!enableNext} emphasis="primary" onPress={onSubmit}>
+          {t('common.button.continue')}
         </Button>
       </Flex>
     </Flex>

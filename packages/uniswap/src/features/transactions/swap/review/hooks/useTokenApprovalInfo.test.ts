@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks'
+import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeType, GasEstimate, TradingApi } from '@universe/api'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'

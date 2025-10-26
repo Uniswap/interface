@@ -1,10 +1,9 @@
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/constants'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
 import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
 import { useModalState } from 'hooks/useModalState'
 import { useSignInWithPasskey } from 'hooks/useSignInWithPasskey'
-import { useAtom } from 'jotai'
 import Swap from 'pages/Swap'
 import { useEffect, useMemo, useRef } from 'react'
 import { useDispatch } from 'react-redux'
@@ -102,7 +101,7 @@ export default function PasskeyManagement() {
   const disconnect = useDisconnect()
   const accountDrawer = useAccountDrawer()
   const dispatch = useDispatch()
-  const [, setMenu] = useAtom(miniPortfolioMenuStateAtom)
+  const setMenu = useSetMenu()
   const accountDrawerHasBeenOpenedRef = useRef<boolean>(accountDrawer.isOpen)
   const passkeyConnectionAttemptedRef = useRef<boolean>(false)
   const navigate = useNavigate()
@@ -110,7 +109,7 @@ export default function PasskeyManagement() {
 
   const navigateToPasskeyManagement = useEvent(() => {
     setTimeout(() => {
-      setMenu(MenuState.PASSKEYS)
+      setMenu({ variant: MenuStateVariant.PASSKEYS })
       accountDrawer.open()
       accountDrawerHasBeenOpenedRef.current = true
     }, 125)

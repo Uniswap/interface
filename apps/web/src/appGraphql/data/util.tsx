@@ -1,23 +1,13 @@
 import { DeepPartial } from '@apollo/client/utilities'
 import { DataTag, DefaultError, QueryKey, queryOptions, UndefinedInitialDataOptions } from '@tanstack/react-query'
-import { Currency, Token } from '@uniswap/sdk-core'
+import { Currency } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import ms from 'ms'
 import { ExploreTab } from 'pages/Explore/constants'
 import { TokenStat } from 'state/explore/types'
 import { ColorTokens } from 'ui/src'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import {
-  ActivityWebQuery,
-  Chain,
-  ContractInput,
-  Token as GqlToken,
-  HistoryDuration,
-  PriceSource,
-  SwapOrderStatus,
-  SwapOrderType,
-  TokenStandard,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   fromGraphQLChain,
@@ -29,6 +19,7 @@ import {
 import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { getChainIdFromBackendChain, getChainIdFromChainUrlParam } from 'utils/chainParams'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
@@ -48,30 +39,30 @@ export enum TimePeriod {
 }
 
 // eslint-disable-next-line consistent-return
-export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
+export function toHistoryDuration(timePeriod: TimePeriod): GraphQLApi.HistoryDuration {
   switch (timePeriod) {
     case TimePeriod.HOUR:
-      return HistoryDuration.Hour
+      return GraphQLApi.HistoryDuration.Hour
     case TimePeriod.DAY:
-      return HistoryDuration.Day
+      return GraphQLApi.HistoryDuration.Day
     case TimePeriod.WEEK:
-      return HistoryDuration.Week
+      return GraphQLApi.HistoryDuration.Week
     case TimePeriod.MONTH:
-      return HistoryDuration.Month
+      return GraphQLApi.HistoryDuration.Month
     case TimePeriod.YEAR:
-      return HistoryDuration.Year
+      return GraphQLApi.HistoryDuration.Year
   }
 }
 
 export type PricePoint = { timestamp: number; value: number }
 
-export function toContractInput(currency: Currency, fallback: UniverseChainId): ContractInput {
+export function toContractInput(currency: Currency, fallback: UniverseChainId): GraphQLApi.ContractInput {
   const supportedChainId = toSupportedChainId(currency.chainId)
   const chain = toGraphQLChain(supportedChainId ?? fallback)
   return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
 }
 
-export function gqlToCurrency(token: DeepPartial<GqlToken | TokenStat>): Currency | undefined {
+export function gqlToCurrency(token: DeepPartial<GraphQLApi.Token | TokenStat>): Currency | undefined {
   if (!token.chain) {
     return undefined
   }
@@ -80,7 +71,7 @@ export function gqlToCurrency(token: DeepPartial<GqlToken | TokenStat>): Currenc
   if (!chainId) {
     return undefined
   }
-  if (token.standard === TokenStandard.Native || token.address === NATIVE_CHAIN_ID || !token.address) {
+  if (token.standard === GraphQLApi.TokenStandard.Native || token.address === NATIVE_CHAIN_ID || !token.address) {
     return nativeOnChain(chainId)
   } else {
     return buildCurrency({
@@ -106,13 +97,19 @@ export function fiatOnRampToCurrency(forCurrency: FORSupportedToken): Currency |
     return nativeOnChain(supportedChainId)
   } else {
     // The Meld code may not match the currency's symbol (e.g. codes like USDC_BASE), so these should not be used for display.
-    return new Token(supportedChainId, forCurrency.address, 18, forCurrency.cryptoCurrencyCode, forCurrency.displayName)
+    return buildCurrency({
+      chainId: supportedChainId,
+      address: forCurrency.address,
+      decimals: 18,
+      symbol: forCurrency.cryptoCurrencyCode,
+      name: forCurrency.displayName,
+    })
   }
 }
 
 export function supportedChainIdFromGQLChain(chain: GqlChainId): UniverseChainId
-export function supportedChainIdFromGQLChain(chain: Chain): UniverseChainId | undefined
-export function supportedChainIdFromGQLChain(chain: Chain): UniverseChainId | undefined {
+export function supportedChainIdFromGQLChain(chain: GraphQLApi.Chain): UniverseChainId | undefined
+export function supportedChainIdFromGQLChain(chain: GraphQLApi.Chain): UniverseChainId | undefined {
   return isBackendSupportedChain(chain) ? (fromGraphQLChain(chain) ?? undefined) : undefined
 }
 
@@ -128,12 +125,12 @@ export function getTokenDetailsURL({
   outputAddress,
 }: {
   address?: string | null
-  chain?: Chain
+  chain?: GraphQLApi.Chain
   chainUrlParam?: string
   inputAddress?: string | null
   outputAddress?: string | null
 }) {
-  const chainName = chainUrlParam || chain?.toLowerCase() || Chain.Ethereum.toLowerCase()
+  const chainName = chainUrlParam || chain?.toLowerCase() || GraphQLApi.Chain.Ethereum.toLowerCase()
   const tokenAddress = address ?? NATIVE_CHAIN_ID
   const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
   const outputAddressSuffix = outputAddress ? `&outputCurrency=${outputAddress}` : ''
@@ -152,9 +149,12 @@ export function unwrapToken<
     return token
   }
 
-  const address = token.address.toLowerCase()
-  const nativeAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
-  if (address !== nativeAddress) {
+  if (
+    !areAddressesEqual({
+      addressInput1: { address: token.address, chainId },
+      addressInput2: { address: WRAPPED_NATIVE_CURRENCY[chainId]?.address, chainId },
+    })
+  ) {
     return token
   }
 
@@ -173,30 +173,30 @@ export function unwrapToken<
 }
 
 type ProtocolMeta = { name: string; color: ColorTokens; gradient: { start: string; end: string } }
-const PROTOCOL_META: { [source in PriceSource]: ProtocolMeta } = {
-  [PriceSource.SubgraphV2]: {
+const PROTOCOL_META: { [source in GraphQLApi.PriceSource]: ProtocolMeta } = {
+  [GraphQLApi.PriceSource.SubgraphV2]: {
     name: 'v2',
     color: '$DEP_blue400',
     gradient: { start: 'rgba(96, 123, 238, 0.20)', end: 'rgba(55, 70, 136, 0.00)' },
   },
-  [PriceSource.SubgraphV3]: {
+  [GraphQLApi.PriceSource.SubgraphV3]: {
     name: 'v3',
     color: '$accent1',
     gradient: { start: 'rgba(252, 116, 254, 0.20)', end: 'rgba(252, 116, 254, 0.00)' },
   },
-  [PriceSource.SubgraphV4]: {
+  [GraphQLApi.PriceSource.SubgraphV4]: {
     name: 'v4',
     color: '$chain_137',
     gradient: { start: 'rgba(96, 123, 238, 0.20)', end: 'rgba(55, 70, 136, 0.00)' },
   },
-  /* [PriceSource.UniswapX]: { name: 'UniswapX', color: purple } */
+  /* [GraphQLApi.PriceSource.UniswapX]: { name: 'UniswapX', color: purple } */
 }
 
-export function getProtocolColor(priceSource: PriceSource): ColorTokens {
+export function getProtocolColor(priceSource: GraphQLApi.PriceSource): ColorTokens {
   return PROTOCOL_META[priceSource].color
 }
 
-export function getProtocolName(priceSource: PriceSource): string {
+export function getProtocolName(priceSource: GraphQLApi.PriceSource): string {
   return PROTOCOL_META[priceSource].name
 }
 
@@ -227,18 +227,4 @@ export function apolloQueryOptions<
     ...options,
     staleTime: 0,
   })
-}
-
-// Type for a single asset activity item - using the inline type from the GraphQL query result
-export type AssetActivityItem = NonNullable<
-  NonNullable<NonNullable<ActivityWebQuery['portfolios']>[number]>['assetActivities']
->[number]
-
-export function isOpenLimitOrder(activity: AssetActivityItem | undefined): boolean {
-  return (
-    activity !== undefined &&
-    activity.details.__typename === 'SwapOrderDetails' &&
-    activity.details.swapOrderType === SwapOrderType.Limit &&
-    activity.details.orderStatus === SwapOrderStatus.Open
-  )
 }

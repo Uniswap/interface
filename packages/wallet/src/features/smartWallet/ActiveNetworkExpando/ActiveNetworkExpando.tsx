@@ -100,7 +100,7 @@ function ActiveNetworkRow({ chainId, delegationAddress }: ActiveDelegation): JSX
           }}
         >
           <Text variant={TEXT_VARIANT} color="$neutral2">
-            {shortenAddress(delegationAddress)}
+            {shortenAddress({ address: delegationAddress })}
           </Text>
           <ExternalLink color="$neutral3" size="$icon.16" />
         </TouchableArea>

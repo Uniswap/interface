@@ -6,9 +6,6 @@ ignores: [
     'jest-presets',
     ## Internal packages / workspaces
     'ui',
-    'utilities',
-    'tsconfig',
-    'utilities',
     # used in package.json
     'esbuild-register',
   ]

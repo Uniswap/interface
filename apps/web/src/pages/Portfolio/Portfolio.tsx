@@ -1,11 +1,13 @@
-import PortfolioActivity from 'pages/Portfolio/Activity'
+import { useAccount } from 'hooks/useAccount'
+import PortfolioActivity from 'pages/Portfolio/Activity/Activity'
+import PortfolioConnectWalletView from 'pages/Portfolio/ConnectWalletView'
 import PortfolioDefi from 'pages/Portfolio/Defi'
 import PortfolioHeader from 'pages/Portfolio/Header/Header'
 import { usePortfolioParams } from 'pages/Portfolio/Header/hooks/usePortfolioParams'
 import { usePortfolioTabsAnimation } from 'pages/Portfolio/Header/hooks/usePortfolioTabsAnimation'
 import PortfolioNfts from 'pages/Portfolio/Nfts'
 import PortfolioOverview from 'pages/Portfolio/Overview'
-import PortfolioTokens from 'pages/Portfolio/Tokens'
+import PortfolioTokens from 'pages/Portfolio/Tokens/Tokens'
 import { PortfolioTab } from 'pages/Portfolio/types'
 import { useLocation } from 'react-router'
 import { Flex } from 'ui/src'
@@ -33,8 +35,8 @@ const renderPortfolioContent = (tab: PortfolioTab | undefined) => {
 // eslint-disable-next-line import/no-unused-modules -- used in RouteDefinitions.tsx via lazy import
 export default function Portfolio() {
   const { pathname } = useLocation()
+  const account = useAccount()
   const animationType = usePortfolioTabsAnimation(pathname)
-
   const { tab } = usePortfolioParams()
 
   return (
@@ -48,14 +50,20 @@ export default function Portfolio() {
         pt="$none"
         position="relative"
       >
-        <PortfolioHeader />
+        {account.address ? (
+          <>
+            <PortfolioHeader />
 
-        {/* Animated Content Area - All routes show same content, filtered by chain */}
-        <Flex flex={1} position="relative">
-          <TransitionItem childKey={pathname} animationType={animationType} animation="fast">
-            {renderPortfolioContent(tab)}
-          </TransitionItem>
-        </Flex>
+            {/* Animated Content Area - All routes show same content, filtered by chain */}
+            <Flex flex={1} position="relative">
+              <TransitionItem childKey={pathname} animationType={animationType} animation="fast">
+                {renderPortfolioContent(tab)}
+              </TransitionItem>
+            </Flex>
+          </>
+        ) : (
+          <PortfolioConnectWalletView />
+        )}
       </Flex>
     </Trace>
   )

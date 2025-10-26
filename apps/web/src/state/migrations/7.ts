@@ -14,7 +14,7 @@ export const migration7 = (state: PersistAppStateV7 | undefined) => {
   }
   const userHidAndroidAnnouncementBanner = state.user?.hideAndroidAnnouncementBanner
   if (state.user && 'hideAndroidAnnouncementBanner' in state.user) {
-    delete state.user['hideAndroidAnnouncementBanner']
+    delete state.user.hideAndroidAnnouncementBanner
   }
   // If the the user has previously hidden the Android announcement banner, we respect that preference.
   if (state.user && userHidAndroidAnnouncementBanner) {

@@ -7,40 +7,31 @@ import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { Loader } from 'ui/src/loading/Loader'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
-const Tokens = lazy(() => import('components/AccountDrawer/MiniPortfolio/Tokens/TokensTab'))
-const SharedTokens = lazy(() => import('components/AccountDrawer/MiniPortfolio/Tokens/TokensTabShared'))
-const NFTs = lazy(() => import('components/AccountDrawer/MiniPortfolio/NFTs/NFTTab'))
-const SharedNFTs = lazy(() => import('components/AccountDrawer/MiniPortfolio/NFTs/NftTabShared'))
-const Pools = lazy(() => import('components/AccountDrawer/MiniPortfolio/Pools/PoolsTab'))
-const ActivityTab = lazy(() =>
-  import('components/AccountDrawer/MiniPortfolio/Activity/ActivityTab').then((module) => ({
-    default: module.ActivityTab,
-  })),
-)
-const ActivityTabShared = lazy(() => import('components/AccountDrawer/MiniPortfolio/Activity/ActivityTabShared'))
+const TokensTab = lazy(() => import('components/AccountDrawer/MiniPortfolio/Tokens/TokensTab'))
+const NFTsTab = lazy(() => import('components/AccountDrawer/MiniPortfolio/NFTs/NFTsTab'))
+const PoolsTab = lazy(() => import('components/AccountDrawer/MiniPortfolio/Pools/PoolsTab'))
+const ActivityTab = lazy(() => import('components/AccountDrawer/MiniPortfolio/Activity/ActivityTab'))
 
 const lastPageAtom = atom(0)
 
 interface Page {
   title: string
   key: string
-  component: ({ account }: { account: string }) => JSX.Element
+  component: ({ evmAddress, svmAddress }: { evmAddress?: string; svmAddress?: string }) => JSX.Element
   loggingElementName: ElementName
 }
 
-export default function MiniPortfolio({ account }: { account: string }) {
+export default function MiniPortfolio({ evmAddress, svmAddress }: { evmAddress?: string; svmAddress?: string }) {
   const { t } = useTranslation()
   const theme = useTheme()
-  const sharedPortfolioUIEnabled = useFeatureFlag(FeatureFlags.SharedPortfolioUI)
 
   // Resumes at the last viewed page
   const [lastPage, setLastPage] = useAtom(lastPageAtom)
   const [currentPage, setCurrentPage] = useState(lastPage)
+  // biome-ignore lint/complexity/noVoid: Using void to explicitly discard the return value
   useEffect(() => void setLastPage(currentPage), [currentPage, setLastPage])
 
   const pages: Page[] = useMemo(
@@ -48,9 +39,9 @@ export default function MiniPortfolio({ account }: { account: string }) {
       {
         title: t('common.tokens'),
         key: 'tokens',
-        component: ({ account }: { account: string }) => (
+        component: ({ evmAddress, svmAddress }: { evmAddress?: string; svmAddress?: string }) => (
           <Suspense fallback={<Loader.Box />}>
-            {sharedPortfolioUIEnabled ? <SharedTokens owner={account} /> : <Tokens />}
+            <TokensTab evmOwner={evmAddress} svmOwner={svmAddress} />
           </Suspense>
         ),
         loggingElementName: ElementName.MiniPortfolioTokensTab,
@@ -58,9 +49,9 @@ export default function MiniPortfolio({ account }: { account: string }) {
       {
         title: t('common.nfts'),
         key: 'nfts',
-        component: ({ account }: { account: string }) => (
+        component: ({ evmAddress }: { evmAddress?: string }) => (
           <Suspense fallback={<Loader.Box />}>
-            {sharedPortfolioUIEnabled ? <SharedNFTs owner={account} /> : <NFTs account={account} />}
+            <NFTsTab owner={evmAddress ?? ' '} />
           </Suspense>
         ),
         loggingElementName: ElementName.MiniPortfolioNftTab,
@@ -68,9 +59,9 @@ export default function MiniPortfolio({ account }: { account: string }) {
       {
         title: t('common.pools'),
         key: 'pools',
-        component: ({ account }: { account: string }) => (
+        component: ({ evmAddress }: { evmAddress?: string }) => (
           <Suspense fallback={<Loader.Box />}>
-            <Pools account={account} />
+            <PoolsTab account={evmAddress ?? ''} />
           </Suspense>
         ),
         loggingElementName: ElementName.MiniPortfolioPoolsTab,
@@ -78,15 +69,15 @@ export default function MiniPortfolio({ account }: { account: string }) {
       {
         title: t('common.activity'),
         key: 'activity',
-        component: ({ account }: { account: string }) => (
+        component: ({ evmAddress, svmAddress }: { evmAddress?: string; svmAddress?: string }) => (
           <Suspense fallback={<Loader.Box />}>
-            {sharedPortfolioUIEnabled ? <ActivityTabShared account={account} /> : <ActivityTab account={account} />}
+            <ActivityTab evmOwner={evmAddress} svmOwner={svmAddress} />
           </Suspense>
         ),
         loggingElementName: ElementName.MiniPortfolioActivityTab,
       },
     ],
-    [t, sharedPortfolioUIEnabled],
+    [t],
   )
 
   const { component: Page, key: currentKey } = pages[currentPage]
@@ -104,7 +95,14 @@ export default function MiniPortfolio({ account }: { account: string }) {
   return (
     <Trace section={SectionName.MiniPortfolio}>
       <Flex mt="$spacing28" gap="$spacing12" height="100%">
-        <Flex row gap="$spacing20" data-testid="mini-portfolio-navbar">
+        <Flex
+          row
+          gap="$spacing20"
+          data-testid="mini-portfolio-navbar"
+          $platform-web={{
+            overflowX: 'auto',
+          }}
+        >
           {pages.map(({ title, loggingElementName, key }, index) => {
             const isUnselectedActivity = key === 'activity' && currentKey !== 'activity'
             const showActivityIndicator = isUnselectedActivity && (hasPendingActivity || activityUnread)
@@ -136,7 +134,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
                       {title}
                     </Text>
                     {showActivityIndicator && hasPendingActivity && (
-                      <Flex>
+                      <Flex overflow="hidden">
                         <LoaderV2 />
                       </Flex>
                     )}
@@ -152,7 +150,7 @@ export default function MiniPortfolio({ account }: { account: string }) {
           })}
         </Flex>
         <Flex borderRadius="$rounded12" mx={-16} width="calc(100% + 32px)" data-testid="mini-portfolio-page">
-          <Page account={account} />
+          <Page evmAddress={evmAddress} svmAddress={svmAddress} />
         </Flex>
       </Flex>
     </Trace>

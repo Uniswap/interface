@@ -6,6 +6,7 @@ import Swap from 'pages/Swap'
 import { lazy, ReactNode, Suspense, useMemo } from 'react'
 import { matchPath, Navigate, Route, Routes, useLocation } from 'react-router'
 import { CHROME_EXTENSION_UNINSTALL_URL_PATH } from 'uniswap/src/constants/urls'
+import { WRAPPED_SOL_ADDRESS_SOLANA } from 'uniswap/src/features/chains/svm/defaults'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
@@ -41,12 +42,14 @@ const ExtensionPasskeyAuthPopUp = lazy(() => import('pages/ExtensionPasskeyAuthP
 const PasskeyManagement = lazy(() => import('pages/PasskeyManagement'))
 const ExtensionUninstall = lazy(() => import('pages/ExtensionUninstall/ExtensionUninstall'))
 const Portfolio = lazy(() => import('pages/Portfolio/Portfolio'))
+const ToucanToken = lazy(() => import('pages/Explore/ToucanToken'))
 
 interface RouterConfig {
   browserRouterEnabled?: boolean
   hash?: string
   isEmbeddedWalletEnabled?: boolean
   isPortfolioPageEnabled?: boolean
+  isToucanEnabled?: boolean
 }
 
 /**
@@ -57,6 +60,7 @@ export function useRouterConfig(): RouterConfig {
   const { hash } = useLocation()
   const isEmbeddedWalletEnabled = useFeatureFlag(FeatureFlags.EmbeddedWallet)
   const isPortfolioPageEnabled = useFeatureFlag(FeatureFlags.PortfolioPage)
+  const isToucanEnabled = useFeatureFlag(FeatureFlags.Toucan)
 
   return useMemo(
     () => ({
@@ -64,8 +68,9 @@ export function useRouterConfig(): RouterConfig {
       hash,
       isEmbeddedWalletEnabled,
       isPortfolioPageEnabled,
+      isToucanEnabled,
     }),
-    [browserRouterEnabled, hash, isEmbeddedWalletEnabled, isPortfolioPageEnabled],
+    [browserRouterEnabled, hash, isEmbeddedWalletEnabled, isPortfolioPageEnabled, isToucanEnabled],
   )
 }
 
@@ -86,6 +91,8 @@ const StaticTitlesAndDescriptions = {
   PasskeyManagementTitle: i18n.t('title.managePasskeys'),
   PortfolioTitle: i18n.t('portfolio.title'),
   PortfolioDescription: i18n.t('portfolio.description'),
+  // TODO(LP-295): Update after launch
+  ToucanPlaceholderDescription: 'Placeholder description for Toucan page',
 }
 
 export interface RouteDefinition {
@@ -127,6 +134,13 @@ export const routes: RouteDefinition[] = [
     nestedPaths: [':tab', ':chainName', ':tab/:chainName'],
     getElement: () => <RedirectExplore />,
   }),
+  // Special case: redirect WSOL to SOL TDP, as directly trading WSOL is not supported currently.
+  createRouteDefinition({
+    path: `/explore/tokens/solana/${WRAPPED_SOL_ADDRESS_SOLANA}`,
+    getTitle: () => i18n.t('common.buyAndSell'),
+    getDescription: () => StaticTitlesAndDescriptions.TDPDescription,
+    getElement: () => <Navigate to="/explore/tokens/solana/NATIVE" replace />,
+  }),
   createRouteDefinition({
     path: '/explore/tokens/:chainName/:tokenAddress',
     getTitle: () => i18n.t('common.buyAndSell'),
@@ -162,6 +176,17 @@ export const routes: RouteDefinition[] = [
     getElement: () => (
       <Suspense fallback={null}>
         <PoolDetails />
+      </Suspense>
+    ),
+  }),
+  createRouteDefinition({
+    path: '/explore/toucan/:id',
+    getTitle: () => StaticTitlesAndDescriptions.DetailsPageBaseTitle,
+    getDescription: () => StaticTitlesAndDescriptions.ToucanPlaceholderDescription,
+    enabled: (args) => args.isToucanEnabled ?? false,
+    getElement: () => (
+      <Suspense fallback={null}>
+        <ToucanToken />
       </Suspense>
     ),
   }),

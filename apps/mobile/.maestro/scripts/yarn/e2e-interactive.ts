@@ -287,7 +287,7 @@ async function main(): Promise<void> {
   try {
     // Run the selected test(s)
     await runTests({ selectedFlows, selectionDescription, E2E_RECOVERY_PHRASE, DATADOG_API_KEY })
-  } catch (error) {
+  } catch (_error) {
     console.error(`\n${colors.red}❌ E2E test${selectedFlows.length > 1 ? 's' : ''} failed${colors.reset}`)
     if (metroProcess) {
       console.log(`${colors.yellow}Stopping Metro bundler...${colors.reset}`)
@@ -314,7 +314,7 @@ process.on('SIGINT', () => {
       if (globalMetroProcess.pid) {
         process.kill(-globalMetroProcess.pid)
       }
-    } catch (e) {
+    } catch (_e) {
       globalMetroProcess.kill('SIGTERM')
     }
   }
@@ -327,7 +327,7 @@ process.on('exit', () => {
       if (globalMetroProcess.pid) {
         process.kill(-globalMetroProcess.pid)
       }
-    } catch (e) {
+    } catch (_e) {
       globalMetroProcess.kill('SIGTERM')
     }
   }

@@ -1,4 +1,4 @@
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GraphQLApi } from '@universe/api'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { buildCurrency } from 'uniswap/src/features/dataApi/utils/buildCurrency'
 import {
@@ -27,7 +27,9 @@ describe(gqlTokenToCurrencyInfo, () => {
   })
 
   it('returns null if currency is invalid', () => {
-    const result = gqlTokenToCurrencyInfo(ethToken({ chain: 'INVALID' as Chain }) satisfies GqlTokenToCurrencyInfoToken)
+    const result = gqlTokenToCurrencyInfo(
+      ethToken({ chain: 'INVALID' as GraphQLApi.Chain }) satisfies GqlTokenToCurrencyInfoToken,
+    )
 
     expect(result).toBeNull()
   })

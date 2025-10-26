@@ -1,4 +1,5 @@
 import { gqlToCurrency } from 'appGraphql/data/util'
+import { GraphQLApi } from '@universe/api'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'
 import { Scrim } from 'components/AccountDrawer/Scrim'
@@ -19,13 +20,14 @@ import { Z_INDEX } from 'theme/zIndex'
 import { Button, Flex, Spacer, useIsTouchDevice, useMedia } from 'ui/src'
 import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
 import { breakpoints } from 'ui/src/theme'
-import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { getChainUrlParam } from 'utils/chainParams'
 
@@ -72,12 +74,12 @@ const SwapModalWrapper = styled(Column)<{ open?: boolean }>`
 
 interface PoolDetailsStatsButtonsProps {
   chainId?: UniverseChainId
-  token0?: Token
-  token1?: Token
+  token0?: GraphQLApi.Token
+  token1?: GraphQLApi.Token
   feeTier?: number
   hookAddress?: string
   isDynamic?: boolean
-  protocolVersion?: ProtocolVersion
+  protocolVersion?: GraphQLApi.ProtocolVersion
   loading?: boolean
 }
 
@@ -112,17 +114,29 @@ function findMatchingPosition({
   feeTier,
 }: {
   positions: PositionInfo[]
-  token0?: Token
-  token1?: Token
+  token0?: GraphQLApi.Token
+  token1?: GraphQLApi.Token
   feeTier?: number
 }) {
   return positions.find(
     (position) =>
-      (position.details.token0.toLowerCase() === token0?.address ||
-        position.details.token0.toLowerCase() === token1?.address) &&
-      (position.details.token1.toLowerCase() === token0?.address ||
-        position.details.token1.toLowerCase() === token1?.address) &&
-      position.details.fee == feeTier &&
+      (areAddressesEqual({
+        addressInput1: { address: position.details.token0, platform: Platform.EVM },
+        addressInput2: { address: token0?.address, platform: Platform.EVM },
+      }) ||
+        areAddressesEqual({
+          addressInput1: { address: position.details.token0, platform: Platform.EVM },
+          addressInput2: { address: token1?.address, platform: Platform.EVM },
+        })) &&
+      (areAddressesEqual({
+        addressInput1: { address: position.details.token1, platform: Platform.EVM },
+        addressInput2: { address: token0?.address, platform: Platform.EVM },
+      }) ||
+        areAddressesEqual({
+          addressInput1: { address: position.details.token1, platform: Platform.EVM },
+          addressInput2: { address: token1?.address, platform: Platform.EVM },
+        })) &&
+      position.details.fee === feeTier &&
       !position.closed,
   )
 }

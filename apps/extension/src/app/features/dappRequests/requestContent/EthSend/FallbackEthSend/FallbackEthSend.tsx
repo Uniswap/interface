@@ -93,7 +93,7 @@ export function FallbackEthSendRequestContent({
             <Anchor href={recipientLink} rel="noopener noreferrer" target="_blank" textDecorationLine="none">
               <Flex row alignItems="center" gap="$spacing8">
                 <Text color="$neutral1" variant="body4">
-                  {shortenAddress(toAddress)}
+                  {shortenAddress({ address: toAddress })}
                 </Text>
                 <ExternalLink color="$neutral3" size="$icon.16" />
               </Flex>

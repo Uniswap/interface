@@ -1,7 +1,8 @@
 import { getContrastPassingTextColor } from 'ui/src/utils/colors/getContrastPassingTextColor'
+import { describe, expect, it, vi } from 'vitest'
 
 // Mocking the colorsLight object
-jest.mock('ui/src/theme', () => ({
+vi.mock('ui/src/theme', () => ({
   colorsLight: {
     white: '#FFFFFF',
   },

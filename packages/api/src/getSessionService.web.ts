@@ -3,23 +3,25 @@ import { getIsSessionServiceEnabled } from '@universe/api/src/getIsSessionServic
 import {
   createDeviceIdService,
   createNoopSessionService,
+  createSessionClient,
   createSessionRepository,
   createSessionService,
   createSessionStorage,
+  createTransport,
   type SessionService,
 } from '@universe/sessions'
 import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
-import { isInterface } from 'utilities/src/platform'
+import { isExtensionApp, isWebApp } from 'utilities/src/platform'
 
-function getSessionService(): SessionService {
+function getSessionService(ctx: { getBaseUrl: () => string }): SessionService {
   if (!getIsSessionServiceEnabled()) {
     return createNoopSessionService()
   }
-  if (isInterface) {
+  if (isWebApp) {
     // Web doesn't have a session service (cookies are automatically handled by the browser)
     return createNoopSessionService()
   }
-  return getExtensionSessionService()
+  return getExtensionSessionService(ctx)
 }
 
 const SESSION_ID_KEY = 'UNISWAP_SESSION_ID'
@@ -44,11 +46,20 @@ const deviceIdService = createDeviceIdService({
   queryClient: SharedQueryClient,
 })
 
-const sessionRepository = createSessionRepository()
+function getExtensionSessionService(ctx: { getBaseUrl: () => string }): SessionService {
+  const sessionClient = createSessionClient({
+    transport: createTransport({
+      getBaseUrl: ctx.getBaseUrl,
+      getSessionId: isExtensionApp
+        ? (): Promise<string | null> => chromeSessionStorage.get().then((state) => state?.sessionId ?? null)
+        : undefined,
+      getDeviceId: isExtensionApp ? deviceIdService.getDeviceId : undefined,
+    }),
+  })
 
-function getExtensionSessionService(): SessionService {
+  const sessionRepository = createSessionRepository({ client: sessionClient })
+
   return createSessionService({
-    deviceIdService,
     sessionStorage: chromeSessionStorage,
     sessionRepository,
   })

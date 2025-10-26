@@ -35,7 +35,7 @@ import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import { logger } from 'utilities/src/logger/logger'
-import { isWeb } from 'utilities/src/platform'
+import { isWebPlatform } from 'utilities/src/platform'
 
 interface SwapReviewScreenProps {
   hideContent: boolean
@@ -148,7 +148,12 @@ function SwapReviewContent(): JSX.Element | null {
       <SwapReviewContentWrapper>
         <SwapReviewWarningModal />
         {/* We hide the content via `hideContent` to allow the bottom sheet to animate properly while still rendering the components to allow the sheet to calculate its height. */}
-        <Flex animation="quick" opacity={hideContent ? 0 : 1} gap="$spacing16" pt={isWeb ? '$spacing8' : undefined}>
+        <Flex
+          animation="quick"
+          opacity={hideContent ? 0 : 1}
+          gap="$spacing16"
+          pt={isWebPlatform ? '$spacing8' : undefined}
+        >
           {acceptedDerivedSwapInfo && (
             <TransactionAmountsReview
               acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}

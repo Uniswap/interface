@@ -1,6 +1,6 @@
 import { currentTimeInSeconds, inXMinutesUnix, isStale } from 'utilities/src/time/time'
 
-jest.useFakeTimers()
+vi.useFakeTimers()
 
 describe('isStale', () => {
   it('returns true if lastUpdated is null', () => {
@@ -9,7 +9,7 @@ describe('isStale', () => {
 
   it('returns true if the lastUpdated timestamp is older than the staleTime', () => {
     const now = Date.now()
-    jest.spyOn(Date, 'now').mockReturnValue(now)
+    vi.spyOn(Date, 'now').mockReturnValue(now)
 
     const lastUpdated = now - 2000
     const staleTime = 1000
@@ -19,7 +19,7 @@ describe('isStale', () => {
 
   it('returns false if the lastUpdated timestamp is newer than the staleTime', () => {
     const now = Date.now()
-    jest.spyOn(Date, 'now').mockReturnValue(now)
+    vi.spyOn(Date, 'now').mockReturnValue(now)
 
     const lastUpdated = now - 500
     const staleTime = 1000
@@ -29,7 +29,7 @@ describe('isStale', () => {
 
   it('returns false if the lastUpdated timestamp is equal to the staleTime', () => {
     const now = Date.now()
-    jest.spyOn(Date, 'now').mockReturnValue(now)
+    vi.spyOn(Date, 'now').mockReturnValue(now)
 
     const lastUpdated = now - 1000
     const staleTime = 1000
@@ -41,7 +41,7 @@ describe('isStale', () => {
 describe('currentTimeInSeconds', () => {
   it('returns the current time in seconds', () => {
     const now = Date.now()
-    jest.setSystemTime(now) // Ensures that dayjs and Date.now() return the same value
+    vi.setSystemTime(now) // Ensures that dayjs and Date.now() return the same value
 
     expect(currentTimeInSeconds()).toBe(Math.floor(now / 1000))
   })
@@ -50,7 +50,7 @@ describe('currentTimeInSeconds', () => {
 describe('inXMinutesUnix', () => {
   it('returns current time advanced by x minutes in seconds', () => {
     const now = Date.now()
-    jest.setSystemTime(now) // Ensures that dayjs and Date.now() return the same value
+    vi.setSystemTime(now) // Ensures that dayjs and Date.now() return the same value
 
     expect(inXMinutesUnix(5)).toBe(Math.floor((now + 5 * 60 * 1000) / 1000))
   })

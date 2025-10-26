@@ -70,7 +70,7 @@ export function useOnchainDisplayName(
   }
 
   return {
-    name: `${sanitizeAddressText(shortenAddress(address))}`,
+    name: `${sanitizeAddressText(shortenAddress({ address }))}`,
     type: DisplayNameType.Address,
   }
 }

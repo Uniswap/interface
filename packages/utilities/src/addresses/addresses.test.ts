@@ -8,35 +8,42 @@ describe('utils', () => {
       ${INVALID_ADDRESS_TOO_SHORT}                    | ${''}              | ${'doesnt throw on invalid address'}
       ${INVALID_ADDRESS_TOO_LONG}                     | ${''}              | ${'doesnt throw on invalid address'}
       ${'0xf164fc0ec4e93095b804a4795bbe1e041497b92a'} | ${'0xf164...b92a'} | ${'returns the truncated address'}
-      ${'f164fc0ec4e93095b804a4795bbe1e041497b92a'}   | ${'0xf164...b92a'} | ${'returns the truncated address without prefix'}
-      ${'0x2E1b342132A67Ea578e4E3B814bae2107dc254CC'} | ${'0x2E1b...54CC'} | ${'renders checksummed address'}
+      ${'0x8C9A8Ca25dF88ED92341e640A9A77CE196D09df5'} | ${'0x8C9A...9df5'} | ${'renders checksummed address'}
       ${undefined}                                    | ${''}              | ${'allows undefined'}
       ${false}                                        | ${''}              | ${'doesnt error on boolean'}
       ${null}                                         | ${''}              | ${'doesnt error on null'}
       ${'0x'}                                         | ${''}              | ${'doesnt error on 0x prefix'}
     `('$desc for shortenAddress($input) should return $expected', async ({ input, expected }) => {
-      expect(shortenAddress(input)).toEqual(expected)
+      expect(shortenAddress({ address: input })).toEqual(expected)
     })
 
     it('allows custom amounts of start/end chars', () => {
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2)).toBe('0x2E...CC')
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 6)).toBe('0x2E1b34...c254CC')
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2, 2)).toBe('0x2E...CC')
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2, 6)).toBe('0x2E...c254CC')
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 0, 4)).toBe('0x...54CC')
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 44)).toBe(
-        '0x2E1b342132A67Ea578e4E3B814bae2107dc254CC',
+      expect(shortenAddress({ address: '0x8C9A8Ca25dF88ED92341e640A9A77CE196D09df5', chars: 2 })).toBe('0x8C...f5')
+      expect(shortenAddress({ address: '0x8C9A8Ca25dF88ED92341e640A9A77CE196D09df5', chars: 6 })).toBe(
+        '0x8C9A8C...D09df5',
       )
-      expect(shortenAddress('2E1b342132A67Ea578e4E3B814bae2107dc254CC', 43)).toBe(
-        '0x2E1b342132A67Ea578e4E3B814bae2107dc254CC',
+      expect(shortenAddress({ address: '0x8C9A8Ca25dF88ED92341e640A9A77CE196D09df5', chars: 2, charsEnd: 2 })).toBe(
+        '0x8C...f5',
       )
-      expect(shortenAddress('2E1b342132A67Ea578e4E3B814bae2107dc254CC', 1, 55)).toBe(
-        '0x2E1b342132A67Ea578e4E3B814bae2107dc254CC',
+      expect(shortenAddress({ address: '0x8C9A8Ca25dF88ED92341e640A9A77CE196D09df5', chars: 2, charsEnd: 6 })).toBe(
+        '0x8C...D09df5',
+      )
+      expect(shortenAddress({ address: '0x8C9A8Ca25dF88ED92341e640A9A77CE196D09df5', chars: 0, charsEnd: 4 })).toBe(
+        '0x...9df5',
+      )
+      expect(shortenAddress({ address: '0x8C9A8Ca25dF88ED92341e640A9A77CE196D09df5', chars: 44 })).toBe(
+        '0x8C9A8Ca25dF88ED92341e640A9A77CE196D09df5',
+      )
+      expect(shortenAddress({ address: '0x8C9A8Ca25dF88ED92341e640A9A77CE196D09df5', chars: 43 })).toBe(
+        '0x8C9A8Ca25dF88ED92341e640A9A77CE196D09df5',
+      )
+      expect(shortenAddress({ address: '0x8C9A8Ca25dF88ED92341e640A9A77CE196D09df5', chars: 1, charsEnd: 55 })).toBe(
+        '0x8C9A8Ca25dF88ED92341e640A9A77CE196D09df5',
       )
     })
 
     it('shortens to 4 chars on start & end if chars is not a positive integer', () => {
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 0)).toBe('0x2E1b...54CC')
+      expect(shortenAddress({ address: '0x8C9A8Ca25dF88ED92341e640A9A77CE196D09df5', chars: 0 })).toBe('0x8C9A...9df5')
     })
   })
 

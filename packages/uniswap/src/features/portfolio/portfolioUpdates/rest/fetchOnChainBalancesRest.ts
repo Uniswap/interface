@@ -3,13 +3,13 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
 import { Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
+import { GraphQLApi, TradingApi } from '@universe/api'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { TokenDocument, TokenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getPrimaryStablecoin } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils/gqlTokenToCurrencyInfo'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { fetchOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import {
   DenominatedValue,
@@ -18,6 +18,7 @@ import {
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { createLogger } from 'utilities/src/logger/logger'
 
@@ -213,8 +214,12 @@ function getInferredCachedDenominatedValueRest({
 
   const cachedTokenBalance = cachedPortfolio.balances.find(
     (balance) =>
-      balance.token?.address.toLowerCase() === cachedBalance.token?.address.toLowerCase() &&
-      balance.token?.chainId === cachedBalance.token?.chainId,
+      balance.token &&
+      balance.token.chainId === cachedBalance.token?.chainId &&
+      areAddressesEqual({
+        addressInput1: { address: balance.token.address, chainId: balance.token.chainId },
+        addressInput2: { address: cachedBalance.token.address, chainId: cachedBalance.token.chainId },
+      }),
   )
 
   if (cachedTokenBalance?.valueUsd && cachedTokenBalance.amount?.amount) {
@@ -253,7 +258,10 @@ function findCachedBalance({
       return isNativeCurrencyAddress(chainId, balance.token.address)
     }
 
-    return balance.token.address.toLowerCase() === currencyAddress.toLowerCase()
+    return areAddressesEqual({
+      addressInput1: { address: balance.token.address, platform: Platform.EVM },
+      addressInput2: { address: currencyAddress, platform: Platform.EVM },
+    })
   })
 }
 
@@ -278,8 +286,8 @@ async function resolveCurrency({
 
   // For new tokens not in cache, fetch token metadata from GraphQL
   // TODO(WALL-7215): migrate this to REST once we have a tokens endpoint
-  const tokenQuery = await apolloClient.query<TokenQuery>({
-    query: TokenDocument,
+  const tokenQuery = await apolloClient.query<GraphQLApi.TokenQuery>({
+    query: GraphQLApi.TokenDocument,
     variables: currencyIdToContractInput(currencyId),
     fetchPolicy: 'cache-first',
   })

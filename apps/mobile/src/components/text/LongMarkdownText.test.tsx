@@ -42,7 +42,6 @@ const measureMarkdown = (tree: ReturnType<typeof render>, numberOfLines: number)
   fireLayoutEvent(markdownWrapperInstance, numberOfLines)
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getMarkdownPropsWithHeight = (height: number | 'auto'): any =>
   expect.objectContaining({
     style: expect.objectContaining({

@@ -16,6 +16,7 @@ import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/ty
 import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
+/** @deprecated Delete when ServiceBasedSwapTransactionInfo is fully rolled out */
 export function useSwapTxAndGasInfo({
   derivedSwapInfo,
   account,

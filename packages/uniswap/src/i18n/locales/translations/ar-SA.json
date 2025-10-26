@@ -115,8 +115,7 @@
   "account.wallet.watch.placeholder": "إنس أو العنوان",
   "account.wallet.watch.title": "أدخل عنوان المحفظة",
   "activity.pending": "{{pendingActivityCount}} معلق",
-  "activity.transaction.lpRewards.descriptor": "{{symbol}} تم جمع المكافآت",
-  "activity.transaction.receive.descriptor": "{{amountWithSymbol}} من {{walletAddress}}",
+  "activity.transaction.lpRewards.descriptor": "{{symbol}} المكافآت التي تم جمعها",
   "activity.transaction.send.descriptor": "{{amountWithSymbol}} إلى {{walletAddress}}",
   "activity.transaction.swap.descriptor": "{{amountWithSymbolA}} لـ {{amountWithSymbolB}}",
   "activity.transaction.tokens.descriptor": "{{amountWithSymbolA}} و {{amountWithSymbolB}}",
@@ -172,8 +171,8 @@
   "common.activity": "نشاط",
   "common.add.label": "يضيف",
   "common.add.liquidity.canceled": "إضافة السيولة الملغاة",
-  "common.addedLiquidity": "السيولة المضافة",
   "common.addLiquidity": "أضف السيولة",
+  "common.address": "عنوان",
   "common.addressOrENS": "عنوان المحفظة أو اسم ENS",
   "common.advanced": "متقدم",
   "common.all": "الجميع",
@@ -289,10 +288,14 @@
   "common.confirmWallet": "تأكيد في المحفظة",
   "common.connect.button": "يتصل",
   "common.connectAWallet.button": "قم بتوصيل المحفظة",
+  "common.connectAWallet.button.evm": "ربط محفظة الإيثريوم",
+  "common.connectAWallet.button.evm.switch": "تبديل محفظة الإيثريوم",
+  "common.connectAWallet.button.svm": "ربط محفظة سولانا",
+  "common.connectAWallet.button.svm.switch": "محفظة سويتش سولانا",
+  "common.connectAWallet.button.switch": "تبديل المحفظة",
   "common.connectTo": "الاتصال بـ {{platform}}",
   "common.connectWallet.button": "ربط المحفظة",
   "common.contactUs.button": "اتصل بنا",
-  "common.contractInteraction": "تفاعل العقد",
   "common.copied": "نسخ",
   "common.copy.address": "نسخ العنوان",
   "common.copy.poolId": "نسخ معرف المجمع",
@@ -314,7 +317,6 @@
   "common.device": "هذا الجهاز",
   "common.device.other": "جهاز آخر",
   "common.dismiss": "رفض",
-  "common.dnsRegistrar": "مسجل DNS",
   "common.docs": "المستندات",
   "common.donate": "يتبرع",
   "common.done": "منتهي",
@@ -332,11 +334,9 @@
   "common.error.label": "خطأ",
   "common.error.request": "عذرًا، حدث خطأ أثناء معالجة طلبك. إذا طلبت الدعم، فتأكد من نسخ تفاصيل هذا الخطأ.",
   "common.error.somethingWrong": "هناك خطأ ما!",
-  "common.errorConnecting.error": "خطأ في الاتصال",
+  "common.errorConnecting.error": "خطأ في الإتصال",
   "common.errorLoadingData.error": "حدث خطأ أثناء تحميل البيانات",
-  "common.ethereumNameService": "خدمة اسم الايثيريوم",
   "common.etherscan": "اثيرسكان",
-  "common.ethRegistrarController": "مراقب مسجل ETH",
   "common.expiry": "انقضاء",
   "common.explore": "يستكشف",
   "common.explorer": "إكسبلورر",
@@ -424,7 +424,6 @@
   "common.migrated.liquidity": "السيولة المهاجرة",
   "common.migrating.liquidity": "هجرة السيولة",
   "common.min": "الحد الأدنى",
-  "common.minted": "سكت",
   "common.more": "أكثر",
   "common.moreDetails": "مزيد من التفاصيل",
   "common.navigation.settings": "إعدادات",
@@ -437,7 +436,6 @@
   "common.new.exclamation": "جديد!",
   "common.nft": "NFT",
   "common.nfts": "الرموز غير القابلة للاستبدال",
-  "common.noActivity": "لا يوجد نشاط بعد",
   "common.noAmount.error": "أدخل المبلغ",
   "common.noData": "لايوجد بيانات",
   "common.none": "لا أحد",
@@ -472,7 +470,7 @@
   "common.pending.cancellation": "في انتظار الإلغاء",
   "common.pendingEllipsis": "قيد الانتظار...",
   "common.permit": "يسمح",
-  "common.permit2": "تصريح2",
+  "common.plusMore": "+{{number}} المزيد",
   "common.pool": "حمام سباحة",
   "common.pools": "حمامات سباحة",
   "common.portfolio": "مَلَفّ",
@@ -492,7 +490,6 @@
   "common.protocol.v2": "Uniswap الإصدار 2",
   "common.protocol.v3": "Uniswap الإصدار 3",
   "common.protocol.v4": "Uniswap الإصدار 4",
-  "common.publicResolver": "الحل العام",
   "common.purchased": "تم شراؤها",
   "common.rate": "معدل",
   "common.readMore": "اقرأ أكثر",
@@ -504,15 +501,12 @@
   "common.remove.label": "يزيل",
   "common.remove.liquidity.canceled": "إزالة السيولة الملغاة",
   "common.remove.liquidity.failed": "فشل إزالة السيولة",
-  "common.removedLiquidity": "تمت إزالة السيولة",
   "common.removing.liquidity": "إزالة السيولة",
   "common.resetLimit": "إعادة تعيين {{symbol}} الحد",
   "common.resetLimitWallet": "إعادة تعيين {{symbol}} الحد في المحفظة",
   "common.resettingLimit": "إعادة تعيين {{symbol}} الحد...",
-  "common.reverseRegistrar": "عكس المسجل",
   "common.revoke.approval.failed": "فشل إلغاء الموافقة",
   "common.revoked.approval": "تم إلغاء الموافقة",
-  "common.revokedApproval": "الموافقة الملغاة",
   "common.revoking.approval": "إلغاء الموافقة",
   "common.scanQRDownload": "امسح رمز الاستجابة السريعة ضوئيًا باستخدام هاتفك للتنزيل",
   "common.selectRegion.label": "اختر منطقتك",
@@ -540,7 +534,6 @@
   "common.swap": "تبديل",
   "common.swap.expired": "انتهت صلاحية المبادلة",
   "common.swap.failed": "فشل المبادلة",
-  "common.swapped": "مبادلة",
   "common.swapPending": "المبادلة معلقة...",
   "common.termsOfService": "شروط الخدمة",
   "common.text.connected": "متصل",
@@ -559,7 +552,9 @@
   "common.time": "وقت",
   "common.time.minute.amt": "{{time}}م",
   "common.time.minutes": "دقائق",
+  "common.time.past.days": "{{days}} أيام",
   "common.time.past.days.short": "{{days}}د",
+  "common.time.past.hours": "{{hours}} ساعات",
   "common.time.past.hours.short": "{{hours}}ح",
   "common.time.past.minutes.short": "{{minutes}}م",
   "common.time.past.months.short": "{{months}}مو",
@@ -588,21 +583,11 @@
   "common.unavailable": "غير متوفره",
   "common.unhide": "إظهار",
   "common.unichain": "يوني تشين",
-  "common.uniGovernance": "حوكمة UNI",
   "common.uniswapMobile": "يونيسواب موبايل",
-  "common.uniswapProtocol": "بروتوكول يونيسواب",
   "common.uniswapWallet": "محفظة يونيسواب",
   "common.uniswapX": "يونيسوابكس",
   "common.unknown": "مجهول",
-  "common.unknownApproval": "موافقة غير معروفة",
-  "common.unknownBridge": "جسر غير معروف",
   "common.unknownError.error": "خطأ غير معروف",
-  "common.unknownLend": "إقراض غير معروف",
-  "common.unknownMint": "نعناع غير معروف",
-  "common.unknownSend": "إرسال غير معروف",
-  "common.unknownSwap": "مبادلة غير معروفة",
-  "common.unsupportedAsset_one": "مادة عرض غير مدعومة",
-  "common.unsupportedAsset_other": "الأصول غير المدعومة",
   "common.unwrap.button": "بسط",
   "common.unwrap.failed": "فشل إلغاء التغليف",
   "common.unwrapped": "يفك ربطة",
@@ -705,32 +690,17 @@
   "empty.swap.button.text": "إضافة الأموال للمبادلة",
   "error.dataUnavailable": "البيانات غير متوفرة في الوقت الراهن؛ نحن نعمل على حل المشكلة",
   "error.id": "معرف الخطأ: {{eventId}}",
-  "error.jupiterApi.execute.failedToLand.message": "فشلت معاملتك على شبكة سولانا. يُرجى التحقق من رصيدك والمحاولة مرة أخرى.",
-  "error.jupiterApi.execute.failedToLand.title": "فشل الاجراء",
-  "error.jupiterApi.execute.invalidBlockHeight.message": "انتهت صلاحية المعاملة بسبب عطل في الشبكة. يُرجى المحاولة مرة أخرى.",
-  "error.jupiterApi.execute.invalidBlockHeight.title": "انتهت صلاحية المعاملة",
-  "error.jupiterApi.execute.invalidMessageBytes.message": "بيانات المعاملة تالفة. يُرجى التحديث والمحاولة مرة أخرى.",
-  "error.jupiterApi.execute.invalidMessageBytes.title": "بيانات المعاملة غير صالحة",
-  "error.jupiterApi.execute.invalidPayload.message": "طلب المبادلة يحتوي على بيانات غير صحيحة. يُرجى التحديث والمحاولة مرة أخرى.",
-  "error.jupiterApi.execute.invalidPayload.title": "بيانات المبادلة غير صالحة",
-  "error.jupiterApi.execute.invalidSignedTransaction.message": "توقيع المعاملة غير صالح. يُرجى محاولة التوقيع مرة أخرى.",
-  "error.jupiterApi.execute.invalidSignedTransaction.title": "توقيع غير صالح",
-  "error.jupiterApi.execute.invalidTransaction.message": "المعاملة غير صالحة. يُرجى التحديث والمحاولة مرة أخرى.",
-  "error.jupiterApi.execute.invalidTransaction.title": "معاملة غير صالحة",
-  "error.jupiterApi.execute.missingCachedOrder.message": "انتهت صلاحية طلب المبادلة. يُرجى المحاولة مرة أخرى.",
-  "error.jupiterApi.execute.missingCachedOrder.title": "انتهت صلاحية المعاملة",
-  "error.jupiterApi.execute.notFullySigned.message": "لم يتم توقيع المعاملة بشكل صحيح. يُرجى توقيع المعاملة في محفظتك.",
-  "error.jupiterApi.execute.notFullySigned.title": "المعاملة غير موقعة",
-  "error.jupiterApi.execute.quoteExpired.message": "انتهت صلاحية عرض السعر. يُرجى طلب عرض سعر جديد.",
-  "error.jupiterApi.execute.quoteExpired.title": "انتهت صلاحية الاقتباس",
-  "error.jupiterApi.execute.rfqFailedToLand.message": "فشل تبادل طلب عرض الأسعار على الشبكة. يُرجى المحاولة مرة أخرى.",
-  "error.jupiterApi.execute.rfqFailedToLand.title": "فشل تبادل طلب عرض الأسعار",
-  "error.jupiterApi.execute.rfqUnknownError.message": "حدث خطأ غير متوقع في طلب عرض الأسعار. يُرجى المحاولة مرة أخرى.",
-  "error.jupiterApi.execute.rfqUnknownError.title": "خطأ غير معروف في طلب عرض الأسعار",
-  "error.jupiterApi.execute.swapRejected.message": "تم رفض طلب المبادلة الخاص بك. قد يكون ذلك بسبب حركة السعر أو مشاكل السيولة.",
-  "error.jupiterApi.execute.swapRejected.title": "تم رفض المبادلة",
-  "error.jupiterApi.execute.unknownError.message": "حدث خطأ غير متوقع. يُرجى المحاولة مرة أخرى.",
-  "error.jupiterApi.execute.unknownError.title": "خطأ غير معروف",
+  "error.jupiterApi.execute.default.title": "حدث خطأ في واجهة برمجة تطبيقات جوبيتر. يُرجى المحاولة مرة أخرى.",
+  "error.jupiterApi.failedToLand": "(الرمز {{code}}: فشلت المعاملة في الوصول إلى الشبكة)",
+  "error.jupiterApi.invalidBlockHeight": "(الرمز -1004: ارتفاع كتلة غير صالح)",
+  "error.jupiterApi.invalidMessageBytes": "(الرمز -3: بايتات الرسالة غير صالحة)",
+  "error.jupiterApi.invalidPayload": "(الرمز -2002: حمولة غير صالحة)",
+  "error.jupiterApi.invalidSignedTransaction": "(الرمز -2: معاملة موقعة غير صالحة)",
+  "error.jupiterApi.invalidTransaction": "(الرمز -1002: معاملة غير صالحة)",
+  "error.jupiterApi.missingCachedOrder": "(الرمز -1: طلب مخزن مؤقتًا مفقود)",
+  "error.jupiterApi.notFullySigned": "(الرمز -1003: المعاملة غير موقعة بالكامل)",
+  "error.jupiterApi.quoteExpired": "انتهت صلاحية هذا الاقتباس، يُرجى المحاولة مرة أخرى. (الرمز -2003)",
+  "error.jupiterApi.unknownErrorCode": "(الرمز {{code}})",
   "error.noData": "لاتوجد بيانات",
   "error.request.provideId": "عذرًا، حدث خطأ أثناء معالجة طلبك. إذا طلبت الدعم، فتأكد من تقديم معرف الخطأ الخاص بك.",
   "error.tokenApproval": "فشلت الموافقة على الرمز المميز",
@@ -802,9 +772,6 @@
   "extension.popup.chrome.title": "متابعة في Uniswap",
   "extension.settings.defaultWallet.message": "إعطاء الأولوية لامتداد Uniswap عند الاتصال بالتطبيقات.",
   "extension.settings.defaultWallet.title": "إنشاء محفظة افتراضية",
-  "extension.settings.password.enter.title": "أدخل كلمة المرور الحالية",
-  "extension.settings.password.error.wrong": "كلمة مرور خاطئة",
-  "extension.settings.password.placeholder": "كلمة السر الحالية",
   "extension.uninstall.reason.missingFeatures": "تفتقر محفظة Uniswap إلى بعض الميزات",
   "extension.uninstall.reason.notUsingCrypto": "لم أعد أرغب في استخدام العملات المشفرة",
   "extension.uninstall.reason.other": "أسباب أخرى",
@@ -854,7 +821,6 @@
   "fiatOffRamp.error.balance": "يتجاوز التوازن",
   "fiatOffRamp.error.populateSend.description": "يرجى الانتظار لحظة ثم المحاولة مرة أخرى.",
   "fiatOffRamp.error.populateSend.title": "لا يمكن تحميل المعاملة",
-  "fiatOffRamp.exchangeRate": "{{inputAmount}} {{inputSymbol}} لـ {{outputAmount}} {{outputSymbol}}",
   "fiatOffRamp.summary.total": "{{cryptoAmount}} لـ {{fiatAmount}}",
   "fiatOffRamp.unsupportedToken.back": "عُد",
   "fiatOffRamp.unsupportedToken.divider": "الرموز غير المدعومة",
@@ -868,6 +834,8 @@
   "fiatOnRamp.cexTransferModal.description": "لا يُدعم شراء العملات المشفرة باستخدام البطاقة في منطقتك. انقل الأصول من حساب تبادل مركزي لتمويل محفظتك.",
   "fiatOnRamp.cexTransferModal.title": "نقل للبدء",
   "fiatOnRamp.checkout.title": "الدفع",
+  "fiatOnRamp.chooseMultiPlatformProvider.chooseNetwork": "اختر الشبكة",
+  "fiatOnRamp.chooseMultiPlatformProvider.description": "سيحدد هذا عنوان المحفظة التي ستتلقى الأموال عليها.",
   "fiatOnRamp.chooseProvider.description": "ستستمر في الوصول إلى بوابة المزود لمعرفة الرسوم المرتبطة بمعاملتك.",
   "fiatOnRamp.completeTransactionHeader": "أكمل المعاملة باستخدام {{serviceProvider}}",
   "fiatOnRamp.connection.error": "فشل الاتصال",
@@ -885,7 +853,6 @@
   "fiatOnRamp.error.unavailable": "هذه الخدمة غير متوفرة في منطقتك",
   "fiatOnRamp.error.unsupported": "غير معتمد في المنطقة",
   "fiatOnRamp.error.usd": "متاح فقط للشراء بالدولار الأمريكي",
-  "fiatOnRamp.exchangeRate": "{{outputAmount}} {{outputSymbol}} لـ {{inputAmount}} {{inputSymbol}}",
   "fiatOnRamp.noQuotes.error": "لم يتم العثور على اقتباسات",
   "fiatOnRamp.paymentMethods.applePay": "أبل باي",
   "fiatOnRamp.paymentMethods.bank": "بنك",
@@ -893,12 +860,12 @@
   "fiatOnRamp.paymentMethods.googlePay": "جوجل باي",
   "fiatOnRamp.paymentMethods.paypal": "باي بال",
   "fiatOnRamp.paymentMethods.venmo": "فينمو",
-  "fiatOnRamp.purchasedOn": "تم الشراء على {{serviceProvider}}",
   "fiatOnRamp.quote.advice": "ستستمر في الوصول إلى بوابة المزود لمعرفة الرسوم المرتبطة بمعاملتك.",
   "fiatOnRamp.quote.type.list": "{{optionsList}}وخيارات أخرى",
   "fiatOnRamp.receiveCrypto.modal.sectionTitle.fromAccount": "من حساب",
   "fiatOnRamp.receiveCrypto.title": "تلقي التشفير",
   "fiatOnRamp.receiveCrypto.transferFunds": "قم بتمويل محفظتك عن طريق تحويل العملات المشفرة من محفظة أو حساب آخر",
+  "fiatOnRamp.receiveCrypto.useThisAddress": "استخدم هذا العنوان لتلقي الرموز على",
   "fiatOnRamp.region.placeholder": "البحث حسب البلد أو المنطقة",
   "fiatOnRamp.region.title": "اختر منطقتك",
   "fiatOnRamp.summary.total": "{{cryptoAmount}} لـ {{fiatAmount}}",
@@ -912,7 +879,7 @@
   "forceUpgrade.title.recommendedStatus": "إصدار جديد متاح",
   "globalPreferences.title": "التفضيلات العالمية",
   "hero.scroll": "قم بالتمرير لمعرفة المزيد",
-  "hero.subtitle": "قم بشراء وبيع العملات المشفرة على أكثر من 14 شبكة بما في ذلك Ethereum وUnichain وBase.",
+  "hero.subtitle": "قم بشراء وبيع العملات المشفرة على شبكات {{amount}}+ بما في ذلك Ethereum وUnichain وBase.",
   "hero.swap.title": "قم بالتبديل في أي وقت، <br/> في أي مكان.",
   "hidden.nfts.info.banner.text": "تعرف على المزيد حول NFTs المخفية",
   "hidden.nfts.info.text.button": "NFTs مخفية ({{numHidden}})",
@@ -958,7 +925,6 @@
   "home.tokens.error.load": "تعذر تحميل أرصدة الرموز المميزة",
   "home.tokens.title": "الرموز",
   "home.upsell.receive.cta": "من حساب",
-  "home.upsell.receive.description": "قم بتمويل محفظتك عن طريق تحويل العملات المشفرة من محفظة أو حساب آخر",
   "home.upsell.receive.title": "تلقي التشفير",
   "home.warning.viewOnly": "هذه محفظة للعرض فقط",
   "interface.metatags.description": "تداول العملات المشفرة على منصات إيثريوم، بيس، أربيتروم، بوليغون، يوني تشين، وغيرها. منصة التمويل اللامركزي (DeFi) التي يثق بها الملايين.",
@@ -975,7 +941,7 @@
   "landing.provideLiquidity.body": "توفير السيولة وجمع الرسوم باستخدام واجهة Uniswap.",
   "landing.provideLiquidity.subtitle": "أسواق الطاقة على السلسلة.",
   "landing.socials": "تابع Uniswap Labs على <LinkX>X</LinkX>و <LinkFarcaster>Farcaster</LinkFarcaster>و <LinkLinkedIn>LinkedIn</LinkLinkedIn>و <LinkTikTok>TikTok</LinkTikTok>",
-  "landing.swapBody": "يمكنك الوصول إلى السيولة العميقة واستكشاف الرموز وتعيين أوامر الحد وتوفير السيولة لآلاف الرموز عبر 14 سلسلة.",
+  "landing.swapBody": "يمكنك الوصول إلى السيولة العميقة واستكشاف الرموز وتعيين أوامر الحد وتوفير السيولة لآلاف الرموز عبر سلاسل {{amount}} .",
   "landing.swapSubtitle": "المبادلة بدون إذن.",
   "landing.tradingApi": "واجهة برمجة التطبيقات للتداول",
   "landing.tradingApiBody": "استخدم نفس واجهة برمجة التطبيقات التي تدعم تطبيق Uniswap Web والمحفظة، والتي تحظى بثقة الفرق الرائدة في جميع أنحاء العالم.",
@@ -1115,14 +1081,8 @@
   "network.lostConnection": "ربما تكون قد فقدت اتصالك بالشبكة.",
   "network.mightBeDown": "ربما يكون {{network}} معطلاً الآن، أو ربما فقدت اتصالك بالشبكة.",
   "network.warning": "تحذير الشبكة",
-  "nft.buyTransferNFTToStart": "قم بشراء أو نقل NFTs إلى هذه المحفظة للبدء.",
-  "nft.buyTransferTokensToStart": "قم بشراء الرموز المميزة أو نقلها إلى هذه المحفظة للبدء.",
-  "nft.card.notAvailable": "المحتوى ليس <br /> متاحًا بعد",
-  "nft.chainSupportComingSoon": "{{chainName}} الدعم قريبا",
   "nft.noPools": "لا حمامات حتى الآن",
   "nft.reportSpam": "الإبلاغ عن البريد العشوائي",
-  "nft.willAppearHere": "ستظهر هنا معاملاتك onchain ومشترياتك من العملات المشفرة.",
-  "nfts.noneYet": "لا يوجد NFTs حتى الآن",
   "notFound.oops": "عفوًا، أعدني إلى Swap",
   "notice.uk": "يتم توفير تطبيق الويب هذا كأداة للمستخدمين للتفاعل مع بروتوكول Uniswap بمبادرة منهم، دون أي تأييد أو توصية لأنشطة تداول العملات المشفرة. ومن خلال القيام بذلك، لا توصي Uniswap المستخدمين أو المستخدمين المحتملين بالمشاركة في نشاط تداول الأصول المشفرة، ولا ينبغي للمستخدمين أو المستخدمين المحتملين لتطبيق الويب اعتبار صفحة الويب هذه أو محتوياتها على أنها تنطوي على أي شكل من أشكال التوصية أو الدعوة أو التحفيز للتعامل في الأصول المشفرة .",
   "notice.uk.label": "إخلاء المسؤولية في المملكة المتحدة:",
@@ -1252,6 +1212,8 @@
   "onboarding.home.intro.backup.description.extension": "احفظ عبارة الاسترداد الخاصة بك للتأكد من عدم فقدان الوصول إلى محفظتك أبدًا.",
   "onboarding.home.intro.backup.description.mobile": "قم بإعداد خطة استرداد إذا فقدت هاتفك أو حصلت على هاتف جديد.",
   "onboarding.home.intro.backup.title": "قم بعمل نسخة احتياطية من محفظتك",
+  "onboarding.home.intro.bridgedAssets.description": "SOL وWIF وBONK وJUP — متوفرة الآن على Unichain",
+  "onboarding.home.intro.bridgedAssets.title": "تداول رموز جديدة على Unichain",
   "onboarding.home.intro.fund.description": "قم بتمويل محفظتك عن طريق شراء العملات المشفرة أو التحويل من حساب آخر.",
   "onboarding.home.intro.fund.title": "احصل على أول رمز مميز لك",
   "onboarding.home.intro.label.required": "مطلوب",
@@ -1388,6 +1350,7 @@
   "pool.closedCTA.title": "هل تبحث عن مواقفك المغلقة؟",
   "pool.collectAs": "اجمع كـ {{nativeWrappedSymbol}}",
   "pool.collectFees": "جمع الرسوم",
+  "pool.connectEthereumToView": "قم بتوصيل محفظة Ethereum لعرض مجموعاتك",
   "pool.create": "إنشاء مجموعة جديدة",
   "pool.create.info": "ستؤدي اختياراتك إلى إنشاء مجموعة سيولة جديدة قد تؤدي إلى انخفاض السيولة الأولية وزيادة التقلبات. فكر في إضافة استثمارات إلى مجموعة موجودة لتقليل هذه المخاطر.",
   "pool.createdPosition": "تم إنشاء الموضع",
@@ -1418,8 +1381,6 @@
   "pool.incentives.similarPoolHasRewards": "يوجد مسبح مماثل به مكافآت UNI",
   "pool.incentives.switchPools": "تبديل المجمعات",
   "pool.incentives.timePeriod": "الفترة الزمنية",
-  "pool.incentives.uni": "مكافآت UNI هنا",
-  "pool.incentives.uni.description": "احصل على مكافآت UNI من خلال توفير السيولة للمجموعات المؤهلة",
   "pool.incentives.uni.findMore": "ابحث عن مجموعات بها مكافآت UNI",
   "pool.incentives.yourRewards.error": "مكافآتك غير متاحة الآن",
   "pool.incentives.yourRewards.error.description": "تعذّر استرداد المكافآت. قد يكون السبب مشكلة في الشبكة. حاول إعادة تحميل الصفحة.",
@@ -1436,9 +1397,11 @@
   "pool.newPosition.plus": "+ مركز جديد",
   "pool.newPosition.title": "موقف جديد",
   "pool.newSpecificPosition": "موضع جديد {{symbol}}",
+  "pool.notAvailableOnSolana": "لا تتوفر حمامات سباحة في سولانا",
   "pool.notFound.description": "عذرًا، لم نتمكن من العثور على أي معلومات حول هذا المسبح. يُرجى التحقق من الاسم والعنوان ثم المحاولة مجددًا.",
   "pool.notFound.title": "لم يتم العثور على المسبح",
-  "pool.openToStart": "افتح مركزًا جديدًا أو أنشئ مجموعة للبدء.",
+  "pool.openToStart.evmAndSolanaConnected": "افتح مركزًا جديدًا أو أنشئ مجموعة استثمارية للبدء. المجموعات الاستثمارية غير متاحة على منصة سولانا.",
+  "pool.openToStart.evmOnly": "افتح مركزًا جديدًا أو أنشئ مجموعة للبدء.",
   "pool.percent": "{{pct}}% تجمع",
   "pool.pooled": "مجمعة {{sym}}:",
   "pool.position": "موضع",
@@ -1465,7 +1428,6 @@
   "pool.v2": "حمامات v2",
   "pool.v3": "حمامات v3",
   "pool.via": "{{tokenPair}} عبر {{dex}}",
-  "pool.viewPools": "عرض حمامات السباحة",
   "pool.volOverTvl": "1D حجم/حجم الصورة",
   "pool.volume.thirtyDay": "حجم 30 يوم",
   "pool.volume.thirtyDay.short": "حجم 30D",
@@ -1474,12 +1436,24 @@
   "poolFinder.availablePools.found.description": "تجمعات v2 التي تتوافق مع اختيار الزوج الخاص بك.",
   "poolFinder.availablePools.notFound.description": "لم يتم العثور على مجموعات v2 متطابقة. تحقق مرة أخرى من اختيار الرمز الخاص بك وتأكد من اتصالك بالمحفظة الصحيحة.",
   "pools.explore": "استكشاف حمامات السباحة",
+  "portfolio.activity.filters.timePeriod.all": "كل الوقت",
+  "portfolio.activity.filters.transactionType.all": "جميع الأنواع",
+  "portfolio.activity.filters.transactionType.deposits": "الودائع",
+  "portfolio.activity.filters.transactionType.staking": "المراهنة",
+  "portfolio.activity.filters.transactionType.swaps": "المبادلات",
   "portfolio.activity.title": "نشاط",
+  "portfolio.connectWallet.summary": "تتبع الرموز والمجموعات والمزيد عبر شبكات {{amount}}+",
   "portfolio.defi.title": "التمويل اللامركزي",
   "portfolio.description": "تتبع محفظة العملات المشفرة الخاصة بك عبر جميع السلاسل والبروتوكولات",
   "portfolio.nfts.title": "الرموز غير القابلة للاستبدال",
   "portfolio.overview.title": "ملخص",
   "portfolio.title": "مَلَفّ",
+  "portfolio.tokens.table.column.allocation": "توزيع",
+  "portfolio.tokens.table.column.balance": "توازن",
+  "portfolio.tokens.table.column.change1d": "تغيير 1D",
+  "portfolio.tokens.table.column.price": "سعر",
+  "portfolio.tokens.table.column.token": "رمز مميز",
+  "portfolio.tokens.table.column.value": "قيمة",
   "portfolio.tokens.title": "الرموز",
   "position.addHook": "أضف خطافًا",
   "position.addHook.tooltip": "تعتبر الخطافات ميزة متقدمة تتيح للمجموعات التفاعل مع العقود الذكية، مما يفتح المجال أمام قدرات مختلفة. توخ الحذر عند إضافة الخطافات، حيث قد تكون بعضها ضارة أو تسبب عواقب غير مقصودة.",
@@ -1596,7 +1570,6 @@
   "qrScanner.status.loading": "تحميل...",
   "qrScanner.title": "مسح رمز الاستجابة السريعة",
   "qrScanner.wallet.networks": "الشبكات المدعومة",
-  "qrScanner.wallet.title": "يمكنك إرسال واستقبال الرموز والرموز غير القابلة للاستبدال على جميع شبكاتنا المدعومة {{numOfNetworks}} .",
   "range.outOfView": "المدى خارج نطاق الرؤية",
   "removeLiquidity.pooled": "مجمعة {{symbol}}:",
   "revoke.failed.message": "من المحتمل أن مشكلة في الشبكة أو الاتصال تسببت في فشل عملية الإلغاء. تحقق من اتصالك وحاول مرة أخرى.",
@@ -1648,7 +1621,9 @@
   "send.search.empty.subtitle": "العنوان الذي كتبته إما غير موجود أو تم كتابته بشكل غير صحيح.",
   "send.search.empty.title": "لم يتم العثور على نتائج",
   "send.search.placeholder": "بحث ENS أو العنوان",
+  "send.solanaSendNotSupported": "لا يتم دعم الإرسال على Solana",
   "send.title": "يرسل",
+  "send.unavailableOnSolana.message": "الإرسال غير متاح على محافظ Solana",
   "send.warning.blocked.default": "هذه المحفظة محظورة",
   "send.warning.blocked.modal.message": "تم حظر هذا العنوان على Uniswap Wallet لأنه مرتبط بنشاط محظور واحد أو أكثر. إذا كنت تعتقد أن هذا خطأ، فيرجى إرسال بريد إلكتروني إلى العنوان@uniswap.org.",
   "send.warning.blocked.modal.title": "العنوان المحظور",
@@ -1700,7 +1675,6 @@
   "settings.action.lock": "قفل المحفظة",
   "settings.action.privacy": "سياسة الخصوصية",
   "settings.action.terms": "شروط الخدمة",
-  "settings.connectWalletPlatform.warning": "لاستخدام Uniswap على {{platform}}، قم بالاتصال بمحفظة تدعم {{platform}}.",
   "settings.footer": "صُنع بكل حب، \nفريق Uniswap 🦄",
   "settings.hideSmallBalances": "إخفاء الأرصدة الصغيرة",
   "settings.hideSmallBalances.subtitle": "سيتم إخفاء الأرصدة التي تقل عن 1 دولار أمريكي من محفظتك.",
@@ -1770,8 +1744,14 @@
   "settings.setting.connections.disconnectAll": "افصل كل شيء",
   "settings.setting.connections.noConnectionsDescription": "قم بالاتصال بالتطبيق من خلال البحث عن زر \"Connect Wallet\" أو \"تسجيل الدخول\".",
   "settings.setting.currency.title": "العملة المحلية",
-  "settings.setting.deviceAccess.title.biometrics": "كلمة المرور والبيانات الحيوية",
-  "settings.setting.deviceAccess.title.touchId": "كلمة المرور ومعرف اللمس",
+  "settings.setting.deviceAccess.reset.title": "إعادة تعيين {{biometricsMethod}}",
+  "settings.setting.deviceAccess.title": "الوصول إلى الجهاز",
+  "settings.setting.deviceAccessTimeout.1hour": "ساعة واحدة",
+  "settings.setting.deviceAccessTimeout.24hours": "24 ساعة",
+  "settings.setting.deviceAccessTimeout.30minutes": "30 دقيقة",
+  "settings.setting.deviceAccessTimeout.5minutes": "5 دقائق",
+  "settings.setting.deviceAccessTimeout.never": "أبداً",
+  "settings.setting.deviceAccessTimeout.title": "مهلة القفل التلقائي",
   "settings.setting.hapticTouch.title": "اللمسة اللمسية",
   "settings.setting.helpCenter.title": "مركز المساعدة",
   "settings.setting.language.button.navigate": "اذهب للاعدادات",
@@ -1783,6 +1763,7 @@
   "settings.setting.notifications.row.updates.description": "التوصيات والميزات الجديدة",
   "settings.setting.notifications.row.updates.title": "تحديثات من Uniswap",
   "settings.setting.notifications.title": "إشعارات",
+  "settings.setting.password.change.title": "إنشاء كلمة مرور جديدة",
   "settings.setting.password.title": "تغيير كلمة المرور",
   "settings.setting.permissions.title": "الأذونات",
   "settings.setting.privacy.analytics.description": "نحن نستخدم بيانات استخدام مجهولة المصدر لتحسين تجربتك عبر منتجات Uniswap Labs. عند التعطيل، فإننا نتتبع الأخطاء والاستخدام الأساسي فقط.",
@@ -1864,7 +1845,7 @@
   "smartWallets.postSwapNudge.title.dapp": "يدعم هذا التطبيق المحافظ الذكية",
   "smartWallets.unavailableModal.description": "يُدير موفر محفظة آخر إعدادات المحفظة الذكية لـ {{displayName}}. يمكنك الاستمرار في استخدام Uniswap كالمعتاد.",
   "smartWallets.unavailableModal.title": "ميزات المحفظة الذكية غير متوفرة",
-  "solanaPromo.banner.description": "قم بتداول رموز Solana مباشرة على Uniswap.",
+  "solanaPromo.banner.description": "قم بتداول رموز Solana مباشرة على تطبيق Uniswap Web App.",
   "solanaPromo.banner.title": "سولانا متاحة الآن",
   "solanaPromo.modal.connectWallet": "قم بتوصيل محفظة Solana المفضلة لديك",
   "solanaPromo.modal.startSwapping.button": "ابدأ بالتبديل على سولانا",
@@ -1958,11 +1939,14 @@
   "swap.fail.message": "حاول تعديل الانزلاق إلى قيمة أعلى.",
   "swap.fail.uniswapX": "لا يمكن إكمال عملية المبادلة باستخدام UniswapX. حاول إجراء المبادلة مرة أخرى لتوجيهها عبر Uniswap API الكلاسيكي.",
   "swap.fees.experience": "يتم تطبيق هذه الرسوم على بعض أزواج الرموز لضمان أفضل تجربة مع Uniswap. يتم دفعها في الرمز الناتج وقد تم تضمينها بالفعل في السعر.",
+  "swap.fees.jupiter.label": "رسوم المشتري",
+  "swap.fees.jupiter.message": "تُفرض رسوم سولانا عبر واجهة برمجة تطبيقات جوبيتر. لا تتقاضى Uniswap Labs هذه الرسوم.",
   "swap.fees.noFee": "يتم تطبيق الرسوم على أزواج الرموز المميزة لضمان أفضل تجربة مع Uniswap. لا توجد رسوم مرتبطة بهذا المبادلة.",
   "swap.finalizingQuote": "الانتهاء من الاقتباس...",
   "swap.form.header": "تبديل",
   "swap.form.warning.output.fotFees": "نظرًا لرسوم الرمز المميز التي تبلغ {{fotCurrencySymbol}}، لا يمكن إدخال مبالغ المبادلة إلا باستخدام حقل الإدخال",
   "swap.form.warning.output.fotFees.fallback": "نظرًا لرسوم الرمز المميز، لا يمكن إدخال مبالغ المبادلة إلا باستخدام حقل الإدخال",
+  "swap.form.warning.output.solana": "لا يتم دعم الإخراج الدقيق على Solana",
   "swap.form.warning.restore": "استعادة محفظتك للتبديل",
   "swap.frontrun.warning": "قد تكون معاملتك في المقدمة وتؤدي إلى تجارة غير مواتية.",
   "swap.header.viewOnly": "للاطلاع فقط",
@@ -1971,7 +1955,6 @@
   "swap.impactOfTrade.uniswapx.missing": "قد لا تكون حسابات تأثير السعر متاحة للأزواج ذات السيولة المنخفضة.",
   "swap.inputEstimated.atMost": "يتم تقدير المدخلات. سوف تبيع على الأكثر <amount /> أو ستعود المعاملة.",
   "swap.limit": "حد",
-  "swap.limitedAssets.warning": "بعض الأصول غير متاحة من خلال هذه الواجهة لأنها قد لا تعمل بشكل جيد مع العقود الذكية أو لأننا غير قادرين على السماح بالتداول لأسباب قانونية.",
   "swap.limitFilled": "الحد ممتلئ!",
   "swap.limitSubmitted": "الحد المقدم",
   "swap.marketPrice.outsideRange.label": "سعر السوق خارج النطاق السعري المحدد. الودائع ذات الأصول الواحدة فقط.",
@@ -2035,7 +2018,6 @@
   "swap.tradeRoutes": "طرق التجارة",
   "swap.transaction.deadline": "الموعد النهائي للمعاملة",
   "swap.transaction.revertAfter": "سيتم إرجاع معاملتك إذا كانت معلقة لأكثر من هذه الفترة الزمنية.",
-  "swap.unsupportedAssets.readMore": "اقرأ المزيد عن الأصول غير المدعومة",
   "swap.warning.enterLargerAmount.title": "أدخل مبلغًا أكبر",
   "swap.warning.expectedFailure.increaseSlippage": "حاول زيادة الانزلاق الخاص بك.",
   "swap.warning.expectedFailure.titleMay": "قد تفشل هذه المبادلة",
@@ -2132,7 +2114,6 @@
   "token.chart.candlestick.unavailable": "لا تتوفر مخططات الشموع لهذه الرمز",
   "token.chart.tooltip": "الرسوم: {{amount}}",
   "token.details": "تفاصيل الرمز",
-  "token.details.testnet.unsupported": "تفاصيل الرمز غير متوفرة لرموز الشبكة التجريبية.",
   "token.error.unknown": "رمز غير معروف",
   "token.fee.buy.label": "رسوم الشراء",
   "token.fee.label": "مصاريف",
@@ -2225,6 +2206,7 @@
   "tokens.nfts.collection.label.owners": "أصحاب",
   "tokens.nfts.collection.label.priceFloor": "أرضية",
   "tokens.nfts.collection.label.swapVolume": "مقدار",
+  "tokens.nfts.connectEthereumToView": "قم بتوصيل محفظة Ethereum لعرض NFTs الخاصة بك",
   "tokens.nfts.details.contract.address": "عنوان العقد",
   "tokens.nfts.details.error.load.title": "تعذر تحميل تفاصيل NFT",
   "tokens.nfts.details.network": "شبكة",
@@ -2242,6 +2224,7 @@
   "tokens.nfts.list.none.description.default": "انقل NFTs من محفظة أخرى للبدء.",
   "tokens.nfts.list.none.description.external": "عندما تشتري هذه المحفظة رموز NFT أو تستقبلها، ستظهر هنا.",
   "tokens.nfts.list.none.title": "لا يوجد NFTs حتى الآن",
+  "tokens.nfts.notAvailableOnSolana": "NFTs غير متوفرة على Solana",
   "tokens.selector.button.choose": "حدد الرمز المميز",
   "tokens.selector.empty.buy.message": "قم بشراء العملات المشفرة باستخدام بطاقة أو بنك لإرسال الرموز المميزة.",
   "tokens.selector.empty.buy.title": "شراء التشفير",
@@ -2261,6 +2244,14 @@
   "tokens.table.search.placeholder.pools": "بحث في حمامات السباحة",
   "tokens.table.search.placeholder.tokens": "رموز البحث",
   "tokens.table.search.placeholder.transactions": "البحث عن المعاملات",
+  "toucan.auction.bidConcentration": "تركيز الطوقان",
+  "toucan.auction.bidConcentration.tooltip.description": "وصف تلميح أداة الطوقان",
+  "toucan.auction.bidConcentration.tooltip.title": "عنوان تلميح أداة الطوقان",
+  "toucan.auctions": "المزادات",
+  "toucan.bidForm.maxBudget": "الميزانية القصوى",
+  "toucan.bidForm.placeBid": "ضع عرضك",
+  "toucan.displayMode.tokenPrice": "سعر الرمز",
+  "toucan.displayMode.valuation": "تقييم",
   "transaction.action.cancel.button": "إلغاء الصفقة",
   "transaction.action.cancel.description": "إذا قمت بإلغاء هذه المعاملة قبل معالجتها بواسطة الشبكة، فستدفع تكلفة شبكة جديدة بدلاً من التكلفة الأصلية.",
   "transaction.action.cancel.title": "هل تريد إلغاء هذه الصفقة؟",
@@ -2515,7 +2506,7 @@
   "v2.notAvailable": "Uniswap V2 غير متوفر على هذه الشبكة.",
   "wallet.appSignIn": "تسجيل الدخول باستخدام التطبيق",
   "wallet.connectingAgreement": "من خلال ربط المحفظة، فإنك توافق على <termsLink>شروط الخدمة</termsLink> الخاصة بـ Uniswap Labs وتوافق على <privacyLink>سياسة الخصوصية</privacyLink>الخاصة بها.",
-  "wallet.connectionFailed.message": "فشلت محاولة الاتصال. الرجاء الضغط على \"المحاولة\" مرة أخرى واتباع الخطوات للاتصال في محفظتك.",
+  "wallet.connectionFailed.message": "فشلت محاولة الاتصال. يُرجى المحاولة مرة أخرى باتباع خطوات الاتصال بمحفظتك.",
   "wallet.mismatch.popup.description": "بعض الميزات غير مدعومة من قبل محفظتك المتصلة.",
   "wallet.mismatch.popup.title": "دعم محدود للمحفظة",
   "wallet.other": "محافظ أخرى",

@@ -25,7 +25,7 @@ export const useInView = () => {
     return () => {
       io.disconnect()
     }
-  }, [ref])
+  }, [])
 
   return { ref, inView }
 }

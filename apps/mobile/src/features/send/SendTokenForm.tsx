@@ -131,8 +131,10 @@ export function SendTokenForm(): JSX.Element {
     (start: number, end: number) => {
       selectionRef.current = { start, end }
       decimalPadRef.current?.updateDisabledKeys()
+      exactAmountTokenRef.current = exactAmountToken
+      exactAmountFiatRef.current = exactAmountFiat
     },
-    [selectionRef],
+    [exactAmountFiat, exactAmountToken],
   )
 
   const resetSelection = useCallback(
@@ -362,11 +364,7 @@ export function SendTokenForm(): JSX.Element {
 
         {!nftIn && (
           <>
-            <DecimalPadCalculateSpace
-              id={DecimalPadCalculatedSpaceId.Send}
-              decimalPadRef={decimalPadRef}
-              additionalElementsHeight={0}
-            />
+            <DecimalPadCalculateSpace id={DecimalPadCalculatedSpaceId.Send} decimalPadRef={decimalPadRef} />
 
             <Flex
               animation="quick"

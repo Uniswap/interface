@@ -13,6 +13,7 @@ export const migration49 = (
     return undefined
   }
 
+  // biome-ignore lint/correctness/noUnusedVariables: we want to remove localWebTransactions
   const { localWebTransactions, ...restState } = state
 
   return {

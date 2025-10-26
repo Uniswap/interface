@@ -1,5 +1,5 @@
-import { QueryResult } from '@apollo/client'
-import { ApolloError } from '@apollo/client/errors'
+import type { QueryResult } from '@apollo/client'
+import type { ApolloError } from '@apollo/client/errors'
 
 // Query result does not have a refetch property so add it here in case it needs to get returned
 export type GqlResult<T> = Pick<QueryResult<T>, 'data' | 'loading'> &

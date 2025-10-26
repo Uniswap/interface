@@ -14,18 +14,18 @@ export function SettingsCloudBackupProcessingScreen({
   },
 }: Props): JSX.Element | null {
   const onBackupComplete = (): void => {
-    navigation.replace(MobileScreens.SettingsCloudBackupStatus, { address })
+    // Reset the stack to remove password screens, keeping only Settings as the base
+    navigation.reset({
+      index: 1,
+      routes: [
+        { name: MobileScreens.Settings },
+        { name: MobileScreens.SettingsCloudBackupStatus, params: { address } },
+      ],
+    })
   }
 
   const onErrorPress = (): void => {
-    navigation.reset({
-      index: 0,
-      routes: [
-        {
-          name: MobileScreens.Settings,
-        },
-      ],
-    })
+    navigation.popToTop()
   }
 
   return (

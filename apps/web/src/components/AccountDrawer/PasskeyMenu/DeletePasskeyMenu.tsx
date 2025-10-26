@@ -94,7 +94,7 @@ export function DeletePasskeyMenu({
             borderStyle="solid"
           >
             <StatusIcon size={24} showMiniIcons={false} />
-            <AddressDisplay enableCopyAddress={false} address={evmAddress} />
+            <AddressDisplay address={evmAddress} />
             <Text variant="body3" color="$statusCritical" ml="auto" mr="0">
               {convertFiatAmountFormatted(balanceUSD, NumberType.FiatTokenPrice)}
             </Text>

@@ -1,14 +1,14 @@
 /* eslint-disable consistent-return */
 import { Currency, NativeCurrency } from '@uniswap/sdk-core'
+import { GraphQLApi } from '@universe/api'
 import { useTranslation } from 'react-i18next'
 import { ColorTokens } from 'ui/src'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AttackType, CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { logger } from 'utilities/src/logger/logger'
-import { isInterface } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
 
 export enum TokenProtectionWarning {
   // THESE NUMERIC VALUES MATTER -- they are used for severity comparison
@@ -103,22 +103,24 @@ export function getTokenProtectionWarning(currencyInfo?: Maybe<CurrencyInfo>): T
     return TokenProtectionWarning.MaliciousHoneypot
   } else if (
     (feeOnTransfer && feeOnTransfer >= TOKEN_PROTECTION_FOT_HIGH_FEE_BREAKPOINT) ||
-    ((protectionResult === ProtectionResult.Malicious || protectionResult === ProtectionResult.Spam) &&
+    ((protectionResult === GraphQLApi.ProtectionResult.Malicious ||
+      protectionResult === GraphQLApi.ProtectionResult.Spam) &&
       attackType === AttackType.HighFees)
   ) {
     return TokenProtectionWarning.FotVeryHigh
   } else if (
-    (protectionResult === ProtectionResult.Malicious || protectionResult === ProtectionResult.Spam) &&
+    (protectionResult === GraphQLApi.ProtectionResult.Malicious ||
+      protectionResult === GraphQLApi.ProtectionResult.Spam) &&
     attackType === AttackType.Impersonator
   ) {
     return TokenProtectionWarning.MaliciousImpersonator
   } else if (feeOnTransfer && feeOnTransfer >= TOKEN_PROTECTION_FOT_FEE_BREAKPOINT) {
     return TokenProtectionWarning.FotHigh
-  } else if (protectionResult === ProtectionResult.Malicious) {
+  } else if (protectionResult === GraphQLApi.ProtectionResult.Malicious) {
     return TokenProtectionWarning.MaliciousGeneral
   } else if (attackType === AttackType.Honeypot) {
     return TokenProtectionWarning.PotentialHoneypot
-  } else if (protectionResult === ProtectionResult.Spam && attackType === AttackType.Airdrop) {
+  } else if (protectionResult === GraphQLApi.ProtectionResult.Spam && attackType === AttackType.Airdrop) {
     return TokenProtectionWarning.SpamAirdrop
   } else if (feeOnTransfer && feeOnTransfer > 0 && feeOnTransfer < TOKEN_PROTECTION_FOT_FEE_BREAKPOINT) {
     return TokenProtectionWarning.FotLow
@@ -278,7 +280,7 @@ export function useModalSubtitleText({
 
   switch (tokenProtectionWarning) {
     case TokenProtectionWarning.Blocked:
-      return isInterface
+      return isWebApp
         ? shouldHavePluralTreatment
           ? t('token.safety.warning.blocked.description.default_other')
           : t('token.safety.warning.blocked.description.default_one')
@@ -417,7 +419,7 @@ export function useCardSubtitleText({
   const formattedSellFeePercent = sellFeePercent && sellFeePercent > 0 ? formatPercent(sellFeePercent) : undefined
   switch (tokenProtectionWarning) {
     case TokenProtectionWarning.Blocked:
-      return isInterface
+      return isWebApp
         ? t('token.safety.warning.blocked.description.default_one')
         : t('token.safetyLevel.blocked.message')
     case TokenProtectionWarning.MaliciousHoneypot:

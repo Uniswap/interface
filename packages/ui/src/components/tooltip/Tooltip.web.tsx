@@ -66,15 +66,15 @@ const Content = styled(HigherOrderStyledContent, {
 Content.displayName = 'Content'
 
 const Arrow = styled(TamaguiTooltip.Arrow, {
-  '$theme-dark': {
-    borderWidth: 1,
-    borderColor: '$surface2',
-  },
+  size: '$spacing12',
+  backgroundColor: '$surface1',
+  borderWidth: 1,
+  borderColor: '$surface3',
   '$theme-light': {
     shadowColor: '$surface3',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: '$spacing16',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: '$spacing8',
   },
 })
 

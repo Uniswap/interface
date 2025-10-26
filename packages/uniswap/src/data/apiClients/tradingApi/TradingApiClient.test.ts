@@ -434,12 +434,12 @@ describe('checkWalletDelegation', () => {
       const params: TradingApi.WalletCheckDelegationRequestBody = {
         walletAddresses: manyWallets,
         chainIds: [
-          mockChainId1,
-          mockChainId2,
-          42 as TradingApi.ChainId,
-          56 as TradingApi.ChainId,
-          100 as TradingApi.ChainId,
-        ], // 5 chains
+          mockChainId1, // 1 (Ethereum)
+          mockChainId2, // 137 (Polygon)
+          10 as TradingApi.ChainId, // Optimism
+          56 as TradingApi.ChainId, // BNB
+          42161 as TradingApi.ChainId, // Arbitrum - using a supported chain instead of 100
+        ], // 5 supported EVM chains
       }
 
       // 30 wallets * 5 chains = 150 combinations, exceeds default threshold of 140, should batch

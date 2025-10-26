@@ -5,7 +5,7 @@ import { Unitag } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
-import { isExtension } from 'utilities/src/platform'
+import { isExtensionApp } from 'utilities/src/platform'
 
 export function WelcomeSplash({
   address,
@@ -23,7 +23,7 @@ export function WelcomeSplash({
 
   return (
     <Flex fill>
-      <Flex centered fill gap={isExtension ? '$spacing24' : '$spacing40'} pb={pb}>
+      <Flex centered fill gap={isExtensionApp ? '$spacing24' : '$spacing40'} pb={pb}>
         <Flex centered>
           <Animated.View entering={FadeInDown.duration(300)}>
             <AccountIcon
