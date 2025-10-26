@@ -1,8 +1,9 @@
-import { AllowanceTransfer, MaxAllowanceTransferAmount, PERMIT2_ADDRESS, PermitSingle } from '@uniswap/permit2-sdk'
+import { AllowanceTransfer, MaxAllowanceTransferAmount, PermitSingle } from '@uniswap/permit2-sdk'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import PERMIT2_ABI from 'abis/permit2.json'
 import { Permit2 } from 'abis/types'
+import { getPermit2Address } from 'constants/permit2'
 import { useContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import ms from 'ms'
@@ -19,6 +20,8 @@ function toDeadline(expiration: number): number {
 }
 
 export function usePermitAllowance(token?: Token, owner?: string, spender?: string) {
+  const { chainId } = useWeb3React()
+  const PERMIT2_ADDRESS = getPermit2Address(chainId)
   const contract = useContract<Permit2>(PERMIT2_ADDRESS, PERMIT2_ABI)
   const inputs = useMemo(() => [owner, token?.address, spender], [owner, spender, token?.address])
 
