@@ -1,9 +1,16 @@
 /**
- * Permit2 Contract Addresses
+ * Permit2 SDK Patch
  *
- * Permit2 is typically deployed to the same canonical address across all chains,
- * but some chains (like Taiko testnets) may have different addresses.
+ * This module re-exports everything from @uniswap/permit2-sdk but provides
+ * chain-specific PERMIT2_ADDRESS overrides for chains that deployed Permit2
+ * to non-canonical addresses.
+ *
+ * IMPORTANT: All imports of @uniswap/permit2-sdk in this codebase should
+ * import from 'constants/permit2' instead to ensure correct addresses.
  */
+
+// Re-export everything from the SDK
+export * from '@uniswap/permit2-sdk'
 
 import { PERMIT2_ADDRESS as CANONICAL_PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { TAIKO_HOODI_CHAIN_ID } from 'config/chains'
@@ -28,7 +35,11 @@ export function getPermit2Address(chainId?: number): string {
 }
 
 /**
- * Canonical Permit2 address (used on most chains)
- * @deprecated Use getPermit2Address(chainId) instead for chain-specific addresses
+ * PERMIT2_ADDRESS override
+ *
+ * NOTE: This exports the canonical address for backward compatibility.
+ * Code that needs chain-specific addresses should use getPermit2Address(chainId).
+ *
+ * For Taiko Hoodi, use getPermit2Address(TAIKO_HOODI_CHAIN_ID) to get the correct address.
  */
 export const PERMIT2_ADDRESS = CANONICAL_PERMIT2_ADDRESS
