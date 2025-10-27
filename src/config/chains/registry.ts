@@ -173,7 +173,9 @@ export function validateRegistry(throwOnError: boolean = true): void {
   for (const chain of enabledChains) {
     try {
       validateChainAddressesOrThrow(chain.addresses, chain.metadata.name, chain.chainId)
-      console.log(`✓ ${chain.metadata.name} (${chain.chainId}) validated successfully`)
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`✓ ${chain.metadata.name} (${chain.chainId}) validated successfully`)
+      }
     } catch (error) {
       if (throwOnError) {
         throw error
@@ -182,25 +184,27 @@ export function validateRegistry(throwOnError: boolean = true): void {
     }
   }
 
-  // Show summary of all chains (including disabled ones)
-  const allValidationResults = validateMultipleChains(
-    ALL_CHAINS.map((chain) => ({
-      addresses: chain.addresses,
-      chainName: chain.metadata.name,
-      chainId: chain.chainId,
-    }))
-  )
+  // Show summary in development only
+  if (process.env.NODE_ENV === 'development') {
+    const allValidationResults = validateMultipleChains(
+      ALL_CHAINS.map((chain) => ({
+        addresses: chain.addresses,
+        chainName: chain.metadata.name,
+        chainId: chain.chainId,
+      }))
+    )
 
-  const summary = getValidationSummary(allValidationResults)
-  console.log(summary)
+    const summary = getValidationSummary(allValidationResults)
+    console.log(summary)
 
-  // Log disabled chains
-  const disabledChains = getDisabledChains()
-  if (disabledChains.length > 0) {
-    console.log('\nDisabled Chains (not available in UI):')
-    disabledChains.forEach((chain) => {
-      console.log(`  - ${chain.metadata.name} (${chain.chainId})`)
-    })
+    // Log disabled chains
+    const disabledChains = getDisabledChains()
+    if (disabledChains.length > 0) {
+      console.log('\nDisabled Chains (not available in UI):')
+      disabledChains.forEach((chain) => {
+        console.log(`  - ${chain.metadata.name} (${chain.chainId})`)
+      })
+    }
   }
 }
 

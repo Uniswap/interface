@@ -131,20 +131,16 @@ export const routingApi = createApi({
             const { getTaikoQuote } = await import('lib/hooks/routing/taikoQuoter')
             const quoteResult = await getTaikoQuote(args)
 
-            console.log('🔍 Taiko quote result:', quoteResult)
-
             if (quoteResult.state === QuoteState.SUCCESS && quoteResult.data) {
-              console.log('🔍 Transforming routes to trade...')
               const trade = await transformRoutesToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE_FALLBACK)
-              console.log('🔍 Trade result:', trade)
               return { data: { ...trade, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
             }
           } catch (error: any) {
-            console.error('❌ Taiko quoter failed:', error)
-            console.error('Stack trace:', error.stack)
+            if (process.env.NODE_ENV === 'development') {
+              console.error('Taiko quoter failed:', error)
+            }
           }
 
-          console.log('⚠️ Returning NOT_FOUND')
           return {
             data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
           }

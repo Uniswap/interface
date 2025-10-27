@@ -43,10 +43,4 @@ export function patchUniversalRouterForTaiko() {
   // We can't directly override the SDK's exported function, but we can ensure our
   // application code uses our patched version. The actual patching happens by
   // importing from this module instead of directly from the SDK.
-
-  if (process.env.NODE_ENV === 'development') {
-    console.log('✅ Universal Router patched for Taiko networks')
-    console.log(`   Mainnet (${TAIKO_MAINNET_CHAIN_ID}):`, TAIKO_UNIVERSAL_ROUTER_ADDRESS[TAIKO_MAINNET_CHAIN_ID])
-    console.log(`   Hoodi (${TAIKO_HOODI_CHAIN_ID}):`, TAIKO_UNIVERSAL_ROUTER_ADDRESS[TAIKO_HOODI_CHAIN_ID])
-  }
 }

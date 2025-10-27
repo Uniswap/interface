@@ -29,11 +29,9 @@ import OrderUpdater from './state/signatures/updater'
 import TransactionUpdater from './state/transactions/updater'
 import ThemeProvider, { ThemedGlobalStyle } from './theme'
 import RadialGradientByChainUpdater from './theme/components/RadialGradientByChainUpdater'
-import { patchSdkAddressesForTaiko } from './utils/patchSdkAddresses'
 import { patchUniversalRouterForTaiko } from './utils/patchUniversalRouter'
 
-// Patch SDK addresses to support Taiko Hoodi
-patchSdkAddressesForTaiko()
+// Initialize Taiko-specific patches
 patchUniversalRouterForTaiko()
 
 if (window.ethereum) {

@@ -1,6 +1,7 @@
 import { t } from '@lingui/macro'
-import { ChainId, Currency, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { ChainId, Currency, UNI_ADDRESSES } from '@uniswap/sdk-core'
 import UniswapXBolt from 'assets/svg/bolt.svg'
+import { NONFUNGIBLE_POSITION_MANAGER_ADDRESSES } from 'config/chains'
 import moonpayLogoSrc from 'assets/svg/moonpay.svg'
 import { nativeOnChain } from 'constants/tokens'
 import {

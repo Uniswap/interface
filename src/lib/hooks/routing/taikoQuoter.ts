@@ -20,16 +20,8 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
     tradeType,
   } = args
 
-  console.log('🔵 Taiko Quoter called:', {
-    tokenInAddress,
-    tokenOutAddress,
-    amount,
-    tradeType: tradeType === TradeType.EXACT_INPUT ? 'EXACT_INPUT' : 'EXACT_OUTPUT',
-  })
-
   // Only support Taiko Hoodi chain
   if (tokenInChainId !== TAIKO_HOODI_CHAIN_ID || tokenOutChainId !== TAIKO_HOODI_CHAIN_ID) {
-    console.log('❌ Chain mismatch')
     return { state: QuoteState.NOT_FOUND }
   }
 
@@ -37,10 +29,7 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
     const provider = RPC_PROVIDERS[TAIKO_HOODI_CHAIN_ID]
     const quoterAddress = TAIKO_HOODI_ADDRESSES.quoterV2
 
-    console.log('🔵 Using QuoterV2 at:', quoterAddress)
-
     if (!quoterAddress || quoterAddress === '0x0000000000000000000000000000000000000000') {
-      console.warn('QuoterV2 not configured for Taiko Hoodi')
       return { state: QuoteState.NOT_FOUND }
     }
 
@@ -52,11 +41,6 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
     const actualTokenInAddress = tokenInIsNative ? TAIKO_HOODI_ADDRESSES.weth9 : tokenInAddress
     const actualTokenOutAddress = tokenOutIsNative ? TAIKO_HOODI_ADDRESSES.weth9 : tokenOutAddress
 
-    console.log('🔵 Token addresses (after native conversion):', {
-      tokenIn: actualTokenInAddress,
-      tokenOut: actualTokenOutAddress,
-    })
-
     const quoter = Quoter__factory.connect(quoterAddress, provider)
 
     // Try common fee tiers in order: 0.3%, 0.05%, 1%, 0.01%
@@ -64,8 +48,6 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
 
     for (const fee of feeTiers) {
       try {
-        console.log(`🔵 Trying fee tier: ${fee}`)
-
         // First check if pool exists
         const poolAddress = await quoter.factory().then((factoryAddr: string) => {
           const { Contract } = require('@ethersproject/contracts')
@@ -73,10 +55,7 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
           return factory.getPool(actualTokenInAddress, actualTokenOutAddress, fee)
         })
 
-        console.log(`🔵 Pool address for fee ${fee}:`, poolAddress)
-
         if (!poolAddress || poolAddress === '0x0000000000000000000000000000000000000000') {
-          console.log(`⚠️ No pool for fee tier ${fee}`)
           continue
         }
 
@@ -93,12 +72,6 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
 
         const [slot0, liquidity] = await Promise.all([poolContract.slot0(), poolContract.liquidity()])
 
-        console.log(`🔵 Pool state:`, {
-          sqrtPriceX96: slot0.sqrtPriceX96.toString(),
-          tick: slot0.tick.toString(),
-          liquidity: liquidity.toString(),
-        })
-
         if (tradeType === TradeType.EXACT_INPUT) {
           // Quoter V1 uses separate parameters, not a struct
           const amountOut = await quoter.callStatic.quoteExactInputSingle(
@@ -108,8 +81,6 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
             amount,
             0 // sqrtPriceLimitX96
           )
-
-          console.log(`✅ Got quote: amountOut = ${amountOut.toString()}`)
 
           if (amountOut && !BigNumber.from(amountOut).isZero()) {
             const blockNumber = await provider.getBlockNumber().then(String)
@@ -232,16 +203,17 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
         }
       } catch (poolError: any) {
         // Pool doesn't exist or has no liquidity for this fee tier, try next one
-        console.log(`⚠️ Fee tier ${fee} failed:`, poolError.reason || poolError.message)
         continue
       }
     }
 
     // No pool found with any fee tier
-    console.log('❌ No pool found with any fee tier')
     return { state: QuoteState.NOT_FOUND }
   } catch (error: any) {
-    console.error('❌ Taiko quoter error:', error)
+    // Log errors in development for debugging
+    if (process.env.NODE_ENV === 'development') {
+      console.error('Taiko quoter error:', error)
+    }
     return { state: QuoteState.NOT_FOUND }
   }
 }
