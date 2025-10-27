@@ -19,7 +19,7 @@ import { TAIKO_HOODI_CHAIN_ID } from 'config/chains'
  * Custom Permit2 addresses for chains that don't use the canonical address
  */
 const CUSTOM_PERMIT2_ADDRESSES: { [chainId: number]: string } = {
-  [TAIKO_HOODI_CHAIN_ID]: '0x333a379c824BFfAC68F1235ed6ACe5251AE7ed2C', // Deployed Permit2 on Taiko Hoodi
+  [TAIKO_HOODI_CHAIN_ID]: '0xC723E421FE936ad9BcB5d89EF710771BA9C44C7D', // Deployed Permit2 on Taiko Hoodi (Solidity 0.8.17, Shanghai EVM)
 }
 
 /**
