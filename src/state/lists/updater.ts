@@ -44,28 +44,21 @@ export default function Updater(): null {
   useEffect(() => {
     if (!rehydrated) return // loaded lists will not be available until state is rehydrated
 
-    // whenever a list is not loaded and not loading, try again to load it
-    Object.keys(lists).forEach((listUrl) => {
+    // Only fetch lists that are in DEFAULT_LIST_OF_LISTS (prevents stale lists in localStorage from being fetched)
+    DEFAULT_LIST_OF_LISTS.forEach((listUrl) => {
       const list = lists[listUrl]
-      if (!list.current && !list.loadingRequestId && !list.error) {
-        fetchList(listUrl).catch((error) => console.debug('list added fetching error', error))
-      }
-    })
-    UNSUPPORTED_LIST_URLS.forEach((listUrl) => {
-      const list = lists[listUrl]
-      if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
-        fetchList(listUrl, /* isUnsupportedList= */ true).catch((error) =>
-          console.debug('list added fetching error', error)
-        )
+      if (!list?.current && !list?.loadingRequestId && !list?.error) {
+        const isUnsupportedList = UNSUPPORTED_LIST_URLS.includes(listUrl)
+        fetchList(listUrl, isUnsupportedList).catch((error) => console.debug('list added fetching error', error))
       }
     })
   }, [dispatch, fetchList, lists, rehydrated])
 
-  // automatically update lists if versions are minor/patch
+  // automatically update lists if versions are minor/patch (only for lists in DEFAULT_LIST_OF_LISTS)
   useEffect(() => {
-    Object.keys(lists).forEach((listUrl) => {
+    DEFAULT_LIST_OF_LISTS.forEach((listUrl) => {
       const list = lists[listUrl]
-      if (list.current && list.pendingUpdate) {
+      if (list?.current && list.pendingUpdate) {
         const bump = getVersionUpgrade(list.current.version, list.pendingUpdate.version)
         switch (bump) {
           case VersionUpgrade.NONE:
