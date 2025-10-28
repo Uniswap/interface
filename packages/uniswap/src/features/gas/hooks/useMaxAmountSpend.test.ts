@@ -8,8 +8,9 @@ import { MAINNET_CURRENCY } from 'uniswap/src/test/fixtures/wallet/currencies'
 
 const mockUseDynamicConfigValue = jest.fn()
 
-jest.mock('uniswap/src/features/gating/hooks', () => {
+jest.mock('@universe/gating', () => {
   return {
+    ...jest.requireActual('@universe/gating'),
     useDynamicConfigValue: (params: { config: unknown; key: unknown; defaultValue: unknown }): unknown =>
       mockUseDynamicConfigValue(params),
   }

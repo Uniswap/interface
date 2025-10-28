@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { useDepositInfo } from 'components/Liquidity/Create/hooks/useDepositInfo'
 import { getCurrencyWithOptionalUnwrap } from 'components/Liquidity/utils/currency'
 import { useAccount } from 'hooks/useAccount'

@@ -5,8 +5,8 @@ import {
   PoolTableSortState,
 } from 'appGraphql/data/pools/useTopPools'
 import { OrderDirection } from 'appGraphql/data/util'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { useAtomValue } from 'jotai/utils'
 import { useContext, useMemo } from 'react'

@@ -16,6 +16,7 @@ test.describe('Time-to-swap logging', () => {
     anvil,
   }) => {
     await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
     await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
     const expectMultipleTransactions = createExpectMultipleTransactions({

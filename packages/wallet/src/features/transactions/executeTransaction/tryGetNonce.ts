@@ -1,11 +1,15 @@
+import {
+  Experiments,
+  FeatureFlags,
+  getExperimentValue,
+  getFeatureFlagName,
+  getStatsigClient,
+  PrivateRpcProperties,
+} from '@universe/gating'
 import { SagaIterator } from 'redux-saga'
 import { call, select } from 'typed-redux-saga'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { Experiments, PrivateRpcProperties } from 'uniswap/src/features/gating/experiments'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
-import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { DEFAULT_FLASHBOTS_ENABLED } from 'uniswap/src/features/providers/FlashbotsCommon'
 import { makeSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'

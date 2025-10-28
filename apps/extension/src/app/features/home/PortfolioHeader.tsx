@@ -55,7 +55,7 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
         }),
       )
     }
-  }, [isScreenFocused, pressProgress])
+  }, [isScreenFocused])
 
   const onBegin = (): void => {
     pressProgress.value = withTiming(1)

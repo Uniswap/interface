@@ -177,7 +177,17 @@
         },
         "noUnusedLabels": "error",
         "noUnusedVariables": "error",
-        "useExhaustiveDependencies": "error",
+        "useExhaustiveDependencies": {
+          "level": "error",
+          "options": {
+            "hooks": [
+              // React Native Reanimated hooks with stable results
+              { "name": "useSharedValue", "stableResult": true },
+              { "name": "useDerivedValue", "stableResult": true },
+              { "name": "useAnimatedRef", "stableResult": true }
+            ]
+          }
+        },
         "useHookAtTopLevel": "error",
         "useIsNan": "warn",
         "useJsxKeyInIterable": "error",

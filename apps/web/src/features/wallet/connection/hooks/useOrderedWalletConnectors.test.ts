@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { createAccountsStoreGetters } from 'features/accounts/store/getters'
 import { useAccountsStore } from 'features/accounts/store/hooks'
@@ -7,8 +8,6 @@ import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 
 // biome-ignore lint/suspicious/noVar: Testing variable hoisting behavior requires var
@@ -38,10 +37,13 @@ vi.mock('components/Web3Provider/constants', async () => {
   }
 })
 
-vi.mock('uniswap/src/features/gating/hooks', () => ({
-  useFeatureFlag: vi.fn(),
-  getFeatureFlag: vi.fn(),
-}))
+vi.mock('@universe/gating', async (importOriginal) => {
+  return {
+    ...(await importOriginal()),
+    useFeatureFlag: vi.fn(),
+    getFeatureFlag: vi.fn(),
+  }
+})
 
 const createExternalWallet = (overrides: Partial<ExternalWallet> = {}): ExternalWallet => ({
   id: 'test-wallet-id',

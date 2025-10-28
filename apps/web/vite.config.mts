@@ -287,7 +287,7 @@ export default defineConfig(({ mode }) => {
         '@visx/responsive',
       ],
       // Libraries that shouldn't be pre-bundled
-      exclude: ['expo-clipboard'],
+      exclude: ['expo-clipboard', '@connectrpc/connect'],
       esbuildOptions: {
         resolveExtensions: ['.web.js', '.web.ts', '.web.tsx', '.js', '.ts', '.tsx'],
         loader: {

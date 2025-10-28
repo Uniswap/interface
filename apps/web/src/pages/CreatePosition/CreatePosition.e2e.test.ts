@@ -1,7 +1,9 @@
 import { DYNAMIC_FEE_DATA } from 'components/Liquidity/Create/types'
 import ms from 'ms'
-import { expect, getTest, Page } from 'playwright/fixtures'
+import { expect, getTest, type Page } from 'playwright/fixtures'
+import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { DAI, USDC_UNICHAIN, USDT } from 'uniswap/src/constants/tokens'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
@@ -529,15 +531,15 @@ test.describe('Create position', () => {
 
     test.describe('V3', () => {
       test('token0 and token1 are sorted - increment/decrement', async ({ page }) => {
+        await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
         await page.goto(`/positions/create/v3?currencyA=NATIVE&currencyB=${USDT.address}`)
-
         await waitUntilInputFilled({ page })
         await incrementDecrementPrice({ page })
       })
 
       test('token0 and token1 are not sorted - increment/decrement', async ({ page }) => {
+        await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
         await page.goto(`/positions/create/v3?currencyA=${USDT.address}&currencyB=NATIVE`)
-
         await waitUntilInputFilled({ page })
         await incrementDecrementPrice({ page })
       })

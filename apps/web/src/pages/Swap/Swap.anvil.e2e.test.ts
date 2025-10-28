@@ -48,6 +48,7 @@ test.describe('Swap', () => {
 
   test('should swap ETH to USDC', async ({ page, anvil }) => {
     await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
 
     await page.goto('/swap')
     await page.getByTestId(TestID.ChooseOutputToken).click()
@@ -68,6 +69,8 @@ test.describe('Swap', () => {
   })
 
   test('should be able to swap token with FOT warning via TDP', async ({ page, anvil }) => {
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
+
     await page.route(`${uniswapUrls.tradingApiUrl}/v1/swap`, async (route) => {
       const request = route.request()
       const postData = request.postDataJSON()
@@ -111,6 +114,8 @@ test.describe('Swap', () => {
   })
 
   test('should bridge from ETH to L2', async ({ page, anvil }) => {
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
     await page.goto(`/swap?inputCurrency=ETH`)
     await page.getByTestId(TestID.ChooseOutputToken).click()
     await page.getByTestId(`token-option-${UniverseChainId.Base}-ETH`).first().click()
@@ -122,6 +127,7 @@ test.describe('Swap', () => {
     ).toBeVisible()
     await page.getByTestId(TestID.AmountInputIn).click()
     await page.getByTestId(TestID.AmountInputIn).fill('1')
+    await expect(page.getByTestId(TestID.ReviewSwap)).toBeEnabled()
     await page.getByTestId(TestID.ReviewSwap).click()
     await page.getByTestId(TestID.Confirm).click()
     await page.getByTestId(TestID.Swap).click()
@@ -198,7 +204,7 @@ test.describe('Swap', () => {
       await page.getByTestId(TestID.ReviewSwap).click()
       await page.getByTestId(TestID.Swap).click()
 
-      await expect(page.getByText('Sign Message')).not.toBeVisible()
+      await expect(page.getByText('Sign message')).not.toBeVisible()
       await expect(page.getByText('Approved')).toBeVisible()
       await expect(page.getByText('Swapped')).toBeVisible()
     })
@@ -239,48 +245,48 @@ test.describe('Swap', () => {
       await page.getByTestId(TestID.Swap).click()
 
       await expect(page.getByText('Reset USDT limit')).toBeVisible()
-      await expect(page.getByText('Sign Message')).toBeVisible()
+      await expect(page.getByText('Sign message')).toBeVisible()
       await expect(page.getByText('Approved')).toBeVisible()
       await expect(page.getByText('Swapped')).toBeVisible()
     })
 
     test('prompts signature when existing permit approval is expired', async ({ page, anvil }) => {
+      await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+      await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       await anvil.setPermit2Allowance({
         owner: TEST_WALLET_ADDRESS,
         token: assume0xAddress(USDT.address),
         spender: assume0xAddress(UNIVERSAL_ROUTER_ADDRESS(UniversalRouterVersion.V2_0, UniverseChainId.Mainnet)),
         expiration: Math.floor((Date.now() - 1) / 1000),
       })
-      await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
-      await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       await page.goto(`/swap?inputCurrency=${USDT.address}&outputCurrency=ETH`)
       await page.getByTestId(TestID.AmountInputIn).click()
       await page.getByTestId(TestID.AmountInputIn).fill('10')
       await page.getByTestId(TestID.ReviewSwap).click()
       await page.getByTestId(TestID.Swap).click()
 
+      await expect(page.getByText('Sign message')).toBeVisible()
       await expect(page.getByText('Approved')).toBeVisible()
-      await expect(page.getByText('Sign Message')).toBeVisible()
       await expect(page.getByText('Swapped')).toBeVisible()
     })
 
     test('prompts signature when existing permit approval amount is too low', async ({ page, anvil }) => {
+      await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+      await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       await anvil.setPermit2Allowance({
         owner: TEST_WALLET_ADDRESS,
         token: assume0xAddress(USDT.address),
         spender: assume0xAddress(UNIVERSAL_ROUTER_ADDRESS(UniversalRouterVersion.V2_0, UniverseChainId.Mainnet)),
         amount: 1n,
       })
-      await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
-      await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
       await page.goto(`/swap?inputCurrency=${USDT.address}&outputCurrency=ETH`)
       await page.getByTestId(TestID.AmountInputIn).click()
       await page.getByTestId(TestID.AmountInputIn).fill('10')
       await page.getByTestId(TestID.ReviewSwap).click()
       await page.getByTestId(TestID.Swap).click()
 
+      await expect(page.getByText('Sign message')).toBeVisible()
       await expect(page.getByText('Approved')).toBeVisible()
-      await expect(page.getByText('Sign Message')).toBeVisible()
       await expect(page.getByText('Swapped')).toBeVisible()
     })
   })

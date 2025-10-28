@@ -1,14 +1,13 @@
 import { permit2Address } from '@uniswap/permit2-sdk'
 import { TradingApi } from '@universe/api'
+import { Experiments, FeatureFlags, getFeatureFlagName, getStatsigClient } from '@universe/gating'
 import { call, put, select } from 'typed-redux-saga'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
-import { FLASHBLOCKS_UI_SKIP_ROUTES } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
-import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
+import { logExperimentQualifyingEvent } from 'uniswap/src/features/telemetry/utils/logExperimentQualifyingEvent'
+import { getFlashblocksExperimentStatus } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { PermitMethod, ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { tradeToTransactionInfo } from 'uniswap/src/features/transactions/swap/utils/trade'
@@ -217,8 +216,19 @@ export function* approveAndSwap(params: SwapParams) {
       }
       yield* call(executeTransaction, executeTransactionParams)
 
-      // Only show pending notification if not a flashblock transaction
-      if (!getIsFlashblocksEnabled(chainId) || FLASHBLOCKS_UI_SKIP_ROUTES.includes(swapTxContext.routing)) {
+      const { shouldLogQualifyingEvent, shouldShowModal } = getFlashblocksExperimentStatus({
+        chainId,
+        routing: swapTxContext.routing,
+      })
+
+      if (shouldLogQualifyingEvent) {
+        logExperimentQualifyingEvent({
+          experiment: Experiments.UnichainFlashblocksModal,
+        })
+      }
+
+      // Show pending notification for control variant or ineligible swaps
+      if (!shouldShowModal) {
         yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
       }
 

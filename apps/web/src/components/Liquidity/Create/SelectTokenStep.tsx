@@ -1,6 +1,13 @@
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency, Percent } from '@uniswap/sdk-core'
+import {
+  AllowedV4WethHookAddressesConfigKey,
+  DynamicConfigs,
+  FeatureFlags,
+  useDynamicConfigValue,
+  useFeatureFlag,
+} from '@universe/gating'
 import CreatingPoolInfo from 'components/CreatingPoolInfo/CreatingPoolInfo'
 import { ErrorCallout } from 'components/ErrorCallout'
 import { AddHook } from 'components/Liquidity/Create/AddHook'
@@ -41,9 +48,6 @@ import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { AllowedV4WethHookAddressesConfigKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
@@ -225,7 +229,7 @@ export function SelectTokensStep({
   })
 
   const {
-    positionState: { hook, userApprovedHook, fee },
+    positionState: { hook, userApprovedHook, fee, initialPosition },
     setPositionState,
     protocolVersion,
     creatingPoolOrPair,
@@ -586,7 +590,7 @@ export function SelectTokensStep({
                     </Flex>
                     <Button
                       fill={false}
-                      isDisabled={!currencyInputs.tokenA || !currencyInputs.tokenB}
+                      isDisabled={!currencyInputs.tokenA || !currencyInputs.tokenB || initialPosition?.isOutOfRange}
                       size="xsmall"
                       maxWidth="fit-content"
                       emphasis="secondary"

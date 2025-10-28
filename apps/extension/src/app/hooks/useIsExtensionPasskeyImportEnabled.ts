@@ -1,5 +1,4 @@
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 
 export function useIsExtensionPasskeyImportEnabled(): boolean {
   return useFeatureFlag(FeatureFlags.EmbeddedWallet)

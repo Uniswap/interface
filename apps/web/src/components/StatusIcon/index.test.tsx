@@ -20,10 +20,13 @@ vi.mock('features/accounts/store/hooks', () => ({
   useConnectionStatus: vi.fn(() => ({ isConnected: false, isConnecting: false, isDisconnected: true })),
 }))
 
-vi.mock('uniswap/src/features/gating/hooks', () => ({
-  useFeatureFlag: () => false,
-  getFeatureFlag: () => false,
-}))
+vi.mock('@universe/gating', async (importOriginal) => {
+  return {
+    ...(await importOriginal()),
+    useFeatureFlag: vi.fn(),
+    getFeatureFlag: vi.fn(),
+  }
+})
 
 describe('StatusIcon', () => {
   describe('with no account', () => {

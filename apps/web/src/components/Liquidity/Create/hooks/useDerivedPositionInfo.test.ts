@@ -1,10 +1,11 @@
 import { renderHook } from '@testing-library/react'
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { ChainId, PoolInformation } from '@uniswap/client-trading/dist/trading/v1/api_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { getFeatureFlag } from '@universe/gating'
 import {
   getSortedCurrenciesForProtocol,
   useDerivedPositionInfo,
@@ -21,7 +22,6 @@ import { ETH_MAINNET } from 'test-utils/constants'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI, nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 class MockPoolInformation extends PoolInformation {
@@ -90,8 +90,8 @@ vi.mock('uniswap/src/data/rest/getPools', () => ({
   useGetPoolsByTokens: () => mockUseGetPoolsByTokens(),
 }))
 
-vi.mock('uniswap/src/features/gating/hooks', (importOriginal) => ({
-  ...importOriginal(),
+vi.mock('@universe/gating', async (importOriginal) => ({
+  ...(await importOriginal()),
   getFeatureFlag: vi.fn(),
 }))
 

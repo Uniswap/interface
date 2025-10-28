@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmZmRjJXcRL1HVbuFBLX23qqmQydzmqGsLmb94qrqTU9A7`
-- CIDv1: `bafybeifjzfti2rq27be42zfwqnturszxqyecs4zxklxxr4pejgcgi72eja`
+- CIDv0: `QmUF5sYAgjigJ6D7nE6p12SG1rFrwYLidKxeX52qBN1Pce`
+- CIDv1: `bafybeicxxeljdmh6f2s3xo43piks2h7ibgm6hbfoo3ftc5wjfmqfsngghm`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,54 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeifjzfti2rq27be42zfwqnturszxqyecs4zxklxxr4pejgcgi72eja.ipfs.dweb.link/
-- [ipfs://QmZmRjJXcRL1HVbuFBLX23qqmQydzmqGsLmb94qrqTU9A7/](ipfs://QmZmRjJXcRL1HVbuFBLX23qqmQydzmqGsLmb94qrqTU9A7/)
+- https://bafybeicxxeljdmh6f2s3xo43piks2h7ibgm6hbfoo3ftc5wjfmqfsngghm.ipfs.dweb.link/
+- [ipfs://QmUF5sYAgjigJ6D7nE6p12SG1rFrwYLidKxeX52qBN1Pce/](ipfs://QmUF5sYAgjigJ6D7nE6p12SG1rFrwYLidKxeX52qBN1Pce/)
 
-## 5.115.0 (2025-10-24)
+## 5.116.0 (2025-10-28)
 
 
 ### Features
 
-* **web:** special case metamask dual vm connection flow (#24756) (#24789) b21eafd
+* **web:** add activity table to the tab with real data (#23506) f00228c
+* **web:** Add createRejectableMockConnector util to force tx rejection (#24574) 3b3b2b7
+* **web:** add demo account support for activity tab (#24639) 9ec0194
+* **web:** add disconnected portfolio view (#23690) 7a1b085
+* **web:** add fiat to price chart (#23577) fab99ce
+* **web:** add hidden tokens table rows (#23535) 291fab3
+* **web:** add loading state to tokens table (#23544) ed5ced8
+* **web:** add more & better filtering + transaction parsing (#24579) 205c03d
+* **web:** add v2 bridged asset banner (#24734) 4666868
+* **web:** disconnected view B version (#24630) 46ca828
+* **web:** Help Modal styling nits (#24547) ae252e6
+* **web:** NFTs tab (#23604) a438b54
+* **web:** small style nits for Company menu (#24318) 4d71e08
+* **web:** special case metamask dual vm connection flow (#24756) faabc72
+* **web:** tokens table search (#23509) b83fc75
+* **web:** update CompanyMenu arrangement on tablet width (#24312) 758f68d
+
+
+### Bug Fixes
+
+* **web:** default to mainnet for limits flow [STAGING] (#24885) 5a8e150
+* **web:** Fix CreatePosition e2e anvil test (#24573) d68b011
+* **web:** Fix e2e anvil tests missing quote stub (#24590) 838d5bd
+* **web:** Fix limit order chain switch bug (#23064) b11176d
+* **web:** Fix Swap e2e anvil tests (#24662) 26adf5c
+* **web:** fixes pools tab loader skeletons (#24472) 2f887aa
+* **web:** Increase anvil manager timeout (#24623) 466eb69
+* **web:** log interface swap finalization results for flashblocks (#24869) bf30270
+* **web:** support chain filtering query params (#24754) 4bc3729
+* **web:** update the create flow to display the latest dependnet amount (#24676) 168c20a
+* **web:** Use Mainnet instead of Base for e2e test commands (#24589) ff7dfee
+
+
+### Continuous Integration
+
+* **web:** update sitemaps 4e8124b
+
+
+### Tests
+
+* **web:** Disable anvil snapshots by default (#24666) 1a2903c
 
 

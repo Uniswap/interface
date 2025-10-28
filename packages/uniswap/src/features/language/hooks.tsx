@@ -1,9 +1,9 @@
+import { ForceUpgradeTranslations } from '@universe/gating'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
-import { ForceUpgradeTranslations } from 'uniswap/src/features/gating/configs'
 import {
   Language,
   Locale,

@@ -1,3 +1,5 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { HelpModal } from 'components/HelpModal/HelpModal'
 import { MenuItem, MenuSection, MenuSectionTitle, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
 import { LegalAndPrivacyMenu } from 'components/NavBar/LegalAndPrivacyMenu'
 import { NavDropdown } from 'components/NavBar/NavDropdown'
@@ -11,8 +13,6 @@ import { ExternalLink } from 'theme/components/Links'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Flex, Separator, styled, Text } from 'ui/src'
 import { TextVariantTokens } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const Container = styled(Flex, {
@@ -22,9 +22,6 @@ const Container = styled(Flex, {
   height: 'unset',
   borderRadius: '$rounded12',
   backgroundColor: '$surface2',
-  borderColor: '$surface3',
-  borderWidth: 1,
-  borderStyle: 'solid',
   boxShadow: '$shadow.1',
 })
 
@@ -71,7 +68,7 @@ export function MenuLink({
 }
 function Section({ title, items, closeMenu }: MenuSection) {
   return (
-    <Flex gap="$spacing4" flex={1} data-testid={`menu-section-${title}`}>
+    <Flex gap="$spacing8" flex={1} data-testid={`menu-section-${title}`}>
       <Text variant="body4" color="$neutral2">
         {title}
       </Text>
@@ -147,7 +144,7 @@ export function MenuDropdown({ close }: { close?: () => void }) {
   }, [tabs])
 
   return (
-    <NavDropdown isOpen={false} dataTestId={TestID.NavCompanyDropdown}>
+    <NavDropdown isOpen={false} dataTestId={TestID.NavCompanyDropdown} borderColor="$surface3">
       <Container>
         <Flex gap="$spacing16">
           {productSection[MenuSectionTitle.Products] && (
@@ -165,8 +162,20 @@ export function MenuDropdown({ close }: { close?: () => void }) {
               />
             ))}
           </Flex>
-          <Socials iconSize="25px" />
-          {isConversionTrackingEnabled && <LegalAndPrivacyMenu closeMenu={close} />}
+          <Flex
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+            $xl={{ flexDirection: 'column', gap: '$spacing16', alignItems: 'flex-start' }}
+          >
+            {isConversionTrackingEnabled && <LegalAndPrivacyMenu closeMenu={close} />}
+            <Flex row alignSelf="flex-end" alignItems="center" justifyContent="space-between" $xl={{ width: '100%' }}>
+              <Flex display="none" $xl={{ display: 'flex' }}>
+                <HelpModal showOnXL />
+              </Flex>
+              <Socials iconSize="18px" gap="$spacing12" />
+            </Flex>
+          </Flex>
         </Flex>
       </Container>
     </NavDropdown>

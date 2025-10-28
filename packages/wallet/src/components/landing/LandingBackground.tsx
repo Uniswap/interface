@@ -76,7 +76,7 @@ const OnboardingAnimation = ({
         easing: Easing.elastic(1.1),
       }),
     )
-  }, [uniswapLogoScale])
+  }, [])
 
   useTimeout(() => {
     setShowAnimatedElements(true)
@@ -184,7 +184,7 @@ const AnimatedElements = ({
     )
     innerAnimation.value = withDelay(INNER_CIRCLE_SHOW_DELAY, withSpring(0.8))
     outerAnimation.value = withDelay(OUTER_CIRCLE_SHOW_DELAY, withSpring(0.8))
-  }, [innerAnimation, outerAnimation, rotation])
+  }, [])
 
   const innerCircleStyle = useAnimatedStyle(() => {
     return {

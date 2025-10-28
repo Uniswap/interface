@@ -4,7 +4,6 @@ import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useNavigate } from 'react-router'
 import { BridgedAssetModalAtom } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
 import { BridgedAssetTDPSection } from 'uniswap/src/components/BridgedAsset/BridgedAssetTDPSection'
-import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -23,7 +22,7 @@ export function BridgedAssetSection(): JSX.Element | null {
   const { toggleModal, closeModal } = useModalState(ModalName.BridgedAsset)
   const [, setBridgedAssetModal] = useAtom(BridgedAssetModalAtom)
 
-  const isBridgedAsset = currencyInfo && checkIsBridgedAsset(currencyInfo)
+  const isBridgedAsset = currencyInfo && Boolean(currencyInfo.isBridged)
   const handlePress = useEvent(() => {
     if (isBridgedAsset) {
       setBridgedAssetModal({

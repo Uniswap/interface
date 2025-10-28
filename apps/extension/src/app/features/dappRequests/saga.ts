@@ -1,6 +1,7 @@
 /* eslint-disable max-lines */
 import { Provider } from '@ethersproject/providers'
 import { providerErrors, rpcErrors, serializeError } from '@metamask/rpc-errors'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { createSearchParams } from 'react-router'
 import { changeChain } from 'src/app/features/dapp/changeChain'
 import { DappInfo, dappStore } from 'src/app/features/dapp/store'
@@ -45,8 +46,6 @@ import getCalldataInfoFromTransaction from 'src/background/utils/getCalldataInfo
 import { call, put, select, take } from 'typed-redux-saga'
 import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { DappRequestType, DappResponseType } from 'uniswap/src/features/dappRequests/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'

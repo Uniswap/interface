@@ -40,7 +40,9 @@
       "ui/*": ["packages/ui/*"],
       "uniswap/*": ["packages/uniswap/*"],
       "utilities/*": ["packages/utilities/*"],
-      "wallet/*": ["packages/wallet/*"]
+      "wallet/*": ["packages/wallet/*"],
+      "@universe/gating/*": ["packages/gating/*"],
+      "@universe/notifications/*": ["packages/notifications/*"]
     }
   }
 }

@@ -184,10 +184,29 @@ env:
       PHASE: 'end'
 - waitForAnimationToEnd
 
+# Wait for cloud backup to fail - handle both possible error states
+# First try waiting for "No backups found"
 - extendedWaitUntil:
     visible:
       text: 'No backups found'
-    timeout: 5000 # wait for cloud backup to fail
+    timeout: 5000
+    optional: true
+
+# If that didn't appear, wait for "Error while importing backups"
+- extendedWaitUntil:
+    visible:
+      text: 'Error while importing backups'
+    timeout: 5000
+    optional: true
+
+# If error while importing backups appeared, tap to enter recovery phrase manually
+- runFlow:
+    when:
+      visible:
+        text: 'Enter recovery phrase'
+    commands:
+      - tapOn:
+          text: 'Enter recovery phrase'
 
 # Track seed phrase input
 - runScript:

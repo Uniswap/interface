@@ -1,7 +1,7 @@
 import { V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { computePairAddress } from '@uniswap/v2-sdk'
 import { ONE_MILLION_USDT } from 'playwright/anvil/utils'
-import { expect, getTest, Page } from 'playwright/fixtures'
+import { expect, getTest, type Page } from 'playwright/fixtures'
 import { DEFAULT_TEST_GAS_LIMIT, stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { Mocks } from 'playwright/mocks/mocks'
 import { USDT } from 'uniswap/src/constants/tokens'
@@ -15,6 +15,7 @@ import { parseEther } from 'viem'
 const test = getTest({ withAnvil: true })
 
 const WETH_ADDRESS = WETH.address
+const DEFAULT_INITIAL_POOL_PRICE = '3000'
 
 function modifyGasLimit(data: { create: { gasLimit: string } }) {
   try {
@@ -124,6 +125,8 @@ test.describe('Create position', () => {
       await expect(page.getByText('New tier').first()).toBeVisible()
       await expect(page.getByText('Creating new pool')).toBeVisible()
       await page.getByRole('button', { name: 'Continue' }).click()
+      // Set initial price for new pool
+      await page.getByPlaceholder('0').first().fill(DEFAULT_INITIAL_POOL_PRICE)
       await reviewAndCreatePosition({ page })
     })
 
@@ -142,6 +145,8 @@ test.describe('Create position', () => {
       await page.getByRole('button', { name: 'Continue' }).click()
       await page.getByRole('button', { name: 'Continue' }).click()
       await page.getByRole('button', { name: 'Continue' }).click()
+      // Set initial price for new pool
+      await page.getByPlaceholder('0').first().fill(DEFAULT_INITIAL_POOL_PRICE)
       await reviewAndCreatePosition({ page })
     })
   })

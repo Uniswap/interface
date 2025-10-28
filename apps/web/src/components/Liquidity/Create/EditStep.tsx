@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import CreatingPoolInfo from 'components/CreatingPoolInfo/CreatingPoolInfo'
 import { useDefaultInitialPrice } from 'components/Liquidity/Create/hooks/useDefaultInitialPrice'
 import { PositionFlowStep } from 'components/Liquidity/Create/types'

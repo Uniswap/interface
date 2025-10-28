@@ -14,7 +14,8 @@ export function tokenProjectToCurrencyInfos(
     ?.flatMap((project) =>
       project?.tokens.map((token) => {
         const { logoUrl, safetyLevel } = project
-        const { name, chain, address, decimals, symbol, feeData, protectionInfo } = token
+        const { name, chain, address, decimals, symbol, feeData, protectionInfo, isBridged, bridgedWithdrawalInfo } =
+          token
         const chainId = fromGraphQLChain(chain)
 
         if (chainFilter && chainFilter !== chainId) {
@@ -40,6 +41,8 @@ export function tokenProjectToCurrencyInfos(
           currencyId: currencyId(currency),
           logoUrl,
           safetyInfo: getCurrencySafetyInfo(safetyLevel, protectionInfo),
+          isBridged,
+          bridgedWithdrawalInfo,
         })
 
         return currencyInfo

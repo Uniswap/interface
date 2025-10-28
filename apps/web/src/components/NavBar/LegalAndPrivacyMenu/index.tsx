@@ -42,14 +42,16 @@ export function LegalAndPrivacyMenu({ closeMenu }: { closeMenu?: () => void }) {
     <Expand
       isOpen={isOpen}
       onToggle={toggleIsOpen}
-      iconSize="icon20"
+      iconSize="icon16"
       button={
         <Text color="$neutral2" variant="body4" pr={spacing.spacing4}>
           {t('common.legalAndPrivacy')}
         </Text>
       }
+      paddingTop="4px"
+      width="100%"
     >
-      <Flex gap="$gap8">
+      <Flex gap="$gap4">
         <MenuLink onPress={handleOnMenuPress(openPrivacyChoices)}>
           <PrivacyOptions /> {t('common.privacyChoices')}
         </MenuLink>

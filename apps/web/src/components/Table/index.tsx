@@ -194,6 +194,9 @@ export function Table<T extends RowData>({
   defaultPinnedColumns = [],
   forcePinning = false,
   v2 = true,
+  hideHeader = false,
+  externalScrollSync = false,
+  scrollGroup = 'table-sync',
   getRowId,
   rowWrapper,
 }: {
@@ -207,6 +210,9 @@ export function Table<T extends RowData>({
   defaultPinnedColumns?: string[]
   forcePinning?: boolean
   v2: boolean
+  hideHeader?: boolean
+  externalScrollSync?: boolean
+  scrollGroup?: string
   getRowId?: (originalRow: T, index: number, parent?: Row<T>) => string
   rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
 }) {
@@ -380,11 +386,15 @@ export function Table<T extends RowData>({
   const hasPinnedColumns = useMemo(() => pinnedColumns.length > 0, [pinnedColumns])
 
   const tableSize = useMemo(() => ({ width, height, top, left }), [width, height, top, left])
+  const computedBodyMaxHeight = useMemo(
+    () => (maxHeight ? (hideHeader ? maxHeight : maxHeight - headerHeight) : 'unset'),
+    [maxHeight, hideHeader, headerHeight],
+  )
 
-  return (
-    <TableSizeProvider value={tableSize}>
-      <ScrollSync horizontal>
-        <TableContainer maxWidth={maxWidth} maxHeight={maxHeight} position="relative" ref={parentRef}>
+  const content = (
+    <TableContainer maxWidth={maxWidth} maxHeight={maxHeight} position="relative" ref={parentRef}>
+      {!hideHeader && (
+        <>
           <TableHead $isSticky={isSticky} $top={headerHeight}>
             {hasPinnedColumns && (
               <>
@@ -415,7 +425,7 @@ export function Table<T extends RowData>({
                 />
               </>
             )}
-            <ScrollSyncPane group="table-sync">
+            <ScrollSyncPane group={scrollGroup}>
               <HeaderRow dimmed={!!error} v2={v2}>
                 {table.getFlatHeaders().map((header) => (
                   <CellContainer key={header.id} style={getCommonPinningStyles(header.column, colors)}>
@@ -426,29 +436,35 @@ export function Table<T extends RowData>({
             </ScrollSyncPane>
           </TableHead>
           {hasPinnedColumns && <TableScrollMask zIndex={zIndexes.default} borderBottomRightRadius="$rounded20" />}
-          <ScrollSyncPane group="table-sync">
-            <TableBodyContainer maxHeight={maxHeight ? maxHeight - headerHeight : 'unset'} v2={v2}>
-              <TableBody
-                loading={loading}
-                error={error}
-                v2={v2}
-                rowWrapper={rowWrapper}
-                // @ts-ignore
-                table={table}
-                ref={tableBodyRef}
-              />
-            </TableBodyContainer>
-          </ScrollSyncPane>
-          {loadingMore && (
-            <LoadingIndicatorContainer>
-              <LoadingIndicator>
-                <Loader />
-                <Trans i18nKey="common.loading" />
-              </LoadingIndicator>
-            </LoadingIndicatorContainer>
-          )}
-        </TableContainer>
-      </ScrollSync>
+        </>
+      )}
+      <ScrollSyncPane group={scrollGroup}>
+        <TableBodyContainer maxHeight={computedBodyMaxHeight} v2={v2}>
+          <TableBody
+            loading={loading}
+            error={error}
+            v2={v2}
+            rowWrapper={rowWrapper}
+            // @ts-ignore
+            table={table}
+            ref={tableBodyRef}
+          />
+        </TableBodyContainer>
+      </ScrollSyncPane>
+      {loadingMore && (
+        <LoadingIndicatorContainer>
+          <LoadingIndicator>
+            <Loader />
+            <Trans i18nKey="common.loading" />
+          </LoadingIndicator>
+        </LoadingIndicatorContainer>
+      )}
+    </TableContainer>
+  )
+
+  return (
+    <TableSizeProvider value={tableSize}>
+      {externalScrollSync ? content : <ScrollSync horizontal>{content}</ScrollSync>}
     </TableSizeProvider>
   )
 }

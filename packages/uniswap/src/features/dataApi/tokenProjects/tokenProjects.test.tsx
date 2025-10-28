@@ -28,9 +28,17 @@ describe(useTokenProjects, () => {
       resolvers,
     })
 
-    await waitFor(async () => {
-      const data = result.current.data
-      expect(data).toEqual(tokenProjectToCurrencyInfos(await resolved.tokenProjects))
+    const expected = tokenProjectToCurrencyInfos(await resolved.tokenProjects)
+    // GraphQL converts undefined to null, so we need to do the same for comparison
+    const expectedWithNull = expected.map((item) => ({
+      ...item,
+      isBridged: item.isBridged ?? null,
+      bridgedWithdrawalInfo: item.bridgedWithdrawalInfo ?? null,
+    }))
+
+    await waitFor(() => {
+      expect(result.current.loading).toEqual(false)
+      expect(result.current.data).toEqual(expectedWithNull)
     })
   })
 })

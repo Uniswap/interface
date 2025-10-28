@@ -37,6 +37,7 @@ const TabItem = ({ tab, index, isFocused, onPress, colors }: TabItemProps): JSX.
   return (
     <TouchableArea
       key={tab.key}
+      testID={`${tab.key.toLowerCase()}-tab`}
       role="button"
       aria-label={`${tab.key} tab`}
       aria-selected={isFocused}

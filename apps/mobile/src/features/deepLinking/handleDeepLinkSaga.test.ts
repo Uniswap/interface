@@ -42,13 +42,11 @@ jest.mock('expo-web-browser', () => ({
     FULL_SCREEN: 'fullScreen',
   },
 }))
-jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
+jest.mock('@universe/gating', () => ({
+  ...jest.requireActual('@universe/gating'),
   getStatsigClient: jest.fn(() => ({
     checkGate: jest.fn(() => false), // Always return false to avoid Korea gate redirects
   })),
-}))
-
-jest.mock('uniswap/src/features/gating/hooks', () => ({
   getFeatureFlag: jest.fn(() => false), // Default to false for feature flags
 }))
 

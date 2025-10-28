@@ -11,8 +11,10 @@ import { createRoot } from 'react-dom/client'
 import SidebarApp from 'src/app/core/SidebarApp'
 import { onboardingMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { OnboardingMessageType } from 'src/background/messagePassing/types/ExtensionMessages'
+import { getReduxStore } from 'src/store/store'
 import { ExtensionAppLocation, StoreSynchronization } from 'src/store/storeSynchronization'
 import { initializeScrollWatcher } from 'uniswap/src/components/modals/ScrollLock'
+import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { logger } from 'utilities/src/logger/logger'
 // biome-ignore lint/suspicious/noExplicitAny: Global polyfill cleanup requires any type for runtime modification
 ;(globalThis as any).regeneratorRuntime = undefined
@@ -44,6 +46,7 @@ export function makeSidebar(): void {
   }
 
   StoreSynchronization.init(ExtensionAppLocation.SidePanel)
+  initializePortfolioQueryOverrides({ store: getReduxStore() })
   initSidebar()
   initializeScrollWatcher()
 }

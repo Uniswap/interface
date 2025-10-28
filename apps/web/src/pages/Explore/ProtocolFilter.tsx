@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Dropdown, InternalMenuItem } from 'components/Dropdowns/Dropdown'
 import { getProtocolVersionLabel } from 'components/Liquidity/utils/protocolVersion'
 import { atom, useAtom } from 'jotai'

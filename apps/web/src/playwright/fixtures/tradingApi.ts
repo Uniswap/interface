@@ -1,6 +1,6 @@
 // biome-ignore lint/style/noRestrictedImports: Trading API fixtures need direct Playwright imports
 import { test as base } from '@playwright/test'
-import { Page } from 'playwright/test'
+import { type Page } from 'playwright/test'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 
 export const DEFAULT_TEST_GAS_LIMIT = '20000000'
@@ -54,7 +54,15 @@ export async function stubTradingApiEndpoint({
       })
 
       const responseText = await response.text()
-      let responseJson = JSON.parse(responseText)
+      let responseJson
+      try {
+        responseJson = JSON.parse(responseText)
+      } catch (parseError) {
+        throw new Error(`Failed to parse trading API response for ${endpoint}. Response: ${responseText}`, {
+          cause: parseError,
+        })
+      }
+
       // Set a high gas limit to avoid OutOfGas
       if (endpoint === uniswapUrls.tradingApiPaths.swap) {
         responseJson.swap.gasLimit = DEFAULT_TEST_GAS_LIMIT

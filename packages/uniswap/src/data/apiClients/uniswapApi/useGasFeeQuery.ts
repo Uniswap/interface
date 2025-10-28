@@ -4,13 +4,13 @@ import {
   type UseQueryWithImmediateGarbageCollectionApiHelperHookArgs,
   useQueryWithImmediateGarbageCollection,
 } from '@universe/api'
+import { useStatsigClientStatus } from '@universe/gating'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import {
   createFetchGasFee,
   type GasFeeResultWithoutState,
 } from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
 import { getActiveGasStrategy } from 'uniswap/src/features/gas/utils'
-import { useStatsigClientStatus } from 'uniswap/src/features/gating/hooks'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 export function useGasFeeQuery({

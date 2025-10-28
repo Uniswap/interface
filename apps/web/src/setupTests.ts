@@ -10,6 +10,7 @@ import {
   WalletName,
   WalletReadyState,
 } from '@solana/wallet-adapter-base'
+import { useFeatureFlag } from '@universe/gating'
 import { useWeb3React } from '@web3-react/core'
 import { config as loadEnv } from 'dotenv'
 import failOnConsole from 'jest-fail-on-console'
@@ -19,7 +20,6 @@ import { Readable } from 'stream'
 import { toBeVisible } from 'test-utils/matchers'
 import { mocked } from 'test-utils/mocked'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { setupi18n } from 'uniswap/src/i18n/i18n-setup-interface'
 import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { TextDecoder, TextEncoder } from 'util'
@@ -390,10 +390,9 @@ failOnConsole({
   },
 })
 
-vi.mock('uniswap/src/features/gating/hooks', async () => {
-  const genMock = await vi.importActual('uniswap/src/features/gating/hooks')
+vi.mock('@universe/gating', async (importOriginal) => {
   return {
-    ...genMock,
+    ...(await importOriginal()),
     useFeatureFlag: vi.fn(),
     useFeatureFlagWithLoading: vi.fn(),
     getFeatureFlag: vi.fn(),

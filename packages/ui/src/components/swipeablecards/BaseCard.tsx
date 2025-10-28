@@ -38,7 +38,7 @@ export function BaseCard({ children, stackIndex, cardHeight, onLayout, panOffset
     if (panOffset) {
       panOffset.value = 0
     }
-  }, [panOffset, scale, stackIndex, yOffset])
+  }, [panOffset, stackIndex])
 
   const animatedStyle = useAnimatedStyle(() => {
     return {

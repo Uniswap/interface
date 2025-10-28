@@ -1,4 +1,4 @@
-import { getPosition } from '@uniswap/client-pools/dist/pools/v1/api-PoolsService_connectquery'
+import { getPosition } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import { expect, getTest } from 'playwright/fixtures'
 import { Mocks } from 'playwright/mocks/mocks'
 import { uniswapUrls } from 'uniswap/src/constants/urls'

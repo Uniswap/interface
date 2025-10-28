@@ -10,6 +10,7 @@ const test = getTest({ withAnvil: true })
 test.describe('Fees', () => {
   test('swaps ETH for USDC exact-in with swap fee', async ({ page, anvil }) => {
     await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
 
     await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 

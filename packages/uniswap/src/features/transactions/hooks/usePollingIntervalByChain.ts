@@ -1,8 +1,6 @@
+import { DynamicConfigs, FeatureFlags, SwapConfigKey, useDynamicConfigValue, useFeatureFlag } from '@universe/gating'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isMainnetChainId } from 'uniswap/src/features/chains/utils'
-import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export const AVERAGE_L1_BLOCK_TIME_MS = 12 * ONE_SECOND_MS

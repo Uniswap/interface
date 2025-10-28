@@ -1,3 +1,4 @@
+import useIsConnected from 'pages/Portfolio/Header/hooks/useIsConnected'
 import { TokenData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { PropsWithChildren, useMemo } from 'react'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
@@ -9,6 +10,7 @@ export default function TokensContextMenuWrapper({
   triggerMode,
   children,
 }: PropsWithChildren<{ tokenData: TokenData; triggerMode?: ContextMenuTriggerMode }>): React.ReactNode {
+  const isConnected = useIsConnected()
   const portfolioBalance: PortfolioBalance | undefined = useMemo(() => {
     if (!tokenData.currencyInfo) {
       return undefined
@@ -25,7 +27,7 @@ export default function TokensContextMenuWrapper({
     }
   }, [tokenData.currencyInfo, tokenData.id, tokenData.balance.value, tokenData.change1d, tokenData.rawValue])
 
-  if (!portfolioBalance) {
+  if (!portfolioBalance || !isConnected) {
     return children
   }
 

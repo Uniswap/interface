@@ -1,3 +1,4 @@
+import { DeepLinkUrlAllowlist } from '@universe/gating'
 import { getScantasticQueryParams } from 'src/components/Requests/ScanSheet/util'
 import { UNISWAP_URL_SCHEME_UWU_LINK } from 'src/components/Requests/Uwulink/utils'
 import { getInAppBrowserAllowlist } from 'src/features/deepLinking/configUtils'
@@ -8,7 +9,6 @@ import {
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/constants'
 import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
-import { DeepLinkUrlAllowlist } from 'uniswap/src/features/gating/configs'
 import { isCurrencyIdValid } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 

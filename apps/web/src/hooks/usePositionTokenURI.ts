@@ -1,6 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { useQuery } from '@tanstack/react-query'
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { useV3NFTPositionManagerContract, useV4NFTPositionManagerContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'

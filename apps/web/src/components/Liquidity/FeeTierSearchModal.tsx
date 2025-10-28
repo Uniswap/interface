@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks/useAllFeeTierPoolData'
 import {
   calculateTickSpacingFromFeeAmount,
@@ -27,8 +28,6 @@ import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { numericInputRegex } from 'uniswap/src/components/AmountInput/utils/numericInputEnforcer'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { LiquidityEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'

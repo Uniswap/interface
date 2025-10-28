@@ -23,7 +23,7 @@ export function AnimatedTokenFlip({
       duration: 600,
       easing: Easing.bezier(0.68, -0.3, 0.265, 1.3),
     })
-  }, [processingState, flipAnimation])
+  }, [processingState])
 
   const handleTokenClick = (): void => {
     setProcessingState((prev) => (prev === 'complete' ? 'processing' : 'complete'))

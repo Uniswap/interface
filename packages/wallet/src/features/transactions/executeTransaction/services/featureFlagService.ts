@@ -1,5 +1,5 @@
-import { ExperimentProperties } from 'uniswap/src/features/gating/experiments'
-import type { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import type { FeatureFlags } from '@universe/gating'
+import { ExperimentProperties } from '@universe/gating'
 
 export interface FeatureFlagService {
   isFeatureEnabled(flagName: FeatureFlags): boolean

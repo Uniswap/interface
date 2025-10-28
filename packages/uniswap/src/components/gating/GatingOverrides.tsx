@@ -1,3 +1,16 @@
+import {
+  DynamicConfigs,
+  EmbeddedWalletConfigKey,
+  Experiments,
+  ExtensionBiometricUnlockConfigKey,
+  FeatureFlags,
+  ForceUpgradeConfigKey,
+  getFeatureFlagName,
+  getOverrideAdapter,
+  Layers,
+  useFeatureFlagWithExposureLoggingDisabled,
+  WALLET_FEATURE_FLAG_NAMES,
+} from '@universe/gating'
 import React, { PropsWithChildren, useCallback } from 'react'
 import { Accordion, Flex, Separator, Switch, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -14,16 +27,6 @@ import { GatingButton } from 'uniswap/src/components/gating/GatingButton'
 import { ExperimentRow, LayerRow } from 'uniswap/src/components/gating/Rows'
 import { useForceUpgradeStatus } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeStatus'
 import { useForceUpgradeTranslations } from 'uniswap/src/features/forceUpgrade/hooks/useForceUpgradeTranslations'
-import {
-  DynamicConfigs,
-  EmbeddedWalletConfigKey,
-  ExtensionBiometricUnlockConfigKey,
-  ForceUpgradeConfigKey,
-} from 'uniswap/src/features/gating/configs'
-import { Experiments, Layers } from 'uniswap/src/features/gating/experiments'
-import { FeatureFlags, getFeatureFlagName, WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
-import { getOverrideAdapter } from 'uniswap/src/features/gating/sdk/statsig'
 import { useEmbeddedWalletBaseUrl } from 'uniswap/src/features/passkey/hooks/useEmbeddedWalletBaseUrl'
 import { isExtensionApp, isMobileApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'

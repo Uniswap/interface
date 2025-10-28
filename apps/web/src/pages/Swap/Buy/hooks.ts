@@ -1,4 +1,5 @@
 import { useMeldSupportedCurrencyToCurrencyInfo } from 'appGraphql/data/types'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
@@ -17,8 +18,6 @@ import {
   FORCountry,
   OffRampTransferDetailsRequest,
 } from 'uniswap/src/features/fiatOnRamp/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 // biome-ignore lint/style/noRestrictedImports: Buy hooks need direct SDK imports
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 

@@ -1,7 +1,8 @@
 import React from 'react'
-import { useAnimatedStyle } from 'react-native-reanimated'
+import { useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { useLineChartDatetime } from 'react-native-wagmi-charts'
 import { AnimatedDecimalNumber } from 'src/components/PriceExplorer/AnimatedDecimalNumber'
+import { useLineChartFiatDelta } from 'src/components/PriceExplorer/useFiatDelta'
 import { useLineChartPrice, useLineChartRelativeChange } from 'src/components/PriceExplorer/usePrice'
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { Flex, Text, useSporeColors } from 'ui/src'
@@ -39,18 +40,46 @@ export function PriceText({ maxWidth }: { loading: boolean; maxWidth?: number })
   )
 }
 
-export function RelativeChangeText({ loading }: { loading: boolean }): JSX.Element {
+export function RelativeChangeText({
+  loading,
+  startingPrice,
+  shouldTreatAsStablecoin = false,
+}: {
+  loading: boolean
+  startingPrice?: number
+  shouldTreatAsStablecoin?: boolean
+}): JSX.Element {
   const colors = useSporeColors()
 
   const relativeChange = useLineChartRelativeChange()
+  const fiatDelta = useLineChartFiatDelta({
+    startingPrice,
+    shouldTreatAsStablecoin,
+  })
+
+  const changeColor = useDerivedValue(() => {
+    if (relativeChange.value.value === 0) {
+      return colors.neutral3.val
+    }
+    return relativeChange.value.value > 0 ? colors.statusSuccess.val : colors.statusCritical.val
+  })
 
   const styles = useAnimatedStyle(() => ({
-    color: relativeChange.value.value >= 0 ? colors.statusSuccess.val : colors.statusCritical.val,
+    color: changeColor.value,
   }))
   const caretStyle = useAnimatedStyle(() => ({
-    color: relativeChange.value.value >= 0 ? colors.statusSuccess.val : colors.statusCritical.val,
+    color: changeColor.value,
     transform: [{ rotate: relativeChange.value.value >= 0 ? '180deg' : '0deg' }],
   }))
+
+  // Combine fiat delta and percentage in a derived value
+  const combinedText = useDerivedValue(() => {
+    const delta = fiatDelta.formatted.value
+    if (delta) {
+      return `${delta} (${relativeChange.formatted.value})`
+    }
+    return relativeChange.formatted.value
+  })
 
   return (
     <Flex
@@ -76,7 +105,7 @@ export function RelativeChangeText({ loading }: { loading: boolean }): JSX.Eleme
               { translateY: relativeChange.value.value >= 0 ? -1 : 1 },
             ]}
           />
-          <AnimatedText style={styles} testID="relative-change-text" text={relativeChange.formatted} variant="body1" />
+          <AnimatedText style={styles} testID="relative-change-text" text={combinedText} variant="body1" />
         </>
       )}
     </Flex>
@@ -93,8 +122,8 @@ export function DatetimeText({ loading }: { loading: boolean }): JSX.Element | n
   }
 
   return (
-    <Flex alignItems={isAndroid ? 'center' : 'flex-end'} gap="$spacing2" mt={isAndroid ? '$none' : '$spacing2'}>
-      <AnimatedText color="$neutral2" text={datetime.formatted} variant="body1" />
+    <Flex alignItems="center" mt="$spacing12">
+      <AnimatedText color="$neutral2" text={datetime.formatted} variant="body3" />
     </Flex>
   )
 }

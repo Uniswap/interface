@@ -40,7 +40,7 @@ export const Switch = memo(function Switch({
     if (checked !== undefined && checked !== (progress.value === 1)) {
       progress.value = withTiming(checked ? 1 : 0, ANIMATION_CONFIG)
     }
-  }, [checked, progress])
+  }, [checked])
 
   const trackStyle = useAnimatedStyle(() => {
     const isOn = progress.value

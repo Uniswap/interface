@@ -207,7 +207,7 @@ function TDPSwapComponent() {
     <Flex gap="$gap12">
       <Swap
         syncTabToUrl={false}
-        chainId={currency.chainId}
+        initialInputChainId={currency.chainId}
         initialInputCurrency={initialInputCurrency}
         initialOutputCurrency={initialOutputCurrency}
         onCurrencyChange={handleCurrencyChange}

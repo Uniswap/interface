@@ -160,20 +160,26 @@ export function useConfirmModalState({
   )
 
   const startSwapFlow = useCallback(async () => {
-    if (chainId && chainId !== account.chainId) {
-      const switchChainResult = await selectChain(chainId)
-      if (!switchChainResult) {
-        return
-      }
-    }
     const steps = generateRequiredSteps()
     setPendingModalSteps(steps)
     performStep(steps[0])
-  }, [account.chainId, chainId, generateRequiredSteps, performStep, selectChain])
+  }, [generateRequiredSteps, performStep])
 
   const previousSetupApprovalNeeded = usePrevious(
     allowance.state === AllowanceState.REQUIRED ? allowance.needsSetupApproval : undefined,
   )
+
+  useEffect(() => {
+    const switchChain = async () => {
+      if (chainId && chainId !== account.chainId) {
+        const switchChainResult = await selectChain(chainId)
+        if (!switchChainResult) {
+          return
+        }
+      }
+    }
+    switchChain()
+  }, [chainId, account.chainId, selectChain])
 
   useEffect(() => {
     // If the wrapping step finished, trigger the next step (allowance or swap).

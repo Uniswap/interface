@@ -10,7 +10,7 @@ const Balance = memo(function Balance({ value, symbol }: TokenData['balance']) {
   }
 
   return (
-    <TableText>
+    <TableText numberOfLines={1}>
       <ValueWithFadedDecimals value={value} /> {symbol}
     </TableText>
   )

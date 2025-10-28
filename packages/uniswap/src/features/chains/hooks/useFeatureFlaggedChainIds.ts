@@ -1,8 +1,7 @@
+import { FeatureFlags, getFeatureFlag, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { filterChainIdsByFeatureFlag } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlag, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export const getFeatureFlaggedChainIds = createGetFeatureFlaggedChainIds({
   getSoneiumStatus: () => getFeatureFlag(FeatureFlags.Soneium),

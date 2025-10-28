@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { MenuStateVariant, useMenuState } from 'components/AccountDrawer/menuState'
 import { SwitchNetworkAction } from 'components/Popups/types'
@@ -22,8 +23,6 @@ import { useOnchainDisplayName } from 'uniswap/src/features/accounts/useOnchainD
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { useSetActiveChainId } from 'uniswap/src/features/smartWallet/delegation/hooks/useSetActiveChainId'

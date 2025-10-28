@@ -249,7 +249,7 @@ export function PoolDetailsStatsButtons({
       <SwapModalWrapper open={swapModalOpen} data-testid="pool-details-swap-modal">
         <Swap
           syncTabToUrl={false}
-          chainId={chainId}
+          initialInputChainId={chainId}
           initialInputCurrency={currency0}
           initialOutputCurrency={currency1}
         />

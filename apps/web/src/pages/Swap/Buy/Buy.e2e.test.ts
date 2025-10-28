@@ -1,5 +1,7 @@
 import { expect, getTest } from 'playwright/fixtures'
+import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { Mocks } from 'playwright/mocks/mocks'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const test = getTest()
@@ -20,6 +22,7 @@ test.describe('Buy Crypto Form', () => {
       })
     }
 
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
     await page.goto('/buy')
 
     // Wait for wallet to be connected

@@ -19,7 +19,6 @@ export function WaveLoader(): JSX.Element {
   const yPosition = useSharedValue(0)
   const { chartHeight } = useChartDimensions()
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: only want to do this once on mount
   useEffect(() => {
     yPosition.value = withRepeat(withTiming(1, { duration: WAVE_DURATION }), Infinity, false)
   }, [])

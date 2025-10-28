@@ -2,10 +2,10 @@ import {
   DeepLinkUrlAllowlist,
   DeepLinkUrlAllowlistConfigKey,
   DynamicConfigs,
+  getDynamicConfigValue,
   UwULinkAllowlist,
   UwuLinkConfigKey,
-} from 'uniswap/src/features/gating/configs'
-import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+} from '@universe/gating'
 import { isUwULinkAllowlistType } from 'uniswap/src/features/gating/typeGuards'
 
 /**

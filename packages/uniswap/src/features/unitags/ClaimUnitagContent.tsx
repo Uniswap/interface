@@ -131,13 +131,7 @@ export function ClaimUnitagContent({
     })
 
     return unsubscribe
-  }, [
-    navigationEventConsumer,
-    showTextInputView,
-    addressViewOpacity,
-    unitagInputContainerTranslateY,
-    focusUnitagTextInput,
-  ])
+  }, [navigationEventConsumer, showTextInputView, focusUnitagTextInput])
 
   const onChangeTextInput = useCallback(
     (text: string): void => {
@@ -196,15 +190,7 @@ export function ClaimUnitagContent({
         }
       }, initialDelay + translateYDuration)
     },
-    [
-      onComplete,
-      onNavigateContinue,
-      addressViewOpacity,
-      entryPoint,
-      unitagAddress,
-      unitagInputContainerTranslateY,
-      fontSize,
-    ],
+    [onComplete, onNavigateContinue, entryPoint, unitagAddress, fontSize],
   )
 
   useEffect(() => {

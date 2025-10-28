@@ -33,6 +33,7 @@ export function PopupItem({ content, onClose }: { content: PopupContent; popKey:
     case PopupType.SwitchNetwork: {
       return (
         <ToastRegularSimple
+          width="unset"
           onDismiss={onClose}
           icon={<NetworkLogo chainId={content.chainId} />}
           text={getSwitchNetworkTitle({

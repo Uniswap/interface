@@ -1,6 +1,7 @@
-import { Pool, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Pool, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { PoolInfoRequest, PoolParameters } from '@uniswap/client-trading/dist/trading/v1/api_pb'
 import { Currency } from '@uniswap/sdk-core'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import {
   CreatePositionInfo,
   CreateV2PositionInfo,
@@ -25,8 +26,6 @@ import { PositionField } from 'types/position'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { usePoolInfoQuery } from 'uniswap/src/data/apiClients/tradingApi/usePoolInfoQuery'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 function getSortedCurrencies(a: Maybe<Currency>, b: Maybe<Currency>): { [field in PositionField]: Maybe<Currency> } {
   if (!a || !b) {

@@ -1,4 +1,5 @@
 import { StackActions } from '@react-navigation/native'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { PropsWithChildren, useCallback } from 'react'
 import { Share } from 'react-native'
 import { useDispatch } from 'react-redux'
@@ -15,8 +16,6 @@ import {
   useFiatOnRampAggregatorGetCountryQuery,
 } from 'uniswap/src/features/fiatOnRamp/api'
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'

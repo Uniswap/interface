@@ -9,6 +9,7 @@ export interface UniswapBehaviorHistoryState {
   hasDismissedBridgingWarning?: boolean
   hasDismissedLowNetworkTokenWarning?: boolean
   hasViewedContractAddressExplainer?: boolean
+  hasDismissedBridgedAssetsBannerV2?: boolean
   unichainPromotion?: {
     coldBannerDismissed?: boolean
     warmBannerDismissed?: boolean
@@ -33,6 +34,7 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
   hasDismissedBridgingWarning: false,
   hasDismissedLowNetworkTokenWarning: false,
   hasViewedContractAddressExplainer: false,
+  hasDismissedBridgedAssetsBannerV2: false,
   unichainPromotion: {
     coldBannerDismissed: false,
     warmBannerDismissed: false,
@@ -108,6 +110,9 @@ const slice = createSlice({
     setHasSeenToucanIntroModal: (state, action: PayloadAction<boolean>) => {
       state.hasSeenToucanIntroModal = action.payload
     },
+    setHasDismissedBridgedAssetsBannerV2: (state, action: PayloadAction<boolean>) => {
+      state.hasDismissedBridgedAssetsBannerV2 = action.payload
+    },
   },
 })
 
@@ -128,6 +133,7 @@ export const {
   setEmbeddedWalletGraduateCardDismissed,
   setHasShownSmartWalletNudge,
   setHasSeenToucanIntroModal,
+  setHasDismissedBridgedAssetsBannerV2,
 } = slice.actions
 
 export const uniswapBehaviorHistoryReducer = slice.reducer

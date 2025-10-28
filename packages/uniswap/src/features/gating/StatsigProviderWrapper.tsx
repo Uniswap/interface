@@ -1,12 +1,6 @@
+import { StatsigOptions, StatsigProvider, StatsigUser, StorageProvider, useClientAsyncInit } from '@universe/gating'
 import { ReactNode, useEffect } from 'react'
 import { config } from 'uniswap/src/config'
-import {
-  StatsigOptions,
-  StatsigProvider,
-  StatsigUser,
-  StorageProvider,
-  useClientAsyncInit,
-} from 'uniswap/src/features/gating/sdk/statsig'
 import { statsigBaseConfig } from 'uniswap/src/features/gating/statsigBaseConfig'
 import { logger } from 'utilities/src/logger/logger'
 

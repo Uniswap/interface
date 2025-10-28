@@ -3,6 +3,17 @@ import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
 import { DdRum, RumActionType } from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
+import {
+  DatadogSessionSampleRateKey,
+  DynamicConfigs,
+  Experiments,
+  getDynamicConfigValue,
+  getStatsigClient,
+  StatsigCustomAppValue,
+  StatsigUser,
+  Storage,
+  WALLET_FEATURE_FLAG_NAMES,
+} from '@universe/gating'
 import { MMKVWrapper } from 'apollo3-cache-persist'
 import { default as React, StrictMode, useCallback, useEffect, useMemo, useRef } from 'react'
 import { I18nextProvider } from 'react-i18next'
@@ -55,13 +66,7 @@ import { BlankUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { DatadogSessionSampleRateKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
-import { StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
-import { Experiments } from 'uniswap/src/features/gating/experiments'
-import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
-import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
-import { getStatsigClient, StatsigUser, Storage } from 'uniswap/src/features/gating/sdk/statsig'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice/slice'
@@ -120,6 +125,8 @@ initDynamicIntlPolyfills()
 
 initOneSignal()
 initAppsFlyer()
+
+initializePortfolioQueryOverrides({ store })
 
 function App(): JSX.Element | null {
   useEffect(() => {
@@ -239,12 +246,6 @@ function AppOuter(): JSX.Element | null {
       })
     }
   }, [])
-
-  useEffect(() => {
-    if (client) {
-      initializePortfolioQueryOverrides({ store, apolloClient: client })
-    }
-  }, [client])
 
   if (!client) {
     return null

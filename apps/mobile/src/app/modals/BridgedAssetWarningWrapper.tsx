@@ -1,7 +1,6 @@
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
 import { BridgedAssetModal } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
-import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useDismissedBridgedAssetWarnings } from 'uniswap/src/features/tokens/slice/hooks'
@@ -36,7 +35,7 @@ export function BridgedAssetWarningWrapper({
     return null
   }
 
-  const isBridgedAsset = checkIsBridgedAsset(currencyInfo)
+  const isBridgedAsset = Boolean(currencyInfo.isBridged)
 
   // If token is not bridged or warning was dismissed and not blocked, skip warning and proceed to SwapFlow
   if (!isBridgedAsset || bridgedAssetWarningDismissed) {

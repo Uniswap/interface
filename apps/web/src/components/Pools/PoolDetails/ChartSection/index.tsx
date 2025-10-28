@@ -1,6 +1,6 @@
 import { PoolData } from 'appGraphql/data/pools/usePoolData'
 import { gqlToCurrency, TimePeriod, toHistoryDuration } from 'appGraphql/data/util'
-import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { GraphQLApi, parseRestProtocolVersion } from '@universe/api'
@@ -334,7 +334,7 @@ function PriceChart({
         return (
           <ChartHeader
             value={priceDisplay}
-            additionalFields={<PriceChartDelta startingPrice={data[0]} endingPrice={displayValue} />}
+            additionalFields={<PriceChartDelta startingPrice={data[0].close} endingPrice={displayValue.close} />}
             valueFormatterType={NumberType.FiatTokenPrice}
             time={crosshairData?.time}
           />

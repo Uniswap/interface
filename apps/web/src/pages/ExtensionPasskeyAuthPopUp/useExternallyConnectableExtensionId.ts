@@ -1,5 +1,4 @@
-import { DynamicConfigs, ExternallyConnectableExtensionConfigKey } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { DynamicConfigs, ExternallyConnectableExtensionConfigKey, useDynamicConfigValue } from '@universe/gating'
 import { TRUSTED_CHROME_EXTENSION_IDS } from 'utilities/src/environment/extensionId'
 
 export function useExternallyConnectableExtensionId(): string {

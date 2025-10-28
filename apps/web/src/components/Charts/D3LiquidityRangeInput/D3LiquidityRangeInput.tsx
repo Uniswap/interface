@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, Price } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { D3LiquidityChartHeader } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/D3LiquidityChartHeader'
@@ -13,7 +13,7 @@ import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { ChartType } from 'components/Charts/utils'
-import { RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
+import { InitialPosition, RangeAmountInputPriceMode } from 'components/Liquidity/Create/types'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo, useState } from 'react'
@@ -42,6 +42,7 @@ export function D3LiquidityRangeInput({
   price,
   hook,
   currentPrice,
+  initialPosition,
   isFullRange,
   minPrice,
   maxPrice,
@@ -73,6 +74,7 @@ export function D3LiquidityRangeInput({
   minPrice?: number
   maxPrice?: number
   inputMode?: RangeAmountInputPriceMode
+  initialPosition?: InitialPosition
   setInputMode: (inputMode: RangeAmountInputPriceMode) => void
   setMinPrice: (minPrice?: number | null) => void
   setMaxPrice: (maxPrice?: number | null) => void
@@ -194,6 +196,7 @@ export function D3LiquidityRangeInput({
               baseCurrency={baseCurrency}
               priceData={finalPriceData}
               liquidityData={sortedLiquidityData}
+              initialPosition={initialPosition}
             />
           ) : (
             <Shine disabled={showChartErrorView} p="$spacing16">

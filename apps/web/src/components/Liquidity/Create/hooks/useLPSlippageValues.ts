@@ -1,7 +1,6 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { DynamicConfigs, LPConfigKey } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { DynamicConfigs, LPConfigKey, useDynamicConfigValue } from '@universe/gating'
 
 export function useLPSlippageValue({
   version,

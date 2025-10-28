@@ -225,7 +225,8 @@ export function useInitialCurrencyState(): {
   initialOutputCurrency?: Currency
   initialTypedValue?: string
   initialField?: CurrencyField
-  initialChainId: UniverseChainId
+  initialInputChainId?: UniverseChainId
+  initialOutputChainId?: UniverseChainId
   triggerConnect: boolean
 } {
   const { setIsUserSelectedToken } = useMultichainContext()
@@ -243,7 +244,10 @@ export function useInitialCurrencyState(): {
   const isSupportedChainCompatible = isTestnetModeEnabled === !!supportedChainInfo.testnet
 
   const hasCurrencyQueryParams =
-    parsedCurrencyState.inputCurrencyAddress || parsedCurrencyState.outputCurrencyAddress || parsedCurrencyState.chainId
+    parsedCurrencyState.inputCurrencyAddress ||
+    parsedCurrencyState.outputCurrencyAddress ||
+    parsedCurrencyState.chainId ||
+    parsedCurrencyState.outputChainId
 
   useEffect(() => {
     if (parsedCurrencyState.inputCurrencyAddress || parsedCurrencyState.outputCurrencyAddress) {
@@ -255,9 +259,9 @@ export function useInitialCurrencyState(): {
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
     // Default to native if no query params or chain is not compatible with testnet or mainnet mode
     if (!hasCurrencyQueryParams || !isSupportedChainCompatible) {
-      const initialChainId = persistedFilteredChainIds?.input ?? defaultChainId
+      const initialChainId = persistedFilteredChainIds?.input
       return {
-        initialInputCurrencyAddress: getNativeAddress(initialChainId),
+        initialInputCurrencyAddress: getNativeAddress(initialChainId ?? defaultChainId),
         initialChainId,
       }
     }
@@ -265,13 +269,13 @@ export function useInitialCurrencyState(): {
     if (parsedCurrencyState.inputCurrencyAddress) {
       return {
         initialInputCurrencyAddress: parsedCurrencyState.inputCurrencyAddress,
-        initialChainId: supportedChainId,
+        initialChainId: parsedCurrencyState.chainId ? supportedChainId : undefined,
       }
     }
     // return ETH or parsedCurrencyState
     return {
       initialInputCurrencyAddress: parsedCurrencyState.outputCurrencyAddress ? undefined : 'ETH',
-      initialChainId: supportedChainId,
+      initialChainId: parsedCurrencyState.chainId ? supportedChainId : undefined,
     }
   }, [
     hasCurrencyQueryParams,
@@ -282,15 +286,15 @@ export function useInitialCurrencyState(): {
     defaultChainId,
   ])
 
-  const outputChainIsSupported = useSupportedChainId(parsedCurrencyState.outputChainId)
+  const supportedOutputChainId = useSupportedChainId(parsedCurrencyState.outputChainId)
 
   const initialOutputCurrencyAddress = useMemo(
     () =>
       // clear output if identical unless there's a supported outputChainId which means we're bridging
-      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyAddress && !outputChainIsSupported
+      initialInputCurrencyAddress === parsedCurrencyState.outputCurrencyAddress && !supportedOutputChainId
         ? undefined
         : parsedCurrencyState.outputCurrencyAddress,
-    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyAddress, outputChainIsSupported],
+    [initialInputCurrencyAddress, parsedCurrencyState.outputCurrencyAddress, supportedOutputChainId],
   )
 
   const initialInputCurrency = useCurrency({ address: initialInputCurrencyAddress, chainId: initialChainId })
@@ -313,7 +317,8 @@ export function useInitialCurrencyState(): {
     initialOutputCurrency,
     initialTypedValue,
     initialField,
-    initialChainId,
+    initialInputChainId: initialChainId,
+    initialOutputChainId: supportedOutputChainId,
     triggerConnect: !!parsedQs.connect,
   }
 }

@@ -62,6 +62,16 @@ jest.mock('uniswap/src/data/rest/tokenRankings', () => ({
   tokenRankingsStatToCurrencyInfo: jest.fn(),
 }))
 
+// Helper to convert undefined to null for GraphQL compatibility
+const convertUndefinedToNull = <T extends { isBridged?: boolean | null; bridgedWithdrawalInfo?: any }>(
+  items: T[],
+): T[] =>
+  items.map((item) => ({
+    ...item,
+    isBridged: item.isBridged ?? null,
+    bridgedWithdrawalInfo: item.bridgedWithdrawalInfo ?? null,
+  }))
+
 const mockPortfolioHook = jest.requireMock(
   'uniswap/src/components/TokenSelector/hooks/usePortfolioBalancesForAddressById',
 )
@@ -157,12 +167,12 @@ describe(useAllCommonBaseCurrencies, () => {
     {
       test: 'returns all currencies when there is no currency with a bridged version on other networks',
       input: projects,
-      output: { data: tokenProjectToCurrencyInfos(projects) },
+      output: { data: convertUndefinedToNull(tokenProjectToCurrencyInfos(projects)) },
     },
     {
       test: 'filters out currencies that have a bridged version on other networks',
       input: [projectWithBridged],
-      output: { data: tokenProjectToCurrencyInfos([tokenProjectWithoutBridged]) },
+      output: { data: convertUndefinedToNull(tokenProjectToCurrencyInfos([tokenProjectWithoutBridged])) },
     },
   ]
 
@@ -215,7 +225,7 @@ describe(useFavoriteCurrencies, () => {
     {
       test: 'returns favorite tokens when there is data',
       input: [project],
-      output: { data: tokenProjectToCurrencyInfos([projectWithFavoritesOnly]) },
+      output: { data: convertUndefinedToNull(tokenProjectToCurrencyInfos([projectWithFavoritesOnly])) },
     },
   ]
 
@@ -319,22 +329,22 @@ describe(useFilterCallbacks, () => {
       expect(result.current.chainFilter).toEqual(UniverseChainId.ArbitrumOne)
       expect(result.current.searchFilter).toEqual('base uni')
       expect(result.current.parsedSearchFilter).toEqual(null)
-      expect(result.current.parsedSearchFilter).toEqual(null)
     })
 
     it('does not parse unsupported chains', async () => {
+      const searchText = 'UNSUPPORTED uni'
       const { result } = renderHook(() => useFilterCallbacks(null, ModalName.Swap))
 
       expect(result.current.parsedSearchFilter).toEqual(null)
 
       await act(() => {
-        result.current.onChangeText('UNSUPPORTED uni')
+        result.current.onChangeText(searchText)
       })
 
       expect(result.current.chainFilter).toEqual(null)
-      expect(result.current.searchFilter).toEqual('UNSUPPORTED uni')
+      expect(result.current.searchFilter).toEqual(searchText)
       expect(result.current.parsedChainFilter).toEqual(null)
-      expect(result.current.parsedSearchFilter).toEqual(null)
+      expect(result.current.parsedSearchFilter).toEqual(searchText)
     })
 
     it('only parses after the first space', async () => {
@@ -399,17 +409,18 @@ describe(useFilterCallbacks, () => {
 
     it('does not parse unsupported chains from end', async () => {
       const { result } = renderHook(() => useFilterCallbacks(null, ModalName.Swap))
+      const searchText = 'uni UNSUPPORTED'
 
       expect(result.current.parsedSearchFilter).toEqual(null)
 
       await act(() => {
-        result.current.onChangeText('uni UNSUPPORTED')
+        result.current.onChangeText(searchText)
       })
 
       expect(result.current.chainFilter).toEqual(null)
-      expect(result.current.searchFilter).toEqual('uni UNSUPPORTED')
+      expect(result.current.searchFilter).toEqual(searchText)
       expect(result.current.parsedChainFilter).toEqual(null)
-      expect(result.current.parsedSearchFilter).toEqual(null)
+      expect(result.current.parsedSearchFilter).toEqual(searchText)
     })
   })
 

@@ -22,6 +22,32 @@ module.exports = {
 
   overrides: [
     {
+      // Portfolio pages must not use useAccount directly. Use usePortfolioAddress (or a domain-specific hook) instead.
+      files: ['src/pages/Portfolio/*.{ts,tsx}', 'src/pages/Portfolio/**/*.{ts,tsx}'],
+      rules: {
+        'no-restricted-imports': [
+          'error',
+          {
+            paths: [
+              {
+                name: 'hooks/useAccount',
+                message:
+                  "Do not import 'useAccount' in portfolio pages. Use 'pages/Portfolio/hooks/usePortfolioAddress' (or a domain-specific hook) instead.",
+              },
+            ],
+          },
+        ],
+        'no-restricted-syntax': [
+          'error',
+          {
+            selector: 'CallExpression[callee.name="useAccount"]',
+            message:
+              "Do not call 'useAccount' in portfolio pages. Use 'pages/Portfolio/hooks/usePortfolioAddress' (or a domain-specific hook) instead.",
+          },
+        ],
+      },
+    },
+    {
       files: [
         'src/index.tsx',
         'src/tracing/index.ts',

@@ -1,6 +1,7 @@
 import type { LegendListRef } from '@legendapp/list'
 import { LegendList } from '@legendapp/list'
 import { useScrollToTop } from '@react-navigation/native'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { ForwardedRef } from 'react'
 import { forwardRef, memo, useMemo, useRef } from 'react'
 import type { FlatList } from 'react-native'
@@ -17,14 +18,13 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, useSporeColors } from 'ui/src'
 import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
 import { usePerformanceLogger } from 'utilities/src/logger/usePerformanceLogger'
 import { isAndroid } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useActivityDataWallet } from 'wallet/src/features/activity/useActivityDataWallet'
 
 const ESTIMATED_ITEM_SIZE = 92
@@ -55,11 +55,11 @@ export const ActivityContent = memo(
 
     const { onContentSizeChange, adaptiveFooter } = useAdaptiveFooter(containerProps?.contentContainerStyle)
 
-    const onPressReceive = (): void => {
+    const onPressReceive = useEvent((): void => {
       // in case we received a pending session from a previous scan after closing modal
       dispatch(removePendingSession())
       dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
-    }
+    })
 
     const { maybeEmptyComponent, renderActivityItem, sectionData, keyExtractor } = useActivityDataWallet({
       evmOwner: owner,
@@ -105,6 +105,9 @@ export const ActivityContent = memo(
             ListEmptyComponent={maybeEmptyComponent}
             ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
             contentContainerStyle={containerProps?.contentContainerStyle}
+            refreshControl={refreshControl}
+            refreshing={refreshing}
+            onContentSizeChange={onContentSizeChange}
           />
         ) : (
           <List

@@ -1,4 +1,4 @@
-import { getPosition } from '@uniswap/client-pools/dist/pools/v1/api-PoolsService_connectquery'
+import { getPosition } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import { createExpectSingleTransaction } from 'playwright/anvil/transactions'
 import { expect, getTest } from 'playwright/fixtures'
 import { DEFAULT_TEST_GAS_LIMIT, stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'

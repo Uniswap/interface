@@ -5,11 +5,11 @@ import { colorsDark, colorsLight } from 'ui/src/theme'
 
 const StyledUpArrow = styled(ArrowChangeUp)<{ $noColor?: boolean }>`
   color: ${({ theme, $noColor }) =>
-    $noColor ? theme.neutral2 : theme.darkMode ? colorsDark.statusSuccess : colorsLight.statusSuccess};
+    $noColor ? theme.neutral3 : theme.darkMode ? colorsDark.statusSuccess : colorsLight.statusSuccess};
 `
 const StyledDownArrow = styled(ArrowChangeDown)<{ $noColor?: boolean }>`
   color: ${({ theme, $noColor }) =>
-    $noColor ? theme.neutral2 : theme.darkMode ? colorsDark.statusCritical : colorsLight.statusCritical};
+    $noColor ? theme.neutral3 : theme.darkMode ? colorsDark.statusCritical : colorsLight.statusCritical};
 `
 
 export function calculateDelta(start: number, current: number): number | undefined {
@@ -43,19 +43,19 @@ export function DeltaArrow({ delta, formattedDelta, noColor = false, size = 16 }
   return Math.sign(delta) < 0 && !isZero ? (
     <StyledDownArrow width={size} height={size} key="arrow-down" aria-label="down" $noColor={noColor} />
   ) : (
-    <StyledUpArrow width={size} height={size} key="arrow-up" aria-label="up" $noColor={noColor} />
+    <StyledUpArrow width={size} height={size} key="arrow-up" aria-label="up" $noColor={isZero || noColor} />
   )
 }
 
 export const DeltaText = styled.span<{ delta?: number }>`
-  color: ${({ theme, delta }) =>
-    delta !== undefined
-      ? Math.sign(delta) < 0
-        ? theme.darkMode
-          ? colorsDark.statusCritical
-          : colorsLight.statusCritical
-        : theme.darkMode
-          ? colorsDark.statusSuccess
-          : colorsLight.statusSuccess
-      : theme.neutral1};
+  color: ${({ theme, delta }) => {
+    if (delta === undefined || delta === 0) {
+      return theme.neutral3
+    }
+
+    const isNegative = Math.sign(delta) < 0
+    const colors = theme.darkMode ? colorsDark : colorsLight
+
+    return isNegative ? colors.statusCritical : colors.statusSuccess
+  }};
 `

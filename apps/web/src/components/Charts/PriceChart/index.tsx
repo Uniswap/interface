@@ -25,6 +25,7 @@ import { Trans } from 'react-i18next'
 import { Flex, styled, Text } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
+import { useFormatChartFiatDelta } from 'uniswap/src/features/fiatCurrency/hooks/useFormatChartFiatDelta'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -230,19 +231,54 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
 }
 
 interface PriceChartDeltaProps {
-  startingPrice: PriceChartData
-  endingPrice: PriceChartData
+  startingPrice: number
+  endingPrice: number
   noColor?: boolean
+  shouldIncludeFiatDelta?: boolean
+  shouldTreatAsStablecoin?: boolean
 }
 
-export function PriceChartDelta({ startingPrice, endingPrice, noColor }: PriceChartDeltaProps) {
-  const delta = calculateDelta(startingPrice.close, endingPrice.close)
-  const { formatPercent } = useLocalizationContext()
+export function PriceChartDelta({
+  startingPrice,
+  endingPrice,
+  noColor,
+  shouldIncludeFiatDelta = false,
+  shouldTreatAsStablecoin = false,
+}: PriceChartDeltaProps) {
+  const { formatPercent, convertFiatAmount } = useLocalizationContext()
+  const { formatChartFiatDelta } = useFormatChartFiatDelta()
+
+  const delta = calculateDelta(startingPrice, endingPrice)
+  const formattedDelta = useMemo(() => {
+    return delta !== undefined ? formatPercent(Math.abs(delta)) : '-'
+  }, [delta, formatPercent])
+
+  const fiatDelta = useMemo(() => {
+    if (!shouldIncludeFiatDelta) {
+      return null
+    }
+
+    const convertedStart = convertFiatAmount(startingPrice)
+    const convertedEnd = convertFiatAmount(endingPrice)
+
+    return formatChartFiatDelta({
+      startingPrice: convertedStart.amount,
+      endingPrice: convertedEnd.amount,
+      isStablecoin: shouldTreatAsStablecoin,
+    })
+  }, [
+    shouldIncludeFiatDelta,
+    formatChartFiatDelta,
+    startingPrice,
+    endingPrice,
+    convertFiatAmount,
+    shouldTreatAsStablecoin,
+  ])
 
   return (
     <Text variant="body2" display="flex" alignItems="center" gap="$gap4">
-      {delta && <DeltaArrow delta={delta} formattedDelta={formatPercent(Math.abs(delta))} noColor={noColor} />}
-      <DeltaText delta={delta}>{delta ? formatPercent(Math.abs(delta)) : '-'}</DeltaText>
+      {delta !== undefined && <DeltaArrow delta={delta} formattedDelta={formattedDelta} noColor={noColor} />}
+      <DeltaText delta={delta}>{fiatDelta ? `${fiatDelta.formatted} (${formattedDelta})` : formattedDelta}</DeltaText>
     </Text>
   )
 }
@@ -288,7 +324,14 @@ function CandlestickTooltip({ data }: { data: PriceChartData }) {
 }
 
 export function PriceChart({ data, height, type, stale, timePeriod }: PriceChartProps) {
+  const startingPrice = data[0]
   const lastPrice = data[data.length - 1]
+  const { min, max } = getCandlestickPriceBounds(data)
+  const shouldTreatAsStablecoin = isLowVarianceRange({
+    min,
+    max,
+    duration: timePeriod,
+  })
 
   return (
     <Chart
@@ -300,7 +343,14 @@ export function PriceChart({ data, height, type, stale, timePeriod }: PriceChart
       {(crosshairData) => (
         <ChartHeader
           value={(crosshairData ?? lastPrice).value}
-          additionalFields={<PriceChartDelta startingPrice={data[0]} endingPrice={crosshairData ?? lastPrice} />}
+          additionalFields={
+            <PriceChartDelta
+              startingPrice={startingPrice.close}
+              endingPrice={(crosshairData ?? lastPrice).close}
+              shouldIncludeFiatDelta
+              shouldTreatAsStablecoin={shouldTreatAsStablecoin}
+            />
+          }
           valueFormatterType={NumberType.FiatTokenPrice}
           time={crosshairData?.time}
         />

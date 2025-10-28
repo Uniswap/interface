@@ -1,20 +1,37 @@
 appId: com.uniswap.mobile.dev
 ---
 # This flow handles the common action of navigating to the Explore tab
-# from the main wallet screen.
+# from the main wallet screen. It supports both bottom tabs navigation (new)
+# and the legacy floating navigation bar.
 
 # Wait for the home screen to be visible
 - extendedWaitUntil:
-    visible: 'noop'
+    visible: "noop"
     timeout: 2000
     optional: true
 
-# Tap on the Explore/Search button in the navigation bar
+# OPTION 1: Try bottom tabs navigation first (new UI pattern)
+# This will be available when BottomTabs feature flag is enabled
+- tapOn:
+    id: ${output.testIds.ExploreTab}
+    optional: true
+
+# TODO: INFRA-1074 - Remove this fallback when we no longer support the legacy navigation bar
+# OPTION 2: Fallback to legacy floating navigation bar
+# This will be used when BottomTabs feature flag is disabled
 - tapOn:
     id: ${output.testIds.SearchTokensAndWallets}
+    optional: true
 
+# Wait for tab animations to complete (200ms animation duration)
 - waitForAnimationToEnd
 
 # Verify we're in the Explore screen by checking for the search input
+# This verification works for both navigation patterns
+- extendedWaitUntil:
+    visible:
+      id: ${output.testIds.ExploreSearchInput}
+    timeout: 3000
+
 - assertVisible:
     id: ${output.testIds.ExploreSearchInput}

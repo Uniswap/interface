@@ -1,12 +1,12 @@
 import { ReactNode, RefObject } from 'react'
-import { Flex, Popover, styled, useScrollbarStyles, useShadowPropsMedium, WebBottomSheet } from 'ui/src'
+import { Flex, FlexProps, Popover, styled, useScrollbarStyles, useShadowPropsMedium, WebBottomSheet } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT } from 'ui/src/theme'
 
 const NavDropdownContent = styled(Flex, {
   borderRadius: '$rounded16',
   borderWidth: 1,
   borderStyle: 'solid',
-  borderColor: '$surface2',
+  boxShadow: '$shadow.1',
   backgroundColor: '$surface1',
   maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT + 20}px)`,
   $sm: {
@@ -41,6 +41,7 @@ interface NavDropdownProps {
   dataTestId?: string
   padded?: boolean
   mr?: number
+  borderColor?: FlexProps['borderColor']
 }
 
 export function NavDropdown({
@@ -52,6 +53,7 @@ export function NavDropdown({
   padded,
   dataTestId,
   mr = 0,
+  borderColor = '$surface2',
 }: NavDropdownProps) {
   const shadowProps = useShadowPropsMedium()
   const scrollbarStyles = useScrollbarStyles()
@@ -83,6 +85,7 @@ export function NavDropdown({
           width={width}
           minWidth={minWidth}
           padded={padded}
+          borderColor={borderColor}
           {...shadowProps}
           $platform-web={{ overflow: 'auto' }}
           style={scrollbarStyles}

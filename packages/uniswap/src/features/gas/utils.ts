@@ -1,14 +1,14 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { GasEstimate, GasStrategy } from '@universe/api'
-import JSBI from 'jsbi'
-import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import {
   DynamicConfigs,
   GasStrategies,
   GasStrategyType,
   GasStrategyWithConditions,
-} from 'uniswap/src/features/gating/configs'
-import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
+  getStatsigClient,
+} from '@universe/gating'
+import JSBI from 'jsbi'
+import { areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 
 // The default "Urgent" strategy that was previously hardcoded in the gas service

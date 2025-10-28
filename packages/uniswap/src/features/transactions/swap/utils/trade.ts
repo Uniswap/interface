@@ -208,6 +208,12 @@ export function validateTransactionRequest(
   return undefined
 }
 
+export function validateTransactionRequestTypeGuard(
+  request?: providers.TransactionRequest | null,
+): request is ValidatedTransactionRequest {
+  return !!request?.to && !!request.chainId
+}
+
 export function validateTransactionRequests(
   requests?: providers.TransactionRequest[] | null,
 ): PopulatedTransactionRequestArray | undefined {
@@ -241,6 +247,10 @@ export function validatePermit(permit: TradingApi.NullablePermit | undefined): V
     return { domain, types, values }
   }
   return undefined
+}
+
+export function validatePermitTypeGuard(permit: TradingApi.NullablePermit | undefined): permit is ValidatedPermit {
+  return !!permit && !!permit.domain && !!permit.types && !!permit.values
 }
 
 export function hasTradeType(

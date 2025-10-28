@@ -1,4 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { useCallback, useEffect } from 'react'
 import { Gesture, GestureDetector, State } from 'react-native-gesture-handler'
 import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
@@ -11,8 +12,6 @@ import { CopyAlt, ScanHome, SettingsHome } from 'ui/src/components/icons'
 import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { AccountType, DisplayNameType } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -39,7 +38,7 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
     if (isScreenFocused) {
       pressProgress.value = withDelay(50, withTiming(0))
     }
-  }, [isScreenFocused, pressProgress])
+  }, [isScreenFocused])
 
   const tap = Gesture.Tap()
     .withTestId(TestID.AccountHeaderSettings)

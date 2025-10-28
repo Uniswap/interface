@@ -12,7 +12,8 @@ jest.mock('utilities/src/platform', () => ({
   ...jest.requireActual('utilities/src/platform'),
 }))
 
-jest.mock('uniswap/src/features/gating/hooks', () => ({
+jest.mock('@universe/gating', () => ({
+  ...jest.requireActual('@universe/gating'),
   useFeatureFlag: jest.fn(),
 }))
 

@@ -42,7 +42,8 @@ import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { getTxProvidersMocks } from 'wallet/src/test/mocks'
 
-jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
+jest.mock('@universe/gating', () => ({
+  ...jest.requireActual('@universe/gating'),
   getStatsigClient: jest.fn(() => ({
     checkGate: jest.fn().mockReturnValue(true),
     getLayer: jest.fn(() => ({

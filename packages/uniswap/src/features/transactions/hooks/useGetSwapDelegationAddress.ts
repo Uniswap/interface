@@ -1,6 +1,5 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function useGetSwapDelegationAddress(): (chainId: UniverseChainId | undefined) => string | undefined {

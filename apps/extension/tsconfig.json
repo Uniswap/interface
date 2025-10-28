@@ -19,6 +19,9 @@
     },
     {
       "path": "../../packages/api"
+    },
+    {
+      "path": "../../packages/gating"
     }
   ],
   "compilerOptions": {

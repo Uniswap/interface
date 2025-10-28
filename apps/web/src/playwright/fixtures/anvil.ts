@@ -10,7 +10,9 @@ import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { assume0xAddress } from 'utils/wagmi'
-import { Address, erc20Abi } from 'viem'
+import { type Address, erc20Abi } from 'viem'
+
+const SNAPSHOTS_ENABLED = process.env.ENABLE_ANVIL_SNAPSHOTS === 'true'
 
 class WalletError extends Error {
   code?: number
@@ -162,6 +164,11 @@ const createAnvilClient = () => {
 
       await client.mine({ blocks: 1 })
     },
+    /**
+     * @deprecated
+     * Wagmi submits transactions to Anvil via the RPC interface so this function no longer intercepts
+     * the requests. Use createRejectableMockConnector instead.
+     */
     async setTransactionRejection() {
       // Override the wallet actions to reject transactions
       const originalRequest = client.request
@@ -219,7 +226,9 @@ export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: vo
     // Take snapshot for test isolation
     let snapshotId: `0x${string}` | undefined
     try {
-      snapshotId = await testAnvil.snapshot()
+      if (SNAPSHOTS_ENABLED) {
+        snapshotId = await testAnvil.snapshot()
+      }
     } catch (error) {
       if (isTimeoutError(error)) {
         // Anvil timed out during snapshot, restart and retry

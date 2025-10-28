@@ -48,7 +48,8 @@ export function usePortfolioData({
   pollInterval?: PollingInterval
   fetchPolicy?: WatchQueryFetchPolicy
 } & GetPortfolioInput['input']): PortfolioDataResult {
-  const { chains: chainIds } = useEnabledChains()
+  const { chains: defaultChainIds } = useEnabledChains()
+  const chainIds = queryOptions.chainIds || defaultChainIds
 
   // TODO(SWAP-388): GetPortfolio REST endpoint does not yet support modifier array; it will take 1 evm/svm address, but will apply the modifications across the board
   const modifier = useRestPortfolioValueModifier(evmAddress ?? svmAddress)

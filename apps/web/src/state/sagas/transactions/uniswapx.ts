@@ -4,7 +4,6 @@ import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import {
   addTransactionBreadcrumb,
   getSwapTransactionInfo,
-  HandleSignatureStepParams,
   handleSignatureStep,
   TransactionBreadcrumbStatus,
 } from 'state/sagas/transactions/utils'
@@ -15,6 +14,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/errors'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
+import { HandleSignatureStepParams } from 'uniswap/src/features/transactions/steps/types'
 import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/steps/signOrder'
 import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'

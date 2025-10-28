@@ -1,4 +1,4 @@
-import { SwapConfigKey } from 'uniswap/src/features/gating/configs'
+import { SwapConfigKey } from '@universe/gating'
 
 /**
  * Shared gas configuration constants.

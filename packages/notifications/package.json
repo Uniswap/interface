@@ -1,0 +1,18 @@
+{
+  "name": "@universe/notifications",
+  "version": "0.0.0",
+  "devDependencies": {
+    "@types/node": "22.13.1",
+    "@uniswap/eslint-config": "workspace:^",
+    "depcheck": "1.4.7",
+    "eslint": "8.44.0",
+    "typescript": "5.3.3"
+  },
+  "scripts": {},
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

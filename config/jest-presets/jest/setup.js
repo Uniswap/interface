@@ -109,38 +109,32 @@ const NetInfoStateType = {
 
 jest.mock('@react-native-community/netinfo', () => ({ ...mockRNCNetInfo, NetInfoStateType }))
 
-jest.mock('uniswap/src/features/gating/sdk/statsig', () => {
-  const real = jest.requireActual('uniswap/src/features/gating/sdk/statsig')
-  const StatsigMock = {
-    ...real,
-    useGate: () => {
-      return {
-        isLoading: false,
-        value: false,
-      }
-    },
-    useConfig: () => {
-      return {}
-    },
-
-    Statsig: {
-      checkGate: () => false,
-      getConfig: () => {
-        return {
-          get: (_name, fallback) => fallback,
-          getValue: (_name, fallback) => fallback,
-        }
-      },
-    },
-  }
-  return StatsigMock
-})
-
-jest.mock('uniswap/src/features/gating/hooks', () => {
-  const real = jest.requireActual('uniswap/src/features/gating/hooks')
+jest.mock('@universe/gating', () => {
+  const actual = jest.requireActual('@universe/gating')
   return {
-    ...real,
-    useDynamicConfigValue: (args) => args.defaultValue,
+    ...actual,
+    // Mock functions
+    useDynamicConfigValue: jest.fn((args) => args.defaultValue),
+    useFeatureFlag: jest.fn(() => false),
+    useGate: jest.fn(() => ({ isLoading: false, value: false })),
+    useConfig: jest.fn(() => ({})),
+    getStatsigClient: jest.fn(() => ({
+      checkGate: jest.fn(() => false),
+      getConfig: jest.fn(() => ({
+        get: (_name, fallback) => fallback,
+        getValue: (_name, fallback) => fallback,
+      })),
+      getLayer: jest.fn(() => ({
+        get: jest.fn(() => false),
+      })),
+    })),
+    Statsig: {
+      checkGate: jest.fn(() => false),
+      getConfig: jest.fn(() => ({
+        get: (_name, fallback) => fallback,
+        getValue: (_name, fallback) => fallback,
+      })),
+    },
   }
 })
 

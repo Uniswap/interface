@@ -1,5 +1,5 @@
-import { LoadingBubble } from 'components/Tokens/loading'
-import { Flex, FlexProps } from 'ui/src'
+import { TextLoader } from 'components/Liquidity/Loader'
+import { Circle, Flex, FlexProps, Shine } from 'ui/src'
 
 const PortfolioRowWrapper = ({ children, className, ...rest }: FlexProps) => (
   <Flex
@@ -49,34 +49,48 @@ export default function PortfolioRow({
   )
 }
 
-function PortfolioSkeletonRow({ shrinkRight }: { shrinkRight?: boolean }) {
+function PortfolioSkeletonRow() {
   return (
-    <PortfolioRowWrapper>
-      <LoadingBubble height="40px" width="40px" round />
-      <Flex alignItems="center" flexGrow={1} gap="$gap4">
-        <LoadingBubble height="16px" width="60px" delay="300ms" />
-        <LoadingBubble height="10px" width="90px" delay="300ms" />
+    <Shine>
+      <Flex
+        p="$spacing16"
+        gap="$spacing20"
+        borderWidth="$spacing1"
+        borderRadius="$rounded20"
+        borderColor="$surface3"
+        width="100%"
+        overflow="hidden"
+      >
+        <Flex row alignItems="center" justifyContent="space-between" gap="$gap12">
+          <Circle size={36} backgroundColor="$surface3" />
+          <Flex grow $md={{ row: true, justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <TextLoader variant="subheading1" width={100} />
+            <TextLoader variant="body3" width={70} />
+          </Flex>
+        </Flex>
+        <Flex row alignItems="center" gap="$gap12">
+          <Flex gap="$gap2">
+            <TextLoader variant="body2" width={40} />
+            <TextLoader variant="body4" width={35} />
+          </Flex>
+          <Flex gap="$gap2">
+            <TextLoader variant="body2" width={40} />
+            <TextLoader variant="body4" width={35} />
+          </Flex>
+        </Flex>
+
+        <TextLoader variant="body4" width={220} />
       </Flex>
-      <Flex alignItems="flex-end" gap="$gap4">
-        {shrinkRight ? (
-          <LoadingBubble height="12px" width="20px" delay="600ms" />
-        ) : (
-          <>
-            <LoadingBubble height="14px" width="70px" delay="600ms" />
-            <LoadingBubble height="14px" width="50px" delay="600ms" />
-          </>
-        )}
-      </Flex>
-    </PortfolioRowWrapper>
+    </Shine>
   )
 }
 
-export function PortfolioSkeleton({ shrinkRight = false }: { shrinkRight?: boolean }) {
+export function PortfolioSkeleton() {
   return (
-    <>
+    <Flex gap="$gap12" px="$spacing16">
       {Array.from({ length: 5 }).map((_, i) => (
-        <PortfolioSkeletonRow shrinkRight={shrinkRight} key={`portfolio loading row${i}`} />
+        <PortfolioSkeletonRow key={`portfolio loading row${i}`} />
       ))}
-    </>
+    </Flex>
   )
 }

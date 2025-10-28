@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { AdvancedButton } from 'components/Liquidity/Create/AdvancedButton'
 import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
 import { DEFAULT_POSITION_STATE } from 'components/Liquidity/Create/types'

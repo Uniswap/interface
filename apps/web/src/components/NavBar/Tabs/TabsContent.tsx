@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { CreditCardIcon } from 'components/Icons/CreditCard'
 import { Limit } from 'components/Icons/Limit'
 import { SwapV2 } from 'components/Icons/SwapV2'
@@ -10,8 +11,6 @@ import { Compass } from 'ui/src/components/icons/Compass'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { ReceiveAlt } from 'ui/src/components/icons/ReceiveAlt'
 import { Wallet } from 'ui/src/components/icons/Wallet'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export type TabsSection = {
   title: string

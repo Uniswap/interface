@@ -1,5 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
@@ -12,8 +13,6 @@ import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -40,7 +39,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   useEffect(() => {
     // disables looping animation during e2e tests which was preventing js thread from idle
     actionButtonsOpacity.value = withDelay(LANDING_ANIMATION_DURATION, withTiming(1, { duration: ONE_SECOND_MS }))
-  }, [actionButtonsOpacity])
+  }, [])
 
   // Disables testnet mode on mount if enabled (eg upon removing a wallet)
   useEffect(() => {

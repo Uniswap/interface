@@ -13130,4 +13130,24 @@
     <lastmod>2025-10-17T22:04:33.647Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/ethereum/0xa3ccaf08a54cf31649f91ae1570a0720c8d4eb1e</loc>
+    <lastmod>2025-10-24T19:06:27.459Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/arbitrum/0xd13040d4fe917ee704158cfcb3338dcd2838b245</loc>
+    <lastmod>2025-10-24T19:06:27.459Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/bnb/0x75c5fbf77c1cd517544487aca4cc41e1ad95aced</loc>
+    <lastmod>2025-10-24T19:06:27.459Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/bnb/0x8c5a402ede3a33998604c8ba5fe6510896cb3821</loc>
+    <lastmod>2025-10-24T19:06:27.459Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

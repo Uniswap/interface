@@ -73,11 +73,11 @@ export {
   type ExistingTradeRequest,
   Method,
   type NewTradeRequest,
+  type PlanStep,
   PlanStepStatus,
   type PriorityQuoteResponse,
   type SwappableTokensParams,
   type TradeResponse,
-  type TradeStep,
   type UnwrapQuoteResponse,
   type UpdateExistingTradeRequest,
   type WrapQuoteResponse,
@@ -123,6 +123,16 @@ export {
   type DataServiceApiClientContext,
   TokenReportEventType,
 } from '@universe/api/src/clients/data/createDataServiceApiClient'
+
+// Notifications API
+export { createNotificationsApiClient } from '@universe/api/src/clients/notifications/createNotificationsApiClient'
+export type {
+  GetNotificationsRequest,
+  GetNotificationsResponse,
+  InAppNotification,
+  NotificationsApiClient,
+  NotificationsClientContext,
+} from '@universe/api/src/clients/notifications/types'
 
 // ConnectRPC API
 export {

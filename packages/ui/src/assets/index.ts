@@ -55,6 +55,7 @@ export const UNITAG_LIGHT_SMALL = require('./graphics/unitag-light-small.png')
 
 export const PUSH_NOTIFICATIONS_CARD_BANNER = require('./graphics/push-notifications-card-banner.png')
 export const BRIDGED_ASSETS_CARD_BANNER = require('./graphics/bridged-assets-card-banner.png')
+export const BRIDGED_ASSETS_V2_WEB_BANNER = require('./graphics/bridged-assets-v2-web-banner.png')
 
 export const ONBOARDING_NOTIFICATIONS_DARK = {
   ios: require(`./backgrounds/ios/notifications-dark.png`),

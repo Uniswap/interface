@@ -32,7 +32,8 @@ export function HelpContent({ onClose }: HelpContentProps) {
   return (
     <Flex
       py="$padding12"
-      px="$padding8"
+      pr="$padding8"
+      pl="$padding12"
       gap="$gap12"
       width={240}
       zIndex="$tooltip"

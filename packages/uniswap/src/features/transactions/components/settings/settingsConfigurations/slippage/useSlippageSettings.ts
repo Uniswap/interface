@@ -152,7 +152,7 @@ export function useSlippageSettings(params?: SlippageSettingsProps): {
         setCustomSlippageTolerance(parsedValue)
       }
     },
-    [updateInputWarning, saveOnBlur, inputShakeX, setCustomSlippageTolerance],
+    [updateInputWarning, saveOnBlur, setCustomSlippageTolerance],
   )
 
   const onFocusSlippageInput = useCallback((): void => {

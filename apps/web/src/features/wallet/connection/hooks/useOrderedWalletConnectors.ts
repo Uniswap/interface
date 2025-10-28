@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useAccountsStore } from 'features/accounts/store/hooks'
 import { ExternalWallet } from 'features/accounts/store/types'
@@ -5,8 +6,6 @@ import { useConnectWallet } from 'features/wallet/connection/hooks/useConnectWal
 import { useCallback, useMemo } from 'react'
 import { CONNECTION_PROVIDER_IDS, CONNECTION_PROVIDER_NAMES } from 'uniswap/src/constants/web3'
 import { AccessPattern } from 'uniswap/src/features/accounts/store/types/Connector'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { isMobileWeb } from 'utilities/src/platform'

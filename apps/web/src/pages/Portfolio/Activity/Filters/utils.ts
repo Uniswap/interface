@@ -1,40 +1,108 @@
 import { SelectOption } from 'components/Dropdowns/DropdownSelector'
-import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
-import { Coins } from 'ui/src/components/icons/Coins'
+import { Approve } from 'ui/src/components/icons/Approve'
+import { ArrowChange } from 'ui/src/components/icons/ArrowChange'
+import { ArrowDownCircle } from 'ui/src/components/icons/ArrowDownCircle'
+import { ArrowUpCircle } from 'ui/src/components/icons/ArrowUpCircle'
 import { Dollar } from 'ui/src/components/icons/Dollar'
+import { Plus } from 'ui/src/components/icons/Plus'
+import { ReceiveAlt } from 'ui/src/components/icons/ReceiveAlt'
 import { SendAction } from 'ui/src/components/icons/SendAction'
+import { Sparkle } from 'ui/src/components/icons/Sparkle'
+import { Swap } from 'ui/src/components/icons/Swap'
 import { AppTFunction } from 'ui/src/i18n/types'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
-// TODO: use our existing TransactionType enum
-enum TransactionType {
+enum ActivityFilterType {
   All = 'all',
+  Sends = 'sends',
+  Receives = 'receives',
   Swaps = 'swaps',
-  Sent = 'sent',
-  Received = 'received',
-  Deposits = 'deposits',
-  Staking = 'staking',
+  Wraps = 'wraps',
+  Approves = 'approves',
+  CreatePool = 'create-pool',
+  AddLiquidity = 'add-liquidity',
+  RemoveLiquidity = 'remove-liquidity',
+  Mints = 'mints',
+  ClaimFees = 'claim-fees',
 }
 
 export function getTransactionTypeFilterOptions(t: AppTFunction): Record<string, SelectOption> {
   return {
-    [TransactionType.All]: {
+    [ActivityFilterType.All]: {
       label: t('portfolio.activity.filters.transactionType.all'),
       icon: null,
     },
-    [TransactionType.Swaps]: {
+    [ActivityFilterType.Swaps]: {
       label: t('portfolio.activity.filters.transactionType.swaps'),
-      icon: Coins,
+      icon: Swap,
     },
-    [TransactionType.Sent]: { label: t('common.sent'), icon: SendAction },
-    [TransactionType.Received]: { label: t('common.received'), icon: ArrowDown },
-    [TransactionType.Deposits]: {
-      label: t('portfolio.activity.filters.transactionType.deposits'),
-      icon: Coins,
+    [ActivityFilterType.Sends]: {
+      label: t('common.sent'),
+      icon: SendAction,
     },
-    [TransactionType.Staking]: {
-      label: t('portfolio.activity.filters.transactionType.staking'),
+    [ActivityFilterType.Receives]: {
+      label: t('common.received'),
+      icon: ReceiveAlt,
+    },
+    [ActivityFilterType.Wraps]: {
+      label: t('portfolio.activity.filters.transactionType.wraps'),
+      icon: ArrowChange,
+    },
+    [ActivityFilterType.Approves]: {
+      label: t('portfolio.activity.filters.transactionType.approvals'),
+      icon: Approve,
+    },
+    [ActivityFilterType.CreatePool]: {
+      label: t('portfolio.activity.filters.transactionType.createPool'),
+      icon: Plus,
+    },
+    [ActivityFilterType.AddLiquidity]: {
+      label: t('portfolio.activity.filters.transactionType.addLiquidity'),
+      icon: ArrowDownCircle,
+    },
+    [ActivityFilterType.RemoveLiquidity]: {
+      label: t('portfolio.activity.filters.transactionType.removeLiquidity'),
+      icon: ArrowUpCircle,
+    },
+    [ActivityFilterType.Mints]: {
+      label: t('portfolio.activity.filters.transactionType.mints'),
+      icon: Sparkle,
+    },
+    [ActivityFilterType.ClaimFees]: {
+      label: t('portfolio.activity.filters.transactionType.claimFees'),
       icon: Dollar,
     },
+  }
+}
+
+/**
+ * Maps filter type to transaction types that should be included
+ */
+export function getTransactionTypesForFilter(filterType: string): TransactionType[] | 'all' {
+  switch (filterType) {
+    case ActivityFilterType.Sends:
+      return [TransactionType.Send]
+    case ActivityFilterType.Receives:
+      return [TransactionType.Receive]
+    case ActivityFilterType.Swaps:
+      return [TransactionType.Swap, TransactionType.Bridge]
+    case ActivityFilterType.Wraps:
+      return [TransactionType.Wrap]
+    case ActivityFilterType.Approves:
+      return [TransactionType.Approve]
+    case ActivityFilterType.CreatePool:
+      return [TransactionType.CreatePool, TransactionType.CreatePair]
+    case ActivityFilterType.AddLiquidity:
+      return [TransactionType.LiquidityIncrease]
+    case ActivityFilterType.RemoveLiquidity:
+      return [TransactionType.LiquidityDecrease]
+    case ActivityFilterType.Mints:
+      return [TransactionType.NFTMint]
+    case ActivityFilterType.ClaimFees:
+      return [TransactionType.CollectFees, TransactionType.LPIncentivesClaimRewards, TransactionType.ClaimUni]
+    case ActivityFilterType.All:
+    default:
+      return 'all'
   }
 }
 

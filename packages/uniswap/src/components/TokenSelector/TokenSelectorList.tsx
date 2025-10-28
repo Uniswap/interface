@@ -2,7 +2,6 @@ import { memo, useCallback, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Text } from 'ui/src'
 import { BridgedAssetModal } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
-import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import {
   TokenOptionItem as BaseTokenOptionItem,
   TokenContextMenuVariant,
@@ -80,7 +79,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
   const shouldShowWarningModalOnPress =
     showWarnings && (isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed))
 
-  const isBridgedAsset = checkIsBridgedAsset(currencyInfo)
+  const isBridgedAsset = Boolean(currencyInfo.isBridged)
   const [showBridgedAssetWarningModal, setShowBridgedAssetWarningModal] = useState(false)
   const { tokenWarningDismissed: bridgedAssetTokenWarningDismissed } = useDismissedBridgedAssetWarnings(
     currencyInfo.currency,

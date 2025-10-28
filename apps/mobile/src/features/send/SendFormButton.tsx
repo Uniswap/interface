@@ -2,7 +2,6 @@ import React, { Dispatch, SetStateAction, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { Button, Flex } from 'ui/src'
-import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -60,7 +59,7 @@ export function SendFormButton({
   const { tokenWarningDismissed: isCompatibleAddressDismissed } = useDismissedCompatibleAddressWarnings(
     currencyInInfo?.currency,
   )
-  const isUnichainBridgedAsset = checkIsBridgedAsset(currencyInInfo ?? undefined) && !isCompatibleAddressDismissed
+  const isUnichainBridgedAsset = Boolean(currencyInInfo?.isBridged) && !isCompatibleAddressDismissed
 
   const insufficientGasFunds = warnings.warnings.some((warning) => warning.type === WarningLabel.InsufficientGasFunds)
 

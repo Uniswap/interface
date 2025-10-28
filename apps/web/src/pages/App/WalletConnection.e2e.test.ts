@@ -1,5 +1,5 @@
+import { FeatureFlags, getFeatureFlagName } from '@universe/gating'
 import { expect, getTest } from 'playwright/fixtures'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const test = getTest()

@@ -58,6 +58,8 @@ export const token = createFixture<GraphQLApi.Token, TokenOptions>({
     sellFeeBps: '',
   },
   protectionInfo,
+  isBridged: undefined,
+  bridgedWithdrawalInfo: undefined,
 }))
 
 export const tokenBalance = createFixture<GraphQLApi.TokenBalance>()(() => ({

@@ -27,7 +27,8 @@ import { getProvider } from 'wallet/src/features/wallet/context'
 
 let mockGates: Record<string, boolean> = {}
 
-jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
+jest.mock('@universe/gating', () => ({
+  ...jest.requireActual('@universe/gating'),
   getStatsigClient: jest.fn(() => ({
     checkGate: jest.fn((gate: string) => mockGates[gate] ?? false),
     getDynamicConfig: jest.fn(() => ({

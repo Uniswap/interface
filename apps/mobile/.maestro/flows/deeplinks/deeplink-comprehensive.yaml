@@ -12,7 +12,7 @@ env:
 - runScript:
     file: ../../scripts/performance/dist/actions/start-flow.js
     env:
-      FLOW_NAME: 'deeplink-comprehensive'
+      FLOW_NAME: "deeplink-comprehensive"
 
 # Run prerequisite flows (tracked as sub-flows)
 - runFlow: ../../shared-flows/start.yaml
@@ -22,15 +22,15 @@ env:
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'onramp-deeplink'
-      PHASE: 'start'
+      ACTION: "openLink"
+      TARGET: "onramp-deeplink"
+      PHASE: "start"
 - openLink:
-    link: 'uniswap://app/fiatonramp?userAddress=0xEEf806b3Cae8fcecAe1793EE1e0B2c738F61C6bB&source=push'
+    link: "uniswap://app/fiatonramp?userAddress=0xEEf806b3Cae8fcecAe1793EE1e0B2c738F61C6bB&source=push"
     autoVerify: true
 # Handle iOS deeplink permission dialog (optional - only appears on first run)
 - tapOn:
-    text: 'Open'
+    text: "Open"
     optional: true
 - waitForAnimationToEnd:
     timeout: 5000
@@ -41,43 +41,43 @@ env:
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'onramp-deeplink'
-      PHASE: 'end'
+      ACTION: "openLink"
+      TARGET: "onramp-deeplink"
+      PHASE: "end"
 - killApp
 
 # Open widget deeplink
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'widget-deeplink'
-      PHASE: 'start'
+      ACTION: "openLink"
+      TARGET: "widget-deeplink"
+      PHASE: "start"
 - openLink:
-    link: 'uniswap://widget/#/tokens/ethereum/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984'
+    link: "uniswap://widget/#/tokens/ethereum/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984"
     autoVerify: true
 - waitForAnimationToEnd:
     timeout: 3000
 - assertVisible:
     id: ${output.testIds.TokenDetailsHeaderText}
-    text: 'Uniswap'
+    text: "Uniswap"
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'widget-deeplink'
-      PHASE: 'end'
+      ACTION: "openLink"
+      TARGET: "widget-deeplink"
+      PHASE: "end"
 - killApp
 
 # Open swap deeplink
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'swap-deeplink'
-      PHASE: 'start'
+      ACTION: "openLink"
+      TARGET: "swap-deeplink"
+      PHASE: "start"
 - openLink:
-    link: 'uniswap://redirect?screen=swap&userAddress=0xEEf806b3Cae8fcecAe1793EE1e0B2c738F61C6bB&inputCurrencyId=1-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrencyId=1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=input&amount=100'
+    link: "uniswap://redirect?screen=swap&userAddress=0xEEf806b3Cae8fcecAe1793EE1e0B2c738F61C6bB&inputCurrencyId=1-0x6B175474E89094C44Da98b954EedeAC495271d0F&outputCurrencyId=1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984&currencyField=input&amount=100"
     autoVerify: true
 - waitForAnimationToEnd:
     timeout: 3000
@@ -92,20 +92,20 @@ env:
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'swap-deeplink'
-      PHASE: 'end'
+      ACTION: "openLink"
+      TARGET: "swap-deeplink"
+      PHASE: "end"
 - killApp
 
 # Open token details deeplink
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'token-details-deeplink'
-      PHASE: 'start'
+      ACTION: "openLink"
+      TARGET: "token-details-deeplink"
+      PHASE: "start"
 - openLink:
-    link: 'uniswap://app/tokendetails?currencyId=10-0x6fd9d7ad17242c41f7131d257212c54a0e816691&source=push'
+    link: "uniswap://app/tokendetails?currencyId=10-0x6fd9d7ad17242c41f7131d257212c54a0e816691&source=push"
     autoVerify: true
 - waitForAnimationToEnd:
     timeout: 3000
@@ -116,20 +116,20 @@ env:
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'token-details-deeplink'
-      PHASE: 'end'
+      ACTION: "openLink"
+      TARGET: "token-details-deeplink"
+      PHASE: "end"
 - killApp
 
 # Open transaction history deeplink
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'transaction-history-deeplink'
-      PHASE: 'start'
+      ACTION: "openLink"
+      TARGET: "transaction-history-deeplink"
+      PHASE: "start"
 - openLink:
-    link: 'uniswap://redirect?screen=transaction&fiatOnRamp=true&userAddress=0xEEf806b3Cae8fcecAe1793EE1e0B2c738F61C6bB'
+    link: "uniswap://redirect?screen=transaction&fiatOnRamp=true&userAddress=0xEEf806b3Cae8fcecAe1793EE1e0B2c738F61C6bB"
     autoVerify: true
 - waitForAnimationToEnd:
     timeout: 3000
@@ -138,20 +138,20 @@ env:
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'transaction-history-deeplink'
-      PHASE: 'end'
+      ACTION: "openLink"
+      TARGET: "transaction-history-deeplink"
+      PHASE: "end"
 - killApp
 
 # Invalid deeplink (should fail gracefully and remain functional)
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'invalid-deeplink'
-      PHASE: 'start'
+      ACTION: "openLink"
+      TARGET: "invalid-deeplink"
+      PHASE: "start"
 - openLink:
-    link: 'uniswap://invalid-path'
+    link: "uniswap://invalid-path"
     autoVerify: true
 - waitForAnimationToEnd:
     timeout: 3000
@@ -160,46 +160,46 @@ env:
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'invalid-deeplink'
-      PHASE: 'end'
+      ACTION: "openLink"
+      TARGET: "invalid-deeplink"
+      PHASE: "end"
 - killApp
 
 # Open moonpayOnly onramp deeplink
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'moonpay-onramp-deeplink'
-      PHASE: 'start'
+      ACTION: "openLink"
+      TARGET: "moonpay-onramp-deeplink"
+      PHASE: "start"
 - openLink:
-    link: 'uniswap://app/fiatonramp?source=push&moonpayOnly=true&moonpayCurrencyCode=usdc&amount=200'
+    link: "uniswap://app/fiatonramp?source=push&moonpayOnly=true&moonpayCurrencyCode=usdc&amount=200"
     autoVerify: true
 - waitForAnimationToEnd:
     timeout: 5000
 - assertVisible:
     id: ${output.testIds.ForFormTokenSelected}
-    text: 'USD Coin'
+    text: "USD Coin"
 - assertVisible:
     id: ${output.testIds.BuyFormAmountInput}
-    text: '200'
+    text: "200"
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'moonpay-onramp-deeplink'
-      PHASE: 'end'
+      ACTION: "openLink"
+      TARGET: "moonpay-onramp-deeplink"
+      PHASE: "end"
 - killApp
 
 # Open scantastic deeplink (when user scans QR code on the extension)
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'scantastic-deeplink'
-      PHASE: 'start'
+      ACTION: "openLink"
+      TARGET: "scantastic-deeplink"
+      PHASE: "start"
 - openLink:
-    link: 'uniswap://scantastic?pubKey=%7B%22alg%22%3A%22RSA-OAEP-256%22%2C%22kty%22%3A%22RSA%22%2C%22n%22%3A%224X4nRAEZ8FWoVmoQ5KrxcssIR7XpdcVo_y7yD1SgmYuXekvHMIYuLxxkxVTjsyxj2s9jctIHOhZ-g96w4oM8-HXjCJG_v55w6FZyDskllcmaGeUlZFwWkiqZ-PKkHCWxCe_dZGvL33sazS_L8P3eAxXEPEJMG9p9lxsIlPp7ki0GSyVjq4rrHgW0lIz6qy6WqHbnyJWQAMSPnZTGM697ZCdkW_GTD3MyqitBwK5xNQN8Pxgbu6S7xbQglanYNBbeMYpJ3X1PDl37sp16YwPm6ryGaX1ESDPHa3M7-_we_yQEUQvtU5t2dd8chISJX8L1D7s8iNxM1LxG_nZTwKnccRPtrzKj-osBMbfCoU4fiNS2LC7q6zsyHxgDpeFlrV--iboQ9TsaQ7RGaFOSKs0l74_dt8GvX2JtNJ0ah8K__eNg9q0xBD8DTdeY2duMTEKJZIKgEyX0KUiRpsbsNmm_76iqhhZyYvcb6mwvNnVcXPg_TabX7lQEEippd7JTWVnF2LKzldlUonchQSsbLEUlN_ALa0Nuq6GG1MVJ0JjSsNMcpin6rH9fPzmDKkqzM2qvhdyuV66vkS82Wj9tQpqXL_jkRk7bQsDlB-HiVbzM2oNPk6or5u6p5tJni0th6BZm4z-sYgmMj3D5xHeusyap-8dmS9J4mXDxGLL_NloaHY8%22%2C%22e%22%3A%22AQAB%22%7D&uuid=28c01911-8e69-46e9-b2f0-f5e719bb714b&vendor=Apple&model=Macintosh&browser=Chrome'
+    link: "uniswap://scantastic?pubKey=%7B%22alg%22%3A%22RSA-OAEP-256%22%2C%22kty%22%3A%22RSA%22%2C%22n%22%3A%224X4nRAEZ8FWoVmoQ5KrxcssIR7XpdcVo_y7yD1SgmYuXekvHMIYuLxxkxVTjsyxj2s9jctIHOhZ-g96w4oM8-HXjCJG_v55w6FZyDskllcmaGeUlZFwWkiqZ-PKkHCWxCe_dZGvL33sazS_L8P3eAxXEPEJMG9p9lxsIlPp7ki0GSyVjq4rrHgW0lIz6qy6WqHbnyJWQAMSPnZTGM697ZCdkW_GTD3MyqitBwK5xNQN8Pxgbu6S7xbQglanYNBbeMYpJ3X1PDl37sp16YwPm6ryGaX1ESDPHa3M7-_we_yQEUQvtU5t2dd8chISJX8L1D7s8iNxM1LxG_nZTwKnccRPtrzKj-osBMbfCoU4fiNS2LC7q6zsyHxgDpeFlrV--iboQ9TsaQ7RGaFOSKs0l74_dt8GvX2JtNJ0ah8K__eNg9q0xBD8DTdeY2duMTEKJZIKgEyX0KUiRpsbsNmm_76iqhhZyYvcb6mwvNnVcXPg_TabX7lQEEippd7JTWVnF2LKzldlUonchQSsbLEUlN_ALa0Nuq6GG1MVJ0JjSsNMcpin6rH9fPzmDKkqzM2qvhdyuV66vkS82Wj9tQpqXL_jkRk7bQsDlB-HiVbzM2oNPk6or5u6p5tJni0th6BZm4z-sYgmMj3D5xHeusyap-8dmS9J4mXDxGLL_NloaHY8%22%2C%22e%22%3A%22AQAB%22%7D&uuid=28c01911-8e69-46e9-b2f0-f5e719bb714b&vendor=Apple&model=Macintosh&browser=Chrome"
     autoVerify: true
 - waitForAnimationToEnd:
     timeout: 3000
@@ -207,16 +207,16 @@ env:
     id: ${output.testIds.ScantasticConfirmationTitle}
 - assertVisible:
     id: ${output.testIds.ScantasticDevice}
-    text: 'Apple Macintosh'
+    text: "Apple Macintosh"
 - assertVisible:
     id: ${output.testIds.ScantasticBrowser}
-    text: 'Chrome'
+    text: "Chrome"
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
     env:
-      ACTION: 'openLink'
-      TARGET: 'scantastic-deeplink'
-      PHASE: 'end'
+      ACTION: "openLink"
+      TARGET: "scantastic-deeplink"
+      PHASE: "end"
 - killApp
 
 # End flow tracking
@@ -228,4 +228,4 @@ env:
     file: ../../scripts/performance/upload-metrics.js
     env:
       DATADOG_API_KEY: ${DATADOG_API_KEY}
-      ENVIRONMENT: 'maestro_cloud'
+      ENVIRONMENT: "maestro_cloud"

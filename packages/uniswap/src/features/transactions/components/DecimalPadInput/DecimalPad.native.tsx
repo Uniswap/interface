@@ -228,7 +228,7 @@ const KeyButton = memo(function KeyButton({
     onPress?.(label, action)
     scale.value = withSequence(withTiming(1.3, animationOptions), withTiming(1, animationOptions))
     opacity.value = withSequence(withTiming(0.75, animationOptions), withTiming(1, animationOptions))
-  }, [action, label, onPress, opacity, scale])
+  }, [action, label, onPress])
 
   const handleLongPressStart = useCallback((): void => {
     onLongPressStart?.(label, action)

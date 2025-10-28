@@ -1,4 +1,3 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { ToolkitStore } from '@reduxjs/toolkit/dist/configureStore'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
@@ -16,40 +15,28 @@ const FILE_NAME = 'portfolioBalanceOverrides.ts'
 // so instead of checking for exact equality, we check if the quantities are "aproximately" equal.
 const APPROXIMATE_EQUALITY_THRESHOLD_PERCENT = 0.02 // 2%
 
-// Module-level references to Redux store and Apollo client
+// Module-level references to Redux store
 // These are initialized once during app startup
 let portfolioQueryReduxStore: ToolkitStore | null = null
-let portfolioQueryApolloClient: ApolloClient<NormalizedCacheObject> | null = null
 
 /**
  * Initializes the portfolio balance override mechanism.
- * This must be called once during each app initialization after both the Redux store and Apollo client are created.
+ * This must be called once during each app initialization after the Redux store is created.
  */
-export function initializePortfolioQueryOverrides({
-  store,
-  apolloClient,
-}: {
-  store: ToolkitStore
-  apolloClient: ApolloClient<NormalizedCacheObject>
-}): void {
+export function initializePortfolioQueryOverrides({ store }: { store: ToolkitStore }): void {
   const log = createLogger(FILE_NAME, 'initializePortfolioQueryOverrides', '[REST-ITBU]')
 
-  if (portfolioQueryReduxStore || portfolioQueryApolloClient) {
+  if (portfolioQueryReduxStore) {
     log.warn('`initializePortfolioQueryOverrides` called multiple times')
   }
 
   portfolioQueryReduxStore = store
-  portfolioQueryApolloClient = apolloClient
 
   log.debug('Portfolio query overrides successfully initialized')
 }
 
 export function getPortfolioQueryReduxStore(): ToolkitStore | null {
   return portfolioQueryReduxStore
-}
-
-export function getPortfolioQueryApolloClient(): ApolloClient<NormalizedCacheObject> | null {
-  return portfolioQueryApolloClient
 }
 
 const selectTokenBalanceOverridesForWalletAddress = makeSelectTokenBalanceOverridesForWalletAddress()

@@ -42,7 +42,7 @@ interface StepProof {
   orderId?: string
 }
 
-export interface TradeStep {
+export interface PlanStep {
   stepId: string
   method: Method
   payloadType: PayloadType
@@ -62,7 +62,7 @@ export interface TradeStep {
 
 export interface TradeResponse {
   tradeId: string
-  steps: TradeStep[]
+  steps: PlanStep[]
   expectedOutput: number
   timeEstimateMs: number //ms
   gasFee: string

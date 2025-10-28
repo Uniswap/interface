@@ -2,6 +2,7 @@ import { PoolSortFields } from 'appGraphql/data/pools/useTopPools'
 import { OrderDirection } from 'appGraphql/data/util'
 import { ExploreStatsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ALL_NETWORKS_ARG } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ExternalArrowLink } from 'components/Liquidity/ExternalArrowLink'
 import { useAccount } from 'hooks/useAccount'
 import { TopPoolsSection } from 'pages/Positions/TopPoolsSection'
@@ -10,8 +11,6 @@ import { useTopPools } from 'state/explore/topPools'
 import { Flex, useMedia } from 'ui/src'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const MAX_BOOSTED_POOLS = 3
 

@@ -1,9 +1,8 @@
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreen/HomeScreenTabIndex'
 import { dismissInAppBrowser } from 'src/utils/linking'
 import { call, put } from 'typed-redux-saga'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { forceFetchFiatOnRampTransactions } from 'uniswap/src/features/transactions/slice'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 

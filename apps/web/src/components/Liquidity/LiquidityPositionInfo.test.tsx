@@ -1,4 +1,4 @@
-import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { PositionInfo } from 'components/Liquidity/types'
 import { TEST_TOKEN_1, TEST_TOKEN_2, toCurrencyAmount } from 'test-utils/constants'

@@ -1,15 +1,20 @@
 /* eslint-disable complexity */
 import { forwardRef, memo, useCallback } from 'react'
 import { Flex, TouchableArea, useIsShortMobileDevice, useShakeAnimation } from 'ui/src'
-import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
+import {
+  AmountInputPresets,
+  PRESET_BUTTON_PROPS,
+} from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
 import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/PresetAmountButton'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
+import { PRESET_PERCENTAGES } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/utils'
 import { CurrencyInputPanelBalance } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelBalance'
 import { CurrencyInputPanelHeader } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelHeader'
 import { CurrencyInputPanelInput } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelInput'
 import { CurrencyInputPanelValue } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanelValue'
 import { useIndicativeQuoteTextDisplay } from 'uniswap/src/components/CurrencyInputPanel/hooks/useIndicativeQuoteTextDisplay'
 import type { CurrencyInputPanelProps, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { isExtensionApp, isMobileWeb, isWebAppDesktop } from 'utilities/src/platform'
@@ -80,6 +85,22 @@ export const CurrencyInputPanel = memo(
         [onSetPresetValue],
       )
 
+      const renderPreset = useCallback(
+        (preset: PresetPercentage) => (
+          <PresetAmountButton
+            percentage={preset}
+            currencyAmount={currencyAmount}
+            currencyBalance={currencyBalance}
+            currencyField={currencyField}
+            transactionType={transactionType}
+            elementName={ElementName.PresetPercentage}
+            buttonProps={PRESET_BUTTON_PROPS}
+            onSetPresetValue={handleSetPresetValue}
+          />
+        ),
+        [currencyAmount, currencyBalance, currencyField, handleSetPresetValue, transactionType],
+      )
+
       return (
         <TouchableArea
           group
@@ -139,13 +160,7 @@ export const CurrencyInputPanel = memo(
             >
               {showPercentagePresetsOnBottom && currencyBalance && !currencyAmount ? (
                 <Flex position="absolute">
-                  <AmountInputPresets
-                    hoverLtr
-                    buttonProps={{ py: '$spacing4' }}
-                    currencyAmount={currencyAmount}
-                    currencyBalance={currencyBalance}
-                    onSetPresetValue={handleSetPresetValue}
-                  />
+                  <AmountInputPresets hoverLtr presets={PRESET_PERCENTAGES} renderPreset={renderPreset} />
                 </Flex>
               ) : (
                 <CurrencyInputPanelValue

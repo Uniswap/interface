@@ -1,15 +1,16 @@
+import { Layers, PriceUxUpdateProperties } from '@universe/gating'
 import { expect, getTest } from 'playwright/fixtures'
 import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { Mocks } from 'playwright/mocks/mocks'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { Layers, PriceUxUpdateProperties } from 'uniswap/src/features/gating/experiments'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const test = getTest()
 
 test.describe('Fees', () => {
   test('should not display fee on swaps without fees', async ({ page }) => {
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
     await page.goto(`/swap?inputCurrency=${DAI.address}&outputCurrency=${USDC_MAINNET.address}`)
 
     // Enter amount
@@ -23,6 +24,7 @@ test.describe('Fees', () => {
   })
 
   test('displays UniswapX fee in UI', async ({ page }) => {
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
     await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
 
     await page.goto(

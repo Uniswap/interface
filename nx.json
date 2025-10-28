@@ -10,7 +10,13 @@
     "build": {
       "dependsOn": ["^prepare", "prepare", "^build"],
       "inputs": ["dependencies", "sourceFiles", "tsConfig"],
-      "outputs": ["{projectRoot}/dist", "{projectRoot}/build", "{projectRoot}/.next", "{projectRoot}/types"],
+      "outputs": [
+        "{workspaceRoot}/dist/out-tsc/{projectRoot}",
+        "{projectRoot}/dist",
+        "{projectRoot}/build",
+        "{projectRoot}/.next",
+        "{projectRoot}/types"
+      ],
       "cache": true
     },
     "build:production": {
@@ -49,18 +55,14 @@
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": [
-        "@uniswap/biome-config:prepare"
-      ]
+      "dependsOn": ["@uniswap/biome-config:prepare"]
     },
     "lint:biome:fix": {
       "command": "biome check . --write",
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": [
-        "@uniswap/biome-config:prepare"
-      ]
+      "dependsOn": ["@uniswap/biome-config:prepare"]
     },
     "lint:eslint": {
       "command": "eslint . --ext ts,tsx --max-warnings=0",
@@ -82,10 +84,7 @@
     },
     "lint:fix": {
       "executor": "nx:noop",
-      "dependsOn": [
-        "lint:biome:fix",
-        "lint:eslint:fix"
-      ],
+      "dependsOn": ["lint:biome:fix", "lint:eslint:fix"],
       "cache": false
     },
     "test": {
@@ -171,13 +170,8 @@
     },
     "@nx/js:tsc": {
       "cache": true,
-      "dependsOn": [
-        "^build"
-      ],
-      "inputs": [
-        "production",
-        "^production"
-      ]
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
     }
   },
   "namedInputs": {

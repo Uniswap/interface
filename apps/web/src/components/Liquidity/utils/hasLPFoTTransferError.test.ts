@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { hasLPFoTTransferError } from 'components/Liquidity/utils/hasLPFoTTransferError'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { describe, expect, it } from 'vitest'

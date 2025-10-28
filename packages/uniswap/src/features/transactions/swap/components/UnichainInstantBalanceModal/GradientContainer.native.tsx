@@ -33,7 +33,7 @@ export function GradientContainer({ toTokenColor, children }: GradientContainerP
     blobT1.value = withRepeat(withTiming(1, cfg), -1, true)
     blobT2.value = withRepeat(withTiming(1, { ...cfg, duration: 16000 }), -1, true)
     blobT3.value = withRepeat(withTiming(1, { ...cfg, duration: 7000 }), -1, true)
-  }, [blobT1, blobT2, blobT3])
+  }, [])
 
   const blob1 = useAnimatedStyle(() => {
     const innerT = blobT1.value * Math.PI * 2

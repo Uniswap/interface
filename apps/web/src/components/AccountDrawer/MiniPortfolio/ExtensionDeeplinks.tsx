@@ -1,4 +1,4 @@
-import { PositionStatus } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { PositionStatus } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { useOpenLimitOrders, usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'

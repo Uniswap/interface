@@ -2,16 +2,16 @@ import { useApolloClient } from '@apollo/client'
 import { useScrollToTop } from '@react-navigation/native'
 import { useQuery } from '@tanstack/react-query'
 import { GQLQueries } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { ESTIMATED_BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
 import { ActivityContent } from 'src/components/activity/ActivityContent'
 import { Screen } from 'src/components/layout/Screen'
+import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { Text } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -48,6 +48,13 @@ export function ActivityScreen(): JSX.Element {
   useScrollToTop(scrollRef)
 
   const { refreshing, onRefreshActivityData } = useRefreshActivityData(activeAccount.address)
+
+  // Automatically refresh activity data when app comes to foreground
+  useAppStateTrigger({
+    from: 'background',
+    to: 'active',
+    callback: onRefreshActivityData,
+  })
 
   const insets = useAppInsets()
   const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)

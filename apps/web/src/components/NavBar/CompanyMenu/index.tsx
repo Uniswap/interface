@@ -41,7 +41,7 @@ export function CompanyMenu() {
   const isTouchDevice = useIsTouchDevice()
 
   return (
-    <Popover ref={popoverRef} placement="bottom" hoverable stayInFrame allowFlip onOpenChange={setIsOpen}>
+    <Popover ref={popoverRef} placement="bottom" hoverable={!media.xl} stayInFrame allowFlip onOpenChange={setIsOpen}>
       <Popover.Trigger data-testid={TestID.NavCompanyMenu}>
         <Flex
           row

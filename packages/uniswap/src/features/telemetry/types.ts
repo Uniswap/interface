@@ -7,6 +7,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { OnChainStatus } from '@uniswap/client-trading/dist/trading/v1/api_pb'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { TradingApi, UnitagClaimContext } from '@universe/api'
+import { Experiments } from '@universe/gating'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -908,6 +909,9 @@ export type UniverseEventProperties = {
     chainId: number
     delegationAddress: string
     isActiveChain?: boolean
+  }
+  [UniswapEventName.ExperimentQualifyingEvent]: {
+    experiment: Experiments
   }
   [UniswapEventName.BalancesReport]: {
     total_balances_usd: number

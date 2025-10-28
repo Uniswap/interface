@@ -1,5 +1,6 @@
 /* eslint-disable react-native/no-unused-styles */
 import { FlashList, FlashListProps } from '@shopify/flash-list'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { RefObject, useCallback, useMemo } from 'react'
 import {
   FlatList,
@@ -14,8 +15,6 @@ import Animated, { SharedValue } from 'react-native-reanimated'
 import { Route } from 'react-native-tab-view'
 import { Flex, Text } from 'ui/src'
 import { colorsLight, spacing } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { PendingNotificationBadge } from 'wallet/src/features/notifications/components/PendingNotificationBadge'
 

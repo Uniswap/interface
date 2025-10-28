@@ -20,6 +20,8 @@ describe(tokenProjectToCurrencyInfos, () => {
         symbol: token.symbol,
         name: token.name ?? project.name,
       }),
+      isBridged: token.isBridged,
+      bridgedWithdrawalInfo: token.bridgedWithdrawalInfo,
     }) as CurrencyInfo
 
   it('converts tokenProject to CurrencyInfo', () => {

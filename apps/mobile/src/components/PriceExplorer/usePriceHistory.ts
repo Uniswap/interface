@@ -83,7 +83,7 @@ export function useTokenPriceHistory({
             relativeChange: spotRelativeChange,
           }
         : undefined,
-    [price, spotValue, spotRelativeChange],
+    [price],
   )
 
   const formattedPriceHistory = useMemo(() => {

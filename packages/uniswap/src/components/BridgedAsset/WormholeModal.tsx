@@ -17,7 +17,6 @@ import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { iconSizes } from 'ui/src/theme'
 import { BaseModalProps } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
-import { getBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -52,7 +51,7 @@ export function WormholeModal({
   const textColor = useMemo(() => {
     return getContrastPassingTextColor(validTokenColor ?? colors.accent1.val)
   }, [colors.accent1.val, validTokenColor])
-  const bridgedAsset = getBridgedAsset(currencyInfo)
+  const bridgedWithdrawalInfo = currencyInfo?.bridgedWithdrawalInfo
 
   const onPressLearnMore = async (): Promise<void> => {
     await openUri({ uri: uniswapUrls.helpArticleUrls.bridgedAssets })
@@ -60,14 +59,17 @@ export function WormholeModal({
   }
 
   const onPressContinue = useEvent(async () => {
+    if (!bridgedWithdrawalInfo?.url) {
+      return
+    }
     await openUri({
-      uri: `${uniswapUrls.wormholeUrl}?sourceChain=unichain&targetChain=${bridgedAsset?.nativeChain}&asset=${bridgedAsset?.unichainAddress}&targetAsset=${bridgedAsset?.nativeAddress}`,
+      uri: bridgedWithdrawalInfo.url,
       openExternalBrowser: true,
     })
     onClose()
   })
 
-  if (!currencyInfo || !currencyInfo.currency.symbol || !bridgedAsset) {
+  if (!currencyInfo || !currencyInfo.currency.symbol || !bridgedWithdrawalInfo) {
     return null
   }
   const chainName = getChainLabel(currencyInfo.currency.chainId)
@@ -127,14 +129,15 @@ export function WormholeModal({
               <Text variant="subheading1" textAlign="center">
                 {t('bridgedAsset.wormhole.title', {
                   currencySymbol: currencyInfo.currency.symbol,
-                  nativeChainName: bridgedAsset.nativeChain,
+                  nativeChainName: bridgedWithdrawalInfo.chain,
                 })}
               </Text>
               <Text variant="body2" color="$neutral2" textAlign="center" textWrap="wrap" whiteSpace="wrap">
                 {t('bridgedAsset.wormhole.description', {
                   currencySymbol: currencyInfo.currency.symbol,
                   chainName,
-                  nativeChainName: bridgedAsset.nativeChain,
+                  nativeChainName: bridgedWithdrawalInfo.chain,
+                  provider: bridgedWithdrawalInfo.provider,
                 })}
               </Text>
               <Trace logPress element={ElementName.LearnMoreLink}>
@@ -158,7 +161,7 @@ export function WormholeModal({
                 onPress={onPressContinue}
               >
                 <Text variant="buttonLabel1" color={textColor}>
-                  {t('bridgedAsset.wormhole.button')}
+                  {t('bridgedAsset.wormhole.button', { provider: bridgedWithdrawalInfo.provider })}
                 </Text>
               </Button>
             </Trace>

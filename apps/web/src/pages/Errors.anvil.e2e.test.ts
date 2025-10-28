@@ -1,3 +1,4 @@
+import { rejectNextTransaction } from 'components/Web3Provider/rejectableConnector'
 import { expect, getTest } from 'playwright/fixtures'
 import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { TEST_WALLET_ADDRESS } from 'playwright/fixtures/wallets'
@@ -5,17 +6,18 @@ import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
-import { HexString } from 'utilities/src/addresses/hex'
+import { type HexString } from 'utilities/src/addresses/hex'
 
 const test = getTest({ withAnvil: true })
 
 test.describe('Errors', () => {
   test('wallet rejection', async ({ page, anvil }) => {
     await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
 
     await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
-    await anvil.setTransactionRejection()
+    const nonceBefore = await anvil.getTransactionCount({ address: TEST_WALLET_ADDRESS })
 
     // Enter amount to swap
     await page.getByTestId(TestID.AmountInputOut).fill('1')
@@ -25,10 +27,17 @@ test.describe('Errors', () => {
 
     // Submit transaction
     await page.getByTestId(TestID.ReviewSwap).click()
+
+    // Set rejection flag before clicking Swap
+    await rejectNextTransaction(page)
+
     await page.getByTestId(TestID.Swap).click()
 
-    // Verify rejection state by checking the button text
-    await expect(page.getByTestId(TestID.Swap)).toContainText('Swap')
+    await anvil.mine({ blocks: 1 })
+    const nonceAfter = await anvil.getTransactionCount({ address: TEST_WALLET_ADDRESS })
+
+    // Verify transaction was rejected - nonce should not have changed
+    expect(nonceAfter).toBe(nonceBefore)
   })
 
   test.skip('transaction past deadline', async ({ page, anvil }) => {
@@ -86,6 +95,7 @@ test.describe('Errors', () => {
 
   test('slippage failure', async ({ page, anvil }) => {
     await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
 
     const originalEthBalance = await anvil.getBalance({ address: TEST_WALLET_ADDRESS })
 

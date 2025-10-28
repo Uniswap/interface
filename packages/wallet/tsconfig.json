@@ -12,6 +12,9 @@
       "path": "../ui"
     },
     {
+      "path": "../gating"
+    },
+    {
       "path": "../api"
     }
   ],

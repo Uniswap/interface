@@ -1,8 +1,6 @@
-import { useMemo } from 'react'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { BridgedAssetTDPSection } from 'uniswap/src/components/BridgedAsset/BridgedAssetTDPSection'
-import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -29,7 +27,7 @@ export function TokenDetailsBridgedAssetSection(): JSX.Element | null {
       },
     })
   })
-  const isBridgedAsset = useMemo(() => currencyInfo && checkIsBridgedAsset(currencyInfo), [currencyInfo])
+  const isBridgedAsset = Boolean(currencyInfo?.isBridged)
   if (!isBridgedAsset || !currencyInfo) {
     return null
   }

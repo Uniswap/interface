@@ -1,21 +1,17 @@
-import { Flex, FlexProps } from 'ui/src'
+import { Key } from 'react'
+import { ButtonProps, Flex, FlexProps } from 'ui/src'
 import { get200MsAnimationDelayFromIndex } from 'ui/src/theme/animations/delay200ms'
-import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/PresetAmountButton'
 import { AmountInputPresetsProps } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
-import { PRESET_PERCENTAGES } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/utils'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { CurrencyField } from 'uniswap/src/types/currency'
 import { isHoverable } from 'utilities/src/platform'
 
-export function AmountInputPresets({
+export const PRESET_BUTTON_PROPS: ButtonProps = { variant: 'default', py: '$spacing4' }
+
+export function AmountInputPresets<T extends Key>({
   hoverLtr,
-  currencyAmount,
-  currencyBalance,
-  transactionType,
-  buttonProps,
-  onSetPresetValue,
+  presets,
+  renderPreset,
   ...rest
-}: AmountInputPresetsProps & FlexProps): JSX.Element {
+}: AmountInputPresetsProps<T> & FlexProps): JSX.Element {
   return (
     <Flex
       row
@@ -30,9 +26,9 @@ export function AmountInputPresets({
       animation="100ms"
       {...rest}
     >
-      {PRESET_PERCENTAGES.map((percent, index) => (
+      {presets.map((preset, index) => (
         <Flex
-          key={percent}
+          key={preset}
           grow
           {...(isHoverable
             ? {
@@ -43,20 +39,11 @@ export function AmountInputPresets({
                   transform: [{ translateY: 0 }],
                   scale: 1,
                 },
-                animation: get200MsAnimationDelayFromIndex(hoverLtr ? index : PRESET_PERCENTAGES.length - index - 1),
+                animation: get200MsAnimationDelayFromIndex(hoverLtr ? index : presets.length - index - 1),
               }
             : {})}
         >
-          <PresetAmountButton
-            percentage={percent}
-            currencyAmount={currencyAmount}
-            currencyBalance={currencyBalance}
-            currencyField={CurrencyField.INPUT}
-            transactionType={transactionType}
-            elementName={ElementName.PresetPercentage}
-            buttonProps={{ ...buttonProps, variant: 'default', py: '$spacing4' }}
-            onSetPresetValue={onSetPresetValue}
-          />
+          {renderPreset(preset)}
         </Flex>
       ))}
     </Flex>

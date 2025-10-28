@@ -68,7 +68,7 @@ export function useLineChartPrice(currentSpot?: SharedValue<number>): ValueAndFo
       formatted: priceFormatted,
       shouldAnimate,
     }),
-    [price, priceFormatted, shouldAnimate],
+    [],
   )
 }
 

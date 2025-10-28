@@ -1,17 +1,18 @@
 import { datadogLogs } from '@datadog/browser-logs'
 import { datadogRum, RumEvent, RumEventDomainContext, RumFetchResourceEventDomainContext } from '@datadog/browser-rum'
-import { config } from 'uniswap/src/config'
 import {
   DatadogIgnoredErrorsConfigKey,
   DatadogIgnoredErrorsValType,
   DatadogSessionSampleRateKey,
   DatadogSessionSampleRateValType,
   DynamicConfigs,
-} from 'uniswap/src/features/gating/configs'
-import { Experiments } from 'uniswap/src/features/gating/experiments'
-import { WALLET_FEATURE_FLAG_NAMES, WEB_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
-import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
+  Experiments,
+  getDynamicConfigValue,
+  getStatsigClient,
+  WALLET_FEATURE_FLAG_NAMES,
+  WEB_FEATURE_FLAG_NAMES,
+} from '@universe/gating'
+import { config } from 'uniswap/src/config'
 import { getUniqueId } from 'utilities/src/device/uniqueId'
 import { datadogEnabledBuild, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { isBetaEnv } from 'utilities/src/environment/env'
@@ -40,7 +41,9 @@ function beforeSend(event: RumEvent, context: RumEventDomainContext): boolean {
       defaultValue: [],
     })
 
-    const ignoredError = ignoredErrors.find(({ messageContains }) => event.error.message.includes(messageContains))
+    const ignoredError = ignoredErrors.find(({ messageContains }: { messageContains: string }) =>
+      event.error.message.includes(messageContains),
+    )
     if (ignoredError && Math.random() > ignoredError.sampleRate) {
       return false
     }
