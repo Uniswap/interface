@@ -11783,7 +11783,7 @@ __metadata:
     "@types/jest": 29.5.0
     "@types/ms": 0.7.31
     "@types/multicodec": 1.0.0
-    "@types/node": 18.16.0
+    "@types/node": ^20.0.0
     "@types/poisson-disk-sampling": 2.2.4
     "@types/qs": 6.9.2
     "@types/react": ^18.0.15
@@ -13195,13 +13195,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:18.16.0":
-  version: 18.16.0
-  resolution: "@types/node@npm:18.16.0"
-  checksum: 63e0042136663b9e85ce503a4c65406cc6621fdba63ea66c74b4b1364a9aa9bdb57cadcb76696abab177f38a819b0fa6ace9e7f1647dcb990aedb1b4bd01012f
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:^10.11.7":
   version: 10.17.60
   resolution: "@types/node@npm:10.17.60"
@@ -13220,6 +13213,15 @@ __metadata:
   version: 16.18.46
   resolution: "@types/node@npm:16.18.46"
   checksum: 1aed3fe9693f2098b8dac8c76c809c1925a456da00dd6f06c1ccb55c62ccfbbe7ec43ccfd12001f9cb4ff84e138292ae53456435dfecd5c4bb1324394c3e09c7
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^20.0.0":
+  version: 20.19.24
+  resolution: "@types/node@npm:20.19.24"
+  dependencies:
+    undici-types: ~6.21.0
+  checksum: d532a28d454dfadc7b3af7f39d087f7d9416d2e0cdd4b47c3e00fc303177280a66bd15a86078a9957260a47b1d2bad5ac35096aeb316e56bc0318c904f214cc3
   languageName: node
   linkType: hard
 
@@ -42581,6 +42583,13 @@ __metadata:
   version: 1.12.1
   resolution: "underscore@npm:1.12.1"
   checksum: ec327603aa112b99fe9d74cd9bf3b3b7451465a9d2610ceab269a532e3f191650ab017903be34dc86fe406a11d04d8905a3b04dd4c129493e51bee09a3f3074c
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~6.21.0":
+  version: 6.21.0
+  resolution: "undici-types@npm:6.21.0"
+  checksum: 46331c7d6016bf85b3e8f20c159d62f5ae471aba1eb3dc52fff35a0259d58dcc7d592d4cc4f00c5f9243fa738a11cfa48bd20203040d4a9e6bc25e807fab7ab3
   languageName: node
   linkType: hard
 

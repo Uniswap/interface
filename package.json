@@ -18,7 +18,7 @@
     "turbo-ignore": "^1.11.3"
   },
   "engines": {
-    "node": "=18.12.1",
+    "node": ">=20.0.0",
     "yarn": ">=3.2.3",
     "npm": "please-use-yarn"
   },
