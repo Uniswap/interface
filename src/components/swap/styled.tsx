@@ -28,7 +28,7 @@ export const PageWrapper = styled.div`
   }
 `
 
-// Gradient background for swap page
+// Gradient background for swap page - DISABLED to prevent darkening swap card
 export const SwapGradientBackground = styled.div<{ isDarkMode: boolean }>`
   position: absolute;
   top: 0;
@@ -39,6 +39,7 @@ export const SwapGradientBackground = styled.div<{ isDarkMode: boolean }>`
   height: 100vh;
   z-index: -2;
   pointer-events: none;
+  /* Gradient disabled - was darkening the swap interface
   ${({ isDarkMode }) =>
     isDarkMode
       ? css`
@@ -47,6 +48,7 @@ export const SwapGradientBackground = styled.div<{ isDarkMode: boolean }>`
       : css`
           background: linear-gradient(rgba(255, 255, 255, 0) 0%, rgb(255 255 255 /100%) 45%);
         `};
+  */
 `
 
 // Glow effect behind swap card
