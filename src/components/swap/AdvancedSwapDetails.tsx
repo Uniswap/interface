@@ -10,6 +10,7 @@ import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { ClassicTrade, InterfaceTrade } from 'state/routing/types'
 import { getTransactionCount, isClassicTrade } from 'state/routing/utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { getPriceImpactColor } from 'utils/prices'
 
 import { ExternalLink, Separator, ThemedText } from '../../theme'
 import Column from '../Column'
@@ -94,7 +95,9 @@ export function AdvancedSwapDetails({ trade, allowedSlippage, syncing = false }:
               </ThemedText.BodySmall>
             </MouseoverTooltip>
             <TextWithLoadingPlaceholder syncing={syncing} width={50}>
-              <ThemedText.BodySmall>{formatPriceImpact(trade.priceImpact)}</ThemedText.BodySmall>
+              <ThemedText.BodySmall color={getPriceImpactColor(trade.priceImpact)}>
+                {formatPriceImpact(trade.priceImpact)}
+              </ThemedText.BodySmall>
             </TextWithLoadingPlaceholder>
           </RowBetween>
         </>
