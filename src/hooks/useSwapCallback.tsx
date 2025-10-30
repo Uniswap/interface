@@ -16,7 +16,7 @@ import {
 import { currencyId } from '../utils/currencyId'
 import useTransactionDeadline from './useTransactionDeadline'
 import { useUniswapXSwapCallback } from './useUniswapXSwapCallback'
-import { useUniversalRouterSwapCallback } from './useUniversalRouter'
+import { useSwapRouterSwapCallback } from './useSwapRouter'
 
 export type SwapResult = Awaited<ReturnType<ReturnType<typeof useSwapCallback>>>
 
@@ -40,7 +40,7 @@ export function useSwapCallback(
     fiatValues,
   })
 
-  const universalRouterSwapCallback = useUniversalRouterSwapCallback(
+  const swapRouterSwapCallback = useSwapRouterSwapCallback(
     isClassicTrade(trade) ? trade : undefined,
     fiatValues,
     {
@@ -50,7 +50,7 @@ export function useSwapCallback(
     }
   )
 
-  const swapCallback = isUniswapXTrade(trade) ? uniswapXSwapCallback : universalRouterSwapCallback
+  const swapCallback = isUniswapXTrade(trade) ? uniswapXSwapCallback : swapRouterSwapCallback
 
   return useCallback(async () => {
     if (!trade) throw new Error('missing trade')
