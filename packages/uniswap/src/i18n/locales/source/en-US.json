@@ -152,7 +152,7 @@
   "bridging.estimatedTime.minutesAndSeconds": "~{{minutes}}min {{seconds}}s",
   "bridging.estimatedTime.minutesOnly": "~{{minutes}}min",
   "bridging.estimatedTime.secondsOnly": "~{{seconds}}s",
-  "bridgingPopularTokens.banner.description": "DOGE, XRP, XLP — now available on Unichain.",
+  "bridgingPopularTokens.banner.description": "DOGE, XRP, XPL, ZEC — now available on Unichain.",
   "chart.candlestick": "Candlestick",
   "chart.error.pools": "Unable to display historical data for the current pool.",
   "chart.error.tokens": "Unable to display historical data for the current token.",
