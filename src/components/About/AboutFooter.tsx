@@ -3,7 +3,6 @@ import { TraceEvent } from 'analytics'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import styled from 'styled-components'
 import { BREAKPOINTS, ExternalLink, StyledRouterLink } from 'theme'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 import { TaikoLogo } from 'components/Logo/TaikoLogo'
 import { DiscordIcon, GithubIcon, TwitterIcon } from './Icons'
@@ -192,8 +191,6 @@ export const AboutFooter = () => {
           <LinkGroupTitle>Community</LinkGroupTitle>
           <ExternalTextLink href="https://discord.gg/taikoxyz">Discord</ExternalTextLink>
           <ExternalTextLink href="https://twitter.com/taikoxyz">Twitter</ExternalTextLink>
-          <ExternalTextLink href="https://taiko.xyz/community">Community Hub</ExternalTextLink>
-          <ExternalTextLink href="https://taiko.xyz/grants">Grants</ExternalTextLink>
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>About</LinkGroupTitle>

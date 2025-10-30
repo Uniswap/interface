@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { TradeType } from '@uniswap/sdk-core'
+import { ZERO_ADDRESS } from '@uniswap/universal-router-sdk/dist/utils/constants'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { TAIKO_HOODI_ADDRESSES, TAIKO_HOODI_CHAIN_ID } from 'config/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
@@ -29,7 +30,7 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
     const provider = RPC_PROVIDERS[TAIKO_HOODI_CHAIN_ID]
     const quoterAddress = TAIKO_HOODI_ADDRESSES.quoterV2
 
-    if (!quoterAddress || quoterAddress === '0x0000000000000000000000000000000000000000') {
+    if (!quoterAddress || quoterAddress === ZERO_ADDRESS) {
       return { state: QuoteState.NOT_FOUND }
     }
 
@@ -55,7 +56,7 @@ export async function getTaikoQuote(args: GetQuoteArgs): Promise<QuoteResult> {
           return factory.getPool(actualTokenInAddress, actualTokenOutAddress, fee)
         })
 
-        if (!poolAddress || poolAddress === '0x0000000000000000000000000000000000000000') {
+        if (!poolAddress || poolAddress === ZERO_ADDRESS) {
           continue
         }
 
