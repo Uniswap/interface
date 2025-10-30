@@ -39,10 +39,17 @@ if (!sentryUserId) {
 }
 Sentry.setUser({ id: sentryUserId })
 
-initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
-  proxyUrl: process.env.REACT_APP_AMPLITUDE_PROXY_URL,
-  defaultEventName: SharedEventName.PAGE_VIEWED,
-  commitHash: process.env.REACT_APP_GIT_COMMIT_HASH,
-  isProductionEnv: isProductionEnv(),
-  debug: isDevelopmentEnv(),
-})
+// Only initialize analytics if proxy URL is configured
+if (process.env.REACT_APP_AMPLITUDE_PROXY_URL) {
+  initializeAnalytics(AMPLITUDE_DUMMY_KEY, OriginApplication.INTERFACE, {
+    proxyUrl: process.env.REACT_APP_AMPLITUDE_PROXY_URL,
+    defaultEventName: SharedEventName.PAGE_VIEWED,
+    commitHash: process.env.REACT_APP_GIT_COMMIT_HASH,
+    isProductionEnv: isProductionEnv(),
+    debug: isDevelopmentEnv(),
+  })
+} else {
+  if (isDevelopmentEnv()) {
+    console.log('[Analytics] Disabled - no REACT_APP_AMPLITUDE_PROXY_URL configured')
+  }
+}
