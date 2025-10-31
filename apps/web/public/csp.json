@@ -115,6 +115,7 @@
     "https://prodregistryv2.org",
     "https://cloudflare-dns.com",
     "https://beyondwickedmapping.org",
+    "https://*.splits.org",
     "wss://*.uniswap.org",
     "wss://relay.walletconnect.com",
     "wss://relay.walletconnect.org",
