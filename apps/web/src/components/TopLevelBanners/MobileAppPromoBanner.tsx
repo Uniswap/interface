@@ -70,7 +70,7 @@ function getDownloadLink(userAgent: string, peerWalletAgent?: string): string {
     return 'https://uniswapwallet.onelink.me/8q3y/03e2c5cw'
   }
   if (userAgent.includes('RHNCW')) {
-    return 'https://uniswapwallet.onelink.me/8q3y/ipq1dx4n'
+    return 'https://apps.apple.com/us/app/uniswap-crypto-nft-wallet/id6443944476?mt=8'
   }
   if (peerWalletAgent?.includes('CoinbaseWallet CoinbaseBrowser')) {
     return 'https://uniswapwallet.onelink.me/8q3y/24xpl5zh'
