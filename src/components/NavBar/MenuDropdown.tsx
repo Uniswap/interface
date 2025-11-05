@@ -137,53 +137,8 @@ export const MenuDropdown = () => {
         </NavIcon>
 
         {isOpen && (
-          <NavDropdown top={{ sm: 'unset', lg: '56' }} bottom={{ sm: '50', lg: 'unset' }} right="0">
+          <NavDropdown top={{ sm: 'unset', lg: '56' }} bottom={{ sm: '50', lg: 'unset' }} right="0" minWidth="292">
             <Column gap="16">
-              <Column paddingX="8" gap="4">
-                <Box display={{ sm: 'none', lg: 'flex', xxl: 'none' }}>
-                  <PrimaryMenuRow to="/pool" close={toggleOpen}>
-                    <Icon>
-                      <PoolIcon width={24} height={24} fill={theme.neutral1} />
-                    </Icon>
-                    <PrimaryMenuRow.Text>
-                      <Trans>Pool</Trans>
-                    </PrimaryMenuRow.Text>
-                  </PrimaryMenuRow>
-                </Box>
-                <Box
-                  onClick={() =>
-                    openDownloadApp({
-                      element: InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON,
-                    })
-                  }
-                >
-                  <PrimaryMenuRow close={toggleOpen}>
-                    <Icon>
-                      <AppleLogo width="24px" height="24px" fill={theme.neutral1} />
-                    </Icon>
-                    <PrimaryMenuRow.Text>
-                      <Trans>Download Uniswap Wallet</Trans>
-                    </PrimaryMenuRow.Text>
-                  </PrimaryMenuRow>
-                </Box>
-                <PrimaryMenuRow to="/vote" close={toggleOpen}>
-                  <Icon>
-                    <GovernanceIcon width={24} height={24} color={theme.neutral1} />
-                  </Icon>
-                  <PrimaryMenuRow.Text>
-                    <Trans>Vote in governance</Trans>
-                  </PrimaryMenuRow.Text>
-                </PrimaryMenuRow>
-                <PrimaryMenuRow href="https://info.uniswap.org/#/">
-                  <Icon>
-                    <BarChartIcon width={24} height={24} color={theme.neutral1} />
-                  </Icon>
-                  <PrimaryMenuRow.Text>
-                    <Trans>View more analytics</Trans>
-                  </PrimaryMenuRow.Text>
-                </PrimaryMenuRow>
-              </Column>
-              <Separator />
               <Box
                 display="flex"
                 flexDirection={{ sm: 'row', md: 'column' }}
@@ -191,14 +146,8 @@ export const MenuDropdown = () => {
                 alignItems={{ sm: 'center', md: 'flex-start' }}
                 paddingX="8"
               >
-                <SecondaryLinkedText href="https://help.uniswap.org/en/">
-                  <Trans>Help center</Trans> ↗
-                </SecondaryLinkedText>
-                <SecondaryLinkedText href="https://docs.uniswap.org/">
+                <SecondaryLinkedText href="https://docs.taiko.xyz">
                   <Trans>Documentation</Trans> ↗
-                </SecondaryLinkedText>
-                <SecondaryLinkedText href="https://uniswap.canny.io/feature-requests">
-                  <Trans>Feedback</Trans> ↗
                 </SecondaryLinkedText>
                 <SecondaryLinkedText
                   onClick={() => {
@@ -208,25 +157,15 @@ export const MenuDropdown = () => {
                 >
                   <Trans>Legal & Privacy</Trans> ↗
                 </SecondaryLinkedText>
-                {(isDevelopmentEnv() || isStagingEnv()) && (
-                  <SecondaryLinkedText
-                    onClick={() => {
-                      toggleOpen()
-                      openFeatureFlagsModal()
-                    }}
-                  >
-                    <Trans>Feature Flags</Trans>
-                  </SecondaryLinkedText>
-                )}
               </Box>
               <IconRow>
-                <Icon href="https://discord.com/invite/FCfyBSbCU5">
+                <Icon href="https://discord.gg/taikoxyz">
                   <DiscordIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
-                <Icon href="https://twitter.com/Uniswap">
+                <Icon href="https://twitter.com/taikoxyz">
                   <TwitterIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
-                <Icon href="https://github.com/Uniswap">
+                <Icon href="https://github.com/taikoxyz">
                   <GithubIconMenu className={styles.hover} width={24} height={24} color={themeVars.colors.neutral2} />
                 </Icon>
               </IconRow>

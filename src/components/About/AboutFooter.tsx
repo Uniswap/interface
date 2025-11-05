@@ -4,7 +4,7 @@ import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import styled from 'styled-components'
 import { BREAKPOINTS, ExternalLink, StyledRouterLink } from 'theme'
 
-import { TaikoLogo } from 'components/Logo/TaikoLogo'
+import { TaikoIcon } from 'components/Logo/TaikoLogo'
 import { DiscordIcon, GithubIcon, TwitterIcon } from './Icons'
 
 const Footer = styled.div`
@@ -13,6 +13,7 @@ const Footer = styled.div`
   width: 100%;
   gap: 48px;
   max-width: 1440px;
+  margin-top: 80px;
 
   @media screen and (min-width: ${BREAKPOINTS.lg}px) {
     flex-direction: row;
@@ -48,15 +49,11 @@ const LogoSectionBottom = styled(LogoSection)`
 `
 
 const StyledLogoWrapper = styled.div`
-  width: 72px;
-  height: 72px;
-  display: none;
+  width: 120px;
+  height: 120px;
+  display: block;
   color: ${({ theme }) => theme.accent1};
-  opacity: 0.2;
-
-  @media screen and (min-width: ${BREAKPOINTS.lg}px) {
-    display: block;
-  }
+  opacity: 0.1;
 `
 
 const SocialLinks = styled.div`
@@ -117,9 +114,9 @@ const Copyright = styled.span`
 `
 
 const BrandTitle = styled.h3`
-  font-size: 24px;
+  font-size: 32px;
   font-weight: 700;
-  line-height: 20px;
+  line-height: 40px;
   margin: 16px 0 12px 0;
   color: ${({ theme }) => theme.neutral1};
 `
@@ -136,7 +133,7 @@ const LogoSectionContent = () => {
   return (
     <>
       <StyledLogoWrapper>
-        <TaikoLogo width="72" height="72" />
+        <TaikoIcon width="120" height="120" />
       </StyledLogoWrapper>
       <BrandTitle>Taiko Labs</BrandTitle>
       <BrandDescription>

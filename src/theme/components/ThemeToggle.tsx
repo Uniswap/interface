@@ -24,8 +24,8 @@ const systemThemeAtom = atom<ThemeMode.LIGHT | ThemeMode.DARK>(
   DARKMODE_MEDIA_QUERY.matches ? ThemeMode.DARK : ThemeMode.LIGHT
 )
 
-// Tracks the user's selected theme mode
-const themeModeAtom = atomWithStorage<ThemeMode>('interface_color_theme', ThemeMode.AUTO)
+// Tracks the user's selected theme mode - Force dark mode for Taiko
+const themeModeAtom = atomWithStorage<ThemeMode>('interface_color_theme', ThemeMode.DARK)
 
 export function SystemThemeUpdater() {
   const setSystemTheme = useSetAtom(systemThemeAtom)
@@ -64,10 +64,8 @@ export function ThemeColorMetaUpdater() {
 }
 
 export function useIsDarkMode(): boolean {
-  const mode = useAtomValue(themeModeAtom)
-  const systemTheme = useAtomValue(systemThemeAtom)
-
-  return (mode === ThemeMode.AUTO ? systemTheme : mode) === ThemeMode.DARK
+  // Force dark mode for Taiko deployment
+  return true
 }
 
 export function useDarkModeManager(): [boolean, (mode: ThemeMode) => void] {

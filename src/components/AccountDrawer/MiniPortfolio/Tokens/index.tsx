@@ -51,12 +51,6 @@ export default function Tokens({ account }: { account: string }) {
         (tokenBalance) =>
           tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
       )}
-      <ExpandoRow isExpanded={showHiddenTokens} toggle={toggleHiddenTokens} numItems={hiddenTokens.length}>
-        {hiddenTokens.map(
-          (tokenBalance) =>
-            tokenBalance.token && <TokenRow key={tokenBalance.id} {...tokenBalance} token={tokenBalance.token} />
-        )}
-      </ExpandoRow>
     </PortfolioTabWrapper>
   )
 }

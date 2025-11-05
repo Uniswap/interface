@@ -243,12 +243,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           )}
         </StatusWrapper>
         <IconContainer>
-          <IconButton
-            hideHorizontal={showDisconnectConfirm}
-            data-testid="wallet-settings"
-            onClick={openSettings}
-            Icon={Settings}
-          />
           <TraceEvent
             events={[BrowserEvent.onClick]}
             name={SharedEventName.ELEMENT_CLICKED}
@@ -293,54 +287,6 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             <LoadingBubble height="44px" width="170px" />
             <LoadingBubble height="16px" width="100px" margin="4px 0 20px 0" />
           </Column>
-        )}
-        {!shouldDisableNFTRoutes && (
-          <HeaderButton
-            data-testid="nft-view-self-nfts"
-            onClick={navigateToProfile}
-            size={ButtonSize.medium}
-            emphasis={ButtonEmphasis.highSoft}
-          >
-            <Trans>View and sell NFTs</Trans>
-          </HeaderButton>
-        )}
-        <HeaderButton
-          size={ButtonSize.medium}
-          emphasis={ButtonEmphasis.highSoft}
-          onClick={handleBuyCryptoClick}
-          disabled={disableBuyCryptoButton}
-          data-testid="wallet-buy-crypto"
-        >
-          {error ? (
-            <ThemedText.BodyPrimary>{error}</ThemedText.BodyPrimary>
-          ) : (
-            <>
-              {fiatOnrampAvailabilityLoading ? (
-                <StyledLoadingButtonSpinner />
-              ) : (
-                <CreditCard height="20px" width="20px" />
-              )}{' '}
-              <Trans>Buy crypto</Trans>
-            </>
-          )}
-        </HeaderButton>
-        {Boolean(!fiatOnrampAvailable && fiatOnrampAvailabilityChecked) && (
-          <FiatOnrampNotAvailableText marginTop="8px">
-            <Trans>Not available in your region</Trans>
-            <Tooltip
-              show={showFiatOnrampUnavailableTooltip}
-              text={<Trans>Moonpay is not available in some regions. Click to learn more.</Trans>}
-            >
-              <FiatOnrampAvailabilityExternalLink
-                onMouseEnter={openFiatOnrampUnavailableTooltip}
-                onMouseLeave={closeFiatOnrampUnavailableTooltip}
-                style={{ color: 'inherit' }}
-                href="https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-"
-              >
-                <StyledInfoIcon />
-              </FiatOnrampAvailabilityExternalLink>
-            </Tooltip>
-          </FiatOnrampNotAvailableText>
         )}
         <MiniPortfolio account={account} />
         {isUnclaimed && (
