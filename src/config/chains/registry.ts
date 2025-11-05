@@ -35,21 +35,21 @@ export interface ChainConfig {
  * This is the single source of truth for chain configurations
  */
 const ALL_CHAINS: ChainConfig[] = [
-  // Taiko Hoodi - ENABLED (has all verified contracts)
+  // Taiko Mainnet - ENABLED (all verified contracts deployed)
+  {
+    chainId: TAIKO_MAINNET_CHAIN_ID,
+    addresses: TAIKO_MAINNET_ADDRESSES,
+    metadata: TAIKO_MAINNET_METADATA,
+    enabled: true,
+    isDefault: true, // Production default
+  },
+  // Taiko Hoodi - ENABLED (testnet, has all verified contracts)
   {
     chainId: TAIKO_HOODI_CHAIN_ID,
     addresses: TAIKO_HOODI_ADDRESSES,
     metadata: TAIKO_HOODI_METADATA,
     enabled: true,
-    isDefault: true, // Currently the only enabled chain, so default
-  },
-  // Taiko Mainnet - DISABLED (has zero addresses for critical contracts)
-  {
-    chainId: TAIKO_MAINNET_CHAIN_ID,
-    addresses: TAIKO_MAINNET_ADDRESSES,
-    metadata: TAIKO_MAINNET_METADATA,
-    enabled: false, // Set to true once contracts are deployed and verified
-    isDefault: false, // Will become default when enabled in production
+    isDefault: false, // Testnet, not default
   },
 ]
 

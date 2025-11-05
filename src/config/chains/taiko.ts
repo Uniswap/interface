@@ -48,39 +48,34 @@ export const TAIKO_HOODI_ADDRESSES: ChainAddresses = {
 /**
  * Taiko Mainnet Configuration
  *
- * NOTE: This configuration is currently DISABLED due to incomplete contract deployments.
- * Only positionManager has been verified. Other contracts have zero addresses.
- *
- * To enable Taiko Mainnet:
- * 1. Verify all contract deployments on https://taikoscan.io/
- * 2. Update addresses below with verified deployments
- * 3. Add to enabled chains in registry.ts
- * 4. Validation will automatically run
- *
+ * All core contracts have been deployed and verified on Taiko Mainnet.
  * Explorer: https://taikoscan.io/
  * RPC: https://rpc.mainnet.taiko.xyz
+ *
+ * NOTE: nftDescriptorImplementation not provided - set to zero address.
+ * This may affect NFT position metadata display but won't prevent trading.
  */
 export const TAIKO_MAINNET_ADDRESSES: ChainAddresses = {
   // Core Protocol
-  weth9: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
-  factory: '0x0000000000000000000000000000000000000000', // TODO: Verify - typically 0x1F98431c8aD98523631AE4a59f267346ea31F984
+  weth9: '0xA51894664A773981C6C112C43ce576f315d5b1B6', // WETH
+  factory: '0x826D713e30f0bF09Dd3219494A508E6B30327d4f', // V3 Factory
 
   // Periphery Contracts
-  router: '0x0000000000000000000000000000000000000000', // TODO: Verify - typically 0xe592427a0AEce92De3Edee1F18E0157C05861564
-  positionManager: '0x8b3c541c30f9b29560f56b9e44b59718916b69ef', // CONFIRMED on taikoscan.io
-  quoterV2: '0x0000000000000000000000000000000000000000', // TODO: Verify - typically 0xb27308f9F90D607463bb33eA1BeBb41C27CE5AB6
-  multicall: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
-  tickLens: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
+  router: '0x1024Ea017b00F15591846f4E6E893abDe2e37cc8', // SwapRouter02
+  positionManager: '0xf26F8d1DA08aD278D0B65403A04E918341680aDC', // NonfungiblePositionManager
+  quoterV2: '0xcBa70D57be34aA26557B8E80135a9B7754680aDb', // QuoterV2
+  multicall: '0x81504E4F564CC0AC5Ce35A0d79d33acE5099a59B', // UniswapInterfaceMulticall
+  tickLens: '0x43B186781146C24594899100C69C697850D179C7', // TickLens
 
   // Additional Contracts
-  v3Migrator: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
-  v3Staker: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
+  v3Migrator: '0x960a28a6972608d58e45034f856a96264d3592a8', // V3Migrator
+  v3Staker: '0x599F6c1a35d92ed10Fd23e0eA86642F61d4d6D08', // UniswapV3Staker
 
   // Governance & Admin
-  proxyAdmin: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
-  nftDescriptorProxy: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
-  nftDescriptorImplementation: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
-  nftDescriptorLibrary: '0x0000000000000000000000000000000000000000', // TODO: Update with actual deployment
+  proxyAdmin: '0xc5C62C40E9F764053605e40397FF983968186195', // ProxyAdmin
+  nftDescriptorProxy: '0xee9C1AC3824835E9561396263a2332C44aACE1EF', // NonfungibleTokenPositionDescriptor
+  nftDescriptorImplementation: '0x0000000000000000000000000000000000000000', // Not provided - set to zero
+  nftDescriptorLibrary: '0x9ae4f49D5e9e64187D3b338541296D34e34c3838', // NFTDescriptor
 }
 
 /**

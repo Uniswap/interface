@@ -5,8 +5,8 @@ import styled, { css } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
-import { AutoColumn } from '../Column'
 import meshSrc from '../About/images/Mesh.png'
+import { AutoColumn } from '../Column'
 
 export const PageWrapper = styled.div`
   position: relative;
@@ -75,7 +75,7 @@ export const SwapGlow = styled.div`
   max-width: 700px;
   width: 100%;
   height: 700px;
-  animation: pulse 4s ease-in-out infinite;
+  animation: pulse 8s ease-in-out infinite;
   will-change: transform, opacity;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
@@ -91,15 +91,19 @@ export const SwapGlow = styled.div`
     opacity: 0.7;
   }
 
-  /* Mesh texture overlay (not blurred) */
+  /* Mesh texture overlay (not blurred) - prominent in center, fades to edges */
   &::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: url(${meshSrc});
+    background: url(${meshSrc}) center center;
+    background-size: cover;
     border-radius: 50%;
-    opacity: 0.5;
-    mix-blend-mode: overlay;
+    opacity: 0.35;
+    mix-blend-mode: multiply;
+    /* Radial opacity fade: strong in center, transparent at edges */
+    mask-image: radial-gradient(circle at center, black 0%, black 25%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.2) 70%, transparent 90%);
+    -webkit-mask-image: radial-gradient(circle at center, black 0%, black 25%, rgba(0,0,0,0.5) 50%, rgba(0,0,0,0.2) 70%, transparent 90%);
   }
 
   @keyframes pulse {

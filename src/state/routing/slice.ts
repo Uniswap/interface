@@ -3,7 +3,7 @@ import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent } from 'analytics'
 import { isUniswapXSupportedChain } from 'constants/chains'
-import { TAIKO_HOODI_CHAIN_ID } from 'config/chains'
+import { isTaikoChain } from 'config/chains'
 import ms from 'ms'
 import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
 import { trace } from 'tracing/trace'
@@ -125,26 +125,26 @@ export const routingApi = createApi({
         logSwapQuoteRequest(args.tokenInChainId, args.routerPreference)
         const quoteStartMark = performance.mark(`quote-fetch-start-${Date.now()}`)
 
-        // Taiko chains use on-chain quoter since they're not supported by the routing API
-        if (args.tokenInChainId === TAIKO_HOODI_CHAIN_ID) {
-          try {
-            const { getTaikoQuote } = await import('lib/hooks/routing/taikoQuoter')
-            const quoteResult = await getTaikoQuote(args)
+        // Taiko chains: Disabled custom quoter, using standard on-chain quoter flow
+        // if (isTaikoChain(args.tokenInChainId)) {
+        //   try {
+        //     const { getTaikoQuote } = await import('lib/hooks/routing/taikoQuoter')
+        //     const quoteResult = await getTaikoQuote(args)
 
-            if (quoteResult.state === QuoteState.SUCCESS && quoteResult.data) {
-              const trade = await transformRoutesToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE_FALLBACK)
-              return { data: { ...trade, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
-            }
-          } catch (error: any) {
-            if (process.env.NODE_ENV === 'development') {
-              console.error('Taiko quoter failed:', error)
-            }
-          }
+        //     if (quoteResult.state === QuoteState.SUCCESS && quoteResult.data) {
+        //       const trade = await transformRoutesToTrade(args, quoteResult.data, QuoteMethod.CLIENT_SIDE_FALLBACK)
+        //       return { data: { ...trade, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration } }
+        //     }
+        //   } catch (error: any) {
+        //     if (process.env.NODE_ENV === 'development') {
+        //       console.error('Taiko quoter failed:', error)
+        //     }
+        //   }
 
-          return {
-            data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
-          }
-        }
+        //   return {
+        //     data: { state: QuoteState.NOT_FOUND, latencyMs: getQuoteLatencyMeasure(quoteStartMark).duration },
+        //   }
+        // }
 
         if (shouldUseAPIRouter(args)) {
           fellBack = true

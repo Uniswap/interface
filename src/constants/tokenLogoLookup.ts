@@ -1,6 +1,7 @@
 import store from 'state'
 
 import { DEFAULT_LIST_OF_LISTS } from './lists'
+import TAIKO_LIST from './tokenLists/taiko.tokenlist.json'
 
 class TokenLogoLookupTable {
   private dict: { [key: string]: string[] | undefined } = {}
@@ -9,6 +10,20 @@ class TokenLogoLookupTable {
   initialize() {
     const dict: { [key: string]: string[] | undefined } = {}
 
+    // Add Taiko token list logos
+    TAIKO_LIST.tokens.forEach((token) => {
+      if (token.logoURI) {
+        const lowercaseAddress = token.address.toLowerCase()
+        const currentEntry = dict[lowercaseAddress + ':' + token.chainId]
+        if (currentEntry) {
+          currentEntry.push(token.logoURI)
+        } else {
+          dict[lowercaseAddress + ':' + token.chainId] = [token.logoURI]
+        }
+      }
+    })
+
+    // Add other token lists from store
     DEFAULT_LIST_OF_LISTS.forEach((list) => {
       const listData = store.getState().lists.byUrl[list]
       if (!listData) {
