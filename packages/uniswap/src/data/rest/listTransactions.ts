@@ -1,6 +1,13 @@
 import { PartialMessage } from '@bufbuild/protobuf'
 import { createPromiseClient } from '@connectrpc/connect'
-import { queryOptions, UseQueryResult, useQuery } from '@tanstack/react-query'
+import {
+  InfiniteData,
+  infiniteQueryOptions,
+  queryOptions,
+  UseInfiniteQueryOptions,
+  UseInfiniteQueryResult,
+  useInfiniteQuery,
+} from '@tanstack/react-query'
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import { ListTransactionsRequest, ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { transformInput, WithoutWalletAccount } from '@universe/api'
@@ -19,17 +26,30 @@ type GetListTransactionsInput<TSelectData = ListTransactionsResponse> = {
   }
 } & Pick<GetListTransactionsQuery<TSelectData>, 'enabled' | 'refetchInterval' | 'select'>
 
+type GetListTransactionsInfiniteInput = {
+  input?: WithoutWalletAccount<PartialMessage<ListTransactionsRequest>> & {
+    evmAddress?: string
+    svmAddress?: string
+  }
+  enabled?: boolean
+  refetchInterval?: number
+}
+
 const transactionsClient = createPromiseClient(DataApiService, uniswapGetTransport)
 
+const EMPTY_LIST_RESPONSE = new ListTransactionsResponse({
+  transactions: [],
+  nextPageToken: undefined,
+})
+
 /**
- * Wrapper around query for DataApiService/ListTransactions
- * This fetches data for user transactions
+ * Wrapper around infinite query for DataApiService/ListTransactions
+ * This fetches data for user transactions with infinite scrolling support
  */
-export function useListTransactionsQuery<TSelectData = ListTransactionsResponse>(
-  params: GetListTransactionsInput<TSelectData>,
-): UseQueryResult<TSelectData, Error> {
-  // TODO(WALL-6996): use useInfiniteQuery to support infinite scrolling and pagination
-  return useQuery(getListTransactionsQuery(params))
+export function useListTransactionsQuery(
+  params: GetListTransactionsInfiniteInput,
+): UseInfiniteQueryResult<InfiniteData<ListTransactionsResponse | undefined>, Error> {
+  return useInfiniteQuery(getListTransactionsInfiniteQuery(params))
 }
 
 type GetListTransactionsQuery<TSelectData = ListTransactionsResponse> = QueryOptionsResult<
@@ -42,6 +62,49 @@ type GetListTransactionsQuery<TSelectData = ListTransactionsResponse> = QueryOpt
     PartialMessage<ListTransactionsRequest> | undefined,
   ]
 >
+
+type GetListTransactionsInfiniteQuery = UseInfiniteQueryOptions<
+  ListTransactionsResponse,
+  Error,
+  InfiniteData<ListTransactionsResponse>,
+  ListTransactionsResponse,
+  (Record<string, never> | undefined)[],
+  string | undefined
+>
+
+export const getListTransactionsInfiniteQuery = ({
+  input,
+  enabled,
+  refetchInterval,
+}: GetListTransactionsInfiniteInput): GetListTransactionsInfiniteQuery => {
+  const transformedInput = transformInput(input)
+
+  const { walletAccount, ...inputWithoutAddress } = transformedInput ?? {}
+  const address = walletAccount?.platformAddresses[0]?.address
+
+  return infiniteQueryOptions({
+    queryKey: [ReactQueryCacheKey.ListTransactions, address, inputWithoutAddress],
+    queryFn: ({ pageParam }: { pageParam?: string }) => {
+      if (!transformedInput) {
+        return Promise.resolve(EMPTY_LIST_RESPONSE)
+      }
+
+      const requestWithPageToken = {
+        ...transformedInput,
+        pageToken: pageParam,
+      }
+
+      return transactionsClient.listTransactions(requestWithPageToken)
+    },
+    initialPageParam: undefined,
+    getNextPageParam: (lastPage) => {
+      return lastPage.nextPageToken || undefined
+    },
+    placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when refetching
+    refetchInterval,
+    enabled: !!input && enabled,
+  })
+}
 
 export const getListTransactionsQuery = <TSelectData = ListTransactionsResponse>({
   input,

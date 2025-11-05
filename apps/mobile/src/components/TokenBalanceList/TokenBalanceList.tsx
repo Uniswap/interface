@@ -279,6 +279,13 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
     <TokenBalanceItemContextMenu
       portfolioBalance={portfolioBalance}
       copyAddressToClipboard={copyAddressToClipboard}
+      openReportTokenModal={() =>
+        navigate(ModalName.ReportTokenIssue, {
+          currency: portfolioBalance.currencyInfo.currency,
+          isMarkedSpam: portfolioBalance.currencyInfo.isSpam,
+          source: 'portfolio',
+        })
+      }
       onPressToken={handlePressToken}
     >
       {tokenBalanceItem}

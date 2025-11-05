@@ -10,7 +10,6 @@ export enum GQLQueries {
   TokenDetailsScreen = 'TokenDetailsScreen',
   TokenPriceHistory = 'TokenPriceHistory',
   TokenProjects = 'TokenProjects',
-  TransactionList = 'TransactionList',
   TopTokens = 'TopTokens',
   SearchTokens = 'SearchTokens',
   ExploreSearch = 'ExploreSearch',

@@ -1,6 +1,8 @@
 import React, { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
+import { MODAL_OPEN_WAIT_TIME } from 'src/app/navigation/constants'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDetailsFavoriteButton'
 import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/useTokenDetailsCurrentChainBalance'
@@ -21,7 +23,9 @@ import {
   TokenMenuActionType,
   useTokenContextMenuOptions,
 } from 'uniswap/src/features/portfolio/balances/hooks/useTokenContextMenuOptions'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export const HeaderTitleElement = memo(function HeaderTitleElement(): JSX.Element {
@@ -62,6 +66,22 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
     useTokenDetailsContext()
   const currentChainBalance = useTokenDetailsCurrentChainBalance()
 
+  const openReportTokenModal = useEvent(() => {
+    setTimeout(() => {
+      navigate(ModalName.ReportTokenIssue, {
+        source: 'token-details',
+        currency: currencyInfo?.currency,
+        isMarkedSpam: currencyInfo?.isSpam,
+      })
+    }, MODAL_OPEN_WAIT_TIME)
+  })
+
+  const openReportDataIssueModal = useEvent(() => {
+    setTimeout(() => {
+      navigate(ModalName.ReportTokenData, { currency: currencyInfo?.currency, isMarkedSpam: currencyInfo?.isSpam })
+    }, MODAL_OPEN_WAIT_TIME)
+  })
+
   const { value: isOpen, setTrue: openMenu, setFalse: closeMenu } = useBooleanState(false)
   const menuActions = useTokenContextMenuOptions({
     excludedActions: EXCLUDED_ACTIONS,
@@ -70,6 +90,8 @@ export const HeaderRightElement = memo(function HeaderRightElement(): JSX.Elemen
     tokenSymbolForNotification: currencyInfo?.currency.symbol,
     portfolioBalance: currentChainBalance,
     openContractAddressExplainerModal,
+    openReportDataIssueModal,
+    openReportTokenModal,
     copyAddressToClipboard,
     closeMenu: () => {},
   })

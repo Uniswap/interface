@@ -47,7 +47,6 @@ interface GetActionContext {
   isConnected: boolean
   onConnectWallet?: (platform?: Platform) => void
   isViewOnlyWallet: boolean
-  isInterfaceWrap: boolean
   currencies: DerivedSwapInfo['currencies']
   exactAmountToken?: string
   exactCurrencyField: CurrencyField
@@ -62,7 +61,6 @@ const ReviewActionType = {
   REDIRECT: 'REDIRECT' as const,
   CONNECT_WALLET: 'CONNECT_WALLET' as const,
   SHOW_VIEW_ONLY: 'SHOW_VIEW_ONLY' as const,
-  INTERFACE_WRAP: 'INTERFACE_WRAP' as const,
   SHOW_TOKEN_WARNING: 'SHOW_TOKEN_WARNING' as const,
   SHOW_BRIDGING_WARNING: 'SHOW_BRIDGING_WARNING' as const,
   SHOW_LOW_BALANCE: 'SHOW_LOW_BALANCE' as const,
@@ -84,7 +82,6 @@ type ReviewAction =
   | { type: typeof ReviewActionType.REDIRECT; payload: RedirectActionPayload }
   | { type: typeof ReviewActionType.CONNECT_WALLET; payload: ConnectWalletActionPayload }
   | { type: typeof ReviewActionType.SHOW_VIEW_ONLY }
-  | { type: typeof ReviewActionType.INTERFACE_WRAP }
   | { type: typeof ReviewActionType.SHOW_TOKEN_WARNING }
   | { type: typeof ReviewActionType.SHOW_BRIDGING_WARNING }
   | { type: typeof ReviewActionType.SHOW_LOW_BALANCE; payload: LowBalanceActionPayload }
@@ -102,7 +99,6 @@ function createGetAction(ctx: GetActionContext): (args: CallbackArgs) => ReviewA
     isConnected,
     onConnectWallet,
     isViewOnlyWallet,
-    isInterfaceWrap,
     currencies,
     exactAmountToken,
     exactCurrencyField,
@@ -129,8 +125,6 @@ function createGetAction(ctx: GetActionContext): (args: CallbackArgs) => ReviewA
       return { type: ReviewActionType.CONNECT_WALLET, payload: { platform: chainIdToPlatform(chainId) } }
     } else if (isViewOnlyWallet) {
       return { type: ReviewActionType.SHOW_VIEW_ONLY }
-    } else if (isInterfaceWrap) {
-      return { type: ReviewActionType.INTERFACE_WRAP }
     } else if (needsTokenProtectionWarning && !args.skipTokenProtectionWarning) {
       return { type: ReviewActionType.SHOW_TOKEN_WARNING }
     } else if (needsBridgingWarning && !args.skipBridgingWarning) {
@@ -158,7 +152,6 @@ interface HandleEventActionContext {
   handleShowBridgedAssetModal: () => void
   swapRedirectCallback?: SwapRedirectFn
   onConnectWallet?: (platform?: Platform) => void
-  onInterfaceWrap?: () => void
   updateSwapForm: (newState: Partial<SwapFormState>) => void
   setScreen: (screen: TransactionScreen) => void
 }
@@ -172,7 +165,6 @@ function createHandleEventAction(ctx: HandleEventActionContext): (action: Review
     handleShowBridgedAssetModal,
     swapRedirectCallback,
     onConnectWallet,
-    onInterfaceWrap,
     updateSwapForm,
     setScreen,
   } = ctx
@@ -186,9 +178,6 @@ function createHandleEventAction(ctx: HandleEventActionContext): (action: Review
         break
       case ReviewActionType.SHOW_VIEW_ONLY:
         handleShowViewOnlyModal()
-        break
-      case ReviewActionType.INTERFACE_WRAP:
-        onInterfaceWrap?.()
         break
       case ReviewActionType.SHOW_TOKEN_WARNING:
         handleShowTokenWarningModal()

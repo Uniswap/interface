@@ -44,6 +44,7 @@ bun extension build:production   # Extension production
 
 ```bash
 bun g:test                      # Run all tests
+bun notifications test          # Run tests for a specific package (e.g. notifications)
 bun g:test:coverage             # With coverage
 bun web playwright:test         # Web E2E tests
 bun mobile e2e                  # Mobile E2E tests

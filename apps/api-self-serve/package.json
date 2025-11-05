@@ -1,0 +1,36 @@
+{
+  "name": "api-self-serve",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "react-router build",
+    "dev": "react-router dev",
+    "start": "react-router-serve ./build/server/index.js",
+    "typecheck": "react-router typegen && tsc"
+  },
+  "dependencies": {
+    "@react-router/node": "7.6.3",
+    "@react-router/serve": "7.6.3",
+    "class-variance-authority": "0.7.1",
+    "clsx": "2.1.1",
+    "isbot": "5.1.31",
+    "lucide-react": "0.548.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "react-router": "7.6.3",
+    "tailwind-merge": "3.3.1",
+    "tailwindcss-animate": "1.0.7"
+  },
+  "devDependencies": {
+    "@react-router/dev": "7.6.3",
+    "@tailwindcss/vite": "4.1.13",
+    "@types/node": "22.13.1",
+    "@types/react": "18.3.18",
+    "@uniswap/eslint-config": "workspace:^",
+    "eslint": "8.44.0",
+    "tailwindcss": "4.1.16",
+    "typescript": "5.3.3",
+    "vite": "npm:rolldown-vite@7.0.10",
+    "vite-tsconfig-paths": "5.1.4"
+  }
+}

@@ -1,7 +1,9 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { providers } from 'ethers/lib/ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { Eye, Flag } from 'ui/src/components/icons'
 import { Clear } from 'ui/src/components/icons/Clear'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { HelpCenter } from 'ui/src/components/icons/HelpCenter'
@@ -13,6 +15,7 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { submitActivitySpamReport } from 'uniswap/src/features/reporting/reports'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CancelConfirmationView } from 'uniswap/src/features/transactions/components/cancel/CancelConfirmationView'
 import { useIsCancelable } from 'uniswap/src/features/transactions/hooks/useIsCancelable'
@@ -24,12 +27,16 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
+import { useIsActivityHidden } from 'uniswap/src/features/visibility/hooks/useIsActivityHidden'
+import { setActivityVisibility } from 'uniswap/src/features/visibility/slice'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openFORSupportLink, openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
+import { noop } from 'utilities/src/react/noop'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 enum SupportLinkParams {
   WalletAddress = 'tf_11041337007757',
@@ -39,11 +46,17 @@ enum SupportLinkParams {
 }
 
 export function useTransactionActions({
-  authTrigger,
   transaction,
+  authTrigger,
+  onClose,
+  onReportTransaction,
+  onUnhideTransaction,
 }: {
-  authTrigger?: AuthTrigger
   transaction: TransactionDetails
+  authTrigger?: AuthTrigger
+  onClose?: () => void
+  onReportTransaction?: () => void
+  onUnhideTransaction?: () => void
 }): {
   renderModals: () => JSX.Element
   openCancelModal: () => void
@@ -60,7 +73,12 @@ export function useTransactionActions({
 
   const isCancelable = useIsCancelable(transaction) && !readonly
 
-  const baseActionItems = useTransactionActionItems(transaction)
+  const baseActionItems = useTransactionActionItems({
+    transactionDetails: transaction,
+    onClose: onClose ?? noop,
+    onReportTransaction,
+    onUnhideTransaction,
+  })
 
   const handleCancel = useEvent((txRequest: providers.TransactionRequest): void => {
     dispatch(
@@ -131,11 +149,22 @@ export function useTransactionActions({
   }
 }
 
-function useTransactionActionItems(transactionDetails: TransactionDetails): MenuOptionItem[] {
+function useTransactionActionItems({
+  transactionDetails,
+  onClose,
+  onReportTransaction,
+  onUnhideTransaction,
+}: {
+  transactionDetails: TransactionDetails
+  onClose: () => void
+  onReportTransaction?: () => void
+  onUnhideTransaction?: () => void
+}): MenuOptionItem[] {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-
   const transactionId = getTransactionId(transactionDetails)
+
+  const isHiddenActivity = useIsActivityHidden(transactionDetails.id)
 
   const onRampProviderName =
     transactionDetails.typeInfo.type === TransactionType.OnRampPurchase ||
@@ -144,8 +173,10 @@ function useTransactionActionItems(transactionDetails: TransactionDetails): Menu
       ? transactionDetails.typeInfo.serviceProvider.name
       : undefined
 
-  const items: MenuOptionItem[] = useMemo(() => {
-    const _items: MenuOptionItem[] = []
+  const isDataReportingAbilitiesEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
+
+  const transactionActionItems: MenuOptionItem[] = useMemo(() => {
+    const items: MenuOptionItem[] = []
 
     if (transactionId) {
       const copyLabel = onRampProviderName
@@ -154,7 +185,7 @@ function useTransactionActionItems(transactionDetails: TransactionDetails): Menu
           })
         : t('transaction.action.copy')
 
-      _items.push({
+      items.push({
         label: copyLabel,
         Icon: CopySheets,
         onPress: async (): Promise<void> => {
@@ -169,7 +200,7 @@ function useTransactionActionItems(transactionDetails: TransactionDetails): Menu
       })
     }
 
-    _items.push({
+    items.push({
       label: t('settings.action.help'),
       Icon: HelpCenter,
       onPress: async (): Promise<void> => {
@@ -183,7 +214,7 @@ function useTransactionActionItems(transactionDetails: TransactionDetails): Menu
       transactionDetails.options.timeoutTimestampMs &&
       transactionDetails.options.timeoutTimestampMs < Date.now()
     ) {
-      _items.push({
+      items.push({
         label: t('transaction.action.clear'),
         Icon: Clear,
         onPress: async (): Promise<void> => {
@@ -192,10 +223,67 @@ function useTransactionActionItems(transactionDetails: TransactionDetails): Menu
       })
     }
 
-    return _items
-  }, [dispatch, onRampProviderName, t, transactionDetails, transactionId])
+    if (isDataReportingAbilitiesEnabled) {
+      if (isHiddenActivity) {
+        items.push({
+          label: t('reporting.activity.unhide.action'),
+          Icon: Eye,
+          onPress: async (): Promise<void> => {
+            // Set visibility to true
+            dispatch(setActivityVisibility({ transactionId: transactionDetails.id, isVisible: true }))
 
-  return items
+            // Show unhiding success
+            onUnhideTransaction?.()
+            dispatch(
+              pushNotification({
+                type: AppNotificationType.AssetVisibility,
+                visible: false,
+                hideDelay: 2 * ONE_SECOND_MS,
+                assetName: t('common.activity'),
+              }),
+            )
+          },
+        })
+      } else {
+        items.push({
+          label: t('nft.reportSpam'),
+          Icon: Flag,
+          destructive: true,
+          onPress: async (): Promise<void> => {
+            // Send analytics report
+            submitActivitySpamReport({ transactionDetails })
+            // Set visibility to false
+            dispatch(setActivityVisibility({ transactionId: transactionDetails.id, isVisible: false }))
+            // Report success
+            onReportTransaction?.()
+            dispatch(
+              pushNotification({
+                type: AppNotificationType.Success,
+                title: t('common.reported'),
+              }),
+            )
+            // close modal
+            onClose()
+          },
+        })
+      }
+    }
+
+    return items
+  }, [
+    dispatch,
+    onRampProviderName,
+    t,
+    transactionDetails,
+    transactionId,
+    onClose,
+    isDataReportingAbilitiesEnabled,
+    onReportTransaction,
+    onUnhideTransaction,
+    isHiddenActivity,
+  ])
+
+  return transactionActionItems
 }
 
 async function openSupportLink(transactionDetails: TransactionDetails): Promise<void> {

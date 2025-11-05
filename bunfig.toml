@@ -6,6 +6,7 @@ telemetry = false
 
 # Use node_modules (default behavior)
 linkStrategy = "node"
+linker = "hoisted"
 
 # Save exact versions (equivalent to defaultSemverRangePrefix: '')
 save = "exact"

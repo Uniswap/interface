@@ -43,6 +43,28 @@ function mergeObjectValues(globalValues, localValues) {
 }
 
 /**
+ * Normalizes an item for comparison by sorting object keys
+ * This ensures objects with the same properties but different order are treated as equal
+ *
+ * @param {*} item - Item to normalize (object, primitive, etc.)
+ * @returns {string} Normalized JSON string representation
+ */
+function normalizeForComparison(item) {
+  if (typeof item !== 'object' || item === null) {
+    return JSON.stringify(item)
+  }
+
+  // Sort object keys to ensure consistent serialization
+  const sortedKeys = Object.keys(item).sort()
+  const normalized = {}
+  for (const key of sortedKeys) {
+    normalized[key] = item[key]
+  }
+
+  return JSON.stringify(normalized)
+}
+
+/**
  * Merges global array values into local array values (generic array merge)
  *
  * Concatenates global and local arrays, removing duplicates based on JSON serialization.
@@ -53,12 +75,24 @@ function mergeObjectValues(globalValues, localValues) {
  * @returns {Array} Merged array (marker removed)
  */
 function mergeArrayValues(globalValues, localValues) {
-  // Filter out marker from local values
-  const cleanLocal = localValues.filter((item) => item !== '__INCLUDE_GLOBAL_VALUES__')
+  // Filter out marker and deduplicate local values
+  const seen = new Set()
+  const cleanLocal = []
 
-  // Deduplicate by JSON serialization - local items take precedence
-  const existingItems = new Set(cleanLocal.map(JSON.stringify))
-  const newItems = globalValues.filter((item) => !existingItems.has(JSON.stringify(item)))
+  for (const item of localValues) {
+    if (item === '__INCLUDE_GLOBAL_VALUES__') {
+      continue
+    }
+
+    const normalized = normalizeForComparison(item)
+    if (!seen.has(normalized)) {
+      seen.add(normalized)
+      cleanLocal.push(item)
+    }
+  }
+
+  // Add global items that don't already exist in local
+  const newItems = globalValues.filter((item) => !seen.has(normalizeForComparison(item)))
 
   return [...cleanLocal, ...newItems]
 }

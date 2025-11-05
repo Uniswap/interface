@@ -7,8 +7,8 @@ Client-side notification system for fetching, processing, storing, and displayin
 ```
 NotificationSystem (orchestrator)
 ├── NotificationDataSource        → Fetch/websocket notification data
-├── NotificationTracker           → Track shown/dismissed state
-├── NotificationProcessor         → Filter & prioritize notifications  
+├── NotificationTracker           → No-op (backend handles deduplication)
+├── NotificationProcessor         → Filter & prioritize notifications
 ├── NotificationChainCoordinator  → Handle multi-step notification flows
 └── NotificationRenderer          → Platform-specific UI rendering
 ```
@@ -39,7 +39,7 @@ import { createNotificationSystem } from '@universe/notifications'
 
 const notificationSystem = createNotificationSystem({
   dataSources: [getFetchNotificationDataSource({ apiClient })],
-  tracker: createLocalNotificationTracker({ storageDriver }),
+  tracker: createNoopNotificationTracker(),
   processor: createNotificationProcessor(),
   renderer: createNotificationRenderer(),
   chainCoordinator: createNotificationChainCoordinator()

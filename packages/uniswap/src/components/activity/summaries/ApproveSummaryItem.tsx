@@ -9,15 +9,14 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   ApproveTransactionInfo,
+  INFINITE_APPROVAL_AMOUNT,
+  REVOKE_APPROVAL_AMOUNT,
   TransactionDetails,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-
-const INFINITE_AMOUNT = 'INF'
-const ZERO_AMOUNT = '0.0'
 
 export function ApproveSummaryItem({
   transaction,
@@ -32,9 +31,9 @@ export function ApproveSummaryItem({
   const { approvalAmount } = transaction.typeInfo
 
   const amount =
-    approvalAmount === INFINITE_AMOUNT
+    approvalAmount === INFINITE_APPROVAL_AMOUNT
       ? t('transaction.amount.unlimited')
-      : approvalAmount && approvalAmount !== ZERO_AMOUNT
+      : approvalAmount && approvalAmount !== REVOKE_APPROVAL_AMOUNT
         ? formatNumberOrString({ value: approvalAmount, type: NumberType.TokenNonTx })
         : ''
 

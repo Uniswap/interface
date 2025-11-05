@@ -1,3 +1,6 @@
+import { CustomHoverMarker } from 'components/Charts/CustomHoverMarker'
+import { useApplyChartTextureEffects } from 'components/Charts/hooks/useApplyChartTextureEffects'
+import { ChartModelWithLiveDot, LiveDotRenderer } from 'components/Charts/LiveDotRenderer'
 import { PROTOCOL_LEGEND_ELEMENT_ID, SeriesDataItemType } from 'components/Charts/types'
 import { formatTickMarks } from 'components/Charts/utils'
 import { MissingDataBars } from 'components/Table/icons'
@@ -72,6 +75,18 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
   private _lastTooltipWidth: number | null = null
 
   public tooltipId = `chart-tooltip-${uuidv4()}`
+
+  /** Get current hover coordinates for custom marker rendering */
+  public getHoverCoordinates(): { x: number; y: number } | null {
+    if (!this._hoverData) {
+      return null
+    }
+    // Adjust x coordinate to account for price scale width
+    return {
+      x: this._hoverData.x + this.api.priceScale('left').width(),
+      y: this._hoverData.y,
+    }
+  }
 
   constructor(chartDiv: HTMLDivElement, params: ChartModelParams<TDataType>) {
     this.chartDiv = chartDiv
@@ -266,6 +281,9 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   children,
   className,
   disableChartTouchPanning,
+  showDottedBackground = false,
+  showLeftFadeOverlay = false,
+  showCustomHoverMarker = false,
 }: {
   Model: new (chartDiv: HTMLDivElement, params: TParamType & ChartUtilParams<TDataType>) => ChartModel<TDataType>
   TooltipBody?: ChartTooltipBodyComponent<TDataType>
@@ -274,24 +292,43 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   children?: (crosshair?: TDataType) => ReactElement
   className?: string
   disableChartTouchPanning?: boolean // On touch devices, optionally disables chart touch panning on mobile devices to avoid interfering with vertical scrolling
+  showDottedBackground?: boolean
+  showLeftFadeOverlay?: boolean
+  showCustomHoverMarker?: boolean
 }) {
   const setRefitChartContent = useUpdateAtom(refitChartContentAtom)
   // Lightweight-charts injects a canvas into the page through the div referenced below
   // It is stored in state to cause a re-render upon div mount, avoiding delay in chart creation
   const [chartDivElement, setChartDivElement] = useState<TamaguiElement | null>(null)
   const [crosshairData, setCrosshairData] = useState<TDataType | undefined>(undefined)
+  const [hoverCoordinates, setHoverCoordinates] = useState<{ x: number; y: number } | null>(null)
   const format = useLocalizationContext()
   const theme = useTheme()
   const locale = useCurrentLocale()
   const media = useMedia()
   const isLargeScreen = !media.lg
+  const handleCrosshairMove = useMemo(
+    () => (data: TDataType | undefined) => {
+      setCrosshairData(data)
+      if (chartModelRef.current) {
+        const coords = chartModelRef.current.getHoverCoordinates()
+        setHoverCoordinates(coords)
+      } else {
+        setHoverCoordinates(null)
+      }
+    },
+    [],
+  )
+
   const modelParams = useMemo(
-    () => ({ ...params, format, theme, locale, isLargeScreen, onCrosshairMove: setCrosshairData }),
-    [format, isLargeScreen, locale, params, theme],
+    () => ({ ...params, format, theme, locale, isLargeScreen, onCrosshairMove: handleCrosshairMove }),
+    [format, isLargeScreen, locale, params, theme, handleCrosshairMove],
   )
 
   // Chart model state should not affect React render cycles since the chart canvas is drawn outside of React, so we store via ref
   const chartModelRef = useRef<ChartModel<TDataType>>()
+
+  useApplyChartTextureEffects({ chartDivElement, showDottedBackground, showLeftFadeOverlay })
 
   // Creates the chart as soon as the chart div ref is defined
   useEffect(() => {
@@ -321,8 +358,21 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
 
   useOnClickOutside({
     node: { current: chartDivElement } as React.RefObject<HTMLDivElement>,
-    handler: () => setCrosshairData(undefined),
+    handler: () => {
+      setCrosshairData(undefined)
+      setHoverCoordinates(null)
+    },
   })
+
+  // Update hover coordinates on crosshair data changes
+  useEffect(() => {
+    if (chartModelRef.current) {
+      const coords = chartModelRef.current.getHoverCoordinates()
+      setHoverCoordinates(coords)
+    } else if (!crosshairData) {
+      setHoverCoordinates(null)
+    }
+  }, [crosshairData])
 
   const touchMoveHandler = disableChartTouchPanning ? (e: TouchEvent<HTMLElement>) => e.stopPropagation() : undefined
   return (
@@ -330,11 +380,17 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
       width="100%"
       position="relative"
       animation="fast"
-      ref={setChartDivElement}
       height={height}
       className={className}
       onTouchMove={touchMoveHandler as any} // any is used to avoid needing to import GestureResponderEvent from react-native
     >
+      {/* Chart container */}
+      <Flex ref={setChartDivElement} height={height} width="100%" position="relative">
+        {/* Canvas is injected here by lightweight-charts */}
+        {/* Background texture and fade overlay are applied directly to the chart td element */}
+      </Flex>
+
+      {/* Header/content outside background */}
       {children && children(crosshairData)}
       {TooltipBody && crosshairData && (
         <ChartTooltip id={chartModelRef.current?.tooltipId} includeBorder={!params.hideTooltipBorder}>
@@ -342,6 +398,18 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
         </ChartTooltip>
       )}
       {params.stale && <StaleBanner />}
+      {/* Custom hover marker */}
+      {showCustomHoverMarker && hoverCoordinates && chartDivElement && chartModelRef.current && (
+        <CustomHoverMarker coordinates={hoverCoordinates} lineColor={theme.accent1} />
+      )}
+      {/* Live dot indicator at the end of line charts */}
+      {chartModelRef.current && chartDivElement && 'getLastPointCoordinates' in chartModelRef.current && (
+        <LiveDotRenderer
+          chartModel={chartModelRef.current as ChartModelWithLiveDot}
+          isHovering={!!crosshairData}
+          chartContainer={chartDivElement as HTMLDivElement}
+        />
+      )}
     </Flex>
   )
 }

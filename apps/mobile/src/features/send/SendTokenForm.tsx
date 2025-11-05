@@ -295,7 +295,7 @@ export function SendTokenForm(): JSX.Element {
               style={StyleSheet.absoluteFill}
             >
               <Flex alignItems="center" bottom={TRANSFER_DIRECTION_BUTTON_SIZE / 2} position="absolute">
-                <SwapArrowButton disabled backgroundColor="$surface1" />
+                <SwapArrowButton disabled opacity={1} />
               </Flex>
             </Flex>
           </Flex>

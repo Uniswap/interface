@@ -1,14 +1,24 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { TradingApi } from '@universe/api'
+import { GasStrategy, TradingApi } from '@universe/api'
 import isEqual from 'lodash/isEqual'
 import omit from 'lodash/omit'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { convertGasFeeToDisplayValue } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import type { SwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
 import { getSwapInputExceedsBalance } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
+import { ChainedSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type { ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { tryCatch } from 'utilities/src/errors'
 
+const UNUSED_CHAINED_ACTIONS_FIELDS: Pick<
+  ChainedSwapTxAndGasInfo,
+  'approveTxRequest' | 'revocationTxRequest' | 'txRequests'
+> = {
+  approveTxRequest: undefined,
+  revocationTxRequest: undefined,
+  txRequests: undefined,
+}
 /**
  * Creates a SwapTxAndGasInfoService for Chained Action trades. Since creating a trade is a non trivial
  * operation we only create 1 trade per quote. When the quote changes, we request a new trade plan,
@@ -17,7 +27,7 @@ import { tryCatch } from 'utilities/src/errors'
  * @returns SwapTxAndGasInfoService for Chained Action trades
  */
 export function createChainedActionSwapTxAndGasInfoService(): SwapTxAndGasInfoService<ChainedActionTrade> {
-  let tradeId: string | undefined
+  let planId: string | undefined
   let prevQuote: TradingApi.Quote | undefined
   const service: SwapTxAndGasInfoService<ChainedActionTrade> = {
     async getSwapTxAndGasInfo(params) {
@@ -25,7 +35,7 @@ export function createChainedActionSwapTxAndGasInfoService(): SwapTxAndGasInfoSe
       const newQuote = trade.quote.quote
 
       if (!isSameQuote({ newQuote, tradeType: params.trade.tradeType, prevQuote })) {
-        tradeId = undefined
+        planId = undefined
       }
 
       prevQuote = newQuote
@@ -33,38 +43,47 @@ export function createChainedActionSwapTxAndGasInfoService(): SwapTxAndGasInfoSe
 
       // TODO SWAP-485 - handle API error cases/skip conditions
       let tradeResponse
-      if (tradeId) {
+      if (planId) {
         const { data } = await tryCatch(
-          skip ? Promise.resolve(undefined) : TradingApiClient.getExistingTrade({ tradeId }),
+          skip ? Promise.resolve(undefined) : TradingApiClient.getExistingPlan({ planId }),
         )
         tradeResponse = data
       } else {
         const { data } = await tryCatch(
-          skip ? Promise.resolve(undefined) : TradingApiClient.fetchNewTrade({ quote: trade.quote.quote }),
+          skip
+            ? Promise.resolve(undefined)
+            : TradingApiClient.createNewPlan({ quote: trade.quote.quote, routing: TradingApi.Routing.CHAINED }),
         )
         tradeResponse = data
       }
-      // Preserve tradeId if previous fetch was skipped
-      tradeId = tradeResponse?.tradeId ?? tradeId
 
-      // TODO: SWAP-476 - add gas fee estimation
+      // Preserve tradeId if previous fetch was skipped
+      planId = tradeResponse?.planId ?? planId
+
+      // @ts-expect-error TODO API-1530 SWAP-458: once fixed use convertGasFeeToDisplayValue(newQuote.gasFee, newQuote.gasStrategy)
+      const gasStrategy: GasStrategy | undefined = newQuote.gasStrategies?.[0]
+        ? {
+            // @ts-expect-error TODO API-1530 SWAP-458: once fixed use convertGasFeeToDisplayValue(newQuote.gasFee, newQuote.gasStrategy)
+            ...newQuote.gasStrategies[0],
+            displayLimitInflationFactor: 1,
+          }
+        : undefined
+
       const gasFee: GasFeeResult = {
-        value: trade.quote.quote.gasFee,
-        displayValue: trade.quote.quote.gasFeeUSD,
+        value: newQuote.gasFee,
+        displayValue: convertGasFeeToDisplayValue(newQuote.gasFee, gasStrategy),
         isLoading: false,
         error: null,
       }
 
       return {
+        ...UNUSED_CHAINED_ACTIONS_FIELDS,
         routing: TradingApi.Routing.CHAINED,
         trade,
-        approveTxRequest: undefined,
-        revocationTxRequest: undefined,
         gasFee,
         gasFeeEstimation: {},
         includesDelegation: false,
-        txRequests: undefined,
-        tradeId,
+        planId,
       }
     },
   }

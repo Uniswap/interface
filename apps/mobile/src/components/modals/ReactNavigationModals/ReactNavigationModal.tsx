@@ -4,6 +4,8 @@ import { useReactNavigationModal } from 'src/components/modals/useReactNavigatio
 import type { GetProps } from 'ui/src'
 import { BridgedAssetModal } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
 import { WormholeModal } from 'uniswap/src/components/BridgedAsset/WormholeModal'
+import { ReportTokenDataModal } from 'uniswap/src/components/reporting/ReportTokenDataModal'
+import { ReportTokenIssueModal } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
 import { PasskeyManagementModal } from 'uniswap/src/features/passkey/PasskeyManagementModal'
 import { PasskeysHelpModal } from 'uniswap/src/features/passkey/PasskeysHelpModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -31,6 +33,8 @@ type ValidModalNames = keyof Pick<
   | typeof ModalName.LanguageSelector
   | typeof ModalName.BridgedAsset
   | typeof ModalName.Wormhole
+  | typeof ModalName.ReportTokenIssue
+  | typeof ModalName.ReportTokenData
 >
 
 type ModalNameWithComponentProps = {
@@ -46,6 +50,8 @@ type ModalNameWithComponentProps = {
   [ModalName.LanguageSelector]: GetProps<typeof SettingsLanguageModal>
   [ModalName.BridgedAsset]: GetProps<typeof BridgedAssetModal>
   [ModalName.Wormhole]: GetProps<typeof WormholeModal>
+  [ModalName.ReportTokenIssue]: GetProps<typeof ReportTokenIssueModal>
+  [ModalName.ReportTokenData]: GetProps<typeof ReportTokenDataModal>
 }
 
 type NavigationModalProps<ModalName extends ValidModalNames> = {

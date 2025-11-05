@@ -7,7 +7,6 @@ import {
   getCoreRowModel,
   Row,
   RowData,
-  Table as TanstackTable,
   useReactTable,
 } from '@tanstack/react-table'
 import { useParentSize } from '@visx/responsive'
@@ -30,6 +29,7 @@ import {
   TableScrollMask,
 } from 'components/Table/styled'
 import { TableSizeProvider, useTableSize } from 'components/Table/TableSizeProvider'
+import { TableBodyProps } from 'components/Table/types'
 import { getCommonPinningStyles } from 'components/Table/utils'
 import useDebounce from 'hooks/useDebounce'
 import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -118,14 +118,6 @@ function TableRowComponent<T extends RowData>({ row, v2 = true, rowWrapper }: Ta
 }
 
 const TableRow = memo(TableRowComponent) as typeof TableRowComponent
-
-type TableBodyProps<T extends RowData = unknown> = {
-  table: TanstackTable<T>
-  loading?: boolean
-  error?: ApolloError | boolean
-  v2: boolean
-  rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
-}
 
 function TableBodyInner<T extends RowData>(
   { table, loading, error, v2 = true, rowWrapper }: TableBodyProps<T>,
@@ -239,8 +231,10 @@ export function Table<T extends RowData>({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: we want to run it also when loadMore, loadingMore are changed
   useEffect(() => {
-    const scrollableElement = maxHeight ? tableBodyRef.current : window
-    if (scrollableElement === null) {
+    // Use parentElement because the actual scrolling container is the parent wrapper,
+    // not the table body div itself (which is a child of the scrollable container)
+    const scrollableElement = maxHeight ? tableBodyRef.current?.parentElement : window
+    if (!scrollableElement) {
       return undefined
     }
     const updateScrollPosition = () => {
@@ -250,7 +244,7 @@ export function Table<T extends RowData>({
           distanceFromTop: scrollTop,
           distanceToBottom: scrollHeight - scrollTop - clientHeight,
         })
-      } else {
+      } else if (scrollableElement === window) {
         setScrollPosition({
           distanceFromTop: scrollableElement.scrollY,
           distanceToBottom: document.body.scrollHeight - scrollableElement.scrollY - scrollableElement.innerHeight,
@@ -263,7 +257,29 @@ export function Table<T extends RowData>({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: we want to run it also when distanceFromTop, loading are changed
   useEffect(() => {
-    if (distanceToBottom < LOAD_MORE_BOTTOM_OFFSET && !loadingMore && loadMore && canLoadMore.current && !error) {
+    const scrollableElement = maxHeight ? tableBodyRef.current?.parentElement : window
+    const shouldLoadMoreFromScroll = distanceToBottom < LOAD_MORE_BOTTOM_OFFSET
+    let shouldLoadMoreFromViewportHeight = false
+
+    if (!shouldLoadMoreFromScroll) {
+      if (!maxHeight && scrollableElement === window) {
+        const contentHeight = document.body.scrollHeight
+        const viewportHeight = window.innerHeight
+        shouldLoadMoreFromViewportHeight = contentHeight <= viewportHeight
+      } else if (scrollableElement instanceof HTMLDivElement) {
+        const { scrollHeight, clientHeight } = scrollableElement
+        shouldLoadMoreFromViewportHeight = scrollHeight <= clientHeight
+      }
+    }
+
+    if (
+      (shouldLoadMoreFromScroll || shouldLoadMoreFromViewportHeight) &&
+      !loadingMore &&
+      loadMore &&
+      canLoadMore.current &&
+      !error &&
+      !loading
+    ) {
       setLoadingMore(true)
       // Manually update scroll position to prevent re-triggering
       setScrollPosition({
@@ -281,7 +297,7 @@ export function Table<T extends RowData>({
         },
       })
     }
-  }, [data.length, distanceFromTop, distanceToBottom, error, loadMore, loading, loadingMore])
+  }, [data.length, distanceFromTop, distanceToBottom, error, loadMore, loading, loadingMore, maxHeight, tableBodyRef])
 
   const table = useReactTable({
     columns,

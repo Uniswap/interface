@@ -14,10 +14,10 @@ export interface TransactionSummaryLayoutProps {
 }
 
 export interface SummaryItemProps {
+  index?: number
   authTrigger?: AuthTrigger
   transaction: TransactionDetails
   swapCallbacks?: SwapSummaryCallbacks
-  index?: number
 }
 
 export interface SwapSummaryCallbacks {

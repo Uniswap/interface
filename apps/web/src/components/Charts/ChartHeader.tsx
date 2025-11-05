@@ -1,11 +1,11 @@
 import { getProtocolColor, getProtocolName } from 'appGraphql/data/util'
 import { GraphQLApi } from '@universe/api'
-import { useHeaderDateFormatter } from 'components/Charts/hooks'
+import { useHeaderDateFormatter } from 'components/Charts/hooks/useHeaderDateFormatter'
 import { PROTOCOL_LEGEND_ELEMENT_ID } from 'components/Charts/types'
 import { UTCTimestamp } from 'lightweight-charts'
 import { ReactElement, ReactNode } from 'react'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
-import { Flex, styled, Text } from 'ui/src'
+import { Flex, styled, Text, useSporeColors } from 'ui/src'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 
@@ -113,6 +113,7 @@ export function ChartHeader({
   additionalFields,
 }: ChartHeaderProps) {
   const isHovered = !!time
+  const colors = useSporeColors()
   return (
     <Flex
       row
@@ -121,10 +122,19 @@ export function ChartHeader({
       gap="$gap8"
       alignItems="flex-start"
       animation="fast"
-      zIndex="$default"
+      zIndex="$mask"
       id="chart-header"
     >
-      <Flex position="absolute" gap="$gap4" pb={14} pointerEvents="none">
+      <Flex
+        position="absolute"
+        gap="$gap4"
+        pb={14}
+        pointerEvents="none"
+        style={{
+          background: `linear-gradient(to right, ${colors.surface1.val} 0%, ${colors.surface1.val} 70%, transparent 100%),
+                      linear-gradient(to bottom, ${colors.surface1.val} 0%, ${colors.surface1.val} 70%, transparent 100%)`,
+        }}
+      >
         <HeaderValueDisplay value={value} valueFormatterType={valueFormatterType} />
         <Flex row gap="$gap8" {...EllipsisTamaguiStyle}>
           {additionalFields}

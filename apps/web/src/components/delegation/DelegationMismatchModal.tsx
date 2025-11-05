@@ -10,7 +10,7 @@ import { Blocked } from 'ui/src/components/icons/Blocked'
 import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -78,24 +78,23 @@ function DelegationMismatchModal({ onClose }: DelegationMismatchModalProps) {
         }
         icon={<WalletAlertBadge walletIcon={iconSrc} />}
         primaryButtonText={t('common.button.disconnect')}
-        primaryButtonOnClick={handleSwitchWallets}
+        primaryButtonOnPress={handleSwitchWallets}
         primaryButtonVariant="default"
         primaryButtonEmphasis="secondary"
         secondaryButtonText={t('common.button.continue')}
-        secondaryButtonOnClick={handleContinue}
+        secondaryButtonOnPress={handleContinue}
         secondaryButtonVariant="default"
         secondaryButtonEmphasis="primary"
         learnMoreUrl={uniswapUrls.helpArticleUrls.mismatchedImports}
         learnMoreTextColor="$accent1"
         learnMoreTextVariant="buttonLabel3"
         onClose={onClose}
-        buttonContainerProps={{ flexDirection: 'row', gap: '$spacing12' }}
         textAlign="left"
       >
-        <Flex flexDirection="column" alignItems="flex-start" width="100%" mt="$spacing12" gap="$spacing8">
+        <Flex flexDirection="column" alignItems="flex-start" width="100%" gap="$spacing8">
           {FEATURES.map((feature, index) => (
-            <Flex key={index} row alignItems="center" gap="$spacing4">
-              <Blocked color="$neutral3" size={16} />
+            <Flex key={index} row alignItems="center" gap="$spacing8">
+              <Blocked color="$neutral2" size={16} />
               <Text variant="body3" color="$neutral1">
                 {feature}
               </Text>

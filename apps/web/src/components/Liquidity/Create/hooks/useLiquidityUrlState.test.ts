@@ -183,9 +183,9 @@ describe('useLiquidityUrlState', () => {
       vi.fn(),
     ])
     const { result } = renderHook(() => useLiquidityUrlState())
-    expect(result.current.fee.feeAmount).toBe(500)
-    expect(result.current.fee.isDynamic).toBe(true)
-    expect(result.current.fee.tickSpacing).toBe(10)
+    expect(result.current.fee?.feeAmount).toBe(500)
+    expect(result.current.fee?.isDynamic).toBe(true)
+    expect(result.current.fee?.tickSpacing).toBe(10)
   })
 
   it('returns default fee when no fee data provided', () => {
@@ -493,7 +493,7 @@ describe('useLiquidityUrlState', () => {
 
     // Verify specific values
     expect(result.current.tokenA).toEqual(USDC)
-    expect(result.current.fee.feeAmount).toBe(3000)
+    expect(result.current.fee?.feeAmount).toBe(3000)
     expect(result.current.hook).toBe('0x0000000000000000000000000000000000000001')
     expect(result.current.priceRangeState.minPrice).toBe('1.0')
     expect(result.current.depositState.exactAmounts?.[PositionField.TOKEN0]).toBe('100')

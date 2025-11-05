@@ -13,6 +13,7 @@ export interface UserSettingsState {
   currentCurrency: FiatCurrency
   hideSmallBalances: boolean
   hideSpamTokens: boolean
+  hideReportedActivity?: boolean
   isTestnetModeEnabled?: boolean
   hapticsEnabled: boolean
   deviceAccessTimeout: DeviceAccessTimeout
@@ -23,6 +24,7 @@ export const initialUserSettingsState: UserSettingsState = {
   currentCurrency: FiatCurrency.UnitedStatesDollar,
   hideSmallBalances: true,
   hideSpamTokens: true,
+  hideReportedActivity: true,
   isTestnetModeEnabled: false,
   hapticsEnabled: true,
   deviceAccessTimeout: DEFAULT_DEVICE_ACCESS_TIMEOUT,
@@ -37,6 +39,9 @@ const slice = createSlice({
     },
     setHideSpamTokens: (state, { payload }: PayloadAction<boolean>) => {
       state.hideSpamTokens = payload
+    },
+    setHideReportedActivity: (state, { payload }: PayloadAction<boolean>) => {
+      state.hideReportedActivity = payload
     },
     setCurrentLanguage: (state, action: PayloadAction<Language>) => {
       state.currentLanguage = action.payload
@@ -64,6 +69,7 @@ const slice = createSlice({
 export const {
   setHideSmallBalances,
   setHideSpamTokens,
+  setHideReportedActivity,
   setCurrentLanguage,
   setCurrentFiatCurrency,
   setIsTestnetModeEnabled,

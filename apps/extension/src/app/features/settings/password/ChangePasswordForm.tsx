@@ -1,13 +1,19 @@
-import { useCallback } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { PADDING_STRENGTH_INDICATOR, PasswordInput } from 'src/app/components/PasswordInput'
 import { Button, Flex, Text } from 'ui/src'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { usePasswordForm } from 'wallet/src/utils/password'
+import { PasswordErrors, usePasswordForm } from 'wallet/src/utils/password'
 
-export function ChangePasswordForm({ onNext }: { onNext: (password: string) => void }): JSX.Element {
+export function ChangePasswordForm({
+  oldPassword,
+  onNext,
+}: {
+  oldPassword: string | undefined
+  onNext: (password: string) => void
+}): JSX.Element {
   const { t } = useTranslation()
 
   const {
@@ -20,18 +26,45 @@ export function ChangePasswordForm({ onNext }: { onNext: (password: string) => v
     confirmPassword,
     onChangeConfirmPassword,
     setHideInput,
-    errorText,
+    errorText: baseErrorText,
     checkSubmit,
   } = usePasswordForm()
 
+  const [customError, setCustomError] = useState<PasswordErrors | undefined>(undefined)
+
+  // Check if new password is same as old password
+  const isSamePassword = useMemo(
+    () => Boolean(password && oldPassword && password === oldPassword),
+    [password, oldPassword],
+  )
+
+  // Update custom error when password matches old password
+  useEffect(() => {
+    setCustomError(isSamePassword ? PasswordErrors.SamePassword : undefined)
+  }, [isSamePassword])
+
+  // Override error text if custom error exists
+  const errorText = useMemo(() => {
+    if (customError === PasswordErrors.SamePassword) {
+      return t('common.input.password.error.same')
+    }
+    return baseErrorText
+  }, [customError, baseErrorText, t])
+
   const onSubmit = useCallback(async () => {
+    // Check for same password error
+    if (isSamePassword) {
+      setCustomError(PasswordErrors.SamePassword)
+      return
+    }
+
     if (checkSubmit()) {
       // Just change the password and pass it to the parent
       await Keyring.changePassword(password)
       sendAnalyticsEvent(ExtensionEventName.PasswordChanged)
       onNext(password)
     }
-  }, [checkSubmit, password, onNext])
+  }, [checkSubmit, password, onNext, isSamePassword])
 
   return (
     <Flex grow width="100%">
@@ -70,7 +103,7 @@ export function ChangePasswordForm({ onNext }: { onNext: (password: string) => v
         </Text>
       </Flex>
       <Flex row width="100%">
-        <Button size="medium" isDisabled={!enableNext} emphasis="primary" onPress={onSubmit}>
+        <Button size="medium" isDisabled={!enableNext || isSamePassword} emphasis="primary" onPress={onSubmit}>
           {t('common.button.continue')}
         </Button>
       </Flex>

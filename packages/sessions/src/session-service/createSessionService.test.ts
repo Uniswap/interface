@@ -1,3 +1,4 @@
+import type { DeviceIdService } from '@universe/sessions/src/device-id/types'
 import type { SessionRepository } from '@universe/sessions/src/session-repository/types'
 import { createSessionService } from '@universe/sessions/src/session-service/createSessionService'
 import type { SessionService } from '@universe/sessions/src/session-service/types'
@@ -7,6 +8,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 describe('createSessionService', () => {
   let storage: SessionStorage
   let repository: SessionRepository
+  let deviceIdService: DeviceIdService
   let service: SessionService
 
   beforeEach(() => {
@@ -19,6 +21,17 @@ describe('createSessionService', () => {
       },
       clear: async (): Promise<void> => {
         data = null
+      },
+    }
+
+    let deviceIdData: string | null = null
+    deviceIdService = {
+      getDeviceId: async (): Promise<string> => deviceIdData || '',
+      setDeviceId: async (deviceId: string): Promise<void> => {
+        deviceIdData = deviceId
+      },
+      removeDeviceId: async (): Promise<void> => {
+        deviceIdData = null
       },
     }
 
@@ -41,6 +54,7 @@ describe('createSessionService', () => {
     service = createSessionService({
       sessionStorage: storage,
       sessionRepository: repository,
+      deviceIdService,
     })
   })
 
@@ -74,6 +88,7 @@ describe('createSessionService', () => {
       service = createSessionService({
         sessionStorage: storage,
         sessionRepository: repository,
+        deviceIdService,
       })
 
       await service.initSession()
@@ -147,6 +162,7 @@ describe('createSessionService', () => {
       const service2 = createSessionService({
         sessionStorage: storage,
         sessionRepository: repository,
+        deviceIdService,
       })
 
       expect(await service2.getSessionState()).toEqual({ sessionId: 'test-session-123' })
@@ -168,6 +184,7 @@ describe('createSessionService', () => {
       const service2 = createSessionService({
         sessionStorage: storage2,
         sessionRepository: repository,
+        deviceIdService,
       })
 
       await service.initSession()
@@ -270,6 +287,23 @@ describe('createSessionService', () => {
 
       expect(secondSession).not.toEqual(firstSession)
       expect(secondSession).toEqual({ sessionId: 'new-session-789' })
+    })
+  })
+  describe('device ID handling', () => {
+    it('sets and gets device ID', async () => {
+      // Second initialization should replace
+      repository.initSession = async (): Promise<{
+        sessionId?: string
+        needChallenge: boolean
+        extra: Record<string, string>
+      }> => ({
+        sessionId: 'new-session-789',
+        needChallenge: false,
+        extra: { device_id: 'test-device-id' },
+      })
+
+      await service.initSession()
+      expect(await deviceIdService.getDeviceId()).toBe('test-device-id')
     })
   })
 })

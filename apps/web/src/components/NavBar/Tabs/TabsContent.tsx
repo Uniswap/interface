@@ -1,5 +1,4 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { CreditCardIcon } from 'components/Icons/CreditCard'
 import { Limit } from 'components/Icons/Limit'
 import { SwapV2 } from 'components/Icons/SwapV2'
 import { MenuItem } from 'components/NavBar/CompanyMenu/Content'
@@ -8,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
 import { Compass } from 'ui/src/components/icons/Compass'
+import { CreditCard } from 'ui/src/components/icons/CreditCard'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { ReceiveAlt } from 'ui/src/components/icons/ReceiveAlt'
 import { Wallet } from 'ui/src/components/icons/Wallet'
@@ -32,6 +32,7 @@ export const useTabsContent = (): TabsSection[] => {
   const isFiatOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
   const isPortfolioPageEnabled = useFeatureFlag(FeatureFlags.PortfolioPage)
   const isToucanEnabled = useFeatureFlag(FeatureFlags.Toucan)
+  const isPortfolioDefiTabEnabled = useFeatureFlag(FeatureFlags.PortfolioDefiTab)
 
   return [
     {
@@ -54,7 +55,7 @@ export const useTabsContent = (): TabsSection[] => {
         },
         {
           label: t('common.buy.label'),
-          icon: <CreditCardIcon fill={theme.neutral2} />,
+          icon: <CreditCard size="$icon.24" color="$neutral2" />,
           href: '/buy',
           internal: true,
         },
@@ -122,11 +123,15 @@ export const useTabsContent = (): TabsSection[] => {
                 href: '/portfolio/tokens',
                 internal: true,
               },
-              {
-                label: t('portfolio.defi.title'),
-                href: '/portfolio/defi',
-                internal: true,
-              },
+              ...(isPortfolioDefiTabEnabled
+                ? [
+                    {
+                      label: t('portfolio.defi.title'),
+                      href: '/portfolio/defi',
+                      internal: true,
+                    },
+                  ]
+                : []),
               {
                 label: t('portfolio.nfts.title'),
                 href: '/portfolio/nfts',

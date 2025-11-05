@@ -17,8 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
-import { useSwapCallback } from 'state/sagas/transactions/swapSaga'
-import { useWrapCallback } from 'state/sagas/transactions/wrapSaga'
+import { useSwapHandlers } from 'state/sagas/transactions/useSwapHandlers'
 import { useInitialCurrencyState } from 'state/swap/hooks'
 import { SwapAndLimitContextProvider } from 'state/swap/SwapContext'
 import type { CurrencyState } from 'state/swap/types'
@@ -259,8 +258,7 @@ function UniversalSwapFlow({
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const swapCallback = useSwapCallback()
-  const wrapCallback = useWrapCallback()
+  const swapHandlers = useSwapHandlers()
 
   const LimitFormWrapper = useDeferredComponent(() =>
     import('pages/Swap/Limit/LimitForm').then((module) => ({
@@ -346,7 +344,7 @@ function UniversalSwapFlow({
       )}
       {currentTab === SwapTab.Swap && (
         <Flex gap="$spacing16">
-          <SwapDependenciesStoreContextProvider swapCallback={swapCallback} wrapCallback={wrapCallback}>
+          <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
             <SwapFlow
               settings={swapSettings}
               hideHeader={hideHeader}

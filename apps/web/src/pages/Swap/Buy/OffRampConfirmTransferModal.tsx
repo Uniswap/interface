@@ -243,9 +243,9 @@ export const OffRampConfirmTransferModal = ({
         title={t('fiatOffRamp.error.populateSend.title')}
         subtext={t('fiatOffRamp.error.populateSend.description')}
         icon={<AlertTriangleFilled color="$statusCritical" size="$icon.24" />}
-        hasIconBackground
+        iconBackgroundColor="$surface3"
         primaryButtonText={t('common.close')}
-        primaryButtonOnClick={onClose}
+        primaryButtonOnPress={onClose}
         primaryButtonVariant="default"
         modalName={ModalName.FiatOffRampConfirmTransferError}
       />

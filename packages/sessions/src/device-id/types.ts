@@ -3,13 +3,9 @@
  * Platform-specific implementations handle device identification
  */
 interface DeviceIdService {
-  /**
-   * Get or generate device ID
-   * - iOS/Android: System-provided ID
-   * - Extension: Generated UUID
-   * - Web: Not used (EGW handles)
-   */
-  getDeviceId(): Promise<string>
+  getDeviceId(): Promise<string | null>
+  setDeviceId(deviceId: string): Promise<void>
+  removeDeviceId(): Promise<void>
 }
 
 export type { DeviceIdService }

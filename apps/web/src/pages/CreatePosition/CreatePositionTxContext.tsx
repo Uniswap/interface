@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -226,7 +227,7 @@ export function generateCreateCalldataQueryParams({
         tickSpacing,
         token0: getTokenOrZeroAddress(displayCurrencies.TOKEN0),
         token1: getTokenOrZeroAddress(displayCurrencies.TOKEN1),
-        fee: positionState.fee.isDynamic ? DYNAMIC_FEE_DATA.feeAmount : positionState.fee.feeAmount,
+        fee: positionState.fee?.isDynamic ? DYNAMIC_FEE_DATA.feeAmount : positionState.fee?.feeAmount,
         hooks: positionState.hook,
       },
     },

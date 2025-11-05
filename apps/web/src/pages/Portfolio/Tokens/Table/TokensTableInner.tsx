@@ -4,13 +4,13 @@ import { Cell } from 'components/Table/Cell'
 import { HeaderCell } from 'components/Table/styled'
 import { ValueWithFadedDecimals } from 'pages/Portfolio/components/ValueWithFadedDecimals/ValueWithFadedDecimals'
 import { TokenData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
-import Allocation from 'pages/Portfolio/Tokens/Table/columns/Allocation'
-import Balance from 'pages/Portfolio/Tokens/Table/columns/Balance'
-import ContextMenuButton from 'pages/Portfolio/Tokens/Table/columns/ContextMenuButton'
-import RelativeChange1D from 'pages/Portfolio/Tokens/Table/columns/RelativeChange1D'
-import TokenDisplay from 'pages/Portfolio/Tokens/Table/columns/TokenDisplay'
-import Value from 'pages/Portfolio/Tokens/Table/columns/Value'
-import TokensContextMenuWrapper from 'pages/Portfolio/Tokens/Table/TokensContextMenuWrapper'
+import { Allocation } from 'pages/Portfolio/Tokens/Table/columns/Allocation'
+import { Balance } from 'pages/Portfolio/Tokens/Table/columns/Balance'
+import { ContextMenuButton } from 'pages/Portfolio/Tokens/Table/columns/ContextMenuButton'
+import { RelativeChange1D } from 'pages/Portfolio/Tokens/Table/columns/RelativeChange1D'
+import { TokenDisplay } from 'pages/Portfolio/Tokens/Table/columns/TokenDisplay'
+import { Value } from 'pages/Portfolio/Tokens/Table/columns/Value'
+import { TokensContextMenuWrapper } from 'pages/Portfolio/Tokens/Table/TokensContextMenuWrapper'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Text } from 'ui/src'
@@ -20,7 +20,7 @@ const hasRow = <T,>(obj: unknown): obj is { row: { original: T } } => {
   return typeof maybeRow === 'object' && maybeRow !== null && 'original' in maybeRow && maybeRow.original !== undefined
 }
 
-export default function TokensTableInner({
+export function TokensTableInner({
   tokenData,
   hideHeader,
   loading = false,

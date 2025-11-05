@@ -52,7 +52,7 @@ export function useBlockTimestamp({
 
   // For future blocks, calculate estimated timestamp
   const estimatedFutureTimestamp = useMemo(() => {
-    if (!blockNumber || !currentBlockTimestamp || !chainId) {
+    if (!blockNumber || !currentBlockTimestamp || !chainId || !currentBlockNumber) {
       return undefined
     }
 

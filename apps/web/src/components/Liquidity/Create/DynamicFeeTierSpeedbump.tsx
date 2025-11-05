@@ -19,11 +19,13 @@ export const DynamicFeeTierSpeedbump = () => {
   const handleConfirm = () => {
     setPositionState((prevState) => ({
       ...prevState,
-      fee: {
-        feeAmount: dynamicFeeTierSpeedbumpData.wishFeeData.feeAmount,
-        tickSpacing: dynamicFeeTierSpeedbumpData.wishFeeData.tickSpacing,
-        isDynamic: dynamicFeeTierSpeedbumpData.wishFeeData.isDynamic,
-      },
+      fee: dynamicFeeTierSpeedbumpData.wishFeeData
+        ? {
+            feeAmount: dynamicFeeTierSpeedbumpData.wishFeeData.feeAmount,
+            tickSpacing: dynamicFeeTierSpeedbumpData.wishFeeData.tickSpacing,
+            isDynamic: dynamicFeeTierSpeedbumpData.wishFeeData.isDynamic,
+          }
+        : undefined,
     }))
 
     setDynamicFeeTierSpeedbumpData({
@@ -56,10 +58,10 @@ export const DynamicFeeTierSpeedbump = () => {
       subtext={t('fee.tier.dynamic.create.info')}
       onClose={handleCancel}
       primaryButtonText={t('common.button.continue')}
-      primaryButtonOnClick={handleConfirm}
+      primaryButtonOnPress={handleConfirm}
       primaryButtonVariant="default"
       secondaryButtonText={t('common.button.cancel')}
-      secondaryButtonOnClick={handleCancel}
+      secondaryButtonOnPress={handleCancel}
       modalName={ModalName.DynamicFeeTierSpeedbump}
       displayHelpCTA
     />

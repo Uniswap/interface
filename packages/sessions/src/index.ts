@@ -18,13 +18,44 @@ export type { SessionRepository } from '@universe/sessions/src/session-repositor
 // Session Service
 export { createNoopSessionService } from '@universe/sessions/src/session-service/createNoopSessionService'
 export { createSessionService } from '@universe/sessions/src/session-service/createSessionService'
-export type { SessionService } from '@universe/sessions/src/session-service/types'
+export type {
+  SessionService,
+  InitSessionResponse,
+  ChallengeResponse,
+  UpgradeSessionRequest,
+  UpgradeSessionResponse,
+} from '@universe/sessions/src/session-service/types'
 
 // Session Storage
 export { createSessionStorage } from '@universe/sessions/src/session-storage/createSessionStorage'
-export type { SessionStorage } from '@universe/sessions/src/session-storage/types'
+export type { SessionStorage, SessionState } from '@universe/sessions/src/session-storage/types'
 
 // Session Client
 export { createSessionClient } from '@universe/sessions/src/session-repository/createSessionClient'
 export type { SessionServiceClient } from '@universe/sessions/src/session-repository/createSessionClient'
-export { createTransport } from '@universe/sessions/src/session-repository/transport'
+
+// Session Initialization
+export { createSessionInitializationService } from '@universe/sessions/src/session-initialization/createSessionInitializationService'
+export {
+  SessionError,
+  MaxChallengeRetriesError,
+  NoSolverAvailableError,
+} from '@universe/sessions/src/session-initialization/sessionErrors'
+export type {
+  SessionInitializationService,
+  SessionInitResult,
+} from '@universe/sessions/src/session-initialization/createSessionInitializationService'
+
+// Challenge Solvers
+export { createChallengeSolverService } from '@universe/sessions/src/challenge-solvers/createChallengeSolverService'
+export { createTurnstileMockSolver } from '@universe/sessions/src/challenge-solvers/createTurnstileMockSolver'
+export { createHashcashMockSolver } from '@universe/sessions/src/challenge-solvers/createHashcashMockSolver'
+export { createNoneMockSolver } from '@universe/sessions/src/challenge-solvers/createNoneMockSolver'
+export { createTurnstileSolver } from '@universe/sessions/src/challenge-solvers/createTurnstileSolver'
+export type {
+  ChallengeSolver,
+  ChallengeSolverService,
+  ChallengeData,
+} from '@universe/sessions/src/challenge-solvers/types'
+
+export { BotDetectionType } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'

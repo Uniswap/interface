@@ -2,7 +2,6 @@ import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useInterfaceWrap'
 import { useSwapFormWarningStoreActions } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/useSwapFormWarningStore'
 import { useNeedsBridgedAssetWarning } from 'uniswap/src/features/transactions/swap/hooks/useNeedsBridgedAssetWarning'
 import { useNeedsBridgingWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useNeedsBridgingWarning'
@@ -28,7 +27,6 @@ export function usePrepareSwap(ctx: { warningService: WarningService }): () => v
     handleShowViewOnlyModal,
     handleShowBridgedAssetModal,
   } = useSwapFormWarningStoreActions()
-  const { isInterfaceWrap, onInterfaceWrap } = useInterfaceWrap()
   const { derivedSwapInfo, updateSwapForm, exactAmountToken, prefilledCurrencies, isMax } = useSwapFormStore((s) => ({
     derivedSwapInfo: s.derivedSwapInfo,
     updateSwapForm: s.updateSwapForm,
@@ -59,7 +57,6 @@ export function usePrepareSwap(ctx: { warningService: WarningService }): () => v
       // getAction
       isConnected: !!activeAccount,
       isViewOnlyWallet,
-      isInterfaceWrap,
       currencies,
       exactAmountToken,
       exactCurrencyField,
@@ -74,7 +71,6 @@ export function usePrepareSwap(ctx: { warningService: WarningService }): () => v
       handleShowBridgingWarningModal,
       handleShowMaxNativeTransferModal,
       handleShowBridgedAssetModal,
-      onInterfaceWrap,
       updateSwapForm,
       setScreen,
       // shared

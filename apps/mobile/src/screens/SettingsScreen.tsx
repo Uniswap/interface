@@ -226,7 +226,7 @@ export function SettingsScreen(): JSX.Element {
           },
           {
             navigationModal: ModalName.PortfolioBalanceModal,
-            text: t('settings.setting.smallBalances.title'),
+            text: t('settings.setting.balancesActivity.title'),
             icon: <Chart {...iconProps} />,
           },
           {

@@ -18,6 +18,7 @@ export function SmallBalanceToggle() {
   return (
     <SettingsToggle
       title={t('settings.hideSmallBalances')}
+      description={t('settings.hideSmallBalances.subtitle')}
       isActive={hideSmallBalances && !isTestnetModeEnabled}
       toggle={onToggle}
       disabled={isTestnetModeEnabled}

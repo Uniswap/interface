@@ -1,5 +1,8 @@
 import { SessionStorage } from '@universe/sessions/src/session-storage/types'
 
+/**
+ * Creates a Session Storage instance, given a set of functions to interact with a storage driver.
+ */
 function createSessionStorage(ctx: {
   getSessionId: () => Promise<string | null>
   setSessionId: (sessionId: string) => Promise<void>

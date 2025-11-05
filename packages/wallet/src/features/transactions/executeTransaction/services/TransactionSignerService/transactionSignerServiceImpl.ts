@@ -68,20 +68,12 @@ export function createTransactionSignerService(ctx: {
     return jsonRpcProvider.formatter.receipt(rawReceipt)
   }
 
-  const signAndSendTransaction = getSignAndSendTransaction({
-    prepareTransaction,
-    signTransaction,
-    signTypedData,
-    sendTransaction,
-  })
-
   return {
     prepareTransaction,
     signTransaction,
     signTypedData,
     sendTransaction,
     sendTransactionSync,
-    signAndSendTransaction,
   }
 }
 
@@ -188,27 +180,5 @@ export function createBundledDelegationTransactionSignerService(ctx: {
     signTypedData,
     sendTransaction,
     sendTransactionSync,
-    signAndSendTransaction: getSignAndSendTransaction({
-      prepareTransaction: baseTransactionSignerService.prepareTransaction,
-      signTransaction,
-      signTypedData,
-      sendTransaction,
-    }),
-  }
-}
-
-function getSignAndSendTransaction(ctx: {
-  prepareTransaction: TransactionSigner['prepareTransaction']
-  signTransaction: TransactionSigner['signTransaction']
-  signTypedData: TransactionSigner['signTypedData']
-  sendTransaction: TransactionSigner['sendTransaction']
-}): TransactionSigner['signAndSendTransaction'] {
-  return async (input) => {
-    const populatedRequest = await ctx.prepareTransaction(input)
-    const timestampBeforeSign = Date.now()
-    const signedTx = await ctx.signTransaction(populatedRequest)
-    const timestampBeforeSend = Date.now()
-    const transactionHash = await ctx.sendTransaction({ signedTx })
-    return { transactionHash, populatedRequest, timestampBeforeSign, timestampBeforeSend }
   }
 }

@@ -27,6 +27,8 @@ import { useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { ThemeProvider } from 'theme'
 import { Flex, SegmentedControl, SegmentedControlOption, styled, useMedia } from 'ui/src'
+import { useTokenPriceChange } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 
 export const TDP_CHART_HEIGHT_PX = 356
 const TDP_CHART_SELECTOR_OPTIONS = [ChartType.PRICE, ChartType.VOLUME, ChartType.TVL] as const
@@ -113,7 +115,12 @@ export function useCreateTDPChartState(
 
 export default function ChartSection() {
   const { activeQuery, timePeriod, priceChartType } = useTDPContext().chartState
-  const { tokenColor } = useTDPContext()
+  const { tokenColor, currency } = useTDPContext()
+
+  // Get the 24hr price change from API to ensure consistency with mobile
+  // Both platforms now show the same 24hr change regardless of selected chart period
+  const currencyIdValue = useMemo(() => currencyId(currency), [currency])
+  const priceChange24h = useTokenPriceChange(currencyIdValue)
 
   // eslint-disable-next-line consistent-return
   const getSection = () => {
@@ -137,6 +144,7 @@ export default function ChartSection() {
             type={priceChartType}
             stale={stale}
             timePeriod={toHistoryDuration(timePeriod)}
+            pricePercentChange24h={priceChange24h}
           />
         )
       case ChartType.VOLUME:

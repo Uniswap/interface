@@ -1,5 +1,6 @@
 import { renderHook } from '@testing-library/react'
 import { useListTransactions } from 'uniswap/src/features/dataApi/listTransactions/listTransactions'
+import { renderHookWithProviders } from 'uniswap/src/test/render'
 
 // Mock the chains hook
 jest.mock('uniswap/src/features/chains/hooks/useEnabledChains', () => ({
@@ -29,11 +30,14 @@ describe('useListTransactions', () => {
       error: undefined,
       refetch: jest.fn(),
       status: 'success',
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
     })
   })
 
   it('should call REST API with correct parameters and return expected properties', () => {
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithProviders(() =>
       useListTransactions({
         evmAddress: mockAddress,
         pageSize: mockPageSize,
@@ -45,6 +49,9 @@ describe('useListTransactions', () => {
     expect(result.current).toHaveProperty('networkStatus')
     expect(result.current).toHaveProperty('refetch')
     expect(result.current).toHaveProperty('error')
+    expect(result.current).toHaveProperty('fetchNextPage')
+    expect(result.current).toHaveProperty('hasNextPage')
+    expect(result.current).toHaveProperty('isFetchingNextPage')
 
     // Verify REST hook was called with correct parameters
     expect(mockUseListTransactionsQuery).toHaveBeenCalledWith({
@@ -55,12 +62,11 @@ describe('useListTransactions', () => {
         fiatOnRampParams: undefined,
       },
       enabled: true,
-      select: expect.any(Function),
     })
   })
 
   it('should skip REST API when address is not provided', () => {
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithProviders(() =>
       useListTransactions({
         pageSize: mockPageSize,
       }),
@@ -82,7 +88,6 @@ describe('useListTransactions', () => {
         fiatOnRampParams: undefined,
       },
       enabled: false,
-      select: expect.any(Function),
     })
   })
 
@@ -96,9 +101,12 @@ describe('useListTransactions', () => {
       error: undefined,
       refetch: mockRefetch,
       status: 'success',
+      fetchNextPage: jest.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
     })
 
-    const { result } = renderHook(() =>
+    const { result } = renderHookWithProviders(() =>
       useListTransactions({
         evmAddress: mockAddress,
         pageSize: mockPageSize,
@@ -118,14 +126,13 @@ describe('useListTransactions', () => {
         fiatOnRampParams: undefined,
       },
       enabled: false,
-      select: expect.any(Function),
     })
   })
 
   it('should pass fiatOnRampParams to REST API', () => {
     const mockFiatOnRampParams = {} as const
 
-    renderHook(() =>
+    renderHookWithProviders(() =>
       useListTransactions({
         evmAddress: mockAddress,
         pageSize: mockPageSize,
@@ -142,14 +149,13 @@ describe('useListTransactions', () => {
         fiatOnRampParams: mockFiatOnRampParams,
       },
       enabled: true,
-      select: expect.any(Function),
     })
   })
 
   it('should use custom chainIds when provided', () => {
     const customChainIds = [42, 137]
 
-    renderHook(() =>
+    renderHookWithProviders(() =>
       useListTransactions({
         evmAddress: mockAddress,
         pageSize: mockPageSize,
@@ -166,7 +172,6 @@ describe('useListTransactions', () => {
         fiatOnRampParams: undefined,
       },
       enabled: true,
-      select: expect.any(Function),
     })
   })
 })

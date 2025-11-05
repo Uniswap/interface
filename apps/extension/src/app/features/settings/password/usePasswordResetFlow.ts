@@ -54,6 +54,7 @@ export enum PasswordResetFlowState {
 interface PasswordResetFlowResult {
   // State
   flowState: PasswordResetFlowState
+  oldPassword: string | undefined
 
   // Actions
   startPasswordReset: () => void
@@ -68,6 +69,7 @@ interface PasswordResetFlowResult {
 export function usePasswordResetFlow(): PasswordResetFlowResult {
   const dispatch = useDispatch()
   const [flowState, setFlowState] = useState<PasswordResetFlowState>(PasswordResetFlowState.None)
+  const [oldPassword, setOldPassword] = useState<string | undefined>(undefined)
 
   const hasBiometricUnlockCredential = useHasBiometricUnlockCredential()
 
@@ -95,15 +97,18 @@ export function usePasswordResetFlow(): PasswordResetFlowResult {
     // This check ensures the close action is from user interaction, not from modal state changes.
     if (flowState === expectedState) {
       setFlowState(PasswordResetFlowState.None)
+      setOldPassword(undefined)
     }
   })
 
   const onPasswordModalNext = useEvent((password?: string): void => {
     if (!password) {
       setFlowState(PasswordResetFlowState.None)
+      setOldPassword(undefined)
       return
     }
 
+    setOldPassword(password)
     setFlowState(PasswordResetFlowState.EnterNewPassword)
   })
 
@@ -127,6 +132,7 @@ export function usePasswordResetFlow(): PasswordResetFlowResult {
   return {
     // State
     flowState,
+    oldPassword,
 
     // Actions
     startPasswordReset,

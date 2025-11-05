@@ -42,7 +42,12 @@ const mockGetEncryptionKeyFromBuffer = jest.requireMock(
 
 // Mock PublicKeyCredential (doesn't exist in Jest environment)
 class MockPublicKeyCredential {
-  constructor(public rawId: ArrayBuffer) {}
+  constructor(
+    public rawId: ArrayBuffer,
+    public response = {
+      getTransports: () => ['internal' as AuthenticatorTransport],
+    },
+  ) {}
 }
 Object.defineProperty(global, 'PublicKeyCredential', {
   writable: true,
@@ -124,10 +129,12 @@ describe('useBiometricUnlockSetupMutation', () => {
       // Verify the stored secret payload has all required properties
       const storedData = mockBiometricUnlockStorage.set.mock.calls[0]![0] as {
         credentialId: string
+        transports: AuthenticatorTransport[]
         secretPayload: typeof mockSecretPayload
       }
 
       expect(storedData.credentialId).toBe(expectedCredentialId)
+      expect(storedData.transports).toEqual(['internal'])
 
       expect(storedData.secretPayload).toEqual(
         expect.objectContaining({

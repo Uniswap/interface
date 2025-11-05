@@ -7,7 +7,9 @@ import { TokenBalancesProvider } from 'appGraphql/data/apollo/TokenBalancesProvi
 import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
 import { datadogRum } from '@datadog/browser-rum'
+import { ApiInit, getSessionService } from '@universe/api'
 import type { StatsigUser } from '@universe/gating'
+import { createChallengeSolverService, createSessionInitializationService } from '@universe/sessions'
 import { QueryClientPersistProvider } from 'components/PersistQueryClient'
 import { createWeb3Provider } from 'components/Web3Provider/createWeb3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
@@ -71,6 +73,14 @@ const loadFiatOnRampTransactionsUpdater = () => import('state/fiatOnRampTransact
 const loadWebAccountsStoreUpdater = () =>
   import('features/accounts/store/updater').then((m) => ({ default: m.WebAccountsStoreUpdater }))
 
+const sessionInitService = createSessionInitializationService({
+  sessionService: getSessionService({
+    // TODO: Use real base url
+    getBaseUrl: () => 'https://entry-gateway.backend-dev.api.uniswap.org',
+  }),
+  challengeSolverService: createChallengeSolverService(),
+})
+
 function Updaters() {
   const location = useLocation()
 
@@ -97,6 +107,7 @@ function Updaters() {
       {FiatOnRampTransactionsUpdater && <FiatOnRampTransactionsUpdater />}
       {WebAccountsStoreUpdater && <WebAccountsStoreUpdater />}
       <AccountsStoreDevTool />
+      <ApiInit sessionInitService={sessionInitService} />
     </>
   )
 }

@@ -1,6 +1,6 @@
 // biome-ignore-all lint/correctness/noRestrictedElements: ignoring for the whole file
 
-import { GraphQLApi } from '@universe/api'
+import * as GraphQLApi from '@universe/api/src/clients/graphql/__generated__/types-and-hooks'
 import { ImageResponse } from '@vercel/og'
 import { WATERMARK_URL } from 'functions/constants'
 import getFont from 'functions/utils/getFont'

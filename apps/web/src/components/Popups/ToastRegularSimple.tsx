@@ -42,7 +42,7 @@ export function ToastRegularSimple({
     >
       <Flex row alignItems={isToastOneLine ? 'center' : 'flex-start'} gap={spacing.spacing6} flex={1}>
         {icon && <Flex>{icon}</Flex>}
-        {text ? isToastOneLine ? <Text variant="body4">{text}</Text> : text : null}
+        {text ? isToastOneLine ? <Text variant="body3">{text}</Text> : text : null}
       </Flex>
       {onDismiss ? (
         <TouchableArea onPress={onDismiss} ml="$spacing8">

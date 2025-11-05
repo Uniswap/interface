@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import type { TransactionResponse } from '@ethersproject/providers'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { type Currency, CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'

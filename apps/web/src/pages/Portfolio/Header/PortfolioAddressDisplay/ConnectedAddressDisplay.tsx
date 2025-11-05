@@ -4,7 +4,7 @@ import { useScroll } from 'hooks/useScroll'
 import { useEffect, useState } from 'react'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
 
-export default function ConnectedAddressDisplay() {
+export function ConnectedAddressDisplay() {
   const { height: scrollHeight } = useScroll()
   const [isCompact, setIsCompact] = useState(false)
   // Use connected address rather than usePortfolioAddress because this is only for the connected view
@@ -34,6 +34,7 @@ export default function ConnectedAddressDisplay() {
       hideAddressInSubtitle={isCompact}
       addressNumVisibleCharacters={4}
       accountIconTransition="all 0.3s ease"
+      animateAddressSubtitleHeight
     />
   )
 }

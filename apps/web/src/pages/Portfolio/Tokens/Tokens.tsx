@@ -1,9 +1,10 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { SearchInput } from 'pages/Portfolio/components/SearchInput'
-import { usePortfolioParams } from 'pages/Portfolio/Header/hooks/usePortfolioParams'
+import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddress } from 'pages/Portfolio/hooks/usePortfolioAddress'
 import { useTransformTokenTableData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { TokensAllocationChart } from 'pages/Portfolio/Tokens/Table/TokensAllocationChart'
-import TokensTable from 'pages/Portfolio/Tokens/Table/TokensTable'
+import { TokensTable } from 'pages/Portfolio/Tokens/Table/TokensTable'
 import { filterTokensBySearch } from 'pages/Portfolio/Tokens/utils/filterTokensBySearch'
 import { memo, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -35,12 +36,13 @@ const TokenCountIndicator = memo(({ count }: { count: number }) => {
 
 TokenCountIndicator.displayName = 'TokenCountIndicator'
 
-export default function PortfolioTokens() {
+export function PortfolioTokens() {
   const portfolioAddress = usePortfolioAddress()
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
   const { chains: enabledChains } = useEnabledChains()
-  const { chainId: urlChainId } = usePortfolioParams()
+  const { chainId: urlChainId } = usePortfolioRoutes()
+  const isPortfolioTokensAllocationChartEnabled = useFeatureFlag(FeatureFlags.PortfolioTokensAllocationChart)
 
   // Parse search query to extract chain filter and search term
   const { chainFilter, searchTerm } = useMemo(() => {
@@ -90,7 +92,7 @@ export default function PortfolioTokens() {
 
           {(tokenData && tokenData.length > 0) || loading ? (
             <>
-              <TokensAllocationChart tokenData={tokenData || []} />
+              {isPortfolioTokensAllocationChartEnabled && <TokensAllocationChart tokenData={tokenData || []} />}
               {(filteredTokenData?.length ?? 0) > 0 || loading ? (
                 <TokensTable
                   visible={filteredTokenData || []}

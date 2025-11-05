@@ -4,6 +4,7 @@
  */
 export enum ReactQueryCacheKey {
   ActivityScreenRefresh = 'ActivityScreenRefresh',
+  AuctionApi = 'AuctionApi',
   BalanceAndUnitags = 'BalanceAndUnitags',
   CameraPermission = 'CameraPermission',
   CancelTransactionRequest = 'CancelTransactionRequest',
@@ -22,6 +23,7 @@ export enum ReactQueryCacheKey {
   LocalActivities = 'localActivities',
   MismatchAccountBulk = 'MismatchAccountBulk',
   MnemonicUnlocked = 'MnemonicUnlocked',
+  Notifications = 'Notifications',
   OnboardingRedirect = 'OnboardingRedirect',
   OnchainBalances = 'OnchainBalances',
   OnchainENS = 'OnchainENS',
@@ -32,6 +34,7 @@ export enum ReactQueryCacheKey {
   PositionTokenURI = 'PositionTokenURI',
   PrepareSwapTransaction = 'PrepareSwapTransaction',
   RemoteSvg = 'RemoteSvg',
+  Session = 'Session',
   SharedUniswapXActivities = 'SharedUniswapXActivities',
   SignatureToActivity = 'SignatureToActivity',
   SolanaConnection = 'SolanaConnection',

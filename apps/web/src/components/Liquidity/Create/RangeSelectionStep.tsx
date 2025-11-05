@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { D3LiquidityRangeInput } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeInput'
@@ -335,7 +336,7 @@ export const SelectPriceRangeStep = ({
       ? {
           baseCurrency,
           quoteCurrency,
-          feeAmount: fee.feeAmount,
+          feeAmount: fee?.feeAmount,
           tickLower: ticks[0],
           tickUpper: ticks[1],
           pool: poolOrPair,
@@ -516,6 +517,7 @@ export const SelectPriceRangeStep = ({
           )}
           {baseCurrency &&
             quoteCurrency &&
+            fee &&
             (isD3LiquidityRangeChartEnabled ? (
               <D3LiquidityRangeInput
                 key={buildRangeInputKeyV2({ protocolVersion, poolId: poolId ?? '', priceRangeState })}

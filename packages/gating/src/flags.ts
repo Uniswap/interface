@@ -12,6 +12,7 @@ export enum FeatureFlags {
   BlockaidFotLogging,
   BridgedAssetsBannerV2,
   ChainedActions,
+  DataReportingAbilities,
   DisableSwap7702,
   EmbeddedWallet,
   FiatOffRamp,
@@ -53,9 +54,7 @@ export enum FeatureFlags {
   Eip5792Methods,
   EnableRestoreSeedPhrase,
   SmartWalletSettings,
-  SwapPreSign,
   TradingApiSwapConfirmation,
-  UseAlarmsApi,
 
   // Web
   AATestWeb,
@@ -72,6 +71,8 @@ export enum FeatureFlags {
   PoolInfoEndpoint,
   PoolSearch,
   PortfolioPage,
+  PortfolioDefiTab,
+  PortfolioTokensAllocationChart,
   PriceRangeInputV2,
   SolanaPromo,
   Toucan,
@@ -90,6 +91,7 @@ export const SHARED_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.BlockaidFotLogging, 'blockaid_fot_logging'],
   [FeatureFlags.BridgedAssetsBannerV2, 'bridged_assets_banner_v2'],
   [FeatureFlags.ChainedActions, 'enable_chained_actions'],
+  [FeatureFlags.DataReportingAbilities, 'data_reporting_abilities'],
   [FeatureFlags.DisableSwap7702, 'disable-swap-7702'],
   [FeatureFlags.EmbeddedWallet, 'embedded_wallet'],
   [FeatureFlags.EnablePermitMismatchUX, 'enable_permit2_mismatch_ux'],
@@ -135,6 +137,8 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.PoolInfoEndpoint, 'pool_info_endpoint'],
   [FeatureFlags.PoolSearch, 'pool_search'],
   [FeatureFlags.PortfolioPage, 'portfolio_page'],
+  [FeatureFlags.PortfolioDefiTab, 'portfolio_defi_tab'],
+  [FeatureFlags.PortfolioTokensAllocationChart, 'portfolio_tokens_allocation_chart'],
   [FeatureFlags.PortoWalletConnector, 'porto_wallet_connector'],
   [FeatureFlags.PriceRangeInputV2, 'price_range_input_v2'],
   [FeatureFlags.SolanaPromo, 'solana_promo'],
@@ -161,8 +165,6 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.PrivateRpc, 'mev-blocker'],
   [FeatureFlags.Scantastic, 'scantastic'],
   [FeatureFlags.SmartWalletSettings, 'smart_wallet_settings'],
-  [FeatureFlags.SwapPreSign, 'swap_pre_sign'],
-  [FeatureFlags.UseAlarmsApi, 'use_alarms_api'],
   [FeatureFlags.UwULink, 'uwu-link'],
 ])
 

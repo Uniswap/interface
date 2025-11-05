@@ -4,20 +4,16 @@ import { TradeRoutingPreference } from 'uniswap/src/features/transactions/swap/c
 import { SwapFlow, type SwapFlowProps } from 'uniswap/src/features/transactions/swap/SwapFlow/SwapFlow'
 import { SwapDependenciesStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/SwapDependenciesStoreContextProvider'
 import { SwapFormStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContextProvider'
-import { useSwapCallback } from 'wallet/src/features/transactions/swap/hooks/useSwapCallback'
 import { useSwapHandlers } from 'wallet/src/features/transactions/swap/hooks/useSwapHandlers'
-import { useWrapCallback } from 'wallet/src/features/transactions/swap/hooks/useWrapCallback'
 import { SwapProtection } from 'wallet/src/features/transactions/swap/settings/SwapProtection'
 
-type WalletSwapFlowProps = Omit<SwapFlowProps, 'settings' | 'swapCallback' | 'wrapCallback'> & {
+type WalletSwapFlowProps = Omit<SwapFlowProps, 'settings'> & {
   onSubmitSwap?: () => Promise<void>
 }
 
 const SETTINGS: SwapFlowProps['settings'] = [Slippage, SwapProtection, TradeRoutingPreference]
 
 export function WalletSwapFlow(props: WalletSwapFlowProps): JSX.Element {
-  const swapCallback = useSwapCallback()
-  const wrapCallback = useWrapCallback()
   const swapHandlers = useSwapHandlers()
 
   return (
@@ -27,11 +23,7 @@ export function WalletSwapFlow(props: WalletSwapFlowProps): JSX.Element {
         hideSettings={props.hideHeader}
         hideFooter={props.hideFooter}
       >
-        <SwapDependenciesStoreContextProvider
-          swapCallback={swapCallback}
-          wrapCallback={wrapCallback}
-          swapHandlers={swapHandlers}
-        >
+        <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
           <SwapFlow {...props} settings={SETTINGS} />
         </SwapDependenciesStoreContextProvider>
       </SwapFormStoreContextProvider>

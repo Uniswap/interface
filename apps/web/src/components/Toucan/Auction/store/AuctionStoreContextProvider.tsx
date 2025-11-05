@@ -1,3 +1,4 @@
+import { useAuctionBlockPolling } from 'components/Toucan/Auction/hooks/useAuctionBlockPolling'
 import { AuctionStoreContext } from 'components/Toucan/Auction/store/AuctionStoreContext'
 import { createAuctionStore } from 'components/Toucan/Auction/store/createAuctionStore'
 import { useAuctionStore, useAuctionStoreActions } from 'components/Toucan/Auction/store/useAuctionStore'
@@ -30,6 +31,13 @@ function useUpdateTokenColorInAuctionStore() {
 
 function AuctionStoreProviderInner({ children }: PropsWithChildren) {
   useUpdateTokenColorInAuctionStore()
+
+  const { chainId, endBlock } = useAuctionStore((state) => ({
+    chainId: state.auctionDetails?.chainId,
+    endBlock: state.auctionDetails?.endBlock,
+  }))
+
+  useAuctionBlockPolling(chainId, endBlock)
 
   return children
 }

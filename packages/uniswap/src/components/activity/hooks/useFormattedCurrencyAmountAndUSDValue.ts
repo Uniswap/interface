@@ -39,7 +39,7 @@ export function useFormattedCurrencyAmountAndUSDValue({
 
   return {
     tilde: isApproximateAmount ? '~' : '',
-    amount: `${formattedAmount}`,
+    amount: formattedAmount,
     value: value
       ? formatter.convertFiatAmountFormatted(parseFloat(value.toExact()), NumberType.FiatTokenQuantity)
       : '-', // default placeholder string for when value is loading

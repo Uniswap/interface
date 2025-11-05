@@ -69,8 +69,8 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
   caption,
   icon,
   index,
-  onRetry,
   isQueued,
+  onRetry,
 }: TransactionSummaryLayoutProps & {
   isQueued: boolean
 }): JSX.Element {

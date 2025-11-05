@@ -11,6 +11,18 @@
     "lint:eslint": {},
     "lint:eslint:fix": {},
     "lint": {},
-    "lint:fix": {}
+    "lint:fix": {},
+    "test": {
+      "command": "vitest run",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "test:coverage": {
+      "command": "vitest run --coverage",
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    }
   }
 }

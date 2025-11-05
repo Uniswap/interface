@@ -4,15 +4,7 @@ import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { StackedAreaSeriesOptions } from 'components/Charts/StackedLineChart/stacked-area-series/options'
 import { StackedAreaSeries } from 'components/Charts/StackedLineChart/stacked-area-series/stacked-area-series'
-import {
-  CustomStyleOptions,
-  DeepPartial,
-  ISeriesApi,
-  LineStyle,
-  Logical,
-  UTCTimestamp,
-  WhitespaceData,
-} from 'lightweight-charts'
+import { CustomStyleOptions, DeepPartial, ISeriesApi, Logical, UTCTimestamp, WhitespaceData } from 'lightweight-charts'
 import { useMemo } from 'react'
 import { ColorTokens, useSporeColors } from 'ui/src'
 
@@ -52,15 +44,6 @@ class TVLChartModel extends ChartModel<StackedLineData> {
   updateOptions(params: TVLChartParams) {
     const isSingleLineChart = params.colors.length === 1
 
-    const gridSettings = isSingleLineChart
-      ? {
-          grid: {
-            vertLines: { style: LineStyle.CustomDotGrid, color: params.theme.neutral3 },
-            horzLines: { style: LineStyle.CustomDotGrid, color: params.theme.neutral3 },
-          },
-        }
-      : {}
-
     super.updateOptions(params, {
       handleScale: false,
       handleScroll: false,
@@ -73,7 +56,6 @@ class TVLChartModel extends ChartModel<StackedLineData> {
         },
         autoScale: true,
       },
-      ...gridSettings,
     })
     const { data, colors, gradients } = params
 
@@ -114,8 +96,10 @@ export function LineChart({ height, data, sources, stale }: LineChartProps) {
   }, [data, sporeColors, sources, stale])
 
   const lastEntry = data[data.length - 1]
+  const isSingleLineChart = params.colors.length === 1
+
   return (
-    <Chart Model={TVLChartModel} params={params} height={height}>
+    <Chart Model={TVLChartModel} params={params} height={height} showDottedBackground={isSingleLineChart}>
       {(crosshairData: StackedLineData | undefined) => (
         <ChartHeader
           value={(crosshairData ?? lastEntry).values.reduce((v, sum) => (sum += v), 0)}

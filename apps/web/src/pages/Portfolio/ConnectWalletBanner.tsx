@@ -10,7 +10,7 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 
-export default function PortfolioConnectWalletBanner() {
+export function PortfolioConnectWalletBanner() {
   const { t } = useTranslation()
   const accountDrawer = useAccountDrawer()
   const pinkPastel = '#FDAFF03F'

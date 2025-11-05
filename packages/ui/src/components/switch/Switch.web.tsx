@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { OpaqueColorValue } from 'react-native'
+import { type OpaqueColorValue } from 'react-native'
 import type { ColorTokens, GetThemeValueForKey } from 'tamagui'
 import { Switch as TamaguiSwitch } from 'tamagui'
 import { Check } from 'ui/src/components/icons'
@@ -163,7 +163,7 @@ export function Switch({
       <>
         {/* focus ring outer */}
         <Flex
-          $group-item-focus={{
+          $group-item-focusVisible={{
             borderColor: checked
               ? isBranded
                 ? '$accent1Hovered'
@@ -185,7 +185,7 @@ export function Switch({
 
         {/* focus ring inner */}
         <Flex
-          $group-item-focus={{
+          $group-item-focusVisible={{
             borderColor: isBranded ? '$surface1' : '$surface1',
           }}
           borderColor="transparent"

@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { ApolloError } from '@apollo/client'
 import { ConnectError } from '@connectrpc/connect'
 import { UseQueryResult } from '@tanstack/react-query'

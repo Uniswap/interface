@@ -7,10 +7,12 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function CreateNewPasswordModal({
   isOpen,
+  oldPassword,
   onNext,
   onClose,
 }: {
   isOpen: boolean
+  oldPassword: string | undefined
   onNext: (password: string) => void
   onClose: () => void
 }): JSX.Element {
@@ -36,7 +38,7 @@ export function CreateNewPasswordModal({
           {t('settings.setting.password.change.title')}
         </Text>
 
-        <ChangePasswordForm onNext={onNext} />
+        <ChangePasswordForm oldPassword={oldPassword} onNext={onNext} />
       </Flex>
     </Modal>
   )

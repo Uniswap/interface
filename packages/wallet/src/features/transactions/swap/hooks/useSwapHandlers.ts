@@ -1,4 +1,3 @@
-import { FeatureFlags, getFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
@@ -25,7 +24,7 @@ import { useSwapSigning } from 'wallet/src/features/transactions/swap/hooks/useS
 /**
  * Custom hook that provides SwapHandlers with improved caching for prepared transactions
  */
-export function useSwapHandlers(): SwapHandlers | undefined {
+export function useSwapHandlers(): SwapHandlers {
   const dispatch = useDispatch()
   const formatter = useLocalizationContext()
   const swapStartTimestamp = useSelector(selectSwapStartTimestamp)
@@ -118,13 +117,10 @@ export function useSwapHandlers(): SwapHandlers | undefined {
   )
 
   return useMemo(
-    () =>
-      getFeatureFlag(FeatureFlags.SwapPreSign)
-        ? {
-            prepareAndSign: signing.prepareAndSign,
-            execute,
-          }
-        : undefined,
+    () => ({
+      prepareAndSign: signing.prepareAndSign,
+      execute,
+    }),
     [execute, signing.prepareAndSign],
   )
 }

@@ -46,19 +46,25 @@
   ],
   "references": [
     {
-      "path": "../../packages/ui"
-    },
-    {
       "path": "../../packages/utilities"
     },
     {
       "path": "../../packages/uniswap"
     },
     {
-      "path": "../../packages/api"
+      "path": "../../packages/ui"
+    },
+    {
+      "path": "../../packages/sessions"
     },
     {
       "path": "../../packages/gating"
+    },
+    {
+      "path": "../../packages/notifications"
+    },
+    {
+      "path": "../../packages/api"
     }
   ]
 }

@@ -29,6 +29,8 @@ vi.mock('utilities/src/platform', () => ({
   isWebApp: true,
   isMobileApp: false,
   isExtensionApp: false,
+  isIOS: false,
+  isAndroid: false,
 }))
 
 vi.mock('uniswap/src/features/language/utils', () => ({

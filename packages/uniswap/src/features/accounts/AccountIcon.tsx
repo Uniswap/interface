@@ -41,6 +41,8 @@ export function AccountIcon({
 
   const avatarUri = avatarUriOverride || avatar
 
+  const sizeTransitionStyle = transition ? { transition } : {}
+
   return (
     <Flex
       backgroundColor={showBackground ? '$surface1' : '$transparent'}
@@ -51,11 +53,12 @@ export function AccountIcon({
       testID="account-icon"
       width={size}
       height={size}
+      style={sizeTransitionStyle}
       {...flexProps}
     >
       <Flex animation="fast" enterStyle={{ opacity: 0 }}>
         <UniversalImage
-          style={{ image: { borderRadius: size, ...(transition && { transition }) } }}
+          style={{ image: { borderRadius: size, ...sizeTransitionStyle } }}
           fallback={uniconImage}
           size={{ width: size, height: size, resizeMode: UniversalImageResizeMode.Cover }}
           uri={avatarUri}

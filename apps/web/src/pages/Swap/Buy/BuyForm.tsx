@@ -21,7 +21,7 @@ import {
   StyledNumericalInput,
   useWidthAdjustedDisplayValue,
 } from 'pages/Swap/common/shared'
-import { useCallback, useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useSearchParams } from 'react-router'
 import { Flex, styled, Text } from 'ui/src'
@@ -110,6 +110,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
   const prevQuoteCurrency = usePrevious(quoteCurrency)
   const postWidthAdjustedDisplayValue = useWidthAdjustedDisplayValue(inputAmount)
   const hiddenObserver = useResizeObserver<HTMLElement>()
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const fiatValue = inputInFiat ? inputAmount : derivedBuyFormInfo.amountOut
@@ -284,7 +285,15 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
               countryCode={selectedCountry?.countryCode}
             />
           </HeaderRow>
-          <Flex alignItems="center" gap="$spacing16" maxWidth="100%" overflow="hidden">
+          <Flex
+            alignItems="center"
+            gap="$spacing16"
+            maxWidth="100%"
+            overflow="hidden"
+            width="100%"
+            cursor="text"
+            onPress={() => inputRef.current?.focus()}
+          >
             {error && (
               <Text variant="body3" userSelect="none" color="$statusCritical">
                 {error.message}
@@ -309,6 +318,7 @@ function BuyFormInner({ disabled, initialCurrency }: BuyFormProps) {
                     : (quoteCurrency?.currencyInfo?.currency.decimals ?? DEFAULT_FIAT_DECIMALS)
                 }
                 testId={TestID.BuyFormAmountInput}
+                ref={inputRef}
               />
               <NumericalInputMimic ref={hiddenObserver.ref}>{inputAmount}</NumericalInputMimic>
             </NumericalInputWrapper>

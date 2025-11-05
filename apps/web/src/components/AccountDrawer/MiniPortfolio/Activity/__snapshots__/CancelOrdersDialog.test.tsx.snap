@@ -63,7 +63,7 @@ exports[`CancelOrdersDialog > should render limit order text 1`] = `
         <h2
           class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
           data-disable-theme="true"
-          id="title-:r14:"
+          id="title-:r16:"
           role="heading"
         />
       </span>
@@ -101,11 +101,11 @@ exports[`CancelOrdersDialog > should render limit order text 1`] = `
                 style="display: contents; pointer-events: auto;"
               >
                 <dialog
-                  aria-describedby="description-:r14:"
-                  aria-labelledby="title-:r14:"
-                  class="is_DialogContent _transform-0enter-translateX01029433866 _opacity-0enter-0 _overflowX-_platformweb_auto _overflowY-_platformweb_auto _pt-_sm_t-space-spa1360334080 _pr-_sm_t-space-spa1360334080 _pb-_sm_t-space-spa1360334080 _pl-_sm_t-space-spa1360334080 _height-_sm_max-content _maxHeight-_sm_calc100dvh-296810814 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-background _pt-t-space-spa1360334047 _pr-t-space-spa1360334047 _pb-t-space-spa1360334047 _pl-t-space-spa1360334047 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _zIndex-1060 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _gap-t-space-spa94665589 _mt-t-space-non101 _mr-t-space-non101 _mb-t-space-non101 _ml-t-space-non101 _maxHeight-calc100vh-32087695319 _maxWidth-420px _width-calc100vw-32087695319 _outlineStyle-none _boxShadow-0px3px6pxva26674076"
+                  aria-describedby="description-:r16:"
+                  aria-labelledby="title-:r16:"
+                  class="is_DialogContent _transform-0enter-translateX01029433866 _opacity-0enter-0 _overflowX-_platformweb_auto _overflowY-_platformweb_auto _pt-_sm_t-space-spa1360334080 _pr-_sm_t-space-spa1360334080 _pb-_sm_t-space-spa1360334080 _pl-_sm_t-space-spa1360334080 _height-_sm_max-content _maxHeight-_sm_calc100dvh-296810814 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-background _pt-t-space-pad1331704925 _pr-t-space-spa1360334047 _pb-t-space-spa1360334047 _pl-t-space-spa1360334047 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _zIndex-1060 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _gap-t-space-gap1602 _mt-t-space-non101 _mr-t-space-non101 _mb-t-space-non101 _ml-t-space-non101 _maxHeight-calc100vh-32087695319 _maxWidth-420px _width-calc100vw-32087695319 _outlineStyle-none _boxShadow-0px3px6pxva26674076"
                   data-state="open"
-                  id="content-:r14:"
+                  id="content-:r16:"
                   style="opacity: 1;"
                   tabindex="-1"
                 >
@@ -121,11 +121,11 @@ exports[`CancelOrdersDialog > should render limit order text 1`] = `
                         target="_blank"
                       >
                         <div
-                          class="_backgroundColor-0hover-surface2Hov3121676 _width-_platformweb_fit-content _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665589 _pb-t-space-spa94665589 _backgroundColor-surface2 _gap-t-space-spa94665589 _alignItems-center"
+                          class="_backgroundColor-0hover-surface3Hov3121676 _width-_platformweb_fit-content _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665591 _pb-t-space-spa94665591 _gap-t-space-spa94665589 _alignItems-center _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                         >
                           <svg
                             stroke-width="8"
-                            style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                            style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
                             viewBox="0 0 16 16"
                           >
                             <path
@@ -134,7 +134,7 @@ exports[`CancelOrdersDialog > should render limit order text 1`] = `
                             />
                           </svg>
                           <span
-                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                            class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-me3083741"
                             data-disable-theme="true"
                           >
                             Get help
@@ -164,10 +164,10 @@ exports[`CancelOrdersDialog > should render limit order text 1`] = `
                     </div>
                   </div>
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _gap-t-space-spa94665593"
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334076"
                   >
                     <div
-                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface3 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347366 _width-t-size-spac100347366 _alignItems-center _justifyContent-center _mb-t-space-spa94665589"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface3 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347366 _width-t-size-spac100347366 _alignItems-center _justifyContent-center"
                       data-testid="dialog-icon"
                     >
                       <svg
@@ -194,65 +194,73 @@ exports[`CancelOrdersDialog > should render limit order text 1`] = `
                         />
                       </svg>
                     </div>
-                    <span
-                      class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-t-space-spa94665593 _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
-                      data-disable-theme="true"
-                    >
-                      Cancel limit
-                    </span>
-                    <span
-                      class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
-                      data-disable-theme="true"
-                    >
-                      Your swap could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?
-                    </span>
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _mt-t-space-spa1360334076 _pt-t-space-spa1360334076 _borderTopColor-surface3 _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665593 _alignItems-center"
+                    >
+                      <span
+                        class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+                        data-disable-theme="true"
+                      >
+                        Cancel limit
+                      </span>
+                      <span
+                        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                        data-disable-theme="true"
+                      >
+                        Your swap could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?
+                      </span>
+                    </div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-surface2 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     >
                       <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
                       >
                         <div
-                          class="c0 c1 css-142zc9n"
-                          data-testid="swap-li-label"
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
                         >
-                          Network cost
-                        </div>
-                        <div
-                          class="c0 c2 css-142zc9n"
-                        >
-                          <span>
-                            -
-                          </span>
+                          <div
+                            class="c0 c1 css-142zc9n"
+                            data-testid="swap-li-label"
+                          >
+                            Network cost
+                          </div>
+                          <div
+                            class="c0 c2 css-142zc9n"
+                          >
+                            <span>
+                              -
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _gap-t-space-spa94665593 _width-10037 _mt-t-space-spa1360334076 _flexDirection-row"
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _gap-t-space-spa94665593 _width-10037 _flexDirection-row"
+                  >
+                    <button
+                      class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-statusCriti1611160553 _backgroundColor-0focus-visible-statusCriti1611160553 _outlineColor-0focus-visible-statusCriti506252077 _transform-0active-scale0--981281 _backgroundColor-0active-statusCriti1611160553 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-statusCriti3045924 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347333 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
+                      dd-action-name="Proceed"
                     >
-                      <button
-                        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-surface3Hov3121676 _backgroundColor-0focus-visible-surface3Hov3121676 _outlineColor-0focus-visible-neutral3Hov3121676 _transform-0active-scale0--981281 _backgroundColor-0active-surface3Hov3121676 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-surface3 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347366 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
-                        dd-action-name="Never mind"
+                      <span
+                        class="font_button _color-_groupitem-hover_statusCriti506252077 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-statusCriti98254 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+                        line-height-disabled="false"
                       >
-                        <span
-                          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-                          line-height-disabled="false"
-                        >
-                          Never mind
-                        </span>
-                      </button>
-                      <button
-                        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-statusCriti1611160553 _backgroundColor-0focus-visible-statusCriti1611160553 _outlineColor-0focus-visible-statusCriti506252077 _transform-0active-scale0--981281 _backgroundColor-0active-statusCriti1611160553 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-statusCriti3045924 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347366 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
-                        dd-action-name="Proceed"
+                        Proceed
+                      </span>
+                    </button>
+                    <button
+                      class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-surface3Hov3121676 _backgroundColor-0focus-visible-surface3Hov3121676 _outlineColor-0focus-visible-neutral3Hov3121676 _transform-0active-scale0--981281 _backgroundColor-0active-surface3Hov3121676 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-surface3 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347333 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
+                      dd-action-name="Never mind"
+                    >
+                      <span
+                        class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+                        line-height-disabled="false"
                       >
-                        <span
-                          class="font_button _color-_groupitem-hover_statusCriti506252077 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-statusCriti98254 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-                          line-height-disabled="false"
-                        >
-                          Proceed
-                        </span>
-                      </button>
-                    </div>
+                        Never mind
+                      </span>
+                    </button>
                   </div>
                 </dialog>
               </div>
@@ -368,7 +376,7 @@ exports[`CancelOrdersDialog > should render order cancel correctly 1`] = `
                 <dialog
                   aria-describedby="description-:r2:"
                   aria-labelledby="title-:r2:"
-                  class="is_DialogContent _transform-0enter-translateX01029433866 _opacity-0enter-0 _overflowX-_platformweb_auto _overflowY-_platformweb_auto _pt-_sm_t-space-spa1360334080 _pr-_sm_t-space-spa1360334080 _pb-_sm_t-space-spa1360334080 _pl-_sm_t-space-spa1360334080 _height-_sm_max-content _maxHeight-_sm_calc100dvh-296810814 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-background _pt-t-space-spa1360334047 _pr-t-space-spa1360334047 _pb-t-space-spa1360334047 _pl-t-space-spa1360334047 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _zIndex-1060 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _gap-t-space-spa94665589 _mt-t-space-non101 _mr-t-space-non101 _mb-t-space-non101 _ml-t-space-non101 _maxHeight-calc100vh-32087695319 _maxWidth-420px _width-calc100vw-32087695319 _outlineStyle-none _boxShadow-0px3px6pxva26674076"
+                  class="is_DialogContent _transform-0enter-translateX01029433866 _opacity-0enter-0 _overflowX-_platformweb_auto _overflowY-_platformweb_auto _pt-_sm_t-space-spa1360334080 _pr-_sm_t-space-spa1360334080 _pb-_sm_t-space-spa1360334080 _pl-_sm_t-space-spa1360334080 _height-_sm_max-content _maxHeight-_sm_calc100dvh-296810814 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-background _pt-t-space-pad1331704925 _pr-t-space-spa1360334047 _pb-t-space-spa1360334047 _pl-t-space-spa1360334047 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _zIndex-1060 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _gap-t-space-gap1602 _mt-t-space-non101 _mr-t-space-non101 _mb-t-space-non101 _ml-t-space-non101 _maxHeight-calc100vh-32087695319 _maxWidth-420px _width-calc100vw-32087695319 _outlineStyle-none _boxShadow-0px3px6pxva26674076"
                   data-state="open"
                   id="content-:r2:"
                   style="opacity: 1;"
@@ -386,11 +394,11 @@ exports[`CancelOrdersDialog > should render order cancel correctly 1`] = `
                         target="_blank"
                       >
                         <div
-                          class="_backgroundColor-0hover-surface2Hov3121676 _width-_platformweb_fit-content _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665589 _pb-t-space-spa94665589 _backgroundColor-surface2 _gap-t-space-spa94665589 _alignItems-center"
+                          class="_backgroundColor-0hover-surface3Hov3121676 _width-_platformweb_fit-content _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665591 _pb-t-space-spa94665591 _gap-t-space-spa94665589 _alignItems-center _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                         >
                           <svg
                             stroke-width="8"
-                            style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                            style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
                             viewBox="0 0 16 16"
                           >
                             <path
@@ -399,7 +407,7 @@ exports[`CancelOrdersDialog > should render order cancel correctly 1`] = `
                             />
                           </svg>
                           <span
-                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                            class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-me3083741"
                             data-disable-theme="true"
                           >
                             Get help
@@ -429,10 +437,10 @@ exports[`CancelOrdersDialog > should render order cancel correctly 1`] = `
                     </div>
                   </div>
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _gap-t-space-spa94665593"
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334076"
                   >
                     <div
-                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface3 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347366 _width-t-size-spac100347366 _alignItems-center _justifyContent-center _mb-t-space-spa94665589"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface3 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347366 _width-t-size-spac100347366 _alignItems-center _justifyContent-center"
                       data-testid="dialog-icon"
                     >
                       <svg
@@ -459,65 +467,73 @@ exports[`CancelOrdersDialog > should render order cancel correctly 1`] = `
                         />
                       </svg>
                     </div>
-                    <span
-                      class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-t-space-spa94665593 _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
-                      data-disable-theme="true"
-                    >
-                      Cancel order
-                    </span>
-                    <span
-                      class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
-                      data-disable-theme="true"
-                    >
-                      Your swap could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?
-                    </span>
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _mt-t-space-spa1360334076 _pt-t-space-spa1360334076 _borderTopColor-surface3 _borderRightColor-transparent _borderBottomColor-transparent _borderLeftColor-transparent _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665593 _alignItems-center"
+                    >
+                      <span
+                        class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+                        data-disable-theme="true"
+                      >
+                        Cancel order
+                      </span>
+                      <span
+                        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                        data-disable-theme="true"
+                      >
+                        Your swap could execute before cancellation is processed. Your network costs cannot be refunded. Do you wish to proceed?
+                      </span>
+                    </div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-surface2 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     >
                       <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037"
                       >
                         <div
-                          class="c0 c1 css-142zc9n"
-                          data-testid="swap-li-label"
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
                         >
-                          Network cost
-                        </div>
-                        <div
-                          class="c0 c2 css-142zc9n"
-                        >
-                          <span>
-                            -
-                          </span>
+                          <div
+                            class="c0 c1 css-142zc9n"
+                            data-testid="swap-li-label"
+                          >
+                            Network cost
+                          </div>
+                          <div
+                            class="c0 c2 css-142zc9n"
+                          >
+                            <span>
+                              -
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                    <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _gap-t-space-spa94665593 _width-10037 _mt-t-space-spa1360334076 _flexDirection-row"
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _gap-t-space-spa94665593 _width-10037 _flexDirection-row"
+                  >
+                    <button
+                      class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-statusCriti1611160553 _backgroundColor-0focus-visible-statusCriti1611160553 _outlineColor-0focus-visible-statusCriti506252077 _transform-0active-scale0--981281 _backgroundColor-0active-statusCriti1611160553 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-statusCriti3045924 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347333 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
+                      dd-action-name="Proceed"
                     >
-                      <button
-                        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-surface3Hov3121676 _backgroundColor-0focus-visible-surface3Hov3121676 _outlineColor-0focus-visible-neutral3Hov3121676 _transform-0active-scale0--981281 _backgroundColor-0active-surface3Hov3121676 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-surface3 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347366 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
-                        dd-action-name="Never mind"
+                      <span
+                        class="font_button _color-_groupitem-hover_statusCriti506252077 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-statusCriti98254 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+                        line-height-disabled="false"
                       >
-                        <span
-                          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-                          line-height-disabled="false"
-                        >
-                          Never mind
-                        </span>
-                      </button>
-                      <button
-                        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-statusCriti1611160553 _backgroundColor-0focus-visible-statusCriti1611160553 _outlineColor-0focus-visible-statusCriti506252077 _transform-0active-scale0--981281 _backgroundColor-0active-statusCriti1611160553 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-statusCriti3045924 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347366 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
-                        dd-action-name="Proceed"
+                        Proceed
+                      </span>
+                    </button>
+                    <button
+                      class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-surface3Hov3121676 _backgroundColor-0focus-visible-surface3Hov3121676 _outlineColor-0focus-visible-neutral3Hov3121676 _transform-0active-scale0--981281 _backgroundColor-0active-surface3Hov3121676 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-surface3 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347333 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
+                      dd-action-name="Never mind"
+                    >
+                      <span
+                        class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+                        line-height-disabled="false"
                       >
-                        <span
-                          class="font_button _color-_groupitem-hover_statusCriti506252077 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-statusCriti98254 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-                          line-height-disabled="false"
-                        >
-                          Proceed
-                        </span>
-                      </button>
-                    </div>
+                        Never mind
+                      </span>
+                    </button>
                   </div>
                 </dialog>
               </div>

@@ -3,6 +3,7 @@ export enum UniswapEventName {
   BalancesReportPerChain = 'Balances Report Per Chain',
   BlockaidFeesMismatch = 'Blockaid Fees Mismatch',
   ConversionEventSubmitted = 'Conversion Event Submitted',
+  DataReportSubmitted = 'Data Report Submitted',
   DelegationDetected = 'Delegation Detected',
   ExperimentQualifyingEvent = 'Experiment Qualifying Event',
   LowNetworkTokenInfoModalOpened = 'Low Network Token Info Modal Opened',
@@ -12,6 +13,7 @@ export enum UniswapEventName {
   LpIncentiveCollectRewardsSuccess = 'LP Incentive Collect Rewards Success',
   LpIncentiveLearnMoreCtaClicked = 'LP Incentive Learn More CTA Clicked',
   SmartWalletMismatchDetected = 'Smart Wallet Mismatch Detected',
+  SpamReportSubmitted = 'Spam Report Submitted',
   TokenSelected = 'Token Selected',
   TooltipOpened = 'Tooltip Opened',
   // alphabetize additional values.

@@ -4,17 +4,12 @@ import localizedFormat from 'dayjs/plugin/localizedFormat'
 import 'dayjs/locale/en'
 import 'dayjs/locale/es'
 import 'dayjs/locale/fr'
-import 'dayjs/locale/hi'
 import 'dayjs/locale/id'
 import 'dayjs/locale/ja'
-import 'dayjs/locale/ms-my'
 import 'dayjs/locale/nl'
 import 'dayjs/locale/pt'
 import 'dayjs/locale/ru'
-import 'dayjs/locale/th'
 import 'dayjs/locale/tr'
-import 'dayjs/locale/uk'
-import 'dayjs/locale/ur'
 import 'dayjs/locale/vi'
 import 'dayjs/locale/zh-cn'
 import 'dayjs/locale/zh-tw'
@@ -45,33 +40,17 @@ export type LocalizedDayjs = typeof dayjs
 
 // Supported ones found here https://github.com/iamkun/dayjs/tree/dev/src/locale
 const mapLocaleToSupportedDayjsLocale: Record<Locale, string> = {
-  [Locale.Afrikaans]: 'af',
-  [Locale.ArabicSaudi]: 'ar-sa',
-  [Locale.Catalan]: 'ca',
   [Locale.ChineseSimplified]: 'zh-cn',
   [Locale.ChineseTraditional]: 'zh-tw',
-  [Locale.CzechCzechia]: 'cs',
-  [Locale.DanishDenmark]: 'da',
   [Locale.DutchNetherlands]: 'nl',
   [Locale.EnglishUnitedStates]: 'en-us',
-  [Locale.FinnishFinland]: 'fi',
   [Locale.FrenchFrance]: 'fr',
-  [Locale.GreekGreece]: 'el',
-  [Locale.HebrewIsrael]: 'he',
-  [Locale.HindiIndia]: 'hi',
-  [Locale.HungarianHungarian]: 'hu',
   [Locale.IndonesianIndonesia]: 'id',
-  [Locale.ItalianItaly]: 'it',
   [Locale.JapaneseJapan]: 'ja',
   [Locale.KoreanKorea]: 'ko',
-  [Locale.MalayMalaysia]: 'ms',
-  [Locale.NorwegianNorway]: 'no',
-  [Locale.PolishPoland]: 'pl',
   [Locale.PortugueseBrazil]: 'pt-br',
   [Locale.PortuguesePortugal]: 'pt',
-  [Locale.RomanianRomania]: 'ro',
   [Locale.RussianRussia]: 'ru',
-  [Locale.Serbian]: 'sr',
   [Locale.SpanishSpain]: 'es-es',
   [Locale.SpanishLatam]: 'es-mx',
   [Locale.SpanishArgentina]: 'es-mx',
@@ -95,11 +74,7 @@ const mapLocaleToSupportedDayjsLocale: Record<Locale, string> = {
   [Locale.SpanishUruguay]: 'es-mx',
   [Locale.SpanishVenezuela]: 'es-mx',
   [Locale.SpanishUnitedStates]: 'es-us',
-  [Locale.SwahiliTanzania]: 'sw',
-  [Locale.SwedishSweden]: 'sv',
   [Locale.TurkishTurkey]: 'tr',
-  [Locale.UkrainianUkraine]: 'uk',
-  [Locale.UrduPakistan]: 'ur',
   [Locale.VietnameseVietnam]: 'vi',
 }
 

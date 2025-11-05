@@ -1,6 +1,6 @@
 import NetworkFilter from 'components/NetworkFilter/NetworkFilter'
-import { usePortfolioParams } from 'pages/Portfolio/Header/hooks/usePortfolioParams'
-import PortfolioAddressDisplay from 'pages/Portfolio/Header/PortfolioAddressDisplay/PortfolioAddressDisplay'
+import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { PortfolioAddressDisplay } from 'pages/Portfolio/Header/PortfolioAddressDisplay/PortfolioAddressDisplay'
 import { PortfolioTabs } from 'pages/Portfolio/Header/Tabs'
 import { PortfolioTab } from 'pages/Portfolio/types'
 import { useNavigate } from 'react-router'
@@ -16,9 +16,9 @@ function buildPortfolioUrl(tab: PortfolioTab | undefined, chainId: UniverseChain
   return `${currentPath}${chainId ? `?chain=${chainUrlParam}` : ''}`
 }
 
-export default function PortfolioHeader() {
+export function PortfolioHeader() {
   const navigate = useNavigate()
-  const { tab, chainId: currentChainId } = usePortfolioParams()
+  const { tab, chainId: currentChainId } = usePortfolioRoutes()
 
   const onNetworkPress = useEvent((chainId: UniverseChainId | undefined) => {
     navigate(buildPortfolioUrl(tab, chainId))
@@ -29,7 +29,6 @@ export default function PortfolioHeader() {
       backgroundColor="$surface1"
       paddingTop="$spacing40"
       zIndex="$header"
-      paddingBottom="$spacing16"
       $platform-web={{
         position: 'sticky',
         top: INTERFACE_NAV_HEIGHT,

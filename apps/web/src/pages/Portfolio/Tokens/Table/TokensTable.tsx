@@ -1,6 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { TokenData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
-import TokensTableInner from 'pages/Portfolio/Tokens/Table/TokensTableInner'
+import { TokensTableInner } from 'pages/Portfolio/Tokens/Table/TokensTableInner'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollSync } from 'react-scroll-sync'
@@ -17,7 +17,7 @@ interface TokensTableProps {
   error?: Error | undefined
 }
 
-export default function TokensTable({ visible, hidden, loading, refetching, networkStatus, error }: TokensTableProps) {
+export function TokensTable({ visible, hidden, loading, refetching, networkStatus, error }: TokensTableProps) {
   const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const tableLoading = loading && !refetching

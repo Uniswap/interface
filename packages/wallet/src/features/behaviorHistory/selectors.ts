@@ -15,6 +15,9 @@ export const selectHasUsedExplore = (state: WalletState): boolean => state.behav
 export const selectHasViewedBridgedAssetsCard = (state: WalletState): boolean =>
   state.behaviorHistory.hasViewedBridgedAssetsCard ?? false
 
+export const selectHasViewedBridgedAssetsV2Card = (state: WalletState): boolean =>
+  state.behaviorHistory.hasViewedBridgedAssetsV2Card ?? false
+
 export const selectHasViewedOffRampTooltip = (state: WalletState): boolean =>
   state.behaviorHistory.hasViewedOffRampTooltip
 

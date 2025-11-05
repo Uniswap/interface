@@ -1,7 +1,6 @@
 export type {
   DatadogIgnoredErrorsValType,
   DatadogSessionSampleRateValType,
-  DeepLinkUrlAllowlist,
   DynamicConfigKeys,
   ForceUpgradeStatus,
   ForceUpgradeTranslations,
@@ -17,7 +16,6 @@ export {
   ChainsConfigKey,
   DatadogIgnoredErrorsConfigKey,
   DatadogSessionSampleRateKey,
-  DeepLinkUrlAllowlistConfigKey,
   DynamicConfigs,
   EmbeddedWalletConfigKey,
   ExtensionBiometricUnlockConfigKey,

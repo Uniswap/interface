@@ -1,5 +1,4 @@
 import {
-  DEFAULT_FEE_DATA,
   FeeData,
   PositionFlowStep,
   PriceRangeState,
@@ -37,13 +36,13 @@ const depositStateSchema: z.ZodSchema<Partial<DepositState>> = z
   })
   .partial()
 
-const feeDataSchema: z.ZodSchema<FeeData> = z.object({
+const feeDataSchema: z.ZodSchema<FeeData | undefined> = z.object({
   feeAmount: z.number(),
   tickSpacing: z.number(),
   isDynamic: z.boolean(),
 })
 
-export const parseAsFeeData = parseAsJson(feeDataSchema.parse).withDefault(DEFAULT_FEE_DATA)
+export const parseAsFeeData = parseAsJson(feeDataSchema.parse)
 
 export const parseAsPriceRangeState = parseAsJson(priceRangeStateSchema.parse).withDefault({})
 

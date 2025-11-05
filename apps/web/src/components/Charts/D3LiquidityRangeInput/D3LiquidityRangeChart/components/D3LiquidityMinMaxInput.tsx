@@ -63,7 +63,7 @@ export function D3LiquidityMinMaxInput() {
 
   // Navigation params for increment/decrement actions
   const tickNavigationParams: TickNavigationParams | undefined = useMemo(() => {
-    if (!positionState.fee.tickSpacing || !currencies.display.TOKEN0 || !currencies.display.TOKEN1) {
+    if (!positionState.fee?.tickSpacing || !currencies.display.TOKEN0 || !currencies.display.TOKEN1) {
       return undefined
     }
 
@@ -76,7 +76,7 @@ export function D3LiquidityMinMaxInput() {
       priceInverted: priceRangeState.priceInverted,
       protocolVersion: positionState.protocolVersion,
     }
-  }, [positionState.fee.tickSpacing, currencies.display, priceRangeState.priceInverted, positionState.protocolVersion])
+  }, [positionState.fee?.tickSpacing, currencies.display, priceRangeState.priceInverted, positionState.protocolVersion])
 
   // Get display value based on input mode
   const getDisplayValue = useCallback(

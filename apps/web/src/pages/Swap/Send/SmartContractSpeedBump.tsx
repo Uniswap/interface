@@ -14,21 +14,18 @@ export const SmartContractSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: Se
       isOpen={isOpen}
       onClose={onDismiss}
       icon={<AlertTriangleFilled fill={colors.neutral2.val} size="28px" />}
-      hasIconBackground
+      iconBackgroundColor="$surface3"
       title={t('speedBump.smartContractAddress.warning.title')}
       subtext={t('speedBump.smartContractAddress.warning.description')}
       modalName={ModalName.SmartContractSpeedBump}
       primaryButtonText={t('common.button.cancel')}
-      primaryButtonOnClick={onDismiss}
+      primaryButtonOnPress={onDismiss}
       primaryButtonVariant="default"
       primaryButtonEmphasis="secondary"
       secondaryButtonText={t('common.button.continue')}
-      secondaryButtonOnClick={onConfirm}
+      secondaryButtonOnPress={onConfirm}
       secondaryButtonVariant="branded"
       displayHelpCTA
-      buttonContainerProps={{
-        flexDirection: 'row',
-      }}
     />
   )
 }

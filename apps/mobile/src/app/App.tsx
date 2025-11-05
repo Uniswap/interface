@@ -3,6 +3,7 @@ import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
 import { DdRum, RumActionType } from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
+import { ApiInit, getSessionService } from '@universe/api'
 import {
   DatadogSessionSampleRateKey,
   DynamicConfigs,
@@ -14,6 +15,7 @@ import {
   Storage,
   WALLET_FEATURE_FLAG_NAMES,
 } from '@universe/gating'
+import { createChallengeSolverService, createSessionInitializationService } from '@universe/sessions'
 import { MMKVWrapper } from 'apollo3-cache-persist'
 import { default as React, StrictMode, useCallback, useEffect, useMemo, useRef } from 'react'
 import { I18nextProvider } from 'react-i18next'
@@ -127,6 +129,14 @@ initOneSignal()
 initAppsFlyer()
 
 initializePortfolioQueryOverrides({ store })
+
+const sessionInitService = createSessionInitializationService({
+  sessionService: getSessionService({
+    // TODO: Use real base url
+    getBaseUrl: () => 'https://entry-gateway.backend-dev.api.uniswap.org',
+  }),
+  challengeSolverService: createChallengeSolverService(),
+})
 
 function App(): JSX.Element | null {
   useEffect(() => {
@@ -366,6 +376,7 @@ function DataUpdaters(): JSX.Element {
   return (
     <>
       <TraceUserProperties />
+      <ApiInit sessionInitService={sessionInitService} />
       <TransactionHistoryUpdater />
     </>
   )

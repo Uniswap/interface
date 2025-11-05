@@ -1,6 +1,7 @@
 export enum SectionName {
   CurrencyInputPanel = 'currency-input-panel',
   CurrencyOutputPanel = 'currency-output-panel',
+  DisputeTokenWarning = 'dispute-token-warning',
   ExploreFavoriteTokensSection = 'explore-favorite-tokens-section',
   ExploreSearch = 'explore-search',
   ExploreTopTokensSection = 'explore-top-tokens-section',

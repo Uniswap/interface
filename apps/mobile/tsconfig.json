@@ -14,10 +14,13 @@
       "path": "../../packages/uniswap"
     },
     {
-      "path": "../../packages/api"
+      "path": "../../packages/sessions"
     },
     {
       "path": "../../packages/gating"
+    },
+    {
+      "path": "../../packages/api"
     }
   ],
   "compilerOptions": {

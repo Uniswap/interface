@@ -4,7 +4,7 @@ import { TokenData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableDa
 import { memo } from 'react'
 import { EM_DASH } from 'ui/src'
 
-const Balance = memo(function Balance({ value, symbol }: TokenData['balance']) {
+export const Balance = memo(function Balance({ value, symbol }: TokenData['balance']) {
   if (!value && value !== '0') {
     return <TableText>{EM_DASH}</TableText>
   }
@@ -16,5 +16,3 @@ const Balance = memo(function Balance({ value, symbol }: TokenData['balance']) {
   )
 })
 Balance.displayName = 'Balance'
-
-export default Balance

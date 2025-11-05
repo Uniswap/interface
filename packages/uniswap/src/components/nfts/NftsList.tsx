@@ -21,6 +21,8 @@ export type NftsListProps = Omit<
     autoColumns?: boolean
     /** Web-only: when true, use a flex-wrap container instead of 2-col grid */
     wrapFlex?: boolean
+    /** Custom loading state skeleton - if provided, overrides default loading skeleton */
+    customLoadingState?: JSX.Element
   },
   'renderItem' | 'data'
 > & {

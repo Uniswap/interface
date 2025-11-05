@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { createStore, Store } from '@reduxjs/toolkit'
 import { TradingApi } from '@universe/api'
 

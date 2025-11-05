@@ -37,9 +37,7 @@ export function MaxBalanceInfoModal({
           <Text variant="body4" textAlign="left" color="$neutral2">
             {isMax
               ? t('transaction.networkCost.maxNativeBalance.description')
-              : t('swap.warning.insufficientGas.button', {
-                  currencySymbol: currencySymbol || '',
-                })}
+              : t('transaction.networkCost.presetNativeBalance.description')}
           </Text>
         }
         placement="top"
@@ -52,11 +50,19 @@ export function MaxBalanceInfoModal({
     <>
       {children}
       <WarningModal
-        caption={t('transaction.networkCost.maxNativeBalance.description')}
+        caption={
+          isMax
+            ? t('transaction.networkCost.maxNativeBalance.description')
+            : t('transaction.networkCost.presetNativeBalance.description')
+        }
         isOpen={isModalOpen}
         modalName={ModalName.NativeBalanceInfo}
         severity={WarningSeverity.Low}
-        title={t('transaction.networkCost.maxNativeBalance.title')}
+        title={
+          isMax
+            ? t('transaction.networkCost.maxNativeBalance.title')
+            : t('transaction.networkCost.presetNativeBalance.title')
+        }
         rejectText={t('common.button.close')}
         onClose={onClose}
         onReject={onClose}

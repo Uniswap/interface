@@ -25,6 +25,7 @@ export function useChangePasswordWithBiometricMutation(options?: {
     // Authenticate with WebAuthn to get the encryption key
     const { encryptionKey } = await authenticateWithBiometricCredential({
       credentialId: biometricUnlockCredential.credentialId,
+      transports: biometricUnlockCredential.transports,
       abortSignal,
     })
 
@@ -36,6 +37,7 @@ export function useChangePasswordWithBiometricMutation(options?: {
       password: newPassword,
       encryptionKey,
       credentialId: biometricUnlockCredential.credentialId,
+      transports: biometricUnlockCredential.transports,
     })
 
     // Update the stored biometric data

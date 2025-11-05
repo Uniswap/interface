@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency, Percent } from '@uniswap/sdk-core'
@@ -44,7 +45,6 @@ import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
@@ -213,8 +213,6 @@ export function SelectTokensStep({
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
 } & FlexProps) {
   const { loadingA, loadingB } = useLiquidityUrlState()
-  const { useParsedQueryString } = useUrlContext()
-  const parsedQs = useParsedQueryString()
   const { formatPercent } = useLocalizationContext()
   const { t } = useTranslation()
   const { setSelectedChainId } = useMultichainContext()
@@ -263,6 +261,9 @@ export function SelectTokensStep({
 
       setSelectedChainId(currency.chainId)
 
+      // If the tokens change, we want to reset the default fee tier (mostUsedFeeTier) in the useEffect below.
+      setPositionState((prevState) => ({ ...prevState, fee: undefined }))
+
       if (areCurrenciesEqual(currency, otherCurrency) || areCurrenciesEqual(wrappedCurrencyNew, wrappedCurrencyOther)) {
         setCurrencyInputs((prevState) => ({
           ...prevState,
@@ -284,8 +285,6 @@ export function SelectTokensStep({
       switch (currencySearchInputState) {
         case 'tokenA':
         case 'tokenB':
-          // If the tokens change, we want to reset the default fee tier in the useEffect below.
-          setDefaultFeeTierSelected(false)
           setCurrencyInputs((prevState) => ({
             ...prevState,
             [currencySearchInputState]: currency,
@@ -295,7 +294,7 @@ export function SelectTokensStep({
           break
       }
     },
-    [currencySearchInputState, setCurrencyInputs, currencyInputs, setSelectedChainId],
+    [currencySearchInputState, setCurrencyInputs, currencyInputs, setSelectedChainId, setPositionState],
   )
 
   const handleFeeTierSelect = useCallback(
@@ -322,7 +321,6 @@ export function SelectTokensStep({
     [feeTierData, isLpIncentivesEnabled],
   )
 
-  const [defaultFeeTierSelected, setDefaultFeeTierSelected] = useState(false)
   const mostUsedFeeTier = useMemo(() => {
     if (hasExistingFeeTiers && Object.keys(feeTierData).length > 0) {
       return Object.values(feeTierData).reduce((highest, current) => {
@@ -333,18 +331,18 @@ export function SelectTokensStep({
     return undefined
   }, [hasExistingFeeTiers, feeTierData])
 
-  // If the userApprovedHook changes, we want to reset the default fee tier in the useEffect below.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +userApprovedHook
   useEffect(() => {
-    setDefaultFeeTierSelected(false)
-  }, [userApprovedHook])
+    // If a fee tier is already set, return
+    if (fee) {
+      return
+    }
 
-  useEffect(() => {
-    // Don't auto-select recommended fee if user provided either legacy feeTier param or modern fee param
-    // or if the user is migrating a position
-    const hasUserProvidedFee = parsedQs.feeTier || parsedQs.fee
-    if (mostUsedFeeTier && !defaultFeeTierSelected && !hasUserProvidedFee && !tokensLocked) {
-      setDefaultFeeTierSelected(true)
+    // If the tokens are locked, return
+    if (tokensLocked) {
+      return
+    }
+
+    if (mostUsedFeeTier) {
       setPositionState((prevState) => ({
         ...prevState,
         fee: mostUsedFeeTier.fee,
@@ -355,7 +353,7 @@ export function SelectTokensStep({
         ...trace,
       })
     }
-  }, [tokensLocked, mostUsedFeeTier, defaultFeeTierSelected, parsedQs, setPositionState, trace])
+  }, [tokensLocked, mostUsedFeeTier, fee, setPositionState, trace])
 
   const { chains } = useEnabledChains({ platform: Platform.EVM })
   const supportedChains = useMemo(() => {
@@ -439,10 +437,10 @@ export function SelectTokensStep({
     // to ensure the current selected fee tier rewards APR matches the same fee tier in the fee tier selector,
     // grab the rewards tier from the fee tier directly
     const matchingFeeTier = Object.values(feeTierData).find(
-      (tier) => getFeeTierKey(tier.fee.feeAmount, tier.fee.isDynamic) === getFeeTierKey(fee.feeAmount, fee.isDynamic),
+      (tier) => getFeeTierKey(tier.fee.feeAmount, tier.fee.isDynamic) === getFeeTierKey(fee?.feeAmount, fee?.isDynamic),
     )
     return matchingFeeTier?.boostedApr && matchingFeeTier.boostedApr > 0 ? matchingFeeTier.boostedApr : undefined
-  }, [isLpIncentivesEnabled, protocolVersion, feeTierData, fee.feeAmount, fee.isDynamic])
+  }, [isLpIncentivesEnabled, protocolVersion, feeTierData, fee?.feeAmount, fee?.isDynamic])
 
   const defaultFeeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion })
 
@@ -453,7 +451,7 @@ export function SelectTokensStep({
           isOpen={hookModalOpen}
           address={hook}
           onClose={() => setHookModalOpen(false)}
-          onClearHook={() => setPositionState((state) => ({ ...state, hook: undefined }))}
+          onClearHook={() => setPositionState((state) => ({ ...state, hook: undefined, fee: undefined }))}
           onContinue={() => {
             setPositionState((state) => ({ ...state, userApprovedHook: hook }))
             onContinue()
@@ -530,8 +528,10 @@ export function SelectTokensStep({
                   >
                     <Flex gap="$gap4" flex={1} minWidth={0}>
                       <Flex row gap="$gap8" alignItems="center">
-                        <Text variant="subheading2" color="$neutral1">
-                          {isDynamicFeeTier(fee) ? (
+                        <Text variant="subheading2" color={fee ? '$neutral1' : '$neutral2'}>
+                          {!fee ? (
+                            <Trans i18nKey="fee.tier.default" />
+                          ) : isDynamicFeeTier(fee) ? (
                             <Trans i18nKey="fee.tier.dynamic" />
                           ) : (
                             <Trans
@@ -540,9 +540,10 @@ export function SelectTokensStep({
                             />
                           )}
                         </Text>
-                        {getFeeTierKey(fee.feeAmount, fee.isDynamic) ===
-                        (mostUsedFeeTier &&
-                          getFeeTierKey(mostUsedFeeTier.fee.feeAmount, mostUsedFeeTier.fee.isDynamic)) ? (
+                        {fee &&
+                        getFeeTierKey(fee.feeAmount, fee.isDynamic) ===
+                          (mostUsedFeeTier &&
+                            getFeeTierKey(mostUsedFeeTier.fee.feeAmount, mostUsedFeeTier.fee.isDynamic)) ? (
                           <MouseoverTooltip text={t('fee.tier.recommended.description')}>
                             <Flex
                               justifyContent="center"
@@ -557,18 +558,19 @@ export function SelectTokensStep({
                               </Text>
                             </Flex>
                           </MouseoverTooltip>
-                        ) : defaultFeeTiers.find(
+                        ) : fee &&
+                          defaultFeeTiers.find(
                             (tier) =>
                               getFeeTierKey(tier.value.feeAmount, tier.value.isDynamic) ===
                               getFeeTierKey(fee.feeAmount, fee.isDynamic),
-                          ) ? null : (
+                          ) ? null : fee ? (
                           <Flex justifyContent="center" borderRadius="$rounded6" backgroundColor="$surface3" px={7}>
                             <Text variant="buttonLabel4">
                               <Trans i18nKey="fee.tier.new" />
                             </Text>
                           </Flex>
-                        )}
-                        {lpIncentiveRewardApr && (
+                        ) : null}
+                        {fee && lpIncentiveRewardApr && (
                           <LpIncentivesAprDisplay
                             lpIncentiveRewardApr={lpIncentiveRewardApr}
                             $md={{ display: 'none' }}
@@ -655,8 +657,9 @@ export function SelectTokensStep({
                           key={feeTier.value.feeAmount}
                           feeTier={feeTier}
                           selected={
+                            !!fee &&
                             getFeeTierKey(feeTier.value.feeAmount, feeTier.value.isDynamic) ===
-                            getFeeTierKey(fee.feeAmount, fee.isDynamic)
+                              getFeeTierKey(fee.feeAmount, fee.isDynamic)
                           }
                           onSelect={handleFeeTierSelect}
                           isLpIncentivesEnabled={isLpIncentivesEnabled}
@@ -683,7 +686,7 @@ export function SelectTokensStep({
               size="large"
               key="SelectTokensStep-continue"
               onPress={handleOnContinue}
-              loading={Boolean(!continueButtonEnabled && token0 && token1)}
+              loading={Boolean(!continueButtonEnabled && token0 && token1 && fee)}
               isDisabled={!continueButtonEnabled || hasError || (showWrappedNativeWarning && !!wrappedNativeWarning)}
             >
               {t('common.button.continue')}

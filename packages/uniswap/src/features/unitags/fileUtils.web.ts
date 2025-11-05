@@ -60,10 +60,25 @@ export async function uploadFileToS3(
 
     const formData = new FormData()
 
+    if (!blob.type || !blob.type.startsWith('image/')) {
+      throw new Error('Invalid image type')
+    }
+
     // Add the S3 fields to the form data
     Object.entries(creds.s3UploadFields).forEach(([key, value]) => {
       formData.append(key, value)
     })
+
+    // Add Content-Type if not already provided by S3 fields (required by S3 policy to start with "image/")
+    const existingContentType = creds.s3UploadFields['Content-Type']
+    if (existingContentType) {
+      // Validate existing Content-Type is an image type
+      if (!existingContentType.startsWith('image/')) {
+        throw new Error('Invalid Content-Type in S3 upload fields: must be an image type')
+      }
+    } else {
+      formData.append('Content-Type', blob.type)
+    }
 
     // Add the file to the form data
     formData.append('file', blob)

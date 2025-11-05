@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { EditLabelModal } from 'src/app/features/accounts/EditLabelModal'
 import { removeAllDappConnectionsForAccount } from 'src/app/features/dapp/actions'
-import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
-import { useExtensionNavigation } from 'src/app/navigation/utils'
+import { AppRoutes, SettingsRoutes, UnitagClaimRoutes } from 'src/app/navigation/constants'
+import { focusOrCreateUnitagTab, useExtensionNavigation } from 'src/app/navigation/utils'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { CopySheets, Edit, Ellipsis, Globe, TrashFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -97,13 +97,17 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
         label: !accountHasUnitag
           ? t('account.wallet.menu.edit.title')
           : t('settings.setting.wallet.action.editProfile'),
-        onPress: (e: BaseSyntheticEvent): void => {
+        onPress: async (e: BaseSyntheticEvent): Promise<void> => {
           // We have to manually prevent click-through because the way the context menu is inside of a TouchableArea in this component it
           // means that without it the TouchableArea handler will get called
           e.preventDefault()
           e.stopPropagation()
 
-          setShowEditLabelModal(true)
+          if (accountHasUnitag) {
+            await focusOrCreateUnitagTab(address, UnitagClaimRoutes.EditProfile)
+          } else {
+            setShowEditLabelModal(true)
+          }
         },
         Icon: Edit,
       },
@@ -134,7 +138,7 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
         iconProps: { color: '$statusCritical' },
       },
     ]
-  }, [accountHasUnitag, onPressCopyAddress, navigateTo, t])
+  }, [accountHasUnitag, onPressCopyAddress, navigateTo, t, address])
 
   return (
     <>

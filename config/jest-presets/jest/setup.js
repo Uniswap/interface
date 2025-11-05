@@ -48,6 +48,17 @@ jest.mock('expo-haptics', () => ({
 }))
 jest.mock('expo-linear-gradient', () => ({ LinearGradient: () => 'ExpoLinearGradient' }))
 jest.mock('expo-screen-capture', () => ({ addScreenshotListener: jest.fn() }))
+jest.mock('expo-secure-store', () => ({
+  getItemAsync: jest.fn(() => Promise.resolve(null)),
+  setItemAsync: jest.fn(() => Promise.resolve()),
+  deleteItemAsync: jest.fn(() => Promise.resolve()),
+}))
+jest.mock('expo-local-authentication', () => ({
+  authenticateAsync: jest.fn(() => Promise.resolve({ success: true })),
+  hasHardwareAsync: jest.fn(() => Promise.resolve(true)),
+  isEnrolledAsync: jest.fn(() => Promise.resolve(true)),
+  supportedAuthenticationTypesAsync: jest.fn(() => Promise.resolve([1, 2])),
+}))
 
 // Mock Amplitde log reporting
 jest.mock('@amplitude/analytics-react-native', () => ({

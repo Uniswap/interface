@@ -28,23 +28,10 @@ export function createSessionRepository(ctx: CreateSessionRepositoryDeps): Sessi
     try {
       const response = await client.challenge({})
 
-      // Map the protobuf response to our interface
-      // The proto has 'challenge' field, we need to extract challenge details from it
-      // biome-ignore lint/suspicious/noExplicitAny: TODO use schema to parse the response
-      let challengeData = {} as any
-      if (response.challenge) {
-        try {
-          challengeData = JSON.parse(response.challenge)
-        } catch (parseError) {
-          const errorMessage = parseError instanceof Error ? parseError.message : String(parseError)
-          throw new Error(`Failed to parse challenge JSON: ${errorMessage}`, { cause: parseError })
-        }
-      }
-
       return {
-        challengeId: challengeData.challengeId || '',
-        botDetectionType: challengeData.botDetectionType || 0,
-        extra: challengeData.extra || {},
+        challengeId: response.challengeId || '',
+        botDetectionType: response.botDetectionType || 0,
+        extra: response.extra,
       }
     } catch (error) {
       throw new Error(`Failed to get challenge: ${error}`)
@@ -53,14 +40,14 @@ export function createSessionRepository(ctx: CreateSessionRepositoryDeps): Sessi
 
   const upgradeSession: SessionRepository['upgradeSession'] = async (request) => {
     try {
-      await client.upgradeSession({
+      const verifyResponse = await client.verify({
         solution: request.solution,
-        // Note: The proto only has 'solution' field, no challengeId or walletAddress
+        challengeId: request.challengeId,
       })
 
       // The response structure needs to be mapped from actual proto response
       return {
-        retry: false, // Default since proto doesn't have this field
+        retry: verifyResponse.retry,
       }
     } catch (error) {
       throw new Error(`Failed to upgrade session: ${error}`)

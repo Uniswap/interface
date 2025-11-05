@@ -1,6 +1,7 @@
 import { AppTFunction } from 'ui/src/i18n/types'
 import {
   NFTTradeType,
+  REVOKE_APPROVAL_AMOUNT,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
@@ -107,7 +108,7 @@ function getTransactionTypeVerbs(
         }
       }
     case TransactionType.Approve:
-      if (typeInfo.approvalAmount === '0.0') {
+      if (typeInfo.approvalAmount === REVOKE_APPROVAL_AMOUNT) {
         return {
           success: externalDappName
             ? t('transaction.status.revoke.successDapp', { externalDappName })

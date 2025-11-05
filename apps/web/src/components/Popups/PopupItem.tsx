@@ -11,6 +11,8 @@ import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
+import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
+import { Eye } from 'ui/src/components/icons/Eye'
 import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { spacing } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -64,6 +66,24 @@ export function PopupItem({ content, onClose }: { content: PopupContent; popKey:
           onDismiss={onClose}
           icon={<AlertTriangleFilled color="$statusCritical" size="$icon.24" />}
           text={content.error}
+        />
+      )
+    }
+    case PopupType.Success: {
+      return (
+        <ToastRegularSimple
+          onDismiss={onClose}
+          icon={<CheckCircleFilled color="$statusSuccess" size="$icon.24" />}
+          text={content.message}
+        />
+      )
+    }
+    case PopupType.Unhide: {
+      return (
+        <ToastRegularSimple
+          onDismiss={onClose}
+          icon={<Eye color="$neutral1" size="$icon.24" />}
+          text={t('notification.assetVisibility.unhidden', { assetName: content.assetName })}
         />
       )
     }

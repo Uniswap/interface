@@ -29,16 +29,3 @@ export const MissingDataBars = ({ color }: { color: string }) => (
     <path d="m12.5 26.6667 15.8333-10.8333" stroke={color} strokeLinecap="round" strokeWidth="2" />
   </svg>
 )
-
-export const MissingDataIcon = (props: SVGProps) => (
-  <svg fill="none" height="40" viewBox="0 0 40 40" width="40" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <rect fill="#fff" fillOpacity=".12" height="40" rx="12" width="40" />
-    <path
-      clipRule="evenodd"
-      d="m19.5833 27.5h.8334c.8333 0 1.25-.4167 1.25-1.25v-2.2203l-3.3326 2.2802c.0197.7934.4361 1.1901 1.2492 1.1901zm-1.25-8.4596v-5.2904c0-.8333.4167-1.25 1.25-1.25h.8334c.8333 0 1.25.4167 1.25 1.25v3.0097zm5.8334 3.2788 3.3333-2.2807v6.2115c0 .8333-.4167 1.25-1.25 1.25h-.8333c-.8334 0-1.25-.4167-1.25-1.25zm-8.3866-1.5318-3.2801 2.2443v-1.7817c0-.8333.4167-1.25 1.25-1.25h.8333c.6614 0 1.0603.2625 1.1968.7874zm-2.862 6.4904-.3496-.511c.0672.2197.1837.39.3496.511z"
-      fill="#9b9b9b"
-      fillRule="evenodd"
-    />
-    <path d="m12.5 26.6667 15.8333-10.8333" stroke="#9b9b9b" strokeLinecap="round" strokeWidth="2" />
-  </svg>
-)

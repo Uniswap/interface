@@ -2,6 +2,7 @@ import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
 import { STATE_STORAGE_KEY } from 'src/store/constants'
 import { ExtensionState } from 'src/store/extensionReducer'
 import { EXTENSION_STATE_VERSION } from 'src/store/migrations'
+import { deviceAccessTimeoutToMinutes } from 'uniswap/src/features/settings/constants'
 import { logger } from 'utilities/src/logger/logger'
 
 export async function readReduxStateFromStorage(storageChanges?: {
@@ -28,6 +29,11 @@ export async function readReduxStateFromStorage(storageChanges?: {
 export async function readIsOnboardedFromStorage(): Promise<boolean> {
   const state = await readReduxStateFromStorage()
   return state ? isOnboardedSelector(state) : false
+}
+
+export async function readDeviceAccessTimeoutMinutesFromStorage(): Promise<number | undefined> {
+  const state = await readReduxStateFromStorage()
+  return state ? deviceAccessTimeoutToMinutes(state.userSettings.deviceAccessTimeout) : undefined
 }
 
 /**

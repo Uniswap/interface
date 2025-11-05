@@ -1,7 +1,13 @@
 import { Row } from '@tanstack/react-table'
-import { ActivityTable } from 'components/ActivityTable/ActivityTable'
 import { DropdownSelector } from 'components/Dropdowns/DropdownSelector'
+import { POPUP_MEDIUM_DISMISS_MS } from 'components/Popups/constants'
+import { popupRegistry } from 'components/Popups/registry'
+import { PopupType } from 'components/Popups/types'
+import { Cell } from 'components/Table/Cell'
+import { DataRow } from 'components/Table/styled'
+import { ActivityTable } from 'pages/Portfolio/Activity/ActivityTable/ActivityTable'
 import {
+  filterTransactionDetailsFromActivityItems,
   getTimePeriodFilterOptions,
   getTransactionTypeFilterOptions,
   getTransactionTypesForFilter,
@@ -10,16 +16,18 @@ import { SearchInput } from 'pages/Portfolio/components/SearchInput'
 import { usePortfolioAddress } from 'pages/Portfolio/hooks/usePortfolioAddress'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, TouchableArea } from 'ui/src'
+import { Flex, TouchableArea, useMedia } from 'ui/src'
 import { Calendar } from 'ui/src/components/icons/Calendar'
 import { Filter } from 'ui/src/components/icons/Filter'
 import { TransactionDetailsModal } from 'uniswap/src/components/activity/details/TransactionDetailsModal'
 import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
-import { isLoadingItem, isSectionHeader } from 'uniswap/src/components/activity/utils'
+import { isLoadingItem } from 'uniswap/src/components/activity/utils'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useInfiniteScroll } from 'utilities/src/react/useInfiniteScroll'
 import { ONE_DAY_MS } from 'utilities/src/time/time'
 
 const DROPDOWN_MIN_WIDTH = {
@@ -27,7 +35,7 @@ const DROPDOWN_MIN_WIDTH = {
   timePeriod: 200,
 }
 
-const PAGE_SIZE = 50
+const SEARCH_INPUT_WIDTH = 280
 
 function isWithinTimePeriod(txTime: number, period: string): boolean {
   if (period === 'all') {
@@ -57,18 +65,14 @@ function filterTransactions({
 }): TransactionDetails[] {
   const allowedTypes = getTransactionTypesForFilter(typeFilter)
 
-  // Filter out loading items and section headers, leaving only TransactionDetails
-  const transactionItems = transactions.filter(
-    (item): item is TransactionDetails => !isLoadingItem(item) && !isSectionHeader(item),
-  )
-
-  return transactionItems
+  return filterTransactionDetailsFromActivityItems(transactions)
     .filter((tx) => allowedTypes === 'all' || allowedTypes.includes(tx.typeInfo.type))
     .filter((tx) => isWithinTimePeriod(tx.addedTime, timeFilter))
 }
 
 export default function PortfolioActivity() {
   const { t } = useTranslation()
+  const media = useMedia()
   const transactionTypeOptions = getTransactionTypeFilterOptions(t)
   const timePeriodOptions = getTimePeriodFilterOptions(t)
   const [selectedTransactionType, setSelectedTransactionType] = useState('all')
@@ -80,7 +84,7 @@ export default function PortfolioActivity() {
 
   const portfolioAddress = usePortfolioAddress()
 
-  const activityData = useActivityData({
+  const { sectionData, fetchNextPage, hasNextPage, isFetchingNextPage } = useActivityData({
     evmOwner: portfolioAddress,
     ownerAddresses: [portfolioAddress],
     swapCallbacks: {
@@ -91,18 +95,24 @@ export default function PortfolioActivity() {
     fiatOnRampParams: undefined,
   })
 
+  const { sentinelRef } = useInfiniteScroll({
+    onLoadMore: fetchNextPage,
+    hasNextPage,
+    isFetching: isFetchingNextPage,
+  })
+
   // Show loading skeleton while data is being fetched (sectionData contains loading items when loading)
-  const loading = Boolean(activityData.sectionData?.some(isLoadingItem))
+  const loading = Boolean(sectionData?.some(isLoadingItem))
 
   // Filter out section headers and loading items to get just transaction data
   const transactionData: TransactionDetails[] = useMemo(
     () =>
       filterTransactions({
-        transactions: activityData.sectionData || [],
+        transactions: sectionData || [],
         typeFilter: selectedTransactionType,
         timeFilter: selectedTimePeriod,
-      }).slice(0, PAGE_SIZE), // TODO: add infinite scroll once that stack gets merged
-    [activityData.sectionData, selectedTransactionType, selectedTimePeriod],
+      }),
+    [sectionData, selectedTransactionType, selectedTimePeriod],
   )
 
   const error = false
@@ -127,9 +137,25 @@ export default function PortfolioActivity() {
     setSelectedTransaction(null)
   }
 
+  const onReportTransaction = useEvent(() => {
+    popupRegistry.addPopup(
+      { type: PopupType.Success, message: t('common.reported') },
+      'report-transaction-success',
+      POPUP_MEDIUM_DISMISS_MS,
+    )
+  })
+
+  const onUnhideTransaction = useEvent(() => {
+    popupRegistry.addPopup(
+      { type: PopupType.Unhide, assetName: t('common.activity') },
+      'unhide-transaction-success',
+      POPUP_MEDIUM_DISMISS_MS,
+    )
+  })
+
   return (
     <Trace logImpression page={InterfacePageName.PortfolioActivityPage}>
-      <Flex gap="$spacing40">
+      <Flex gap="$spacing28" mt="$spacing12">
         {/* Filtering Controls */}
         <Flex
           row
@@ -151,7 +177,8 @@ export default function PortfolioActivity() {
               isOpen={filterTypeExpanded}
               toggleOpen={setFilterTypeExpanded}
               ButtonIcon={Filter}
-              buttonStyle={{ minWidth: 200 }}
+              buttonStyle={{ width: 140, $md: { width: '100%' } }}
+              containerStyle={media.md ? { flexGrow: 1 } : undefined}
               dropdownStyle={{ minWidth: DROPDOWN_MIN_WIDTH.transactionType }}
             />
 
@@ -163,20 +190,49 @@ export default function PortfolioActivity() {
               isOpen={timePeriodExpanded}
               toggleOpen={setTimePeriodExpanded}
               ButtonIcon={Calendar}
+              buttonStyle={{ width: 140, $md: { width: '100%' } }}
+              containerStyle={media.md ? { flexGrow: 1 } : undefined}
               dropdownStyle={{ minWidth: DROPDOWN_MIN_WIDTH.timePeriod }}
             />
           </Flex>
 
-          <SearchInput value={searchValue} onChangeText={setSearchValue} placeholder="Search activity" width={280} />
+          <SearchInput
+            value={searchValue}
+            onChangeText={setSearchValue}
+            placeholder={t('portfolio.activity.search.placeholder')}
+            width={media.md ? '100%' : SEARCH_INPUT_WIDTH}
+          />
         </Flex>
 
-        <ActivityTable data={transactionData} loading={loading} error={error} rowWrapper={rowWrapper} />
+        <Flex>
+          <ActivityTable data={transactionData} loading={loading} error={error} rowWrapper={rowWrapper} />
+
+          {/* Show skeleton loading indicator while fetching next page */}
+          {isFetchingNextPage && (
+            <DataRow v2={true}>
+              {[...Array(4)].map((_, index) => (
+                <Cell
+                  key={index}
+                  loading={true}
+                  justifyContent="flex-start"
+                  grow
+                  {...(index === 2 && { minWidth: '280px' })}
+                />
+              ))}
+            </DataRow>
+          )}
+
+          {/* Intersection observer sentinel for infinite scroll */}
+          <Flex ref={sentinelRef} height={1} my={10} />
+        </Flex>
 
         {selectedTransaction && (
           <TransactionDetailsModal
             transactionDetails={selectedTransaction}
             onClose={handleCloseTransactionDetails}
             authTrigger={undefined}
+            onReportTransaction={onReportTransaction}
+            onUnhideTransaction={onUnhideTransaction}
           />
         )}
       </Flex>

@@ -28,6 +28,7 @@ export enum WalletEventName {
   PortfolioBalanceFreshnessLag = 'Portfolio Balance Freshness Lag',
   SendRecipientSelected = 'Send Recipient Selected',
   ShareButtonClicked = 'Share Button Clicked',
+  SilentPushReceived = 'Silent Push Received',
   SwapSubmitted = 'Swap Submitted to Provider',
   CancelSubmitted = 'Cancel Submitted to Provider',
   SwapTransactionCancelled = 'Swap Transaction Cancelled',

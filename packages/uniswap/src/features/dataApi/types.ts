@@ -16,6 +16,12 @@ export interface BaseResult<T> {
   error?: Error
 }
 
+export interface PaginationControls {
+  fetchNextPage: () => void
+  hasNextPage: boolean
+  isFetchingNextPage: boolean
+}
+
 export enum TokenList {
   Default = 'default',
   NonDefault = 'non_default',

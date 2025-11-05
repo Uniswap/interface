@@ -13,6 +13,7 @@ export function TokenBalanceItemContextMenu({
   portfolioBalance,
   excludedActions,
   openContractAddressExplainerModal,
+  openReportTokenModal,
   copyAddressToClipboard,
   triggerMode,
   onPressToken: onPressToken,
@@ -27,6 +28,7 @@ export function TokenBalanceItemContextMenu({
     tokenSymbolForNotification: portfolioBalance.currencyInfo.currency.symbol,
     portfolioBalance,
     openContractAddressExplainerModal,
+    openReportTokenModal,
     copyAddressToClipboard,
     closeMenu,
   })

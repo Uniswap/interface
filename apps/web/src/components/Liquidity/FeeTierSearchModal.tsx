@@ -421,7 +421,7 @@ export function FeeTierSearchModal() {
                       </Flex>
                     </Flex>
                     {getFeeTierKey(pool.fee.feeAmount, pool.fee.isDynamic) ===
-                      getFeeTierKey(selectedFee.feeAmount, selectedFee.isDynamic) && (
+                      getFeeTierKey(selectedFee?.feeAmount, selectedFee?.isDynamic) && (
                       <CheckCircleFilled size="$icon.24" color="$accent3" />
                     )}
                   </Flex>

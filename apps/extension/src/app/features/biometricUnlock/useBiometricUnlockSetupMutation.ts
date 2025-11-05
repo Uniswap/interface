@@ -69,7 +69,7 @@ async function createCredentialAndEncryptPassword({
 
   const rawKey = await window.crypto.subtle.exportKey('raw', encryptionKey)
 
-  const { credentialId } = await createCredential({
+  const { credentialId, transports } = await createCredential({
     encryptionKey: rawKey,
     abortSignal,
   })
@@ -78,6 +78,7 @@ async function createCredentialAndEncryptPassword({
     password,
     encryptionKey,
     credentialId,
+    transports,
   })
 }
 
@@ -116,7 +117,7 @@ async function createCredential({
 }: {
   encryptionKey: ArrayBuffer
   abortSignal: AbortSignal
-}): Promise<{ credentialId: string }> {
+}): Promise<{ credentialId: string; transports: AuthenticatorTransport[] }> {
   // Create WebAuthn credential with platform authenticator (Touch ID, Windows Hello, etc.) forced
   const credential = await navigator.credentials.create({
     publicKey: {
@@ -149,5 +150,8 @@ async function createCredential({
   // Convert raw ID to a storable string format
   const credentialId = btoa(String.fromCharCode(...new Uint8Array(publicKeyCredential.rawId)))
 
-  return { credentialId }
+  const response = publicKeyCredential.response as AuthenticatorAttestationResponse
+  const transports = response.getTransports() as AuthenticatorTransport[]
+
+  return { credentialId, transports }
 }

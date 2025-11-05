@@ -7,24 +7,26 @@ export interface DialogProps {
   onClose: () => void
   icon: ReactNode
   title: string | ReactNode
+  titleColor?: TextProps['color']
   subtext: string | ReactNode
   learnMoreUrl?: string
   learnMoreTextColor?: TextProps['color']
   learnMoreTextVariant?: TextProps['variant']
   modalName: ModalNameType
-  primaryButtonText: string
-  primaryButtonOnClick: () => void
+  primaryButtonText?: string
+  primaryButtonOnPress?: () => void
   primaryButtonVariant?: ButtonVariant
   primaryButtonEmphasis?: ButtonEmphasis
   isPrimaryButtonLoading?: boolean
   secondaryButtonText?: string
-  secondaryButtonOnClick?: () => void
+  secondaryButtonOnPress?: () => void
   secondaryButtonVariant?: ButtonVariant
   secondaryButtonEmphasis?: ButtonEmphasis
   buttonContainerProps?: FlexProps
   children?: ReactNode
+  footer?: ReactNode
   alignment?: 'top' | 'center'
   textAlign?: 'center' | 'left'
   displayHelpCTA?: boolean
-  hasIconBackground?: boolean
+  iconBackgroundColor?: FlexProps['backgroundColor']
 }

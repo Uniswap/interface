@@ -14,6 +14,7 @@ import { SwapSummaryCallbacks } from 'uniswap/src/components/activity/types'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useFormattedTransactionDataForActivity } from 'uniswap/src/features/activity/hooks/useFormattedTransactionDataForActivity'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
+import { PaginationControls } from 'uniswap/src/features/dataApi/types'
 import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { isWebPlatform } from 'utilities/src/platform'
 
@@ -26,16 +27,18 @@ export type UseActivityDataProps = {
   authTrigger?: AuthTrigger
   isExternalProfile?: boolean
   emptyComponentStyle?: StyleProp<ViewStyle>
-  onPressEmptyState?: () => void
   skip?: boolean
   extraTransactions?: ActivityItem[]
+  onPressEmptyState?: () => void
 }
 
-export type ActivityRenderData = {
+export type ActivityRenderData = PaginationControls & {
   maybeEmptyComponent: JSX.Element | null
   renderActivityItem: ActivityItemRenderer
   sectionData: ActivityItem[] | undefined
   keyExtractor: (item: ActivityItem) => string
+  isLoading: boolean
+  refetch: () => Promise<void>
 }
 
 export function useActivityData({
@@ -64,14 +67,15 @@ export function useActivityData({
     })
   }, [swapCallbacks, authTrigger])
 
-  const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity({
-    evmAddress: evmOwner,
-    svmAddress: svmOwner,
-    ownerAddresses,
-    fiatOnRampParams,
-    hideSpamTokens,
-    skip,
-  })
+  const { isLoading, onRetry, isError, sectionData, keyExtractor, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useFormattedTransactionDataForActivity({
+      evmAddress: evmOwner,
+      svmAddress: svmOwner,
+      ownerAddresses,
+      fiatOnRampParams,
+      hideSpamTokens,
+      skip,
+    })
 
   const sectionDataWithExtra: ActivityItem[] | undefined = useMemo(() => {
     if (extraTransactions?.length) {
@@ -121,6 +125,11 @@ export function useActivityData({
     renderActivityItem,
     sectionData: sectionDataWithExtra,
     keyExtractor,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    refetch: onRetry,
   }
 }
 

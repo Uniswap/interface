@@ -1,5 +1,5 @@
 import { createPromiseClient, type PromiseClient, type Transport } from '@connectrpc/connect'
-import { SessionService } from '@uniswap/client-platform-service/dist/uniswap/sessionservice/v1/sessionService_connect'
+import { SessionService } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_connect'
 
 type SessionServiceClient = PromiseClient<typeof SessionService>
 

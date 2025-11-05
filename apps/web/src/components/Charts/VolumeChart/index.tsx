@@ -2,7 +2,7 @@ import { TimePeriod, toHistoryDuration } from 'appGraphql/data/util'
 import { GraphQLApi } from '@universe/api'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModelParams } from 'components/Charts/ChartModel'
-import { useHeaderDateFormatter } from 'components/Charts/hooks'
+import { useHeaderDateFormatter } from 'components/Charts/hooks/useHeaderDateFormatter'
 import {
   CustomVolumeChartModel,
   CustomVolumeChartModelParams,
@@ -146,6 +146,7 @@ export function VolumeChart({ height, data, feeTier, timePeriod, stale }: Volume
       Model={VolumeChartModel}
       params={params}
       height={height}
+      showDottedBackground={true}
       TooltipBody={
         feeTier === undefined // i.e. if is token volume chart
           ? undefined

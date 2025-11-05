@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { PlanStepStatus, TradingApi } from '@universe/api'
+import { PlanResponse, PlanStepStatus, TradingApi } from '@universe/api'
 import { call, delay, SagaGenerator } from 'typed-redux-saga'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -60,12 +60,12 @@ const MAX_ATTEMPTS = 60
  */
 function* waitForStepCompletion(params: {
   chainId: number
-  tradeId: string
+  planId: string
   targetStepId: string
   currentStepIndex: number
   inputAmount: CurrencyAmount<Currency>
 }): SagaGenerator<TransactionAndPlanStep[]> {
-  const { chainId, tradeId, targetStepId, currentStepIndex, inputAmount } = params
+  const { chainId, planId, targetStepId, currentStepIndex, inputAmount } = params
 
   const pollingInterval = getChainInfo(chainId).tradingApiPollingIntervalMs
   let attempt = 0
@@ -78,7 +78,7 @@ function* waitForStepCompletion(params: {
         maxAttempts: MAX_ATTEMPTS,
       })
 
-      const tradeStatusResponse = yield* call(TradingApiClient.getExistingTrade, { tradeId })
+      const tradeStatusResponse = yield* call(TradingApiClient.getExistingPlan, { planId })
       const latestTargetStep = tradeStatusResponse.steps.find((_step) => _step.stepId === targetStepId)
       if (!latestTargetStep) {
         throw new Error(`Target stepId=${targetStepId} not found in latest plan.`)
@@ -128,18 +128,20 @@ function* plan(params: SwapParams & PlanCalls) {
     return
   }
 
-  const { trade, tradeId: inputTradeId } = swapTxContext
+  const { trade, planId: inputPlanId } = swapTxContext
 
-  let response
-  if (!inputTradeId) {
-    response = yield* call(TradingApiClient.fetchNewTrade, {
+  let response: PlanResponse
+  if (!inputPlanId) {
+    // TODO: SWAP-429 - Update to ChainedQuoteResponse is added to the TAPI sdk
+    response = yield* call(TradingApiClient.createNewPlan, {
       quote: swapTxContext.trade.quote.quote,
+      routing: swapTxContext.trade.quote.routing,
     })
   } else {
-    response = yield* call(TradingApiClient.updateExistingTrade, { tradeId: inputTradeId, steps: [] })
+    response = yield* call(TradingApiClient.updateExistingPlan, { planId: inputPlanId, steps: [] })
   }
   let steps: TransactionAndPlanStep[] = transformSteps(response.steps, swapTxContext.trade.inputAmount)
-  const tradeId = response.tradeId
+  const planId = response.planId
 
   let currentStepIndex = steps.findIndex((step) => step.status !== PlanStepStatus.COMPLETE)
   let currentStep = steps[currentStepIndex]
@@ -194,9 +196,9 @@ function* plan(params: SwapParams & PlanCalls) {
       }
 
       if (hash || signature) {
-        logger.debug('planSaga', 'plan', '🚨 updating existing trade', tradeId, hash, signature)
-        yield* call(TradingApiClient.updateExistingTrade, {
-          tradeId,
+        logger.debug('planSaga', 'plan', '🚨 updating existing trade', planId, hash, signature)
+        yield* call(TradingApiClient.updateExistingPlan, {
+          planId,
           steps: [{ stepId: currentStep.stepId, proof: { txHash: hash, signature } }],
         })
       } else {
@@ -210,7 +212,7 @@ function* plan(params: SwapParams & PlanCalls) {
 
       const updatedSteps: TransactionAndPlanStep[] = yield* call(waitForStepCompletion, {
         chainId: swapChainId,
-        tradeId,
+        planId,
         targetStepId: currentStep.stepId,
         currentStepIndex,
         inputAmount: swapTxContext.trade.inputAmount,

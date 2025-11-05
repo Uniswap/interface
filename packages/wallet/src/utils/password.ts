@@ -8,6 +8,7 @@ import zxcvbn from 'zxcvbn'
 export enum PasswordErrors {
   WeakPassword = 'WeakPassword',
   PasswordsDoNotMatch = 'PasswordsDoNotMatch',
+  SamePassword = 'SamePassword',
 }
 
 export enum PasswordStrength {

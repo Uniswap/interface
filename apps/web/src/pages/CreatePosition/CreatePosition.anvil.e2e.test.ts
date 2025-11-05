@@ -15,7 +15,6 @@ import { parseEther } from 'viem'
 const test = getTest({ withAnvil: true })
 
 const WETH_ADDRESS = WETH.address
-const DEFAULT_INITIAL_POOL_PRICE = '3000'
 
 function modifyGasLimit(data: { create: { gasLimit: string } }) {
   try {
@@ -41,6 +40,9 @@ test.describe('Create position', () => {
     // eslint-disable-next-line
     await page.getByTestId('token-option-1-USDT').first().click()
     await page.getByRole('button', { name: 'Continue' }).click()
+    await graphql.waitForResponse('PoolPriceHistory')
+    await graphql.waitForResponse('AllV4Ticks')
+    await page.getByText('Full range').click()
     await reviewAndCreatePosition({ page })
   })
 
@@ -60,7 +62,6 @@ test.describe('Create position', () => {
     await page.getByRole('button', { name: 'Continue' }).click()
     await graphql.waitForResponse('PoolPriceHistory')
     await graphql.waitForResponse('AllV4Ticks')
-    await page.getByText('Custom range').click()
     await page.getByTestId(TestID.RangeInputIncrement + '-0').click()
     await page.getByTestId(TestID.RangeInputDecrement + '-1').click()
     await reviewAndCreatePosition({ page })
@@ -125,12 +126,10 @@ test.describe('Create position', () => {
       await expect(page.getByText('New tier').first()).toBeVisible()
       await expect(page.getByText('Creating new pool')).toBeVisible()
       await page.getByRole('button', { name: 'Continue' }).click()
-      // Set initial price for new pool
-      await page.getByPlaceholder('0').first().fill(DEFAULT_INITIAL_POOL_PRICE)
       await reviewAndCreatePosition({ page })
     })
 
-    test('should create a position with a custom fee tier and a dynamic fee tier', async ({ page, anvil }) => {
+    test('should create a position with a dynamic fee tier', async ({ page, anvil }) => {
       const HOOK_ADDRESS = '0x09DEA99D714A3a19378e3D80D1ad22Ca46085080'
       await stubTradingApiEndpoint({
         page,
@@ -145,8 +144,6 @@ test.describe('Create position', () => {
       await page.getByRole('button', { name: 'Continue' }).click()
       await page.getByRole('button', { name: 'Continue' }).click()
       await page.getByRole('button', { name: 'Continue' }).click()
-      // Set initial price for new pool
-      await page.getByPlaceholder('0').first().fill(DEFAULT_INITIAL_POOL_PRICE)
       await reviewAndCreatePosition({ page })
     })
   })

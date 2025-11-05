@@ -12,7 +12,7 @@ import { selectHasShownMismatchToast } from 'uniswap/src/features/behaviorHistor
 import { setHasShownMismatchToast } from 'uniswap/src/features/behaviorHistory/slice'
 import { createHasMismatchUtil, type HasMismatchUtil } from 'uniswap/src/features/smartWallet/mismatch/mismatch'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getLogger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 

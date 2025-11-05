@@ -1,17 +1,16 @@
-import { SharedQueryClient } from '@universe/api/src/clients/base/SharedQueryClient'
+import { getDeviceIdService } from '@universe/api/src/getDeviceIdService'
 import { getIsSessionServiceEnabled } from '@universe/api/src/getIsSessionServiceEnabled'
+import { getSessionStorage } from '@universe/api/src/getSessionStorage'
+import { getTransport } from '@universe/api/src/transport'
 import {
-  createDeviceIdService,
   createNoopSessionService,
   createSessionClient,
   createSessionRepository,
   createSessionService,
-  createSessionStorage,
-  createTransport,
   type SessionService,
 } from '@universe/sessions'
-import { getChromeWithThrow } from 'utilities/src/chrome/chrome'
-import { isExtensionApp, isWebApp } from 'utilities/src/platform'
+import { isWebApp } from 'utilities/src/platform'
+import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 
 function getSessionService(ctx: { getBaseUrl: () => string }): SessionService {
   if (!getIsSessionServiceEnabled()) {
@@ -19,48 +18,51 @@ function getSessionService(ctx: { getBaseUrl: () => string }): SessionService {
   }
   if (isWebApp) {
     // Web doesn't have a session service (cookies are automatically handled by the browser)
-    return createNoopSessionService()
+    return getWebAppSessionService(ctx)
   }
   return getExtensionSessionService(ctx)
 }
 
-const SESSION_ID_KEY = 'UNISWAP_SESSION_ID'
-
-const chromeSessionStorage = createSessionStorage({
-  getSessionId: async () => {
-    const chrome = getChromeWithThrow()
-    const sessionId = await chrome.storage.local.get(SESSION_ID_KEY)
-    return (sessionId as { [SESSION_ID_KEY]: string } | null)?.[SESSION_ID_KEY] ?? null
-  },
-  setSessionId: async (sessionId) => {
-    const chrome = getChromeWithThrow()
-    await chrome.storage.local.set({ [SESSION_ID_KEY]: sessionId })
-  },
-  clearSessionId: async () => {
-    const chrome = getChromeWithThrow()
-    await chrome.storage.local.remove(SESSION_ID_KEY)
-  },
-})
-
-const deviceIdService = createDeviceIdService({
-  queryClient: SharedQueryClient,
-})
-
-function getExtensionSessionService(ctx: { getBaseUrl: () => string }): SessionService {
+/**
+ * In production, web won't need an explicit session service since cookies are automatically handled by the backend+browser.
+ *
+ * For testing, we need this since SessionService is the only backend service that has CORS configured to handle the credentials header.
+ *
+ * When more services are added to the Entry Gateway, we can remove this and rely on those typical requests to instantiate the cookie.
+ */
+function getWebAppSessionService(ctx: { getBaseUrl: () => string }): SessionService {
   const sessionClient = createSessionClient({
-    transport: createTransport({
+    transport: getTransport({
       getBaseUrl: ctx.getBaseUrl,
-      getSessionId: isExtensionApp
-        ? (): Promise<string | null> => chromeSessionStorage.get().then((state) => state?.sessionId ?? null)
-        : undefined,
-      getDeviceId: isExtensionApp ? deviceIdService.getDeviceId : undefined,
+      getHeaders: () => ({ 'x-request-source': REQUEST_SOURCE }),
+      options: {
+        credentials: 'include',
+      },
     }),
   })
 
   const sessionRepository = createSessionRepository({ client: sessionClient })
 
   return createSessionService({
-    sessionStorage: chromeSessionStorage,
+    sessionStorage: getSessionStorage(),
+    deviceIdService: getDeviceIdService(),
+    sessionRepository,
+  })
+}
+
+function getExtensionSessionService(ctx: { getBaseUrl: () => string }): SessionService {
+  const sessionClient = createSessionClient({
+    transport: getTransport({
+      getBaseUrl: ctx.getBaseUrl,
+      getHeaders: () => ({ 'x-request-source': REQUEST_SOURCE }),
+    }),
+  })
+
+  const sessionRepository = createSessionRepository({ client: sessionClient })
+
+  return createSessionService({
+    sessionStorage: getSessionStorage(),
+    deviceIdService: getDeviceIdService(),
     sessionRepository,
   })
 }

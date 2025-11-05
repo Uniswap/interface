@@ -96,6 +96,7 @@ export const AccountSelectPopover = ({
                   textColor="$neutral1"
                   variant="buttonLabel3"
                   captionVariant="body4"
+                  flexGrow={false}
                 />
                 <Checkbox
                   checked={isChecked}

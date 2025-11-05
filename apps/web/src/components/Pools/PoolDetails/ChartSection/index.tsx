@@ -311,7 +311,13 @@ function PriceChart({
   const lastPrice = data[data.length - 1]
   const price = useUSDCValue(tryParseCurrencyAmount(lastPrice.value.toString(), quoteCurrency))
   return (
-    <Chart height={PDP_CHART_HEIGHT_PX} Model={PriceChartModel} params={params}>
+    <Chart
+      height={PDP_CHART_HEIGHT_PX}
+      Model={PriceChartModel}
+      params={params}
+      showDottedBackground
+      showLeftFadeOverlay
+    >
       {(crosshairData) => {
         const displayValue = crosshairData ?? lastPrice
         const priceDisplay = (
@@ -420,6 +426,7 @@ function LiquidityChart({
       height={PDP_CHART_HEIGHT_PX}
       Model={LiquidityBarChartModel}
       params={params}
+      showDottedBackground
       TooltipBody={({ data: crosshairData }: { data: LiquidityBarData }) => (
         // TODO(WEB-3628): investigate potential off-by-one or subgraph issues causing calculated TVL issues on 1 bip pools
         // Also remove Error Boundary when its determined its not needed

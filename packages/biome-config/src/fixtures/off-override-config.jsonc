@@ -1,0 +1,41 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "style": {
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "lodash": "Use lodash-es instead",
+              "moment": "Use date-fns instead",
+              "jquery": "No jQuery allowed"
+            }
+          }
+        }
+      }
+    }
+  },
+  "overrides": [
+    {
+      "include": ["src/vendor/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "__INCLUDE_GLOBAL_VALUES__": true,
+                  "jquery": "off",
+                  "axios": "Use fetch instead"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,5 +1,6 @@
 import { ChangeAssetVisibilityNotification } from 'uniswap/src/components/notifications/notifications/ChangeAssetVisibilityNotification'
 import { CopiedNotification } from 'uniswap/src/components/notifications/notifications/CopiedNotification'
+import { SuccessNotification } from 'uniswap/src/components/notifications/notifications/SuccessNotification'
 import { useSelectAddressNotifications } from 'uniswap/src/features/notifications/slice/hooks'
 import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
@@ -22,6 +23,8 @@ function NotificationToastRouter({ notification }: { notification: AppNotificati
       return <CopiedNotification notification={notification} />
     case AppNotificationType.AssetVisibility:
       return <ChangeAssetVisibilityNotification notification={notification} />
+    case AppNotificationType.Success:
+      return <SuccessNotification notification={notification} />
     default:
       return null
   }

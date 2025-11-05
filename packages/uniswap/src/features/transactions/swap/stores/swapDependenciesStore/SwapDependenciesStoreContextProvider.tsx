@@ -4,29 +4,21 @@ import { useCreateGetExecuteSwapService } from 'uniswap/src/features/transaction
 import { createSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/createSwapDependenciesStore'
 import { SwapDependenciesStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/SwapDependenciesStoreContext'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
-import type { SwapCallback } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import type { SwapHandlers } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
-import type { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
 import { useHasValueChanged } from 'utilities/src/react/useHasValueChanged'
 
 interface SwapDependenciesStoreContextProviderProps {
   children: ReactNode
-  swapCallback: SwapCallback
-  wrapCallback: WrapCallback
-  swapHandlers?: SwapHandlers
+  swapHandlers: SwapHandlers
 }
 
 export const SwapDependenciesStoreContextProvider = ({
   children,
-  swapCallback,
-  wrapCallback,
   swapHandlers,
 }: SwapDependenciesStoreContextProviderProps): JSX.Element => {
   const derivedSwapInfo = useSwapFormStore((s) => s.derivedSwapInfo)
 
   const getExecuteSwapService = useCreateGetExecuteSwapService({
-    swapCallback,
-    wrapCallback,
     swapHandlers,
     derivedSwapInfo,
   })
@@ -35,10 +27,9 @@ export const SwapDependenciesStoreContextProvider = ({
     return {
       derivedSwapInfo,
       getExecuteSwapService,
-      prepareSwapTransaction: swapHandlers?.prepareAndSign,
-      wrapCallback,
+      prepareSwapTransaction: swapHandlers.prepareAndSign,
     }
-  }, [derivedSwapInfo, getExecuteSwapService, swapHandlers, wrapCallback])
+  }, [derivedSwapInfo, getExecuteSwapService, swapHandlers])
 
   const [store] = useState(() => createSwapDependenciesStore(derivedState))
 

@@ -1,6 +1,7 @@
 import { SearchInput } from 'pages/Portfolio/components/SearchInput'
 import { usePortfolioAddress } from 'pages/Portfolio/hooks/usePortfolioAddress'
 import { NFTCard } from 'pages/Portfolio/NFTs/NFTCard'
+import { NFTCardSkeleton } from 'pages/Portfolio/NFTs/NFTCardSkeleton'
 import { filterNft } from 'pages/Portfolio/NFTs/utils/filterNfts'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -14,7 +15,7 @@ import { assume0xAddress } from 'utils/wagmi'
 
 const LOADING_SKELETON_COUNT = 10
 
-export default function PortfolioNfts(): JSX.Element {
+export function PortfolioNfts(): JSX.Element {
   const { t } = useTranslation()
   const owner = usePortfolioAddress()
   const nftsContainerRef = useRef<HTMLDivElement>(null)
@@ -46,9 +47,21 @@ export default function PortfolioNfts(): JSX.Element {
     [lowercaseSearch, owner],
   )
 
+  // Custom loading state with Portfolio-specific skeleton
+  const customLoadingState = useMemo(
+    () => (
+      <>
+        {Array.from({ length: LOADING_SKELETON_COUNT }, (_, i) => (
+          <NFTCardSkeleton key={i} />
+        ))}
+      </>
+    ),
+    [],
+  )
+
   return (
     <Trace logImpression page={InterfacePageName.PortfolioNftsPage}>
-      <Flex gap="$spacing40">
+      <Flex gap="$spacing40" mt="$spacing12">
         <Flex row alignItems="flex-end" justifyContent="space-between">
           <Text variant="body2" color="$neutral2">
             {numShown ? `${numShown}` : ''} {t('portfolio.nfts.title')}
@@ -56,7 +69,7 @@ export default function PortfolioNfts(): JSX.Element {
           <SearchInput
             value={search}
             onChangeText={setSearch}
-            placeholder={t('search.input.placeholder')}
+            placeholder={t('portfolio.nfts.search.placeholder')}
             width={320}
           />
         </Flex>
@@ -67,6 +80,7 @@ export default function PortfolioNfts(): JSX.Element {
             renderNFTItem={renderNFTItem}
             autoColumns
             loadingSkeletonCount={LOADING_SKELETON_COUNT}
+            customLoadingState={customLoadingState}
           />
         </Flex>
       </Flex>

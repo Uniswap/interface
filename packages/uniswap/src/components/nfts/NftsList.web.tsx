@@ -55,6 +55,7 @@ export function NftsList({
   customEmptyState,
   autoColumns = false,
   loadingSkeletonCount = 6,
+  customLoadingState,
 }: NftsListProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -129,16 +130,18 @@ export function NftsList({
     [nfts, shouldAddInLoadingItem],
   )
 
-  const loadingState = useMemo(
-    () => (
+  const loadingState = useMemo<JSX.Element>(() => {
+    if (customLoadingState) {
+      return customLoadingState
+    }
+    return (
       <>
         {Array.from({ length: loadingSkeletonCount }, (_, i) => (
           <Loader.NFT key={i} />
         ))}
       </>
-    ),
-    [loadingSkeletonCount],
-  )
+    )
+  }, [loadingSkeletonCount, customLoadingState])
 
   const emptyState = useMemo(
     () =>

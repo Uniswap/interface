@@ -36,6 +36,7 @@ import {
   v24Schema,
   v25Schema,
   v26Schema,
+  v27Schema,
 } from 'src/store/schema'
 import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -48,7 +49,11 @@ import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
-import { testMigrateSearchHistory, testRemoveTHBFromCurrency } from 'uniswap/src/state/uniswapMigrationTests'
+import {
+  testAddActivityVisibility,
+  testMigrateSearchHistory,
+  testRemoveTHBFromCurrency,
+} from 'uniswap/src/state/uniswapMigrationTests'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBatchedTransactionsState } from 'wallet/src/features/batchedTransactions/slice'
@@ -346,5 +351,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v26 to v27', () => {
     testMigrateSearchHistory(migrations[27], v26Schema)
+  })
+
+  it('migrates from v27 to v29', () => {
+    testAddActivityVisibility(migrations[29], v27Schema)
   })
 })

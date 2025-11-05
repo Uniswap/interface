@@ -1,0 +1,45 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "style": {
+        "noRestrictedImports": {
+          "level": "error",
+          "options": {
+            "paths": {
+              "lodash": "Use lodash-es instead",
+              "moment": "Use date-fns instead"
+            }
+          }
+        },
+        "noRestrictedGlobals": {
+          "level": "error",
+          "options": {
+            "deniedGlobals": ["event", "name"]
+          }
+        }
+      }
+    }
+  },
+  "overrides": [
+    {
+      "include": ["src/test/**"],
+      "linter": {
+        "rules": {
+          "style": {
+            "noRestrictedImports": {
+              "level": "error",
+              "options": {
+                "paths": {
+                  "__INCLUDE_GLOBAL_VALUES__": true,
+                  "react": "Use preact in tests"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

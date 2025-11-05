@@ -259,9 +259,9 @@ export function useInitialCurrencyState(): {
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
     // Default to native if no query params or chain is not compatible with testnet or mainnet mode
     if (!hasCurrencyQueryParams || !isSupportedChainCompatible) {
-      const initialChainId = persistedFilteredChainIds?.input
+      const initialChainId = persistedFilteredChainIds?.input ?? defaultChainId
       return {
-        initialInputCurrencyAddress: getNativeAddress(initialChainId ?? defaultChainId),
+        initialInputCurrencyAddress: getNativeAddress(initialChainId),
         initialChainId,
       }
     }

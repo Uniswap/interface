@@ -29,9 +29,9 @@ describe('Dialog component', () => {
         subtext="Mock Subtext"
         modalName={ModalName.Dialog}
         primaryButtonText="Primary Button"
-        primaryButtonOnClick={mockPrimaryClick}
+        primaryButtonOnPress={mockPrimaryClick}
         secondaryButtonText="Close"
-        secondaryButtonOnClick={mockOnClose}
+        secondaryButtonOnPress={mockOnClose}
         onClose={mockOnClose}
         {...props}
       />,
@@ -63,7 +63,7 @@ describe('Dialog component', () => {
   it('handles secondary button click when provided', () => {
     const { getByText } = renderDialog({
       secondaryButtonText: 'Secondary Button',
-      secondaryButtonOnClick: mockSecondaryClick,
+      secondaryButtonOnPress: mockSecondaryClick,
     })
 
     fireEvent.press(getByText('Secondary Button'))

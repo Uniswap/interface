@@ -42,6 +42,7 @@ type PriceTextProps = {
 const PriceTextSection = memo(function PriceTextSection({
   loading,
   numberOfDigits,
+  relativeChange,
   spotPrice,
   startingPrice,
   shouldTreatAsStablecoin,
@@ -68,6 +69,7 @@ const PriceTextSection = memo(function PriceTextSection({
         */}
         <RelativeChangeText
           loading={loading || !isAnimatedNumberReady}
+          spotRelativeChange={relativeChange}
           startingPrice={startingPrice}
           shouldTreatAsStablecoin={shouldTreatAsStablecoin}
         />

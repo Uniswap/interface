@@ -164,3 +164,16 @@ export function addDismissedBridgedAndCompatibleWarnings(state: any): any {
     },
   }
 }
+
+// Mobile: 95
+// Extension: 29
+// Web: 59
+export function addActivityVisibility(state: any): any {
+  if (!state?.visibility) {
+    return state
+  }
+  return {
+    ...state,
+    visibility: { ...state.visibility, activity: {} },
+  }
+}

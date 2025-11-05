@@ -15,19 +15,23 @@ function GetHelpButton({ url }: { url?: string }): JSX.Element {
       <Flex
         row
         width="max-content"
-        borderRadius="$rounded16"
+        borderRadius="$rounded12"
         px="$spacing8"
-        py="$spacing4"
-        backgroundColor="$surface2"
+        py="$spacing6"
         gap="$spacing4"
         alignItems="center"
-        hoverStyle={{ backgroundColor: '$surface2Hovered' }}
+        borderWidth="$spacing1"
+        borderColor="$surface3"
+        animation="fast"
+        hoverStyle={{
+          backgroundColor: '$surface3Hovered',
+        }}
         $platform-web={{
           width: 'fit-content',
         }}
       >
-        <EnvelopeHeart color="$neutral2" size="$icon.16" />
-        <Text variant="body2" color="$neutral2">
+        <EnvelopeHeart color="$neutral1" size="$icon.16" />
+        <Text variant="buttonLabel4" color="$neutral1">
           {t('common.getHelp.button')}
         </Text>
       </Flex>

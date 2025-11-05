@@ -47,6 +47,12 @@ exports[`LinkButton renders without error 1`] = `
       style={
         {
           "alignItems": "center",
+          "color": {
+            "dynamic": {
+              "dark": "#FFFFFF",
+              "light": "#222222",
+            },
+          },
           "flexDirection": "row",
           "gap": 4,
           "justifyContent": "center",
@@ -66,7 +72,7 @@ exports[`LinkButton renders without error 1`] = `
               },
             },
             "flexShrink": 1,
-            "fontFamily": "Basel Grotesk",
+            "fontFamily": "Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif",
           }
         }
         suppressHighlighting={true}

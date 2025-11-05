@@ -227,7 +227,7 @@ export function SettingsScreen(): JSX.Element {
             />
             <SettingsItem
               Icon={Chart}
-              title={t('settings.setting.smallBalances.title')}
+              title={t('settings.setting.balancesActivity.title')}
               onPress={(): void => setIsPortfolioBalanceModalOpen(true)}
             />
             {isSmartWalletEnabled ? (

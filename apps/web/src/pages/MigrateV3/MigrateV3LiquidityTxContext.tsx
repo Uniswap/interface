@@ -153,7 +153,7 @@ export function MigrateV3PositionTxContextProvider({
         pool: {
           token0: getTokenOrZeroAddress(destinationPool.currency0),
           token1: getTokenOrZeroAddress(destinationPool.currency1),
-          fee: positionState.fee.feeAmount,
+          fee: positionState.fee?.feeAmount,
           hooks: positionState.hook,
           tickSpacing: destinationPool.tickSpacing,
         },
@@ -180,7 +180,7 @@ export function MigrateV3PositionTxContextProvider({
     account,
     poolOrPair,
     ticks,
-    positionState.fee.feeAmount,
+    positionState.fee?.feeAmount,
     positionState.hook,
     approvalsNeeded,
   ])

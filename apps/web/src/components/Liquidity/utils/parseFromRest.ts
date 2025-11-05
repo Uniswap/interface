@@ -200,8 +200,8 @@ export function getSDKPoolFromPoolInformation({
   }
   if (protocolVersion === ProtocolVersion.V2) {
     return new Pair(
-      CurrencyAmount.fromRawAmount(token0, poolOrPair.tokenAReserves ?? '0'),
-      CurrencyAmount.fromRawAmount(token1, poolOrPair.tokenBReserves ?? '0'),
+      CurrencyAmount.fromRawAmount(token0, poolOrPair.token0Reserves ?? '0'),
+      CurrencyAmount.fromRawAmount(token1, poolOrPair.token1Reserves ?? '0'),
     )
   }
 

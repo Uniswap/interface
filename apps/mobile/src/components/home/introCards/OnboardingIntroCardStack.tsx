@@ -8,8 +8,13 @@ import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
-import { Flex } from 'ui/src'
-import { BRIDGED_ASSETS_CARD_BANNER, PUSH_NOTIFICATIONS_CARD_BANNER } from 'ui/src/assets'
+import { Flex, useIsDarkMode } from 'ui/src'
+import {
+  BRIDGED_ASSETS_CARD_BANNER,
+  BRIDGED_ASSETS_V2_CARD_BANNER_DARK,
+  BRIDGED_ASSETS_V2_CARD_BANNER_LIGHT,
+  PUSH_NOTIFICATIONS_CARD_BANNER,
+} from 'ui/src/assets'
 import { Buy } from 'ui/src/components/icons'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -30,9 +35,14 @@ import { useSharedIntroCards } from 'wallet/src/components/introCards/useSharedI
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import {
   selectHasViewedBridgedAssetsCard,
+  selectHasViewedBridgedAssetsV2Card,
   selectHasViewedNotificationsCard,
 } from 'wallet/src/features/behaviorHistory/selectors'
-import { setHasViewedBridgedAssetsCard, setHasViewedNotificationsCard } from 'wallet/src/features/behaviorHistory/slice'
+import {
+  setHasViewedBridgedAssetsCard,
+  setHasViewedBridgedAssetsV2Card,
+  setHasViewedNotificationsCard,
+} from 'wallet/src/features/behaviorHistory/slice'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type OnboardingIntroCardStackProps = {
@@ -44,6 +54,7 @@ export function OnboardingIntroCardStack({
   isLoading = false,
 }: OnboardingIntroCardStackProps): JSX.Element | null {
   const { t } = useTranslation()
+  const isDarkMode = useIsDarkMode()
   const dispatch = useDispatch()
   const activeAccount = useActiveAccountWithThrow()
   const address = activeAccount.address
@@ -59,6 +70,10 @@ export function OnboardingIntroCardStack({
 
   const hasViewedBridgedAssetCard = useSelector(selectHasViewedBridgedAssetsCard)
   const shouldShowBridgedAssetCard = useFeatureFlag(FeatureFlags.BridgedAssetsBanner) && !hasViewedBridgedAssetCard
+
+  const hasViewedBridgedAssetsV2Card = useSelector(selectHasViewedBridgedAssetsV2Card)
+  const shouldShowBridgedAssetsV2Card =
+    useFeatureFlag(FeatureFlags.BridgedAssetsBannerV2) && !hasViewedBridgedAssetsV2Card
 
   const { navigateToSwapFlow } = useWalletNavigation()
 
@@ -151,6 +166,26 @@ export function OnboardingIntroCardStack({
       })
     }
 
+    if (shouldShowBridgedAssetsV2Card) {
+      output.push({
+        loggingName: OnboardingCardLoggingName.BridgedAsset,
+        graphic: {
+          type: IntroCardGraphicType.Image,
+          image: isDarkMode ? BRIDGED_ASSETS_V2_CARD_BANNER_DARK : BRIDGED_ASSETS_V2_CARD_BANNER_LIGHT,
+        },
+        title: t('onboarding.home.intro.bridgedAssets.title'),
+        description: t('onboarding.home.intro.bridgedAssets.description.v2'),
+        cardType: CardType.Dismissible,
+        onPress: () => {
+          navigateToBridgedAssetSwap()
+          dispatch(setHasViewedBridgedAssetsV2Card(true))
+        },
+        onClose: () => {
+          dispatch(setHasViewedBridgedAssetsV2Card(true))
+        },
+      })
+    }
+
     if (shouldShowBridgedAssetCard) {
       output.push({
         loggingName: OnboardingCardLoggingName.BridgedAsset,
@@ -177,9 +212,11 @@ export function OnboardingIntroCardStack({
     isSignerAccount,
     sharedCards,
     t,
+    isDarkMode,
     dispatch,
     navigateToBridgedAssetSwap,
     shouldShowBridgedAssetCard,
+    shouldShowBridgedAssetsV2Card,
     showEnableNotificationsCard,
   ])
 

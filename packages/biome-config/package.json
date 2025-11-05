@@ -9,7 +9,8 @@
     ".": "./compiled/base.json"
   },
   "scripts": {
-    "prepare": "bun ./scripts/generate.js && biome check --write"
+    "prepare": "bun ./scripts/generate.js && biome check --write",
+    "test": "bun test"
   },
   "keywords": ["biome", "config", "linting", "formatting"],
   "license": "MIT"

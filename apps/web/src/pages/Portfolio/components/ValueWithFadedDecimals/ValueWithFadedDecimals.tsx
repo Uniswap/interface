@@ -1,29 +1,38 @@
 import { TableText } from 'components/Table/styled'
 import { useParseCurrencyAmountParts } from 'pages/Portfolio/components/ValueWithFadedDecimals/parseCurrencyAmountParts'
-import { EM_DASH } from 'ui/src'
+import { EM_DASH, Text, TextProps } from 'ui/src'
 
-export function ValueWithFadedDecimals({ value }: { value: string }) {
+type ValueWithFadedDecimalsProps = {
+  value: string
+  isTableText?: boolean
+  textProps?: TextProps
+}
+
+export function ValueWithFadedDecimals({ value, isTableText, textProps }: ValueWithFadedDecimalsProps) {
   const { prefixSymbol, wholeNumber, decimalNumber, suffixSymbol, suffix, decimalSeparator } =
     useParseCurrencyAmountParts(value)
 
+  const TextComponent = isTableText ? TableText : Text
+
   if (!value) {
-    return <TableText>{EM_DASH}</TableText>
+    return <TextComponent {...textProps}>{EM_DASH}</TextComponent>
   }
 
   return (
-    <TableText>
+    <TextComponent {...textProps}>
       {prefixSymbol}
       {wholeNumber}
       {decimalNumber && (
         <>
-          <TableText color="$neutral2">
+          {/* $neutral2 needs to be last so it overrides the textProps color */}
+          <TextComponent {...textProps} color="$neutral2">
             {decimalSeparator}
             {decimalNumber}
-          </TableText>
+          </TextComponent>
           {suffix}
         </>
       )}
       {suffixSymbol}
-    </TableText>
+    </TextComponent>
   )
 }

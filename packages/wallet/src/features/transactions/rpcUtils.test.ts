@@ -10,6 +10,7 @@ describe('getRPCErrorCategory', () => {
       expected: 'tx_limit_reached_for_delegated_account',
     },
     { error: rpcUtilsFixtures.timeout, expected: 'timeout' },
+    { error: rpcUtilsFixtures.confirmationTimeout, expected: 'confirmation_timeout' },
     { error: rpcUtilsFixtures.noNetwork, expected: 'no_network' },
     { error: rpcUtilsFixtures.rateLimited1, expected: 'rate_limited' },
     { error: rpcUtilsFixtures.rateLimited2, expected: 'rate_limited' },

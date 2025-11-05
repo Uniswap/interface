@@ -4,7 +4,7 @@ import { Flex, Text, Tooltip, useSporeColors } from 'ui/src'
 import { Eye } from 'ui/src/components/icons/Eye'
 import { iconSizes } from 'ui/src/theme'
 
-export default function DemoAddressDisplay() {
+export function DemoAddressDisplay() {
   const colors = useSporeColors()
   const { t } = useTranslation()
 

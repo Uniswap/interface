@@ -95,7 +95,7 @@ exports[`SmartContractSpeedBumpModal > should render correctly 1`] = `
                 <dialog
                   aria-describedby="description-:r3:"
                   aria-labelledby="title-:r3:"
-                  class="is_DialogContent _transform-0enter-translateX01029433866 _opacity-0enter-0 _overflowX-_platformweb_auto _overflowY-_platformweb_auto _pt-_sm_t-space-spa1360334080 _pr-_sm_t-space-spa1360334080 _pb-_sm_t-space-spa1360334080 _pl-_sm_t-space-spa1360334080 _height-_sm_max-content _maxHeight-_sm_calc100dvh-296810814 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-background _pt-t-space-spa1360334047 _pr-t-space-spa1360334047 _pb-t-space-spa1360334047 _pl-t-space-spa1360334047 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _zIndex-1060 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _gap-t-space-spa94665589 _mt-t-space-non101 _mr-t-space-non101 _mb-t-space-non101 _ml-t-space-non101 _maxHeight-calc100vh-32087695319 _maxWidth-420px _width-calc100vw-32087695319 _outlineStyle-none _boxShadow-0px3px6pxva26674076"
+                  class="is_DialogContent _transform-0enter-translateX01029433866 _opacity-0enter-0 _overflowX-_platformweb_auto _overflowY-_platformweb_auto _pt-_sm_t-space-spa1360334080 _pr-_sm_t-space-spa1360334080 _pb-_sm_t-space-spa1360334080 _pl-_sm_t-space-spa1360334080 _height-_sm_max-content _maxHeight-_sm_calc100dvh-296810814 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-background _pt-t-space-pad1331704925 _pr-t-space-spa1360334047 _pb-t-space-spa1360334047 _pl-t-space-spa1360334047 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _zIndex-1060 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _gap-t-space-gap1602 _mt-t-space-non101 _mr-t-space-non101 _mb-t-space-non101 _ml-t-space-non101 _maxHeight-calc100vh-32087695319 _maxWidth-420px _width-calc100vw-32087695319 _outlineStyle-none _boxShadow-0px3px6pxva26674076"
                   data-state="open"
                   id="content-:r3:"
                   style="opacity: 1;"
@@ -113,11 +113,11 @@ exports[`SmartContractSpeedBumpModal > should render correctly 1`] = `
                         target="_blank"
                       >
                         <div
-                          class="_backgroundColor-0hover-surface2Hov3121676 _width-_platformweb_fit-content _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665589 _pb-t-space-spa94665589 _backgroundColor-surface2 _gap-t-space-spa94665589 _alignItems-center"
+                          class="_backgroundColor-0hover-surface3Hov3121676 _width-_platformweb_fit-content _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665591 _pb-t-space-spa94665591 _gap-t-space-spa94665589 _alignItems-center _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                         >
                           <svg
                             stroke-width="8"
-                            style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                            style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
                             viewBox="0 0 16 16"
                           >
                             <path
@@ -126,7 +126,7 @@ exports[`SmartContractSpeedBumpModal > should render correctly 1`] = `
                             />
                           </svg>
                           <span
-                            class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                            class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-me3083741"
                             data-disable-theme="true"
                           >
                             Get help
@@ -156,10 +156,10 @@ exports[`SmartContractSpeedBumpModal > should render correctly 1`] = `
                     </div>
                   </div>
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080 _gap-t-space-spa94665593"
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-t-space-spa1360334076"
                   >
                     <div
-                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface3 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347366 _width-t-size-spac100347366 _alignItems-center _justifyContent-center _mb-t-space-spa94665589"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-surface3 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _height-t-size-spac100347366 _width-t-size-spac100347366 _alignItems-center _justifyContent-center"
                       data-testid="dialog-icon"
                     >
                       <svg
@@ -174,44 +174,48 @@ exports[`SmartContractSpeedBumpModal > should render correctly 1`] = `
                         />
                       </svg>
                     </div>
-                    <span
-                      class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-t-space-spa94665593 _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
-                      data-disable-theme="true"
-                    >
-                      Is this a wallet address?
-                    </span>
-                    <span
-                      class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _textAlign-center"
-                      data-disable-theme="true"
-                    >
-                      You’re about to send tokens to a special type of address - a smart contract. Double-check it’s the address you intended to send to. If it’s wrong, your tokens could be lost forever.
-                    </span>
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _gap-t-space-spa94665593 _width-10037 _mt-t-space-spa1360334076 _flexDirection-row"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-spa94665593 _alignItems-center"
                     >
-                      <button
-                        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-surface3Hov3121676 _backgroundColor-0focus-visible-surface3Hov3121676 _outlineColor-0focus-visible-neutral3Hov3121676 _transform-0active-scale0--981281 _backgroundColor-0active-surface3Hov3121676 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-surface3 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347366 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
-                        dd-action-name="Cancel"
+                      <span
+                        class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+                        data-disable-theme="true"
                       >
-                        <span
-                          class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-                          line-height-disabled="false"
-                        >
-                          Cancel
-                        </span>
-                      </button>
-                      <button
-                        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-accent2Hove112785 _backgroundColor-0focus-visible-accent2Hove112785 _outlineColor-0focus-visible-accent1Hove112785 _transform-0active-scale0--981281 _backgroundColor-0active-accent2Hove112785 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-accent2 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347366 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
-                        dd-action-name="Continue"
+                        Is this a wallet address?
+                      </span>
+                      <span
+                        class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548 _textAlign-center"
+                        data-disable-theme="true"
                       >
-                        <span
-                          class="font_button _color-_groupitem-hover_accent1Hove112785 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
-                          line-height-disabled="false"
-                        >
-                          Continue
-                        </span>
-                      </button>
+                        You’re about to send tokens to a special type of address - a smart contract. Double-check it’s the address you intended to send to. If it’s wrong, your tokens could be lost forever.
+                      </span>
                     </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _gap-t-space-spa94665593 _width-10037 _flexDirection-row"
+                  >
+                    <button
+                      class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-accent2Hove112785 _backgroundColor-0focus-visible-accent2Hove112785 _outlineColor-0focus-visible-accent1Hove112785 _transform-0active-scale0--981281 _backgroundColor-0active-accent2Hove112785 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-accent2 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347333 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
+                      dd-action-name="Continue"
+                    >
+                      <span
+                        class="font_button _color-_groupitem-hover_accent1Hove112785 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+                        line-height-disabled="false"
+                      >
+                        Continue
+                      </span>
+                    </button>
+                    <button
+                      class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _backgroundColor-0hover-surface3Hov3121676 _backgroundColor-0focus-visible-surface3Hov3121676 _outlineColor-0focus-visible-neutral3Hov3121676 _transform-0active-scale0--981281 _backgroundColor-0active-surface3Hov3121676 _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-surface3 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-pointer _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _minHeight-t-size-spac100347333 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
+                      dd-action-name="Cancel"
+                    >
+                      <span
+                        class="font_button _color-_groupitem-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _fontSize-f-size-medi3736 _fontWeight-f-weight-me3083741 _lineHeight-f-lineHeigh1262266530"
+                        line-height-disabled="false"
+                      >
+                        Cancel
+                      </span>
+                    </button>
                   </div>
                 </dialog>
               </div>

@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getTokenProtectionFeeOnTransfer } from 'uniswap/src/features/tokens/safetyUtils'
 
 /**

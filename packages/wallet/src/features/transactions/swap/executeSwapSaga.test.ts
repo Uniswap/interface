@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { call } from '@redux-saga/core/effects'
 import { TradingApi } from '@universe/api'
 import { expectSaga } from 'redux-saga-test-plan'

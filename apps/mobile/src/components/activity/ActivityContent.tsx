@@ -3,7 +3,7 @@ import { LegendList } from '@legendapp/list'
 import { useScrollToTop } from '@react-navigation/native'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { ForwardedRef } from 'react'
-import { forwardRef, memo, useMemo, useRef } from 'react'
+import { forwardRef, memo, useMemo, useRef, useState } from 'react'
 import type { FlatList } from 'react-native'
 import { RefreshControl } from 'react-native'
 import type Animated from 'react-native-reanimated'
@@ -16,7 +16,7 @@ import { useBiometricAppSettings } from 'src/features/biometrics/useBiometricApp
 import { useBiometricPrompt } from 'src/features/biometricsSettings/hooks'
 import { openModal } from 'src/features/modals/modalSlice'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex, Loader, useSporeColors } from 'ui/src'
 import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -29,6 +29,7 @@ import { useActivityDataWallet } from 'wallet/src/features/activity/useActivityD
 
 const ESTIMATED_ITEM_SIZE = 92
 const AMOUNT_TO_DRAW = 18
+const ON_END_REACHED_THRESHOLD = 0.1 // trigger onEndReached at 10% of visible length
 
 export const ActivityContent = memo(
   forwardRef<FlatList<unknown>, TabProps>(function _ActivityTab(
@@ -61,7 +62,16 @@ export const ActivityContent = memo(
       dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
     })
 
-    const { maybeEmptyComponent, renderActivityItem, sectionData, keyExtractor } = useActivityDataWallet({
+    const {
+      maybeEmptyComponent,
+      renderActivityItem,
+      sectionData,
+      keyExtractor,
+      fetchNextPage,
+      hasNextPage,
+      isFetchingNextPage,
+      refetch,
+    } = useActivityDataWallet({
       evmOwner: owner,
       authTrigger: requiresBiometrics ? biometricsTrigger : undefined,
       isExternalProfile,
@@ -71,6 +81,20 @@ export const ActivityContent = memo(
 
     usePerformanceLogger(DDRumManualTiming.RenderActivityTabList, [])
 
+    const [isRefreshing, setIsRefreshing] = useState(false)
+
+    const handleRefresh = useEvent(async () => {
+      setIsRefreshing(true)
+      try {
+        onRefresh?.()
+        await refetch()
+      } finally {
+        setIsRefreshing(false)
+      }
+    })
+
+    const refreshingAll = refreshing ?? isRefreshing
+
     const refreshControl = useMemo(() => {
       const progressViewOffset = isBottomTabsEnabled
         ? undefined
@@ -79,12 +103,12 @@ export const ActivityContent = memo(
       return (
         <RefreshControl
           progressViewOffset={progressViewOffset}
-          refreshing={refreshing ?? false}
+          refreshing={refreshingAll}
           tintColor={colors.neutral3.get()}
-          onRefresh={onRefresh}
+          onRefresh={handleRefresh}
         />
       )
-    }, [isBottomTabsEnabled, insets.top, headerHeight, refreshing, colors.neutral3, onRefresh])
+    }, [isBottomTabsEnabled, insets.top, headerHeight, refreshingAll, colors.neutral3, handleRefresh])
 
     const List = renderedInModal ? AnimatedBottomSheetFlatList : AnimatedFlatList
 
@@ -103,11 +127,20 @@ export const ActivityContent = memo(
             estimatedItemSize={ESTIMATED_ITEM_SIZE}
             drawDistance={ESTIMATED_ITEM_SIZE * AMOUNT_TO_DRAW}
             ListEmptyComponent={maybeEmptyComponent}
-            ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
+            ListFooterComponent={
+              isExternalProfile ? null : (
+                <Flex>
+                  {isFetchingNextPage && <Loader.Transaction />}
+                  {adaptiveFooter}
+                </Flex>
+              )
+            }
             contentContainerStyle={containerProps?.contentContainerStyle}
             refreshControl={refreshControl}
-            refreshing={refreshing}
+            refreshing={refreshingAll}
             onContentSizeChange={onContentSizeChange}
+            onEndReached={hasNextPage && !isFetchingNextPage ? fetchNextPage : undefined}
+            onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
           />
         ) : (
           <List
@@ -117,7 +150,7 @@ export const ActivityContent = memo(
             keyExtractor={keyExtractor}
             maxToRenderPerBatch={10}
             refreshControl={refreshControl}
-            refreshing={refreshing}
+            refreshing={refreshingAll}
             renderItem={renderActivityItem}
             showsVerticalScrollIndicator={false}
             // `sectionData` will be either an array of transactions or an array of loading skeletons
@@ -125,9 +158,18 @@ export const ActivityContent = memo(
             estimatedItemSize={ESTIMATED_ITEM_SIZE}
             ListEmptyComponent={maybeEmptyComponent}
             // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
-            ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
+            ListFooterComponent={
+              isExternalProfile ? null : (
+                <Flex>
+                  {isFetchingNextPage && <Loader.Transaction />}
+                  {adaptiveFooter}
+                </Flex>
+              )
+            }
             onScroll={scrollHandler}
             onContentSizeChange={onContentSizeChange}
+            onEndReached={hasNextPage && !isFetchingNextPage ? fetchNextPage : undefined}
+            onEndReachedThreshold={ON_END_REACHED_THRESHOLD}
             {...containerProps}
           />
         )}

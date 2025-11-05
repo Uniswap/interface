@@ -248,7 +248,7 @@ function CreatePositionContent({
             currencyInputs={currencyInputs}
             setCurrencyInputs={setCurrencyInputs}
             initialPositionState={{
-              fee: initialInputs.fee,
+              fee: initialInputs.fee ?? undefined,
               hook: initialInputs.hook ?? undefined,
               protocolVersion: initialProtocolVersion,
             }}

@@ -134,6 +134,7 @@ export function getPercentageError(
  * category. As more distinct patterns are found from the errors, we
  * should update this function to categorize them.
  */
+// eslint-disable-next-line complexity
 export function getRPCErrorCategory(error: Error): string {
   const message = error.message
   switch (true) {
@@ -157,6 +158,8 @@ export function getRPCErrorCategory(error: Error): string {
       return 'already_known'
     case message.includes('could not detect network'):
       return 'no_network'
+    case message.includes("was added to the mempool but wasn't confirmed within"):
+      return 'confirmation_timeout'
     case message.includes('code=TIMEOUT'):
       return 'timeout'
     case message.includes('Cannot read properties of'):

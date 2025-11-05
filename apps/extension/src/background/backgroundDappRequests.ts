@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { rpcErrors, serializeError } from '@metamask/rpc-errors'
 import { removeDappConnection } from 'src/app/features/dapp/actions'
 import { changeChain } from 'src/app/features/dapp/changeChain'

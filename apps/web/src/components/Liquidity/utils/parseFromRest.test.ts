@@ -80,8 +80,8 @@ describe('getSDKPoolFromPoolInformation', () => {
     tokenAddressA = token0.address
     tokenAddressB = token1.address
     chainId = ChainId.MAINNET
-    tokenAReserves = '1000000000000000000'
-    tokenBReserves = '2000000000000000000'
+    token0Reserves = '1000000000000000000'
+    token1Reserves = '2000000000000000000'
     hookAddress = hooks.address
     constructor(readonly protocolVersion: ProtocolVersion) {
       super()

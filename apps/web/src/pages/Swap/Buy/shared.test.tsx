@@ -228,9 +228,9 @@ describe('getCountryFromLocale', () => {
 
   it.each([
     [Locale.EnglishUnitedStates, 'US'],
-    [Locale.ItalianItaly, 'IT'],
     [Locale.JapaneseJapan, 'JP'],
     [Locale.PortugueseBrazil, 'BR'],
+    [Locale.PortuguesePortugal, 'PT'],
   ])('should extract country code %s correctly as %s', (locale, expectedCountryCode) => {
     // Arrange
     mockNavigatorLocale.mockReturnValue(locale)

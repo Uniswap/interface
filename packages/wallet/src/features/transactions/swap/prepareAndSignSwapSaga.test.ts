@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { call, select } from '@redux-saga/core/effects'
 import { MaxUint256, TradeType } from '@uniswap/sdk-core'
 import { TradingApi, type UnwrapQuoteResponse, type WrapQuoteResponse } from '@universe/api'

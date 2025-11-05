@@ -108,6 +108,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
     // Setup default mocks
     mockBiometricUnlockStorage.get.mockResolvedValue({
       credentialId: mockCredentialId,
+      transports: ['internal'],
       secretPayload: mockOldEncryptedPayload,
     })
 
@@ -146,6 +147,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
             {
               type: 'public-key',
               id: credentialIdBuffer,
+              transports: ['internal'],
             },
           ],
           userVerification: 'required',
@@ -160,6 +162,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
       // 4. Should update the stored biometric data with re-encrypted password
       expect(mockBiometricUnlockStorage.set).toHaveBeenCalledWith({
         credentialId: mockCredentialId,
+        transports: ['internal'],
         secretPayload: expect.objectContaining({
           ciphertext: expect.any(String),
           iv: expect.any(String),
@@ -189,6 +192,7 @@ describe('useChangePasswordWithBiometricMutation', () => {
       const newBiometricData = setCall?.[0]
 
       expect(newBiometricData?.credentialId).toBe(mockCredentialId)
+      expect(newBiometricData?.transports).toEqual(['internal'])
       expect(newBiometricData?.secretPayload).toMatchObject({
         ciphertext: expect.any(String),
         iv: expect.any(String),

@@ -48,6 +48,7 @@ export function DeviceAccessScreen(): JSX.Element {
 
   const {
     flowState,
+    oldPassword,
     startPasswordReset,
     closeModal,
     onPasswordModalNext,
@@ -98,6 +99,7 @@ export function DeviceAccessScreen(): JSX.Element {
             return (
               <CreateNewPasswordModal
                 isOpen={true}
+                oldPassword={oldPassword}
                 onNext={onChangePasswordModalNext}
                 onClose={() => closeModal(PasswordResetFlowState.EnterNewPassword)}
               />

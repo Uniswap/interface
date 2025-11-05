@@ -5,7 +5,6 @@ import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useInterfaceWrap'
 import { useIsAmountSelectionInvalid } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsAmountSelectionInvalid'
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
 import { useIsTokenSelectionInvalid } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsTokenSelectionInvalid'
@@ -13,10 +12,10 @@ import { useIsTradeIndicative } from 'uniswap/src/features/transactions/swap/com
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import { getActionText } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/SubmitSwapButton'
 import { useSwapFormStoreDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export const useSwapFormButtonText = (): string => {
-  const { isInterfaceWrap } = useInterfaceWrap()
   const { t } = useTranslation()
   const { swapRedirectCallback } = useTransactionModalContext()
   const { currencies, wrapType, chainId } = useSwapFormStoreDerivedSwapInfo((s) => ({
@@ -39,6 +38,7 @@ export const useSwapFormButtonText = (): string => {
 
   const isIndicative = useIsTradeIndicative()
   const isWebFORNudgeEnabled = useIsWebFORNudgeEnabled()
+  const isWrap = wrapType !== WrapType.NotApplicable
 
   if (swapRedirectCallback) {
     return t('common.getStarted')
@@ -82,7 +82,7 @@ export const useSwapFormButtonText = (): string => {
     return t('common.insufficientTokenBalance.error.simple', { tokenSymbol: nativeCurrency.symbol ?? '' })
   }
 
-  if (isInterfaceWrap) {
+  if (isWrap) {
     return getActionText({ t, wrapType })
   }
 

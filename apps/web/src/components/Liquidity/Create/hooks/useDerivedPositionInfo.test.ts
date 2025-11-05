@@ -34,8 +34,8 @@ class MockPoolInformation extends PoolInformation {
   tokenAddressA = ETH_MAINNET.wrapped.address
   tokenAddressB = USDT.address
   chainId = ChainId.MAINNET
-  tokenAReserves = '1000000000000000000'
-  tokenBReserves = '2000000000000000000'
+  token0Reserves = '1000000000000000000'
+  token1Reserves = '2000000000000000000'
   hookAddress = ZERO_ADDRESS
 
   constructor(readonly protocolVersion: ProtocolVersion) {
@@ -68,8 +68,8 @@ const mockV4Pool = new V4Pool(
 )
 
 const mockPair = new Pair(
-  CurrencyAmount.fromRawAmount(ETH_MAINNET.wrapped, mockV2PairInformation.tokenAReserves),
-  CurrencyAmount.fromRawAmount(USDT, mockV2PairInformation.tokenBReserves),
+  CurrencyAmount.fromRawAmount(ETH_MAINNET.wrapped, mockV2PairInformation.token0Reserves),
+  CurrencyAmount.fromRawAmount(USDT, mockV2PairInformation.token1Reserves),
 )
 
 // remove the following mocks once the PoolInfoEndpoint is fully rolled out
