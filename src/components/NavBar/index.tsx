@@ -117,8 +117,8 @@ const Navbar = ({ blur }: { blur: boolean }) => {
           <Box className={styles.leftSideContainer}>
             <Box className={styles.logoContainer}>
               <TaikoLogo
-                width="35"
-                height="35"
+                width="125"
+                height="34"
                 data-testid="taiko-logo"
                 className={styles.logo}
                 onClick={handleUniIconClick}

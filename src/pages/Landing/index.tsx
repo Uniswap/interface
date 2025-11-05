@@ -5,8 +5,7 @@ import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
-import { BaseButton } from 'components/Button'
-import { AppleLogo } from 'components/Logo/AppleLogo'
+import { BaseButton, ButtonPrimary } from 'components/Button'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
 import { useMemo, useRef } from 'react'
@@ -15,9 +14,7 @@ import { Link as NativeLink } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
-import { getDownloadAppLinkProps } from 'utils/openDownloadApp'
 
 const PageContainer = styled.div`
   position: absolute;
@@ -262,7 +259,7 @@ const LandingSwapContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 1;
+  z-index: 995;
 `
 
 const SwapCss = css`
@@ -331,32 +328,23 @@ export default function Landing() {
               name={SharedEventName.ELEMENT_CLICKED}
               element={InterfaceElementName.CONTINUE_BUTTON}
             >
-              <ButtonCTA as={Link} to="/swap">
-                <ButtonCTAText>
-                  <Trans>Get started</Trans>
-                </ButtonCTAText>
-              </ButtonCTA>
-            </TraceEvent>
-          </ActionsContainer>
-          <LearnMoreContainer
-            onClick={() => {
+              <ButtonPrimary
+                        
+                          padding="16px 16px"
+                          width="100%"
+                          $borderRadius="12px"
+                          mt="1rem"
+                          onClick={() => {
               cardsRef?.current?.scrollIntoView({ behavior: 'smooth' })
             }}
-          >
-            <Trans>Learn more</Trans>
-            <LearnMoreArrow />
-          </LearnMoreContainer>
+                        >
+                  <Trans>Learn more</Trans>
+              </ButtonPrimary>
+            </TraceEvent>
+          </ActionsContainer>
+         
 
-          <DownloadWalletLink
-            {...getDownloadAppLinkProps({
-              // landing page specific tracking params
-              microSiteParams: `utm_source=home_page&utm_medium=webapp&utm_campaign=wallet_microsite&utm_id=1`,
-              appStoreParams: `ct=Uniswap-Home-Page&mt=8`,
-            })}
-          >
-            <AppleLogo width="20" height="20" />
-            Download the Uniswap Wallet for iOS
-          </DownloadWalletLink>
+        
         </ContentContainer>
         <AboutContentContainer isDarkMode={isDarkMode}>
           <CardGrid cols={cards.length} ref={cardsRef}>

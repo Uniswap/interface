@@ -19,13 +19,19 @@ const originalUniversalRouterAddress = SDK_UNIVERSAL_ROUTER_ADDRESS
 /**
  * Enhanced UNIVERSAL_ROUTER_ADDRESS that supports Taiko chains
  * Falls back to the original SDK implementation for other chains
+ *
+ * Note: For Taiko mainnet, UniversalRouter is not deployed. We use SwapRouter02 instead.
+ * This function returns undefined for Taiko chains without UniversalRouter, allowing
+ * the Permit2 allowance logic to gracefully handle chains without UniversalRouter.
  */
-export function UNIVERSAL_ROUTER_ADDRESS(chainId: number): string {
+export function UNIVERSAL_ROUTER_ADDRESS(chainId: number): string | undefined {
   // Check if this is a Taiko chain
   if (chainId === TAIKO_MAINNET_CHAIN_ID || chainId === TAIKO_HOODI_CHAIN_ID) {
     const address = TAIKO_UNIVERSAL_ROUTER_ADDRESS[chainId]
+    // Return undefined if UniversalRouter is not deployed on this Taiko chain
+    // This allows Permit2 to use regular ERC20 approvals instead of permit signatures
     if (!address || address === '0x0000000000000000000000000000000000000000') {
-      throw new Error(`Universal Router not deployed on Taiko chain ${chainId}`)
+      return undefined
     }
     return address
   }

@@ -1,9 +1,9 @@
 {
-  "name": "Taiko Hoodi Token List",
-  "timestamp": "2025-01-24T00:00:00.000Z",
+  "name": "Taiko Token List",
+  "timestamp": "2025-11-03T00:00:00.000Z",
   "version": {
     "major": 1,
-    "minor": 0,
+    "minor": 1,
     "patch": 0
   },
   "tags": {
@@ -14,11 +14,51 @@
     "wrapped": {
       "name": "Wrapped",
       "description": "Tokens that represent a wrapped native asset"
+    },
+    "native": {
+      "name": "Native Token",
+      "description": "Native protocol token"
     }
   },
   "logoURI": "https://taiko.xyz/images/logos/taiko-icon.svg",
-  "keywords": ["taiko", "hoodi", "testnet", "uniswap"],
+  "keywords": ["taiko", "mainnet", "hoodi", "testnet", "uniswap"],
   "tokens": [
+    {
+      "name": "Wrapped Ether",
+      "address": "0xA51894664A773981C6C112C43ce576f315d5b1B6",
+      "symbol": "WETH",
+      "decimals": 18,
+      "chainId": 167000,
+      "logoURI": "https://assets.coingecko.com/coins/images/2518/large/weth.png",
+      "tags": ["wrapped"]
+    },
+    {
+      "name": "USD Coin",
+      "address": "0x07d83526730c7438048D55A4fc0b850e2aaB6f0b",
+      "symbol": "USDC",
+      "decimals": 6,
+      "chainId": 167000,
+      "logoURI": "https://assets.coingecko.com/coins/images/6319/large/usdc.png",
+      "tags": ["stablecoin"]
+    },
+    {
+      "name": "Tether USD",
+      "address": "0x2DEF195713CF4a606B49D07E520e22C17899a736",
+      "symbol": "USDT",
+      "decimals": 6,
+      "chainId": 167000,
+      "logoURI": "https://assets.coingecko.com/coins/images/325/large/Tether.png",
+      "tags": ["stablecoin"]
+    },
+    {
+      "name": "Taiko",
+      "address": "0xA9d23408b9bA935c230493c40C73824Df71A0975",
+      "symbol": "TAIKO",
+      "decimals": 18,
+      "chainId": 167000,
+      "logoURI": "https://assets.coingecko.com/coins/images/38058/standard/icon.png",
+      "tags": ["native"]
+    },
     {
       "name": "Wrapped Ether",
       "address": "0x3B39685B5495359c892DDD1057B5712F49976835",
