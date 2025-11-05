@@ -1,11 +1,11 @@
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
-import { Trace, TraceEvent } from 'analytics'
+import { InterfacePageName } from '@uniswap/analytics-events'
+import { Trace } from 'analytics'
 import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
 import ProtocolBanner from 'components/About/ProtocolBanner'
-import { BaseButton, ButtonPrimary } from 'components/Button'
+import { BaseButton } from 'components/Button'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import Swap from 'pages/Swap'
 import { useMemo, useRef } from 'react'
@@ -259,7 +259,7 @@ const LandingSwapContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  z-index: 995;
+  z-index: 1;
 `
 
 const SwapCss = css`
@@ -322,29 +322,17 @@ export default function Landing() {
               )}
             </SubText>
           </SubTextContainer>
-          <ActionsContainer>
-            <TraceEvent
-              events={[BrowserEvent.onClick]}
-              name={SharedEventName.ELEMENT_CLICKED}
-              element={InterfaceElementName.CONTINUE_BUTTON}
-            >
-              <ButtonPrimary
-                        
-                          padding="16px 16px"
-                          width="100%"
-                          $borderRadius="12px"
-                          mt="1rem"
-                          onClick={() => {
+       
+          <LearnMoreContainer
+            onClick={() => {
               cardsRef?.current?.scrollIntoView({ behavior: 'smooth' })
             }}
-                        >
-                  <Trans>Learn more</Trans>
-              </ButtonPrimary>
-            </TraceEvent>
-          </ActionsContainer>
-         
+          >
+            <Trans>Learn more</Trans>
+            <LearnMoreArrow />
+          </LearnMoreContainer>
 
-        
+       
         </ContentContainer>
         <AboutContentContainer isDarkMode={isDarkMode}>
           <CardGrid cols={cards.length} ref={cardsRef}>
