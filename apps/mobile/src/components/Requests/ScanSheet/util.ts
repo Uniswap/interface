@@ -46,6 +46,9 @@ export async function getSupportedURI(
     return undefined
   }
 
+  // Decode URI in case it's encoded (handles both percent encoding and HTML ampersand)
+  uri = safeDecodeURIComponent(uri).replace(/&amp;/g, '&')
+
   const maybeAddress = getValidAddress({
     address: uri,
     platform: Platform.EVM,
@@ -72,7 +75,7 @@ export async function getSupportedURI(
     (await getWcUriWithCustomPrefix(uri, CUSTOM_UNI_QR_CODE_PREFIX)) ||
     (await getWcUriWithCustomPrefix(uri, UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM)) ||
     (await getWcUriWithCustomPrefix(uri, UNISWAP_URL_SCHEME)) ||
-    (await getWcUriWithCustomPrefix(decodeURIComponent(uri), UNISWAP_WALLETCONNECT_URL)) ||
+    (await getWcUriWithCustomPrefix(uri, UNISWAP_WALLETCONNECT_URL)) ||
     {}
 
   if (maybeCustomWcUri && type) {
@@ -147,6 +150,22 @@ export function getScantasticQueryParams(uri: string): Nullable<string> {
   return uriParts[1] || null
 }
 
+function safeDecodeURIComponent(value: string): string {
+  try {
+    return decodeURIComponent(value)
+  } catch (e) {
+    logger.error(new Error('Failed to decode URI component'), {
+      tags: {
+        file: 'util.ts',
+        function: 'safeDecodeURIComponent',
+      },
+      extra: { value, error: e },
+    })
+    // If decoding fails, return the original value
+    return value
+  }
+}
+
 const PARAM_PUB_KEY = 'pubKey'
 const PARAM_UUID = 'uuid'
 const PARAM_VENDOR = 'vendor'
@@ -181,10 +200,10 @@ export function parseScantasticParams(uri: string): ScantasticParams | undefined
   try {
     return ScantasticParamsSchema.parse({
       publicKey: publicKey ? JSON.parse(publicKey) : undefined,
-      uuid: uuid ? decodeURIComponent(uuid) : undefined,
-      vendor: vendor ? decodeURIComponent(vendor) : undefined,
-      model: model ? decodeURIComponent(model) : undefined,
-      browser: browser ? decodeURIComponent(browser) : undefined,
+      uuid: uuid ? safeDecodeURIComponent(uuid) : undefined,
+      vendor: vendor ? safeDecodeURIComponent(vendor) : undefined,
+      model: model ? safeDecodeURIComponent(model) : undefined,
+      browser: browser ? safeDecodeURIComponent(browser) : undefined,
     })
   } catch (e) {
     const wrappedError = new Error('Invalid scantastic params', { cause: e })

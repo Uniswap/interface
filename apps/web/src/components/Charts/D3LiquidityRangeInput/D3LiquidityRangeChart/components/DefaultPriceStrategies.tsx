@@ -2,6 +2,7 @@ import { useChartPriceState } from 'components/Charts/D3LiquidityRangeInput/D3Li
 import { useLiquidityChartStoreRenderingContext } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/viewSelectors'
 import { DefaultPriceStrategy } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'
 import { useLiquidityChartStoreActions } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/useLiquidityChartStore'
+import { POPUP_MEDIUM_DISMISS_MS } from 'components/Popups/constants'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
@@ -115,7 +116,7 @@ export function DefaultPriceStrategies({ isLoading }: { isLoading: boolean }) {
       popupRegistry.addPopup(
         { type: PopupType.Error, error: i18n.t('position.default_price_strategies.error') },
         'default-price-strategy-error',
-        3000,
+        POPUP_MEDIUM_DISMISS_MS,
       )
     }
   })

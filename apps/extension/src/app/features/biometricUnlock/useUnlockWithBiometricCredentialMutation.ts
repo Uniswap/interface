@@ -58,10 +58,10 @@ async function getPasswordFromBiometricCredential(abortSignal: AbortSignal): Pro
     throw new Error('No biometric unlock credential found')
   }
 
-  const { credentialId } = biometricUnlockCredential
+  const { credentialId, transports } = biometricUnlockCredential
 
   // Authenticate with WebAuthn using the stored credential and decrypt password
-  const { encryptionKey } = await authenticateWithBiometricCredential({ credentialId, abortSignal })
+  const { encryptionKey } = await authenticateWithBiometricCredential({ credentialId, transports, abortSignal })
   const password = await decryptPasswordFromBiometricData({ encryptionKey, biometricUnlockCredential })
   return password
 }

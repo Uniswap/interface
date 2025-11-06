@@ -1,4 +1,5 @@
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useIsUniswapXSupportedChain } from 'hooks/useIsUniswapXSupportedChain'
 import {
   createGetRoutingAPIArguments,
@@ -7,8 +8,6 @@ import {
 } from 'lib/hooks/routing/createGetRoutingAPIArguments'
 import { useMemo } from 'react'
 import { GetQuoteArgs } from 'state/routing/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useIsMismatchAccountQuery } from 'uniswap/src/features/smartWallet/mismatch/hooks'
 import { useUniswapXPriorityOrderFlag } from 'uniswap/src/features/transactions/swap/utils/protocols'
 

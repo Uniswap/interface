@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
-import { getBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import { WormholeModalAtom } from 'uniswap/src/components/BridgedAsset/WormholeModal'
 import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -165,15 +164,15 @@ function BridgedAssetWithdrawButton(): JSX.Element | null {
     }
   })
 
-  const bridgedAsset = getBridgedAsset(currencyInfo)
-  if (!bridgedAsset) {
+  const bridgedWithdrawalInfo = currencyInfo?.bridgedWithdrawalInfo
+  if (!bridgedWithdrawalInfo) {
     return null
   }
   return (
     <TouchableArea onPress={handlePress} hoverStyle={{ opacity: 0.8 }}>
       <Flex row gap="$spacing8">
         <Text variant="buttonLabel3" color="$neutral2">
-          {t('bridgedAsset.wormhole.withdrawToNativeChain', { nativeChainName: bridgedAsset.nativeChain })}
+          {t('bridgedAsset.wormhole.withdrawToNativeChain', { nativeChainName: bridgedWithdrawalInfo.chain })}
         </Text>
         <ExternalLink color="$neutral3" size="$icon.16" />
       </Flex>

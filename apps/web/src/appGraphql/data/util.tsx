@@ -189,6 +189,12 @@ const PROTOCOL_META: { [source in GraphQLApi.PriceSource]: ProtocolMeta } = {
     color: '$chain_137',
     gradient: { start: 'rgba(96, 123, 238, 0.20)', end: 'rgba(55, 70, 136, 0.00)' },
   },
+  [GraphQLApi.PriceSource.External]: {
+    // TODO (LP-350): Remove this since this protocol chart does not exist anymore
+    name: 'external',
+    color: '$neutral1',
+    gradient: { start: 'rgba(252, 116, 254, 0.20)', end: 'rgba(252, 116, 254, 0.00)' },
+  },
   /* [GraphQLApi.PriceSource.UniswapX]: { name: 'UniswapX', color: purple } */
 }
 

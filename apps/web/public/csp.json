@@ -1,6 +1,6 @@
 {
   "defaultSrc": ["'self'"],
-  "scriptSrc": ["'self'", "'wasm-unsafe-eval'"],
+  "scriptSrc": ["'self'", "'wasm-unsafe-eval'", "https://challenges.cloudflare.com"],
   "styleSrc": [
     "'self'",
     "'unsafe-inline'",

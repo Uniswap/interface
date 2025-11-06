@@ -1,5 +1,4 @@
-import { DynamicConfigs, ForceUpgradeConfigKey, ForceUpgradeStatus } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { DynamicConfigs, ForceUpgradeConfigKey, ForceUpgradeStatus, useDynamicConfigValue } from '@universe/gating'
 
 export function useForceUpgradeStatus(): ForceUpgradeStatus {
   return useDynamicConfigValue({

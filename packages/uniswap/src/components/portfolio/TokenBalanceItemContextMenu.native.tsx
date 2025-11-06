@@ -87,6 +87,7 @@ export function TokenBalanceItemContextMenu({
   portfolioBalance,
   excludedActions,
   openContractAddressExplainerModal,
+  openReportTokenModal,
   copyAddressToClipboard,
   onPressToken: onPressToken,
 }: PropsWithChildren<TokenBalanceItemContextMenuProps>): JSX.Element {
@@ -97,6 +98,7 @@ export function TokenBalanceItemContextMenu({
     tokenSymbolForNotification: portfolioBalance.currencyInfo.currency.symbol,
     portfolioBalance,
     openContractAddressExplainerModal,
+    openReportTokenModal,
     copyAddressToClipboard,
     closeMenu: () => {},
   })
@@ -137,4 +139,5 @@ const actionToIcon: Record<string, string> = {
   share: 'square.and.arrow.up',
   toggleVisibility: 'eye',
   copyAddress: 'doc.on.doc',
+  reportToken: 'flag',
 }

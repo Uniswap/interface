@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { DYNAMIC_FEE_DATA } from 'components/Liquidity/Create/types'
@@ -50,6 +50,7 @@ describe('mergeFeeTiers', () => {
   const formattedDynamicFeeTier = 'dynamic'
   const staticFee = { feeAmount: 100, isDynamic: false, tickSpacing: 60 }
   const dynamicFee = { feeAmount: 100, isDynamic: true, tickSpacing: 60 }
+  const dynamicFeeKey = getFeeTierKey(dynamicFee.feeAmount, true)!
 
   const staticFeeTierData: FeeTierData = {
     fee: staticFee,
@@ -99,7 +100,8 @@ describe('mergeFeeTiers', () => {
 
   it('formats static and dynamic fees correctly', () => {
     const defaultFeeData = [staticFee]
-    let feeTiers = { [getFeeTierKey(DYNAMIC_FEE_DATA.feeAmount, true)]: defaultDynamicFeeTierData }
+    const dynamicKey = getFeeTierKey(DYNAMIC_FEE_DATA.feeAmount, true)!
+    let feeTiers = { [dynamicKey]: defaultDynamicFeeTierData }
     let result = mergeFeeTiers({ feeTiers, defaultFeeData, formatPercent, formattedDynamicFeeTier })
     expect(result).toEqual({
       100: {
@@ -108,10 +110,10 @@ describe('mergeFeeTiers', () => {
         tvl: '0',
         percentage: new Percent(0, 100),
       },
-      [getFeeTierKey(DYNAMIC_FEE_DATA.feeAmount, true)]: defaultDynamicFeeTierData,
+      [dynamicKey]: defaultDynamicFeeTierData,
     })
 
-    feeTiers = { [getFeeTierKey(dynamicFee.feeAmount, true)]: dynamicFeeTierData }
+    feeTiers = { [dynamicFeeKey]: dynamicFeeTierData }
     result = mergeFeeTiers({ feeTiers, defaultFeeData, formatPercent, formattedDynamicFeeTier })
     expect(result).toEqual({
       100: {
@@ -120,7 +122,7 @@ describe('mergeFeeTiers', () => {
         tvl: '0',
         percentage: new Percent(0, 100),
       },
-      [getFeeTierKey(dynamicFee.feeAmount, true)]: dynamicFeeTierData,
+      [dynamicFeeKey]: dynamicFeeTierData,
     })
   })
 
@@ -128,12 +130,13 @@ describe('mergeFeeTiers', () => {
     const defaultFeeData = [staticFee, dynamicFee]
     const feeTiers = { '100': { ...staticFeeTierData, totalLiquidityUsd: 999 } }
     const result = mergeFeeTiers({ feeTiers, defaultFeeData, formatPercent, formattedDynamicFeeTier })
+
     expect(result).toEqual({
       100: {
         ...staticFeeTierData,
         totalLiquidityUsd: 999,
       },
-      [getFeeTierKey(dynamicFee.feeAmount, true)]: {
+      [dynamicFeeKey]: {
         ...dynamicFeeTierData,
         created: false,
         totalLiquidityUsd: 0,

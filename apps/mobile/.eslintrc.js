@@ -58,13 +58,6 @@ module.exports = {
         'import/no-unused-modules': 'off',
       },
     },
-    {
-      // Allow test files to exceed max-lines limit
-      files: ['**/*.test.ts', '**/*.test.tsx', '**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)'],
-      rules: {
-        'max-lines': 'off',
-      },
-    },
   ],
   rules: {
     'rulesdir/i18n': 'error',

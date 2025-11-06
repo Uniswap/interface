@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { SpinnerSVG } from 'theme/components/icons/spinner'
-import { Flex, styled, Text, useSporeColors } from 'ui/src'
+import { Flex, FlexProps, styled, Text, useSporeColors } from 'ui/src'
 
 const LoadingButtonSpinner = (props: React.ComponentPropsWithoutRef<'svg'>) => (
   <SpinnerSVG width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -39,6 +39,16 @@ const Tile = styled(Flex, {
   },
 })
 
+export type ActionTileProps = {
+  dataTestId: string
+  Icon: ReactNode
+  name: string
+  onClick: () => void
+  loading?: boolean
+  disabled?: boolean
+  padding?: FlexProps['p']
+}
+
 export function ActionTile({
   dataTestId,
   Icon,
@@ -46,18 +56,12 @@ export function ActionTile({
   onClick,
   loading,
   disabled,
-}: {
-  dataTestId: string
-  Icon: ReactNode
-  name: string
-  onClick: () => void
-  loading?: boolean
-  disabled?: boolean
-}) {
+  padding = '$spacing12',
+}: ActionTileProps) {
   const { accent1 } = useSporeColors()
 
   return (
-    <Tile data-testid={dataTestId} onPress={onClick} disabled={disabled}>
+    <Tile data-testid={dataTestId} onPress={onClick} disabled={disabled} p={padding}>
       {loading ? <LoadingButtonSpinner height={28} width={28} fill={accent1.val} /> : Icon}
       <Text variant="subheading2" color="$accent1">
         {name}

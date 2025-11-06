@@ -1,4 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
+import { Currency } from '@uniswap/sdk-core'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -26,6 +27,7 @@ type TokenBalanceListProps = {
   onPressReceive: () => void
   onPressBuy: () => void
   onPressToken?: (currencyId: CurrencyId) => void
+  openReportTokenModal: (currency: Currency, isMarkedSpam: Maybe<boolean>) => void
   backgroundImageWrapperCallback?: React.FC<{ children: React.ReactNode }>
 }
 
@@ -35,6 +37,7 @@ export const TokenBalanceListWeb = memo(function _TokenBalanceList({
   onPressReceive,
   onPressBuy,
   onPressToken,
+  openReportTokenModal,
   backgroundImageWrapperCallback,
 }: TokenBalanceListProps): JSX.Element {
   return (
@@ -47,6 +50,7 @@ export const TokenBalanceListWeb = memo(function _TokenBalanceList({
       >
         <TokenBalanceListInner
           backgroundImageWrapperCallback={backgroundImageWrapperCallback}
+          openReportTokenModal={openReportTokenModal}
           onPressReceive={onPressReceive}
           onPressBuy={onPressBuy}
         />
@@ -58,6 +62,7 @@ export const TokenBalanceListWeb = memo(function _TokenBalanceList({
 function TokenBalanceListInner({
   onPressReceive,
   onPressBuy,
+  openReportTokenModal,
   backgroundImageWrapperCallback,
 }: Omit<TokenBalanceListProps, 'owner' | 'onPressToken'>): JSX.Element {
   const { t } = useTranslation()
@@ -117,15 +122,25 @@ function TokenBalanceListInner({
           <BaseCard.InlineErrorState title={t('home.tokens.error.fetch')} onRetry={refetch} />
         </Flex>
       )}
-      <TokenBalanceItems rows={visible} />
+      <TokenBalanceItems rows={visible} openReportTokenModal={openReportTokenModal} />
       <AnimatePresence initial={false}>
-        {hiddenTokensExpanded && <TokenBalanceItems animated rows={hidden} />}
+        {hiddenTokensExpanded && (
+          <TokenBalanceItems animated rows={hidden} openReportTokenModal={openReportTokenModal} />
+        )}
       </AnimatePresence>
     </>
   )
 }
 
-const TokenBalanceItems = ({ animated, rows }: { animated?: boolean; rows: string[] }): JSX.Element => {
+const TokenBalanceItems = ({
+  animated,
+  rows,
+  openReportTokenModal,
+}: {
+  animated?: boolean
+  rows: string[]
+  openReportTokenModal: (currency: Currency, isMarkedSpam: Maybe<boolean>) => void
+}): JSX.Element => {
   return (
     <Flex
       {...(animated && {
@@ -135,13 +150,19 @@ const TokenBalanceItems = ({ animated, rows }: { animated?: boolean; rows: strin
       })}
     >
       {rows.map((balance: TokenBalanceListRow) => {
-        return <TokenBalanceItemRow key={balance} item={balance} />
+        return <TokenBalanceItemRow key={balance} item={balance} openReportTokenModal={openReportTokenModal} />
       })}
     </Flex>
   )
 }
 
-const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: TokenBalanceListRow }) {
+const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
+  item,
+  openReportTokenModal,
+}: {
+  item: TokenBalanceListRow
+  openReportTokenModal: (currency: Currency, isMarkedSpam: Maybe<boolean>) => void
+}) {
   const { balancesById, isWarmLoading, onPressToken } = useTokenBalanceListContext()
   const dispatch = useDispatch()
 
@@ -201,6 +222,9 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
     <TokenBalanceItemContextMenu
       portfolioBalance={portfolioBalance}
       copyAddressToClipboard={copyAddressToClipboard}
+      openReportTokenModal={() =>
+        openReportTokenModal(portfolioBalance.currencyInfo.currency, portfolioBalance.currencyInfo.isSpam)
+      }
       onPressToken={handlePressToken}
     >
       <TokenBalanceItem

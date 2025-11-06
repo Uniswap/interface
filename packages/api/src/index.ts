@@ -70,16 +70,16 @@ export {
   type DiscriminatedQuoteResponse,
   type DutchQuoteResponse,
   type DutchV3QuoteResponse,
-  type ExistingTradeRequest,
+  type ExistingPlanRequest,
   Method,
-  type NewTradeRequest,
+  type NewPlanRequest,
+  type PlanStep,
   PlanStepStatus,
   type PriorityQuoteResponse,
   type SwappableTokensParams,
-  type TradeResponse,
-  type TradeStep,
+  type PlanResponse,
   type UnwrapQuoteResponse,
-  type UpdateExistingTradeRequest,
+  type UpdateExistingPlanRequest,
   type WrapQuoteResponse,
 } from '@universe/api/src/clients/trading/tradeTypes'
 export {
@@ -124,6 +124,16 @@ export {
   TokenReportEventType,
 } from '@universe/api/src/clients/data/createDataServiceApiClient'
 
+// Notifications API
+export { createNotificationsApiClient } from '@universe/api/src/clients/notifications/createNotificationsApiClient'
+export type {
+  GetNotificationsRequest,
+  GetNotificationsResponse,
+  InAppNotification,
+  NotificationsApiClient,
+  NotificationsClientContext,
+} from '@universe/api/src/clients/notifications/types'
+
 // ConnectRPC API
 export {
   ALL_NETWORKS_ARG,
@@ -153,6 +163,11 @@ export {
   createFetcher,
   objectToQueryString,
 } from '@universe/api/src/clients/base/utils'
+
+// Session API
+export { ApiInit } from '@universe/api/src/components/ApiInit'
+export { getSessionService } from '@universe/api/src/getSessionService'
+
 export type {
   UseQueryApiHelperHookArgs,
   UseQueryWithImmediateGarbageCollectionApiHelperHookArgs,
@@ -165,3 +180,5 @@ export {
   RankingType,
   SpamCode,
 } from '@universe/api/src/clients/content/types'
+
+export { getTransport } from '@universe/api/src/transport'

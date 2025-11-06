@@ -5,7 +5,6 @@ import {
 import { getLiquidityEventName } from 'components/Liquidity/analytics'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
-import type { HandleOnChainStepParams } from 'state/sagas/transactions/utils'
 import {
   getDisplayableError,
   handleApprovalTransactionStep,
@@ -34,7 +33,7 @@ import type {
 } from 'uniswap/src/features/transactions/liquidity/steps/migrate'
 import type { LiquidityAction, ValidatedLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { LiquidityTransactionType } from 'uniswap/src/features/transactions/liquidity/types'
-import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import type { HandleOnChainStepParams, TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import type { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import type {

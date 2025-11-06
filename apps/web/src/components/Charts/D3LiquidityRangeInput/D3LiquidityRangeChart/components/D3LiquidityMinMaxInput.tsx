@@ -63,7 +63,7 @@ export function D3LiquidityMinMaxInput() {
 
   // Navigation params for increment/decrement actions
   const tickNavigationParams: TickNavigationParams | undefined = useMemo(() => {
-    if (!positionState.fee.tickSpacing || !currencies.display.TOKEN0 || !currencies.display.TOKEN1) {
+    if (!positionState.fee?.tickSpacing || !currencies.display.TOKEN0 || !currencies.display.TOKEN1) {
       return undefined
     }
 
@@ -76,7 +76,7 @@ export function D3LiquidityMinMaxInput() {
       priceInverted: priceRangeState.priceInverted,
       protocolVersion: positionState.protocolVersion,
     }
-  }, [positionState.fee.tickSpacing, currencies.display, priceRangeState.priceInverted, positionState.protocolVersion])
+  }, [positionState.fee?.tickSpacing, currencies.display, priceRangeState.priceInverted, positionState.protocolVersion])
 
   // Get display value based on input mode
   const getDisplayValue = useCallback(
@@ -92,15 +92,26 @@ export function D3LiquidityMinMaxInput() {
       }
 
       const price = input === RangeSelectionInput.MIN ? minPrice : maxPrice
-      if (input === RangeSelectionInput.MIN && ticksAtLimit[0]) {
+
+      if (input === RangeSelectionInput.MIN && ticksAtLimit[0] && !positionState.initialPosition) {
         return '0'
       }
-      if (input === RangeSelectionInput.MAX && ticksAtLimit[1]) {
+      if (input === RangeSelectionInput.MAX && ticksAtLimit[1] && !positionState.initialPosition) {
         return '∞'
       }
+
       return price?.toString() ?? ''
     },
-    [displayUserTypedValue, typedValue, inputMode, priceDifferences, minPrice, maxPrice, ticksAtLimit],
+    [
+      displayUserTypedValue,
+      typedValue,
+      inputMode,
+      priceDifferences,
+      minPrice,
+      maxPrice,
+      ticksAtLimit,
+      positionState.initialPosition,
+    ],
   )
 
   // Sets chart state but does not update liquidity context

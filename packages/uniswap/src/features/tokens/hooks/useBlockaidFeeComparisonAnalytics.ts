@@ -1,10 +1,9 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect, useRef } from 'react'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getTokenProtectionFeeOnTransfer } from 'uniswap/src/features/tokens/safetyUtils'
 
 /**

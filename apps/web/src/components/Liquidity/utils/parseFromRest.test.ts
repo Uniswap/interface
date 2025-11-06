@@ -7,7 +7,7 @@ import {
   Position as RestPosition,
   Token as RestToken,
   V4Position as RestV4Position,
-} from '@uniswap/client-pools/dist/pools/v1/types_pb'
+} from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { ChainId, PoolInformation } from '@uniswap/client-trading/dist/trading/v1/api_pb'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -80,8 +80,8 @@ describe('getSDKPoolFromPoolInformation', () => {
     tokenAddressA = token0.address
     tokenAddressB = token1.address
     chainId = ChainId.MAINNET
-    tokenAReserves = '1000000000000000000'
-    tokenBReserves = '2000000000000000000'
+    token0Reserves = '1000000000000000000'
+    token1Reserves = '2000000000000000000'
     hookAddress = hooks.address
     constructor(readonly protocolVersion: ProtocolVersion) {
       super()

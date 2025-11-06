@@ -1,4 +1,5 @@
 import { nanoid } from '@reduxjs/toolkit'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { useRef } from 'react'
@@ -9,11 +10,9 @@ import { isAtomicBatchingSupportedByChainId } from 'state/walletCapabilities/lib
 import { useDelegationService } from 'state/wallets/useDelegationService'
 import { selectHasShownMismatchToast } from 'uniswap/src/features/behaviorHistory/selectors'
 import { setHasShownMismatchToast } from 'uniswap/src/features/behaviorHistory/slice'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { createHasMismatchUtil, type HasMismatchUtil } from 'uniswap/src/features/smartWallet/mismatch/mismatch'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send.web'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getLogger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 

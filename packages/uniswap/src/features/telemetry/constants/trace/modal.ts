@@ -128,6 +128,8 @@ export const ModalName = {
   RemoveLiquidity: 'remove-liquidity',
   RemoveSeedPhraseWarningModal: 'remove-seed-phrase-warning-modal',
   RemoveWallet: 'remove-wallet-modal',
+  ReportTokenData: 'report-token-data-modal',
+  ReportTokenIssue: 'report-token-issue-modal',
   ResetCreatePositionsForm: 'reset-create-positions-form',
   RestoreWallet: 'restore-wallet-modal',
   RestoreWalletSeedPhrase: 'restore-wallet-seed-phrase-modal',

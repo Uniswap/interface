@@ -11,6 +11,9 @@ import {
 } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { UTCTimestamp } from 'lightweight-charts'
 import { useMemo, useReducer } from 'react'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
 type TDPChartQueryVariables = { chain: GraphQLApi.Chain; address?: string; duration: GraphQLApi.HistoryDuration }
 
@@ -39,17 +42,63 @@ export function useTDPPriceChartData({
   priceChartType: PriceChartType
 }): ChartQueryResult<PriceChartData, ChartType.PRICE> & { disableCandlestickUI: boolean } {
   const [fallback, enablePriceHistoryFallback] = useReducer(() => true, false)
-  const { data, loading } = GraphQLApi.useTokenPriceQuery({ variables: { ...variables, fallback }, skip })
+
+  // For candlestick charts, use subgraph OHLC data (required, not available in CoinGecko)
+  // For line charts when fallback is needed, fetch both CoinGecko and subgraph data
+  const { data: subgraphData, loading: subgraphLoading } = GraphQLApi.useTokenPriceQuery({
+    variables: { ...variables, fallback },
+    skip,
+  })
+
+  // Fetch CoinGecko data for line charts to prefer its priceHistory
+  // Construct currencyId from chain and address for the CoinGecko query
+  const currencyIdValue = useMemo(() => {
+    if (!variables.address) {
+      return undefined
+    }
+    const chainId = fromGraphQLChain(variables.chain)
+    return chainId ? buildCurrencyId(chainId, variables.address) : undefined
+  }, [variables.chain, variables.address])
+
+  const { data: coinGeckoData, loading: coinGeckoLoading } = GraphQLApi.useTokenPriceHistoryQuery({
+    variables: {
+      contract: currencyIdValue
+        ? currencyIdToContractInput(currencyIdValue)
+        : { address: undefined, chain: variables.chain },
+      duration: variables.duration,
+    },
+    skip: skip || !currencyIdValue || priceChartType === PriceChartType.CANDLESTICK,
+  })
+
+  const loading = subgraphLoading || (priceChartType === PriceChartType.LINE && coinGeckoLoading)
 
   return useMemo(() => {
-    const { ohlc, priceHistory, price } = data?.token?.market ?? {}
+    const subgraphMarket = subgraphData?.token?.market
+    const { ohlc, priceHistory: subgraphPriceHistory, price: subgraphPrice } = subgraphMarket ?? {}
+
+    // Data source strategy: prefer CoinGecko for line charts, use subgraph for candlesticks
+    // Prefer per-chain CoinGecko history when available so multi-chain tokens render correctly
+    const coinGeckoProject = coinGeckoData?.tokenProjects?.[0]
+    const coinGeckoMarket = coinGeckoProject?.markets?.[0]
+    const coinGeckoTokenMarket = coinGeckoProject?.tokens.find((token) => token.chain === variables.chain)?.market
+    const coinGeckoPriceHistory = coinGeckoTokenMarket?.priceHistory ?? coinGeckoMarket?.priceHistory
+    const coinGeckoAggregatedPrice = coinGeckoTokenMarket?.price?.value ?? coinGeckoMarket?.price?.value
+
+    // For line charts, prefer CoinGecko priceHistory but use PER-CHAIN current price
+    // For candlestick charts, always use subgraph OHLC (only source)
+    const useCoinGeckoHistory = priceChartType === PriceChartType.LINE && coinGeckoPriceHistory
+    const priceHistory = useCoinGeckoHistory ? coinGeckoPriceHistory : subgraphPriceHistory
+
+    // CRITICAL: Always use per-chain price from subgraph for multi-chain tokens
+    // This ensures USDC on Ethereum shows Ethereum price, not aggregated price
+    const currentPrice = subgraphPrice?.value ?? coinGeckoAggregatedPrice
+
     let entries =
       (ohlc
         ? ohlc.filter((v): v is GraphQLApi.CandlestickOhlcFragment => v !== undefined).map(toPriceChartData)
         : priceHistory
             ?.filter((v): v is GraphQLApi.PriceHistoryFallbackFragment => v !== undefined)
             .map(fallbackToPriceChartData)) ?? []
-    const currentPrice = price?.value
 
     if (ohlc) {
       // Special case: backend returns invalid OHLC data on some chains. If we detect long series of 0's, return an empty array to trigger fallback.
@@ -141,7 +190,15 @@ export function useTDPPriceChartData({
 
     const dataQuality = checkDataQuality({ data: entries, chartType: ChartType.PRICE, duration: variables.duration })
     return { chartType: ChartType.PRICE, entries, loading, dataQuality, disableCandlestickUI: fallback }
-  }, [data?.token?.market, fallback, loading, priceChartType, variables.duration])
+  }, [
+    subgraphData?.token?.market,
+    coinGeckoData?.tokenProjects?.[0],
+    fallback,
+    loading,
+    priceChartType,
+    variables.duration,
+    variables.chain,
+  ])
 }
 
 export function useTDPVolumeChartData(

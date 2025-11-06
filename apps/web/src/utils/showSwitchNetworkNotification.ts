@@ -1,3 +1,4 @@
+import { POPUP_MEDIUM_DISMISS_MS } from 'components/Popups/constants'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType, SwitchNetworkAction } from 'components/Popups/types'
 
@@ -7,8 +8,6 @@ type SwitchNetworkNotificationCallbackType = {
   outputChainId?: number // The output chainId the user is swapping to
   action: SwitchNetworkAction
 }
-
-const POPUP_DURATION = 3000
 
 export function showSwitchNetworkNotification({
   chainId,
@@ -33,7 +32,7 @@ export function showSwitchNetworkNotification({
             outputChainId,
           },
           `bridge-${chainId}-to-${outputChainId}`,
-          POPUP_DURATION,
+          POPUP_MEDIUM_DISMISS_MS,
         )
         break
       } else if (prevChainId) {
@@ -44,7 +43,7 @@ export function showSwitchNetworkNotification({
             action: SwitchNetworkAction.Swap,
           },
           `switchNetwork-${chainId}`,
-          POPUP_DURATION,
+          POPUP_MEDIUM_DISMISS_MS,
         )
         break
       }
@@ -57,7 +56,7 @@ export function showSwitchNetworkNotification({
           action,
         },
         `switchNetwork-${chainId}`,
-        POPUP_DURATION,
+        POPUP_MEDIUM_DISMISS_MS,
       )
       break
   }

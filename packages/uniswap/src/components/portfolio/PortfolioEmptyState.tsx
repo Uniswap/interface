@@ -1,4 +1,4 @@
-import { FlashList } from '@shopify/flash-list'
+import { CellContainer, FlashList } from '@shopify/flash-list'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { StyleProp, ViewStyle } from 'react-native'
@@ -164,9 +164,9 @@ const LogoRendererComponent = ({
   const cellStyle = [style, { zIndex: -index }]
 
   return (
-    <Flex style={cellStyle} {...props}>
+    <CellContainer index={index} style={cellStyle} {...props}>
       {children}
-    </Flex>
+    </CellContainer>
   )
 }
 

@@ -2,7 +2,6 @@ import { useActiveAddress, useActiveWallet } from 'uniswap/src/features/accounts
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
 import { useIsShowingWebFORNudge, useIsWebFORNudgeEnabled } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { useInterfaceWrap } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useInterfaceWrap'
 import { useIsMissingPlatformWallet } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useIsMissingPlatformWallet'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/useSwapWarnings'
 import {
@@ -25,9 +24,6 @@ const useIsReviewButtonDisabled = (): boolean => {
   const { isBlocked: isBlockedAccount, isBlockedLoading: isBlockedAccountLoading } = useIsBlocked(activeAccountAddress)
   const { walletNeedsRestore } = useTransactionModalContext()
 
-  const { isInterfaceWrap, onInterfaceWrap } = useInterfaceWrap()
-  const isWrapDisabled = isInterfaceWrap && !onInterfaceWrap
-
   return (
     !!blockingWarning ||
     isBlockedAccount ||
@@ -35,7 +31,6 @@ const useIsReviewButtonDisabled = (): boolean => {
     walletNeedsRestore ||
     isSubmitting ||
     isTradeMissing ||
-    isWrapDisabled ||
     isMissingPlatformWallet
   )
 }

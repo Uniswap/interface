@@ -1,15 +1,15 @@
-import { parseEther } from 'ethers/lib/utils'
-import { WalletConnectSigningRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { AssetType } from 'uniswap/src/entities/assets'
-import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
-import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import {
   DynamicConfigs,
   UwULinkAllowlist,
   UwULinkAllowlistItem,
   UwuLinkConfigKey,
-} from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+  useDynamicConfigValue,
+} from '@universe/gating'
+import { parseEther } from 'ethers/lib/utils'
+import { WalletConnectSigningRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { AssetType } from 'uniswap/src/entities/assets'
+import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { isUwULinkAllowlistType } from 'uniswap/src/features/gating/typeGuards'
 import {
   DappRequestType,

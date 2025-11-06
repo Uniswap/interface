@@ -3,6 +3,7 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
+import { MODAL_OPEN_WAIT_TIME } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { Flex, Text, TouchableArea } from 'ui/src'
@@ -23,8 +24,6 @@ import { NumberType } from 'utilities/src/format/types'
 import { noop } from 'utilities/src/react/noop'
 import { useAccountListData } from 'wallet/src/features/accounts/useAccountListData'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-
-const MODAL_CLOSE_WAIT_TIME = 300
 
 type AccountCardItemProps = {
   address: Address
@@ -130,7 +129,7 @@ export function AccountCardItem({
       navigate(ModalName.ConnectionsDappListModal, {
         address,
       })
-    }, MODAL_CLOSE_WAIT_TIME)
+    }, MODAL_OPEN_WAIT_TIME)
   }, [address, onClose])
 
   const onPressRemoveWallet = useCallback(() => {

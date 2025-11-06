@@ -1,0 +1,21 @@
+{
+    "version": 1,
+    "permissions": {
+      "deny": [
+        "Read(**/.env)",
+        "Write(**/.env)",
+        "Read(~/.aws/**)",
+        "Write(~/.aws/**)",
+        "Read(~/.ssh/**)",
+        "Write(~/.ssh/**)",
+        "Read(~/.gnupg/**)",
+        "Write(~/.gnupg/**)",
+        "Read(~/.git-credentials)",
+        "Write(~/.git-credentials)",
+        "Read($HOME/Library/Keychains/**)",
+        "Write($HOME/Library/Keychains/**)",
+        "Read(/private/etc/**)",
+        "Write(/private/etc/**)"
+      ]
+    }
+  }

@@ -40,6 +40,7 @@ module.exports = {
     'no-extra-boolean-cast': 'error',
     'object-shorthand': ['error', 'always'],
     'consistent-return': ['error', { treatUndefinedAsUnspecified: false }],
+    'max-lines': ['error', 500], // cap file length
     // Disallow unnecessary curly braces in JSX props and children
     'react/jsx-curly-brace-presence': ['error', { props: 'never', children: 'never' }],
     'max-params': ['error', { max: 2 }],
@@ -159,6 +160,13 @@ module.exports = {
       },
       extends: ['plugin:jest/recommended'],
       plugins: ['jest'],
+    },
+    {
+      // Allow test files to exceed max-lines limit
+      files: ['**/*.test.ts', '**/*.test.tsx', '**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[tj]s?(x)'],
+      rules: {
+        'max-lines': 'off',
+      },
     },
   ],
 }

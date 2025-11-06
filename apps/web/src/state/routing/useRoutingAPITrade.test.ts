@@ -24,8 +24,9 @@ vi.mock('./slice', () => {
   }
 })
 vi.mock('state/user/hooks')
-vi.mock('uniswap/src/features/gating/hooks', () => {
+vi.mock('@universe/gating', async (importOriginal) => {
   return {
+    ...(await importOriginal()),
     useFeatureFlag: vi.fn(),
     useExperimentValue: vi.fn(),
     getFeatureFlag: vi.fn(),

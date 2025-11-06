@@ -35,10 +35,6 @@ export function createFetchClient({
         }
         return fetch(`${baseUrl}${path}`, {
           ...options,
-          // Do NOT remove this, session cookies need to be sent with the request!
-          // Note: this causes CORS errors when running web locally
-          // TODO(app-infra): Re-enable this when we have a solution
-          // credentials: 'include',
           headers,
         }) as Promise<T>
       }

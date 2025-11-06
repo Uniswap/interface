@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react'
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Percent } from '@uniswap/sdk-core'
 import { useAllFeeTierPoolData } from 'components/Liquidity/hooks/useAllFeeTierPoolData'
 import { TEST_TOKEN_1, TEST_TOKEN_2 } from 'test-utils/constants'

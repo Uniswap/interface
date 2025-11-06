@@ -1,9 +1,11 @@
 import React from 'react'
-import { useAnimatedStyle } from 'react-native-reanimated'
-import { useLineChartDatetime } from 'react-native-wagmi-charts'
+import { SharedValue, useAnimatedStyle, useDerivedValue } from 'react-native-reanimated'
+import { useLineChart, useLineChartDatetime } from 'react-native-wagmi-charts'
 import { AnimatedDecimalNumber } from 'src/components/PriceExplorer/AnimatedDecimalNumber'
+import { useLineChartFiatDelta } from 'src/components/PriceExplorer/useFiatDelta'
 import { useLineChartPrice, useLineChartRelativeChange } from 'src/components/PriceExplorer/usePrice'
 import { AnimatedText } from 'src/components/text/AnimatedText'
+import { numberToPercentWorklet } from 'src/utils/reanimated'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { AnimatedCaretChange } from 'ui/src/components/icons'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
@@ -39,18 +41,76 @@ export function PriceText({ maxWidth }: { loading: boolean; maxWidth?: number })
   )
 }
 
-export function RelativeChangeText({ loading }: { loading: boolean }): JSX.Element {
+export function RelativeChangeText({
+  loading,
+  spotRelativeChange,
+  startingPrice,
+  shouldTreatAsStablecoin = false,
+}: {
+  loading: boolean
+  /** 24hr price change from API (used when not scrubbing chart) */
+  spotRelativeChange?: SharedValue<number>
+  startingPrice?: number
+  shouldTreatAsStablecoin?: boolean
+}): JSX.Element {
   const colors = useSporeColors()
+  const { isActive } = useLineChart()
 
-  const relativeChange = useLineChartRelativeChange()
+  // Calculate relative change from chart data (used when scrubbing)
+  const calculatedRelativeChange = useLineChartRelativeChange()
+
+  const fiatDelta = useLineChartFiatDelta({
+    startingPrice,
+    shouldTreatAsStablecoin,
+  })
+
+  // Decide which source to use: API's 24hr when idle, chart's when scrubbing
+  // This ensures the color shows immediately with correct API data
+  const hasSpotData = !!spotRelativeChange
+  const shouldUseSpotData = useDerivedValue(() => !isActive.value && hasSpotData)
+
+  const relativeChange = useDerivedValue(() => {
+    return shouldUseSpotData.value
+      ? (spotRelativeChange?.value ?? calculatedRelativeChange.value.value)
+      : calculatedRelativeChange.value.value
+  })
+
+  const relativeChangeFormatted = useDerivedValue(() => {
+    if (shouldUseSpotData.value) {
+      return spotRelativeChange
+        ? numberToPercentWorklet(spotRelativeChange.value, { precision: 2, absolute: true })
+        : calculatedRelativeChange.formatted.value
+    }
+    return calculatedRelativeChange.formatted.value
+  })
+
+  const changeColor = useDerivedValue(() => {
+    if (relativeChange.value === 0) {
+      return colors.neutral3.val
+    }
+    return relativeChange.value > 0 ? colors.statusSuccess.val : colors.statusCritical.val
+  })
 
   const styles = useAnimatedStyle(() => ({
-    color: relativeChange.value.value >= 0 ? colors.statusSuccess.val : colors.statusCritical.val,
+    color: changeColor.value,
   }))
   const caretStyle = useAnimatedStyle(() => ({
-    color: relativeChange.value.value >= 0 ? colors.statusSuccess.val : colors.statusCritical.val,
-    transform: [{ rotate: relativeChange.value.value >= 0 ? '180deg' : '0deg' }],
+    color: changeColor.value,
+    transform: [
+      { rotate: relativeChange.value >= 0 ? '180deg' : '0deg' },
+      // fix vertical centering
+      { translateY: relativeChange.value >= 0 ? -1 : 1 },
+    ],
   }))
+
+  // Combine fiat delta and percentage in a derived value
+  const combinedText = useDerivedValue(() => {
+    const delta = fiatDelta.formatted.value
+    if (delta) {
+      return `${delta} (${relativeChangeFormatted.value})`
+    }
+    return relativeChangeFormatted.value
+  })
 
   return (
     <Flex
@@ -67,16 +127,8 @@ export function RelativeChangeText({ loading }: { loading: boolean }): JSX.Eleme
         <Text loading="no-shimmer" loadingPlaceholderText="00.00%" variant="body1" />
       ) : (
         <>
-          <AnimatedCaretChange
-            size="$icon.16"
-            strokeWidth={2}
-            style={[
-              caretStyle,
-              // fix vertical centering
-              { translateY: relativeChange.value.value >= 0 ? -1 : 1 },
-            ]}
-          />
-          <AnimatedText style={styles} testID="relative-change-text" text={relativeChange.formatted} variant="body1" />
+          <AnimatedCaretChange size="$icon.16" strokeWidth={2} style={caretStyle} />
+          <AnimatedText style={styles} testID="relative-change-text" text={combinedText} variant="body1" />
         </>
       )}
     </Flex>
@@ -93,8 +145,8 @@ export function DatetimeText({ loading }: { loading: boolean }): JSX.Element | n
   }
 
   return (
-    <Flex alignItems={isAndroid ? 'center' : 'flex-end'} gap="$spacing2" mt={isAndroid ? '$none' : '$spacing2'}>
-      <AnimatedText color="$neutral2" text={datetime.formatted} variant="body1" />
+    <Flex alignItems="center" mt="$spacing12">
+      <AnimatedText color="$neutral2" text={datetime.formatted} variant="body3" />
     </Flex>
   )
 }

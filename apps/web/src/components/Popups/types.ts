@@ -11,6 +11,8 @@ export enum PopupType {
   Mismatch = 'mismatch',
   FORTransaction = 'forTransaction',
   Error = 'error',
+  Success = 'success',
+  Unhide = 'unhide',
 }
 
 export enum SwitchNetworkAction {
@@ -57,4 +59,12 @@ export type PopupContent =
   | {
       type: PopupType.Error
       error: string
+    }
+  | {
+      type: PopupType.Success
+      message: string
+    }
+  | {
+      type: PopupType.Unhide
+      assetName: string
     }

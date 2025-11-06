@@ -1,6 +1,6 @@
-import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb.d'
-import { GraphQLApi } from '@universe/api'
+import { type Token as SearchToken } from '@uniswap/client-search/dist/search/v1/api_pb'
+import * as searchTokensAndPools from 'uniswap/src/data/rest/searchTokensAndPools'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { fetchOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { fetchOnChainBalancesRest } from 'uniswap/src/features/portfolio/portfolioUpdates/rest/fetchOnChainBalancesRest'
@@ -33,8 +33,17 @@ jest.mock('uniswap/src/features/portfolio/api', () => ({
   fetchOnChainCurrencyBalance: jest.fn(),
 }))
 
+jest.mock('uniswap/src/data/rest/searchTokensAndPools', () => ({
+  ...jest.requireActual('uniswap/src/data/rest/searchTokensAndPools'),
+  fetchTokenByAddress: jest.fn(),
+}))
+
 const mockGetOnChainBalancesFetch = fetchOnChainCurrencyBalance as jest.MockedFunction<
   typeof fetchOnChainCurrencyBalance
+>
+
+const mockFetchTokenByAddress = searchTokensAndPools.fetchTokenByAddress as jest.MockedFunction<
+  typeof searchTokensAndPools.fetchTokenByAddress
 >
 
 const TEST_ACCOUNT = '0x1234567890123456789012345678901234567890'
@@ -83,10 +92,6 @@ const mockCachedPortfolio = {
 } as NonNullable<GetPortfolioResponse['portfolio']>
 
 describe('fetchOnChainBalancesRest', () => {
-  const mockApolloClient = {
-    query: jest.fn(),
-  } as unknown as ApolloClient<NormalizedCacheObject>
-
   beforeEach(() => {
     jest.clearAllMocks()
   })
@@ -100,7 +105,6 @@ describe('fetchOnChainBalancesRest', () => {
     })
 
     const result = await fetchOnChainBalancesRest({
-      apolloClient: mockApolloClient,
       cachedPortfolio: mockCachedPortfolio,
       accountAddress: TEST_ACCOUNT,
       currencyIds: new Set([currencyId]),
@@ -149,7 +153,6 @@ describe('fetchOnChainBalancesRest', () => {
     } as NonNullable<GetPortfolioResponse['portfolio']>
 
     const result = await fetchOnChainBalancesRest({
-      apolloClient: mockApolloClient,
       cachedPortfolio: mockCachedPortfolioWithNative,
       accountAddress: TEST_ACCOUNT,
       currencyIds: new Set([currencyId]),
@@ -172,7 +175,6 @@ describe('fetchOnChainBalancesRest', () => {
     const invalidCurrencyId = 'invalid-currency-id'
 
     const result = await fetchOnChainBalancesRest({
-      apolloClient: mockApolloClient,
       cachedPortfolio: mockCachedPortfolio,
       accountAddress: TEST_ACCOUNT,
       currencyIds: new Set([invalidCurrencyId]),
@@ -190,32 +192,28 @@ describe('fetchOnChainBalancesRest', () => {
       balance: mockBalance,
     })
 
-    // Mock GraphQL query for new token
-    ;(mockApolloClient.query as jest.Mock).mockResolvedValueOnce({
-      data: {
-        token: {
-          ...mockToken,
-          address: MOCK_TOKEN_ADDRESS_2,
-          symbol: 'NEW',
-          name: 'New Token',
-        },
-      },
-    })
+    // Mock REST search for new token
+    mockFetchTokenByAddress.mockResolvedValueOnce({
+      chainId: TEST_CHAIN_ID,
+      address: MOCK_TOKEN_ADDRESS_2,
+      symbol: 'NEW',
+      name: 'New Token',
+      decimals: 18,
+      logoUrl: '',
+      feeData: undefined,
+      safetyLevel: 0,
+      protectionInfo: undefined,
+    } as unknown as SearchToken)
 
     const result = await fetchOnChainBalancesRest({
-      apolloClient: mockApolloClient,
       cachedPortfolio: mockCachedPortfolio, // doesn't contain new token
       accountAddress: TEST_ACCOUNT,
       currencyIds: new Set([currencyId]),
     })
 
-    expect(mockApolloClient.query).toHaveBeenCalledWith({
-      query: GraphQLApi.TokenDocument,
-      variables: {
-        chain: 'ETHEREUM',
-        address: MOCK_TOKEN_ADDRESS_2,
-      },
-      fetchPolicy: 'cache-first',
+    expect(mockFetchTokenByAddress).toHaveBeenCalledWith({
+      chainId: TEST_CHAIN_ID,
+      address: MOCK_TOKEN_ADDRESS_2,
     })
 
     const balanceInfo = result.get(currencyId)
@@ -225,7 +223,7 @@ describe('fetchOnChainBalancesRest', () => {
     expect(balanceInfo?.token?.symbol).toBe('NEW')
   })
 
-  it('skips tokens when GraphQL query fails', async () => {
+  it('skips tokens when REST token search fails', async () => {
     const currencyId = buildCurrencyId(TEST_CHAIN_ID, MOCK_TOKEN_ADDRESS_3)
     const mockBalance = MOCK_BALANCE_1_ETH
 
@@ -233,13 +231,10 @@ describe('fetchOnChainBalancesRest', () => {
       balance: mockBalance,
     })
 
-    // Mock GraphQL query to return null token
-    ;(mockApolloClient.query as jest.Mock).mockResolvedValueOnce({
-      data: { token: null },
-    })
+    // Mock REST search to return null (token not found)
+    mockFetchTokenByAddress.mockResolvedValueOnce(null)
 
     const result = await fetchOnChainBalancesRest({
-      apolloClient: mockApolloClient,
       cachedPortfolio: mockCachedPortfolio,
       accountAddress: TEST_ACCOUNT,
       currencyIds: new Set([currencyId]),
@@ -284,7 +279,6 @@ describe('fetchOnChainBalancesRest', () => {
       .mockResolvedValueOnce({ balance: MOCK_BALANCE_2_ETH })
 
     const result = await fetchOnChainBalancesRest({
-      apolloClient: mockApolloClient,
       cachedPortfolio: mockCachedPortfolioMultiple,
       accountAddress: TEST_ACCOUNT,
       currencyIds: new Set([currencyId1, currencyId2]),
@@ -310,7 +304,6 @@ describe('fetchOnChainBalancesRest', () => {
       .mockRejectedValueOnce(new Error('Network error'))
 
     const result = await fetchOnChainBalancesRest({
-      apolloClient: mockApolloClient,
       cachedPortfolio: mockCachedPortfolio,
       accountAddress: TEST_ACCOUNT,
       currencyIds: new Set([currencyId1, currencyId2]),
@@ -332,7 +325,6 @@ describe('fetchOnChainBalancesRest', () => {
 
     // Cached portfolio has 1 token worth $100
     const result = await fetchOnChainBalancesRest({
-      apolloClient: mockApolloClient,
       cachedPortfolio: mockCachedPortfolio,
       accountAddress: TEST_ACCOUNT,
       currencyIds: new Set([currencyId]),

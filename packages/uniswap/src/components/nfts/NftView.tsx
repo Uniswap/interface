@@ -10,9 +10,10 @@ export type NftViewProps = {
   onPress: () => void
   walletAddresses: Address[]
   openContextMenu?: () => void
+  hoverAnimation?: boolean
 }
 
-export function NftView({ item, onPress, index, openContextMenu }: NftViewProps): JSX.Element {
+export function NftView({ item, onPress, index, openContextMenu, hoverAnimation = true }: NftViewProps): JSX.Element {
   const nftView = (
     <NFTViewer
       svgRenderingDisabled
@@ -35,7 +36,8 @@ export function NftView({ item, onPress, index, openContextMenu }: NftViewProps)
     width: '100%',
     shadowColor: '$shadowColor',
     shadowRadius: '$spacing12',
-    hoverStyle: { transform: 'scale(1.02)' },
+    transition: 'transform 100ms ease-in-out',
+    hoverStyle: hoverAnimation ? { transform: 'scale(1.02)' } : undefined,
   }
 
   if (isAndroid) {

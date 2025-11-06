@@ -3,9 +3,10 @@ import { JsonRpcProvider, TransactionReceipt } from '@ethersproject/providers'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
-import { updateTransaction } from 'uniswap/src/features/transactions/slice'
+import { updateTransactionWithoutWatch } from 'uniswap/src/features/transactions/slice'
 import { getOutputAmountUsingSwapLogAndFormData } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/getOutputAmountFromSwapLogAndFormData.ts/getOutputAmountFromSwapLogAndFormData'
 import {
+  logSwapTransactionCompleted,
   NO_OUTPUT_ERROR,
   reportOutputAmount,
 } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/hooks/receiptFetching/utils'
@@ -75,16 +76,19 @@ export function useReceiptSuccessHandler(): (params: ReceiptSuccessParams) => Pr
       // updates if the tx is successful so we know to fallback to the form value
       updateSwapForm({ instantReceiptFetchTime: methodFetchTime - methodRoundtripTime })
 
-      // TODO(APPS-8546): move to a saga to avoid anti-pattern
+      // TODO(SWAP-407): move to a saga to avoid anti-pattern
       const parsedReceipt = receiptFromEthersReceipt(receipt, methodFetchTime)
-      dispatch(
-        updateTransaction({
-          ...transaction,
-          receipt: parsedReceipt,
-          status: TransactionStatus.Success,
-          ...(isWebApp && { isFlashblockTxWithinThreshold }),
-        }),
-      )
+
+      const updatedTransaction = {
+        ...transaction,
+        receipt: parsedReceipt,
+        status: TransactionStatus.Success,
+        ...(isWebApp && { isFlashblockTxWithinThreshold }),
+      }
+
+      dispatch(updateTransactionWithoutWatch(updatedTransaction))
+
+      logSwapTransactionCompleted(updatedTransaction)
 
       // Try to get output amount from transfer logs first
       const outputAmountFromOutputTransferLog = getOutputAmountUsingOutputTransferLog({

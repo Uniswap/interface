@@ -1,6 +1,5 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMedia } from 'ui/src'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export function useIsSearchBarVisible() {
   const media = useMedia()

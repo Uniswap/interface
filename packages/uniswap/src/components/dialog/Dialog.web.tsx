@@ -10,87 +10,106 @@ export function Dialog({
   onClose,
   icon,
   title,
+  titleColor,
   subtext,
   learnMoreUrl,
   learnMoreTextColor = '$neutral1',
   learnMoreTextVariant = 'body3',
   modalName,
   primaryButtonText,
-  primaryButtonOnClick,
-  primaryButtonVariant = 'branded',
-  primaryButtonEmphasis,
+  primaryButtonOnPress,
+  primaryButtonVariant = 'default',
+  primaryButtonEmphasis = 'primary',
   isPrimaryButtonLoading,
   secondaryButtonText,
-  secondaryButtonOnClick,
+  secondaryButtonOnPress,
   secondaryButtonVariant = 'default',
   secondaryButtonEmphasis = 'secondary',
   buttonContainerProps,
   alignment = isExtensionApp ? 'top' : undefined,
   children,
+  footer,
   textAlign = 'center',
   displayHelpCTA = false,
-  hasIconBackground = false,
+  iconBackgroundColor,
 }: DialogProps): JSX.Element {
   return (
-    <Modal alignment={alignment} isModalOpen={isOpen} name={modalName} onClose={onClose}>
+    <Modal
+      alignment={alignment}
+      isModalOpen={isOpen}
+      name={modalName}
+      pt="$padding16"
+      paddingX={isExtensionApp ? '$spacing12' : undefined}
+      pb={isExtensionApp ? '$spacing12' : undefined}
+      gap="$gap24"
+      maxWidth={isExtensionApp ? 310 : undefined}
+      onClose={onClose}
+    >
       {displayHelpCTA && <GetHelpHeader closeModal={onClose} />}
-      <Flex
-        flexDirection="column"
-        alignItems={textAlign === 'center' ? 'center' : 'flex-start'}
-        p="$spacing12"
-        gap="$spacing8"
-      >
-        {hasIconBackground ? (
-          <Flex
-            backgroundColor="$surface3"
-            borderRadius="$rounded12"
-            height="$spacing48"
-            width="$spacing48"
-            alignItems="center"
-            justifyContent="center"
-            mb="$spacing4"
-            data-testid="dialog-icon"
-          >
-            {icon}
-          </Flex>
-        ) : (
-          icon
-        )}
-        <Text variant="subheading1" color="$neutral1" mt="$spacing8">
-          {title}
-        </Text>
-        {typeof subtext === 'string' ? (
-          <Text variant="body3" color="$neutral2" textAlign={textAlign}>
-            {subtext}
+      <Flex flexDirection="column" alignItems={textAlign === 'center' ? 'center' : 'flex-start'} gap="$spacing16">
+        <Flex
+          backgroundColor={iconBackgroundColor ?? '$surface2'}
+          borderRadius="$rounded12"
+          height="$spacing48"
+          width="$spacing48"
+          alignItems="center"
+          justifyContent="center"
+          data-testid="dialog-icon"
+        >
+          {icon}
+        </Flex>
+        <Flex gap="$spacing8" alignItems={textAlign === 'center' ? 'center' : 'flex-start'}>
+          <Text variant="subheading1" color={titleColor ?? '$neutral1'}>
+            {title}
           </Text>
-        ) : (
-          subtext
+          {typeof subtext === 'string' ? (
+            <Text variant="body3" color="$neutral2" textAlign={textAlign}>
+              {subtext}
+            </Text>
+          ) : (
+            subtext
+          )}
+          {learnMoreUrl && (
+            <LearnMoreLink url={learnMoreUrl} textColor={learnMoreTextColor} textVariant={learnMoreTextVariant} />
+          )}
+        </Flex>
+        {children && (
+          <Flex
+            width="100%"
+            borderRadius="$rounded12"
+            backgroundColor="$surface2"
+            borderWidth="$spacing1"
+            borderColor="$surface3"
+            px="$spacing16"
+            py="$spacing12"
+          >
+            {children}
+          </Flex>
         )}
-        {learnMoreUrl && (
-          <LearnMoreLink url={learnMoreUrl} textColor={learnMoreTextColor} textVariant={learnMoreTextVariant} />
+        {footer}
+      </Flex>
+      <Flex gap="$spacing8" width="100%" flexDirection="row" {...buttonContainerProps}>
+        {secondaryButtonText && secondaryButtonOnPress && (
+          <Button
+            variant={secondaryButtonVariant}
+            emphasis={secondaryButtonEmphasis}
+            minHeight="$spacing36"
+            onPress={secondaryButtonOnPress}
+          >
+            {secondaryButtonText}
+          </Button>
         )}
-        {children}
-        <Flex gap="$spacing8" width="100%" mt="$spacing16" {...buttonContainerProps}>
+        {primaryButtonText && primaryButtonOnPress && (
           <Button
             variant={primaryButtonVariant}
             emphasis={primaryButtonEmphasis}
-            minHeight="$spacing48"
+            minHeight="$spacing36"
             loading={isPrimaryButtonLoading}
-            onPress={primaryButtonOnClick}
+            onPress={primaryButtonOnPress}
           >
             {primaryButtonText}
           </Button>
-          {secondaryButtonText && secondaryButtonOnClick && (
-            <Button
-              variant={secondaryButtonVariant}
-              emphasis={secondaryButtonEmphasis}
-              minHeight="$spacing48"
-              onPress={secondaryButtonOnClick}
-            >
-              {secondaryButtonText}
-            </Button>
-          )}
-        </Flex>
+        )}
       </Flex>
     </Modal>
   )

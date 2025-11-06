@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { BaseProvider, JsonRpcProvider, Provider, TransactionReceipt } from '@ethersproject/providers'
 import { BigNumber, utils } from 'ethers'
 import { AssetType } from 'uniswap/src/entities/assets'
@@ -57,7 +56,6 @@ describe('TransactionService', () => {
     signTypedData: jest.fn(),
     sendTransaction: jest.fn(),
     sendTransactionSync: jest.fn(),
-    signAndSendTransaction: jest.fn(),
   }
 
   // Create a proper mock for AnalyticsService without relying on jest.Mocked

@@ -83,6 +83,11 @@ const WormholeModal = createLazy(() =>
   })),
 )
 
+const ReportTokenModal = createLazy(() =>
+  import('uniswap/src/components/reporting/ReportTokenIssueModal').then((module) => ({
+    default: module.ReportTokenIssueModal,
+  })),
+)
 const ModalLoadingFallback = memo(() => null)
 ModalLoadingFallback.displayName = 'ModalLoadingFallback'
 
@@ -198,6 +203,10 @@ export const modalRegistry: ModalRegistry = {
   [ModalName.Wormhole]: {
     component: WormholeModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.Wormhole,
+  },
+  [ModalName.ReportTokenIssue]: {
+    component: ReportTokenModal,
+    shouldMount: (state) => state.application.openModal?.name === ModalName.ReportTokenIssue,
   },
 } as const
 

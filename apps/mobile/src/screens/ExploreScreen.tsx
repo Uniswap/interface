@@ -1,5 +1,6 @@
 import { useIsFocused, useNavigation, useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type TextInput } from 'react-native'
@@ -16,8 +17,6 @@ import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { NetworkFilter, type NetworkFilterProps } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
 import { CancelBehaviorType, SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { MobileEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -98,7 +97,7 @@ export function ExploreScreen(): JSX.Element {
     })
 
     return unsubscribe
-  }, [isBottomTabsEnabled, navigation, listRef])
+  }, [isBottomTabsEnabled, navigation])
 
   // TODO(WALL-5482): investigate list rendering performance/scrolling issue
   const canRenderList = useRenderNextFrame(isSheetReady && !isSearchMode)

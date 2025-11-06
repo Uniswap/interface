@@ -1,4 +1,5 @@
 import { TokenReportEventType } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,12 +15,11 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { useBlockExplorerLogo } from 'uniswap/src/features/chains/logos'
 import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainExplorerName } from 'uniswap/src/features/chains/utils'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useNavigateToNftExplorerLink } from 'uniswap/src/features/nfts/hooks/useNavigateToNftExplorerLink'
 import { getIsNftHidden, getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { submitNFTSpamReport } from 'uniswap/src/features/reporting/reports'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectNftsVisibility } from 'uniswap/src/features/visibility/selectors'
@@ -78,18 +78,26 @@ export function useNFTContextMenuItems({
     }
 
     try {
+      // Submit report to Amplitude to track metrics
+      submitNFTSpamReport({
+        chainId,
+        contractAddress,
+      })
+      // Submit report to API
       await DataServiceApiClient.submitTokenReport({
         chainId,
         address: contractAddress,
         event: TokenReportEventType.FalseNegative,
       })
 
-      dispatch(
-        pushNotification({
-          type: AppNotificationType.Success,
-          title: t('notification.spam.NFT.successful'),
-        }),
-      )
+      if (showNotification) {
+        dispatch(
+          pushNotification({
+            type: AppNotificationType.Success,
+            title: t('common.reported'),
+          }),
+        )
+      }
     } catch (e) {
       logger.error(e, {
         tags: { file: 'useNftContextMenu.tsx', function: 'onPressReport' },
@@ -103,15 +111,17 @@ export function useNFTContextMenuItems({
         return
       }
 
-      dispatch(
-        pushNotification({
-          type: AppNotificationType.Error,
-          errorMessage: t('notification.spam.NFT.failed'),
-        }),
-      )
+      if (showNotification) {
+        dispatch(
+          pushNotification({
+            type: AppNotificationType.Error,
+            errorMessage: t('notification.spam.NFT.failed'),
+          }),
+        )
+      }
       return
     }
-  }, [t, dispatch, contractAddress, isVisible, chainId, nftKey])
+  }, [t, dispatch, contractAddress, isVisible, chainId, nftKey, showNotification])
 
   const onPressHiddenStatus = useCallback(() => {
     if (!nftKey) {
@@ -145,13 +155,15 @@ export function useNFTContextMenuItems({
       return
     }
     await setClipboard(contractAddress)
-    dispatch(
-      pushNotification({
-        type: AppNotificationType.Copied,
-        copyType: CopyNotificationType.Address,
-      }),
-    )
-  }, [contractAddress, dispatch])
+    if (showNotification) {
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.Copied,
+          copyType: CopyNotificationType.Address,
+        }),
+      )
+    }
+  }, [contractAddress, dispatch, showNotification])
 
   const openseaUri = useMemo(() => {
     if (chainId && contractAddress && tokenId) {

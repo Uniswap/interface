@@ -5,7 +5,7 @@ import { EM_DASH } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 
-const RelativeChange1D = memo(function RelativeChange1D({ value }: { value: number | undefined }): JSX.Element {
+export const RelativeChange1D = memo(function RelativeChange1D({ value }: { value: number | undefined }): JSX.Element {
   const { width: tableWidth } = useTableSize()
 
   if (!value && value !== 0) {
@@ -24,5 +24,3 @@ const RelativeChange1D = memo(function RelativeChange1D({ value }: { value: numb
   )
 })
 RelativeChange1D.displayName = 'RelativeChange1D'
-
-export default RelativeChange1D

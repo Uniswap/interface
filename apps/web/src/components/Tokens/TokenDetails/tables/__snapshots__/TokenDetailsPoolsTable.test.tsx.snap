@@ -2,7 +2,23 @@
 
 exports[`TDPPoolTable > renders data filled state 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c2 {
+  height: 16px;
+  width: 16px;
+}
+
+.c2 path {
+  stroke: #FF37C7;
+  background: rgba(19,19,19,0.63);
+  fill: none;
+}
+
+.c3 {
+  -webkit-animation: 2s fvtopB linear infinite;
+  animation: 2s fvtopB linear infinite;
+}
+
+.c0 {
   display: inline-block;
   height: inherit;
 }
@@ -572,6 +588,29 @@ exports[`TDPPoolTable > renders data filled state 1`] = `
                 </div>
               </a>
             </div>
+          </div>
+        </div>
+        <div
+          class="_position-_platformweb_sticky _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-center _mt--48px _zIndex-1020"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-accent2Soli100 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _width-fit-content _pt-t-space-pad95589114 _pr-t-space-pad95589114 _pb-t-space-pad95589114 _pl-t-space-pad95589114 _gap-t-space-gap56 _height-34px"
+          >
+            <svg
+              class="c2 c3"
+              fill="none"
+              stroke="#FF37C7"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2.5"
+              />
+            </svg>
+            Loading
           </div>
         </div>
       </div>
@@ -5674,33 +5713,27 @@ exports[`TDPPoolTable > renders error state 1`] = `
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
             >
-              <svg
-                fill="none"
-                height="40"
-                viewBox="0 0 40 40"
-                width="40"
-                xmlns="http://www.w3.org/2000/svg"
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-pad95589114 _pr-t-space-pad95589114 _pb-t-space-pad95589114 _pl-t-space-pad95589114 _backgroundColor-surface3 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453"
               >
-                <rect
-                  fill="#fff"
-                  fill-opacity=".12"
-                  height="40"
-                  rx="12"
-                  width="40"
-                />
-                <path
-                  clip-rule="evenodd"
-                  d="m19.5833 27.5h.8334c.8333 0 1.25-.4167 1.25-1.25v-2.2203l-3.3326 2.2802c.0197.7934.4361 1.1901 1.2492 1.1901zm-1.25-8.4596v-5.2904c0-.8333.4167-1.25 1.25-1.25h.8334c.8333 0 1.25.4167 1.25 1.25v3.0097zm5.8334 3.2788 3.3333-2.2807v6.2115c0 .8333-.4167 1.25-1.25 1.25h-.8333c-.8334 0-1.25-.4167-1.25-1.25zm-8.3866-1.5318-3.2801 2.2443v-1.7817c0-.8333.4167-1.25 1.25-1.25h.8333c.6614 0 1.0603.2625 1.1968.7874zm-2.862 6.4904-.3496-.511c.0672.2197.1837.39.3496.511z"
-                  fill="#9b9b9b"
-                  fill-rule="evenodd"
-                />
-                <path
-                  d="m12.5 26.6667 15.8333-10.8333"
-                  stroke="#9b9b9b"
-                  stroke-linecap="round"
-                  stroke-width="2"
-                />
-              </svg>
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M9.33301 13C9.33301 13.6667 8.99967 14 8.33301 14H7.66699C7.00033 14 6.66699 13.6667 6.66699 13V12.5635L9.33301 10.7393V13ZM14 13C14 13.6667 13.6667 14 13 14H12.333C11.6666 13.9999 11.333 13.6666 11.333 13V9.37012L14 7.5459V13ZM3.66699 8C4.33344 8.00011 4.66699 8.33344 4.66699 9V9.08496L2 10.9102V9C2 8.33333 2.33333 8 3 8H3.66699ZM8.33301 2C8.99967 2 9.33301 2.33333 9.33301 3V5.89258L6.66699 7.7168V3C6.66699 2.33333 7.00033 2 7.66699 2H8.33301Z"
+                    fill="currentColor"
+                  />
+                  <path
+                    d="M2 13.3334L14.6667 4.66675"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-width="2"
+                  />
+                </svg>
+              </div>
             </div>
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _maxWidth-200px"

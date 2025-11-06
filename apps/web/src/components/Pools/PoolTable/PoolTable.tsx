@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
-
+/* eslint-disable max-lines */
 import { PoolSortFields, TablePool } from 'appGraphql/data/pools/useTopPools'
 import { gqlToCurrency, OrderDirection, supportedChainIdFromGQLChain, unwrapToken } from 'appGraphql/data/util'
 import { ApolloError } from '@apollo/client'
@@ -7,6 +7,7 @@ import { createColumnHelper, Row } from '@tanstack/react-table'
 import { TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { Percent, Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { FeeData } from 'components/Liquidity/Create/types'
 import LPIncentiveFeeStatTooltip from 'components/Liquidity/LPIncentives/LPIncentiveFeeStatTooltip'
@@ -31,7 +32,7 @@ import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/
 import { exploreProtocolVersionFilterAtom } from 'pages/Explore/ProtocolFilter'
 import { memo, ReactElement, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { giveExploreStatDefaultValue, TABLE_PAGE_SIZE } from 'state/explore'
+import { TABLE_PAGE_SIZE } from 'state/explore'
 import { useExploreContextTopPools } from 'state/explore/topPools'
 import { PoolStat } from 'state/explore/types'
 import { Flex, styled, Text, useMedia } from 'ui/src'
@@ -42,8 +43,6 @@ import { UNI } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -59,10 +58,10 @@ const TableWrapper = styled(Flex, {
 interface PoolTableValues {
   index: number
   poolDescription: ReactElement
-  tvl: number
+  tvl: string
   apr: Percent
-  volume24h: number
-  volume30d: number
+  volume24h: string
+  volume30d: string
   volOverTvl?: number
   link: string
   protocolVersion?: string
@@ -269,6 +268,10 @@ export function PoolsTable({
             ? buildCurrencyId(chainId, token1Address)
             : undefined
 
+        const parseVolume = (amount: number | undefined): string => {
+          return amount ? convertFiatAmountFormatted(amount, NumberType.FiatTokenStats) : '-'
+        }
+
         return {
           index: poolSortRank,
           poolDescription: (
@@ -280,9 +283,9 @@ export function PoolsTable({
           ),
           protocolVersion: pool.protocolVersion?.toLowerCase(),
           feeTier: pool.feeTier,
-          tvl: isGqlPool ? pool.tvl : giveExploreStatDefaultValue(pool.totalLiquidity?.value),
-          volume24h: isGqlPool ? pool.volume24h : giveExploreStatDefaultValue(pool.volume1Day?.value),
-          volume30d: isGqlPool ? pool.volume30d : giveExploreStatDefaultValue(pool.volume30Day?.value),
+          tvl: parseVolume((isGqlPool ? pool.tvl : pool.totalLiquidity?.value) ?? 0),
+          volume24h: parseVolume((isGqlPool ? pool.volume24h : pool.volume1Day?.value) ?? 0),
+          volume30d: parseVolume((isGqlPool ? pool.volume30d : pool.volume30Day?.value) ?? 0),
           volOverTvl: pool.volOverTvl,
           apr: pool.apr,
           rewardApr: pool.boostedApr,
@@ -306,7 +309,7 @@ export function PoolsTable({
           },
         }
       }) ?? [],
-    [defaultChainId, filterString, pools],
+    [convertFiatAmountFormatted, defaultChainId, filterString, pools],
   )
 
   const showLoadingSkeleton = loading || !!error
@@ -399,7 +402,7 @@ export function PoolsTable({
             ),
             cell: (tvl) => (
               <Cell loading={showLoadingSkeleton}>
-                <TableText>{convertFiatAmountFormatted(tvl.getValue?.(), NumberType.FiatTokenStats)}</TableText>
+                <TableText>{tvl.getValue?.()}</TableText>
               </Cell>
             ),
           })
@@ -473,9 +476,7 @@ export function PoolsTable({
             cell: (volume24h) => {
               return (
                 <Cell loading={showLoadingSkeleton}>
-                  <TableText>
-                    {convertFiatAmountFormatted(volume24h?.getValue?.(), NumberType.FiatTokenStats)}
-                  </TableText>
+                  <TableText>{volume24h?.getValue?.()}</TableText>
                 </Cell>
               )
             },
@@ -496,7 +497,7 @@ export function PoolsTable({
             ),
             cell: (volumeWeek) => (
               <Cell loading={showLoadingSkeleton}>
-                <TableText>{convertFiatAmountFormatted(volumeWeek.getValue?.(), NumberType.FiatTokenStats)}</TableText>
+                <TableText>{volumeWeek.getValue?.()}</TableText>
               </Cell>
             ),
           })
@@ -539,7 +540,6 @@ export function PoolsTable({
     orderDirection,
     formatNumberOrString,
     formatPercent,
-    convertFiatAmountFormatted,
   ])
 
   return (

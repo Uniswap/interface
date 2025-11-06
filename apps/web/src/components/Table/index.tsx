@@ -7,7 +7,6 @@ import {
   getCoreRowModel,
   Row,
   RowData,
-  Table as TanstackTable,
   useReactTable,
 } from '@tanstack/react-table'
 import { useParentSize } from '@visx/responsive'
@@ -30,6 +29,7 @@ import {
   TableScrollMask,
 } from 'components/Table/styled'
 import { TableSizeProvider, useTableSize } from 'components/Table/TableSizeProvider'
+import { TableBodyProps } from 'components/Table/types'
 import { getCommonPinningStyles } from 'components/Table/utils'
 import useDebounce from 'hooks/useDebounce'
 import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -119,14 +119,6 @@ function TableRowComponent<T extends RowData>({ row, v2 = true, rowWrapper }: Ta
 
 const TableRow = memo(TableRowComponent) as typeof TableRowComponent
 
-type TableBodyProps<T extends RowData = unknown> = {
-  table: TanstackTable<T>
-  loading?: boolean
-  error?: ApolloError | boolean
-  v2: boolean
-  rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
-}
-
 function TableBodyInner<T extends RowData>(
   { table, loading, error, v2 = true, rowWrapper }: TableBodyProps<T>,
   ref: React.Ref<HTMLDivElement>,
@@ -194,6 +186,9 @@ export function Table<T extends RowData>({
   defaultPinnedColumns = [],
   forcePinning = false,
   v2 = true,
+  hideHeader = false,
+  externalScrollSync = false,
+  scrollGroup = 'table-sync',
   getRowId,
   rowWrapper,
 }: {
@@ -207,6 +202,9 @@ export function Table<T extends RowData>({
   defaultPinnedColumns?: string[]
   forcePinning?: boolean
   v2: boolean
+  hideHeader?: boolean
+  externalScrollSync?: boolean
+  scrollGroup?: string
   getRowId?: (originalRow: T, index: number, parent?: Row<T>) => string
   rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
 }) {
@@ -233,8 +231,10 @@ export function Table<T extends RowData>({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: we want to run it also when loadMore, loadingMore are changed
   useEffect(() => {
-    const scrollableElement = maxHeight ? tableBodyRef.current : window
-    if (scrollableElement === null) {
+    // Use parentElement because the actual scrolling container is the parent wrapper,
+    // not the table body div itself (which is a child of the scrollable container)
+    const scrollableElement = maxHeight ? tableBodyRef.current?.parentElement : window
+    if (!scrollableElement) {
       return undefined
     }
     const updateScrollPosition = () => {
@@ -244,7 +244,7 @@ export function Table<T extends RowData>({
           distanceFromTop: scrollTop,
           distanceToBottom: scrollHeight - scrollTop - clientHeight,
         })
-      } else {
+      } else if (scrollableElement === window) {
         setScrollPosition({
           distanceFromTop: scrollableElement.scrollY,
           distanceToBottom: document.body.scrollHeight - scrollableElement.scrollY - scrollableElement.innerHeight,
@@ -257,7 +257,29 @@ export function Table<T extends RowData>({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: we want to run it also when distanceFromTop, loading are changed
   useEffect(() => {
-    if (distanceToBottom < LOAD_MORE_BOTTOM_OFFSET && !loadingMore && loadMore && canLoadMore.current && !error) {
+    const scrollableElement = maxHeight ? tableBodyRef.current?.parentElement : window
+    const shouldLoadMoreFromScroll = distanceToBottom < LOAD_MORE_BOTTOM_OFFSET
+    let shouldLoadMoreFromViewportHeight = false
+
+    if (!shouldLoadMoreFromScroll) {
+      if (!maxHeight && scrollableElement === window) {
+        const contentHeight = document.body.scrollHeight
+        const viewportHeight = window.innerHeight
+        shouldLoadMoreFromViewportHeight = contentHeight <= viewportHeight
+      } else if (scrollableElement instanceof HTMLDivElement) {
+        const { scrollHeight, clientHeight } = scrollableElement
+        shouldLoadMoreFromViewportHeight = scrollHeight <= clientHeight
+      }
+    }
+
+    if (
+      (shouldLoadMoreFromScroll || shouldLoadMoreFromViewportHeight) &&
+      !loadingMore &&
+      loadMore &&
+      canLoadMore.current &&
+      !error &&
+      !loading
+    ) {
       setLoadingMore(true)
       // Manually update scroll position to prevent re-triggering
       setScrollPosition({
@@ -275,7 +297,7 @@ export function Table<T extends RowData>({
         },
       })
     }
-  }, [data.length, distanceFromTop, distanceToBottom, error, loadMore, loading, loadingMore])
+  }, [data.length, distanceFromTop, distanceToBottom, error, loadMore, loading, loadingMore, maxHeight, tableBodyRef])
 
   const table = useReactTable({
     columns,
@@ -380,11 +402,15 @@ export function Table<T extends RowData>({
   const hasPinnedColumns = useMemo(() => pinnedColumns.length > 0, [pinnedColumns])
 
   const tableSize = useMemo(() => ({ width, height, top, left }), [width, height, top, left])
+  const computedBodyMaxHeight = useMemo(
+    () => (maxHeight ? (hideHeader ? maxHeight : maxHeight - headerHeight) : 'unset'),
+    [maxHeight, hideHeader, headerHeight],
+  )
 
-  return (
-    <TableSizeProvider value={tableSize}>
-      <ScrollSync horizontal>
-        <TableContainer maxWidth={maxWidth} maxHeight={maxHeight} position="relative" ref={parentRef}>
+  const content = (
+    <TableContainer maxWidth={maxWidth} maxHeight={maxHeight} position="relative" ref={parentRef}>
+      {!hideHeader && (
+        <>
           <TableHead $isSticky={isSticky} $top={headerHeight}>
             {hasPinnedColumns && (
               <>
@@ -415,7 +441,7 @@ export function Table<T extends RowData>({
                 />
               </>
             )}
-            <ScrollSyncPane group="table-sync">
+            <ScrollSyncPane group={scrollGroup}>
               <HeaderRow dimmed={!!error} v2={v2}>
                 {table.getFlatHeaders().map((header) => (
                   <CellContainer key={header.id} style={getCommonPinningStyles(header.column, colors)}>
@@ -426,29 +452,35 @@ export function Table<T extends RowData>({
             </ScrollSyncPane>
           </TableHead>
           {hasPinnedColumns && <TableScrollMask zIndex={zIndexes.default} borderBottomRightRadius="$rounded20" />}
-          <ScrollSyncPane group="table-sync">
-            <TableBodyContainer maxHeight={maxHeight ? maxHeight - headerHeight : 'unset'} v2={v2}>
-              <TableBody
-                loading={loading}
-                error={error}
-                v2={v2}
-                rowWrapper={rowWrapper}
-                // @ts-ignore
-                table={table}
-                ref={tableBodyRef}
-              />
-            </TableBodyContainer>
-          </ScrollSyncPane>
-          {loadingMore && (
-            <LoadingIndicatorContainer>
-              <LoadingIndicator>
-                <Loader />
-                <Trans i18nKey="common.loading" />
-              </LoadingIndicator>
-            </LoadingIndicatorContainer>
-          )}
-        </TableContainer>
-      </ScrollSync>
+        </>
+      )}
+      <ScrollSyncPane group={scrollGroup}>
+        <TableBodyContainer maxHeight={computedBodyMaxHeight} v2={v2}>
+          <TableBody
+            loading={loading}
+            error={error}
+            v2={v2}
+            rowWrapper={rowWrapper}
+            // @ts-ignore
+            table={table}
+            ref={tableBodyRef}
+          />
+        </TableBodyContainer>
+      </ScrollSyncPane>
+      {loadingMore && (
+        <LoadingIndicatorContainer>
+          <LoadingIndicator>
+            <Loader />
+            <Trans i18nKey="common.loading" />
+          </LoadingIndicator>
+        </LoadingIndicatorContainer>
+      )}
+    </TableContainer>
+  )
+
+  return (
+    <TableSizeProvider value={tableSize}>
+      {externalScrollSync ? content : <ScrollSync horizontal>{content}</ScrollSync>}
     </TableSizeProvider>
   )
 }

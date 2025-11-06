@@ -1,37 +1,18 @@
 import { Dropdown } from 'components/Dropdowns/Dropdown'
 import { Share as ShareIcon } from 'components/Icons/Share'
 import { TwitterXLogo } from 'components/Icons/TwitterX'
-import { ActionButtonStyle } from 'components/Tokens/TokenDetails/shared'
+import { ActionButtonStyle, DropdownAction } from 'components/Tokens/TokenDetails/shared'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import styled from 'lib/styled-components'
 import { useState } from 'react'
 import { Link } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
-import { colors } from 'theme/colors'
 import { Text, useMedia, useSporeColors } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
-import { opacify } from 'ui/src/theme'
 import { isMobileWeb } from 'utilities/src/platform'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480
-
-const ShareAction = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 8px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 485;
-  gap: 12px;
-  height: 40px;
-  color: ${({ theme }) => theme.neutral1};
-  cursor: pointer;
-  :hover {
-    background-color: ${({ theme }) => opacify(10, theme.darkMode ? colors.gray200 : colors.gray300)};
-  }
-`
 
 export function openShareTweetWindow(name: string) {
   const currentLocation = window.location.href
@@ -67,15 +48,15 @@ export default function ShareButton({ name, utmSource }: { name: string; utmSour
       dropdownStyle={{ width: 200 }}
       alignRight
     >
-      <ShareAction onClick={() => setCopied(currentLocation)}>
+      <DropdownAction onClick={() => setCopied(currentLocation)}>
         {isCopied ? (
           <Check size="$icon.16" p={1} color="$statusSuccess" />
         ) : (
           <Link width="18px" height="18px" color={colors.neutral1.val} />
         )}
         <Text variant="body2">{isCopied ? t('common.copied') : t('common.copyLink.button')}</Text>
-      </ShareAction>
-      <ShareAction
+      </DropdownAction>
+      <DropdownAction
         onClick={() => {
           setIsOpen(false)
           openShareTweetWindow(name)
@@ -83,7 +64,7 @@ export default function ShareButton({ name, utmSource }: { name: string; utmSour
       >
         <TwitterXLogo width="18px" height="18px" fill={colors.neutral1.val} />
         <Text variant="body2">{t('common.share.shareToTwitter')}</Text>
-      </ShareAction>
+      </DropdownAction>
     </Dropdown>
   )
 }

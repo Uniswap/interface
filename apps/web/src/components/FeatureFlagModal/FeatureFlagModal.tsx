@@ -1,3 +1,15 @@
+import type { DynamicConfigKeys } from '@universe/gating'
+import {
+  DynamicConfigs,
+  Experiments,
+  ExternallyConnectableExtensionConfigKey,
+  FeatureFlags,
+  getFeatureFlagName,
+  getOverrideAdapter,
+  Layers,
+  NetworkRequestsConfigKey,
+  useFeatureFlagWithExposureLoggingDisabled,
+} from '@universe/gating'
 import { useModalState } from 'hooks/useModalState'
 import styledDep from 'lib/styled-components'
 import { useExternallyConnectableExtensionId } from 'pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
@@ -6,16 +18,6 @@ import { useCallback } from 'react'
 import { Button, Flex, ModalCloseIcon, styled, Text } from 'ui/src'
 import { ExperimentRow, LayerRow } from 'uniswap/src/components/gating/Rows'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import type { DynamicConfigKeys } from 'uniswap/src/features/gating/configs'
-import {
-  DynamicConfigs,
-  ExternallyConnectableExtensionConfigKey,
-  NetworkRequestsConfigKey,
-} from 'uniswap/src/features/gating/configs'
-import { Experiments, Layers } from 'uniswap/src/features/gating/experiments'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
-import { getOverrideAdapter } from 'uniswap/src/features/gating/sdk/statsig'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { TRUSTED_CHROME_EXTENSION_IDS } from 'utilities/src/environment/extensionId'
@@ -247,6 +249,9 @@ export default function FeatureFlagModal() {
               label="Disable extension deeplinks for testing mini portfolio UI on web"
             />
           </FeatureFlagGroup>
+          <FeatureFlagGroup name="Data Reporting">
+            <FeatureFlagOption flag={FeatureFlags.DataReportingAbilities} label="Enable Data Reporting Abilities" />
+          </FeatureFlagGroup>
           <FeatureFlagGroup name="Search">
             <FeatureFlagOption
               flag={FeatureFlags.PoolSearch}
@@ -274,8 +279,16 @@ export default function FeatureFlagModal() {
           <FeatureFlagGroup name="New Wallet Connectors">
             <FeatureFlagOption flag={FeatureFlags.PortoWalletConnector} label="Enable Porto Wallet Connector" />
           </FeatureFlagGroup>
-          <FeatureFlagGroup name="Misc">
+          <FeatureFlagGroup name="Portfolio">
             <FeatureFlagOption flag={FeatureFlags.PortfolioPage} label="Enable Portfolio page" />
+            <FeatureFlagOption flag={FeatureFlags.PortfolioDefiTab} label="Enable Portfolio DeFi Tab" />
+            <FeatureFlagOption
+              flag={FeatureFlags.PortfolioTokensAllocationChart}
+              label="Enable Portfolio Tokens Allocation Chart"
+            />
+          </FeatureFlagGroup>
+          <FeatureFlagGroup name="Misc">
+            <FeatureFlagOption flag={FeatureFlags.BridgedAssetsBannerV2} label="Enable V2 Bridged Assets Banner" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Experiments">
             <Flex ml="$padding8">
@@ -286,6 +299,7 @@ export default function FeatureFlagModal() {
           <FeatureFlagGroup name="Layers">
             <Flex ml="$padding8">
               <LayerRow value={Layers.SwapPage} />
+              <LayerRow value={Layers.PortfolioPage} />
             </Flex>
           </FeatureFlagGroup>
         </Flex>

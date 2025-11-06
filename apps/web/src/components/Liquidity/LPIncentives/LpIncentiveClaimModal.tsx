@@ -108,7 +108,7 @@ export function LpIncentiveClaimModal({
       }
       displayHelpCTA
       onClose={onClose}
-      primaryButtonOnClick={buttonConfig.onClick}
+      primaryButtonOnPress={buttonConfig.onClick}
       isPrimaryButtonLoading={buttonConfig.isLoading}
       modalName={ModalName.LpIncentiveClaimModal}
       primaryButtonText={buttonConfig.title}

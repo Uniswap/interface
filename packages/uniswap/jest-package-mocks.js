@@ -20,10 +20,10 @@ jest.mock('utilities/src/device/uniqueId', () => {
   return jest.requireActual('uniswap/src/test/mocks/uniqueId')
 })
 
-jest.mock('uniswap/src/features/gating/sdk/statsig', () => {
-  const actualStatsig = jest.requireActual('uniswap/src/features/gating/sdk/statsig')
+jest.mock('@universe/gating', () => {
+  const actual = jest.requireActual('@universe/gating')
   return {
-    ...actualStatsig,
+    ...actual,
     useClientAsyncInit: jest.fn(() => ({
       client: null,
       isLoading: true,

@@ -1,4 +1,5 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+/* eslint-disable max-lines */
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import {
@@ -226,7 +227,7 @@ export function getPriceRangeInfo({
   derivedPositionInfo: CreatePositionInfo
   state: PriceRangeState
   positionState: PositionState
-}): PriceRangeInfo {
+}): PriceRangeInfo | undefined {
   if (derivedPositionInfo.protocolVersion === ProtocolVersion.V2) {
     return getV2PriceRangeInfo({ state, derivedPositionInfo })
   }
@@ -270,8 +271,13 @@ export function getV3PriceRangeInfo({
   state: PriceRangeState
   positionState: PositionState
   derivedPositionInfo: CreateV3PositionInfo
-}): V3PriceRangeInfo {
+}): V3PriceRangeInfo | undefined {
   const { fee } = positionState
+
+  if (!fee) {
+    return undefined
+  }
+
   const {
     protocolVersion,
     currencies: { sdk: sdkCurrencies },
@@ -426,8 +432,13 @@ export function getV4PriceRangeInfo({
   state: PriceRangeState
   positionState: PositionState
   derivedPositionInfo: CreateV4PositionInfo
-}): V4PriceRangeInfo {
+}): V4PriceRangeInfo | undefined {
   const { fee, hook, initialPosition } = positionState
+
+  if (!fee) {
+    return undefined
+  }
+
   const {
     protocolVersion,
     currencies: { sdk: sortedCurrencies },

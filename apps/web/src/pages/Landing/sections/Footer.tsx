@@ -4,7 +4,7 @@ import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
 import { useModalState } from 'hooks/useModalState'
 import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
 import { useTranslation } from 'react-i18next'
-import { Anchor, Flex, Separator, styled, Text } from 'ui/src'
+import { Anchor, Flex, FlexProps, Separator, styled, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
@@ -24,9 +24,9 @@ const PolicyLink = styled(Text, {
   style: { transition: '100ms' },
 })
 
-export function Socials({ iconSize }: { iconSize?: string }) {
+export function Socials({ iconSize, gap }: { iconSize?: string; gap?: FlexProps['gap'] }) {
   return (
-    <Flex row gap="$spacing24" maxHeight={iconSize} alignItems="flex-start">
+    <Flex row gap={gap ?? '$spacing24'} maxHeight={iconSize} alignItems="flex-start">
       <SocialIcon iconColor="#00C32B">
         <Anchor href="https://github.com/Uniswap" target="_blank">
           <Github size={iconSize} fill="inherit" />

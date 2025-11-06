@@ -1,8 +1,9 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
+import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useDerivedPositionInfo } from 'components/Liquidity/Create/hooks/useDerivedPositionInfo'
 import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
 import {
@@ -16,8 +17,6 @@ import type { DepositState } from 'components/Liquidity/types'
 import { getPriceRangeInfo } from 'components/Liquidity/utils/priceRangeInfo'
 import { createContext, Dispatch, SetStateAction, useContext, useEffect, useMemo, useState } from 'react'
 import { PositionField } from 'types/position'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -35,14 +34,8 @@ export const DEFAULT_DEPOSIT_STATE: DepositState = {
   exactAmounts: {},
 }
 
-const DEFAULT_FEE_DATA = {
-  feeAmount: FeeAmount.MEDIUM,
-  tickSpacing: TICK_SPACINGS[FeeAmount.MEDIUM],
-  isDynamic: false,
-}
-
 const DEFAULT_POSITION_STATE: PositionState = {
-  fee: DEFAULT_FEE_DATA,
+  fee: undefined,
   hook: undefined,
   userApprovedHook: undefined,
   protocolVersion: ProtocolVersion.V4,
@@ -167,7 +160,7 @@ export function CreateLiquidityContextProvider({
   const [feeTierSearchModalOpen, setFeeTierSearchModalOpen] = useState(false)
   const [dynamicFeeTierSpeedbumpData, setDynamicFeeTierSpeedbumpData] = useState<DynamicFeeTierSpeedbumpData>({
     open: false,
-    wishFeeData: DEFAULT_POSITION_STATE.fee,
+    wishFeeData: undefined,
   })
   const [refetch, setRefetch] = useState<() => void>()
 
@@ -210,6 +203,10 @@ export function CreateLiquidityContextProvider({
   }, [derivedPositionInfo, priceRangeState, positionState])
 
   const poolOrPair = useMemo(() => {
+    if (!derivedPriceRangeInfo) {
+      return undefined
+    }
+
     if (
       derivedPositionInfo.protocolVersion === ProtocolVersion.V2 &&
       derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2
@@ -287,17 +284,17 @@ export function CreateLiquidityContextProvider({
     poolId: derivedPositionInfo.poolId,
     poolOrPairLoading: derivedPositionInfo.poolOrPairLoading,
     creatingPoolOrPair: derivedPositionInfo.creatingPoolOrPair,
-    price: derivedPriceRangeInfo.price,
+    price: derivedPriceRangeInfo?.price,
     ticks:
-      derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2
+      derivedPriceRangeInfo?.protocolVersion === ProtocolVersion.V2 || !derivedPriceRangeInfo
         ? [undefined, undefined]
         : derivedPriceRangeInfo.ticks,
     ticksAtLimit:
-      derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2
+      derivedPriceRangeInfo?.protocolVersion === ProtocolVersion.V2 || !derivedPriceRangeInfo
         ? [false, false]
         : derivedPriceRangeInfo.ticksAtLimit,
     pricesAtTicks:
-      derivedPriceRangeInfo.protocolVersion === ProtocolVersion.V2
+      derivedPriceRangeInfo?.protocolVersion === ProtocolVersion.V2 || !derivedPriceRangeInfo
         ? [undefined, undefined]
         : derivedPriceRangeInfo.pricesAtTicks,
     isNativeTokenAOnly,

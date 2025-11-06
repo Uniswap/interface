@@ -6,10 +6,9 @@ exports[`DatetimeText renders without error 1`] = `
 <View
   style={
     {
-      "alignItems": "flex-end",
+      "alignItems": "center",
       "flexDirection": "column",
-      "gap": 2,
-      "marginTop": 2,
+      "marginTop": 12,
     }
   }
 >
@@ -32,9 +31,9 @@ exports[`DatetimeText renders without error 1`] = `
           },
         },
         "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
+        "fontSize": 15,
         "fontWeight": "400",
-        "lineHeight": 24.7,
+        "lineHeight": 19.5,
         "padding": 0,
       }
     }

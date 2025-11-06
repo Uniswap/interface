@@ -19,6 +19,7 @@ test.describe('ActivityTab activity history', () => {
     })
 
     await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
     await graphql.intercept('ActivityWeb', Mocks.Account.activity_history)
     await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 

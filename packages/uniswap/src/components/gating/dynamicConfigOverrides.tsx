@@ -1,6 +1,6 @@
+import { ForceUpgradeStatus, ForceUpgradeTranslations } from '@universe/gating'
 import { ComponentProps } from 'react'
 import { DynamicConfigDropdown } from 'uniswap/src/components/gating/DynamicConfigDropdown'
-import { ForceUpgradeStatus, ForceUpgradeTranslations } from 'uniswap/src/features/gating/configs'
 
 type DynamicConfigOptions = ComponentProps<typeof DynamicConfigDropdown>['options']
 

@@ -88,6 +88,15 @@ export function TokenBalanceListContextProvider({
 
   const rows = useMemo<TokenBalanceListRow[]>(() => {
     const shownTokensArray = shownTokens ?? []
+
+    const testnetModeRowIds = [
+      // When we're on testnet mode, we want to show all tokens, without splitting to hidden ones
+      ...sortPortfolioBalances({
+        balances: [...shownTokensArray, ...(sortedHiddenTokens ?? [])],
+        isTestnetModeEnabled,
+      }),
+    ].map((token) => token.currencyInfo.currencyId)
+
     const newRowIds = [
       // Always sort tokens to ensure proper ordering after instant balance updates
       // In prod, sort by USD value; in testnet mode, sort by native balances
@@ -102,9 +111,11 @@ export function TokenBalanceListContextProvider({
       return token.currencyInfo.currencyId
     })
 
+    const modeDependentRowIds = isTestnetModeEnabled ? testnetModeRowIds : newRowIds
+
     // We do this extra step to make sure we return the same array reference if the currency IDs for each row haven't changed.
-    if (!rowsRef.current || !isEqual(rowsRef.current, newRowIds)) {
-      rowsRef.current = newRowIds
+    if (!rowsRef.current || !isEqual(rowsRef.current, modeDependentRowIds)) {
+      rowsRef.current = modeDependentRowIds
     }
 
     return rowsRef.current

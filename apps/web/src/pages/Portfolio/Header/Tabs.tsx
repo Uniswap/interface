@@ -1,13 +1,12 @@
-import { usePortfolioParams } from 'pages/Portfolio/Header/hooks/usePortfolioParams'
+import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { PortfolioTabInfo, usePortfolioTabs } from 'pages/Portfolio/Header/hooks/usePortfolioTabs'
-import { useLocation, useNavigate } from 'react-router'
-import { Flex, Separator, Text, TouchableArea } from 'ui/src'
+import { Link, useLocation } from 'react-router'
+import { Flex, Separator, Text } from 'ui/src'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 
 export function PortfolioTabs() {
   const { pathname } = useLocation()
-  const navigate = useNavigate()
-  const { chainName } = usePortfolioParams()
+  const { chainName } = usePortfolioRoutes()
   const portfolioTabs = usePortfolioTabs()
 
   return (
@@ -19,11 +18,10 @@ export function PortfolioTabs() {
           const isActive = currentPage === tab.pageName
 
           return (
-            <TouchableArea
+            <Link
+              to={tabPath}
               key={tab.path}
-              onPress={() => navigate(tabPath)}
-              role="link"
-              tag="a"
+              style={{ textDecoration: 'none', paddingBottom: 12 }}
               aria-label={`Navigate to ${tab.label}`}
             >
               <Text
@@ -40,7 +38,7 @@ export function PortfolioTabs() {
               >
                 {tab.label}
               </Text>
-            </TouchableArea>
+            </Link>
           )
         })}
       </Flex>

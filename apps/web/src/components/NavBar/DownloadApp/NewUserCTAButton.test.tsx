@@ -1,10 +1,13 @@
 import { NewUserCTAButton } from 'components/NavBar/DownloadApp/NewUserCTAButton'
 import { render, screen } from 'test-utils/render'
 
-vi.mock('uniswap/src/features/gating/hooks', () => ({
-  useFeatureFlag: vi.fn(),
-  getFeatureFlag: vi.fn(),
-}))
+vi.mock('@universe/gating', async (importOriginal) => {
+  return {
+    ...(await importOriginal()),
+    useFeatureFlag: vi.fn(),
+    getFeatureFlag: vi.fn(),
+  }
+})
 
 beforeEach(() => {
   window.matchMedia = vi.fn().mockImplementation(() => ({

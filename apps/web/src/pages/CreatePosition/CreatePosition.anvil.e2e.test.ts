@@ -1,7 +1,7 @@
 import { V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { computePairAddress } from '@uniswap/v2-sdk'
 import { ONE_MILLION_USDT } from 'playwright/anvil/utils'
-import { expect, getTest, Page } from 'playwright/fixtures'
+import { expect, getTest, type Page } from 'playwright/fixtures'
 import { DEFAULT_TEST_GAS_LIMIT, stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { Mocks } from 'playwright/mocks/mocks'
 import { USDT } from 'uniswap/src/constants/tokens'
@@ -40,6 +40,9 @@ test.describe('Create position', () => {
     // eslint-disable-next-line
     await page.getByTestId('token-option-1-USDT').first().click()
     await page.getByRole('button', { name: 'Continue' }).click()
+    await graphql.waitForResponse('PoolPriceHistory')
+    await graphql.waitForResponse('AllV4Ticks')
+    await page.getByText('Full range').click()
     await reviewAndCreatePosition({ page })
   })
 
@@ -59,7 +62,6 @@ test.describe('Create position', () => {
     await page.getByRole('button', { name: 'Continue' }).click()
     await graphql.waitForResponse('PoolPriceHistory')
     await graphql.waitForResponse('AllV4Ticks')
-    await page.getByText('Custom range').click()
     await page.getByTestId(TestID.RangeInputIncrement + '-0').click()
     await page.getByTestId(TestID.RangeInputDecrement + '-1').click()
     await reviewAndCreatePosition({ page })
@@ -127,7 +129,7 @@ test.describe('Create position', () => {
       await reviewAndCreatePosition({ page })
     })
 
-    test('should create a position with a custom fee tier and a dynamic fee tier', async ({ page, anvil }) => {
+    test('should create a position with a dynamic fee tier', async ({ page, anvil }) => {
       const HOOK_ADDRESS = '0x09DEA99D714A3a19378e3D80D1ad22Ca46085080'
       await stubTradingApiEndpoint({
         page,

@@ -7,6 +7,9 @@ import { TokenBalancesProvider } from 'appGraphql/data/apollo/TokenBalancesProvi
 import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
 import { datadogRum } from '@datadog/browser-rum'
+import { ApiInit, getSessionService } from '@universe/api'
+import type { StatsigUser } from '@universe/gating'
+import { createChallengeSolverService, createSessionInitializationService } from '@universe/sessions'
 import { QueryClientPersistProvider } from 'components/PersistQueryClient'
 import { createWeb3Provider } from 'components/Web3Provider/createWeb3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
@@ -36,7 +39,6 @@ import { PortalProvider } from 'ui/src'
 import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
-import type { StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import i18n from 'uniswap/src/i18n'
 import { initializeDatadog } from 'uniswap/src/utils/datadog'
@@ -56,8 +58,7 @@ if (__DEV__ && !isTestEnv()) {
   })
 }
 
-// Initialize portfolio balance overrides for instant token balance updates
-initializePortfolioQueryOverrides({ store, apolloClient })
+initializePortfolioQueryOverrides({ store })
 
 const loadListsUpdater = () => import('state/lists/updater')
 const loadSystemThemeUpdater = () =>
@@ -71,6 +72,14 @@ const loadLogsUpdater = () => import('state/logs/updater')
 const loadFiatOnRampTransactionsUpdater = () => import('state/fiatOnRampTransactions/updater')
 const loadWebAccountsStoreUpdater = () =>
   import('features/accounts/store/updater').then((m) => ({ default: m.WebAccountsStoreUpdater }))
+
+const sessionInitService = createSessionInitializationService({
+  sessionService: getSessionService({
+    // TODO: Use real base url
+    getBaseUrl: () => 'https://entry-gateway.backend-dev.api.uniswap.org',
+  }),
+  challengeSolverService: createChallengeSolverService(),
+})
 
 function Updaters() {
   const location = useLocation()
@@ -98,6 +107,7 @@ function Updaters() {
       {FiatOnRampTransactionsUpdater && <FiatOnRampTransactionsUpdater />}
       {WebAccountsStoreUpdater && <WebAccountsStoreUpdater />}
       <AccountsStoreDevTool />
+      <ApiInit sessionInitService={sessionInitService} />
     </>
   )
 }

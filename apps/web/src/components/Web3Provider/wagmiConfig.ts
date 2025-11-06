@@ -1,5 +1,6 @@
 import { getWagmiConnectorV2 } from '@binance/w3w-wagmi-connector-v2'
 import { PLAYWRIGHT_CONNECT_ADDRESS } from 'components/Web3Provider/constants'
+import { createRejectableMockConnector } from 'components/Web3Provider/rejectableConnector'
 import { WC_PARAMS } from 'components/Web3Provider/walletConnect'
 import { embeddedWallet } from 'connection/EmbeddedWalletConnector'
 import { porto } from 'porto/wagmi'
@@ -16,7 +17,7 @@ import type { Chain } from 'viem'
 import { createClient } from 'viem'
 import type { Config } from 'wagmi'
 import { createConfig, fallback, http } from 'wagmi'
-import { coinbaseWallet, injected, mock, safe, walletConnect } from 'wagmi/connectors'
+import { coinbaseWallet, injected, safe, walletConnect } from 'wagmi/connectors'
 
 // Get the appropriate Binance connector based on the environment
 const getBinanceConnector = () => {
@@ -89,7 +90,7 @@ function createWagmiConnectors(params: {
   return includeMockConnector
     ? [
         ...baseConnectors,
-        mock({
+        createRejectableMockConnector({
           features: {},
           accounts: [PLAYWRIGHT_CONNECT_ADDRESS],
         }),

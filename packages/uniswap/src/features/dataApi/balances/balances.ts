@@ -38,10 +38,12 @@ export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: Portfol
 export function usePortfolioBalances({
   evmAddress,
   svmAddress,
+  chainIds,
   ...queryOptions
 }: {
   evmAddress?: Address
   svmAddress?: Address
+  chainIds?: UniverseChainId[]
 } & QueryHookOptions<
   GraphQLApi.PortfolioBalancesQuery,
   GraphQLApi.PortfolioBalancesQueryVariables
@@ -49,6 +51,7 @@ export function usePortfolioBalances({
   return usePortfolioData({
     evmAddress: evmAddress || '',
     svmAddress: svmAddress || '',
+    chainIds,
     ...queryOptions,
     skip: !(evmAddress ?? svmAddress) || queryOptions.skip,
   })
@@ -270,6 +273,8 @@ export function useTokenBalancesGroupedByVisibility({
   }, [balancesById, currencyIdToTokenVisibility, isTestnetModeEnabled])
 }
 
+type SortedPortfolioBalancesResult = GqlResult<SortedPortfolioBalances> & { networkStatus: NetworkStatus }
+
 /**
  * Returns portfolio balances for a given address sorted by USD value.
  *
@@ -284,12 +289,14 @@ export function useSortedPortfolioBalances({
   svmAddress,
   pollInterval,
   onCompleted,
+  chainIds,
 }: {
   evmAddress?: Address
   svmAddress?: Address
   pollInterval?: PollingInterval
   onCompleted?: () => void
-}): GqlResult<SortedPortfolioBalances> & { networkStatus: NetworkStatus } {
+  chainIds?: UniverseChainId[]
+}): SortedPortfolioBalancesResult {
   const { isTestnetModeEnabled } = useEnabledChains()
 
   // Fetch all balances including small balances and spam tokens because we want to return those in separate arrays
@@ -304,19 +311,23 @@ export function useSortedPortfolioBalances({
     pollInterval,
     onCompleted,
     fetchPolicy: 'cache-and-network',
+    chainIds,
   })
 
   const { shownTokens, hiddenTokens } = useTokenBalancesGroupedByVisibility({ balancesById })
 
-  return {
-    data: {
-      balances: sortPortfolioBalances({ balances: shownTokens || [], isTestnetModeEnabled }),
-      hiddenBalances: sortPortfolioBalances({ balances: hiddenTokens || [], isTestnetModeEnabled }),
-    },
-    loading,
-    networkStatus,
-    refetch,
-  }
+  return useMemo(
+    () => ({
+      data: {
+        balances: sortPortfolioBalances({ balances: shownTokens || [], isTestnetModeEnabled }),
+        hiddenBalances: sortPortfolioBalances({ balances: hiddenTokens || [], isTestnetModeEnabled }),
+      },
+      loading,
+      networkStatus,
+      refetch,
+    }),
+    [shownTokens, hiddenTokens, isTestnetModeEnabled, loading, networkStatus, refetch],
+  )
 }
 
 /**

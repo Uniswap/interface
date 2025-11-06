@@ -2,6 +2,9 @@ import { getTokenDetailsURL } from 'appGraphql/data/util'
 import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import { MobileBottomBar, TDPActionTabs } from 'components/NavBar/MobileBottomBar'
+import { POPUP_MEDIUM_DISMISS_MS } from 'components/Popups/constants'
+import { popupRegistry } from 'components/Popups/registry'
+import { PopupType } from 'components/Popups/types'
 import { ActivitySection } from 'components/Tokens/TokenDetails/ActivitySection'
 import BalanceSummary, { PageChainBalanceSummary } from 'components/Tokens/TokenDetails/BalanceSummary'
 import { BridgedAssetSection } from 'components/Tokens/TokenDetails/BridgedAssetSection'
@@ -19,7 +22,7 @@ import { Swap } from 'pages/Swap'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
-import { Trans } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { CurrencyState } from 'state/swap/types'
 import { Flex, useIsTouchDevice, useMedia } from 'ui/src'
@@ -33,6 +36,7 @@ import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
+import { useEvent } from 'utilities/src/react/hooks'
 import { getInitialLogoUrl } from 'utils/getInitialLogoURL'
 
 const DividerLine = deprecatedStyled(Hr)`
@@ -114,6 +118,7 @@ function includesToken(tokens: CurrencyState | undefined, token: Currency | unde
 }
 
 function TDPSwapComponent() {
+  const { t } = useTranslation()
   const { address, currency, currencyChainId, tokenColor } = useTDPContext()
   const navigate = useNavigate()
 
@@ -203,11 +208,19 @@ function TDPSwapComponent() {
   const [showWarningModal, setShowWarningModal] = useState(false)
   const closeWarningModal = useCallback(() => setShowWarningModal(false), [])
 
+  const onTokenWarningReportSuccess = useEvent(() => {
+    popupRegistry.addPopup(
+      { type: PopupType.Success, message: t('common.reported') },
+      'report-token-warning-success',
+      POPUP_MEDIUM_DISMISS_MS,
+    )
+  })
+
   return (
     <Flex gap="$gap12">
       <Swap
         syncTabToUrl={false}
-        chainId={currency.chainId}
+        initialInputChainId={currency.chainId}
         initialInputCurrency={initialInputCurrency}
         initialOutputCurrency={initialOutputCurrency}
         onCurrencyChange={handleCurrencyChange}
@@ -221,6 +234,7 @@ function TDPSwapComponent() {
           isInfoOnlyWarning
           isVisible={showWarningModal}
           closeModalOnly={closeWarningModal}
+          onReportSuccess={onTokenWarningReportSuccess}
           onAcknowledge={closeWarningModal}
         />
       )}

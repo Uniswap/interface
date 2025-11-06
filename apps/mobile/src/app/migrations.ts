@@ -18,6 +18,7 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
+  addActivityVisibility,
   addDismissedBridgedAndCompatibleWarnings,
   migrateSearchHistory,
   removeThaiBahtFromFiatCurrency,
@@ -1084,6 +1085,7 @@ export const migrations = {
 
   93: migrateSearchHistory,
   94: addDismissedBridgedAndCompatibleWarnings,
+  95: addActivityVisibility,
 }
 
-export const MOBILE_STATE_VERSION = 94
+export const MOBILE_STATE_VERSION = 95

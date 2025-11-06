@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { TFunction } from 'i18next'
 import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -11,6 +12,7 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { submitTokenWarningDataReport } from 'uniswap/src/features/reporting/reports'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useBlockaidFeeComparisonAnalytics } from 'uniswap/src/features/tokens/hooks/useBlockaidFeeComparisonAnalytics'
@@ -31,6 +33,7 @@ import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hoo
 import { TokenWarningFlagsTable } from 'uniswap/src/features/tokens/TokenWarningFlagsTable'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { isMobileApp } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 
 export interface FoTPercent {
   buyFeePercent?: number
@@ -51,6 +54,7 @@ interface TokenWarningModalContentProps extends TokenWarningProps {
   onAcknowledgeButton: () => void
   onDismissTokenWarning0: () => void
   onDismissTokenWarning1?: () => void
+  onReportSuccess?: () => void
 }
 export interface TokenWarningModalProps extends TokenWarningProps {
   isVisible: boolean
@@ -59,6 +63,7 @@ export interface TokenWarningModalProps extends TokenWarningProps {
   onToken1BlockAcknowledged?: () => void
   closeModalOnly: () => void // callback that purely just closes the modal
   onAcknowledge: () => void
+  onReportSuccess?: () => void // callback to send a report of an incorrect warning, which enables the report UI when applied
 }
 
 const BLOCKAID_LOGO_WIDTH = 50
@@ -76,6 +81,7 @@ function TokenWarningModalContent({
   feeOnTransferOverride,
   onDismissTokenWarning0,
   onDismissTokenWarning1,
+  onReportSuccess,
 }: TokenWarningModalContentProps): JSX.Element | null {
   const { t } = useTranslation()
 
@@ -138,6 +144,25 @@ function TokenWarningModalContent({
     onAcknowledgeButton()
   }
 
+  const isDataReportingEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
+  const showReportUI = isDataReportingEnabled && tokenProtectionWarning > TokenProtectionWarning.NonDefault
+
+  const sendReport = useEvent((reportText: string) => {
+    // send report to amplitude
+    submitTokenWarningDataReport({
+      chainId: currencyInfo0.currency.chainId,
+      tokenAddress: currencyIdToAddress(currencyInfo0.currencyId),
+      tokenName: currencyInfo0.currency.name,
+      reportText,
+    })
+
+    // report success for the given case
+    onReportSuccess?.()
+
+    // close the modal
+    onAcknowledgeButton()
+  })
+
   if (severity === WarningSeverity.None) {
     return null
   }
@@ -190,6 +215,7 @@ function TokenWarningModalContent({
               {titleText}
             </Text>
           }
+          sendReport={showReportUI ? sendReport : undefined}
           onReject={onRejectButton}
           onClose={onRejectButton}
           onAcknowledge={onAcknowledge}
@@ -301,6 +327,7 @@ export default function TokenWarningModal({
   onToken1BlockAcknowledged,
   onAcknowledge,
   closeModalOnly,
+  onReportSuccess,
 }: TokenWarningModalProps): JSX.Element | null {
   const colors = useSporeColors()
   const [warningIndex, setWarningIndex] = useState<0 | 1>(0)
@@ -343,6 +370,7 @@ export default function TokenWarningModal({
           hasSecondWarning={hasSecondWarning}
           shouldBeCombinedPlural={combinedPlural}
           feeOnTransferOverride={feeOnTransferOverride}
+          onReportSuccess={onReportSuccess}
           onRejectButton={onReject ?? closeModalOnly}
           onAcknowledgeButton={() => {
             if (hasSecondWarning) {
@@ -365,6 +393,7 @@ export default function TokenWarningModal({
           <TokenWarningModalContent
             hasSecondWarning
             currencyInfo0={currencyInfo1}
+            onReportSuccess={onReportSuccess}
             onDismissTokenWarning0={onDismissTokenWarning1}
             onRejectButton={() => {
               setWarningIndex(0)

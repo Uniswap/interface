@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useDismissedBridgedAssetWarnings } from 'uniswap/src/features/tokens/slice/hooks'
@@ -38,19 +37,14 @@ export function useNeedsBridgedAssetWarning(
       outputCurrencyId &&
       prefilledCurrencies?.some((currency) => currencyId(currency).toLowerCase() === outputCurrencyId.toLowerCase())
 
-    if (
-      inputCurrencyInfo &&
-      !inputTokenWarningPreviouslyDismissed &&
-      isInputPrefilled &&
-      checkIsBridgedAsset(inputCurrencyInfo)
-    ) {
+    if (inputCurrencyInfo && !inputTokenWarningPreviouslyDismissed && isInputPrefilled && inputCurrencyInfo.isBridged) {
       tokens.push(inputCurrencyInfo)
     }
     if (
       outputCurrencyInfo &&
       !outputTokenWarningPreviouslyDismissed &&
       isOutputPrefilled &&
-      checkIsBridgedAsset(outputCurrencyInfo)
+      outputCurrencyInfo.isBridged
     ) {
       tokens.push(outputCurrencyInfo)
     }

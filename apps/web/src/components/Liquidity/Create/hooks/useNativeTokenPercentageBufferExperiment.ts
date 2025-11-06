@@ -1,5 +1,4 @@
-import { Experiments, NativeTokenPercentageBufferProperties } from 'uniswap/src/features/gating/experiments'
-import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
+import { Experiments, NativeTokenPercentageBufferProperties, useExperimentValue } from '@universe/gating'
 
 export function useNativeTokenPercentageBufferExperiment(): number {
   const bufferSize = useExperimentValue({

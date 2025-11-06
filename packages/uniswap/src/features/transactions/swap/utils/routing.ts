@@ -1,6 +1,6 @@
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import { TradingApi } from '@universe/api'
-
+import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
 import { type SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { type ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 
@@ -54,6 +54,16 @@ export function getEVMTxRequest(swapTxContext: SwapTxAndGasInfo): ValidatedTrans
     return undefined
   }
   return swapTxContext.txRequests?.[0]
+}
+
+/** Asserts that a given object fits a given routing variant. */
+export function requireRouting<T extends TradingApi.Routing, V extends { routing: TradingApi.Routing }>(
+  val: V,
+  routing: readonly T[],
+): asserts val is V & { routing: T } {
+  if (!routing.includes(val.routing as T)) {
+    throw new UnexpectedTransactionStateError(`Expected routing ${routing}, got ${val.routing}`)
+  }
 }
 
 export const ACROSS_DAPP_INFO = {

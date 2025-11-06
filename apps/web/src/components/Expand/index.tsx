@@ -1,30 +1,7 @@
-import Column from 'components/deprecated/Column'
-import Row, { RowBetween } from 'components/deprecated/Row'
-import styled from 'lib/styled-components'
 import { PropsWithChildren, ReactElement } from 'react'
-import { ChevronDown } from 'react-feather'
-import { HeightAnimator } from 'ui/src'
+import { Flex, FlexProps, HeightAnimator } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
-
-const ButtonContainer = styled(Row)`
-  cursor: pointer;
-  justify-content: flex-end;
-  width: unset;
-`
-
-const ExpandIcon = styled(ChevronDown)<{ $isOpen: boolean }>`
-  color: ${({ theme }) => theme.neutral2};
-  transform: ${({ $isOpen }) => ($isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
-  transition: transform ${({ theme }) => theme.transition.duration.medium};
-`
-
-const Content = styled(Column)`
-  padding-top: ${({ theme }) => theme.grids.md};
-`
-
-const Wrapper = styled(Column)<{ $padding?: string }>`
-  padding: ${({ $padding }) => $padding};
-`
 
 export default function Expand({
   header,
@@ -35,27 +12,41 @@ export default function Expand({
   padding,
   onToggle,
   iconSize = 'icon24',
+  paddingTop,
+  width,
 }: PropsWithChildren<{
   header?: ReactElement
   button: ReactElement
   testId?: string
   isOpen: boolean
-  padding?: string
+  padding?: FlexProps['p']
   onToggle: () => void
   iconSize?: keyof typeof iconSizes
+  paddingTop?: FlexProps['pt']
+  width?: FlexProps['width']
 }>) {
   return (
-    <Wrapper $padding={padding}>
-      <RowBetween>
+    <Flex p={padding} width={width}>
+      <Flex row justifyContent="space-between">
         {header}
-        <ButtonContainer data-testid={testId} onClick={onToggle} aria-expanded={isOpen}>
+        <Flex
+          row
+          cursor="pointer"
+          width="unset"
+          justifyContent="flex-end"
+          data-testid={testId}
+          onPress={onToggle}
+          aria-expanded={isOpen}
+        >
           {button}
-          <ExpandIcon $isOpen={isOpen} size={iconSizes[iconSize]} />
-        </ButtonContainer>
-      </RowBetween>
+          <RotatableChevron height={iconSizes[iconSize]} direction={isOpen ? 'up' : 'down'} color="$neutral2" />
+        </Flex>
+      </Flex>
       <HeightAnimator open={isOpen}>
-        <Content gap="md">{children}</Content>
+        <Flex gap="$gap12" pt={paddingTop}>
+          {children}
+        </Flex>
       </HeightAnimator>
-    </Wrapper>
+    </Flex>
   )
 }

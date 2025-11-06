@@ -18,6 +18,12 @@
       "path": "../../packages/ui"
     },
     {
+      "path": "../../packages/sessions"
+    },
+    {
+      "path": "../../packages/gating"
+    },
+    {
       "path": "../../packages/api"
     }
   ],

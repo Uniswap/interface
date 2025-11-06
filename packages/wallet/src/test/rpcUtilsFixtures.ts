@@ -13,6 +13,9 @@ const txLimitReachedForDelegatedAccount =
 const timeout =
   'timeout (requestBody="{\"method\":\"eth_sendRawTransaction\",\"params\":[\"...\"],\"id\":165,\"jsonrpc\":\"2.0\"}", requestMethod="POST", timeout=120000, url="...", code=TIMEOUT, version=web/5.7.1)'
 
+const confirmationTimeout =
+  'processing response error (body="{\"jsonrpc\":\"2.0\",\"id\":305,\"error\":{\"code\":4,\"message\":\"Transaction ... was added to the mempool but wasn\'t confirmed within 6s.\"}}", error={"code":4}, requestBody="{\"method\":\"eth_sendRawTransactionSync\",\"params\":[\"...\"],\"id\":305,\"jsonrpc\":\"2.0\"}", requestMethod="POST", url="...", code=SERVER_ERROR, version=web/5.7.1)'
+
 const noNetwork = 'could not detect network (event="noNetwork", code=NETWORK_ERROR, version=providers/5.7.2)'
 
 const cannotReadProperty1 = "Cannot read properties of null (reading 'to')"
@@ -46,6 +49,7 @@ export const rpcUtilsFixtures = {
   missingResponseBody,
   txLimitReachedForDelegatedAccount,
   timeout,
+  confirmationTimeout,
   noNetwork,
   cannotReadProperty1,
   cannotReadProperty2,

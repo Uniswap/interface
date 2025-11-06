@@ -12,9 +12,9 @@ import {
   GetPositionResponse,
   ListPositionsRequest,
   ListPositionsResponse,
-} from '@uniswap/client-pools/dist/pools/v1/api_pb'
-import { getPosition, listPositions } from '@uniswap/client-pools/dist/pools/v1/api-PoolsService_connectquery'
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+} from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { getPosition, listPositions } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Pair } from '@uniswap/v2-sdk'
 import { useMemo } from 'react'
 import { uniswapPostTransport } from 'uniswap/src/data/rest/base'

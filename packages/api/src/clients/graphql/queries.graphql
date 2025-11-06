@@ -836,6 +836,12 @@ fragment TokenBasicInfoParts on Token {
   name
   standard
   symbol
+  isBridged
+  bridgedWithdrawalInfo {
+    chain
+    provider
+    url
+  }
 }
 
 fragment TokenBasicProjectParts on Token {

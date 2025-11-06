@@ -4,12 +4,12 @@ import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { getRoutingForTransaction } from 'state/activity/utils'
-import { getSigner, HandleOnChainStepParams, watchForInterruption } from 'state/sagas/transactions/utils'
+import { getSigner, watchForInterruption } from 'state/sagas/transactions/utils'
 import { handleGetCapabilities } from 'state/walletCapabilities/lib/handleGetCapabilities'
 import { setCapabilitiesByChain } from 'state/walletCapabilities/reducer'
 import { call, put } from 'typed-redux-saga'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
-import { OnChainTransactionStepBatched } from 'uniswap/src/features/transactions/steps/types'
+import { HandleOnChainStepParams, OnChainTransactionStepBatched } from 'uniswap/src/features/transactions/steps/types'
 import {
   InterfaceTransactionDetails,
   TransactionOriginType,

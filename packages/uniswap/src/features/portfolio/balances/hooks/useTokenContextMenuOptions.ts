@@ -1,8 +1,10 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { isNativeCurrency } from '@uniswap/universal-router-sdk'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
+import { ChartBarCrossed, Flag } from 'ui/src/components/icons'
 import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
 import { CopySheets } from 'ui/src/components/icons/CopySheets'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
@@ -24,7 +26,7 @@ import { pushNotification } from 'uniswap/src/features/notifications/slice/slice
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { ElementName, SectionName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useTokenVisibility } from 'uniswap/src/features/visibility/selectors'
+import { useTokenVisibility } from 'uniswap/src/features/visibility/hooks/useTokenVisibility'
 import { setTokenVisibility } from 'uniswap/src/features/visibility/slice'
 import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
@@ -39,6 +41,8 @@ export enum TokenMenuActionType {
   ViewDetails = 'viewDetails',
   ToggleVisibility = 'toggleVisibility',
   CopyAddress = 'copyAddress',
+  ReportToken = 'reportToken',
+  DataIssue = 'dataIssue',
 }
 
 interface TokenMenuParams {
@@ -48,6 +52,8 @@ interface TokenMenuParams {
   portfolioBalance?: Nullable<PortfolioBalance>
   excludedActions?: TokenMenuActionType[]
   openContractAddressExplainerModal?: () => void
+  openReportTokenModal: () => void
+  openReportDataIssueModal?: () => void
   copyAddressToClipboard?: (address: string) => Promise<void>
   closeMenu: () => void
 }
@@ -61,13 +67,17 @@ export function useTokenContextMenuOptions({
   portfolioBalance,
   excludedActions,
   openContractAddressExplainerModal,
+  openReportTokenModal,
+  openReportDataIssueModal,
   copyAddressToClipboard,
   closeMenu,
 }: TokenMenuParams): MenuOptionItemWithId[] {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const { defaultChainId } = useEnabledChains()
 
+  const isDataReportingEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
+
+  const { defaultChainId } = useEnabledChains()
   const activeAddresses = useActiveAddresses()
 
   const { navigateToSwapFlow, navigateToReceive, navigateToSendFlow, handleShareToken, navigateToTokenDetails } =
@@ -221,9 +231,27 @@ export function useTokenContextMenuOptions({
       actions.push({
         id: TokenMenuActionType.ToggleVisibility,
         label: isVisible ? t('tokens.action.hide') : t('tokens.action.unhide'),
-        destructive: isVisible,
         onPress: onPressHiddenStatus,
         Icon: isVisible ? EyeOff : Eye,
+      })
+    }
+
+    if (isDataReportingEnabled && openReportDataIssueModal) {
+      actions.push({
+        id: TokenMenuActionType.DataIssue,
+        label: t('reporting.token.data.title'),
+        onPress: openReportDataIssueModal,
+        Icon: ChartBarCrossed,
+      })
+    }
+
+    if (isDataReportingEnabled && !isNative) {
+      actions.push({
+        id: TokenMenuActionType.ReportToken,
+        label: t('reporting.token.report.title'),
+        onPress: openReportTokenModal,
+        Icon: Flag,
+        destructive: true,
       })
     }
 
@@ -253,6 +281,9 @@ export function useTokenContextMenuOptions({
     isTestnetModeEnabled,
     isNative,
     copyAddressToClipboard,
+    openReportTokenModal,
+    openReportDataIssueModal,
+    isDataReportingEnabled,
   ])
 
   return menuActions

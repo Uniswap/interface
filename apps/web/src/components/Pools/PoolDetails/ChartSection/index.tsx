@@ -1,6 +1,6 @@
 import { PoolData } from 'appGraphql/data/pools/usePoolData'
 import { gqlToCurrency, TimePeriod, toHistoryDuration } from 'appGraphql/data/util'
-import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion as RestProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { GraphQLApi, parseRestProtocolVersion } from '@universe/api'
@@ -311,7 +311,13 @@ function PriceChart({
   const lastPrice = data[data.length - 1]
   const price = useUSDCValue(tryParseCurrencyAmount(lastPrice.value.toString(), quoteCurrency))
   return (
-    <Chart height={PDP_CHART_HEIGHT_PX} Model={PriceChartModel} params={params}>
+    <Chart
+      height={PDP_CHART_HEIGHT_PX}
+      Model={PriceChartModel}
+      params={params}
+      showDottedBackground
+      showLeftFadeOverlay
+    >
       {(crosshairData) => {
         const displayValue = crosshairData ?? lastPrice
         const priceDisplay = (
@@ -334,7 +340,7 @@ function PriceChart({
         return (
           <ChartHeader
             value={priceDisplay}
-            additionalFields={<PriceChartDelta startingPrice={data[0]} endingPrice={displayValue} />}
+            additionalFields={<PriceChartDelta startingPrice={data[0].close} endingPrice={displayValue.close} />}
             valueFormatterType={NumberType.FiatTokenPrice}
             time={crosshairData?.time}
           />
@@ -420,6 +426,7 @@ function LiquidityChart({
       height={PDP_CHART_HEIGHT_PX}
       Model={LiquidityBarChartModel}
       params={params}
+      showDottedBackground
       TooltipBody={({ data: crosshairData }: { data: LiquidityBarData }) => (
         // TODO(WEB-3628): investigate potential off-by-one or subgraph issues causing calculated TVL issues on 1 bip pools
         // Also remove Error Boundary when its determined its not needed

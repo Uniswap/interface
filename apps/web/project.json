@@ -19,7 +19,7 @@
         "command": "nx playwright:test web",
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["anvil:base", "preview", "wait-for-webserver"]
+      "dependsOn": ["anvil:mainnet", "preview", "wait-for-webserver"]
     },
     "e2e:anvil": {
       "executor": "nx:run-commands",
@@ -27,7 +27,7 @@
         "command": "nx playwright:test:anvil web",
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["anvil:base", "preview", "wait-for-webserver"]
+      "dependsOn": ["anvil:mainnet", "preview", "wait-for-webserver"]
     },
     "e2e:no-anvil": {
       "executor": "nx:run-commands",

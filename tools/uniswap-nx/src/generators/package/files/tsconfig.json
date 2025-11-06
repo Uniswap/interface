@@ -5,7 +5,7 @@
   "compilerOptions": {
     "noEmit": false,
     "emitDeclarationOnly": true,
-    "types": [<%= types %>],
+    "types": [<%- types %>],
     "paths": {}
   },
   "references": []

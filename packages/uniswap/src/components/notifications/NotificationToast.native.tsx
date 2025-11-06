@@ -39,11 +39,11 @@ export function NotificationToast({
 
   const onDismissLatest = useCallback(() => {
     bannerOffset.value = withSpring(HIDE_OFFSET_Y, SPRING_ANIMATION)
-  }, [bannerOffset])
+  }, [])
 
   const onShowCurrentNotification = useCallback(() => {
     bannerOffset.value = withDelay(SPRING_ANIMATION_DELAY, withSpring(showOffset, SPRING_ANIMATION))
-  }, [bannerOffset, showOffset])
+  }, [showOffset])
 
   const { onActionButtonPress, onNotificationPress, cancelDismiss, dismissLatest } = useNotificationLifecycle({
     actionButtonOnPress: actionButton?.onPress,

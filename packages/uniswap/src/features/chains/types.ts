@@ -1,10 +1,10 @@
 // biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
 import { CurrencyAmount, Token, ChainId as UniswapSDKChainId } from '@uniswap/sdk-core'
 import type { GraphQLApi } from '@universe/api'
+import { SwapConfigKey } from '@universe/gating'
 import type { ImageSourcePropType } from 'react-native'
 // biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
 import { type UNIVERSE_CHAIN_INFO } from 'uniswap/src/features/chains/chainInfo'
-import { SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { NonEmptyArray } from 'utilities/src/primitives/array'

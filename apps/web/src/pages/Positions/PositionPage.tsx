@@ -1,12 +1,15 @@
+/* eslint-disable max-lines */
 import { BigNumber } from '@ethersproject/bignumber'
-import { Position, PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Position, PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { WrappedLiquidityPositionRangeChart } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { Dropdown } from 'components/Dropdowns/Dropdown'
 import { BaseQuoteFiatAmount } from 'components/Liquidity/BaseQuoteFiatAmount'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
+import { useReportPositionHandler } from 'components/Liquidity/hooks/useReportPositionHandler'
 import { LiquidityPositionAmountRows } from 'components/Liquidity/LiquidityPositionAmountRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { LiquidityPositionStackedBars } from 'components/Liquidity/LiquidityPositionStackedBars'
@@ -45,6 +48,7 @@ import {
   useSporeColors,
 } from 'ui/src'
 import { ExchangeHorizontal } from 'ui/src/components/icons/ExchangeHorizontal'
+import { Flag } from 'ui/src/components/icons/Flag'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -56,14 +60,13 @@ import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useSupportedChainId } from 'uniswap/src/features/chains/hooks/useSupportedChainId'
 import { EVMUniverseChainId, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { usePositionVisibilityCheck } from 'uniswap/src/features/visibility/hooks/usePositionVisibilityCheck'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, currencyId, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -164,6 +167,23 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
       base: token0,
     }
   }, [positionInfo])
+
+  const isPositionVisible = usePositionVisibilityCheck()
+  const isVisible =
+    positionInfo !== undefined &&
+    isPositionVisible({
+      poolId: positionInfo.poolId,
+      tokenId: positionInfo.tokenId,
+      chainId: positionInfo.chainId,
+      isFlaggedSpam: positionInfo.isHidden,
+    })
+
+  const isDataReportingEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
+  const reportPositionHandler = useReportPositionHandler({
+    position: positionInfo,
+    isVisible,
+    navigateToPositions: true,
+  })
 
   const [priceInverted, setPriceInverted] = useState(false)
 
@@ -586,6 +606,19 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
                   totalApr={positionInfo.totalApr}
                 />
               )}
+            {isDataReportingEnabled && (
+              <Flex row justifyContent="space-between">
+                <Text variant="body3" color="$neutral3">
+                  {t('reporting.pool.details.title')}
+                </Text>
+                <TouchableArea row gap="$gap4" alignItems="center" onPress={reportPositionHandler}>
+                  <Flag size="$icon.16" color="$statusCritical" />
+                  <Text variant="body3" color="$statusCritical">
+                    {t('nft.reportSpam')}
+                  </Text>
+                </TouchableArea>
+              </Flex>
+            )}
           </Flex>
         </Flex>
       </BodyWrapper>

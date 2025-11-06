@@ -1,3 +1,5 @@
+import { ApiInit, getSessionService } from '@universe/api'
+import { createChallengeSolverService, createSessionInitializationService } from '@universe/sessions'
 import { PropsWithChildren } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { GraphqlProvider } from 'src/app/apollo'
@@ -13,6 +15,14 @@ import i18n from 'uniswap/src/i18n'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { AccountsStoreContextProvider } from 'wallet/src/features/accounts/store/provider'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
+
+const sessionInitializationService = createSessionInitializationService({
+  sessionService: getSessionService({
+    // TODO: Use real base url
+    getBaseUrl: () => 'https://entry-gateway.backend-dev.api.uniswap.org',
+  }),
+  challengeSolverService: createChallengeSolverService(),
+})
 
 export function BaseAppContainer({
   children,
@@ -30,6 +40,7 @@ export function BaseAppContainer({
                     <SmartWalletNudgesProvider>
                       <LocalizationContextProvider>
                         <TraceUserProperties />
+                        <ApiInit sessionInitService={sessionInitializationService} />
                         {children}
                       </LocalizationContextProvider>
                     </SmartWalletNudgesProvider>

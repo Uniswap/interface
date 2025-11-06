@@ -1,7 +1,6 @@
+import { FeatureFlags, getFeatureFlagName, getStatsigClient } from '@universe/gating'
 import { call, select } from 'typed-redux-saga'
 import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import type { PrepareSwapParams } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
 import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isBridge, isClassic, isUniswapX, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'

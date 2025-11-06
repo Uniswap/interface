@@ -1,5 +1,6 @@
+/* eslint-disable max-lines */
 import type { TransactionResponse } from '@ethersproject/providers'
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { type Currency, CurrencyAmount, Fraction, Percent, Price, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position, priceToClosestTick, TickMath } from '@uniswap/v3-sdk'
 import { BlueCard, DarkGrayCard, LightCard, YellowCard } from 'components/Card/cards'

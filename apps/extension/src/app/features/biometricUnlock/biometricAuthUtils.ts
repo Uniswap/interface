@@ -16,9 +16,11 @@ import {
  */
 export async function authenticateWithBiometricCredential({
   credentialId,
+  transports,
   abortSignal,
 }: {
   credentialId: string
+  transports: AuthenticatorTransport[]
   abortSignal: AbortSignal
 }): Promise<{ publicKeyCredential: PublicKeyCredential; encryptionKey: CryptoKey }> {
   // Convert stored credential ID back to binary format
@@ -31,6 +33,7 @@ export async function authenticateWithBiometricCredential({
         {
           type: 'public-key',
           id: credentialIdBuffer,
+          transports,
         },
       ],
       userVerification: 'required',
@@ -70,10 +73,12 @@ export async function encryptPasswordWithBiometricData({
   password,
   encryptionKey,
   credentialId,
+  transports,
 }: {
   password: string
   encryptionKey: CryptoKey
   credentialId: string
+  transports: AuthenticatorTransport[]
 }): Promise<BiometricUnlockStorageData> {
   // Create a new secret payload for the password
   const secretPayload = await createEmptySecretPayload()
@@ -86,7 +91,7 @@ export async function encryptPasswordWithBiometricData({
     additionalData: credentialId, // Use credential ID as additional authenticated data
   })
 
-  return { credentialId, secretPayload: secretPayloadWithCiphertext }
+  return { credentialId, transports, secretPayload: secretPayloadWithCiphertext }
 }
 
 /**

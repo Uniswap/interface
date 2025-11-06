@@ -95,6 +95,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
   const onSuccess = useCallback(() => {
     // For Unichain networks, trigger confirmation and branch to stall+fetch logic (ie handle in component)
     if (isFlashblocksEnabled && shouldShowConfirmedState) {
+      resetCurrentStep()
       updateSwapForm({
         isConfirmed: true,
         isSubmitting: false,
@@ -125,7 +126,7 @@ export function useCreateSwapReviewCallbacks(ctx: {
       setScreen(TransactionScreen.Form)
     }
     onClose()
-  }, [setScreen, updateSwapForm, onClose, isFlashblocksEnabled, shouldShowConfirmedState])
+  }, [setScreen, updateSwapForm, onClose, isFlashblocksEnabled, shouldShowConfirmedState, resetCurrentStep])
 
   const onPending = useCallback(() => {
     // Skip pending UI only for Unichain networks with flashblocks-compatible routes

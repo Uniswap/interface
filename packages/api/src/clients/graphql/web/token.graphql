@@ -40,6 +40,7 @@ query TokenWeb($chain: Chain!, $address: String = null) {
       homepageUrl
       twitterName
       logoUrl
+      isSpam
       tokens {
         id
         chain
@@ -77,6 +78,7 @@ query TokenProjectWeb($chain: Chain!, $address: String = null) {
       homepageUrl
       twitterName
       logoUrl
+      isSpam
       tokens {
         id
         chain

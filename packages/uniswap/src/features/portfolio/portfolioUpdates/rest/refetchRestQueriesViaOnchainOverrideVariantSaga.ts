@@ -147,12 +147,10 @@ export function mergeOnChainBalances(
 }
 
 export async function fetchAndMergeOnchainBalances({
-  apolloClient,
   cachedPortfolio,
   accountAddress,
   currencyIds,
 }: {
-  apolloClient: ApolloClient<NormalizedCacheObject>
   cachedPortfolio: Portfolio
   accountAddress: string
   currencyIds: Set<CurrencyId>
@@ -165,7 +163,6 @@ export async function fetchAndMergeOnchainBalances({
 
   try {
     const onchainBalancesByCurrencyId = await fetchOnChainBalancesRest({
-      apolloClient,
       cachedPortfolio,
       accountAddress,
       currencyIds,
@@ -206,7 +203,8 @@ export function* refetchRestQueriesViaOnchainOverrideVariant({
 }: {
   transaction: TransactionDetails
   activeAddress: string | null
-  apolloClient: ApolloClient<NormalizedCacheObject>
+  // Only pass `null` for Solana where we don't need to refetch GQL queries
+  apolloClient: ApolloClient<NormalizedCacheObject> | null
 }): Generator {
   const currenciesWithBalanceToUpdate = getCurrenciesToUpdate(transaction, activeAddress)
 
@@ -243,7 +241,6 @@ export function* refetchRestQueriesViaOnchainOverrideVariant({
   yield* all(
     portfolioQueriesToUpdate.map((query) =>
       call(updatePortfolioCache, {
-        apolloClient,
         ownerAddress: activeAddress,
         currencyIds: currenciesWithBalanceToUpdate,
         queryKey: query.queryKey,
@@ -255,7 +252,11 @@ export function* refetchRestQueriesViaOnchainOverrideVariant({
   yield* delay(REFETCH_DELAY)
 
   // Once NFTs are migrated to REST we won't need to do this
-  yield* call([apolloClient, apolloClient.refetchQueries], { include: [GQLQueries.NftsTab] })
+  if (apolloClient) {
+    yield* call([apolloClient, apolloClient.refetchQueries], { include: [GQLQueries.NftsTab] })
+  } else {
+    log.debug(`Ignoring NFT GQL refetch for ${platform} because apolloClient is null`)
+  }
 
   // Invalidate all portfolio queries that match this address
   yield* call([SharedQueryClient, SharedQueryClient.invalidateQueries], {
@@ -265,12 +266,10 @@ export function* refetchRestQueriesViaOnchainOverrideVariant({
 }
 
 function* updatePortfolioCache({
-  apolloClient,
   ownerAddress,
   currencyIds,
   queryKey,
 }: {
-  apolloClient: ApolloClient<NormalizedCacheObject>
   ownerAddress: string
   currencyIds: Set<CurrencyId>
   queryKey: readonly unknown[]
@@ -286,7 +285,6 @@ function* updatePortfolioCache({
   }
 
   const mergedData = yield* call(fetchAndMergeOnchainBalances, {
-    apolloClient,
     cachedPortfolio: cachedPortfolioData.portfolio,
     accountAddress: ownerAddress,
     currencyIds,

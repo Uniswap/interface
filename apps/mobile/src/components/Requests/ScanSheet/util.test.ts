@@ -1,6 +1,10 @@
 import * as wcUtils from '@walletconnect/utils'
 import { CUSTOM_UNI_QR_CODE_PREFIX, getSupportedURI, URIType } from 'src/components/Requests/ScanSheet/util'
 import {
+  UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
+  UNISWAP_WALLETCONNECT_URL,
+} from 'src/features/deepLinking/constants'
+import {
   wcAsParamInUniwapScheme,
   wcInUniwapScheme,
   wcUniversalLinkUrl,
@@ -120,5 +124,85 @@ describe('getSupportedURI', () => {
 
   it('should return undefined for invalid metamask address', async () => {
     expect(await getSupportedURI('ethereum:invalid_address')).toBeUndefined()
+  })
+
+  describe('URL and HTML encoded URIs', () => {
+    it('should handle percent-encoded WalletConnect v2 URI', async () => {
+      // Simulate a URI that has been percent-encoded (& becomes %26)
+      const encodedUri = encodeURIComponent(VALID_WC_V2_URI)
+      const result = await getSupportedURI(encodedUri)
+      expect(result).toEqual({ type: URIType.WalletConnectV2URL, value: VALID_WC_V2_URI })
+    })
+
+    it('should handle HTML entity-encoded ampersands in WalletConnect v2 URI', async () => {
+      // Simulate a URI with HTML-encoded ampersands (& becomes &amp;)
+      const htmlEncodedUri = VALID_WC_V2_URI.replace(/&/g, '&amp;')
+      const result = await getSupportedURI(htmlEncodedUri)
+      expect(result).toEqual({ type: URIType.WalletConnectV2URL, value: VALID_WC_V2_URI })
+    })
+
+    it('should handle both percent-encoded and HTML entity-encoded URI', async () => {
+      // First apply HTML encoding, then percent encoding
+      const htmlEncodedUri = VALID_WC_V2_URI.replace(/&/g, '&amp;')
+      const doubleEncodedUri = encodeURIComponent(htmlEncodedUri)
+      const result = await getSupportedURI(doubleEncodedUri)
+      expect(result).toEqual({ type: URIType.WalletConnectV2URL, value: VALID_WC_V2_URI })
+    })
+
+    it('should handle percent-encoded uniswap scheme URI with query param', async () => {
+      const fullUri = UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM + VALID_WC_V2_URI
+      const encodedUri = encodeURIComponent(fullUri)
+      const result = await getSupportedURI(encodedUri)
+      expect(result).toEqual({ type: URIType.WalletConnectV2URL, value: VALID_WC_V2_URI })
+    })
+
+    it('should handle HTML entity-encoded uniswap scheme URI with query param', async () => {
+      const fullUri = UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM + VALID_WC_V2_URI
+      const htmlEncodedUri = fullUri.replace(/&/g, '&amp;')
+      const result = await getSupportedURI(htmlEncodedUri)
+      expect(result).toEqual({ type: URIType.WalletConnectV2URL, value: VALID_WC_V2_URI })
+    })
+
+    it('should handle percent-encoded uniswap app URL', async () => {
+      const fullUri = UNISWAP_WALLETCONNECT_URL + VALID_WC_V2_URI
+      const encodedUri = encodeURIComponent(fullUri)
+      const result = await getSupportedURI(encodedUri)
+      expect(result).toEqual({ type: URIType.WalletConnectV2URL, value: VALID_WC_V2_URI })
+    })
+
+    it('should handle HTML entity-encoded uniswap app URL', async () => {
+      const fullUri = UNISWAP_WALLETCONNECT_URL + VALID_WC_V2_URI
+      const htmlEncodedUri = fullUri.replace(/&/g, '&amp;')
+      const result = await getSupportedURI(htmlEncodedUri)
+      expect(result).toEqual({ type: URIType.WalletConnectV2URL, value: VALID_WC_V2_URI })
+    })
+
+    it('should handle percent-encoded hello_uniwallet prefix', async () => {
+      const fullUri = CUSTOM_UNI_QR_CODE_PREFIX + VALID_WC_V2_URI
+      const encodedUri = encodeURIComponent(fullUri)
+      const result = await getSupportedURI(encodedUri)
+      expect(result).toEqual({ type: URIType.WalletConnectV2URL, value: VALID_WC_V2_URI })
+    })
+
+    it('should handle HTML entity-encoded hello_uniwallet prefix', async () => {
+      const fullUri = CUSTOM_UNI_QR_CODE_PREFIX + VALID_WC_V2_URI
+      const htmlEncodedUri = fullUri.replace(/&/g, '&amp;')
+      const result = await getSupportedURI(htmlEncodedUri)
+      expect(result).toEqual({ type: URIType.WalletConnectV2URL, value: VALID_WC_V2_URI })
+    })
+
+    it('should handle malformed percent-encoded URI without crashing', async () => {
+      // Malformed URI with invalid percent encoding (% not followed by valid hex)
+      const malformedUri = 'uniswap://wc?uri=%E0%A4%A'
+      // Should not throw an error, even with malformed encoding
+      await expect(getSupportedURI(malformedUri)).resolves.not.toThrow()
+    })
+
+    it('should handle URI with standalone percent sign', async () => {
+      // URI with a standalone % which is invalid for decodeURIComponent
+      const malformedUri = 'hello_uniwallet:' + VALID_WC_V2_URI + '%'
+      // Should not throw an error, even with malformed encoding
+      await expect(getSupportedURI(malformedUri)).resolves.not.toThrow()
+    })
   })
 })

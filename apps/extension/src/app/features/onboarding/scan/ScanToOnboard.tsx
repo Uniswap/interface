@@ -174,7 +174,7 @@ export function ScanToOnboard(): JSX.Element {
     )
 
     return () => cancelAnimation(qrScale)
-  }, [isLoadingUUID, qrScale])
+  }, [isLoadingUUID])
   // Using useAnimatedStyle and AnimatedFlex because tamagui scale animation not working
   const qrAnimatedStyle = useAnimatedStyle(() => {
     return {

@@ -7,17 +7,20 @@ export type Visibility = { isVisible: boolean }
 export type PositionKeyToVisibility = Record<string, Visibility>
 export type CurrencyIdToVisibility = Record<CurrencyId, Visibility>
 export type NFTKeyToVisibility = Record<string, Visibility>
+export type ActivityIdToVisibility = Record<string, Visibility>
 
 export interface VisibilityState {
   positions: PositionKeyToVisibility
   tokens: CurrencyIdToVisibility
   nfts: NFTKeyToVisibility
+  activity: ActivityIdToVisibility
 }
 
 export const initialVisibilityState: VisibilityState = {
   positions: {},
   tokens: {},
   nfts: {},
+  activity: {},
 }
 
 // Manages user-marked visibility states for positions and tokens
@@ -25,20 +28,19 @@ export const slice = createSlice({
   name: 'visibility',
   initialState: initialVisibilityState,
   reducers: {
-    togglePositionVisibility: (
+    setPositionVisibility: (
       state,
       {
-        payload: { poolId, tokenId, chainId },
+        payload: { poolId, tokenId, chainId, isVisible },
       }: PayloadAction<{
         poolId: string
         tokenId: string | undefined
         chainId: UniverseChainId
+        isVisible: boolean
       }>,
     ) => {
       const positionId = getUniquePositionId({ poolId, tokenId, chainId })
-
-      const isVisible = state.positions[positionId]?.isVisible ?? true
-      state.positions[positionId] = { isVisible: !isVisible }
+      state.positions[positionId] = { isVisible }
     },
     setTokenVisibility: (
       state,
@@ -52,8 +54,14 @@ export const slice = createSlice({
     ) => {
       state.nfts[nftKey] = { isVisible }
     },
+    setActivityVisibility: (
+      state,
+      { payload: { transactionId, isVisible } }: PayloadAction<{ transactionId: string; isVisible: boolean }>,
+    ) => {
+      state.activity[transactionId] = { isVisible }
+    },
   },
 })
 
-export const { togglePositionVisibility, setTokenVisibility, setNftVisibility } = slice.actions
+export const { setPositionVisibility, setTokenVisibility, setNftVisibility, setActivityVisibility } = slice.actions
 export const { reducer: visibilityReducer } = slice

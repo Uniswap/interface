@@ -10,7 +10,9 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   ApproveTransactionInfo,
+  INFINITE_APPROVAL_AMOUNT,
   Permit2ApproveTransactionInfo,
+  REVOKE_APPROVAL_AMOUNT,
   TransactionDetails,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -19,8 +21,6 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { isWebPlatform } from 'utilities/src/platform'
 
-const INFINITE_AMOUNT = 'INF'
-const ZERO_AMOUNT = '0.0'
 export function ApproveTransactionDetails({
   transactionDetails,
   typeInfo,
@@ -42,9 +42,9 @@ export function ApproveTransactionDetails({
   const approvalAmount = typeInfo.type === TransactionType.Approve ? typeInfo.approvalAmount : typeInfo.amount
 
   const amount =
-    approvalAmount === INFINITE_AMOUNT
+    approvalAmount === INFINITE_APPROVAL_AMOUNT
       ? t('transaction.amount.unlimited')
-      : approvalAmount && approvalAmount !== ZERO_AMOUNT
+      : approvalAmount && approvalAmount !== REVOKE_APPROVAL_AMOUNT
         ? formatNumberOrString({ value: approvalAmount, type: NumberType.TokenNonTx })
         : ''
 

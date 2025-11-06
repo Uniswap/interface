@@ -1,6 +1,6 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`UniswapWalletOptions Test > Download wallet option should be visible if extension is not detected 1`] = `
+exports[`UniswapWalletOptions > Download wallet option should be visible if extension is not detected 1`] = `
 <DocumentFragment>
   <span
     class=""
@@ -107,7 +107,7 @@ exports[`UniswapWalletOptions Test > Download wallet option should be visible if
 </DocumentFragment>
 `;
 
-exports[`UniswapWalletOptions Test > Extension connecter should be shown if detected 1`] = `
+exports[`UniswapWalletOptions > Extension connecter should be shown if detected 1`] = `
 <DocumentFragment>
   <span
     class=""

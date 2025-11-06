@@ -23,6 +23,8 @@ describe(gqlTokenToCurrencyInfo, () => {
       currencyId: `${fromGraphQLChain(token.chain)}-${token.address}`,
       logoUrl: token.project.logoUrl,
       isSpam: token.project.isSpam,
+      isBridged: token.isBridged,
+      bridgedWithdrawalInfo: token.bridgedWithdrawalInfo,
     })
   })
 

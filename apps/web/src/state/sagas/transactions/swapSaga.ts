@@ -1,5 +1,6 @@
 import { useTotalBalancesUsdForAnalytics } from 'appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { TradingApi } from '@universe/api'
+import { Experiments } from '@universe/gating'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS, ZERO_PERCENT } from 'constants/misc'
@@ -16,7 +17,6 @@ import { handleUniswapXSignatureStep } from 'state/sagas/transactions/uniswapx'
 import {
   getDisplayableError,
   getSwapTransactionInfo,
-  HandleOnChainStepParams,
   handleApprovalTransactionStep,
   handleOnChainStep,
   handlePermitTransactionStep,
@@ -24,24 +24,31 @@ import {
 } from 'state/sagas/transactions/utils'
 import { VitalTxFields } from 'state/transactions/types'
 import invariant from 'tiny-invariant'
-import { call } from 'typed-redux-saga'
+import { call, SagaGenerator } from 'typed-redux-saga'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import { logExperimentQualifyingEvent } from 'uniswap/src/features/telemetry/utils/logExperimentQualifyingEvent'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
 import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
-import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
+import {
+  HandleOnChainStepParams,
+  HandleSwapStepParams,
+  TransactionStep,
+  TransactionStepType,
+} from 'uniswap/src/features/transactions/steps/types'
 import {
   ExtractedBaseTradeAnalyticsProperties,
   getBaseTradeAnalyticsProperties,
 } from 'uniswap/src/features/transactions/swap/analytics'
-import { FLASHBLOCKS_UI_SKIP_ROUTES } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
-import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
+import { getFlashblocksExperimentStatus } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
+import { planSaga } from 'uniswap/src/features/transactions/swap/plan/planSaga'
+import { handleSwitchChains } from 'uniswap/src/features/transactions/swap/plan/utils'
 import {
   SwapTransactionStep,
   SwapTransactionStepAsync,
@@ -54,10 +61,15 @@ import {
   SwapCallbackParams,
 } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { PermitMethod, ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { BridgeTrade, ChainedActionTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { generateSwapTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateSwapTransactionSteps'
-import { isClassic, isJupiter, UNISWAPX_ROUTING_VARIANTS } from 'uniswap/src/features/transactions/swap/utils/routing'
+import {
+  isClassic,
+  isJupiter,
+  requireRouting,
+  UNISWAPX_ROUTING_VARIANTS,
+} from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import {
@@ -68,14 +80,7 @@ import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
-interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
-  step: SwapTransactionStep | SwapTransactionStepAsync
-  signature?: string
-  trade: ClassicTrade | BridgeTrade
-  analytics: ExtractedBaseTradeAnalyticsProperties
-  onTransactionHash?: (hash: string) => void
-}
-function* handleSwapTransactionStep(params: HandleSwapStepParams) {
+function* handleSwapTransactionStep(params: HandleSwapStepParams): SagaGenerator<string> {
   const { trade, step, signature, analytics, onTransactionHash } = params
 
   const info = getSwapTransactionInfo(trade)
@@ -103,14 +108,24 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
 
   handleSwapTransactionAnalytics({ ...params, hash })
 
-  if (
-    !getIsFlashblocksEnabled(trade.inputAmount.currency.chainId) ||
-    FLASHBLOCKS_UI_SKIP_ROUTES.includes(trade.routing)
-  ) {
+  const chainId = trade.inputAmount.currency.chainId
+  const { shouldLogQualifyingEvent, shouldShowModal } = getFlashblocksExperimentStatus({
+    chainId,
+    routing: trade.routing,
+  })
+
+  if (shouldLogQualifyingEvent) {
+    logExperimentQualifyingEvent({
+      experiment: Experiments.UnichainFlashblocksModal,
+    })
+  }
+
+  // Show regular popup for control variant or ineligible swaps
+  if (!shouldShowModal) {
     popupRegistry.addPopup(
       { type: PopupType.Transaction, hash },
       hash,
-      isL2ChainId(trade.inputAmount.currency.chainId) ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS,
+      isL2ChainId(chainId) ? L2_TXN_DISMISS_MS : DEFAULT_TXN_DISMISS_MS,
     )
   }
 
@@ -119,7 +134,7 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
     onTransactionHash(hash)
   }
 
-  return
+  return hash
 }
 
 interface HandleSwapBatchedStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
@@ -149,7 +164,7 @@ function* handleSwapTransactionBatchedStep(params: HandleSwapBatchedStepParams) 
 }
 
 function handleSwapTransactionAnalytics(params: {
-  trade: ClassicTrade | BridgeTrade
+  trade: ClassicTrade | BridgeTrade | ChainedActionTrade
   analytics: SwapTradeBaseProperties
   hash?: string
   batchId?: string
@@ -208,31 +223,6 @@ type SwapParams = {
   v4Enabled: boolean
 }
 
-/** Asserts that a given object fits a given routing variant. */
-function requireRouting<T extends TradingApi.Routing, V extends { routing: TradingApi.Routing }>(
-  val: V,
-  routing: readonly T[],
-): asserts val is V & { routing: T } {
-  if (!routing.includes(val.routing as T)) {
-    throw new UnexpectedTransactionStateError(`Expected routing ${routing}, got ${val.routing}`)
-  }
-}
-
-/** Switches to the proper chain, if needed. If a chain switch is necessary and it fails, returns success=false. */
-async function handleSwitchChains(
-  params: Pick<SwapParams, 'selectChain' | 'startChainId' | 'swapTxContext'>,
-): Promise<{ chainSwitchFailed: boolean }> {
-  const { selectChain, startChainId, swapTxContext } = params
-
-  const swapChainId = swapTxContext.trade.inputAmount.currency.chainId
-  if (isJupiter(swapTxContext) || swapChainId === startChainId) {
-    return { chainSwitchFailed: false }
-  }
-
-  const chainSwitched = await selectChain(swapChainId)
-  return { chainSwitchFailed: !chainSwitched }
-}
-
 function* swap(params: SwapParams) {
   const {
     account,
@@ -247,7 +237,11 @@ function* swap(params: SwapParams) {
   } = params
   const { trade } = swapTxContext
 
-  const { chainSwitchFailed } = yield* call(handleSwitchChains, params)
+  const { chainSwitchFailed } = yield* call(handleSwitchChains, {
+    selectChain: params.selectChain,
+    startChainId: params.startChainId,
+    swapTxContext,
+  })
   if (chainSwitchFailed) {
     onFailure()
     return
@@ -408,7 +402,19 @@ export function useSwapCallback(): SwapCallback {
           updateSwapForm({ txHash: hash, txHashReceivedTime: Date.now() })
         },
       }
-      appDispatch(swapSaga.actions.trigger(swapParams))
+      if (swapTxContext.trade.routing === TradingApi.Routing.CHAINED) {
+        appDispatch(
+          planSaga.actions.trigger({
+            ...swapParams,
+            handleApprovalTransactionStep,
+            handleSwapTransactionStep,
+            handleSignatureStep,
+            getDisplayableError,
+          }),
+        )
+      } else {
+        appDispatch(swapSaga.actions.trigger(swapParams))
+      }
 
       const blockNumber = getClassicQuoteFromResponse(trade.quote)?.blockNumber?.toString()
 

@@ -1,8 +1,9 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, nearestUsableTick, TICK_SPACINGS, TickMath, Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { useDynamicConfigValue } from '@universe/gating'
 import { useDepositInfo } from 'components/Liquidity/Create/hooks/useDepositInfo'
 import { useNativeTokenPercentageBufferExperiment } from 'components/Liquidity/Create/hooks/useNativeTokenPercentageBufferExperiment'
 import JSBI from 'jsbi'
@@ -12,7 +13,6 @@ import { PositionField } from 'types/position'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { USDC, USDT } from 'uniswap/src/constants/tokens'
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/hooks/useMaxAmountSpend'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 
@@ -26,7 +26,7 @@ vi.mock('uniswap/src/features/portfolio/api', async (importOriginal) => ({
   useOnChainCurrencyBalance: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/gating/hooks', async (importOriginal) => ({
+vi.mock('@universe/gating', async (importOriginal) => ({
   ...(await importOriginal()),
   useDynamicConfigValue: vi.fn(),
 }))

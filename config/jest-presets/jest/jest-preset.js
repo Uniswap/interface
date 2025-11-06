@@ -19,7 +19,7 @@ module.exports = {
   //   '<rootDir>/packages/**/src/**/*.ts',
   // ],
   moduleDirectories: ['node_modules', 'src'],
-  moduleFileExtensions: ['jest.tsx', 'jest.ts', 'ts', 'tsx', 'js', 'mjs', 'cjs', 'jsx', 'json', 'node', 'mp4'],
+  moduleFileExtensions: ['web.tsx', 'web.ts', 'jest.tsx', 'jest.ts', 'ts', 'tsx', 'js', 'mjs', 'cjs', 'jsx', 'json', 'node', 'mp4'],
   moduleNameMapper: {
     '.+\\.(css|style|less|sass|scss|png|jpg|ttf|woff|woff2|mp4)$': 'jest-transform-stub',
     // Jest by default doesn't support absolute imports out of the box
@@ -34,7 +34,7 @@ module.exports = {
   // changedSince: 'master',
   // https://github.com/facebook/jest/issues/2663#issuecomment-341384494
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|react-native-web|react-native-modal-selector|react-native-modal-datetime-picker|react-native-keyboard-controller|@react-navigation|@storybook/react-native|@react-native-community/datetimepicker|react-native-image-colors|uuid|react-native-reanimated|react-native-safe-area-context|react-native-localize|@react-native-masked-view|@statsig-js/js-client|@statsig/react-native-bindings|@statsig/react-bindings|@statsig/js-local-overrides|@react-native|@react-native-firebase|@uniswap/client-embeddedwallet|@uniswap/client-data-api|@uniswap/client-pools|@uniswap/client-platform-service|@connectrpc|@bufbuild|react-native-webview|@gorhom|expo.*|d3-(array|color|format|interpolate|path|scale|shape|time-format|time)|internmap|react-native-qrcode-svg|react-native-modal|react-native-animatable|react-native-masked-view|redux-persist|react-native-url-polyfill|react-native-context-menu-view|react-native-wagmi-charts|react-native-markdown-display|react-native-redash|@walletconnect|moti|react-native-image-picker|wagmi|viem|rn-qr-generator|@solana|jayson)/)',
+    'node_modules/(?!(react-native|@universe|react-native-web|react-native-modal-selector|react-native-modal-datetime-picker|react-native-keyboard-controller|@react-navigation|@storybook/react-native|@react-native-community/datetimepicker|react-native-image-colors|uuid|react-native-reanimated|react-native-safe-area-context|react-native-localize|@react-native-masked-view|@statsig-js/js-client|@statsig/react-native-bindings|@statsig/react-bindings|@statsig/js-local-overrides|@react-native|@react-native-firebase|@uniswap/client-embeddedwallet|@uniswap/client-data-api|@uniswap/client-platform-service|@connectrpc|@bufbuild|react-native-webview|@gorhom|expo.*|d3-(array|color|format|interpolate|path|scale|shape|time-format|time)|internmap|react-native-qrcode-svg|react-native-modal|react-native-animatable|react-native-masked-view|redux-persist|react-native-url-polyfill|react-native-context-menu-view|react-native-wagmi-charts|react-native-markdown-display|react-native-redash|@walletconnect|moti|react-native-image-picker|wagmi|viem|rn-qr-generator|@solana|jayson|@uniswap\/client-search)/)',
   ],
   collectCoverage: false, // only collect in CI
   clearMocks: true,

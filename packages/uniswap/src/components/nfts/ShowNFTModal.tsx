@@ -7,7 +7,7 @@ import { InfoLinkModal } from 'uniswap/src/components/modals/InfoLinkModal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isExtensionApp } from 'utilities/src/platform'
+import { isMobileApp } from 'utilities/src/platform'
 
 export function ShowNFTModal(): JSX.Element {
   const { t } = useTranslation()
@@ -36,7 +36,7 @@ export function ShowNFTModal(): JSX.Element {
       <InfoLinkModal
         showCloseButton
         buttonText={t('common.button.close')}
-        description={isExtensionApp ? t('hidden.nfts.info.text.extension') : t('hidden.nfts.info.text.mobile')}
+        description={isMobileApp ? t('hidden.nfts.info.text.mobile') : t('hidden.nfts.info.text.web')}
         icon={
           <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
             <ShieldCheck color="$neutral1" size="$icon.24" />

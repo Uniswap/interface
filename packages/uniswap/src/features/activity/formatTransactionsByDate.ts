@@ -62,15 +62,30 @@ export function formatTransactionsByDate(
   // For all transactions before yesterday, group by month
   const priorByMonthTransactionList = olderThan24HTransactionList.reduce(
     (accum: Record<string, TransactionDetails[]>, item) => {
+      // Skip transactions with invalid timestamps
+      if (!item.addedTime || item.addedTime <= 0) {
+        return accum
+      }
+
       const isPreviousYear = item.addedTime < msTimestampCutoffYear
-      const key = localizedDayjs(item.addedTime)
+      const dayjsDate = localizedDayjs(item.addedTime)
+      const maybeKeyFromDayjsDate = dayjsDate
         // If in a previous year, append year to key string, else just use month
         // This key is used as the section title in TransactionList
         .format(isPreviousYear ? FORMAT_DATE_MONTH_YEAR : FORMAT_DATE_MONTH)
         .toString()
-      const currentMonthList = accum[key] ?? []
+
+      // Fallback to English if localized formatting fails
+      const validatedKey = dayjsDate.isValid()
+        ? maybeKeyFromDayjsDate
+        : dayjs(item.addedTime)
+            .locale('en')
+            .format(isPreviousYear ? FORMAT_DATE_MONTH_YEAR : FORMAT_DATE_MONTH)
+
+      const currentMonthList = accum[validatedKey] ?? []
       currentMonthList.push(item)
-      accum[key] = currentMonthList
+      accum[validatedKey] = currentMonthList
+
       return accum
     },
     {},

@@ -1,8 +1,6 @@
+import { DynamicConfigKeys, DynamicConfigs, getOverrideAdapter, useDynamicConfigValue } from '@universe/gating'
 import { Flex, Text } from 'ui/src'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
-import { DynamicConfigKeys, DynamicConfigs } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { getOverrideAdapter } from 'uniswap/src/features/gating/sdk/statsig'
 
 export function DynamicConfigDropdown({
   config,

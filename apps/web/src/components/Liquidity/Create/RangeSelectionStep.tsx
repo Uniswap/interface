@@ -1,4 +1,6 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+/* eslint-disable max-lines */
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { D3LiquidityRangeInput } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeInput'
 import { LiquidityRangeInput } from 'components/Charts/LiquidityRangeInput/LiquidityRangeInput'
 import { useDefaultInitialPrice } from 'components/Liquidity/Create/hooks/useDefaultInitialPrice'
@@ -23,8 +25,6 @@ import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled
 import { fonts, zIndexes } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 enum RangeSelection {
   FULL = 'FULL',
@@ -336,7 +336,7 @@ export const SelectPriceRangeStep = ({
       ? {
           baseCurrency,
           quoteCurrency,
-          feeAmount: fee.feeAmount,
+          feeAmount: fee?.feeAmount,
           tickLower: ticks[0],
           tickUpper: ticks[1],
           pool: poolOrPair,
@@ -517,6 +517,7 @@ export const SelectPriceRangeStep = ({
           )}
           {baseCurrency &&
             quoteCurrency &&
+            fee &&
             (isD3LiquidityRangeChartEnabled ? (
               <D3LiquidityRangeInput
                 key={buildRangeInputKeyV2({ protocolVersion, poolId: poolId ?? '', priceRangeState })}
@@ -535,6 +536,7 @@ export const SelectPriceRangeStep = ({
                 price={price}
                 currentPrice={Number(price?.toSignificant())}
                 inputMode={priceRangeState.inputMode}
+                initialPosition={initialPosition}
                 minPrice={rangeInputMinPrice}
                 maxPrice={rangeInputMaxPrice}
                 isFullRange={priceRangeState.fullRange}

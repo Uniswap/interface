@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { GraphQLApi } from '@universe/api'
 import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI } from 'uniswap/src/constants/tokens'

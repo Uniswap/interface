@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import {
   getLiquidityRangeChartProps,
@@ -181,8 +181,8 @@ export function CreatePositionModal({
             version: protocolVersion,
             tickLower: ticks[0] ?? undefined,
             tickUpper: ticks[1] ?? undefined,
-            fee: fee.feeAmount,
-            tickSpacing: fee.tickSpacing,
+            fee: fee?.feeAmount,
+            tickSpacing: fee?.tickSpacing,
             currency0: currencyAmounts.TOKEN0.currency,
             currency1: currencyAmounts.TOKEN1.currency,
             currency0AmountUsd: currencyAmountsUSDValue?.TOKEN0,
@@ -214,8 +214,8 @@ export function CreatePositionModal({
     setCurrentTransactionStep,
     onSuccess,
     trace,
-    fee.feeAmount,
-    fee.tickSpacing,
+    fee?.feeAmount,
+    fee?.tickSpacing,
     ticks,
     hook,
     currencyAmountsUSDValue?.TOKEN0,

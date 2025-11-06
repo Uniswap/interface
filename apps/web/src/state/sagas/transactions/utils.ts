@@ -1,8 +1,10 @@
+/* eslint-disable max-lines */
 import { datadogRum } from '@datadog/browser-rum'
 import type { TransactionResponse } from '@ethersproject/abstract-provider'
 import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
 import { FetchError, TradingApi } from '@universe/api'
+import { BlockedAsyncSubmissionChainIdsConfigKey, DynamicConfigs, getDynamicConfigValue } from '@universe/gating'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { clientToProvider } from 'hooks/useEthersProvider'
 import ms from 'ms'
@@ -15,8 +17,6 @@ import type { SagaGenerator } from 'typed-redux-saga'
 import { call, cancel, delay, fork, put, race, select, spawn, take } from 'typed-redux-saga'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { isL2ChainId, isUniverseChainId } from 'uniswap/src/features/chains/utils'
-import { BlockedAsyncSubmissionChainIdsConfigKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
-import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import {
   ApprovalEditedInWalletError,
   HandledTransactionInterrupt,
@@ -33,14 +33,21 @@ import type { TokenApprovalTransactionStep } from 'uniswap/src/features/transact
 import type { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
 import type { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
 import type {
+  HandleApprovalStepParams,
+  HandleOnChainPermit2TransactionStep,
+  HandleOnChainStepParams,
+  HandleSignatureStepParams,
   OnChainTransactionStep,
-  SignatureTransactionStep,
   TransactionStep,
 } from 'uniswap/src/features/transactions/steps/types'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
-import type { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import type { BridgeTrade, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import type {
+  BridgeTrade,
+  ChainedActionTrade,
+  ClassicTrade,
+  UniswapXTrade,
+} from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import type {
   ApproveTransactionInfo,
@@ -75,12 +82,6 @@ export enum TransactionBreadcrumbStatus {
   Interrupted = 'interrupted',
 }
 
-export interface HandleSignatureStepParams<T extends SignatureTransactionStep = SignatureTransactionStep> {
-  account: AccountDetails
-  step: T
-  setCurrentStep: SetCurrentStepFn
-  ignoreInterrupt?: boolean
-}
 export function* handleSignatureStep({ setCurrentStep, step, ignoreInterrupt, account }: HandleSignatureStepParams) {
   // Add a watcher to check if the transaction flow is interrupted during this step
   const { throwIfInterrupted } = yield* watchForInterruption(ignoreInterrupt)
@@ -107,20 +108,6 @@ export function* handleSignatureStep({ setCurrentStep, step, ignoreInterrupt, ac
   return signature
 }
 
-export interface HandleOnChainStepParams<T extends OnChainTransactionStep = OnChainTransactionStep> {
-  account: AccountDetails
-  info: TransactionInfo
-  step: T
-  setCurrentStep: SetCurrentStepFn
-  /** Controls whether the function allow submitting a duplicate tx (a tx w/ identical `info` to another recent/pending tx). Defaults to false. */
-  allowDuplicativeTx?: boolean
-  /** Controls whether the function should throw an error upon interrupt or not, defaults to `false`. */
-  ignoreInterrupt?: boolean
-  /** Controls whether the function should wait to return until after the transaction has confirmed. Defaults to `true`. */
-  shouldWaitForConfirmation?: boolean
-  /** Called when data returned from a submitted transaction differs from data originally sent to the wallet. */
-  onModification?: (response: VitalTxFields) => void | Generator<unknown, void, unknown>
-}
 export function* handleOnChainStep<T extends OnChainTransactionStep>(params: HandleOnChainStepParams<T>) {
   const {
     account,
@@ -350,15 +337,12 @@ function transformTransactionResponse(response: TransactionResponse | Transactio
   return { hash: response.hash, data: response.input, nonce: response.nonce }
 }
 
-interface HandlePermitStepParams extends Omit<HandleOnChainStepParams<Permit2TransactionStep>, 'info'> {}
-export function* handlePermitTransactionStep(params: HandlePermitStepParams) {
+export function* handlePermitTransactionStep(params: HandleOnChainPermit2TransactionStep) {
   const { step } = params
   const info = getPermitTransactionInfo(step)
   return yield* call(handleOnChainStep, { ...params, info })
 }
 
-interface HandleApprovalStepParams
-  extends Omit<HandleOnChainStepParams<TokenApprovalTransactionStep | TokenRevocationTransactionStep>, 'info'> {}
 export function* handleApprovalTransactionStep(params: HandleApprovalStepParams) {
   const { step, account } = params
   const info = getApprovalTransactionInfo(step)
@@ -528,11 +512,11 @@ export async function getSigner(account: string): Promise<JsonRpcSigner> {
 
 type SwapInfo = ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
 export function getSwapTransactionInfo(
-  trade: ClassicTrade | BridgeTrade | SolanaTrade,
+  trade: ClassicTrade | BridgeTrade | SolanaTrade | ChainedActionTrade,
 ): SwapInfo | BridgeTransactionInfo
 export function getSwapTransactionInfo(trade: UniswapXTrade): SwapInfo & { isUniswapXOrder: true }
 export function getSwapTransactionInfo(
-  trade: ClassicTrade | BridgeTrade | UniswapXTrade | SolanaTrade,
+  trade: ClassicTrade | BridgeTrade | UniswapXTrade | SolanaTrade | ChainedActionTrade,
 ): SwapInfo | BridgeTransactionInfo {
   if (trade.routing === TradingApi.Routing.BRIDGE) {
     return {

@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeTierData } from 'components/Liquidity/types'
 import { getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
@@ -56,6 +56,9 @@ export function useAllFeeTierPoolData({
     if (poolData && liquiditySum && sdkCurrencies.TOKEN0 && sdkCurrencies.TOKEN1) {
       for (const pool of poolData.pools) {
         const key = getFeeTierKey(pool.fee, pool.isDynamicFee)
+        if (!key) {
+          continue
+        }
         const totalLiquidityUsdTruncated = Number(pool.totalLiquidityUsd.split('.')[0] ?? '0')
         const percentage = liquiditySum.isZero()
           ? new Percent(0, 100)

@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'

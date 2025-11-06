@@ -30,7 +30,7 @@ export function Shine({ shimmerDurationSeconds = 2, children, disabled }: ShineP
 
   useEffect(() => {
     xPosition.value = withRepeat(withTiming(1, { duration: shimmerDuration }), Infinity, false)
-  }, [xPosition, shimmerDuration])
+  }, [shimmerDuration])
 
   const animatedStyle = useAnimatedStyle(() => ({
     ...StyleSheet.absoluteFillObject,

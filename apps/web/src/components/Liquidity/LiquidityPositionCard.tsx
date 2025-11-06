@@ -1,4 +1,6 @@
-import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+/* eslint-disable max-lines */
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import {
   CHART_HEIGHT,
   CHART_WIDTH,
@@ -7,6 +9,7 @@ import {
 } from 'components/Charts/LiquidityPositionRangeChart/LiquidityPositionRangeChart'
 import { AdaptiveDropdown } from 'components/Dropdowns/AdaptiveDropdown'
 import { useGetRangeDisplay } from 'components/Liquidity/hooks/useGetRangeDisplay'
+import { useReportPositionHandler } from 'components/Liquidity/hooks/useReportPositionHandler'
 import {
   LiquidityPositionFeeStats,
   LiquidityPositionFeeStatsLoader,
@@ -31,6 +34,7 @@ import { ArrowsLeftRight } from 'ui/src/components/icons/ArrowsLeftRight'
 import { Dollar } from 'ui/src/components/icons/Dollar'
 import { Eye } from 'ui/src/components/icons/Eye'
 import { EyeOff } from 'ui/src/components/icons/EyeOff'
+import { Flag } from 'ui/src/components/icons/Flag'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { Minus } from 'ui/src/components/icons/Minus'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
@@ -41,13 +45,11 @@ import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
-import { togglePositionVisibility } from 'uniswap/src/features/visibility/slice'
+import { setPositionVisibility } from 'uniswap/src/features/visibility/slice'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
@@ -88,38 +90,91 @@ function useDropdownOptions({
 }: {
   liquidityPosition: PositionInfo
   showVisibilityOption?: boolean
-  isVisible?: boolean
+  isVisible: boolean
 }): MenuOptionItem[] {
   const { t } = useTranslation()
   const isOpenLiquidityPosition = liquidityPosition.status !== PositionStatus.CLOSED
+  const isDataReportingEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const account = useAccount()
   const selectChain = useSelectChain()
+  const reportPositionHandler = useReportPositionHandler({ position: liquidityPosition, isVisible })
 
   return useMemo(() => {
     const chainInfo = getChainInfo(liquidityPosition.chainId)
 
-    const addLiquidityOption = {
-      onPress: () => {
-        dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: liquidityPosition }))
-      },
-      label: t('common.addLiquidity'),
-      Icon: Plus,
+    const options: MenuOptionItem[] = []
+
+    const isV2Position = liquidityPosition.version === ProtocolVersion.V2
+    const isV3Position = liquidityPosition.version === ProtocolVersion.V3
+    const showMigrateV3Option =
+      isV3Position && isOpenLiquidityPosition && !isV4UnsupportedChain(liquidityPosition.chainId)
+
+    if (!isV2Position && isOpenLiquidityPosition) {
+      options.push({
+        onPress: () => {
+          dispatch(
+            setOpenModal({
+              name: ModalName.ClaimFee,
+              initialState: liquidityPosition,
+            }),
+          )
+        },
+        label: t('pool.collectFees'),
+        Icon: Dollar,
+      })
     }
 
-    const removeLiquidityOption: MenuOptionItem | undefined = isOpenLiquidityPosition
-      ? {
-          onPress: () => {
-            dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: liquidityPosition }))
-          },
-          label: t('pool.removeLiquidity'),
-          Icon: Minus,
-        }
-      : undefined
+    // closed v2 positions cannot re-add liquidity since the erc20 liquidity token is permanently burned when closed,
+    // whereas v3 positions can be re-opened
+    if (!isV2Position || isOpenLiquidityPosition) {
+      options.push({
+        onPress: () => {
+          dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: liquidityPosition }))
+        },
+        label: t('common.addLiquidity'),
+        Icon: Plus,
+      })
+    }
 
-    const poolInfoOption = {
+    if (isOpenLiquidityPosition) {
+      options.push({
+        onPress: () => {
+          dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: liquidityPosition }))
+        },
+        label: t('pool.removeLiquidity'),
+        Icon: Minus,
+      })
+    }
+
+    // Add migration options if relevant
+
+    if (isV2Position && isOpenLiquidityPosition) {
+      options.push({
+        onPress: async () => {
+          if (liquidityPosition.chainId !== account.chainId) {
+            await selectChain(liquidityPosition.chainId)
+          }
+          navigate(`/migrate/v2/${liquidityPosition.liquidityToken.address}`)
+        },
+        label: t('pool.migrateLiquidity'),
+        Icon: RightArrow,
+      })
+    }
+
+    if (showMigrateV3Option) {
+      options.push({
+        onPress: () => {
+          navigate(`/migrate/v3/${chainInfo.urlParam}/${liquidityPosition.tokenId}`)
+        },
+        label: t('pool.migrateLiquidity'),
+        Icon: RightArrow,
+      })
+    }
+
+    options.push({
       onPress: () => {
         if (!liquidityPosition.poolId) {
           return
@@ -129,95 +184,47 @@ function useDropdownOptions({
       },
       label: t('pool.info'),
       Icon: InfoCircleFilled,
+    })
+
+    if (showVisibilityOption) {
+      options.push({
+        onPress: () => {
+          dispatch(
+            setPositionVisibility({
+              poolId: liquidityPosition.poolId,
+              tokenId: liquidityPosition.tokenId,
+              chainId: liquidityPosition.chainId,
+              isVisible: !isVisible,
+            }),
+          )
+        },
+        label: isVisible ? t('common.hide.button') : t('common.unhide'),
+        Icon: isVisible ? EyeOff : Eye,
+        showDivider: true,
+      })
+
+      if (isDataReportingEnabled) {
+        options.push({
+          onPress: reportPositionHandler,
+          label: t('nft.reportSpam'),
+          Icon: Flag,
+          destructive: true,
+        })
+      }
     }
 
-    const hideOption: MenuOptionItem | undefined = showVisibilityOption
-      ? {
-          onPress: () => {
-            dispatch(
-              togglePositionVisibility({
-                poolId: liquidityPosition.poolId,
-                tokenId: liquidityPosition.tokenId,
-                chainId: liquidityPosition.chainId,
-              }),
-            )
-          },
-          label: isVisible ? t('common.hide.button') : t('common.unhide'),
-          Icon: isVisible ? EyeOff : Eye,
-          showDivider: true,
-        }
-      : undefined
-
-    if (liquidityPosition.version === ProtocolVersion.V2) {
-      const migrateV2Option = isOpenLiquidityPosition
-        ? {
-            onPress: async () => {
-              if (liquidityPosition.chainId !== account.chainId) {
-                await selectChain(liquidityPosition.chainId)
-              }
-              navigate(`/migrate/v2/${liquidityPosition.liquidityToken.address}`)
-            },
-            label: t('pool.migrateLiquidity'),
-            Icon: RightArrow,
-          }
-        : undefined
-
-      return [
-        isOpenLiquidityPosition ? addLiquidityOption : undefined, // closed v2 positions cannot re-add liquidity since the erc20 liquidity token is permanently burned when closed. whereas v3 positions can be re-opened
-        removeLiquidityOption,
-        migrateV2Option,
-        poolInfoOption,
-        hideOption,
-      ].filter((o): o is MenuOptionItem => o !== undefined)
-    }
-
-    const collectFeesOption: MenuOptionItem | undefined = isOpenLiquidityPosition
-      ? {
-          onPress: () => {
-            dispatch(
-              setOpenModal({
-                name: ModalName.ClaimFee,
-                initialState: liquidityPosition,
-              }),
-            )
-          },
-          label: t('pool.collectFees'),
-          Icon: Dollar,
-        }
-      : undefined
-
-    const showMigrateV3Option =
-      isOpenLiquidityPosition &&
-      !isV4UnsupportedChain(liquidityPosition.chainId) &&
-      liquidityPosition.version !== ProtocolVersion.V4
-
-    const migrateV3Option: MenuOptionItem | undefined = showMigrateV3Option
-      ? {
-          onPress: () => {
-            navigate(`/migrate/v3/${chainInfo.urlParam}/${liquidityPosition.tokenId}`)
-          },
-          label: t('pool.migrateLiquidity'),
-          Icon: RightArrow,
-        }
-      : undefined
-
-    return [
-      collectFeesOption,
-      addLiquidityOption,
-      removeLiquidityOption,
-      migrateV3Option,
-      poolInfoOption,
-      hideOption,
-    ].filter((o): o is MenuOptionItem => o !== undefined)
+    return options
   }, [
     account.chainId,
     dispatch,
     isOpenLiquidityPosition,
+    reportPositionHandler,
     isVisible,
     liquidityPosition,
     navigate,
     showVisibilityOption,
     selectChain,
+    isDataReportingEnabled,
     t,
   ])
 }
@@ -575,7 +582,6 @@ function PositionDropdownMoreMenu({
     <Flex position="absolute" top="$spacing16" right="$spacing16">
       <AdaptiveDropdown
         alignRight
-        allowFlip
         positionFixed
         forceFlipUp={isLast}
         isOpen={isOpen}

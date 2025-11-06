@@ -111,6 +111,8 @@
     "@uniswap/ethers-rs-mobile": "0.0.5",
     "@uniswap/sdk-core": "7.7.2",
     "@universe/api": "workspace:^",
+    "@universe/gating": "workspace:^",
+    "@universe/sessions": "workspace:^",
     "@walletconnect/core": "2.21.4",
     "@walletconnect/react-native-compat": "2.21.4",
     "@walletconnect/types": "2.21.4",

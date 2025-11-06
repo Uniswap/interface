@@ -1,5 +1,5 @@
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { parseRestProtocolVersion } from '@universe/api'
 import { useMemo } from 'react'
 import { OnchainItemListOptionType, PoolOption } from 'uniswap/src/components/lists/items/types'

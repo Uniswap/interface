@@ -4,8 +4,11 @@ import { type Dispatch, type SetStateAction, useCallback, useMemo, useRef, useSt
 import { type SharedValue, useDerivedValue } from 'react-native-reanimated'
 import { type TLineChartData } from 'react-native-wagmi-charts'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
 
 export type TokenSpotData = {
   value: SharedValue<number>
@@ -63,12 +66,26 @@ export function useTokenPriceHistory({
     skip,
   })
 
+  // Data source strategy for multi-chain tokens:
+  // - Use PER-CHAIN data (token.market) for price and price history to show the correct chain-specific view
+  // - Fallback to AGGREGATED data (project.markets) when per-chain history is unavailable
+  // - Continue using aggregated 24hr change for consistency across platforms
+  // Note: TokenProjectMarket is aggregated across chains, TokenMarket is per-chain
   const offChainData = priceData?.tokenProjects?.[0]?.markets?.[0]
-  const onChainData = priceData?.tokenProjects?.[0]?.tokens[0]?.market
 
-  const price = offChainData?.price?.value ?? onChainData?.price?.value ?? lastPrice.current
+  // We need to find the specific token for the chain we're viewing
+  const currentChain = toGraphQLChain(currencyIdToChain(currencyId) ?? UniverseChainId.Mainnet)
+  const currentChainToken = priceData?.tokenProjects?.[0]?.tokens.find((token) => token.chain === currentChain)
+  const onChainData = currentChainToken?.market
+
+  // Use per-chain price to ensure correct price on each chain (e.g., USDC on Ethereum vs Polygon)
+  const price = onChainData?.price?.value ?? offChainData?.price?.value ?? lastPrice.current
   lastPrice.current = price
-  const priceHistory = offChainData?.priceHistory ?? onChainData?.priceHistory
+
+  // Prefer per-chain price history so multi-chain tokens render the correct chart for the selected chain
+  const priceHistory = onChainData?.priceHistory ?? offChainData?.priceHistory
+
+  // Use aggregated 24hr change (project-level change is more reliable)
   const pricePercentChange24h =
     offChainData?.pricePercentChange24h?.value ?? onChainData?.pricePercentChange24h?.value ?? 0
 
@@ -83,7 +100,7 @@ export function useTokenPriceHistory({
             relativeChange: spotRelativeChange,
           }
         : undefined,
-    [price, spotValue, spotRelativeChange],
+    [price],
   )
 
   const formattedPriceHistory = useMemo(() => {

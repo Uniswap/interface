@@ -18,9 +18,16 @@ export type NftsListProps = Omit<
     emptyStateStyle?: StyleProp<ViewStyle | CSSProperties | (ViewStyle & CSSProperties)>
     skip?: boolean
     customEmptyState?: JSX.Element
+    autoColumns?: boolean
+    /** Web-only: when true, use a flex-wrap container instead of 2-col grid */
+    wrapFlex?: boolean
+    /** Custom loading state skeleton - if provided, overrides default loading skeleton */
+    customLoadingState?: JSX.Element
   },
   'renderItem' | 'data'
->
+> & {
+  loadingSkeletonCount?: number
+}
 
 export function NftsList(_props: NftsListProps): JSX.Element {
   throw new PlatformSplitStubError('NftsList')

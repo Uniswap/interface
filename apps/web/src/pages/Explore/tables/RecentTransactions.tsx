@@ -41,6 +41,8 @@ const TableRow = styled(Flex, {
   alignItems: 'center',
 })
 
+type RecentTransactionType = GraphQLApi.PoolTransaction & { usdValueFormatted: string }
+
 const RecentTransactions = memo(function RecentTransactions() {
   const activeLocalCurrency = useAppFiatCurrency()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
@@ -53,9 +55,18 @@ const RecentTransactions = memo(function RecentTransactions() {
   ])
   const chainInfo = getChainInfo(useChainIdFromUrlParam() ?? UniverseChainId.Mainnet)
   const { t } = useTranslation()
-
   const { transactions, loading, loadMore, errorV2, errorV3 } = useAllTransactions(chainInfo.backendChain.chain, filter)
+
   const filteredTransactions = useFilteredTransactions(transactions)
+  const filteredTransactionsWithFiat = useMemo(() => {
+    return filteredTransactions.map((transaction) => {
+      return {
+        ...transaction,
+        // We have to format the fiat value in object, as cells are not reactive.
+        usdValueFormatted: convertFiatAmountFormatted(transaction.usdValue.value, NumberType.FiatTokenPrice),
+      }
+    })
+  }, [filteredTransactions, convertFiatAmountFormatted])
 
   const combinedError =
     errorV2 && errorV3
@@ -67,7 +78,7 @@ const RecentTransactions = memo(function RecentTransactions() {
   // TODO(WEB-3236): once GQL BE Transaction query is supported add usd, token0 amount, and token1 amount sort support
   const media = useMedia()
   const columns = useMemo(() => {
-    const columnHelper = createColumnHelper<GraphQLApi.PoolTransaction>()
+    const columnHelper = createColumnHelper<RecentTransactionType>()
     const filteredColumns = [
       !media.lg
         ? columnHelper.accessor((transaction) => transaction, {
@@ -146,7 +157,7 @@ const RecentTransactions = memo(function RecentTransactions() {
           </Cell>
         ),
       }),
-      columnHelper.accessor((transaction) => transaction.usdValue.value, {
+      columnHelper.accessor((transaction) => transaction.usdValueFormatted, {
         id: 'fiat-value',
         maxSize: 125,
         header: () => (
@@ -158,7 +169,7 @@ const RecentTransactions = memo(function RecentTransactions() {
         ),
         cell: (fiat) => (
           <Cell loading={showLoadingSkeleton}>
-            <TableText>{convertFiatAmountFormatted(fiat.getValue?.(), NumberType.FiatTokenPrice)}</TableText>
+            <TableText>{fiat.getValue?.()}</TableText>
           </Cell>
         ),
       }),
@@ -242,7 +253,6 @@ const RecentTransactions = memo(function RecentTransactions() {
     media.lg,
     filter,
     filterModalIsOpen,
-    convertFiatAmountFormatted,
     formatNumberOrString,
     showLoadingSkeleton,
     t,
@@ -251,7 +261,7 @@ const RecentTransactions = memo(function RecentTransactions() {
   return (
     <Table
       columns={columns}
-      data={filteredTransactions}
+      data={filteredTransactionsWithFiat}
       loading={allDataStillLoading}
       error={combinedError}
       v2={false}

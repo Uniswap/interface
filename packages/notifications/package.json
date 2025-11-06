@@ -1,0 +1,31 @@
+{
+  "name": "@universe/notifications",
+  "version": "0.0.0",
+  "dependencies": {
+    "@tanstack/react-query": "5.77.2"
+  },
+  "devDependencies": {
+    "@types/node": "22.13.1",
+    "@uniswap/eslint-config": "workspace:^",
+    "@vitest/coverage-v8": "3.2.1",
+    "depcheck": "1.4.7",
+    "eslint": "8.44.0",
+    "typescript": "5.3.3",
+    "vitest": "3.2.1"
+  },
+  "scripts": {
+    "lint:biome": "nx lint:biome notifications",
+    "lint:biome:fix": "nx lint:biome:fix notifications",
+    "lint": "nx lint notifications",
+    "lint:fix": "nx lint:fix notifications",
+    "typecheck": "nx typecheck notifications",
+    "test": "nx test notifications",
+    "test:coverage": "nx test:coverage notifications"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

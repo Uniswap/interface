@@ -4,6 +4,8 @@ import { GQLQueries, GraphQLApi } from '@universe/api'
 import React, { memo, useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
+import { useDispatch } from 'react-redux'
+import { MODAL_OPEN_WAIT_TIME } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import type { AppStackScreenProp } from 'src/app/navigation/types'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
@@ -25,7 +27,6 @@ import { Flex, Separator } from 'ui/src'
 import { ArrowDownCircle, ArrowUpCircle, Bank, SendRoundedAirplane } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { getBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import type { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
@@ -39,6 +40,8 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils/currencyIdToContractInput'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
+import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -167,6 +170,8 @@ const TokenDetailsErrorCard = memo(function _TokenDetailsErrorCard(): JSX.Elemen
 })
 
 const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
   const { navigateToSwapFlow } = useWalletNavigation()
 
   const {
@@ -199,6 +204,15 @@ const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
     }
   })
 
+  const onTokenWarningReportSuccess = useEvent(() => {
+    dispatch(
+      pushNotification({
+        type: AppNotificationType.Success,
+        title: t('common.reported'),
+      }),
+    )
+  })
+
   return (
     <>
       {isTokenWarningModalOpen && currencyInfo && (
@@ -207,6 +221,7 @@ const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
           currencyInfo0={currencyInfo}
           isVisible={isTokenWarningModalOpen}
           closeModalOnly={onCloseTokenWarning}
+          onReportSuccess={onTokenWarningReportSuccess}
           onAcknowledge={onAcknowledgeTokenWarning}
         />
       )}
@@ -293,10 +308,10 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
       navigate(ModalName.Wormhole, {
         currencyInfo,
       })
-    }, 300) // delay is needed to prevent menu from not closing properly
+    }, MODAL_OPEN_WAIT_TIME)
   }, [currencyInfo])
 
-  const bridgedAsset = getBridgedAsset(currencyInfo)
+  const bridgedWithdrawalInfo = currencyInfo?.bridgedWithdrawalInfo
 
   const isScreenNavigationReady = useIsScreenNavigationReady({ navigation })
 
@@ -320,12 +335,12 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
       actions.push({ label: t('common.button.buy'), Icon: Bank, onPress: () => onPressBuyFiatOnRamp() })
     }
 
-    if (!!bridgedAsset && hasTokenBalance) {
+    if (bridgedWithdrawalInfo && hasTokenBalance) {
       actions.push({
         label: t('common.withdraw'),
         Icon: ArrowUpCircle,
         onPress: () => onPressWithdraw(),
-        subheader: t('bridgedAsset.wormhole.toNativeChain', { nativeChainName: bridgedAsset.nativeChain }),
+        subheader: t('bridgedAsset.wormhole.toNativeChain', { nativeChainName: bridgedWithdrawalInfo.chain }),
         actionType: 'external-link',
         height: 56,
       })
@@ -346,7 +361,7 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
   }, [
     fiatOnRampCurrency,
     t,
-    bridgedAsset,
+    bridgedWithdrawalInfo,
     hasTokenBalance,
     onPressWithdraw,
     onPressSend,

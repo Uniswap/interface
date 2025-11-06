@@ -1,17 +1,24 @@
+import { POPUP_MEDIUM_DISMISS_MS } from 'components/Popups/constants'
+import { popupRegistry } from 'components/Popups/registry'
+import { PopupType } from 'components/Popups/types'
 import { ModalRenderer } from 'components/TopLevelModals/modalRegistry'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import { PasskeysHelpModalTypeAtom } from 'hooks/usePasskeyAuthWithHelpModal'
 import { useAtomValue } from 'jotai/utils'
+import { useTranslation } from 'react-i18next'
 import { BridgedAssetModalAtom } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
 import { WormholeModalAtom } from 'uniswap/src/components/BridgedAsset/WormholeModal'
+import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { shortenAddress } from 'utilities/src/addresses'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
+import { useEvent } from 'utilities/src/react/hooks'
 
 export default function TopLevelModals() {
+  const { t } = useTranslation()
   const isLandingPage = useIsPage(PageType.LANDING)
   const wallet = useWallet()
   const evmAddress = wallet.evmAccount?.address
@@ -28,6 +35,15 @@ export default function TopLevelModals() {
   const passkeysHelpModalType = useAtomValue(PasskeysHelpModalTypeAtom)
   const bridgedAssetModalProps = useAtomValue(BridgedAssetModalAtom)
   const wormholeModalProps = useAtomValue(WormholeModalAtom)
+
+  const reportTokenIssueProps = useAtomValue(ReportTokenIssueModalPropsAtom)
+  const onReportSuccess = useEvent(() => {
+    popupRegistry.addPopup(
+      { type: PopupType.Success, message: t('common.reported') },
+      'report-token-success',
+      POPUP_MEDIUM_DISMISS_MS,
+    )
+  })
 
   const shouldShowDevFlags = isDevEnv() || isBetaEnv()
 
@@ -83,6 +99,10 @@ export default function TopLevelModals() {
       <ModalRenderer modalName={ModalName.BridgedAsset} componentProps={bridgedAssetModalProps} />
       <ModalRenderer modalName={ModalName.Wormhole} componentProps={wormholeModalProps} />
       <ModalRenderer modalName={ModalName.PendingWalletConnection} />
+      <ModalRenderer
+        modalName={ModalName.ReportTokenIssue}
+        componentProps={{ ...reportTokenIssueProps, onReportSuccess }}
+      />
     </>
   )
 }

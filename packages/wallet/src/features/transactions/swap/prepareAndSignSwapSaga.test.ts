@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import { call, select } from '@redux-saga/core/effects'
 import { MaxUint256, TradeType } from '@uniswap/sdk-core'
 import { TradingApi, type UnwrapQuoteResponse, type WrapQuoteResponse } from '@universe/api'
@@ -35,7 +34,8 @@ jest.mock('wallet/src/features/transactions/factories/createTransactionServices'
 
 const mockPrivateRpcFlag = jest.fn().mockReturnValue(true)
 
-jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
+jest.mock('@universe/gating', () => ({
+  ...jest.requireActual('@universe/gating'),
   getStatsigClient: jest.fn(() => ({
     checkGate: jest.fn().mockImplementation((flagName: string) => {
       if (flagName === 'mev-blocker') {

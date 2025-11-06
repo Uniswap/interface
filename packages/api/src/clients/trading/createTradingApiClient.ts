@@ -46,11 +46,11 @@ import type {
 import { RoutingPreference } from '@universe/api/src/clients/trading/__generated__'
 import type {
   DiscriminatedQuoteResponse,
-  ExistingTradeRequest,
-  NewTradeRequest,
+  ExistingPlanRequest,
+  NewPlanRequest,
+  PlanResponse,
   SwappableTokensParams,
-  TradeResponse,
-  UpdateExistingTradeRequest,
+  UpdateExistingPlanRequest,
 } from '@universe/api/src/clients/trading/tradeTypes'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -71,12 +71,12 @@ export const TRADING_API_PATHS = {
   order: 'order',
   orders: 'orders',
   quote: 'quote',
+  plan: 'plan',
   swap: 'swap',
   swap5792: 'swap_5792',
   swap7702: 'swap_7702',
   swappableTokens: 'swappable_tokens',
   swaps: 'swaps',
-  trade: 'trade',
   wallet: {
     checkDelegation: 'wallet/check_delegation',
     encode7702: 'wallet/encode_7702',
@@ -120,10 +120,10 @@ export interface TradingApiClient {
   checkWalletDelegationWithoutBatching: (
     params: WalletCheckDelegationRequestBody,
   ) => Promise<WalletCheckDelegationResponseBody>
-  fetchNewTrade: (params: NewTradeRequest) => Promise<TradeResponse>
-  fetchTrade: (params: ExistingTradeRequest) => Promise<TradeResponse>
-  updateExistingTrade: (params: UpdateExistingTradeRequest) => Promise<TradeResponse>
-  getExistingTrade: (params: ExistingTradeRequest) => Promise<TradeResponse>
+  createNewPlan: (params: NewPlanRequest) => Promise<PlanResponse>
+  fetchPlan: (params: ExistingPlanRequest) => Promise<PlanResponse>
+  updateExistingPlan: (params: UpdateExistingPlanRequest) => Promise<PlanResponse>
+  getExistingPlan: (params: ExistingPlanRequest) => Promise<PlanResponse>
 }
 
 type IndicativeQuoteRequest = Pick<
@@ -385,9 +385,9 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
   })
 
   // TODO: SWAP-429 - Uses this endpoint.
-  const fetchNewTrade = createFetcher<NewTradeRequest, TradeResponse>({
+  const fetchNewPlan = createFetcher<NewPlanRequest, PlanResponse>({
     client,
-    url: getApiPath(TRADING_API_PATHS.trade),
+    url: getApiPath(TRADING_API_PATHS.plan),
     method: 'post',
     transformRequest: async () => ({
       headers: getCombinedHeaders(),
@@ -395,9 +395,9 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
   })
 
   // TODO: SWAP-434 - Uses this endpoint.
-  const fetchTrade = createFetcher<ExistingTradeRequest, TradeResponse>({
+  const fetchPlan = createFetcher<ExistingPlanRequest, PlanResponse>({
     client,
-    url: getApiPath(TRADING_API_PATHS.trade),
+    url: getApiPath(TRADING_API_PATHS.plan),
     method: 'post',
     transformRequest: async () => ({
       headers: getCombinedHeaders(),
@@ -405,27 +405,27 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
   })
 
   // TODO: SWAP-434 - Uses this endpoint.
-  const updateExistingTrade = createFetcher<UpdateExistingTradeRequest, TradeResponse>({
+  const updateExistingPlan = createFetcher<UpdateExistingPlanRequest, PlanResponse>({
     client,
-    url: getApiPath(TRADING_API_PATHS.trade),
+    url: getApiPath(TRADING_API_PATHS.plan),
     method: 'patch',
     transformRequest: async ({ params, url }) => ({
       headers: getCombinedHeaders(),
       params: {
         steps: params.steps,
       },
-      url: `${url}/${params.tradeId}`,
+      url: `${url}/${params.planId}`,
     }),
   })
 
   // TODO: SWAP-438 - Uses this endpoint.
-  const getExistingTrade = createFetcher<ExistingTradeRequest, TradeResponse>({
+  const getExistingPlan = createFetcher<ExistingPlanRequest, PlanResponse>({
     client,
-    url: getApiPath(TRADING_API_PATHS.trade),
+    url: getApiPath(TRADING_API_PATHS.plan),
     method: 'get',
     transformRequest: async ({ params, url }) => ({
       headers: getCombinedHeaders(),
-      url: `${url}/${params.tradeId}`,
+      url: `${url}/${params.planId}`,
     }),
   })
 
@@ -452,9 +452,9 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     fetchClaimLpIncentiveRewards,
     fetchWalletEncoding7702,
     checkWalletDelegationWithoutBatching,
-    fetchNewTrade,
-    fetchTrade,
-    updateExistingTrade,
-    getExistingTrade,
+    createNewPlan: fetchNewPlan,
+    fetchPlan,
+    updateExistingPlan,
+    getExistingPlan,
   }
 }

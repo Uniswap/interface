@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { Currency, CurrencyAmount, Price, Rounding, Token } from '@uniswap/sdk-core'
 import {
   encodeSqrtRatioX96,

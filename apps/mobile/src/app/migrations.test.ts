@@ -96,6 +96,7 @@ import {
   v90Schema,
   v91Schema,
   v92Schema,
+  v93Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { initialBiometricsSettingsState } from 'src/features/biometricsSettings/slice'
@@ -118,7 +119,11 @@ import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
-import { testMigrateSearchHistory, testRemoveTHBFromCurrency } from 'uniswap/src/state/uniswapMigrationTests'
+import {
+  testAddActivityVisibility,
+  testMigrateSearchHistory,
+  testRemoveTHBFromCurrency,
+} from 'uniswap/src/state/uniswapMigrationTests'
 import { transactionDetails } from 'uniswap/src/test/fixtures'
 import { DappRequestType } from 'uniswap/src/types/walletConnect'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
@@ -1783,5 +1788,9 @@ describe('Redux state migrations', () => {
 
   it('migrates from v92 to v93', () => {
     testMigrateSearchHistory(migrations[93], v92Schema)
+  })
+
+  it('migrates from v93 to v95', () => {
+    testAddActivityVisibility(migrations[95], v93Schema)
   })
 })

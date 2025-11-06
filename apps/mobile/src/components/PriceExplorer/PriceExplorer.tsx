@@ -35,12 +35,17 @@ type PriceTextProps = {
   relativeChange?: SharedValue<number>
   numberOfDigits: PriceNumberOfDigits
   spotPrice?: SharedValue<number>
+  startingPrice?: number
+  shouldTreatAsStablecoin?: boolean
 }
 
 const PriceTextSection = memo(function PriceTextSection({
   loading,
   numberOfDigits,
+  relativeChange,
   spotPrice,
+  startingPrice,
+  shouldTreatAsStablecoin,
 }: PriceTextProps): JSX.Element {
   const price = useLineChartPrice(spotPrice)
   const currency = useAppFiatCurrencyInfo()
@@ -62,9 +67,14 @@ const PriceTextSection = memo(function PriceTextSection({
         We want both the animated number skeleton and the relative change skeleton to hide at the exact same time.
         When multiple skeletons hide in different order, it gives the feeling of things being slower than they actually are.
         */}
-        <RelativeChangeText loading={loading || !isAnimatedNumberReady} />
-        <DatetimeText loading={loading || !isAnimatedNumberReady} />
+        <RelativeChangeText
+          loading={loading || !isAnimatedNumberReady}
+          spotRelativeChange={relativeChange}
+          startingPrice={startingPrice}
+          shouldTreatAsStablecoin={shouldTreatAsStablecoin}
+        />
       </Flex>
+      <DatetimeText loading={loading || !isAnimatedNumberReady} />
     </Flex>
   )
 })
@@ -144,7 +154,7 @@ const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
         value: convertedSpotValue,
       }
     )
-  }, [data, convertedSpotValue])
+  }, [data])
 
   // Zoom out y-axis for low variance assets
   const shouldZoomOut = useMemo(() => {
@@ -177,6 +187,9 @@ const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
     return <PriceExplorerError showRetry={error} onRetry={refetch} />
   }
 
+  // Get the starting price for fiat delta calculation
+  const startingPrice = convertedPriceHistory[0]?.value
+
   return (
     <LineChartProvider data={convertedPriceHistory} onCurrentIndexChange={hapticFeedback.light}>
       <Flex gap="$spacing8" overflow="hidden">
@@ -185,6 +198,8 @@ const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
           numberOfDigits={numberOfDigits}
           relativeChange={convertedSpot?.relativeChange}
           spotPrice={convertedSpot?.value}
+          startingPrice={startingPrice}
+          shouldTreatAsStablecoin={shouldZoomOut}
         />
 
         <Flex animation="quick" enterStyle={{ opacity: isAndroid ? 0 : 1 }}>

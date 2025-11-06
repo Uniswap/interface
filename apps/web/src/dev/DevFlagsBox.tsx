@@ -1,3 +1,4 @@
+import { getOverrides, StatsigContext } from '@universe/gating'
 import { RowBetween } from 'components/deprecated/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useModalState } from 'hooks/useModalState'
@@ -7,8 +8,6 @@ import { useDispatch } from 'react-redux'
 import { ThemedText } from 'theme/components'
 import { Button, Flex, useShadowPropsShort } from 'ui/src'
 import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
-import { StatsigContext } from 'uniswap/src/features/gating/sdk/statsig'
-import { getOverrides } from 'uniswap/src/features/gating/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
@@ -45,7 +44,7 @@ export default function DevFlagsBox() {
         position: 'fixed',
         ...shadowProps,
       }}
-      $sm={{
+      $xl={{
         bottom: 30,
       }}
       bottom="$spacing48"

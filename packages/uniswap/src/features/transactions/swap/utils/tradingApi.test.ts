@@ -1,12 +1,13 @@
 import { TradingApi } from '@universe/api'
+import { useFeatureFlag } from '@universe/gating'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import type { FrontendSupportedProtocol } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { useProtocolsForChain } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { useQuoteRoutingParams } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { renderHook } from 'uniswap/src/test/test-utils'
 
-jest.mock('uniswap/src/features/gating/hooks', () => ({
+jest.mock('@universe/gating', () => ({
+  ...jest.requireActual('@universe/gating'),
   useFeatureFlag: jest.fn(),
 }))
 jest.mock('uniswap/src/features/transactions/swap/utils/protocols', () => ({

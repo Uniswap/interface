@@ -5,9 +5,10 @@ import { PopupType } from 'components/Popups/types'
 import { signSolanaTransactionWithCurrentWallet } from 'components/Web3Provider/signSolanaTransaction'
 import store from 'state'
 import { getSwapTransactionInfo } from 'state/sagas/transactions/utils'
-import { call } from 'typed-redux-saga'
+import { call, delay, spawn } from 'typed-redux-saga'
 import { JupiterApiClient } from 'uniswap/src/data/apiClients/jupiterApi/JupiterFetchClient'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { refetchRestQueriesViaOnchainOverrideVariant } from 'uniswap/src/features/portfolio/portfolioUpdates/rest/refetchRestQueriesViaOnchainOverrideVariantSaga'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants/features'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { JupiterExecuteError } from 'uniswap/src/features/transactions/errors'
@@ -16,9 +17,15 @@ import { ExtractedBaseTradeAnalyticsProperties } from 'uniswap/src/features/tran
 import { SolanaTrade } from 'uniswap/src/features/transactions/swap/types/solana'
 import { ValidatedSolanaSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
-import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  InterfaceBaseTransactionDetails,
+  SolanaTransactionDetails,
+  TransactionOriginType,
+  TransactionStatus,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { tryCatch } from 'utilities/src/errors'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 type JupiterSwapParams = {
   account: SignerMnemonicAccountDetails
@@ -49,27 +56,52 @@ async function signAndSendJupiterSwap({
   return result
 }
 
-function updateAppState({ hash, trade, from }: { hash: string; trade: SolanaTrade; from: string }) {
+function* refetchBalancesWithDelay({
+  transaction,
+  activeAddress,
+}: {
+  transaction: SolanaTransactionDetails<InterfaceBaseTransactionDetails>
+  activeAddress: string
+}) {
+  // Wait 3 seconds before refetching.
+  // This is because at this point the transaction hasn't been fully confirmed yet,
+  // and it should take 1-2 seconds for the balance to update onchain.
+  yield* delay(3 * ONE_SECOND_MS)
+
+  yield* call(refetchRestQueriesViaOnchainOverrideVariant, {
+    transaction,
+    activeAddress,
+    apolloClient: null,
+  })
+}
+
+function* updateAppState({ hash, trade, from }: { hash: string; trade: SolanaTrade; from: string }) {
   const typeInfo = getSwapTransactionInfo(trade)
 
-  store.dispatch(
-    addTransaction({
-      from,
-      typeInfo,
-      hash,
-      chainId: UniverseChainId.Solana,
-      routing: TradingApi.Routing.JUPITER,
-      status: TransactionStatus.Success,
-      addedTime: Date.now(),
-      id: hash,
-      transactionOriginType: TransactionOriginType.Internal,
-      options: {
-        request: {},
-      },
-    }),
-  )
+  const transaction: SolanaTransactionDetails<InterfaceBaseTransactionDetails> = {
+    from,
+    typeInfo,
+    hash,
+    chainId: UniverseChainId.Solana,
+    routing: TradingApi.Routing.JUPITER,
+    status: TransactionStatus.Success,
+    addedTime: Date.now(),
+    id: hash,
+    transactionOriginType: TransactionOriginType.Internal,
+    options: {
+      request: {},
+    },
+  }
+
+  store.dispatch(addTransaction(transaction))
 
   popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash)
+
+  // Spawn background task to refetch balances after a delay
+  yield* spawn(refetchBalancesWithDelay, {
+    transaction,
+    activeAddress: from,
+  })
 }
 
 function createJupiterSwap(signSolanaTransaction: (tx: VersionedTransaction) => Promise<VersionedTransaction>) {
@@ -92,7 +124,7 @@ function createJupiterSwap(signSolanaTransaction: (tx: VersionedTransaction) => 
       throw new JupiterExecuteError(errorMessage ?? 'Unknown Jupiter Execution Error', code)
     }
 
-    updateAppState({ hash, trade, from: account.address })
+    yield* call(updateAppState, { hash, trade, from: account.address })
 
     return hash
   }

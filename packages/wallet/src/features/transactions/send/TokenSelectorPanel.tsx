@@ -1,5 +1,4 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { Maybe } from 'graphql/jsutils/Maybe'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'

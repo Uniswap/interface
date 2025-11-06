@@ -67,6 +67,12 @@ describe('usePasswordResetFlow', () => {
     expect(result.current.flowState).toBe(PasswordResetFlowState.None)
   })
 
+  it('should initialize with undefined oldPassword', () => {
+    const { result } = renderHook(() => usePasswordResetFlow())
+
+    expect(result.current.oldPassword).toBeUndefined()
+  })
+
   it('should transition to EnterCurrentPassword when starting password reset', () => {
     const { result } = renderHook(() => usePasswordResetFlow())
 
@@ -91,6 +97,22 @@ describe('usePasswordResetFlow', () => {
     expect(result.current.flowState).toBe(PasswordResetFlowState.EnterNewPassword)
   })
 
+  it('should store oldPassword when valid password is provided', () => {
+    const { result } = renderHook(() => usePasswordResetFlow())
+    const testPassword = 'myOldPassword123!'
+
+    act(() => {
+      result.current.startPasswordReset()
+    })
+
+    act(() => {
+      result.current.onPasswordModalNext(testPassword)
+    })
+
+    expect(result.current.oldPassword).toBe(testPassword)
+    expect(result.current.flowState).toBe(PasswordResetFlowState.EnterNewPassword)
+  })
+
   it('should return to None state when no password is provided', () => {
     const { result } = renderHook(() => usePasswordResetFlow())
 
@@ -102,6 +124,32 @@ describe('usePasswordResetFlow', () => {
       result.current.onPasswordModalNext()
     })
 
+    expect(result.current.flowState).toBe(PasswordResetFlowState.None)
+  })
+
+  it('should clear oldPassword when no password is provided', () => {
+    const { result } = renderHook(() => usePasswordResetFlow())
+
+    act(() => {
+      result.current.startPasswordReset()
+    })
+
+    act(() => {
+      result.current.onPasswordModalNext('validPassword')
+    })
+
+    expect(result.current.oldPassword).toBe('validPassword')
+
+    // Go back and provide no password
+    act(() => {
+      result.current.startPasswordReset()
+    })
+
+    act(() => {
+      result.current.onPasswordModalNext()
+    })
+
+    expect(result.current.oldPassword).toBeUndefined()
     expect(result.current.flowState).toBe(PasswordResetFlowState.None)
   })
 
@@ -160,6 +208,28 @@ describe('usePasswordResetFlow', () => {
     expect(result.current.flowState).toBe(PasswordResetFlowState.None)
   })
 
+  it('should clear oldPassword when closeModal is called with matching state', () => {
+    const { result } = renderHook(() => usePasswordResetFlow())
+
+    act(() => {
+      result.current.startPasswordReset()
+    })
+
+    act(() => {
+      result.current.onPasswordModalNext('testPassword123')
+    })
+
+    expect(result.current.oldPassword).toBe('testPassword123')
+    expect(result.current.flowState).toBe(PasswordResetFlowState.EnterNewPassword)
+
+    act(() => {
+      result.current.closeModal(PasswordResetFlowState.EnterNewPassword)
+    })
+
+    expect(result.current.flowState).toBe(PasswordResetFlowState.None)
+    expect(result.current.oldPassword).toBeUndefined()
+  })
+
   it('should not close modal when closeModal is called with non-matching state', () => {
     const { result } = renderHook(() => usePasswordResetFlow())
 
@@ -174,6 +244,29 @@ describe('usePasswordResetFlow', () => {
     })
 
     expect(result.current.flowState).toBe(PasswordResetFlowState.EnterCurrentPassword)
+  })
+
+  it('should not clear oldPassword when closeModal is called with non-matching state', () => {
+    const { result } = renderHook(() => usePasswordResetFlow())
+
+    act(() => {
+      result.current.startPasswordReset()
+    })
+
+    act(() => {
+      result.current.onPasswordModalNext('testPassword456')
+    })
+
+    expect(result.current.oldPassword).toBe('testPassword456')
+    expect(result.current.flowState).toBe(PasswordResetFlowState.EnterNewPassword)
+
+    act(() => {
+      result.current.closeModal(PasswordResetFlowState.BiometricAuth)
+    })
+
+    // Should not clear oldPassword or change state
+    expect(result.current.flowState).toBe(PasswordResetFlowState.EnterNewPassword)
+    expect(result.current.oldPassword).toBe('testPassword456')
   })
 
   it('should transition to BiometricAuth state when biometric is enabled and trigger internal mutation', () => {

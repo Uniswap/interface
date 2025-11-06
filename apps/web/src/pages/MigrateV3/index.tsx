@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { ErrorCallout } from 'components/ErrorCallout'
@@ -6,7 +6,7 @@ import { getLPBaseAnalyticsProperties } from 'components/Liquidity/analytics'
 import { FormStepsWrapper, FormWrapper } from 'components/Liquidity/Create/FormWrapper'
 import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
 import { useLPSlippageValue } from 'components/Liquidity/Create/hooks/useLPSlippageValues'
-import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'components/Liquidity/Create/types'
+import { DEFAULT_POSITION_STATE, InitialPosition, PositionFlowStep } from 'components/Liquidity/Create/types'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
 import { LoadingRow } from 'components/Liquidity/Loader'
@@ -272,7 +272,7 @@ function Toolbar({
   currency1Amount,
   setCurrencyInputs,
 }: {
-  initialPosition: { tickLower: number; tickUpper: number; isOutOfRange: boolean } | undefined
+  initialPosition: InitialPosition | undefined
   currency0Amount: CurrencyAmount<Currency>
   currency1Amount: CurrencyAmount<Currency>
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
@@ -289,14 +289,16 @@ function Toolbar({
         priceRangeState.minPrice === DEFAULT_PRICE_RANGE_STATE.minPrice
 
     return (
-      fee.feeAmount === DEFAULT_POSITION_STATE.fee.feeAmount &&
-      fee.tickSpacing === DEFAULT_POSITION_STATE.fee.tickSpacing &&
-      fee.isDynamic === DEFAULT_POSITION_STATE.fee.isDynamic &&
+      fee &&
+      initialPosition &&
+      fee.feeAmount === initialPosition.fee.feeAmount &&
+      fee.tickSpacing === initialPosition.fee.tickSpacing &&
+      fee.isDynamic === initialPosition.fee.isDynamic &&
       hook === DEFAULT_POSITION_STATE.hook &&
       priceRangeState.initialPrice === DEFAULT_PRICE_RANGE_STATE.initialPrice &&
       isRangeUnchanged
     )
-  }, [fee, hook, priceRangeState, initialPosition?.isOutOfRange])
+  }, [fee, hook, priceRangeState, initialPosition])
 
   return (
     <Flex>
@@ -311,6 +313,7 @@ function Toolbar({
             ...DEFAULT_POSITION_STATE,
             initialPosition,
             protocolVersion,
+            fee: initialPosition?.fee,
           })
           setCurrencyInputs({
             tokenA: getCurrencyForProtocol(currency0Amount.currency, protocolVersion),

@@ -17,9 +17,13 @@ import { isWebPlatform } from 'utilities/src/platform'
 
 interface PortfolioBalanceProps {
   owner: Address
+  endText?: JSX.Element | string
 }
 
-export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element {
+export const PortfolioBalance = memo(function _PortfolioBalance({
+  owner,
+  endText,
+}: PortfolioBalanceProps): JSX.Element {
   const { data, loading, networkStatus, refetch } = usePortfolioTotalValue({
     evmAddress: owner,
     // TransactionHistoryUpdater will refetch this query on new transaction.
@@ -47,7 +51,7 @@ export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: Portf
   const shouldFadePortfolioDecimals =
     (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) && currencyComponents.symbolAtFront
 
-  const EndElement = useMemo(() => {
+  const RefreshButton = useMemo(() => {
     if (isWebPlatform) {
       return <RefreshBalanceButton isLoading={loading} onPress={refetch} />
     }
@@ -65,19 +69,22 @@ export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: Portf
         value={totalBalance}
         warmLoading={isWarmLoading}
         isRightToLeft={isRightToLeft}
-        EndElement={EndElement}
+        EndElement={RefreshButton}
       />
-      <Shine disabled={!isWarmLoading}>
-        <RelativeChange
-          absoluteChange={absoluteChange}
-          arrowSize="$icon.16"
-          change={percentChange}
-          loading={isLoading}
-          negativeChangeColor={isWarmLoading ? '$neutral2' : '$statusCritical'}
-          positiveChangeColor={isWarmLoading ? '$neutral2' : '$statusSuccess'}
-          variant="body3"
-        />
-      </Shine>
+      <Flex row grow alignItems="center">
+        <Shine disabled={!isWarmLoading}>
+          <RelativeChange
+            absoluteChange={absoluteChange}
+            arrowSize="$icon.16"
+            change={percentChange}
+            loading={isLoading}
+            negativeChangeColor={isWarmLoading ? '$neutral2' : '$statusCritical'}
+            positiveChangeColor={isWarmLoading ? '$neutral2' : '$statusSuccess'}
+            variant="body3"
+          />
+        </Shine>
+        {endText}
+      </Flex>
     </Flex>
   )
 })

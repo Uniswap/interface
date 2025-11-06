@@ -1,4 +1,5 @@
 import { createAction } from '@reduxjs/toolkit'
+import { FeatureFlags, getFeatureFlagName, getStatsigClient } from '@universe/gating'
 import { parseUri } from '@walletconnect/utils'
 import { Alert } from 'react-native'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -15,7 +16,6 @@ import {
   PayloadWithFiatOnRampParams,
   parseDeepLinkUrl,
 } from 'src/features/deepLinking/deepLinkUtils'
-import { handleInAppBrowser } from 'src/features/deepLinking/handleInAppBrowserSaga'
 import { handleOffRampReturnLink } from 'src/features/deepLinking/handleOffRampReturnLinkSaga'
 import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
@@ -29,8 +29,6 @@ import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/walletCon
 import { addRequest, setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { getStatsigClient } from 'uniswap/src/features/gating/sdk/statsig'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n'
@@ -67,8 +65,6 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
     if (!activeAccount) {
       if (deepLinkAction.action === DeepLinkAction.UniswapWebLink) {
         yield* call(openUri, { uri: deepLinkAction.data.url.toString(), openExternalBrowser: true })
-      } else if (deepLinkAction.action === DeepLinkAction.InAppBrowser) {
-        yield* call(handleInAppBrowser, deepLinkAction.data.targetUrl, deepLinkAction.data.openInApp)
       }
       // If there is no active account, we don't want to handle other deep links
     } else {
@@ -79,6 +75,10 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
             url: deepLinkAction.data.url.href,
             linkSource: LinkSource.Share,
           })
+          break
+        }
+        case DeepLinkAction.UniswapExternalBrowserLink: {
+          yield* call(openUri, { uri: deepLinkAction.data.url.toString(), openExternalBrowser: true })
           break
         }
         case DeepLinkAction.WalletConnectAsParam:
@@ -100,10 +100,6 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
         }
         case DeepLinkAction.UwuLink: {
           yield* call(handleUwuLinkDeepLink, deepLinkAction.data.url.toString())
-          break
-        }
-        case DeepLinkAction.InAppBrowser: {
-          yield* call(handleInAppBrowser, deepLinkAction.data.targetUrl, deepLinkAction.data.openInApp)
           break
         }
         case DeepLinkAction.TransactionScreen:

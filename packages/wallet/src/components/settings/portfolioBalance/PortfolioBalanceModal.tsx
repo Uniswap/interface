@@ -1,11 +1,16 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Flex, Switch, Text, TouchableArea } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
-import { setHideSmallBalances, setHideSpamTokens } from 'uniswap/src/features/settings/slice'
+import {
+  useHideReportedActivitySetting,
+  useHideSmallBalancesSetting,
+  useHideSpamTokensSetting,
+} from 'uniswap/src/features/settings/hooks'
+import { setHideReportedActivity, setHideSmallBalances, setHideSpamTokens } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isExtensionApp } from 'utilities/src/platform'
 
@@ -22,23 +27,31 @@ export type PortfolioBalanceModalState = Omit<PortfolioBalanceModalProps, 'onClo
 
 export function PortfolioBalanceModal({ isOpen, onClose }: PortfolioBalanceModalProps): JSX.Element {
   const { t } = useTranslation()
-  const hideSpamTokens = useHideSpamTokensSetting()
-  const { isTestnetModeEnabled } = useEnabledChains()
   const dispatch = useDispatch()
 
-  const hideSmallBalances = useHideSmallBalancesSetting()
+  const { isTestnetModeEnabled } = useEnabledChains()
 
+  const hideSmallBalances = useHideSmallBalancesSetting()
   const onToggleHideSmallBalances = useCallback(() => {
     setTimeout(() => {
       dispatch(setHideSmallBalances(!hideSmallBalances))
     }, AVOID_RENDER_DURING_ANIMATION_MS)
   }, [dispatch, hideSmallBalances])
 
+  const hideSpamTokens = useHideSpamTokensSetting()
   const onToggleHideSpamTokens = useCallback(() => {
     setTimeout(() => {
       dispatch(setHideSpamTokens(!hideSpamTokens))
     }, AVOID_RENDER_DURING_ANIMATION_MS)
   }, [dispatch, hideSpamTokens])
+
+  const isDataReportingAbilitiesEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
+  const hideReportedActivity = useHideReportedActivitySetting()
+  const onToggleHideReportedActivity = useCallback(() => {
+    setTimeout(() => {
+      dispatch(setHideReportedActivity(!hideReportedActivity))
+    }, AVOID_RENDER_DURING_ANIMATION_MS)
+  }, [dispatch, hideReportedActivity])
 
   return (
     <Modal isModalOpen={isOpen} name={ModalName.PortfolioBalanceModal} onClose={onClose}>
@@ -52,7 +65,7 @@ export function PortfolioBalanceModal({ isOpen, onClose }: PortfolioBalanceModal
       >
         <Flex centered>
           <Text color="$neutral1" variant="subheading1">
-            {t('settings.setting.smallBalances.title')}
+            {t('settings.setting.balancesActivity.title')}
           </Text>
         </Flex>
 
@@ -69,6 +82,14 @@ export function PortfolioBalanceModal({ isOpen, onClose }: PortfolioBalanceModal
             title={t('settings.setting.unknownTokens.title')}
             onCheckedChange={onToggleHideSpamTokens}
           />
+          {isDataReportingAbilitiesEnabled && (
+            <PortfolioBalanceOption
+              active={hideReportedActivity}
+              subtitle={t('settings.setting.reportedActivity.subtitle')}
+              title={t('settings.setting.reportedActivity.title')}
+              onCheckedChange={onToggleHideReportedActivity}
+            />
+          )}
         </Flex>
       </Flex>
     </Modal>

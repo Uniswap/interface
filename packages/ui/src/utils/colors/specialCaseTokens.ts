@@ -70,4 +70,8 @@ export const SPECIAL_CASE_TOKEN_COLORS: { [key: string]: string } = {
   // RPL
   'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xD33526068D116cE69F19A9ee46F0bd304F21A51f/logo.png':
     '#FF7B4F',
+  // TODO | Toucan: remove once token auction goes live
+  // ToucanToken - Demo token for bid distribution chart testing. This ensures
+  // the token has a consistent brand color in the chart UI during development.
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_jpV17fi4GSCP0jt7m4EtLAdgVprRj1s-Yg&s': '#7482FF',
 }

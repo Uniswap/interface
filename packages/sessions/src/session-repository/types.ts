@@ -1,11 +1,4 @@
-/**
- * Bot detection types from protobuf enum
- */
-enum BotDetectionType {
-  None = 0,
-  Turnstile = 1,
-  Hashcash = 2,
-}
+import { BotDetectionType } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
 
 /**
  * Response from session initialization

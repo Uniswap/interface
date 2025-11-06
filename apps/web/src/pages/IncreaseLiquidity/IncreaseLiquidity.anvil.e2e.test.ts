@@ -1,4 +1,4 @@
-import { getPosition } from '@uniswap/client-pools/dist/pools/v1/api-PoolsService_connectquery'
+import { getPosition } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { ONE_MILLION_USDT } from 'playwright/anvil/utils'
 import { expect, getTest } from 'playwright/fixtures'

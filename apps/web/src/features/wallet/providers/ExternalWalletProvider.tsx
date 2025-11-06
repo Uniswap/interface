@@ -1,10 +1,9 @@
 import { useWallet as useSolanaWalletContext } from '@solana/wallet-adapter-react'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { getExternalEVMWalletService } from 'features/wallet/services/ExternalEVMWalletService'
 import { useExternalSVMWalletService } from 'features/wallet/services/ExternalSVMWalletService'
 import { useAccount } from 'hooks/useAccount'
 import { PropsWithChildren, useMemo } from 'react'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { WalletProvider } from 'uniswap/src/features/wallet/contexts/WalletProvider'
 import { createWalletService } from 'uniswap/src/features/wallet/services/createWalletService'
 

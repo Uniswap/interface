@@ -1,5 +1,6 @@
 import 'symbol-observable' // Needed by `reduxed-chrome-storage` as polyfill, order matters
 
+import { AUTO_LOCK_ALARM_NAME } from 'src/app/components/AutoLockProvider'
 import { initStatSigForBrowserScripts } from 'src/app/core/initStatSigForBrowserScripts'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/focusOrCreateOnboardingTab'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
@@ -14,9 +15,15 @@ import {
   ContentScriptUtilityMessageType,
 } from 'src/background/messagePassing/types/requests'
 import { setSidePanelBehavior, setSidePanelOptions } from 'src/background/utils/chromeSidePanelUtils'
-import { readIsOnboardedFromStorage } from 'src/background/utils/persistedStateUtils'
+import {
+  readDeviceAccessTimeoutMinutesFromStorage,
+  readIsOnboardedFromStorage,
+} from 'src/background/utils/persistedStateUtils'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { defineBackground } from 'wxt/utils/define-background'
 
 async function enableSidebar(): Promise<void> {
@@ -67,6 +74,53 @@ function makeBackground(): void {
 
   chrome.runtime.onInstalled.addListener(async () => {
     await checkAndHandleOnboarding()
+  })
+
+  // Auto-lock alarm listener
+  chrome.alarms.onAlarm.addListener((alarm) => {
+    if (alarm.name === AUTO_LOCK_ALARM_NAME) {
+      Keyring.lock()
+        .then(() => {
+          sendAnalyticsEvent(ExtensionEventName.ChangeLockedState, {
+            locked: true,
+            location: 'background',
+          })
+        })
+        .catch((error) => {
+          logger.error(error, {
+            tags: {
+              file: 'background.ts',
+              function: 'alarms.onAlarm',
+            },
+          })
+        })
+    }
+  })
+
+  // Listen for sidebar port disconnects to schedule auto-lock alarm
+  chrome.runtime.onConnect.addListener((port) => {
+    if (port.name === AUTO_LOCK_ALARM_NAME) {
+      port.onDisconnect.addListener(async () => {
+        try {
+          // Get timeout setting from Redux state
+          const delayInMinutes = await readDeviceAccessTimeoutMinutesFromStorage()
+          if (delayInMinutes === undefined) {
+            return
+          }
+
+          // Schedule alarm
+          chrome.alarms.create(AUTO_LOCK_ALARM_NAME, { delayInMinutes })
+          logger.debug('background', 'port.onDisconnect', `Scheduled auto-lock alarm for ${delayInMinutes} minutes`)
+        } catch (error) {
+          logger.error(error, {
+            tags: {
+              file: 'background.ts',
+              function: 'port.onDisconnect',
+            },
+          })
+        }
+      })
+    }
   })
 
   // on arc browser, show unsupported browser page (lives on onboarding flow)

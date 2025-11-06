@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { nearestUsableTick, priceToClosestTick, TickMath, tickToPrice as tickToPriceV3 } from '@uniswap/v3-sdk'
 import { priceToClosestTick as priceToClosestV4Tick, tickToPrice as tickToPriceV4 } from '@uniswap/v4-sdk'
 import { TickNavigationParams } from 'components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/types'

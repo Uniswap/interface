@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { FeeAmount, TICK_SPACINGS, Pool as V3Pool } from '@uniswap/v3-sdk'
@@ -34,17 +34,20 @@ export enum RangeAmountInputPriceMode {
   PERCENTAGE = 'percentage',
 }
 
+export interface InitialPosition {
+  tickLower: number
+  tickUpper: number
+  isOutOfRange: boolean
+  fee: FeeData
+}
+
 export interface PositionState {
   protocolVersion: ProtocolVersion
-  fee: FeeData
+  fee?: FeeData
   hook?: string
   userApprovedHook?: string // address of approved hook. If different from `hook`, user needs to reapprove the new hook
   // Initial position is provided for migration purposes.
-  initialPosition?: {
-    tickLower: number
-    tickUpper: number
-    isOutOfRange: boolean
-  }
+  initialPosition?: InitialPosition
 }
 
 export const DEFAULT_FEE_DATA = {
@@ -54,7 +57,7 @@ export const DEFAULT_FEE_DATA = {
 }
 
 export const DEFAULT_POSITION_STATE: PositionState = {
-  fee: DEFAULT_FEE_DATA,
+  fee: undefined,
   hook: undefined,
   userApprovedHook: undefined,
   protocolVersion: ProtocolVersion.V4,
@@ -102,7 +105,7 @@ export type CreatePositionInfo = CreateV4PositionInfo | CreateV3PositionInfo | C
 
 export interface DynamicFeeTierSpeedbumpData {
   open: boolean
-  wishFeeData: FeeData
+  wishFeeData?: FeeData
 }
 
 export type PriceDifference = {

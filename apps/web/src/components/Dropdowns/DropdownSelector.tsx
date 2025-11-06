@@ -70,7 +70,7 @@ export function DropdownSelector({
           }}
         >
           <Flex row alignItems="center" gap="$gap8">
-            {option.icon && <option.icon size="$icon.16" color="$neutral2" />}
+            {option.icon && <option.icon size="$icon.16" color="$neutral1" />}
             <Text variant="buttonLabel3">{option.label}</Text>
           </Flex>
           {selectedValue === value && <Check size="$icon.16" color="$accent1" strokeWidth={4} />}

@@ -4,9 +4,11 @@ import { TransactionRequest as EthersTransactionRequest } from '@ethersproject/p
 import { SerializedError } from '@reduxjs/toolkit'
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import { SharedEventName } from '@uniswap/analytics-events'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { OnChainStatus } from '@uniswap/client-trading/dist/trading/v1/api_pb'
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { TradingApi, UnitagClaimContext } from '@universe/api'
+import { Experiments } from '@universe/gating'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
 import { OnchainItemSectionName } from 'uniswap/src/components/lists/OnchainItemList/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -29,6 +31,7 @@ import {
   WalletEventName,
 } from 'uniswap/src/features/telemetry/constants'
 import { TokenProtectionWarning } from 'uniswap/src/features/tokens/safetyUtils'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
@@ -488,6 +491,14 @@ export type LiquidityAnalyticsProperties = ITraceContext & {
 
 export type NotificationToggleLoggingType = 'settings_general_updates_enabled' | 'wallet_activity'
 
+type TokenReportProperties = {
+  is_marked_spam?: Maybe<boolean>
+  token_name?: string
+  token_contract_address?: string
+  chain_id: UniverseChainId
+  text?: string
+}
+
 // Please sort new values by EventName type!
 export type UniverseEventProperties = {
   [ExtensionEventName.BackgroundAttemptedToOpenSidebar]: { hasError: boolean }
@@ -909,6 +920,9 @@ export type UniverseEventProperties = {
     delegationAddress: string
     isActiveChain?: boolean
   }
+  [UniswapEventName.ExperimentQualifyingEvent]: {
+    experiment: Experiments
+  }
   [UniswapEventName.BalancesReport]: {
     total_balances_usd: number
     wallets: string[]
@@ -925,6 +939,18 @@ export type UniverseEventProperties = {
     eventName: string
     platformIdType: string
   }
+  [UniswapEventName.DataReportSubmitted]:
+    | (TokenReportProperties & {
+        type: 'data'
+        price?: boolean
+        volume?: boolean
+        price_chart?: boolean
+        token_details?: boolean
+        something_else?: boolean
+      })
+    | (TokenReportProperties & {
+        type: 'token_warning'
+      })
   [UniswapEventName.TokenSelected]:
     | (ITraceContext &
         AssetDetailsBaseProperties &
@@ -957,6 +983,37 @@ export type UniverseEventProperties = {
     chainId: string
     delegatedAddress: string
   }
+  [UniswapEventName.SpamReportSubmitted]:
+    | (TokenReportProperties & {
+        type: 'token'
+        source: 'portfolio' | 'token-details'
+        spam_token: boolean
+        imposter_token: boolean
+        hidden_fees: boolean
+        something_else: boolean
+      })
+    | {
+        type: 'nft'
+        chain_id?: UniverseChainId
+        contract_address?: Address
+        token_id?: string
+      }
+    | {
+        type: 'activity'
+        address?: Address
+        transaction_id: string
+        chain_id: UniverseChainId
+        hash?: string
+        transaction_type: TransactionType
+      }
+    | {
+        type: 'pool'
+        pool_id: string
+        version: ProtocolVersion
+        chain_id: UniverseChainId
+        token0: string
+        token1: string
+      }
   [UnitagEventName.UnitagBannerActionTaken]: {
     action: 'claim' | 'dismiss'
     entryPoint: 'home' | 'settings'
@@ -1040,6 +1097,9 @@ export type UniverseEventProperties = {
   [WalletEventName.ShareButtonClicked]: {
     entity: ShareableEntity
     url: string
+  }
+  [WalletEventName.SilentPushReceived]: {
+    template_id: string
   }
   [WalletEventName.SwapSubmitted]: (
     | {

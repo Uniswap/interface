@@ -23,13 +23,6 @@ export type TransactionSignerInput = {
  */
 export interface TransactionSigner {
   /**
-   * Sign and send a transaction
-   * @param input The transaction request
-   * @returns The response, populated request, and timestamp
-   */
-  signAndSendTransaction(input: TransactionSignerInput): Promise<TransactionSignerOutput>
-
-  /**
    * Prepare a transaction
    * @param input The transaction request
    * @returns The populated transaction

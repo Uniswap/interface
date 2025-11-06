@@ -69,6 +69,12 @@ exports[`renders wallet preview card 1`] = `
         {
           "alignContent": "center",
           "alignItems": "center",
+          "color": {
+            "dynamic": {
+              "dark": "#FFFFFF",
+              "light": "#222222",
+            },
+          },
           "flex": 1,
           "flexDirection": "row",
           "justifyContent": "space-between",
@@ -248,7 +254,7 @@ exports[`renders wallet preview card 1`] = `
                       },
                     },
                     "flexShrink": 1,
-                    "fontFamily": "Basel Grotesk",
+                    "fontFamily": "Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif",
                     "fontSize": 18,
                     "fontWeight": "400",
                     "lineHeight": 23.400000000000002,
@@ -298,7 +304,7 @@ exports[`renders wallet preview card 1`] = `
                       "light": "rgba(19, 19, 19, 0.63)",
                     },
                   },
-                  "fontFamily": "Basel Grotesk",
+                  "fontFamily": "Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif",
                   "fontSize": 16,
                   "fontWeight": "400",
                   "lineHeight": 20.8,

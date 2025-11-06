@@ -1,4 +1,5 @@
 import { WalletReadyState as SolanaWalletReadyState } from '@solana/wallet-adapter-base'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useAccountsStoreContext } from 'features/accounts/store/provider'
 import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
@@ -6,8 +7,6 @@ import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { ConnectorStatus } from 'uniswap/src/features/accounts/store/types/Connector'
 import { ChainScopeType } from 'uniswap/src/features/accounts/store/types/Session'
 import { SigningCapability } from 'uniswap/src/features/accounts/store/types/Wallet'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 
 // Mock wagmi hooks
@@ -26,10 +25,9 @@ vi.mock('wagmi', async () => ({
   useChainId: () => mockUseWagmiChainId(),
 }))
 
-vi.mock('uniswap/src/features/gating/hooks', async () => {
-  const actual = await vi.importActual('uniswap/src/features/gating/hooks')
+vi.mock('@universe/gating', async (importOriginal) => {
   return {
-    ...actual,
+    ...(await importOriginal()),
     useFeatureFlag: vi.fn(),
   }
 })

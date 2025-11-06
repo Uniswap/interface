@@ -1,9 +1,8 @@
 import { ApolloError } from '@apollo/client'
 import { GraphQLApi } from '@universe/api'
+import { DynamicConfigs, OutageBannerChainIdConfigKey, useDynamicConfigValue } from '@universe/gating'
 import { atomWithReset, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { DynamicConfigs, OutageBannerChainIdConfigKey } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 
 export type ChainOutageData = {
   chainId: UniverseChainId

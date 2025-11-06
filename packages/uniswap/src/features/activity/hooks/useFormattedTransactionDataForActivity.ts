@@ -11,14 +11,23 @@ import { isLoadingItem, isSectionHeader, LoadingItem } from 'uniswap/src/compone
 import { formatTransactionsByDate } from 'uniswap/src/features/activity/formatTransactionsByDate'
 import { useMergeLocalAndRemoteTransactions } from 'uniswap/src/features/activity/hooks/useMergeLocalAndRemoteTransactions'
 import { useListTransactions } from 'uniswap/src/features/dataApi/listTransactions/listTransactions'
+import { PaginationControls } from 'uniswap/src/features/dataApi/types'
 import { useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isLimitOrder } from 'uniswap/src/features/transactions/utils/uniswapX.utils'
 import { selectNftsVisibility } from 'uniswap/src/features/visibility/selectors'
+import { isAndroid } from 'utilities/src/platform'
 
 const LOADING_ITEM = (index: number): LoadingItem => ({ itemType: 'LOADING', id: index })
 const LOADING_DATA = [LOADING_ITEM(1), LOADING_ITEM(2), LOADING_ITEM(3), LOADING_ITEM(4)]
+
+const MAX_ACTIVITY_ITEMS = isAndroid ? 100 : 250
+
+function hasReachedLimit(transactions: TransactionDetails[] | undefined): boolean {
+  const currentTransactionCount = transactions?.length ?? 0
+  return currentTransactionCount >= MAX_ACTIVITY_ITEMS
+}
 
 // Contract for returning Transaction data
 
@@ -38,13 +47,13 @@ interface UseFormattedTransactionDataOptions {
 
 type FormattedTransactionInputs = UseFormattedTransactionDataOptions & TransactionListQueryArgs
 
-export interface FormattedTransactionDataResult {
+export interface FormattedTransactionDataResult extends PaginationControls {
   hasData: boolean
   isLoading: boolean
   isError: Error | undefined
   sectionData: ActivityItem[] | undefined
   keyExtractor: (item: ActivityItem) => string
-  onRetry: () => void
+  onRetry: () => Promise<void>
   skip?: boolean
 }
 
@@ -71,6 +80,9 @@ export function useFormattedTransactionDataForActivity({
     error,
     refetch,
     networkStatus,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
   } = useListTransactions({
     evmAddress,
     svmAddress,
@@ -145,6 +157,9 @@ export function useFormattedTransactionDataForActivity({
     isError: error ?? undefined,
     isLoading: loading,
     keyExtractor,
+    fetchNextPage,
+    hasNextPage: hasNextPage && !hasReachedLimit(transactions),
+    isFetchingNextPage,
   }
 }
 

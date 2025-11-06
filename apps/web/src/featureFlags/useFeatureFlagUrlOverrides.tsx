@@ -1,7 +1,6 @@
+import { getOverrideAdapter, useStatsigClientStatus } from '@universe/gating'
 import { useEffect } from 'react'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
-import { useStatsigClientStatus } from 'uniswap/src/features/gating/hooks'
-import { getOverrideAdapter } from 'uniswap/src/features/gating/sdk/statsig'
 import { isProdEnv } from 'utilities/src/environment/env'
 
 export function useFeatureFlagUrlOverrides() {

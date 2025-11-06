@@ -12,6 +12,7 @@ import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { PriceChartData } from 'components/Charts/PriceChart'
 import { ChartType } from 'components/Charts/utils'
 import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
+import { InitialPosition } from 'components/Liquidity/Create/types'
 import { ChartQueryResult } from 'components/Tokens/TokenDetails/ChartSection/util'
 import * as d3 from 'd3'
 import { useEffect, useMemo, useRef } from 'react'
@@ -22,11 +23,13 @@ const D3LiquidityRangeChart = ({
   liquidityData,
   quoteCurrency,
   baseCurrency,
+  initialPosition,
 }: {
   priceData: ChartQueryResult<PriceChartData, ChartType.PRICE>
   liquidityData: ChartEntry[]
   quoteCurrency: Currency
   baseCurrency: Currency
+  initialPosition?: InitialPosition
 }) => {
   const colors = useSporeColors()
   const svgRef = useRef<SVGSVGElement | null>(null)
@@ -125,6 +128,11 @@ const D3LiquidityRangeChart = ({
   useEffect(() => {
     let minPrice
     let maxPrice
+
+    if (initialPosition) {
+      return
+    }
+
     if (priceRangeState.minPrice && !isNaN(parseFloat(priceRangeState.minPrice))) {
       minPrice = parseFloat(priceRangeState.minPrice)
     }
@@ -136,7 +144,7 @@ const D3LiquidityRangeChart = ({
       minPrice,
       maxPrice,
     })
-  }, [priceData.dataHash, reset])
+  }, [priceData.dataHash, initialPosition, reset])
 
   return (
     <Flex opacity={dimensions.isInitialized ? 1 : 0} animation="fast" flexDirection="column">

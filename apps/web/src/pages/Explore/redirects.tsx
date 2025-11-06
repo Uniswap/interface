@@ -1,9 +1,8 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ExploreTab } from 'pages/Explore/constants'
 import { lazy, Suspense } from 'react'
 import { Navigate, useLocation, useParams } from 'react-router'
 import { Loader } from 'ui/src/loading/Loader'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const Explore = lazy(() => import('pages/Explore'))
 const Toucan = lazy(() => import('pages/Explore/Toucan'))

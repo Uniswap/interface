@@ -17,7 +17,6 @@ import { EnvelopeHeart } from 'ui/src/components/icons/EnvelopeHeart'
 import { OrderRouting } from 'ui/src/components/icons/OrderRouting'
 import { Verified } from 'ui/src/components/icons/Verified'
 import { iconSizes } from 'ui/src/theme'
-import { getBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -47,8 +46,7 @@ export const BridgedAssetModalAtom = atom<BridgedAssetModalProps | undefined>(un
 function BridgedAssetModalContent({ currencyInfo }: { currencyInfo: CurrencyInfo }): JSX.Element | null {
   const { t } = useTranslation()
   const chainName = getChainLabel(currencyInfo.currency.chainId)
-  const bridgedAsset = getBridgedAsset(currencyInfo)
-  if (!currencyInfo.currency.symbol || !bridgedAsset) {
+  if (!currencyInfo.currency.symbol || !currencyInfo.isBridged) {
     return null
   }
 
@@ -104,11 +102,13 @@ function BridgedAssetModalContent({ currencyInfo }: { currencyInfo: CurrencyInfo
           </Flex>
           <Flex flex={1}>
             <Text variant="subheading2" color="$neutral1">
-              {t('bridgedAsset.modal.feature.withdrawToNativeChain', { nativeChainName: bridgedAsset.nativeChain })}
+              {t('bridgedAsset.modal.feature.withdrawToNativeChain', {
+                nativeChainName: currencyInfo.bridgedWithdrawalInfo?.chain ?? '',
+              })}
             </Text>
             <Text variant="body3" color="$neutral2">
               {t('bridgedAsset.modal.feature.withdrawToNativeChain.description', {
-                nativeChainName: bridgedAsset.nativeChain,
+                nativeChainName: currencyInfo.bridgedWithdrawalInfo?.chain ?? '',
               })}
             </Text>
           </Flex>

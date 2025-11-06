@@ -1,15 +1,16 @@
 /* biome-ignore-all lint/suspicious/noExplicitAny: legacy code needs review */
-
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
+  selectActivityVisibility,
   selectNftsVisibility,
   selectPositionsVisibility,
   selectTokensVisibility,
 } from 'uniswap/src/features/visibility/selectors'
 import {
+  setActivityVisibility,
   setNftVisibility,
+  setPositionVisibility,
   setTokenVisibility,
-  togglePositionVisibility,
   VisibilityState,
   visibilityReducer,
 } from 'uniswap/src/features/visibility/slice'
@@ -21,20 +22,23 @@ jest.mock('uniswap/src/features/visibility/utils', () => ({
 
 const mockedGetUniquePositionId = getUniquePositionId as jest.Mock
 
+const makeEmptyVisibilityState = (): VisibilityState => ({
+  positions: {},
+  tokens: {},
+  nfts: {},
+  activity: {},
+})
+
 describe('visibility slice', () => {
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
   it('should return the initial state', () => {
-    expect(visibilityReducer(undefined, { type: 'unknown' })).toEqual({
-      positions: {},
-      tokens: {},
-      nfts: {},
-    })
+    expect(visibilityReducer(undefined, { type: 'unknown' })).toEqual(makeEmptyVisibilityState())
   })
 
-  describe('togglePositionVisibility', () => {
+  describe('setPositionVisibility', () => {
     const poolId = 'pool1'
     const tokenId = 'token1'
     const chainId: UniverseChainId = 1
@@ -45,13 +49,9 @@ describe('visibility slice', () => {
     })
 
     it('should toggle visibility from undefined to false', () => {
-      const initialState: VisibilityState = {
-        positions: {},
-        tokens: {},
-        nfts: {},
-      }
+      const initialState: VisibilityState = makeEmptyVisibilityState()
 
-      const action = togglePositionVisibility({ poolId, tokenId, chainId })
+      const action = setPositionVisibility({ poolId, tokenId, chainId, isVisible: false })
       const newState = visibilityReducer(initialState, action)
 
       expect(newState.positions[positionId]?.isVisible).toBe(false)
@@ -65,9 +65,10 @@ describe('visibility slice', () => {
         },
         tokens: {},
         nfts: {},
+        activity: {},
       }
 
-      const action = togglePositionVisibility({ poolId, tokenId, chainId })
+      const action = setPositionVisibility({ poolId, tokenId, chainId, isVisible: true })
       const newState = visibilityReducer(initialState, action)
 
       expect(newState.positions[positionId]?.isVisible).toBe(true)
@@ -82,9 +83,10 @@ describe('visibility slice', () => {
           [tokenId]: { isVisible: true },
         },
         nfts: {},
+        activity: {},
       }
 
-      const action = togglePositionVisibility({ poolId, tokenId, chainId })
+      const action = setPositionVisibility({ poolId, tokenId, chainId, isVisible: false })
       const newState = visibilityReducer(initialState, action)
 
       expect(newState.positions[positionId]?.isVisible).toBe(false)
@@ -130,11 +132,7 @@ describe('visibility slice', () => {
     const currencyId = 'token1'
 
     it('should set token visibility from undefined to false', () => {
-      const initialState: VisibilityState = {
-        positions: {},
-        tokens: {},
-        nfts: {},
-      }
+      const initialState: VisibilityState = makeEmptyVisibilityState()
 
       const action = setTokenVisibility({ currencyId, isVisible: false })
       const newState = visibilityReducer(initialState, action)
@@ -149,6 +147,7 @@ describe('visibility slice', () => {
           [currencyId]: { isVisible: false },
         },
         nfts: {},
+        activity: {},
       }
 
       const action = setTokenVisibility({ currencyId, isVisible: true })
@@ -164,6 +163,7 @@ describe('visibility slice', () => {
           [currencyId]: { isVisible: true },
         },
         nfts: {},
+        activity: {},
       }
 
       const action = setTokenVisibility({ currencyId, isVisible: false })
@@ -174,11 +174,7 @@ describe('visibility slice', () => {
 
     it('selectTokensVisibility should return empty object if context not present', () => {
       const state: any = {
-        visibility: {
-          positions: {},
-          tokens: {},
-          nfts: {},
-        },
+        visibility: makeEmptyVisibilityState(),
       }
 
       const result = selectTokensVisibility(state)
@@ -190,11 +186,7 @@ describe('visibility slice', () => {
     const nftKey = 'nft1'
 
     it('should set nft visibility from undefined to false', () => {
-      const initialState: VisibilityState = {
-        positions: {},
-        tokens: {},
-        nfts: {},
-      }
+      const initialState: VisibilityState = makeEmptyVisibilityState()
 
       const action = setNftVisibility({ nftKey, isVisible: false })
       const newState = visibilityReducer(initialState, action)
@@ -209,6 +201,7 @@ describe('visibility slice', () => {
         nfts: {
           [nftKey]: { isVisible: false },
         },
+        activity: {},
       }
 
       const action = setNftVisibility({ nftKey, isVisible: true })
@@ -224,6 +217,7 @@ describe('visibility slice', () => {
         nfts: {
           [nftKey]: { isVisible: true },
         },
+        activity: {},
       }
 
       const action = setNftVisibility({ nftKey, isVisible: false })
@@ -234,14 +228,66 @@ describe('visibility slice', () => {
 
     it('selectNftsVisibility should return empty object if context not present', () => {
       const state: any = {
-        visibility: {
-          positions: {},
-          tokens: {},
-          nfts: {},
-        },
+        visibility: makeEmptyVisibilityState(),
       }
 
       const result = selectNftsVisibility(state)
+      expect(result).toEqual({})
+    })
+  })
+
+  describe('setActivityVisibility', () => {
+    const chainId: UniverseChainId = UniverseChainId.Mainnet
+    const hash = '0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef'
+    const transactionId = `${chainId}-${hash}`
+
+    it('should set activity visibility from undefined to false', () => {
+      const initialState: VisibilityState = makeEmptyVisibilityState()
+
+      const action = setActivityVisibility({ transactionId, isVisible: false })
+      const newState = visibilityReducer(initialState, action)
+
+      expect(newState.activity[transactionId]?.isVisible).toBe(false)
+    })
+
+    it('should set activity visibility from false to true', () => {
+      const initialState: VisibilityState = {
+        positions: {},
+        tokens: {},
+        nfts: {},
+        activity: {
+          [transactionId]: { isVisible: false },
+        },
+      }
+
+      const action = setActivityVisibility({ transactionId, isVisible: true })
+      const newState = visibilityReducer(initialState, action)
+
+      expect(newState.activity[transactionId]?.isVisible).toBe(true)
+    })
+
+    it('should set activity visibility from true to false', () => {
+      const initialState: VisibilityState = {
+        positions: {},
+        tokens: {},
+        nfts: {},
+        activity: {
+          [transactionId]: { isVisible: true },
+        },
+      }
+
+      const action = setActivityVisibility({ transactionId, isVisible: false })
+      const newState = visibilityReducer(initialState, action)
+
+      expect(newState.activity[transactionId]?.isVisible).toBe(false)
+    })
+
+    it('selectActivityVisibility should return empty object if context not present', () => {
+      const state: any = {
+        visibility: makeEmptyVisibilityState(),
+      }
+
+      const result = selectActivityVisibility(state)
       expect(result).toEqual({})
     })
   })

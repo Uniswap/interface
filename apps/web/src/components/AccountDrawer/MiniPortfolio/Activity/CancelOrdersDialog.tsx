@@ -156,17 +156,14 @@ export function CancelOrdersDialog(props: CancelOrdersDialogProps) {
         }
         modalName={ModalName.CancelOrders}
         primaryButtonText={t('common.neverMind')}
-        primaryButtonOnClick={onCancel}
+        primaryButtonOnPress={onCancel}
         primaryButtonVariant="default"
         primaryButtonEmphasis="secondary"
         secondaryButtonText={t('common.proceed')}
-        secondaryButtonOnClick={onConfirm}
+        secondaryButtonOnPress={onConfirm}
         secondaryButtonVariant="critical"
-        buttonContainerProps={{
-          flexDirection: 'row',
-        }}
         displayHelpCTA
-        hasIconBackground
+        iconBackgroundColor="$surface3"
       >
         {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
         <GasEstimateDisplay chainId={orders[0].chainId} gasEstimateValue={cancellationGasFeeInfo?.gasFeeDisplayValue} />
@@ -185,15 +182,7 @@ function GasEstimateDisplay({ gasEstimateValue, chainId }: { gasEstimateValue?: 
   const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD?.toExact(), NumberType.PortfolioBalance)
 
   return (
-    <Flex
-      row
-      mt="$spacing16"
-      pt="$spacing16"
-      borderColor="$transparent"
-      borderTopColor="$surface3"
-      borderWidth="$spacing1"
-      width="100%"
-    >
+    <Flex row width="100%">
       <DetailLineItem
         LineItem={{
           Label: () => <Trans i18nKey="common.networkCost" />,

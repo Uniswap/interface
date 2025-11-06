@@ -1,6 +1,7 @@
 import { Linking } from 'react-native'
 import { OneSignal } from 'react-native-onesignal'
 import { NotificationType } from 'src/features/notifications/constants'
+import { startSilentPushListener } from 'src/features/notifications/SilentPushListener'
 import { config } from 'uniswap/src/config'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'uniswap/src/features/portfolio/portfolioUpdates/constants'
 import { getUniqueId } from 'utilities/src/device/uniqueId'
@@ -14,6 +15,8 @@ export const initOneSignal = (): void => {
   // OneSignal.Debug.setLogLevel(LogLevel.Verbose)
 
   OneSignal.initialize(config.onesignalAppId)
+
+  startSilentPushListener()
 
   OneSignal.Notifications.addEventListener('foregroundWillDisplay', (event) => {
     const notification = event.getNotification()
@@ -72,6 +75,12 @@ export const initOneSignal = (): void => {
 export const promptPushPermission = async (): Promise<boolean> => {
   const response = await OneSignal.Notifications.requestPermission(true)
   logger.debug('Onesignal', 'promptForPushNotificationsWithUserResponse', `Prompt response: ${response}`)
+
+  // Explicitly opt in to push notifications if permission was granted
+  if (response) {
+    OneSignal.User.pushSubscription.optIn()
+  }
+
   return response
 }
 

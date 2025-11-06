@@ -61,7 +61,6 @@ module.exports = {
       '@react-native-firebase/**',
       '@uniswap/client-embeddedwallet',
       '@uniswap/client-data-api',
-      '@uniswap/client-pools',
       'react-native-webview',
       '@gorhom/**',
       'expo*',

@@ -20,8 +20,9 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-vi.mock('uniswap/src/features/gating/hooks', () => {
+vi.mock('@universe/gating', async (importOriginal) => {
   return {
+    ...(await importOriginal()),
     useFeatureFlag: vi.fn(),
     getFeatureFlag: vi.fn(),
   }
@@ -126,6 +127,91 @@ describe('hooks', () => {
         value: '20.5',
         field: undefined,
         chainId: undefined,
+      })
+    })
+
+    test('no query parameters', () => {
+      expect(queryParametersToCurrencyState(parse('', { parseArrays: false, ignoreQueryPrefix: true }))).toEqual({
+        inputCurrencyAddress: undefined,
+        outputCurrencyAddress: undefined,
+        value: undefined,
+        field: undefined,
+        chainId: undefined,
+        outputChainId: undefined,
+      })
+    })
+
+    test('only chain parameter, no currencies', () => {
+      expect(
+        queryParametersToCurrencyState(parse('?chain=optimism', { parseArrays: false, ignoreQueryPrefix: true })),
+      ).toEqual({
+        inputCurrencyAddress: undefined,
+        outputCurrencyAddress: undefined,
+        value: undefined,
+        field: undefined,
+        chainId: UniverseChainId.Optimism,
+        outputChainId: undefined,
+      })
+    })
+
+    test('only outputChain parameter, no currencies', () => {
+      expect(
+        queryParametersToCurrencyState(parse('?outputChain=base', { parseArrays: false, ignoreQueryPrefix: true })),
+      ).toEqual({
+        inputCurrencyAddress: undefined,
+        outputCurrencyAddress: undefined,
+        value: undefined,
+        field: undefined,
+        chainId: undefined,
+        outputChainId: UniverseChainId.Base,
+      })
+    })
+
+    test('both chain and outputChain parameters, no currencies', () => {
+      expect(
+        queryParametersToCurrencyState(
+          parse('?chain=mainnet&outputChain=optimism', { parseArrays: false, ignoreQueryPrefix: true }),
+        ),
+      ).toEqual({
+        inputCurrencyAddress: undefined,
+        outputCurrencyAddress: undefined,
+        value: undefined,
+        field: undefined,
+        chainId: UniverseChainId.Mainnet,
+        outputChainId: UniverseChainId.Optimism,
+      })
+    })
+
+    test('outputChain parameter with output currency', () => {
+      expect(
+        queryParametersToCurrencyState(
+          parse(`?outputChain=base&outputCurrency=${DAI.address}`, { parseArrays: false, ignoreQueryPrefix: true }),
+        ),
+      ).toEqual({
+        inputCurrencyAddress: undefined,
+        outputCurrencyAddress: DAI.address,
+        value: undefined,
+        field: undefined,
+        chainId: undefined,
+        outputChainId: UniverseChainId.Base,
+      })
+    })
+
+    test('both chain and outputChain with input and output currencies', () => {
+      expect(
+        queryParametersToCurrencyState(
+          parse(`?chain=mainnet&outputChain=optimism&inputCurrency=ETH&outputCurrency=${USDC_OPTIMISM.address}`, {
+            parseArrays: false,
+            ignoreQueryPrefix: true,
+          }),
+        ),
+      ).toEqual({
+        inputCurrencyAddress: 'ETH',
+        outputCurrencyAddress: USDC_OPTIMISM.address,
+        value: undefined,
+        field: undefined,
+        chainId: UniverseChainId.Mainnet,
+        outputChainId: UniverseChainId.Optimism,
       })
     })
   })
@@ -260,7 +346,7 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -282,7 +368,7 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -307,7 +393,13 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialTypedValue, initialField, initialChainId },
+            current: {
+              initialInputCurrency,
+              initialOutputCurrency,
+              initialTypedValue,
+              initialField,
+              initialInputChainId: initialChainId,
+            },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -328,7 +420,7 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -391,7 +483,7 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialChainId },
+            current: { initialInputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -417,7 +509,7 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -444,7 +536,7 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialChainId },
+            current: { initialInputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -463,7 +555,7 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -482,7 +574,7 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 
@@ -504,7 +596,7 @@ describe('hooks', () => {
 
         const {
           result: {
-            current: { initialInputCurrency, initialOutputCurrency, initialChainId },
+            current: { initialInputCurrency, initialOutputCurrency, initialInputChainId: initialChainId },
           },
         } = renderHook(() => useInitialCurrencyState())
 

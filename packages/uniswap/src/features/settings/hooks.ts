@@ -1,8 +1,9 @@
 import { useSelector } from 'react-redux'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import {
-  // biome-ignore lint/style/noRestrictedImports: legacy import will be migrated
+  // biome-ignore lint/style/noRestrictedImports: expected usage here
   selectIsTestnetModeEnabled,
+  selectWalletHideReportedActivitySetting,
   selectWalletHideSmallBalancesSetting,
   selectWalletHideSpamTokensSetting,
 } from 'uniswap/src/features/settings/selectors'
@@ -16,6 +17,10 @@ export function useHideSmallBalancesSetting(): boolean {
 
 export function useHideSpamTokensSetting(): boolean {
   return useSelector(selectWalletHideSpamTokensSetting)
+}
+
+export function useHideReportedActivitySetting(): boolean {
+  return useSelector(selectWalletHideReportedActivitySetting)
 }
 
 export const TESTNET_MODE_BANNER_HEIGHT = 44

@@ -2,7 +2,7 @@ import { isNonPollingRequestInFlight } from '@universe/api'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import InfiniteScroll from 'react-infinite-scroll-component'
-import { Flex, Loader, View } from 'ui/src'
+import { Flex, Loader, styled, View } from 'ui/src'
 import { NoNfts } from 'ui/src/components/icons/NoNfts'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
@@ -17,24 +17,29 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isExtensionApp } from 'utilities/src/platform'
 
-const AssetsContainer = ({ children, useGrid }: { children: React.ReactNode; useGrid: boolean }): JSX.Element => {
-  return (
-    <View
-      $platform-web={
-        useGrid
-          ? {
-              display: 'grid',
-              gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
-            }
-          : {}
-      }
-      width="100%"
-      gap="$spacing2"
-    >
-      {children}
-    </View>
-  )
-}
+const AssetsContainer = styled(View, {
+  width: '100%',
+  gap: '$spacing2',
+  variants: {
+    useGrid: {
+      true: {
+        '$platform-web': {
+          display: 'grid',
+          // default to 2 columns
+          gridTemplateColumns: 'minmax(0, 1fr) minmax(0, 1fr)',
+          gridGap: '12px',
+        },
+      },
+    },
+    autoColumns: {
+      true: {
+        '$platform-web': {
+          gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+        },
+      },
+    },
+  },
+})
 
 const LOADING_ITEM = 'loading'
 
@@ -48,6 +53,9 @@ export function NftsList({
   renderNFTItem,
   skip,
   customEmptyState,
+  autoColumns = false,
+  loadingSkeletonCount = 6,
+  customLoadingState,
 }: NftsListProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -96,7 +104,7 @@ export function NftsList({
           return null
         case HIDDEN_NFTS_ROW:
           return (
-            <Flex key={keyExtractor(item)} grow gridColumn="span 2">
+            <Flex key={keyExtractor(item)} grow gridColumn="span 2" $platform-web={{ gridColumn: '1 / -1' }}>
               <ExpandoRow
                 isExpanded={hiddenNftsExpanded}
                 data-testid={TestID.HiddenNftsRow}
@@ -122,23 +130,18 @@ export function NftsList({
     [nfts, shouldAddInLoadingItem],
   )
 
-  const loadingState = useMemo(
-    () => (
+  const loadingState = useMemo<JSX.Element>(() => {
+    if (customLoadingState) {
+      return customLoadingState
+    }
+    return (
       <>
-        <Flex gap="$spacing2">
-          <Loader.NFT />
-          <Loader.NFT />
-          <Loader.NFT />
-        </Flex>
-        <Flex gap="$spacing2">
-          <Loader.NFT />
-          <Loader.NFT />
-          <Loader.NFT />
-        </Flex>
+        {Array.from({ length: loadingSkeletonCount }, (_, i) => (
+          <Loader.NFT key={i} />
+        ))}
       </>
-    ),
-    [],
-  )
+    )
+  }, [loadingSkeletonCount, customLoadingState])
 
   const emptyState = useMemo(
     () =>
@@ -197,7 +200,9 @@ export function NftsList({
         style={{ overflow: 'unset' }}
         scrollableTarget="wallet-dropdown-scroll-wrapper"
       >
-        <AssetsContainer useGrid={isLoadingState || nfts.length > 0}>{listContent}</AssetsContainer>
+        <AssetsContainer useGrid={isLoadingState || nfts.length > 0} autoColumns={autoColumns}>
+          {listContent}
+        </AssetsContainer>
       </InfiniteScroll>
     </>
   )

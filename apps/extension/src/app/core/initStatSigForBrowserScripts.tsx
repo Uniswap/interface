@@ -1,6 +1,5 @@
+import { StatsigClient, StatsigCustomAppValue, StatsigUser } from '@universe/gating'
 import { config } from 'uniswap/src/config'
-import { StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
-import { StatsigClient, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import { statsigBaseConfig } from 'uniswap/src/features/gating/statsigBaseConfig'
 import { getUniqueId } from 'utilities/src/device/uniqueId'
 import { logger } from 'utilities/src/logger/logger'

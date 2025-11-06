@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { createHashRouter, RouterProvider } from 'react-router'
 import { PersistGate } from 'redux-persist/integration/react'
+import { AUTO_LOCK_ALARM_NAME } from 'src/app/components/AutoLockProvider'
 import { ErrorElement } from 'src/app/components/ErrorElement'
 import { useTraceSidebarDappUrl } from 'src/app/components/Trace/useTraceSidebarDappUrl'
 import { BaseAppContainer } from 'src/app/core/BaseAppContainer'
@@ -188,8 +189,21 @@ function useDappRequestPortListener(): void {
   }, PORT_PING_INTERVAL)
 }
 
+/**
+ * Creates a connection so that the background script can detect when the sidebar is closed and schedule an auto-lock alarm.
+ */
+function useAutoLockAlarmConnection(): void {
+  useEffect(() => {
+    const port = chrome.runtime.connect({ name: AUTO_LOCK_ALARM_NAME })
+    return () => {
+      port.disconnect()
+    }
+  }, [])
+}
+
 function SidebarWrapper(): JSX.Element {
   useDappRequestPortListener()
+  useAutoLockAlarmConnection()
   useTestnetModeForLoggingAndAnalytics()
 
   const resetUnitagsQueries = useResetUnitagsQueries()

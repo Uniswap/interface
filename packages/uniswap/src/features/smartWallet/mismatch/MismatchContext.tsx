@@ -1,7 +1,6 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { MismatchAccountEffects } from 'uniswap/src/features/smartWallet/mismatch/MismatchAccountEffects'
 import type {
   HasMismatchInput,

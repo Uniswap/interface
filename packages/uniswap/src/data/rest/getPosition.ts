@@ -2,8 +2,8 @@ import { PartialMessage } from '@bufbuild/protobuf'
 import { ConnectError } from '@connectrpc/connect'
 import { useQuery } from '@connectrpc/connect-query'
 import { UseQueryResult } from '@tanstack/react-query'
-import { GetPositionRequest, GetPositionResponse } from '@uniswap/client-pools/dist/pools/v1/api_pb'
-import { getPosition } from '@uniswap/client-pools/dist/pools/v1/api-PoolsService_connectquery'
+import { GetPositionRequest, GetPositionResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { getPosition } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import { uniswapPostTransport } from 'uniswap/src/data/rest/base'
 
 export function useGetPositionQuery(

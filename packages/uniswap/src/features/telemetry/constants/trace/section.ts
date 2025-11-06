@@ -1,6 +1,7 @@
 export enum SectionName {
   CurrencyInputPanel = 'currency-input-panel',
   CurrencyOutputPanel = 'currency-output-panel',
+  DisputeTokenWarning = 'dispute-token-warning',
   ExploreFavoriteTokensSection = 'explore-favorite-tokens-section',
   ExploreSearch = 'explore-search',
   ExploreTopTokensSection = 'explore-top-tokens-section',
@@ -16,6 +17,7 @@ export enum SectionName {
   ProfileActivityTab = 'profile-activity-tab',
   ProfileNftsTab = 'profile-nfts-tab',
   ProfileTokensTab = 'profile-tokens-tab',
+  PortfolioNftsTab = 'portfolio-nfts-tab',
   SwapCurrencyInput = 'swap-currency-input',
   SwapCurrencyOutput = 'swap-currency-output',
   SwapForm = 'swap-form',

@@ -14,13 +14,6 @@ import {
   prepareAndSignSwapSaga,
   prepareAndSignSwapSagaName,
 } from 'wallet/src/features/transactions/swap/configuredSagas'
-import { swapActions, swapReducer, swapSaga, swapSagaName } from 'wallet/src/features/transactions/swap/swapSaga'
-import {
-  tokenWrapActions,
-  tokenWrapReducer,
-  tokenWrapSaga,
-  tokenWrapSagaName,
-} from 'wallet/src/features/transactions/swap/wrapSaga'
 import {
   editAccountActions,
   editAccountReducer,
@@ -60,18 +53,6 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
     wrappedSaga: executeSwapSaga,
     reducer: executeSwapReducer,
     actions: executeSwapActions,
-  },
-  [swapSagaName]: {
-    name: swapSagaName,
-    wrappedSaga: swapSaga,
-    reducer: swapReducer,
-    actions: swapActions,
-  },
-  [tokenWrapSagaName]: {
-    name: tokenWrapSagaName,
-    wrappedSaga: tokenWrapSaga,
-    reducer: tokenWrapReducer,
-    actions: tokenWrapActions,
   },
   [removeDelegationSagaName]: {
     name: removeDelegationSagaName,

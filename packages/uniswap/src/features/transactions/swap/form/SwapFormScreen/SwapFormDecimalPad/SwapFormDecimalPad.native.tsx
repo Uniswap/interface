@@ -1,10 +1,16 @@
 import type { MutableRefObject, RefObject } from 'react'
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import type { LayoutChangeEvent, TextInputProps } from 'react-native'
 import { type ButtonProps, Flex, type FlexProps } from 'ui/src'
-import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
+import {
+  AmountInputPresets,
+  PRESET_BUTTON_PROPS,
+} from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
+import { PresetAmountButton } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/PresetAmountButton'
 import type { PresetPercentage } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/types'
+import { PRESET_PERCENTAGES } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/utils'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import type { DecimalPadInputRef } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
 import {
   DecimalPadCalculatedSpaceId,
@@ -122,6 +128,21 @@ function SwapFormDecimalPadContent({
     setAdditionalElementsHeight(event.nativeEvent.layout.height)
   })
 
+  const renderPreset = useCallback(
+    (preset: PresetPercentage) => (
+      <PresetAmountButton
+        percentage={preset}
+        currencyAmount={currencyAmounts[CurrencyField.INPUT]}
+        currencyBalance={currencyBalances[CurrencyField.INPUT]}
+        currencyField={CurrencyField.INPUT}
+        elementName={ElementName.PresetPercentage}
+        buttonProps={{ ...PRESET_BUTTON_PROPS, ...AMOUNT_INPUT_PRESET_BUTTON_PROPS }}
+        onSetPresetValue={onSetPresetValue}
+      />
+    ),
+    [currencyAmounts[CurrencyField.INPUT], currencyBalances[CurrencyField.INPUT], onSetPresetValue],
+  )
+
   return (
     <>
       <DecimalPadCalculateSpace
@@ -154,10 +175,8 @@ function SwapFormDecimalPadContent({
               flex={1}
               gap="$gap8"
               pb="$padding16"
-              currencyAmount={currencyAmounts[CurrencyField.INPUT]}
-              currencyBalance={currencyBalances[CurrencyField.INPUT]}
-              buttonProps={AMOUNT_INPUT_PRESET_BUTTON_PROPS}
-              onSetPresetValue={onSetPresetValue}
+              presets={PRESET_PERCENTAGES}
+              renderPreset={renderPreset}
               onLayout={onAmountInputPresetsLayout}
             />
           )}

@@ -8,15 +8,15 @@ import {
   UploadFrequency,
 } from '@datadog/mobile-react-native'
 import { ErrorEventMapper } from '@datadog/mobile-react-native/lib/typescript/rum/eventMappers/errorEventMapper'
-import { PropsWithChildren, default as React, useEffect, useState } from 'react'
-import { DatadogContext } from 'src/features/datadog/DatadogContext'
-import { config } from 'uniswap/src/config'
 import {
   DatadogIgnoredErrorsConfigKey,
   DatadogIgnoredErrorsValType,
   DynamicConfigs,
-} from 'uniswap/src/features/gating/configs'
-import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+  getDynamicConfigValue,
+} from '@universe/gating'
+import { PropsWithChildren, default as React, useEffect, useState } from 'react'
+import { DatadogContext } from 'src/features/datadog/DatadogContext'
+import { config } from 'uniswap/src/config'
 import { datadogEnabledBuild, isTestRun, localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { setAttributesToDatadog } from 'utilities/src/logger/datadog/Datadog'
 import { getDatadogEnvironment } from 'utilities/src/logger/datadog/env'

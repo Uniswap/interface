@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { TradingApi } from '@universe/api'
 import { getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
 import { getProtocolItems } from 'components/Liquidity/utils/protocolVersion'

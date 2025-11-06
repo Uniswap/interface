@@ -1,6 +1,4 @@
-import { ExperimentProperties } from 'uniswap/src/features/gating/experiments'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getExperimentValue, getFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { ExperimentProperties, FeatureFlags, getExperimentValue, getFeatureFlag } from '@universe/gating'
 import { FeatureFlagService } from 'wallet/src/features/transactions/executeTransaction/services/featureFlagService'
 
 export const createFeatureFlagService = (): FeatureFlagService => {

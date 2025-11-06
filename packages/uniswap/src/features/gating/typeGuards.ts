@@ -1,6 +1,6 @@
 import { GraphQLApi } from '@universe/api'
+import { UwULinkAllowlist } from '@universe/gating'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { UwULinkAllowlist } from 'uniswap/src/features/gating/configs'
 
 export const isUwULinkAllowlistType = (x: unknown): x is UwULinkAllowlist => {
   const hasFields =

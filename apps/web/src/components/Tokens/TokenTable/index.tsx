@@ -31,7 +31,7 @@ import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtomValue } from 'jotai/utils'
 import { memo, ReactElement, ReactNode, useMemo } from 'react'
 import { Trans } from 'react-i18next'
-import { giveExploreStatDefaultValue, TABLE_PAGE_SIZE } from 'state/explore'
+import { TABLE_PAGE_SIZE } from 'state/explore'
 import { useTopTokens as useRestTopTokens } from 'state/explore/topTokens'
 import { TokenStat } from 'state/explore/types'
 import { Flex, styled, Text, useMedia, View } from 'ui/src'
@@ -42,7 +42,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { NumberType } from 'utilities/src/format/types'
+import { FiatNumberType, NumberType } from 'utilities/src/format/types'
 import { getChainIdFromChainUrlParam } from 'utils/chainParams'
 
 const TableWrapper = styled(Flex, {
@@ -53,11 +53,11 @@ const TableWrapper = styled(Flex, {
 interface TokenTableValue {
   index: number
   tokenDescription: ReactElement
-  price: number
+  price: string
   percentChange1hr: ReactElement
   percentChange1d: ReactElement
-  fdv: number
-  volume: number
+  fdv: string
+  volume: string
   sparkline: ReactElement
   link: string
   /** Used for pre-loading TDP with logo to extract color from */
@@ -178,10 +178,14 @@ function TokenTable({
         const chainId = getChainIdFromChainUrlParam(token.chain.toLowerCase())
         const unwrappedToken = chainId ? unwrapToken(chainId, token) : token
 
+        const parseAmount = (amount: number | undefined, type: FiatNumberType): string => {
+          return amount ? convertFiatAmountFormatted(amount, type) : '-'
+        }
+
         return {
           index: tokenSortIndex,
           tokenDescription: <TokenDescription token={unwrappedToken} />,
-          price: giveExploreStatDefaultValue(token.price?.value),
+          price: parseAmount(token.price?.value, NumberType.FiatTokenPrice),
           testId: `${TestID.TokenTableRowPrefix}${unwrappedToken.address}`,
           percentChange1hr: (
             <Flex row gap="$gap4" alignItems="center">
@@ -195,8 +199,8 @@ function TokenTable({
               <TableText>{formatPercent(delta1dAbs)}</TableText>
             </Flex>
           ),
-          fdv: giveExploreStatDefaultValue(token.fullyDilutedValuation?.value),
-          volume: giveExploreStatDefaultValue(token.volume?.value),
+          fdv: parseAmount(token.fullyDilutedValuation?.value, NumberType.FiatTokenStats),
+          volume: parseAmount(token.volume?.value, NumberType.FiatTokenStats),
           sparkline: (
             <SparklineChart
               width={80}
@@ -226,7 +230,16 @@ function TokenTable({
           linkState: { preloadedLogoSrc: token.logo },
         }
       }) ?? [],
-    [defaultChainId, filterString, formatPercent, sparklines, timePeriod, tokenSortRank, tokens],
+    [
+      convertFiatAmountFormatted,
+      defaultChainId,
+      filterString,
+      formatPercent,
+      sparklines,
+      timePeriod,
+      tokenSortRank,
+      tokens,
+    ],
   )
 
   const showLoadingSkeleton = loading || !!error
@@ -285,9 +298,7 @@ function TokenTable({
           <Cell loading={showLoadingSkeleton} testId={TestID.PriceCell} justifyContent="flex-end">
             <TableText>
               {/* A simple 0 price indicates the price is not currently available from the api */}
-              {price.getValue?.() === 0
-                ? '-'
-                : convertFiatAmountFormatted(price.getValue?.(), NumberType.FiatTokenPrice)}
+              {price.getValue?.()}
             </TableText>
           </Cell>
         ),
@@ -342,7 +353,7 @@ function TokenTable({
         ),
         cell: (fdv) => (
           <Cell loading={showLoadingSkeleton} justifyContent="flex-end" testId={TestID.FdvCell}>
-            <EllipsisText>{convertFiatAmountFormatted(fdv.getValue?.(), NumberType.FiatTokenStats)}</EllipsisText>
+            <EllipsisText>{fdv.getValue?.()}</EllipsisText>
           </Cell>
         ),
       }),
@@ -360,7 +371,7 @@ function TokenTable({
         ),
         cell: (volume) => (
           <Cell loading={showLoadingSkeleton} grow testId={TestID.VolumeCell}>
-            <EllipsisText>{convertFiatAmountFormatted(volume.getValue?.(), NumberType.FiatTokenStats)}</EllipsisText>
+            <EllipsisText>{volume.getValue?.()}</EllipsisText>
           </Cell>
         ),
       }),
@@ -379,7 +390,7 @@ function TokenTable({
     ]
 
     return filteredColumns.filter((column): column is NonNullable<(typeof filteredColumns)[number]> => Boolean(column))
-  }, [convertFiatAmountFormatted, orderDirection, showLoadingSkeleton, sortMethod, media])
+  }, [orderDirection, showLoadingSkeleton, sortMethod, media])
 
   return (
     <Table

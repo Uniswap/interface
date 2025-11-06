@@ -4,6 +4,7 @@ import { PersistedStorage } from 'wallet/src/utils/persistedStorage'
 
 export type BiometricUnlockStorageData = {
   credentialId: string
+  transports: AuthenticatorTransport[]
   secretPayload: Omit<SecretPayload, 'ciphertext'> & { ciphertext: string }
 }
 

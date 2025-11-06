@@ -1,5 +1,5 @@
 import { POPUP_MAX_WIDTH } from 'components/Popups/constants'
-import { Flex, Text, TouchableArea, useShadowPropsMedium } from 'ui/src'
+import { Flex, FlexProps, Text, TouchableArea, useShadowPropsMedium } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { spacing } from 'ui/src/theme'
 
@@ -8,10 +8,12 @@ export function ToastRegularSimple({
   icon,
   text,
   onDismiss,
+  width,
 }: {
   icon?: JSX.Element
   text?: string | JSX.Element
   onDismiss?: () => void
+  width?: FlexProps['width']
 }): JSX.Element {
   const shadowProps = useShadowPropsMedium()
   const isToastOneLine = typeof text === 'string'
@@ -31,7 +33,7 @@ export function ToastRegularSimple({
       {...shadowProps}
       p="$spacing12"
       position="relative"
-      width={POPUP_MAX_WIDTH}
+      width={width ?? POPUP_MAX_WIDTH}
       opacity={1}
       $sm={{
         maxWidth: '100%',
@@ -40,7 +42,7 @@ export function ToastRegularSimple({
     >
       <Flex row alignItems={isToastOneLine ? 'center' : 'flex-start'} gap={spacing.spacing6} flex={1}>
         {icon && <Flex>{icon}</Flex>}
-        {text ? isToastOneLine ? <Text variant="body4">{text}</Text> : text : null}
+        {text ? isToastOneLine ? <Text variant="body3">{text}</Text> : text : null}
       </Flex>
       {onDismiss ? (
         <TouchableArea onPress={onDismiss} ml="$spacing8">

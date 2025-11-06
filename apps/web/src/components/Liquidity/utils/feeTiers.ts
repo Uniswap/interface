@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { DYNAMIC_FEE_DATA, DynamicFeeData, FeeData } from 'components/Liquidity/Create/types'
@@ -26,7 +26,10 @@ export function calculateTickSpacingFromFeeAmount(feeAmount: number): number {
   return Math.max(Math.round((2 * feeAmount) / 100), 1)
 }
 
-export function getFeeTierKey(feeTier: number, isDynamicFee: boolean): string {
+export function getFeeTierKey(feeTier?: number, isDynamicFee?: boolean): string | undefined {
+  if (feeTier === undefined) {
+    return undefined
+  }
   return feeTier + (isDynamicFee ? '-dynamic' : '')
 }
 
@@ -68,16 +71,18 @@ export function mergeFeeTiers({
     }
 
     const key = getFeeTierKey(feeTier.feeAmount, isDynamicFeeTier(feeTier))
-    result[key] = {
-      fee: feeTier,
-      formattedFee: isDynamicFeeTier(feeTier)
-        ? formattedDynamicFeeTier
-        : formatPercent(feeTier.feeAmount / BIPS_BASE, MAX_FEE_TIER_DECIMALS),
-      totalLiquidityUsd: 0,
-      percentage: new Percent(0, 100),
-      created: false,
-      tvl: '0',
-    } satisfies FeeTierData
+    if (key) {
+      result[key] = {
+        fee: feeTier,
+        formattedFee: isDynamicFeeTier(feeTier)
+          ? formattedDynamicFeeTier
+          : formatPercent(feeTier.feeAmount / BIPS_BASE, MAX_FEE_TIER_DECIMALS),
+        totalLiquidityUsd: 0,
+        percentage: new Percent(0, 100),
+        created: false,
+        tvl: '0',
+      } satisfies FeeTierData
+    }
   }
 
   return { ...result, ...feeTiers }
@@ -227,8 +232,8 @@ export function getDefaultFeeTiersWithData({
 }
 /* eslint-enable @typescript-eslint/no-unnecessary-condition */
 
-export function isDynamicFeeTier(feeData: FeeData): feeData is DynamicFeeData {
-  return feeData.isDynamic || feeData.feeAmount === DYNAMIC_FEE_DATA.feeAmount
+export function isDynamicFeeTier(feeData?: FeeData): feeData is DynamicFeeData {
+  return feeData?.isDynamic || feeData?.feeAmount === DYNAMIC_FEE_DATA.feeAmount
 }
 
 const sortFeeTiersByTvl = (a: { tvl: string }, b: { tvl: string }) => {

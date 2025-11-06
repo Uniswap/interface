@@ -1,14 +1,13 @@
 import { ProtocolStatsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
+import { useFeatureFlagWithLoading } from '@universe/gating'
 import { ExploreContext } from 'state/explore'
 import { use24hProtocolVolume, useDailyTVLWithChange } from 'state/explore/protocolStats'
 import { render, screen } from 'test-utils/render'
-import * as GatingHooks from 'uniswap/src/features/gating/hooks'
 import type { Mock } from 'vitest'
 
-vi.mock('uniswap/src/features/gating/hooks', async () => {
-  const actual = await vi.importActual('uniswap/src/features/gating/hooks')
+vi.mock('@universe/gating', async (importOriginal) => {
   return {
-    ...actual,
+    ...(await importOriginal()),
     useFeatureFlagWithLoading: vi.fn(() => ({ value: true, isLoading: false })), // Ensure mock returns value immediately
   }
 })
@@ -57,7 +56,7 @@ const TestComponent24HrTVL = () => {
 }
 
 beforeEach(() => {
-  ;(GatingHooks.useFeatureFlagWithLoading as Mock).mockReturnValue({ value: true, isLoading: false })
+  ;(useFeatureFlagWithLoading as Mock).mockReturnValue({ value: true, isLoading: false })
 })
 
 describe('use24hProtocolVolume', () => {

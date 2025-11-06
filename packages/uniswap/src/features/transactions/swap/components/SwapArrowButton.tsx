@@ -3,7 +3,10 @@ import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { PRESS_SCALE } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/constants'
 import { iconSizes } from 'ui/src/theme'
 
-type SwapArrowButtonProps = Pick<TouchableAreaProps, 'disabled' | 'testID' | 'onPress' | 'backgroundColor'> & {
+type SwapArrowButtonProps = Pick<
+  TouchableAreaProps,
+  'disabled' | 'testID' | 'onPress' | 'backgroundColor' | 'opacity'
+> & {
   iconSize?: number
 }
 
@@ -11,6 +14,7 @@ const hoverStyle: FlexProps['hoverStyle'] = { backgroundColor: '$surface2Hovered
 
 export function SwapArrowButton({
   backgroundColor = '$surface2',
+  opacity = undefined,
   iconSize = iconSizes.icon24,
   disabled,
   onPress,
@@ -30,6 +34,7 @@ export function SwapArrowButton({
       hoverStyle={hoverStyle}
       disabled={disabled}
       testID={testID}
+      opacity={opacity}
       onPress={onPress}
     >
       <Arrow color={colors.neutral1.val} direction="s" size={iconSize} />

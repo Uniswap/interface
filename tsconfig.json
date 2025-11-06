@@ -36,6 +36,12 @@
     },
     {
       "path": "./tools/uniswap-nx"
+    },
+    {
+      "path": "./packages/gating"
+    },
+    {
+      "path": "./packages/notifications"
     }
   ]
 }

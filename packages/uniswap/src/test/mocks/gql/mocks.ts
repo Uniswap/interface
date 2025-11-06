@@ -28,6 +28,8 @@ export const mocks = {
     symbol: () => faker.lorem.word(),
     protectionInfo: () => ({ result: randomEnumValue(GraphQLApi.ProtectionResult), attackTypes: [] }),
     feeData: () => ({ buyFeeBps: '', sellFeeBps: '' }),
+    isBridged: () => null,
+    bridgedWithdrawalInfo: () => null,
   },
   Amount: {
     id: () => faker.datatype.uuid(),

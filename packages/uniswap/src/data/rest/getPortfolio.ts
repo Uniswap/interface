@@ -15,7 +15,6 @@ import {
   cleanupCaughtUpOverrides,
   getOverridesForAddress,
   getOverridesForQuery,
-  getPortfolioQueryApolloClient,
   getPortfolioQueryReduxStore,
 } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -107,9 +106,8 @@ export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
 
       try {
         const reduxStore = getPortfolioQueryReduxStore()
-        const apolloClient = getPortfolioQueryApolloClient()
 
-        if (!reduxStore || !apolloClient) {
+        if (!reduxStore) {
           log.warn('`getPortfolioQuery` called before `initializePortfolioQueryOverrides`')
           return apiResponse
         }
@@ -150,7 +148,6 @@ export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
           })
 
           const mergedResult = await fetchAndMergeOnchainBalances({
-            apolloClient,
             cachedPortfolio: modifiedResponse.portfolio,
             accountAddress: address,
             currencyIds: overridesForCurrentAddress,

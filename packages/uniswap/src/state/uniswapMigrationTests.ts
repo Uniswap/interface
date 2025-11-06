@@ -5,7 +5,6 @@ import { PreV55SearchResultType } from 'uniswap/src/state/oldTypes'
 // Mobile: 89
 // Extension: 25
 // Web: 25
-
 export function testRemoveTHBFromCurrency(migration: (state: any) => any, prevSchema: any): void {
   const result = migration(prevSchema)
 
@@ -16,10 +15,9 @@ export function testRemoveTHBFromCurrency(migration: (state: any) => any, prevSc
   }
 }
 
-// Web: 55
 // Mobile: 93
 // Extension: 27
-
+// Web: 55
 export function testMigrateSearchHistory(migration: (state: any) => any, prevSchema: any): void {
   const result = migration(prevSchema)
 
@@ -38,4 +36,12 @@ export function testMigrateSearchHistory(migration: (state: any) => any, prevSch
       }
     }
   }
+}
+
+// Mobile: 95
+// Extension: 29
+// Web: 59
+export function testAddActivityVisibility(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+  expect(result.visibility.activity).toEqual({})
 }

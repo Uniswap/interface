@@ -1,5 +1,4 @@
-import { Experiments, ForFiltersProperties } from 'uniswap/src/features/gating/experiments'
-import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
+import { Experiments, ForFiltersProperties, useExperimentValue } from '@universe/gating'
 
 /**
  * Hook to determine if ForFilters feature should be enabled

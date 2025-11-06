@@ -1,4 +1,4 @@
-import { ONE_DAY_MS, ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { HOURS_IN_DAY, MINUTES_IN_HOUR } from 'utilities/src/time/time'
 
 export enum DeviceAccessTimeout {
   FiveMinutes = '5_MIN',
@@ -19,23 +19,23 @@ export const ORDERED_DEVICE_ACCESS_TIMEOUTS: DeviceAccessTimeout[] = [
 ]
 
 /**
- * Converts DeviceAccessTimeout enum to milliseconds for timeout calculations
+ * Converts DeviceAccessTimeout enum to minutes for timeout calculations
  * @param timeout The DeviceAccessTimeout enum value
- * @returns The timeout in milliseconds, or undefined for 'Never'
+ * @returns The timeout in minutes, or undefined for 'Never'
  */
-export function deviceAccessTimeoutToMs(timeout: DeviceAccessTimeout): number | undefined {
+export function deviceAccessTimeoutToMinutes(timeout: DeviceAccessTimeout): number | undefined {
   switch (timeout) {
     case DeviceAccessTimeout.FiveMinutes:
-      return 5 * ONE_MINUTE_MS
+      return 5
     case DeviceAccessTimeout.ThirtyMinutes:
-      return 30 * ONE_MINUTE_MS
+      return 30
     case DeviceAccessTimeout.OneHour:
-      return ONE_HOUR_MS
+      return MINUTES_IN_HOUR
     case DeviceAccessTimeout.TwentyFourHours:
-      return ONE_DAY_MS
+      return HOURS_IN_DAY * MINUTES_IN_HOUR
     case DeviceAccessTimeout.Never:
       return undefined
     default:
-      return 30 * ONE_MINUTE_MS // Default fallback to 30 minutes
+      return 30 // Default fallback to 30 minutes
   }
 }

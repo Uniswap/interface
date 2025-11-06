@@ -1,10 +1,11 @@
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
 import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
 import { useMemo } from 'react'
-import { Flex, ScrollView } from 'ui/src'
+import { Flex, Loader, ScrollView } from 'ui/src'
 import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { useInfiniteScroll } from 'utilities/src/react/useInfiniteScroll'
 
 export default function ActivityTab({
   evmOwner,
@@ -15,17 +16,24 @@ export default function ActivityTab({
 }) {
   const setMenu = useSetMenu()
 
-  const { maybeEmptyComponent, renderActivityItem, sectionData } = useActivityData({
-    evmOwner,
-    svmOwner,
-    ownerAddresses: [evmOwner, svmOwner].filter(Boolean) as string[],
-    swapCallbacks: {
-      useLatestSwapTransaction: () => undefined,
-      useSwapFormTransactionState: () => undefined,
-      onRetryGenerator: () => () => {},
-    },
-    fiatOnRampParams: undefined,
-    skip: false,
+  const { maybeEmptyComponent, renderActivityItem, sectionData, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useActivityData({
+      evmOwner,
+      svmOwner,
+      ownerAddresses: [evmOwner, svmOwner].filter(Boolean) as string[],
+      swapCallbacks: {
+        useLatestSwapTransaction: () => undefined,
+        useSwapFormTransactionState: () => undefined,
+        onRetryGenerator: () => () => {},
+      },
+      fiatOnRampParams: undefined,
+      skip: false,
+    })
+
+  const { sentinelRef } = useInfiniteScroll({
+    onLoadMore: fetchNextPage,
+    hasNextPage,
+    isFetching: isFetchingNextPage,
   })
 
   const ActivityItems = useMemo(() => {
@@ -52,6 +60,14 @@ export default function ActivityTab({
       )}
       <ScrollView showsVerticalScrollIndicator={false} width="100%">
         {ActivityItems}
+        {/* Show skeleton loading indicator while fetching next page */}
+        {isFetchingNextPage && (
+          <Flex px="$spacing8">
+            <Loader.Transaction />
+          </Flex>
+        )}
+        {/* Intersection observer sentinel for infinite scroll */}
+        <Flex ref={sentinelRef} height={1} />
       </ScrollView>
     </Flex>
   )

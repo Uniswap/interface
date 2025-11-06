@@ -1,5 +1,6 @@
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import type { Currency } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { SwapBottomCard } from 'components/SwapBottomCard'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
@@ -16,8 +17,7 @@ import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
-import { useSwapCallback } from 'state/sagas/transactions/swapSaga'
-import { useWrapCallback } from 'state/sagas/transactions/wrapSaga'
+import { useSwapHandlers } from 'state/sagas/transactions/useSwapHandlers'
 import { useInitialCurrencyState } from 'state/swap/hooks'
 import { SwapAndLimitContextProvider } from 'state/swap/SwapContext'
 import type { CurrencyState } from 'state/swap/types'
@@ -28,10 +28,8 @@ import type { AppTFunction } from 'ui/src/i18n/types'
 import { zIndexes } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useIsModeMismatch } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import type { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { WebFORNudgeProvider } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { InterfaceEventName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -49,6 +47,7 @@ import { SwapDependenciesStoreContextProvider } from 'uniswap/src/features/trans
 import { SwapFormStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContextProvider'
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { isMobileWeb } from 'utilities/src/platform'
@@ -66,7 +65,8 @@ export default function SwapPage() {
   const {
     initialInputCurrency,
     initialOutputCurrency,
-    initialChainId,
+    initialInputChainId,
+    initialOutputChainId,
     initialTypedValue,
     initialField,
     triggerConnect,
@@ -84,9 +84,10 @@ export default function SwapPage() {
       <PageWrapper>
         <WebFORNudgeProvider>
           <Swap
-            chainId={initialChainId}
+            initialInputChainId={initialInputChainId}
             initialInputCurrency={initialInputCurrency}
             initialOutputCurrency={initialOutputCurrency}
+            initialOutputChainId={initialOutputChainId}
             initialTypedValue={initialTypedValue}
             initialIndependentField={initialField}
             syncTabToUrl={true}
@@ -99,6 +100,23 @@ export default function SwapPage() {
   )
 }
 
+// If there are persisted filtered chain ids, use them. Otherwise, use the initial input and output chain ids derived from query params.
+function getFilteredChainIdsOverride({
+  initialInputChainId,
+  initialOutputChainId,
+  usePersistedFilteredChainIds,
+  persistedFilteredChainIds,
+}: {
+  initialInputChainId?: UniverseChainId
+  initialOutputChainId?: UniverseChainId
+  usePersistedFilteredChainIds?: boolean
+  persistedFilteredChainIds?: { [key in CurrencyField]?: UniverseChainId }
+}): TransactionState['filteredChainIdsOverride'] {
+  return usePersistedFilteredChainIds && !!persistedFilteredChainIds
+    ? persistedFilteredChainIds
+    : { [CurrencyField.OUTPUT]: initialOutputChainId, [CurrencyField.INPUT]: initialInputChainId }
+}
+
 /**
  * The swap component displays the swap interface, manages state for the swap, and triggers onchain swaps.
  *
@@ -109,9 +127,10 @@ export default function SwapPage() {
 export function Swap({
   initialInputCurrency,
   initialOutputCurrency,
+  initialOutputChainId,
   initialTypedValue,
   initialIndependentField,
-  chainId,
+  initialInputChainId,
   hideHeader = false,
   hideFooter = false,
   onCurrencyChange,
@@ -120,10 +139,11 @@ export function Swap({
   tokenColor,
   usePersistedFilteredChainIds = false,
 }: {
-  chainId?: UniverseChainId
+  initialInputChainId?: UniverseChainId
   onCurrencyChange?: (selected: CurrencyState) => void
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
+  initialOutputChainId?: UniverseChainId
   initialTypedValue?: string
   initialIndependentField?: CurrencyField
   syncTabToUrl: boolean
@@ -137,7 +157,7 @@ export function Swap({
   const { isSwapTokenSelectorOpen, swapOutputChainId } = useUniswapContext()
 
   const isExplorePage = useIsPage(PageType.EXPLORE)
-  const isModeMismatch = useIsModeMismatch(chainId)
+  const isModeMismatch = useIsModeMismatch(initialInputChainId)
   const isSharedSwapDisabled = isModeMismatch && isExplorePage
 
   const input = currencyToAsset(initialInputCurrency)
@@ -153,11 +173,16 @@ export function Swap({
     selectingCurrencyField: isSwapTokenSelectorOpen ? CurrencyField.OUTPUT : undefined,
     selectingCurrencyChainId: swapOutputChainId,
     skipFocusOnCurrencyField: isMobileWeb,
-    filteredChainIdsOverride: usePersistedFilteredChainIds ? persistedFilteredChainIds : undefined,
+    filteredChainIdsOverride: getFilteredChainIdsOverride({
+      initialInputChainId,
+      initialOutputChainId,
+      usePersistedFilteredChainIds,
+      persistedFilteredChainIds,
+    }),
   })
 
   return (
-    <MultichainContextProvider initialChainId={chainId}>
+    <MultichainContextProvider initialChainId={initialInputChainId ?? UniverseChainId.Mainnet}>
       <SwapTransactionSettingsStoreContextProvider>
         <SwapAndLimitContextProvider
           initialInputCurrency={initialInputCurrency}
@@ -233,8 +258,7 @@ function UniversalSwapFlow({
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const swapCallback = useSwapCallback()
-  const wrapCallback = useWrapCallback()
+  const swapHandlers = useSwapHandlers()
 
   const LimitFormWrapper = useDeferredComponent(() =>
     import('pages/Swap/Limit/LimitForm').then((module) => ({
@@ -320,7 +344,7 @@ function UniversalSwapFlow({
       )}
       {currentTab === SwapTab.Swap && (
         <Flex gap="$spacing16">
-          <SwapDependenciesStoreContextProvider swapCallback={swapCallback} wrapCallback={wrapCallback}>
+          <SwapDependenciesStoreContextProvider swapHandlers={swapHandlers}>
             <SwapFlow
               settings={swapSettings}
               hideHeader={hideHeader}

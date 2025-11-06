@@ -1,6 +1,7 @@
 #import "AppDelegate.h"
 
 #import <Firebase.h>
+#import <UserNotifications/UserNotifications.h>
 
 #import "Uniswap-Swift.h"
 
@@ -126,6 +127,18 @@ static NSString *const hasLaunchedOnceKey = @"HasLaunchedOnce";
   }
 
   return YES;
+}
+
+- (void)application:(UIApplication *)application
+    didReceiveRemoteNotification:(NSDictionary *)userInfo
+          fetchCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler
+{
+  NSDictionary *aps = userInfo[@"aps"];
+  NSNumber *contentAvailable = aps[@"content-available"] ?: aps[@"content_available"];
+  if (contentAvailable != nil && contentAvailable.integerValue == 1) {
+    [SilentPushEventEmitter emitEventWithPayload:userInfo ?: @{}];
+  }
+  completionHandler(UIBackgroundFetchResultNoData);
 }
 
 @end

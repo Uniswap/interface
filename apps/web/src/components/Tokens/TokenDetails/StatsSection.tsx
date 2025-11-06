@@ -2,10 +2,13 @@ import { TokenQueryData } from 'appGraphql/data/Token'
 import { TokenSortMethod } from 'components/Tokens/state'
 import { HEADER_DESCRIPTIONS } from 'components/Tokens/TokenTable'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { ReactNode } from 'react'
+import { useTDPContext } from 'pages/TokenDetails/TDPContext'
+import { ReactNode, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, FlexProps, Text } from 'ui/src'
+import { useTokenMarketStats } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 
 export const StatWrapper = ({ children, ...props }: { children: ReactNode } & FlexProps) => (
@@ -75,16 +78,20 @@ type StatsSectionProps = {
 export default function StatsSection(props: StatsSectionProps) {
   const { tokenQueryData } = props
   const { t } = useTranslation()
+  const { currency } = useTDPContext()
 
-  const tokenMarketInfo = tokenQueryData?.market
-  const tokenProjectMarketInfo = tokenQueryData?.project?.markets?.[0] // aggregated market price from CoinGecko
+  // Construct currencyId for shared hooks
+  const currencyIdValue = useMemo(() => currencyId(currency), [currency])
 
-  const FDV = tokenProjectMarketInfo?.fullyDilutedValuation?.value
-  const marketCap = tokenProjectMarketInfo?.marketCap?.value
-  const TVL = tokenMarketInfo?.totalValueLocked?.value
-  const volume24H = tokenMarketInfo?.volume24H?.value
+  // Use shared hook for unified data fetching (CoinGecko-first strategy)
+  const { marketCap, fdv } = useTokenMarketStats(currencyIdValue)
 
-  const hasStats = TVL || FDV || marketCap || volume24H
+  // Volume and TVL come from tokenQueryData to avoid fragment timing issues
+  // These are already loaded with the main TokenWebQuery
+  const volume = tokenQueryData?.market?.volume24H?.value
+  const tvl = tokenQueryData?.market?.totalValueLocked?.value
+
+  const hasStats = tvl || fdv || marketCap || volume
 
   if (hasStats) {
     return (
@@ -96,7 +103,7 @@ export default function StatsSection(props: StatsSectionProps) {
           <StatPair>
             <Stat
               testID="tvl"
-              value={TVL}
+              value={tvl}
               description={t('stats.tvl.description')}
               title={t('common.totalValueLocked')}
             />
@@ -110,13 +117,13 @@ export default function StatsSection(props: StatsSectionProps) {
           <StatPair>
             <Stat
               testID="fdv"
-              value={FDV}
+              value={fdv}
               description={HEADER_DESCRIPTIONS[TokenSortMethod.FULLY_DILUTED_VALUATION]}
               title={t('stats.fdv')}
             />
             <Stat
               testID="volume-24h"
-              value={volume24H}
+              value={volume}
               description={t('stats.volume.1d.description')}
               title={t('stats.volume.1d')}
             />

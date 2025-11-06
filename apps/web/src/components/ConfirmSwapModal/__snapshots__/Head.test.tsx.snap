@@ -28,11 +28,11 @@ exports[`ConfirmSwapModal/Head > should render correctly for a Limit order 1`] =
           target="_blank"
         >
           <div
-            class="_backgroundColor-0hover-surface2Hov3121676 _width-_platformweb_fit-content _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665589 _pb-t-space-spa94665589 _backgroundColor-surface2 _gap-t-space-spa94665589 _alignItems-center"
+            class="_backgroundColor-0hover-surface3Hov3121676 _width-_platformweb_fit-content _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665591 _pb-t-space-spa94665591 _gap-t-space-spa94665589 _alignItems-center _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
           >
             <svg
               stroke-width="8"
-              style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+              style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
               viewBox="0 0 16 16"
             >
               <path
@@ -41,7 +41,7 @@ exports[`ConfirmSwapModal/Head > should render correctly for a Limit order 1`] =
               />
             </svg>
             <span
-              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+              class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-me3083741"
               data-disable-theme="true"
             >
               Get help
@@ -106,11 +106,11 @@ exports[`ConfirmSwapModal/Head > should render correctly for a classic swap 1`] 
           target="_blank"
         >
           <div
-            class="_backgroundColor-0hover-surface2Hov3121676 _width-_platformweb_fit-content _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665589 _pb-t-space-spa94665589 _backgroundColor-surface2 _gap-t-space-spa94665589 _alignItems-center"
+            class="_backgroundColor-0hover-surface3Hov3121676 _width-_platformweb_fit-content _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _pr-t-space-spa94665593 _pl-t-space-spa94665593 _pt-t-space-spa94665591 _pb-t-space-spa94665591 _gap-t-space-spa94665589 _alignItems-center _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
           >
             <svg
               stroke-width="8"
-              style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+              style="width: 16px; height: 16px; color: rgb(19, 19, 19);"
               viewBox="0 0 16 16"
             >
               <path
@@ -119,7 +119,7 @@ exports[`ConfirmSwapModal/Head > should render correctly for a classic swap 1`] 
               />
             </svg>
             <span
-              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+              class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-me3083741"
               data-disable-theme="true"
             >
               Get help

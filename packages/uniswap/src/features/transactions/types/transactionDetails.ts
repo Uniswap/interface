@@ -312,6 +312,9 @@ export interface BaseTransactionInfo {
   isSmartWalletTransaction?: boolean
 }
 
+export const INFINITE_APPROVAL_AMOUNT = 'INF'
+export const REVOKE_APPROVAL_AMOUNT = '0.0'
+
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Approve
   tokenAddress: string

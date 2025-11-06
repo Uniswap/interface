@@ -50,32 +50,20 @@ export const NewAddressSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendM
       isOpen={isOpen}
       onClose={onDismiss}
       icon={<UserIcon fill={colors.neutral2.val} width={28} height={28} />}
-      hasIconBackground
+      iconBackgroundColor="$surface3"
       title={t('speedBump.newAddress.warning.title')}
       subtext={t('speedBump.newAddress.warning.description')}
       modalName={ModalName.NewAddressSpeedBump}
       primaryButtonText={t('common.button.close')}
-      primaryButtonOnClick={onDismiss}
+      primaryButtonOnPress={onDismiss}
       primaryButtonVariant="default"
       primaryButtonEmphasis="secondary"
       secondaryButtonText={t('common.button.continue')}
-      secondaryButtonOnClick={onConfirm}
+      secondaryButtonOnPress={onConfirm}
       secondaryButtonVariant="branded"
       displayHelpCTA
-      buttonContainerProps={{
-        flexDirection: 'row',
-      }}
     >
-      <Flex
-        centered
-        borderWidth="$spacing1"
-        borderColor="$surface3"
-        borderRadius="$rounded20"
-        py="$padding20"
-        width="100%"
-      >
-        <RecipientDisplay recipientData={recipientData} />
-      </Flex>
+      <RecipientDisplay recipientData={recipientData} />
     </Dialog>
   )
 }

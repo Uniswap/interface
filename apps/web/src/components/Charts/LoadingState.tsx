@@ -1,14 +1,13 @@
 import { ChartType } from 'components/Charts/utils'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { MissingDataIcon } from 'components/Table/icons'
+import { ChartBarCrossedWithBackground } from 'components/Table/ErrorBox'
 import styled, { useTheme } from 'lib/styled-components'
 import { lighten } from 'polished'
 import { PropsWithChildren, ReactNode } from 'react'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
-import { Flex } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 
 const ChartErrorContainer = styled(Row)`
@@ -34,9 +33,7 @@ const ErrorTextColumn = styled(Column)`
 export function ChartErrorView({ children }: PropsWithChildren) {
   return (
     <ChartErrorContainer data-cy="chart-error-view">
-      <Flex>
-        <MissingDataIcon />
-      </Flex>
+      <ChartBarCrossedWithBackground />
       <ErrorTextColumn gap="xs">
         <ThemedText.SubHeader color="neutral1">
           <Trans i18nKey="chart.missingData" />

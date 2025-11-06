@@ -11,7 +11,8 @@ export type GqlTokenToCurrencyInfoToken = Omit<NonNullable<NonNullable<GraphQLAp
 }
 
 export function gqlTokenToCurrencyInfo(token: GqlTokenToCurrencyInfoToken): CurrencyInfo | null {
-  const { name, chain, address, decimals, symbol, project, feeData, protectionInfo } = token
+  const { name, chain, address, decimals, symbol, project, feeData, protectionInfo, isBridged, bridgedWithdrawalInfo } =
+    token
   const chainId = fromGraphQLChain(chain)
 
   const currency = buildCurrency({
@@ -36,5 +37,7 @@ export function gqlTokenToCurrencyInfo(token: GqlTokenToCurrencyInfoToken): Curr
     // defaulting to not spam. currently this flow triggers when a user is searching
     // for a token, in which case the user probably doesn't expect the token to be spam
     isSpam: project?.isSpam ?? false,
+    isBridged,
+    bridgedWithdrawalInfo,
   })
 }

@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { PropsWithChildren, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native'
@@ -13,8 +14,6 @@ import { ActionCard, ActionCardItem } from 'uniswap/src/components/misc/ActionCa
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ImageUri } from 'uniswap/src/components/nfts/images/ImageUri'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { usePortfolioEmptyStateBackground } from 'wallet/src/components/portfolio/empty'
 

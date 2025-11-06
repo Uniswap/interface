@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmZmRjJXcRL1HVbuFBLX23qqmQydzmqGsLmb94qrqTU9A7`
-- CIDv1: `bafybeifjzfti2rq27be42zfwqnturszxqyecs4zxklxxr4pejgcgi72eja`
+- CIDv0: `QmNMoMSDQVQwUdfxLqhLpM4bKgGMyEHU2LU2RfDFaRqACc`
+- CIDv1: `bafybeiaajnnkurqabznrl32buiydbsym77nt2np3d5xv5mgskkd6euk3au`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,65 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeifjzfti2rq27be42zfwqnturszxqyecs4zxklxxr4pejgcgi72eja.ipfs.dweb.link/
-- [ipfs://QmZmRjJXcRL1HVbuFBLX23qqmQydzmqGsLmb94qrqTU9A7/](ipfs://QmZmRjJXcRL1HVbuFBLX23qqmQydzmqGsLmb94qrqTU9A7/)
+- https://bafybeiaajnnkurqabznrl32buiydbsym77nt2np3d5xv5mgskkd6euk3au.ipfs.dweb.link/
+- [ipfs://QmNMoMSDQVQwUdfxLqhLpM4bKgGMyEHU2LU2RfDFaRqACc/](ipfs://QmNMoMSDQVQwUdfxLqhLpM4bKgGMyEHU2LU2RfDFaRqACc/)
 
-## 5.115.0 (2025-10-24)
+## 5.117.0 (2025-11-05)
 
 
 ### Features
 
-* **web:** special case metamask dual vm connection flow (#24756) (#24789) b21eafd
+* **web:** add activity items to new mini portfolio (#24822) f0994c6
+* **web:** add infinite scroll for portfolio activity table (#24691) d71921f
+* **web:** add infinite scroll to minip on web activity (#23352) 78d6dcb
+* **web:** add NFT context menu (#24791) 10ed3e4
+* **web:** add report position option to context menus (#24840) b587dfc
+* **web:** add report position option to PDP (#24841) 97d0b94
+* **web:** add toast on report (#24717) 65c8cd6
+* **web:** add web entry points for token reporting (#24714) b83cb90
+* **web:** block timestamp countdown (#24632) 6a1da1d
+* **web:** dialog content container + spacing tweaks (#24239) 035026d
+* **web:** portfolio Overview tab (#24737) ed3f451
+* **web:** stub out new mini portfolio behind flag (#24821) 0602da3
+* **web:** toucan auction status (#24866) 0d9d56b
+* **web:** use shared token details hooks with unified 24hr change (#24726) 501d754
+
+
+### Bug Fixes
+
+* **web:** calculate fiat delta from API percentage for multi-chain tokens (#24728) 36f4c68
+* **web:** data reporting abilities fixes (#25130) 9246200
+* **web:** default to mainnet for limits flow (#24884) 666bdb0
+* **web:** fix issue with listpools endpoint returning an error (#25141) 62f132b
+* **web:** fix nested scrollbar overflowY issue (#24688) 60d39f3
+* **web:** Fix non-reactive prices on explore tab (#24766) 4539d99
+* **web:** Load tokens until scrollbar appears- PORT-359 (#23085) 5a480cf
+* **web:** log interface swap finalization results for flashblocks (#24869) b800fb3
+* **web:** portfolio polishes (#24944) 6d94d95
+* **web:** position card context menu fixes and cleanup (#24839) 5568c4d
+* **web:** prevent blank loading state in swap modal 5790e16
+* **web:** remove bad import in server side worker code (#24803) 048e2a0
+* **web:** Remove unnecessary button outline on Switch (#24697) 6216bb8
+* **web:** revert table scroll update (#25113) 9d12691
+
+
+### Continuous Integration
+
+* **web:** update sitemaps c5134d4
+
+
+### Code Refactoring
+
+* **web:** Consolidate swap and wrap callbacks into useSwapHandlers (#24219) b151db3
+* **web:** Consolidate swap and wrap handlers into unified interface (#24184) 672c7be
+
+
+### Styles
+
+* **web:** apply textured background to pool details page table variants (#25040) 8381ec0
+* **web:** fix portfolio page account header scroll animation (#24953) 13aef52
+* **web:** update activity tab filter to reflect designs (#24687) 68f73cb
+* **web:** update loading skeletons for NFT Cards (#24951) d556e00
+* **web:** update price chart styles (#24773) 5f231db
 
 

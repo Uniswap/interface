@@ -92,7 +92,7 @@ export default function SettingsMenu({
             testId={TestID.LanguageSettingsButton}
           />
           <SettingsButton
-            title={t('settings.setting.smallBalances.title')}
+            title={t('settings.setting.balancesActivity.title')}
             onClick={openPortfolioBalanceSettings}
             testId="portfolio-balance-settings-button"
           />

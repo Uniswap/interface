@@ -46,9 +46,11 @@ import { isExtensionApp, isWebPlatform } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 type TransactionDetailsModalProps = {
+  transactionDetails: TransactionDetails
   authTrigger?: AuthTrigger
   onClose: () => void
-  transactionDetails: TransactionDetails
+  onReportTransaction?: () => void
+  onUnhideTransaction?: () => void
 }
 
 export function TransactionDetailsHeader({
@@ -170,9 +172,11 @@ const isNFTActivity = (typeInfo: TransactionTypeInfo): boolean => {
 }
 
 export function TransactionDetailsModal({
+  transactionDetails,
   authTrigger,
   onClose,
-  transactionDetails,
+  onReportTransaction,
+  onUnhideTransaction,
 }: TransactionDetailsModalProps): JSX.Element {
   const { t } = useTranslation()
   const { typeInfo, status, addedTime } = transactionDetails
@@ -189,8 +193,11 @@ export function TransactionDetailsModal({
   const isCancelable = useIsCancelable(transactionDetails) && !readonly
 
   const transactionActions = useTransactionActions({
-    authTrigger,
     transaction: transactionDetails,
+    authTrigger,
+    onClose,
+    onReportTransaction,
+    onUnhideTransaction,
   })
 
   const { openCancelModal, renderModals, menuItems } = transactionActions

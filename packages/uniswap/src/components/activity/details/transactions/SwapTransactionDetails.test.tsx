@@ -51,7 +51,8 @@ jest.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   },
 }))
 
-jest.mock('uniswap/src/features/gating/hooks', () => ({
+jest.mock('@universe/gating', () => ({
+  ...jest.requireActual('@universe/gating'),
   useDynamicConfigValue: jest
     .fn()
     .mockImplementation(({ defaultValue }: { config: unknown; key: unknown; defaultValue: unknown }) => {

@@ -848,6 +848,7 @@ export class ChainedActionTrade {
   readonly indicative = false
   readonly tradeType: TradeType = TradeType.EXACT_INPUT
   readonly deadline: undefined
+  readonly priceImpact: undefined
 
   // depends on trade type. since exact input, max amount in is the input amount
   readonly maxAmountIn: CurrencyAmount<Currency>

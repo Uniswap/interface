@@ -1,11 +1,14 @@
 import { HelpContent } from 'components/HelpModal/HelpContent'
 import { useState } from 'react'
-import { Flex, Popover } from 'ui/src'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
+import { Flex, Popover, TouchableArea, useMedia } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
-export function HelpModal({ showOnMobile = false }: { showOnMobile?: boolean }) {
+export function HelpModal({ showOnXL = false }: { showOnXL?: boolean }) {
   const [isOpen, setIsOpen] = useState(false)
+  const media = useMedia()
+  const isTabletWidth = media.xl && !media.sm
 
   return (
     <Flex
@@ -14,8 +17,8 @@ export function HelpModal({ showOnMobile = false }: { showOnMobile?: boolean }) 
       }}
       bottom="$spacing20"
       left="$spacing20"
-      $sm={
-        showOnMobile
+      $xl={
+        showOnXL
           ? {
               position: 'relative',
               bottom: 0,
@@ -27,15 +30,26 @@ export function HelpModal({ showOnMobile = false }: { showOnMobile?: boolean }) 
       }
       zIndex="$modal"
     >
-      <Popover placement="top" stayInFrame allowFlip open={isOpen} onOpenChange={(open) => setIsOpen(open)}>
+      <Popover
+        placement={isTabletWidth ? 'bottom' : 'top'}
+        stayInFrame
+        allowFlip
+        open={isOpen}
+        onOpenChange={(open) => setIsOpen(open)}
+      >
         <Popover.Trigger>
-          <QuestionInCircleFilled size={20} data-testid={TestID.HelpIcon} />
+          <TouchableArea hoverable {...ClickableTamaguiStyle}>
+            <QuestionInCircleFilled size={20} data-testid={TestID.HelpIcon} />
+          </TouchableArea>
         </Popover.Trigger>
         <Popover.Content
           enterStyle={{ scale: 0.95, opacity: 0 }}
           exitStyle={{ scale: 0.95, opacity: 0 }}
+          animation="quick"
           ml="$spacing12"
           background="transparent"
+          $xl={{ ml: 0, mt: '$spacing20' }}
+          $sm={{ ml: '$spacing12' }}
         >
           <HelpContent onClose={() => setIsOpen(false)} />
         </Popover.Content>

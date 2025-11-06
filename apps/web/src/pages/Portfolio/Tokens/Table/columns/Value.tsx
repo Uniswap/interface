@@ -3,7 +3,7 @@ import { ValueWithFadedDecimals } from 'pages/Portfolio/components/ValueWithFade
 import { memo } from 'react'
 import { EM_DASH } from 'ui/src'
 
-const Value = memo(function Value({ value }: { value: string }) {
+export const Value = memo(function Value({ value }: { value: string }) {
   if (!value && value !== '0') {
     return <TableText>{EM_DASH}</TableText>
   }
@@ -11,5 +11,3 @@ const Value = memo(function Value({ value }: { value: string }) {
   return <ValueWithFadedDecimals value={value} />
 })
 Value.displayName = 'Value'
-
-export default Value

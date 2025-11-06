@@ -1,3 +1,10 @@
+// Mock expo-secure-store before any imports that might use it
+jest.mock('expo-secure-store', () => ({
+  getItemAsync: jest.fn(() => Promise.resolve(null)),
+  setItemAsync: jest.fn(() => Promise.resolve()),
+  deleteItemAsync: jest.fn(() => Promise.resolve()),
+}))
+
 import 'utilities/jest-package-mocks'
 import 'uniswap/jest-package-mocks'
 import 'config/jest-presets/ui/ui-package-mocks'

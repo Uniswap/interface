@@ -25,6 +25,7 @@ import { Trans } from 'react-i18next'
 import { Flex, styled, Text } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
+import { useFormatChartFiatDelta } from 'uniswap/src/features/fiatCurrency/hooks/useFormatChartFiatDelta'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -49,6 +50,64 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   private priceLineOptions: Partial<PriceLineOptions> | undefined
   private min: number
   private max: number
+
+  /**
+   * Gets the screen coordinates for the last data point
+   * Returns null for candlestick charts since they don't need a live dot indicator
+   */
+  getLastPointCoordinates(): { x: number; y: number } | null {
+    // Only show live dot for line charts
+    if (this.type === PriceChartType.CANDLESTICK) {
+      return null
+    }
+
+    if (this.data.length === 0) {
+      return null
+    }
+
+    const lastDataPoint = this.data[this.data.length - 1]
+    const xCoordinate = this.api.timeScale().timeToCoordinate(lastDataPoint.time)
+    const yCoordinate = this.series.priceToCoordinate((lastDataPoint as AreaData<UTCTimestamp>).value)
+
+    if (xCoordinate == null || yCoordinate == null) {
+      return null
+    }
+
+    return {
+      x: Number(xCoordinate) + this.api.priceScale('left').width(),
+      y: Number(yCoordinate),
+    }
+  }
+
+  /**
+   * Gets the screen coordinates for the hovered data point on the line
+   * Returns null if not hovering or for candlestick charts
+   */
+  override getHoverCoordinates(): { x: number; y: number } | null {
+    // Only show custom marker for line charts
+    if (this.type === PriceChartType.CANDLESTICK) {
+      return null
+    }
+
+    const hoverData = (this as any)._hoverData
+    if (!hoverData || !hoverData.item) {
+      return null
+    }
+
+    // Calculate x from time
+    const xCoordinate = this.api.timeScale().timeToCoordinate(hoverData.item.time)
+    // Calculate y from the data point's value (not mouse position)
+    const yCoordinate = this.series.priceToCoordinate((hoverData.item as AreaData<UTCTimestamp>).value)
+
+    if (xCoordinate == null || yCoordinate == null) {
+      return null
+    }
+
+    return {
+      x: Number(xCoordinate) + this.api.priceScale('left').width(),
+      y: Number(yCoordinate),
+    }
+  }
 
   constructor(chartDiv: HTMLDivElement, params: PriceChartModelParams) {
     super(chartDiv, params)
@@ -133,10 +192,6 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
           )
         },
       },
-      grid: {
-        vertLines: { style: LineStyle.CustomDotGrid, color: theme.neutral3 },
-        horzLines: { style: LineStyle.CustomDotGrid, color: theme.neutral3 },
-      },
       ...(scaleMargins && {
         rightPriceScale: {
           scaleMargins,
@@ -179,11 +234,10 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
       lineType: data.length < 20 ? LineType.WithSteps : LineType.Curved, // Stepped line is visually preferred for smaller datasets
       lineWidth: 2,
       lineColor,
-      topColor: opacify(12, lineColor),
-      bottomColor: opacify(12, lineColor),
-      crosshairMarkerRadius: 5,
-      crosshairMarkerBorderColor: opacify(30, lineColor),
-      crosshairMarkerBorderWidth: 3,
+      topColor: lineColor,
+      bottomColor: opacify(0, theme.surface1),
+      // Hide default marker - we use a custom marker instead
+      crosshairMarkerRadius: 0,
 
       // Candlestick-specific options:
       upColor: theme.success,
@@ -230,19 +284,82 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
 }
 
 interface PriceChartDeltaProps {
-  startingPrice: PriceChartData
-  endingPrice: PriceChartData
+  startingPrice: number
+  endingPrice: number
   noColor?: boolean
+  shouldIncludeFiatDelta?: boolean
+  shouldTreatAsStablecoin?: boolean
+  /** Optional 24hr price change % from API (used when not hovering to match mobile) */
+  pricePercentChange24h?: number
+  /** Whether the user is currently hovering over the chart */
+  isHovering?: boolean
 }
 
-export function PriceChartDelta({ startingPrice, endingPrice, noColor }: PriceChartDeltaProps) {
-  const delta = calculateDelta(startingPrice.close, endingPrice.close)
-  const { formatPercent } = useLocalizationContext()
+export function PriceChartDelta({
+  startingPrice,
+  endingPrice,
+  noColor,
+  shouldIncludeFiatDelta = false,
+  shouldTreatAsStablecoin = false,
+  pricePercentChange24h,
+  isHovering = false,
+}: PriceChartDeltaProps) {
+  const { formatPercent, convertFiatAmount } = useLocalizationContext()
+  const { formatChartFiatDelta } = useFormatChartFiatDelta()
+
+  // When not hovering and we have API's 24hr change, use it for consistency with mobile
+  // When hovering, calculate change from starting price to current hover point
+  const calculatedDelta = calculateDelta(startingPrice, endingPrice)
+  const delta = !isHovering && pricePercentChange24h !== undefined ? pricePercentChange24h : calculatedDelta
+
+  const formattedDelta = useMemo(() => {
+    return delta !== undefined ? formatPercent(Math.abs(delta)) : '-'
+  }, [delta, formatPercent])
+
+  const fiatDelta = useMemo(() => {
+    if (!shouldIncludeFiatDelta) {
+      return null
+    }
+
+    // When using API's 24hr percentage (not hovering), calculate fiat delta from that percentage
+    // This avoids mixing aggregated chart prices with per-chain current prices
+    if (!isHovering && pricePercentChange24h !== undefined) {
+      const convertedEnd = convertFiatAmount(endingPrice)
+      const percentAsDecimal = pricePercentChange24h / 100
+      const historicalPrice = convertedEnd.amount / (1 + percentAsDecimal)
+      const fiatChange = convertedEnd.amount - historicalPrice
+
+      return formatChartFiatDelta({
+        startingPrice: convertedEnd.amount - fiatChange,
+        endingPrice: convertedEnd.amount,
+        isStablecoin: shouldTreatAsStablecoin,
+      })
+    }
+
+    // When hovering, use chart prices for consistent calculation
+    const convertedStart = convertFiatAmount(startingPrice)
+    const convertedEnd = convertFiatAmount(endingPrice)
+
+    return formatChartFiatDelta({
+      startingPrice: convertedStart.amount,
+      endingPrice: convertedEnd.amount,
+      isStablecoin: shouldTreatAsStablecoin,
+    })
+  }, [
+    shouldIncludeFiatDelta,
+    formatChartFiatDelta,
+    startingPrice,
+    endingPrice,
+    convertFiatAmount,
+    shouldTreatAsStablecoin,
+    pricePercentChange24h,
+    isHovering,
+  ])
 
   return (
     <Text variant="body2" display="flex" alignItems="center" gap="$gap4">
-      {delta && <DeltaArrow delta={delta} formattedDelta={formatPercent(Math.abs(delta))} noColor={noColor} />}
-      <DeltaText delta={delta}>{delta ? formatPercent(Math.abs(delta)) : '-'}</DeltaText>
+      {delta !== undefined && <DeltaArrow delta={delta} formattedDelta={formattedDelta} noColor={noColor} />}
+      <DeltaText delta={delta}>{fiatDelta ? `${fiatDelta.formatted} (${formattedDelta})` : formattedDelta}</DeltaText>
     </Text>
   )
 }
@@ -253,6 +370,7 @@ interface PriceChartProps {
   data: PriceChartData[]
   stale: boolean
   timePeriod?: GraphQLApi.HistoryDuration
+  pricePercentChange24h?: number
 }
 
 const CandlestickTooltipRow = styled(Flex, {
@@ -287,8 +405,15 @@ function CandlestickTooltip({ data }: { data: PriceChartData }) {
   )
 }
 
-export function PriceChart({ data, height, type, stale, timePeriod }: PriceChartProps) {
+export function PriceChart({ data, height, type, stale, timePeriod, pricePercentChange24h }: PriceChartProps) {
+  const startingPrice = data[0]
   const lastPrice = data[data.length - 1]
+  const { min, max } = getCandlestickPriceBounds(data)
+  const shouldTreatAsStablecoin = isLowVarianceRange({
+    min,
+    max,
+    duration: timePeriod,
+  })
 
   return (
     <Chart
@@ -296,11 +421,23 @@ export function PriceChart({ data, height, type, stale, timePeriod }: PriceChart
       params={useMemo(() => ({ data, type, stale, timePeriod }), [data, stale, type, timePeriod])}
       height={height}
       TooltipBody={type === PriceChartType.CANDLESTICK ? CandlestickTooltip : undefined}
+      showDottedBackground={true}
+      showLeftFadeOverlay={type === PriceChartType.LINE}
+      showCustomHoverMarker={type === PriceChartType.LINE}
     >
       {(crosshairData) => (
         <ChartHeader
           value={(crosshairData ?? lastPrice).value}
-          additionalFields={<PriceChartDelta startingPrice={data[0]} endingPrice={crosshairData ?? lastPrice} />}
+          additionalFields={
+            <PriceChartDelta
+              startingPrice={startingPrice.close}
+              endingPrice={(crosshairData ?? lastPrice).close}
+              shouldIncludeFiatDelta
+              shouldTreatAsStablecoin={shouldTreatAsStablecoin}
+              pricePercentChange24h={pricePercentChange24h}
+              isHovering={!!crosshairData}
+            />
+          }
           valueFormatterType={NumberType.FiatTokenPrice}
           time={crosshairData?.time}
         />

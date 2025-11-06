@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -31,8 +32,6 @@ import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistor
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { PasskeyManagementModal } from 'uniswap/src/features/passkey/PasskeyManagementModal'
 import { setCurrentFiatCurrency, setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
@@ -228,7 +227,7 @@ export function SettingsScreen(): JSX.Element {
             />
             <SettingsItem
               Icon={Chart}
-              title={t('settings.setting.smallBalances.title')}
+              title={t('settings.setting.balancesActivity.title')}
               onPress={(): void => setIsPortfolioBalanceModalOpen(true)}
             />
             {isSmartWalletEnabled ? (

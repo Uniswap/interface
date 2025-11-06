@@ -1,7 +1,9 @@
-import { DYNAMIC_FEE_DATA } from 'components/Liquidity/Create/types'
+import { DEFAULT_FEE_DATA, DYNAMIC_FEE_DATA } from 'components/Liquidity/Create/types'
 import ms from 'ms'
-import { expect, getTest, Page } from 'playwright/fixtures'
+import { expect, getTest, type Page } from 'playwright/fixtures'
+import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'
 import { DAI, USDC_UNICHAIN, USDT } from 'uniswap/src/constants/tokens'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { WETH } from 'uniswap/src/test/fixtures/lib/sdk'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
@@ -57,7 +59,7 @@ test.describe('Create position', () => {
           // Confirm reset
           await page.getByRole('button', { name: 'Reset' }).click()
           const url = new URL(page.url())
-          await expect(url.pathname).toBe(`/positions/create/v2`)
+          await expect(url.pathname).toContain(`/positions/create/v2`)
           await expect(page.getByRole('button', { name: 'New v2 position' })).not.toBeVisible()
         })
       })
@@ -119,6 +121,20 @@ test.describe('Create position', () => {
           )
 
           await expect(page.getByText('Dynamic fee tier')).toBeVisible()
+        })
+
+        test('handles undefined fee', async ({ page }) => {
+          await page.goto(`/positions/create/v4`)
+
+          await expect(page.getByText('-- fee tier')).toBeVisible()
+
+          await page.getByRole('button', { name: 'Choose token' }).click()
+          await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
+          // eslint-disable-next-line
+          await page.getByTestId('token-option-1-USDT').first().click()
+
+          // Verify the fee tier is set to the most used fee tier
+          await expect(page.getByText('-- fee tier')).not.toBeVisible()
         })
       })
 
@@ -235,7 +251,7 @@ test.describe('Create position', () => {
     test.describe('Price range state', () => {
       test('parses and restores complete priceRange state from URL', async ({ page }) => {
         // Test URL with all PriceRangeState fields populated
-        const testUrl = `/positions/create/v4?currencyA=NATIVE&currencyB=${USDT.address}&step=1&priceRangeState={"priceInverted":true,"fullRange":false,"minPrice":"0.00019382924070396673","maxPrice":"0.000350504530738769","initialPrice":""}&chain=ethereum&hook=undefined&depositState={"exactField":"TOKEN1","exactAmounts":{}}`
+        const testUrl = `/positions/create/v4?currencyA=NATIVE&currencyB=${USDT.address}&step=1&priceRangeState={"priceInverted":true,"fullRange":false,"minPrice":"0.00019382924070396673","maxPrice":"0.000350504530738769","initialPrice":""}&chain=ethereum&hook=undefined&depositState={"exactField":"TOKEN1","exactAmounts":{}}&fee=${JSON.stringify(DEFAULT_FEE_DATA)}`
 
         await page.goto(testUrl)
 
@@ -276,7 +292,7 @@ test.describe('Create position', () => {
         const randomCoin = '0x2621Cb9FE8921351E9558D4CD8666688e1DcD689'
 
         await page.goto(
-          `/positions/create/v4?currencyA=NATIVE&currencyB=${randomCoin}&step=1&priceRangeState={"priceInverted":false,"fullRange":false,"minPrice":"2991.7083","maxPrice":"3990.1553","initialPrice":"3500.75","isInitialPriceDirty":true}`,
+          `/positions/create/v4?currencyA=NATIVE&currencyB=${randomCoin}&step=1&priceRangeState={"priceInverted":false,"fullRange":false,"minPrice":"2991.7083","maxPrice":"3990.1553","initialPrice":"3500.75","isInitialPriceDirty":true}&fee=${JSON.stringify(DEFAULT_FEE_DATA)}`,
         )
 
         // Verify price inputs are populated
@@ -305,7 +321,7 @@ test.describe('Create position', () => {
     test.describe('Deposit state', () => {
       test('parses and restores complete depositState from URL with TOKEN0 exact field', async ({ page }) => {
         // Test URL with TOKEN0 as exact field (TOKEN1 will be calculated)
-        const testUrl = `/positions/create/v4?currencyA=NATIVE&currencyB=${USDT.address}&step=1&depositState={"exactField":"TOKEN0","exactAmounts":{"TOKEN0":"1.25","TOKEN1":""}}`
+        const testUrl = `/positions/create/v4?currencyA=NATIVE&currencyB=${USDT.address}&step=1&depositState={"exactField":"TOKEN0","exactAmounts":{"TOKEN0":"1.25","TOKEN1":""}}&fee=${JSON.stringify(DEFAULT_FEE_DATA)}`
 
         await page.goto(testUrl)
 
@@ -337,7 +353,7 @@ test.describe('Create position', () => {
 
       test('parses and restores complete depositState from URL with TOKEN1 exact field', async ({ page }) => {
         // Test URL with TOKEN1 as exact field (TOKEN0 will be calculated)
-        const testUrl = `/positions/create/v4?currencyA=NATIVE&currencyB=${USDT.address}&step=1&depositState={"exactField":"TOKEN1","exactAmounts":{"TOKEN0":"","TOKEN1":"3500.50"}}`
+        const testUrl = `/positions/create/v4?currencyA=NATIVE&currencyB=${USDT.address}&step=1&depositState={"exactField":"TOKEN1","exactAmounts":{"TOKEN0":"","TOKEN1":"3500.50"}}&fee=${JSON.stringify(DEFAULT_FEE_DATA)}`
 
         await page.goto(testUrl)
 
@@ -375,13 +391,13 @@ test.describe('Create position', () => {
         test('token0 and token1 are sorted', async ({ page }) => {
           await page.goto(`/positions/create/v4?currencyA=NATIVE&currencyB=${USDT.address}`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('ETH/USDT')).toBeVisible()
+          await expect(page.getByText('ETH/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/ETH')).not.toBeVisible()
         })
         test('token0 and token1 are not sorted', async ({ page }) => {
           await page.goto(`/positions/create/v4?currencyA=${USDT.address}&currencyB=NATIVE`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('ETH/USDT')).toBeVisible()
+          await expect(page.getByText('ETH/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/ETH')).not.toBeVisible()
         })
       })
@@ -392,14 +408,14 @@ test.describe('Create position', () => {
         test('token0 and token1 are sorted', async ({ page }) => {
           await page.goto(`/positions/create/v4?currencyA=${USDT.address}&currencyB=${DAI.address}`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('DAI/USDT')).toBeVisible()
+          await expect(page.getByText('DAI/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/DAI')).not.toBeVisible()
         })
 
         test('token0 and token1 are not sorted', async ({ page }) => {
           await page.goto(`/positions/create/v4?currencyA=${DAI.address}&currencyB=${USDT.address}`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('DAI/USDT')).toBeVisible()
+          await expect(page.getByText('DAI/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/DAI')).not.toBeVisible()
         })
       })
@@ -410,14 +426,14 @@ test.describe('Create position', () => {
         test('token0 and token1 are sorted', async ({ page }) => {
           await page.goto(`/positions/create/v3?currencyA=NATIVE&currencyB=${USDT.address}`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('ETH/USDT')).toBeVisible()
+          await expect(page.getByText('ETH/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/ETH')).not.toBeVisible()
         })
 
         test('token0 and token1 are not sorted', async ({ page }) => {
           await page.goto(`/positions/create/v3?currencyA=${USDT.address}&currencyB=NATIVE`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('ETH/USDT')).toBeVisible()
+          await expect(page.getByText('ETH/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/ETH')).not.toBeVisible()
         })
       })
@@ -426,14 +442,14 @@ test.describe('Create position', () => {
         test('token0 and token1 are sorted', async ({ page }) => {
           await page.goto(`/positions/create/v3?currencyA=${WETH_ADDRESS}&currencyB=${USDT.address}`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('WETH/USDT')).toBeVisible()
+          await expect(page.getByText('WETH/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/WETH')).not.toBeVisible()
         })
 
         test('token0 and token1 are not sorted', async ({ page }) => {
           await page.goto(`/positions/create/v3?currencyA=${USDT.address}&currencyB=${WETH_ADDRESS}`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('ETH/USDT')).toBeVisible()
+          await expect(page.getByText('ETH/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/ETH')).not.toBeVisible()
         })
       })
@@ -444,14 +460,14 @@ test.describe('Create position', () => {
         test('token0 and token1 are sorted', async ({ page }) => {
           await page.goto(`/positions/create/v3?currencyA=${USDT.address}&currencyB=${DAI.address}`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('DAI/USDT')).toBeVisible()
+          await expect(page.getByText('DAI/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/DAI')).not.toBeVisible()
         })
 
         test('token0 and token1 are not sorted', async ({ page }) => {
           await page.goto(`/positions/create/v3?currencyA=${DAI.address}&currencyB=${USDT.address}`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('DAI/USDT')).toBeVisible()
+          await expect(page.getByText('DAI/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/DAI')).not.toBeVisible()
         })
       })
@@ -462,14 +478,14 @@ test.describe('Create position', () => {
         test('token0 and token1 are sorted', async ({ page }) => {
           await page.goto(`/positions/create/v2?currencyA=NATIVE&currencyB=${USDT.address}`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('ETH/USDT')).toBeVisible()
+          await expect(page.getByText('ETH/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/ETH')).not.toBeVisible()
         })
 
         test('token0 and token1 are not sorted', async ({ page }) => {
           await page.goto(`/positions/create/v2?currencyA=${USDT.address}&currencyB=NATIVE`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('ETH/USDT')).toBeVisible()
+          await expect(page.getByText('ETH/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/ETH')).not.toBeVisible()
         })
       })
@@ -478,14 +494,14 @@ test.describe('Create position', () => {
         test('token0 and token1 are sorted', async ({ page }) => {
           await page.goto(`/positions/create/v2?currencyA=${WETH_ADDRESS}&currencyB=${USDT.address}`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('WETH/USDT')).toBeVisible()
+          await expect(page.getByText('WETH/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/WETH')).not.toBeVisible()
         })
 
         test('token0 and token1 are not sorted', async ({ page }) => {
           await page.goto(`/positions/create/v2?currencyA=${USDT.address}&currencyB=${WETH_ADDRESS}`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('ETH/USDT')).toBeVisible()
+          await expect(page.getByText('ETH/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/WETH')).not.toBeVisible()
         })
       })
@@ -496,14 +512,14 @@ test.describe('Create position', () => {
         test('token0 and token1 are sorted', async ({ page }) => {
           await page.goto(`/positions/create/v2?currencyA=${USDT.address}&currencyB=${DAI.address}`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('DAI/USDT')).toBeVisible()
+          await expect(page.getByText('DAI/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/DAI')).not.toBeVisible()
         })
 
         test('token0 and token1 are not sorted', async ({ page }) => {
           await page.goto(`/positions/create/v2?currencyA=${DAI.address}&currencyB=${USDT.address}`)
           await page.getByRole('button', { name: 'Continue' }).click()
-          await expect(page.getByText('DAI/USDT')).toBeVisible()
+          await expect(page.getByText('DAI/USDT').first()).toBeVisible()
           await expect(page.getByText('USDT/DAI')).not.toBeVisible()
         })
       })
@@ -529,15 +545,15 @@ test.describe('Create position', () => {
 
     test.describe('V3', () => {
       test('token0 and token1 are sorted - increment/decrement', async ({ page }) => {
+        await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
         await page.goto(`/positions/create/v3?currencyA=NATIVE&currencyB=${USDT.address}`)
-
         await waitUntilInputFilled({ page })
         await incrementDecrementPrice({ page })
       })
 
       test('token0 and token1 are not sorted - increment/decrement', async ({ page }) => {
+        await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
         await page.goto(`/positions/create/v3?currencyA=${USDT.address}&currencyB=NATIVE`)
-
         await waitUntilInputFilled({ page })
         await incrementDecrementPrice({ page })
       })
@@ -572,7 +588,6 @@ async function incrementDecrementPrice({ page }: { page: Page }) {
 async function waitUntilInputFilled({ page }: { page: Page }) {
   await page.getByRole('button', { name: 'Continue' }).click()
   await page.waitForTimeout(ms('2s'))
-  await page.getByText('Custom range').click()
   await expect(async () => {
     const minValue = await page.getByTestId(TestID.RangeInput + '-0').inputValue()
     const maxValue = await page.getByTestId(TestID.RangeInput + '-1').inputValue()

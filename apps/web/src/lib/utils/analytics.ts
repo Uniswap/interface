@@ -7,6 +7,7 @@ import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { getRouteAnalyticsData, tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
 import {
   BridgeTrade,
+  ChainedActionTrade,
   ClassicTrade,
   PriorityOrderTrade,
   UniswapXTrade,
@@ -75,7 +76,7 @@ export function formatCommonPropertiesForTrade({
   batchId,
   includedPermitTransactionStep,
 }: {
-  trade: InterfaceTrade | ClassicTrade | UniswapXTrade | BridgeTrade
+  trade: InterfaceTrade | ClassicTrade | UniswapXTrade | BridgeTrade | ChainedActionTrade
   allowedSlippage: Percent
   outputFeeFiatValue?: number
   isBatched?: boolean
@@ -87,7 +88,8 @@ export function formatCommonPropertiesForTrade({
     trade instanceof UniswapXV2Trade ||
     trade instanceof UniswapXV3Trade ||
     trade instanceof PriorityOrderTrade ||
-    trade instanceof BridgeTrade
+    trade instanceof BridgeTrade ||
+    trade instanceof ChainedActionTrade
 
   return {
     routing: isUniversalSwapFlow ? tradeRoutingToFillType(trade) : trade.fillType,
@@ -161,7 +163,7 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   batchId,
   includedPermitTransactionStep,
 }: {
-  trade: SubmittableTrade | ClassicTrade | UniswapXTrade | BridgeTrade
+  trade: SubmittableTrade | ClassicTrade | UniswapXTrade | BridgeTrade | ChainedActionTrade
   allowedSlippage: Percent
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   txHash?: string

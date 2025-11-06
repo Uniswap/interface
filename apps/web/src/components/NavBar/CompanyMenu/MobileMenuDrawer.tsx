@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { HelpModal } from 'components/HelpModal/HelpModal'
 import { MenuSectionTitle, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
 import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
@@ -14,8 +15,6 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Accordion, AnimateTransition, Flex, Separator, Square, Text } from 'ui/src'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 function MenuSection({
@@ -31,7 +30,7 @@ function MenuSection({
 
   return (
     <Accordion.Item value={title} disabled={!collapsible}>
-      <Flex gap="10px">
+      <Flex gap="8px">
         <Accordion.Trigger flexDirection="row" p="0" gap="4px">
           {({ open }: { open: boolean }) => (
             <>
@@ -40,14 +39,14 @@ function MenuSection({
               </Text>
               {collapsible && (
                 <Square animation="200ms" rotate={open ? '-180deg' : '0deg'}>
-                  <ChevronDown size="20px" color={theme.neutral2} />
+                  <ChevronDown size="16px" color={theme.neutral2} />
                 </Square>
               )}
             </>
           )}
         </Accordion.Trigger>
         <Accordion.Content p="0" forceMount={!collapsible || undefined}>
-          <Flex gap="10px">{children}</Flex>
+          <Flex gap="8px">{children}</Flex>
         </Accordion.Content>
       </Flex>
     </Accordion.Item>
@@ -89,7 +88,12 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
   }, [isOpen])
 
   return (
-    <NavDropdown dropdownRef={dropdownRef} isOpen={isOpen} dataTestId={TestID.CompanyMenuMobileDrawer}>
+    <NavDropdown
+      dropdownRef={dropdownRef}
+      isOpen={isOpen}
+      dataTestId={TestID.CompanyMenuMobileDrawer}
+      borderColor="$surface3"
+    >
       <Flex pt="$spacing12" pb="$spacing32" px="$spacing24">
         <AnimateTransition
           currentIndex={getSettingsViewIndex(settingsView)}
@@ -102,7 +106,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
             value={openSections}
             onValueChange={setOpenSections}
           >
-            <Flex gap="$spacing24">
+            <Flex gap="$spacing20">
               <MenuSection title={t('common.app')} collapsible={false}>
                 {tabsContent.map((tab, index) => (
                   <MenuLink
@@ -112,6 +116,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
                     internal
                     closeMenu={closeMenu}
                     icon={tab.icon}
+                    textVariant="body2"
                   />
                 ))}
               </MenuSection>
@@ -125,6 +130,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
                       internal={internal}
                       closeMenu={closeMenu}
                       icon={icon}
+                      textVariant="body2"
                     />
                   ))}
                 </MenuSection>
@@ -147,7 +153,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
               ))}
               {isConversionTrackingEnabled && <LegalAndPrivacyMenu closeMenu={closeMenu} />}
               <Flex row width="100%" justifyContent="space-between" alignItems="flex-end">
-                <HelpModal showOnMobile />
+                <HelpModal showOnXL />
                 <Flex gap="$spacing16">
                   <Socials iconSize="20px" />
                 </Flex>

@@ -1,8 +1,6 @@
-import { useApolloClient } from '@apollo/client'
 import { useScrollToTop } from '@react-navigation/native'
-import { useQuery } from '@tanstack/react-query'
-import { GQLQueries } from '@universe/api'
-import { useCallback, useEffect, useMemo, useRef } from 'react'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { ESTIMATED_BOTTOM_TABS_HEIGHT } from 'src/app/navigation/tabs/CustomTabBar/constants'
@@ -10,34 +8,10 @@ import { ActivityContent } from 'src/components/activity/ActivityContent'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
-import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-
-const useRefreshActivityData = (owner: Address): { refreshing: boolean; onRefreshActivityData: () => void } => {
-  const apolloClient = useApolloClient()
-
-  const refreshFn = useCallback(
-    () =>
-      apolloClient.refetchQueries({
-        include: [GQLQueries.TransactionList],
-      }),
-    [apolloClient],
-  )
-
-  const { refetch, isRefetching } = useQuery({
-    queryKey: [ReactQueryCacheKey.ActivityScreenRefresh, owner],
-    enabled: false,
-    retry: 0,
-    queryFn: refreshFn,
-  })
-
-  return { refreshing: isRefetching, onRefreshActivityData: refetch }
-}
 
 export function ActivityScreen(): JSX.Element {
   const { t } = useTranslation()
@@ -46,8 +20,6 @@ export function ActivityScreen(): JSX.Element {
   const scrollRef = useRef(null)
 
   useScrollToTop(scrollRef)
-
-  const { refreshing, onRefreshActivityData } = useRefreshActivityData(activeAccount.address)
 
   const insets = useAppInsets()
   const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
@@ -75,13 +47,7 @@ export function ActivityScreen(): JSX.Element {
       <Text variant="heading3" py="$padding16" px="$spacing24">
         {t('common.activity')}
       </Text>
-      <ActivityContent
-        ref={scrollRef}
-        refreshing={refreshing}
-        containerProps={containerProps}
-        owner={activeAccount.address}
-        onRefresh={onRefreshActivityData}
-      />
+      <ActivityContent ref={scrollRef} containerProps={containerProps} owner={activeAccount.address} />
     </Screen>
   )
 }

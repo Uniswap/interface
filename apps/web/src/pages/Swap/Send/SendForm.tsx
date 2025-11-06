@@ -13,7 +13,6 @@ import { useTranslation } from 'react-i18next'
 import { useSendContext } from 'state/send/SendContext'
 import { CurrencyState } from 'state/swap/types'
 import { Button, Flex } from 'ui/src'
-import { checkIsBridgedAsset } from 'uniswap/src/components/BridgedAsset/utils'
 import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useActiveAddress, useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
@@ -114,7 +113,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
   const { tokenWarningDismissed: isCompatibleAddressDismissed } = useDismissedCompatibleAddressWarnings(
     inputCurrencyInfo?.currency,
   )
-  const isUnichainBridgedAsset = checkIsBridgedAsset(inputCurrencyInfo ?? undefined) && !isCompatibleAddressDismissed
+  const isUnichainBridgedAsset = Boolean(inputCurrencyInfo?.isBridged) && !isCompatibleAddressDismissed
 
   const { isSmartContractAddress, loading: loadingSmartContractAddress } = useIsSmartContractAddress(
     recipientData?.address,

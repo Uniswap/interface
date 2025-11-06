@@ -1,8 +1,7 @@
+import { ChainsConfigKey, DynamicConfigs, useDynamicConfigValue } from '@universe/gating'
 import { useMemo } from 'react'
 import { ALL_CHAIN_IDS } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { ChainsConfigKey, DynamicConfigs } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 
 // Returns the given chains ordered based on the statsig config
 export function useOrderedChainIds(chainIds: UniverseChainId[]): UniverseChainId[] {

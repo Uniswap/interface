@@ -1,4 +1,4 @@
-import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import type { Currency } from '@uniswap/sdk-core'
 import { parseRestProtocolVersion } from '@universe/api'
 import { Dropdown } from 'components/Dropdowns/Dropdown'
@@ -248,7 +248,7 @@ function CreatePositionContent({
             currencyInputs={currencyInputs}
             setCurrencyInputs={setCurrencyInputs}
             initialPositionState={{
-              fee: initialInputs.fee,
+              fee: initialInputs.fee ?? undefined,
               hook: initialInputs.hook ?? undefined,
               protocolVersion: initialProtocolVersion,
             }}

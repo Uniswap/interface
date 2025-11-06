@@ -3,7 +3,7 @@ import {
   PercentageAllocationItem,
 } from 'components/PercentageAllocationChart/PercentageAllocationChart'
 import { TokenData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
-import React, { useMemo } from 'react'
+import { useMemo } from 'react'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'

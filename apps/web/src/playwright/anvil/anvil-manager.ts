@@ -56,8 +56,8 @@ function buildAnvilConfig(overrides?: Partial<AnvilConfig>): AnvilConfig {
     port: overrides?.port ?? parseInt(process.env.ANVIL_PORT ?? '8545'),
     host: overrides?.host ?? '127.0.0.1',
     forkUrl: overrides?.forkUrl ?? buildForkUrl(),
-    timeout: overrides?.timeout ?? 5000,
-    healthCheckInterval: overrides?.healthCheckInterval ?? 10000,
+    timeout: overrides?.timeout ?? 10_000,
+    healthCheckInterval: overrides?.healthCheckInterval ?? 10_000,
     logFile: overrides?.logFile ?? path.join(process.cwd(), `anvil-test-${process.pid}.log`),
   }
 }

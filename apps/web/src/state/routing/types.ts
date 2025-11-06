@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { BigNumber } from '@ethersproject/bignumber'
 import { AddressZero } from '@ethersproject/constants'
 import { PermitTransferFromData } from '@uniswap/permit2-sdk'

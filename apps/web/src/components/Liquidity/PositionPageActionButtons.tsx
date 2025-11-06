@@ -1,4 +1,4 @@
-import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { PositionInfo } from 'components/Liquidity/types'
 import { MobileBottomBar } from 'components/NavBar/MobileBottomBar'
 import { MouseoverTooltip } from 'components/Tooltip'

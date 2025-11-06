@@ -6,7 +6,7 @@ import {
   Pool as RestPool,
   Position as RestPosition,
   Token as RestToken,
-} from '@uniswap/client-pools/dist/pools/v1/types_pb'
+} from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { PoolInformation } from '@uniswap/client-trading/dist/trading/v1/api_pb'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
@@ -200,8 +200,8 @@ export function getSDKPoolFromPoolInformation({
   }
   if (protocolVersion === ProtocolVersion.V2) {
     return new Pair(
-      CurrencyAmount.fromRawAmount(token0, poolOrPair.tokenAReserves ?? '0'),
-      CurrencyAmount.fromRawAmount(token1, poolOrPair.tokenBReserves ?? '0'),
+      CurrencyAmount.fromRawAmount(token0, poolOrPair.token0Reserves ?? '0'),
+      CurrencyAmount.fromRawAmount(token1, poolOrPair.token1Reserves ?? '0'),
     )
   }
 

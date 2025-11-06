@@ -1,7 +1,6 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useAccount } from 'hooks/useAccount'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 // Checks if the user is connected to the uniswap extension.
 //

@@ -3,15 +3,13 @@ import { waitFor } from '@testing-library/react'
 import { BiometricUnlockStorage } from 'src/app/features/biometricUnlock/BiometricUnlockStorage'
 import { useUnlockWithBiometricCredentialMutation } from 'src/app/features/biometricUnlock/useUnlockWithBiometricCredentialMutation'
 import { renderHookWithProviders } from 'src/test/render'
-import { authActions } from 'wallet/src/features/auth/saga'
-import { AuthActionType } from 'wallet/src/features/auth/types'
 import { encodeForStorage, encrypt, generateNew256BitRandomBuffer } from 'wallet/src/features/wallet/Keyring/crypto'
 
 jest.mock('src/app/features/biometricUnlock/BiometricUnlockStorage')
-jest.mock('wallet/src/features/auth/saga', () => ({
-  authActions: {
-    trigger: jest.fn(),
-  },
+
+const mockUnlockWithPassword = jest.fn()
+jest.mock('src/app/features/lockScreen/useUnlockWithPassword', () => ({
+  useUnlockWithPassword: jest.fn(() => mockUnlockWithPassword),
 }))
 
 // Mock the Web Crypto API with Node.js built-in
@@ -27,7 +25,6 @@ Object.defineProperty(navigator, 'credentials', {
 })
 
 const mockBiometricUnlockStorage = BiometricUnlockStorage as jest.Mocked<typeof BiometricUnlockStorage>
-const mockAuthActions = authActions as jest.Mocked<typeof authActions>
 
 // Mock AuthenticatorAssertionResponse
 class MockAuthenticatorAssertionResponse {
@@ -100,6 +97,7 @@ describe('useUnlockWithBiometricCredentialMutation', () => {
     // Setup default mocks
     mockBiometricUnlockStorage.get.mockResolvedValue({
       credentialId: mockCredentialId,
+      transports: ['internal'],
       secretPayload: mockEncryptedPayload,
     })
 
@@ -107,15 +105,9 @@ describe('useUnlockWithBiometricCredentialMutation', () => {
     const mockPublicKeyCredential = new MockPublicKeyCredential(mockAuthResponse)
     mockCredentialsGet.mockResolvedValue(mockPublicKeyCredential)
 
-    mockAuthActions.trigger.mockReturnValue({
-      type: 'AUTH_TRIGGER',
-      payload: {
-        type: AuthActionType.Unlock,
-        password: mockPassword,
-      },
-    })
-
-    jest.clearAllMocks()
+    // Reset and configure mockUnlockWithPassword
+    mockUnlockWithPassword.mockReset()
+    mockUnlockWithPassword.mockResolvedValue(undefined)
   })
 
   describe('successful unlock', () => {
@@ -140,6 +132,7 @@ describe('useUnlockWithBiometricCredentialMutation', () => {
             {
               type: 'public-key',
               id: credentialIdBuffer,
+              transports: ['internal'],
             },
           ],
           userVerification: 'required',
@@ -148,11 +141,8 @@ describe('useUnlockWithBiometricCredentialMutation', () => {
         signal: expect.any(AbortSignal),
       })
 
-      // 3. Should dispatch unlock action with the decrypted password
-      expect(mockAuthActions.trigger).toHaveBeenCalledWith({
-        type: AuthActionType.Unlock,
-        password: mockPassword,
-      })
+      // 3. Should call unlockWithPassword with the decrypted password
+      expect(mockUnlockWithPassword).toHaveBeenCalledWith({ password: mockPassword })
     })
   })
 
@@ -170,7 +160,7 @@ describe('useUnlockWithBiometricCredentialMutation', () => {
 
       expect(result.current.error?.message).toBe('No biometric unlock credential found')
       expect(mockCredentialsGet).not.toHaveBeenCalled()
-      expect(mockAuthActions.trigger).not.toHaveBeenCalled()
+      expect(mockUnlockWithPassword).not.toHaveBeenCalled()
     })
 
     it('should throw error when biometric authentication fails', async () => {
@@ -185,7 +175,7 @@ describe('useUnlockWithBiometricCredentialMutation', () => {
       })
 
       expect(result.current.error?.message).toBe('Failed to create credential')
-      expect(mockAuthActions.trigger).not.toHaveBeenCalled()
+      expect(mockUnlockWithPassword).not.toHaveBeenCalled()
     })
 
     it('should throw error when no user handle returned from authentication', async () => {
@@ -202,7 +192,7 @@ describe('useUnlockWithBiometricCredentialMutation', () => {
       })
 
       expect(result.current.error?.message).toBe('No user handle returned from biometric authentication')
-      expect(mockAuthActions.trigger).not.toHaveBeenCalled()
+      expect(mockUnlockWithPassword).not.toHaveBeenCalled()
     })
 
     it('should throw error when password decryption fails', async () => {
@@ -226,7 +216,7 @@ describe('useUnlockWithBiometricCredentialMutation', () => {
       })
 
       expect(result.current.error?.message).toBe('Failed to decrypt password')
-      expect(mockAuthActions.trigger).not.toHaveBeenCalled()
+      expect(mockUnlockWithPassword).not.toHaveBeenCalled()
     })
 
     it('should handle WebAuthn API errors', async () => {
@@ -242,7 +232,7 @@ describe('useUnlockWithBiometricCredentialMutation', () => {
       })
 
       expect(result.current.error).toBe(webAuthnError)
-      expect(mockAuthActions.trigger).not.toHaveBeenCalled()
+      expect(mockUnlockWithPassword).not.toHaveBeenCalled()
     })
 
     it('should handle storage retrieval errors', async () => {
@@ -259,7 +249,7 @@ describe('useUnlockWithBiometricCredentialMutation', () => {
 
       expect(result.current.error).toBe(storageError)
       expect(mockCredentialsGet).not.toHaveBeenCalled()
-      expect(mockAuthActions.trigger).not.toHaveBeenCalled()
+      expect(mockUnlockWithPassword).not.toHaveBeenCalled()
     })
   })
 
