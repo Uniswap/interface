@@ -70,6 +70,13 @@ import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 import { UNIVERSAL_ROUTER_ADDRESS } from 'utils/patchUniversalRouter'
+import {
+  isTaikoChain,
+  TAIKO_HOODI_CHAIN_ID,
+  TAIKO_MAINNET_CHAIN_ID,
+  TAIKO_HOODI_ADDRESSES,
+  TAIKO_MAINNET_ADDRESSES,
+} from 'config/chains/taiko'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
@@ -423,12 +430,30 @@ export function Swap({
 
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
   const universalRouterAddress = isSupportedChain(chainId) ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined
+
+  // For Taiko, use SwapRouter02 address for approvals since that's what executes the swap
+  const approvalSpender = useMemo(() => {
+    if (!chainId) return universalRouterAddress
+
+    if (isTaikoChain(chainId)) {
+      // Use SwapRouter02 for Taiko chains
+      if (chainId === TAIKO_HOODI_CHAIN_ID) {
+        return TAIKO_HOODI_ADDRESSES.router
+      }
+      if (chainId === TAIKO_MAINNET_CHAIN_ID) {
+        return TAIKO_MAINNET_ADDRESSES.router
+      }
+    }
+
+    return universalRouterAddress
+  }, [chainId, universalRouterAddress])
+
   const allowance = usePermit2Allowance(
     maximumAmountIn ??
       (parsedAmounts[Field.INPUT]?.currency.isToken
         ? (parsedAmounts[Field.INPUT] as CurrencyAmount<Token>)
         : undefined),
-    universalRouterAddress,
+    approvalSpender,
     trade?.fillType
   )
 
@@ -442,11 +467,16 @@ export function Swap({
   }, [fiatValueTradeInput, fiatValueTradeOutput])
 
   // the callback to execute the swap
+  // Taiko uses SwapRouter02 which doesn't support Permit2, so don't pass permitSignature
   const swapCallback = useSwapCallback(
     trade,
     swapFiatValues,
     allowedSlippage,
-    allowance.state === AllowanceState.ALLOWED ? allowance.permitSignature : undefined
+    chainId && isTaikoChain(chainId)
+      ? undefined
+      : allowance.state === AllowanceState.ALLOWED
+        ? allowance.permitSignature
+        : undefined
   )
 
   const handleContinueToReview = useCallback(() => {
