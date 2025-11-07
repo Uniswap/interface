@@ -5,10 +5,13 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { Trace } from 'analytics'
 import { useCachedPortfolioBalancesQuery } from 'components/PrefetchBalancesWrapper/PrefetchBalancesWrapper'
+import { isTaikoChain } from 'config/chains/taiko'
+import { COMMON_BASES } from 'constants/routing'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import useDebounce from 'hooks/useDebounce'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import useToggle from 'hooks/useToggle'
+import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { TokenBalances, tokenComparator, useSortTokensByQuery } from 'lib/hooks/useTokenList/sorting'
@@ -76,12 +79,58 @@ export function CurrencySearch({
   const searchTokenIsAdded = useIsUserAddedToken(searchToken)
 
   const defaultTokens = useDefaultActiveTokens(chainId)
+
+  // For Taiko, use COMMON_BASES instead of token lists since TKO might not be in any active list
+  const isTaiko = chainId && isTaikoChain(chainId)
+  const taikoCurrencies = useMemo(() => {
+    if (!isTaiko || !chainId) return []
+    return COMMON_BASES[chainId] || []
+  }, [isTaiko, chainId])
+
   const filteredTokens: Token[] = useMemo(() => {
+    // For Taiko, use tokens from COMMON_BASES instead of active lists
+    if (isTaiko) {
+      return taikoCurrencies
+        .filter((c): c is Token => c.isToken)
+        .filter(getTokenFilter(debouncedQuery))
+    }
     return Object.values(defaultTokens).filter(getTokenFilter(debouncedQuery))
-  }, [defaultTokens, debouncedQuery])
+  }, [defaultTokens, debouncedQuery, isTaiko, taikoCurrencies])
 
   const { data, loading: balancesAreLoading } = useCachedPortfolioBalancesQuery({ account })
+
+  // For Taiko, use COMMON_BASES currencies for balance fetching
+  const onChainBalances = useCurrencyBalances(account, isTaiko ? taikoCurrencies : [])
+
   const balances: TokenBalances = useMemo(() => {
+    // For Taiko chains, use on-chain balances from multicall
+    if (isTaiko) {
+      console.log('[TOKEN SELECTOR] Taiko on-chain balances:', {
+        currencyCount: taikoCurrencies.length,
+        balanceCount: onChainBalances.length,
+        balances: onChainBalances.map((b, i) => ({
+          currency: taikoCurrencies[i]?.symbol,
+          balance: b?.toExact(),
+        })),
+      })
+      const balanceMap: TokenBalances = {}
+      taikoCurrencies.forEach((currency, index) => {
+        const balance = onChainBalances[index]
+        if (balance) {
+          const address = currency.isNative ? 'ETH' : currency.isToken ? currency.address?.toLowerCase() : undefined
+          if (address) {
+            balanceMap[address] = {
+              balance: balance.toExact(),
+              usdValue: 0, // USD value not available from on-chain data
+            }
+          }
+        }
+      })
+      console.log('[TOKEN SELECTOR] Balance map:', balanceMap)
+      return balanceMap
+    }
+
+    // For other chains, use GraphQL API
     return (
       data?.portfolios?.[0].tokenBalances?.reduce((balanceMap, tokenBalance) => {
         if (
@@ -98,7 +147,7 @@ export function CurrencySearch({
         return balanceMap
       }, {} as TokenBalances) ?? {}
     )
-  }, [chainId, data?.portfolios])
+  }, [chainId, data?.portfolios, taikoCurrencies, onChainBalances, isTaiko])
 
   const sortedTokens: Token[] = useMemo(
     () =>
