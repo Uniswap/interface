@@ -2,8 +2,8 @@ import { createApi, fetchBaseQuery, FetchBaseQueryError } from '@reduxjs/toolkit
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { sendAnalyticsEvent } from 'analytics'
-import { isUniswapXSupportedChain } from 'constants/chains'
 import { isTaikoChain } from 'config/chains'
+import { isUniswapXSupportedChain } from 'constants/chains'
 import ms from 'ms'
 import { logSwapQuoteRequest } from 'tracing/swapFlowLoggers'
 import { trace } from 'tracing/trace'
@@ -29,6 +29,11 @@ if (UNISWAP_API_URL === undefined) {
 
 const CLIENT_PARAMS = {
   protocols: [Protocol.V2, Protocol.V3, Protocol.MIXED],
+}
+
+// Taiko chains only have V3 deployed, not V2
+const TAIKO_CLIENT_PARAMS = {
+  protocols: [Protocol.V3],
 }
 
 const protocols: Protocol[] = [Protocol.V2, Protocol.V3, Protocol.MIXED]
@@ -208,7 +213,11 @@ export const routingApi = createApi({
           const method = fellBack ? QuoteMethod.CLIENT_SIDE_FALLBACK : QuoteMethod.CLIENT_SIDE
           const { getRouter, getClientSideQuote } = await import('lib/hooks/routing/clientSideSmartOrderRouter')
           const router = getRouter(args.tokenInChainId)
-          const quoteResult = await getClientSideQuote(args, router, CLIENT_PARAMS)
+          // Use V3-only routing for Taiko chains since we don't have V2 deployed
+          const isTaiko = isTaikoChain(args.tokenInChainId)
+          const routerParams = isTaiko ? TAIKO_CLIENT_PARAMS : CLIENT_PARAMS
+          console.log('[ROUTING] Chain:', args.tokenInChainId, 'isTaiko:', isTaiko, 'protocols:', routerParams.protocols)
+          const quoteResult = await getClientSideQuote(args, router, routerParams)
           if (quoteResult.state === QuoteState.SUCCESS) {
             const trade = await transformRoutesToTrade(args, quoteResult.data, method)
             return {

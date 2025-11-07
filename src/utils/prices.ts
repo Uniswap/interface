@@ -113,6 +113,6 @@ export function getPriceImpactColor(priceImpact: Percent): keyof DefaultTheme | 
     case 'warning':
       return 'deprecated_accentWarning'
     default:
-      return undefined
+      return 'neutral1' // Use readable neutral color for low price impact
   }
 }

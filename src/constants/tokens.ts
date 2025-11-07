@@ -295,6 +295,13 @@ export const WETH_TAIKO_HOODI = new Token(
   'WETH',
   'Wrapped Ether'
 )
+export const TAIKO_TAIKO_HOODI = new Token(
+  TAIKO_HOODI_CHAIN_ID,
+  '0x96257D50DB02ba0153f888e919ff47A91951e979',
+  18,
+  'TAIKO',
+  'Taiko Token'
+)
 
 export const UNI: { [chainId: number]: Token } = {
   [ChainId.MAINNET]: new Token(ChainId.MAINNET, UNI_ADDRESSES[ChainId.MAINNET], 18, 'UNI', 'Uniswap'),

@@ -1,0 +1,142 @@
+diff --git a/node_modules/@uniswap/sdk-core/dist/chains.d.ts b/node_modules/@uniswap/sdk-core/dist/chains.d.ts
+index 6321b1d..7c6114e 100644
+--- a/node_modules/@uniswap/sdk-core/dist/chains.d.ts
++++ b/node_modules/@uniswap/sdk-core/dist/chains.d.ts
+@@ -15,9 +15,11 @@ export declare enum ChainId {
+     BNB = 56,
+     AVALANCHE = 43114,
+     BASE_GOERLI = 84531,
+-    BASE = 8453
++    BASE = 8453,
++    TAIKO_MAINNET = 167000,
++    TAIKO_HOODI = 167013
+ }
+-export declare const SUPPORTED_CHAINS: readonly [ChainId.MAINNET, ChainId.OPTIMISM, ChainId.OPTIMISM_GOERLI, ChainId.ARBITRUM_ONE, ChainId.ARBITRUM_GOERLI, ChainId.POLYGON, ChainId.POLYGON_MUMBAI, ChainId.GOERLI, ChainId.SEPOLIA, ChainId.CELO_ALFAJORES, ChainId.CELO, ChainId.BNB, ChainId.AVALANCHE, ChainId.BASE, ChainId.BASE_GOERLI];
++export declare const SUPPORTED_CHAINS: readonly [ChainId.MAINNET, ChainId.OPTIMISM, ChainId.OPTIMISM_GOERLI, ChainId.ARBITRUM_ONE, ChainId.ARBITRUM_GOERLI, ChainId.POLYGON, ChainId.POLYGON_MUMBAI, ChainId.GOERLI, ChainId.SEPOLIA, ChainId.CELO_ALFAJORES, ChainId.CELO, ChainId.BNB, ChainId.AVALANCHE, ChainId.BASE, ChainId.BASE_GOERLI, ChainId.TAIKO_MAINNET, ChainId.TAIKO_HOODI];
+ export declare type SupportedChainsType = typeof SUPPORTED_CHAINS[number];
+ export declare enum NativeCurrencyName {
+     ETHER = "ETH",
+diff --git a/node_modules/@uniswap/sdk-core/dist/sdk-core.cjs.development.js b/node_modules/@uniswap/sdk-core/dist/sdk-core.cjs.development.js
+index 2f8c669..4244a12 100644
+--- a/node_modules/@uniswap/sdk-core/dist/sdk-core.cjs.development.js
++++ b/node_modules/@uniswap/sdk-core/dist/sdk-core.cjs.development.js
+@@ -69,9 +69,11 @@ function _inheritsLoose(subClass, superClass) {
+   ChainId[ChainId["AVALANCHE"] = 43114] = "AVALANCHE";
+   ChainId[ChainId["BASE_GOERLI"] = 84531] = "BASE_GOERLI";
+   ChainId[ChainId["BASE"] = 8453] = "BASE";
++  ChainId[ChainId["TAIKO_MAINNET"] = 167000] = "TAIKO_MAINNET";
++  ChainId[ChainId["TAIKO_HOODI"] = 167013] = "TAIKO_HOODI";
+ })(exports.ChainId || (exports.ChainId = {}));
+ 
+-var SUPPORTED_CHAINS = [exports.ChainId.MAINNET, exports.ChainId.OPTIMISM, exports.ChainId.OPTIMISM_GOERLI, exports.ChainId.ARBITRUM_ONE, exports.ChainId.ARBITRUM_GOERLI, exports.ChainId.POLYGON, exports.ChainId.POLYGON_MUMBAI, exports.ChainId.GOERLI, exports.ChainId.SEPOLIA, exports.ChainId.CELO_ALFAJORES, exports.ChainId.CELO, exports.ChainId.BNB, exports.ChainId.AVALANCHE, exports.ChainId.BASE, exports.ChainId.BASE_GOERLI];
++var SUPPORTED_CHAINS = [exports.ChainId.MAINNET, exports.ChainId.OPTIMISM, exports.ChainId.OPTIMISM_GOERLI, exports.ChainId.ARBITRUM_ONE, exports.ChainId.ARBITRUM_GOERLI, exports.ChainId.POLYGON, exports.ChainId.POLYGON_MUMBAI, exports.ChainId.GOERLI, exports.ChainId.SEPOLIA, exports.ChainId.CELO_ALFAJORES, exports.ChainId.CELO, exports.ChainId.BNB, exports.ChainId.AVALANCHE, exports.ChainId.BASE, exports.ChainId.BASE_GOERLI, exports.ChainId.TAIKO_MAINNET, exports.ChainId.TAIKO_HOODI];
+ 
+ (function (NativeCurrencyName) {
+   // Strings match input for CLI
+@@ -85,7 +87,7 @@ var SUPPORTED_CHAINS = [exports.ChainId.MAINNET, exports.ChainId.OPTIMISM, expor
+ })(exports.NativeCurrencyName || (exports.NativeCurrencyName = {}));
+ 
+ var _CHAIN_TO_ADDRESSES_M, _GOVERNANCE_ALPHA_V1_, _GOVERNANCE_BRAVO_ADD, _MERKLE_DISTRIBUTOR_A, _ARGENT_WALLET_DETECT, _SOCKS_CONTROLLER_ADD;
+-var DEFAULT_NETWORKS = [exports.ChainId.MAINNET, exports.ChainId.GOERLI];
++var DEFAULT_NETWORKS = [exports.ChainId.MAINNET, exports.ChainId.GOERLI, exports.ChainId.SEPOLIA];
+ 
+ function constructSameAddressMap(address, additionalNetworks) {
+   if (additionalNetworks === void 0) {
+@@ -101,7 +103,7 @@ function constructSameAddressMap(address, additionalNetworks) {
+ var UNI_ADDRESSES = /*#__PURE__*/constructSameAddressMap('0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', [exports.ChainId.OPTIMISM, exports.ChainId.ARBITRUM_ONE, exports.ChainId.POLYGON, exports.ChainId.POLYGON_MUMBAI, exports.ChainId.SEPOLIA]);
+ var UNISWAP_NFT_AIRDROP_CLAIM_ADDRESS = '0x8B799381ac40b838BBA4131ffB26197C432AFe78';
+ var V2_FACTORY_ADDRESS = '0x5C69bEe701ef814a2B6a3EDD4B1652CB9cc5aA6f';
+-var V2_FACTORY_ADDRESSES = /*#__PURE__*/constructSameAddressMap(V2_FACTORY_ADDRESS);
++var V2_FACTORY_ADDRESSES = /*#__PURE__*/constructSameAddressMap(V2_FACTORY_ADDRESS, [exports.ChainId.POLYGON, exports.ChainId.OPTIMISM, exports.ChainId.CELO, exports.ChainId.ARBITRUM_ONE, exports.ChainId.BNB, exports.ChainId.AVALANCHE, exports.ChainId.BASE]);
+ var V2_ROUTER_ADDRESS = '0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D';
+ var V2_ROUTER_ADDRESSES = /*#__PURE__*/constructSameAddressMap(V2_ROUTER_ADDRESS); // Networks that share most of the same addresses i.e. Mainnet, Goerli, Optimism, Arbitrum, Polygon
+ 
+@@ -204,7 +206,25 @@ var BASE_GOERLI_ADDRESSES = {
+   tickLensAddress: '0x1acB873Ee909D0c98adB18e4474943249F931b92',
+   swapRouter02Address: '0x8357227D4eDc78991Db6FDB9bD6ADE250536dE1d'
+ };
+-var CHAIN_TO_ADDRESSES_MAP = (_CHAIN_TO_ADDRESSES_M = {}, _CHAIN_TO_ADDRESSES_M[exports.ChainId.MAINNET] = MAINNET_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.OPTIMISM] = OPTIMISM_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.ARBITRUM_ONE] = ARBITRUM_ONE_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.POLYGON] = POLYGON_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.POLYGON_MUMBAI] = POLYGON_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.GOERLI] = GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.CELO] = CELO_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.CELO_ALFAJORES] = CELO_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.BNB] = BNB_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.OPTIMISM_GOERLI] = OPTIMISM_GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.ARBITRUM_GOERLI] = ARBITRUM_GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.SEPOLIA] = SEPOLIA_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.AVALANCHE] = AVALANCHE_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.BASE] = BASE_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.BASE_GOERLI] = BASE_GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M);
++var TAIKO_MAINNET_ADDRESSES = {
++  v3CoreFactoryAddress: '0x826D713e30f0bF09Dd3219494A508E6B30327d4f',
++  multicallAddress: '0x81504E4F564CC0AC5Ce35A0d79d33acE5099a59B',
++  quoterAddress: '0xcBa70D57be34aA26557B8E80135a9B7754680aDb',
++  v3MigratorAddress: '0x960a28a6972608d58e45034f856a96264d3592a8',
++  nonfungiblePositionManagerAddress: '0xf26F8d1DA08aD278D0B65403A04E918341680aDC',
++  tickLensAddress: '0x43B186781146C24594899100C69C697850D179C7',
++  swapRouter02Address: '0x1024Ea017b00F15591846f4E6E893abDe2e37cc8'
++};
++var TAIKO_HOODI_ADDRESSES = {
++  v3CoreFactoryAddress: '0x87C772301B2054D47e2b12c4C3C402481158B7f2',
++  multicallAddress: '0x323dD97aF6DDc101eF306c5daA6aE34c15EA37B7',
++  quoterAddress: '0xAC8D93657DCc5C0dE9d9AF2772aF9eA3A032a1C6',
++  v3MigratorAddress: '0xB86e3226b2045934B2FEfb1028d75e61795CAD76',
++  nonfungiblePositionManagerAddress: '0x2C745eEDC8493D698545F92E5D69B5E9fA6bCE62',
++  tickLensAddress: '0x6283971D01E3f34cAa2a7163Bb38499eC01Cc63D',
++  swapRouter02Address: '0x482233e4DBD56853530fA1918157CE59B60dF230'
++};
++var CHAIN_TO_ADDRESSES_MAP = (_CHAIN_TO_ADDRESSES_M = {}, _CHAIN_TO_ADDRESSES_M[exports.ChainId.MAINNET] = MAINNET_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.OPTIMISM] = OPTIMISM_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.ARBITRUM_ONE] = ARBITRUM_ONE_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.POLYGON] = POLYGON_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.POLYGON_MUMBAI] = POLYGON_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.GOERLI] = GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.CELO] = CELO_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.CELO_ALFAJORES] = CELO_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.BNB] = BNB_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.OPTIMISM_GOERLI] = OPTIMISM_GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.ARBITRUM_GOERLI] = ARBITRUM_GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.SEPOLIA] = SEPOLIA_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.AVALANCHE] = AVALANCHE_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.BASE] = BASE_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.BASE_GOERLI] = BASE_GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.TAIKO_MAINNET] = TAIKO_MAINNET_ADDRESSES, _CHAIN_TO_ADDRESSES_M[exports.ChainId.TAIKO_HOODI] = TAIKO_HOODI_ADDRESSES, _CHAIN_TO_ADDRESSES_M);
+ /* V3 Contract Addresses */
+ 
+ var V3_CORE_FACTORY_ADDRESSES = /*#__PURE__*/_extends({}, /*#__PURE__*/SUPPORTED_CHAINS.reduce(function (memo, chainId) {
+@@ -853,7 +873,7 @@ var _WETH;
+  * Known WETH9 implementation addresses, used in our implementation of Ether#wrapped
+  */
+ 
+-var WETH9 = (_WETH = {}, _WETH[1] = /*#__PURE__*/new Token(1, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[3] = /*#__PURE__*/new Token(3, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[4] = /*#__PURE__*/new Token(4, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[5] = /*#__PURE__*/new Token(5, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[42] = /*#__PURE__*/new Token(42, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH[10] = /*#__PURE__*/new Token(10, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether'), _WETH[69] = /*#__PURE__*/new Token(69, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether'), _WETH[42161] = /*#__PURE__*/new Token(42161, '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1', 18, 'WETH', 'Wrapped Ether'), _WETH[421611] = /*#__PURE__*/new Token(421611, '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681', 18, 'WETH', 'Wrapped Ether'), _WETH);
++var WETH9 = (_WETH = {}, _WETH[1] = /*#__PURE__*/new Token(1, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[3] = /*#__PURE__*/new Token(3, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[4] = /*#__PURE__*/new Token(4, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[5] = /*#__PURE__*/new Token(5, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[42] = /*#__PURE__*/new Token(42, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH[10] = /*#__PURE__*/new Token(10, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether'), _WETH[69] = /*#__PURE__*/new Token(69, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether'), _WETH[42161] = /*#__PURE__*/new Token(42161, '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1', 18, 'WETH', 'Wrapped Ether'), _WETH[421611] = /*#__PURE__*/new Token(421611, '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681', 18, 'WETH', 'Wrapped Ether'), _WETH[167000] = /*#__PURE__*/new Token(167000, '0xA51894664A773981C6C112C43ce576f315d5b1B6', 18, 'WETH', 'Wrapped Ether'), _WETH[167013] = /*#__PURE__*/new Token(167013, '0x3B39685B5495359c892DDD1057B5712F49976835', 18, 'WETH', 'Wrapped Ether'), _WETH);
+ 
+ /**
+  * Ether is the main usage of a 'native' currency, i.e. for Ethereum mainnet and all testnets
+diff --git a/node_modules/@uniswap/sdk-core/dist/sdk-core.esm.js b/node_modules/@uniswap/sdk-core/dist/sdk-core.esm.js
+index fa8806d..d056acc 100644
+--- a/node_modules/@uniswap/sdk-core/dist/sdk-core.esm.js
++++ b/node_modules/@uniswap/sdk-core/dist/sdk-core.esm.js
+@@ -65,9 +65,11 @@ var ChainId;
+   ChainId[ChainId["AVALANCHE"] = 43114] = "AVALANCHE";
+   ChainId[ChainId["BASE_GOERLI"] = 84531] = "BASE_GOERLI";
+   ChainId[ChainId["BASE"] = 8453] = "BASE";
++  ChainId[ChainId["TAIKO_MAINNET"] = 167000] = "TAIKO_MAINNET";
++  ChainId[ChainId["TAIKO_HOODI"] = 167013] = "TAIKO_HOODI";
+ })(ChainId || (ChainId = {}));
+ 
+-var SUPPORTED_CHAINS = [ChainId.MAINNET, ChainId.OPTIMISM, ChainId.OPTIMISM_GOERLI, ChainId.ARBITRUM_ONE, ChainId.ARBITRUM_GOERLI, ChainId.POLYGON, ChainId.POLYGON_MUMBAI, ChainId.GOERLI, ChainId.SEPOLIA, ChainId.CELO_ALFAJORES, ChainId.CELO, ChainId.BNB, ChainId.AVALANCHE, ChainId.BASE, ChainId.BASE_GOERLI];
++var SUPPORTED_CHAINS = [ChainId.MAINNET, ChainId.OPTIMISM, ChainId.OPTIMISM_GOERLI, ChainId.ARBITRUM_ONE, ChainId.ARBITRUM_GOERLI, ChainId.POLYGON, ChainId.POLYGON_MUMBAI, ChainId.GOERLI, ChainId.SEPOLIA, ChainId.CELO_ALFAJORES, ChainId.CELO, ChainId.BNB, ChainId.AVALANCHE, ChainId.BASE, ChainId.BASE_GOERLI, ChainId.TAIKO_MAINNET, ChainId.TAIKO_HOODI];
+ var NativeCurrencyName;
+ 
+ (function (NativeCurrencyName) {
+@@ -201,7 +203,25 @@ var BASE_GOERLI_ADDRESSES = {
+   tickLensAddress: '0x1acB873Ee909D0c98adB18e4474943249F931b92',
+   swapRouter02Address: '0x8357227D4eDc78991Db6FDB9bD6ADE250536dE1d'
+ };
+-var CHAIN_TO_ADDRESSES_MAP = (_CHAIN_TO_ADDRESSES_M = {}, _CHAIN_TO_ADDRESSES_M[ChainId.MAINNET] = MAINNET_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.OPTIMISM] = OPTIMISM_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.ARBITRUM_ONE] = ARBITRUM_ONE_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.POLYGON] = POLYGON_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.POLYGON_MUMBAI] = POLYGON_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.GOERLI] = GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.CELO] = CELO_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.CELO_ALFAJORES] = CELO_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.BNB] = BNB_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.OPTIMISM_GOERLI] = OPTIMISM_GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.ARBITRUM_GOERLI] = ARBITRUM_GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.SEPOLIA] = SEPOLIA_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.AVALANCHE] = AVALANCHE_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.BASE] = BASE_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.BASE_GOERLI] = BASE_GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M);
++var TAIKO_MAINNET_ADDRESSES = {
++  v3CoreFactoryAddress: '0x826D713e30f0bF09Dd3219494A508E6B30327d4f',
++  multicallAddress: '0x81504E4F564CC0AC5Ce35A0d79d33acE5099a59B',
++  quoterAddress: '0xcBa70D57be34aA26557B8E80135a9B7754680aDb',
++  v3MigratorAddress: '0x960a28a6972608d58e45034f856a96264d3592a8',
++  nonfungiblePositionManagerAddress: '0xf26F8d1DA08aD278D0B65403A04E918341680aDC',
++  tickLensAddress: '0x43B186781146C24594899100C69C697850D179C7',
++  swapRouter02Address: '0x1024Ea017b00F15591846f4E6E893abDe2e37cc8'
++};
++var TAIKO_HOODI_ADDRESSES = {
++  v3CoreFactoryAddress: '0x87C772301B2054D47e2b12c4C3C402481158B7f2',
++  multicallAddress: '0x323dD97aF6DDc101eF306c5daA6aE34c15EA37B7',
++  quoterAddress: '0xAC8D93657DCc5C0dE9d9AF2772aF9eA3A032a1C6',
++  v3MigratorAddress: '0xB86e3226b2045934B2FEfb1028d75e61795CAD76',
++  nonfungiblePositionManagerAddress: '0x2C745eEDC8493D698545F92E5D69B5E9fA6bCE62',
++  tickLensAddress: '0x6283971D01E3f34cAa2a7163Bb38499eC01Cc63D',
++  swapRouter02Address: '0x482233e4DBD56853530fA1918157CE59B60dF230'
++};
++var CHAIN_TO_ADDRESSES_MAP = (_CHAIN_TO_ADDRESSES_M = {}, _CHAIN_TO_ADDRESSES_M[ChainId.MAINNET] = MAINNET_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.OPTIMISM] = OPTIMISM_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.ARBITRUM_ONE] = ARBITRUM_ONE_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.POLYGON] = POLYGON_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.POLYGON_MUMBAI] = POLYGON_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.GOERLI] = GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.CELO] = CELO_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.CELO_ALFAJORES] = CELO_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.BNB] = BNB_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.OPTIMISM_GOERLI] = OPTIMISM_GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.ARBITRUM_GOERLI] = ARBITRUM_GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.SEPOLIA] = SEPOLIA_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.AVALANCHE] = AVALANCHE_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.BASE] = BASE_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.BASE_GOERLI] = BASE_GOERLI_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.TAIKO_MAINNET] = TAIKO_MAINNET_ADDRESSES, _CHAIN_TO_ADDRESSES_M[ChainId.TAIKO_HOODI] = TAIKO_HOODI_ADDRESSES, _CHAIN_TO_ADDRESSES_M);
+ /* V3 Contract Addresses */
+ 
+ var V3_CORE_FACTORY_ADDRESSES = /*#__PURE__*/_extends({}, /*#__PURE__*/SUPPORTED_CHAINS.reduce(function (memo, chainId) {
+@@ -854,7 +874,7 @@ var _WETH;
+  * Known WETH9 implementation addresses, used in our implementation of Ether#wrapped
+  */
+ 
+-var WETH9 = (_WETH = {}, _WETH[1] = /*#__PURE__*/new Token(1, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[3] = /*#__PURE__*/new Token(3, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[4] = /*#__PURE__*/new Token(4, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[5] = /*#__PURE__*/new Token(5, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[42] = /*#__PURE__*/new Token(42, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH[10] = /*#__PURE__*/new Token(10, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether'), _WETH[69] = /*#__PURE__*/new Token(69, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether'), _WETH[42161] = /*#__PURE__*/new Token(42161, '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1', 18, 'WETH', 'Wrapped Ether'), _WETH[421611] = /*#__PURE__*/new Token(421611, '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681', 18, 'WETH', 'Wrapped Ether'), _WETH);
++var WETH9 = (_WETH = {}, _WETH[1] = /*#__PURE__*/new Token(1, '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2', 18, 'WETH', 'Wrapped Ether'), _WETH[3] = /*#__PURE__*/new Token(3, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[4] = /*#__PURE__*/new Token(4, '0xc778417E063141139Fce010982780140Aa0cD5Ab', 18, 'WETH', 'Wrapped Ether'), _WETH[5] = /*#__PURE__*/new Token(5, '0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6', 18, 'WETH', 'Wrapped Ether'), _WETH[42] = /*#__PURE__*/new Token(42, '0xd0A1E359811322d97991E03f863a0C30C2cF029C', 18, 'WETH', 'Wrapped Ether'), _WETH[10] = /*#__PURE__*/new Token(10, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether'), _WETH[69] = /*#__PURE__*/new Token(69, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether'), _WETH[42161] = /*#__PURE__*/new Token(42161, '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1', 18, 'WETH', 'Wrapped Ether'), _WETH[421611] = /*#__PURE__*/new Token(421611, '0xB47e6A5f8b33b3F17603C83a0535A9dcD7E32681', 18, 'WETH', 'Wrapped Ether'), _WETH[167000] = /*#__PURE__*/new Token(167000, '0xA51894664A773981C6C112C43ce576f315d5b1B6', 18, 'WETH', 'Wrapped Ether'), _WETH[167013] = /*#__PURE__*/new Token(167013, '0x3B39685B5495359c892DDD1057B5712F49976835', 18, 'WETH', 'Wrapped Ether'), _WETH);
+ 
+ /**
+  * Ether is the main usage of a 'native' currency, i.e. for Ethereum mainnet and all testnets

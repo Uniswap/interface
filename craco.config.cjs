@@ -146,21 +146,36 @@ module.exports = {
       })
 
       // Retain source maps for node_modules packages:
-      webpackConfig.module.rules[0] = {
-        ...webpackConfig.module.rules[0],
-        exclude: /node_modules/,
+      if (webpackConfig.module.rules[0]) {
+        webpackConfig.module.rules[0] = {
+          ...webpackConfig.module.rules[0],
+          exclude: /node_modules/,
+        }
       }
 
       // Configure webpack transpilation (create-react-app specifies transpilation rules in a oneOf):
       // NOTE: Switched back to babel-loader due to SWC plugin crashes on Apple Silicon
-      webpackConfig.module.rules[1].oneOf = webpackConfig.module.rules[1].oneOf.map((rule) => {
-        // Keep babel-loader instead of swc-loader to avoid plugin crashes
-        // if (rule.loader && rule.loader.match(/babel-loader/)) {
-        //   rule.loader = 'swc-loader'
-        //   delete rule.options
-        // }
-        return rule
+      // DEBUG: Log webpack rules structure
+      console.log('=== WEBPACK RULES DEBUG ===')
+      console.log('Number of rules:', webpackConfig.module.rules.length)
+      webpackConfig.module.rules.forEach((rule, i) => {
+        console.log(`Rule ${i}:`, rule ? (rule.oneOf ? `has oneOf (${rule.oneOf.length} items)` : Object.keys(rule)) : 'null/undefined')
       })
+
+      // Find the oneOf rule dynamically in case webpack structure changes
+      const oneOfRule = webpackConfig.module.rules.find(rule => rule && rule.oneOf)
+      if (oneOfRule) {
+        oneOfRule.oneOf = oneOfRule.oneOf.map((rule) => {
+          // Keep babel-loader instead of swc-loader to avoid plugin crashes
+          // if (rule.loader && rule.loader.match(/babel-loader/)) {
+          //   rule.loader = 'swc-loader'
+          //   delete rule.options
+          // }
+          return rule
+        })
+      } else {
+        console.error('ERROR: No oneOf rule found in webpack config!')
+      }
 
       // Configure webpack optimization:
       webpackConfig.optimization = Object.assign(

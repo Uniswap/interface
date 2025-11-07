@@ -39,6 +39,7 @@ import {
   USDT_TAIKO_HOODI,
   USDT_TAIKO_MAINNET,
   TAIKO_TOKEN,
+  TAIKO_TAIKO_HOODI,
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_CELO,
@@ -133,6 +134,7 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[TAIKO_HOODI_CHAIN_ID] as Token,
     USDC_TAIKO_HOODI,
     USDT_TAIKO_HOODI,
+    TAIKO_TAIKO_HOODI,
   ],
 }
 
@@ -166,6 +168,7 @@ export const BASES_TO_TRACK_LIQUIDITY_FOR: ChainTokenList = {
     WRAPPED_NATIVE_CURRENCY[TAIKO_HOODI_CHAIN_ID] as Token,
     USDC_TAIKO_HOODI,
     USDT_TAIKO_HOODI,
+    TAIKO_TAIKO_HOODI,
   ],
 }
 export const PINNED_PAIRS: { readonly [chainId: number]: [Token, Token][] } = {

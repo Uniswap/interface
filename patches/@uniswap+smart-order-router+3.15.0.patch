@@ -1,0 +1,1056 @@
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/caching-token-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/caching-token-provider.js
+index 83c125e..ca81ade 100644
+--- a/node_modules/@uniswap/smart-order-router/build/main/providers/caching-token-provider.js
++++ b/node_modules/@uniswap/smart-order-router/build/main/providers/caching-token-provider.js
+@@ -92,6 +92,14 @@ exports.CACHE_SEED_TOKENS = {
+     [sdk_core_1.ChainId.BASE]: {
+         USDC: token_provider_1.USDC_BASE,
+         WETH: util_1.WRAPPED_NATIVE_CURRENCY[sdk_core_1.ChainId.BASE],
++    },
++    [sdk_core_1.ChainId.TAIKO_MAINNET]: {
++        USDC: new sdk_core_1.Token(sdk_core_1.ChainId.TAIKO_MAINNET, '0x07d83526730c7438048D55A4fc0b850e2aaB6f0b', 6, 'USDC', 'USD Coin'),
++        WETH: util_1.WRAPPED_NATIVE_CURRENCY[sdk_core_1.ChainId.TAIKO_MAINNET],
++    },
++    [sdk_core_1.ChainId.TAIKO_HOODI]: {
++        USDC: new sdk_core_1.Token(sdk_core_1.ChainId.TAIKO_HOODI, '0x18d5bB147f3D05D5f6c5E60Caf1daeeDBF5155B6', 6, 'USDC', 'USD Coin'),
++        WETH: util_1.WRAPPED_NATIVE_CURRENCY[sdk_core_1.ChainId.TAIKO_HOODI],
+     }
+     // Currently we do not have providers for Moonbeam mainnet or Gnosis testnet
+ };
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/token-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/token-provider.js
+index 80da1f0..dfb5666 100644
+--- a/node_modules/@uniswap/smart-order-router/build/main/providers/token-provider.js
++++ b/node_modules/@uniswap/smart-order-router/build/main/providers/token-provider.js
+@@ -1,94 +1,90 @@
+-"use strict";
+-var __importDefault = (this && this.__importDefault) || function (mod) {
+-    return (mod && mod.__esModule) ? mod : { "default": mod };
+-};
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.CELO_ALFAJORES = exports.CEUR_CELO = exports.CUSD_CELO = exports.DAI_CELO = exports.CELO = exports.USDT_BNB = exports.USDC_BNB = exports.ETH_BNB = exports.DAI_BNB = exports.BUSD_BNB = exports.BTC_BNB = exports.WETH_POLYGON_MUMBAI = exports.DAI_POLYGON_MUMBAI = exports.USDC_POLYGON_MUMBAI = exports.WMATIC_POLYGON_MUMBAI = exports.DAI_POLYGON = exports.USDC_POLYGON = exports.WETH_POLYGON = exports.WMATIC_POLYGON = exports.USDC_ARBITRUM_GOERLI = exports.DAI_ARBITRUM_GOERLI = exports.ARB_ARBITRUM = exports.DAI_ARBITRUM = exports.WBTC_ARBITRUM = exports.USDT_ARBITRUM = exports.USDC_ARBITRUM = exports.DAI_OPTIMISM_GOERLI = exports.WBTC_OPTIMISM_GOERLI = exports.USDT_OPTIMISM_GOERLI = exports.USDC_OPTIMISM_GOERLI = exports.OP_OPTIMISM = exports.DAI_OPTIMISM = exports.WBTC_OPTIMISM = exports.USDT_OPTIMISM = exports.USDC_OPTIMISM = exports.UNI_GOERLI = exports.DAI_GOERLI = exports.WBTC_GOERLI = exports.USDT_GOERLI = exports.USDC_GOERLI = exports.DAI_SEPOLIA = exports.USDC_SEPOLIA = exports.LIDO_MAINNET = exports.AAVE_MAINNET = exports.UNI_MAINNET = exports.FEI_MAINNET = exports.DAI_MAINNET = exports.WBTC_MAINNET = exports.USDT_MAINNET = exports.USDC_MAINNET = void 0;
+-exports.WNATIVE_ON = exports.USDC_ON = exports.USDT_ON = exports.DAI_ON = exports.TokenProvider = exports.WBTC_MOONBEAM = exports.DAI_MOONBEAM = exports.WGLMR_MOONBEAM = exports.USDC_MOONBEAM = exports.WBTC_GNOSIS = exports.WXDAI_GNOSIS = exports.USDC_ETHEREUM_GNOSIS = exports.USDC_BASE_GOERLI = exports.USDC_BASE = exports.USDC_AVAX = exports.DAI_AVAX = exports.CEUR_CELO_ALFAJORES = exports.CUSD_CELO_ALFAJORES = exports.DAI_CELO_ALFAJORES = void 0;
+-const abi_1 = require("@ethersproject/abi");
+-const strings_1 = require("@ethersproject/strings");
+-const sdk_core_1 = require("@uniswap/sdk-core");
+-const lodash_1 = __importDefault(require("lodash"));
+-const IERC20Metadata__factory_1 = require("../types/v3/factories/IERC20Metadata__factory");
+-const util_1 = require("../util");
++import { Interface } from '@ethersproject/abi';
++import { parseBytes32String } from '@ethersproject/strings';
++import { ChainId, Token } from '@uniswap/sdk-core';
++import _ from 'lodash';
++import { IERC20Metadata__factory } from '../types/v3/factories/IERC20Metadata__factory';
++import { log, WRAPPED_NATIVE_CURRENCY } from '../util';
+ // Some well known tokens on each chain for seeding cache / testing.
+-exports.USDC_MAINNET = new sdk_core_1.Token(sdk_core_1.ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C');
+-exports.USDT_MAINNET = new sdk_core_1.Token(sdk_core_1.ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD');
+-exports.WBTC_MAINNET = new sdk_core_1.Token(sdk_core_1.ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC');
+-exports.DAI_MAINNET = new sdk_core_1.Token(sdk_core_1.ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin');
+-exports.FEI_MAINNET = new sdk_core_1.Token(sdk_core_1.ChainId.MAINNET, '0x956F47F50A910163D8BF957Cf5846D573E7f87CA', 18, 'FEI', 'Fei USD');
+-exports.UNI_MAINNET = new sdk_core_1.Token(sdk_core_1.ChainId.MAINNET, '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', 18, 'UNI', 'Uniswap');
+-exports.AAVE_MAINNET = new sdk_core_1.Token(sdk_core_1.ChainId.MAINNET, '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9', 18, 'AAVE', 'Aave Token');
+-exports.LIDO_MAINNET = new sdk_core_1.Token(sdk_core_1.ChainId.MAINNET, '0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32', 18, 'LDO', 'Lido DAO Token');
+-exports.USDC_SEPOLIA = new sdk_core_1.Token(sdk_core_1.ChainId.SEPOLIA, '0x6f14C02Fc1F78322cFd7d707aB90f18baD3B54f5', 18, 'USDC', 'USDC Token');
+-exports.DAI_SEPOLIA = new sdk_core_1.Token(sdk_core_1.ChainId.SEPOLIA, '0x7AF17A48a6336F7dc1beF9D485139f7B6f4FB5C8', 18, 'DAI', 'DAI Token');
+-exports.USDC_GOERLI = new sdk_core_1.Token(sdk_core_1.ChainId.GOERLI, '0x07865c6e87b9f70255377e024ace6630c1eaa37f', 6, 'USDC', 'USD//C');
+-exports.USDT_GOERLI = new sdk_core_1.Token(sdk_core_1.ChainId.GOERLI, '0xe583769738b6dd4e7caf8451050d1948be717679', 18, 'USDT', 'Tether USD');
+-exports.WBTC_GOERLI = new sdk_core_1.Token(sdk_core_1.ChainId.GOERLI, '0xa0a5ad2296b38bd3e3eb59aaeaf1589e8d9a29a9', 8, 'WBTC', 'Wrapped BTC');
+-exports.DAI_GOERLI = new sdk_core_1.Token(sdk_core_1.ChainId.GOERLI, '0x11fe4b6ae13d2a6055c8d9cf65c55bac32b5d844', 18, 'DAI', 'Dai Stablecoin');
+-exports.UNI_GOERLI = new sdk_core_1.Token(sdk_core_1.ChainId.GOERLI, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uni token');
+-exports.USDC_OPTIMISM = new sdk_core_1.Token(sdk_core_1.ChainId.OPTIMISM, '0x7F5c764cBc14f9669B88837ca1490cCa17c31607', 6, 'USDC', 'USD//C');
+-exports.USDT_OPTIMISM = new sdk_core_1.Token(sdk_core_1.ChainId.OPTIMISM, '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58', 6, 'USDT', 'Tether USD');
+-exports.WBTC_OPTIMISM = new sdk_core_1.Token(sdk_core_1.ChainId.OPTIMISM, '0x68f180fcCe6836688e9084f035309E29Bf0A2095', 8, 'WBTC', 'Wrapped BTC');
+-exports.DAI_OPTIMISM = new sdk_core_1.Token(sdk_core_1.ChainId.OPTIMISM, '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', 18, 'DAI', 'Dai Stablecoin');
+-exports.OP_OPTIMISM = new sdk_core_1.Token(sdk_core_1.ChainId.OPTIMISM, '0x4200000000000000000000000000000000000042', 18, 'OP', 'Optimism');
+-exports.USDC_OPTIMISM_GOERLI = new sdk_core_1.Token(sdk_core_1.ChainId.OPTIMISM_GOERLI, '0x7E07E15D2a87A24492740D16f5bdF58c16db0c4E', 6, 'USDC', 'USD//C');
+-exports.USDT_OPTIMISM_GOERLI = new sdk_core_1.Token(sdk_core_1.ChainId.OPTIMISM_GOERLI, '0x853eb4bA5D0Ba2B77a0A5329Fd2110d5CE149ECE', 6, 'USDT', 'Tether USD');
+-exports.WBTC_OPTIMISM_GOERLI = new sdk_core_1.Token(sdk_core_1.ChainId.OPTIMISM_GOERLI, '0xe0a592353e81a94Db6E3226fD4A99F881751776a', 8, 'WBTC', 'Wrapped BTC');
+-exports.DAI_OPTIMISM_GOERLI = new sdk_core_1.Token(sdk_core_1.ChainId.OPTIMISM_GOERLI, '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', 18, 'DAI', 'Dai Stablecoin');
+-exports.USDC_ARBITRUM = new sdk_core_1.Token(sdk_core_1.ChainId.ARBITRUM_ONE, '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8', 6, 'USDC', 'USD//C');
+-exports.USDT_ARBITRUM = new sdk_core_1.Token(sdk_core_1.ChainId.ARBITRUM_ONE, '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9', 6, 'USDT', 'Tether USD');
+-exports.WBTC_ARBITRUM = new sdk_core_1.Token(sdk_core_1.ChainId.ARBITRUM_ONE, '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f', 8, 'WBTC', 'Wrapped BTC');
+-exports.DAI_ARBITRUM = new sdk_core_1.Token(sdk_core_1.ChainId.ARBITRUM_ONE, '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', 18, 'DAI', 'Dai Stablecoin');
+-exports.ARB_ARBITRUM = new sdk_core_1.Token(sdk_core_1.ChainId.ARBITRUM_ONE, '0x912CE59144191C1204E64559FE8253a0e49E6548', 18, 'ARB', 'Arbitrum');
+-exports.DAI_ARBITRUM_GOERLI = new sdk_core_1.Token(sdk_core_1.ChainId.ARBITRUM_GOERLI, '0x0000000000000000000000000000000000000000', // TODO: add address
++export const USDC_MAINNET = new Token(ChainId.MAINNET, '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48', 6, 'USDC', 'USD//C');
++export const USDT_MAINNET = new Token(ChainId.MAINNET, '0xdAC17F958D2ee523a2206206994597C13D831ec7', 6, 'USDT', 'Tether USD');
++export const WBTC_MAINNET = new Token(ChainId.MAINNET, '0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599', 8, 'WBTC', 'Wrapped BTC');
++export const DAI_MAINNET = new Token(ChainId.MAINNET, '0x6B175474E89094C44Da98b954EedeAC495271d0F', 18, 'DAI', 'Dai Stablecoin');
++export const FEI_MAINNET = new Token(ChainId.MAINNET, '0x956F47F50A910163D8BF957Cf5846D573E7f87CA', 18, 'FEI', 'Fei USD');
++export const UNI_MAINNET = new Token(ChainId.MAINNET, '0x1f9840a85d5af5bf1d1762f925bdaddc4201f984', 18, 'UNI', 'Uniswap');
++export const AAVE_MAINNET = new Token(ChainId.MAINNET, '0x7Fc66500c84A76Ad7e9c93437bFc5Ac33E2DDaE9', 18, 'AAVE', 'Aave Token');
++export const LIDO_MAINNET = new Token(ChainId.MAINNET, '0x5A98FcBEA516Cf06857215779Fd812CA3beF1B32', 18, 'LDO', 'Lido DAO Token');
++export const USDC_SEPOLIA = new Token(ChainId.SEPOLIA, '0x6f14C02Fc1F78322cFd7d707aB90f18baD3B54f5', 18, 'USDC', 'USDC Token');
++export const DAI_SEPOLIA = new Token(ChainId.SEPOLIA, '0x7AF17A48a6336F7dc1beF9D485139f7B6f4FB5C8', 18, 'DAI', 'DAI Token');
++export const USDC_GOERLI = new Token(ChainId.GOERLI, '0x07865c6e87b9f70255377e024ace6630c1eaa37f', 6, 'USDC', 'USD//C');
++export const USDT_GOERLI = new Token(ChainId.GOERLI, '0xe583769738b6dd4e7caf8451050d1948be717679', 18, 'USDT', 'Tether USD');
++export const WBTC_GOERLI = new Token(ChainId.GOERLI, '0xa0a5ad2296b38bd3e3eb59aaeaf1589e8d9a29a9', 8, 'WBTC', 'Wrapped BTC');
++export const DAI_GOERLI = new Token(ChainId.GOERLI, '0x11fe4b6ae13d2a6055c8d9cf65c55bac32b5d844', 18, 'DAI', 'Dai Stablecoin');
++export const UNI_GOERLI = new Token(ChainId.GOERLI, '0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984', 18, 'UNI', 'Uni token');
++export const USDC_OPTIMISM = new Token(ChainId.OPTIMISM, '0x7F5c764cBc14f9669B88837ca1490cCa17c31607', 6, 'USDC', 'USD//C');
++export const USDT_OPTIMISM = new Token(ChainId.OPTIMISM, '0x94b008aA00579c1307B0EF2c499aD98a8ce58e58', 6, 'USDT', 'Tether USD');
++export const WBTC_OPTIMISM = new Token(ChainId.OPTIMISM, '0x68f180fcCe6836688e9084f035309E29Bf0A2095', 8, 'WBTC', 'Wrapped BTC');
++export const DAI_OPTIMISM = new Token(ChainId.OPTIMISM, '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', 18, 'DAI', 'Dai Stablecoin');
++export const OP_OPTIMISM = new Token(ChainId.OPTIMISM, '0x4200000000000000000000000000000000000042', 18, 'OP', 'Optimism');
++export const USDC_OPTIMISM_GOERLI = new Token(ChainId.OPTIMISM_GOERLI, '0x7E07E15D2a87A24492740D16f5bdF58c16db0c4E', 6, 'USDC', 'USD//C');
++export const USDT_OPTIMISM_GOERLI = new Token(ChainId.OPTIMISM_GOERLI, '0x853eb4bA5D0Ba2B77a0A5329Fd2110d5CE149ECE', 6, 'USDT', 'Tether USD');
++export const WBTC_OPTIMISM_GOERLI = new Token(ChainId.OPTIMISM_GOERLI, '0xe0a592353e81a94Db6E3226fD4A99F881751776a', 8, 'WBTC', 'Wrapped BTC');
++export const DAI_OPTIMISM_GOERLI = new Token(ChainId.OPTIMISM_GOERLI, '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', 18, 'DAI', 'Dai Stablecoin');
++export const USDC_ARBITRUM = new Token(ChainId.ARBITRUM_ONE, '0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8', 6, 'USDC', 'USD//C');
++export const USDT_ARBITRUM = new Token(ChainId.ARBITRUM_ONE, '0xFd086bC7CD5C481DCC9C85ebE478A1C0b69FCbb9', 6, 'USDT', 'Tether USD');
++export const WBTC_ARBITRUM = new Token(ChainId.ARBITRUM_ONE, '0x2f2a2543B76A4166549F7aaB2e75Bef0aefC5B0f', 8, 'WBTC', 'Wrapped BTC');
++export const DAI_ARBITRUM = new Token(ChainId.ARBITRUM_ONE, '0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1', 18, 'DAI', 'Dai Stablecoin');
++export const ARB_ARBITRUM = new Token(ChainId.ARBITRUM_ONE, '0x912CE59144191C1204E64559FE8253a0e49E6548', 18, 'ARB', 'Arbitrum');
++export const DAI_ARBITRUM_GOERLI = new Token(ChainId.ARBITRUM_GOERLI, '0x0000000000000000000000000000000000000000', // TODO: add address
+ 18, 'DAI', 'Dai Stablecoin');
+ // Bridged version of official Goerli USDC
+-exports.USDC_ARBITRUM_GOERLI = new sdk_core_1.Token(sdk_core_1.ChainId.ARBITRUM_GOERLI, '0x8FB1E3fC51F3b789dED7557E680551d93Ea9d892', 6, 'USDC', 'USD//C');
++export const USDC_ARBITRUM_GOERLI = new Token(ChainId.ARBITRUM_GOERLI, '0x8FB1E3fC51F3b789dED7557E680551d93Ea9d892', 6, 'USDC', 'USD//C');
+ //polygon tokens
+-exports.WMATIC_POLYGON = new sdk_core_1.Token(sdk_core_1.ChainId.POLYGON, '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', 18, 'WMATIC', 'Wrapped MATIC');
+-exports.WETH_POLYGON = new sdk_core_1.Token(sdk_core_1.ChainId.POLYGON, '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619', 18, 'WETH', 'Wrapped Ether');
+-exports.USDC_POLYGON = new sdk_core_1.Token(sdk_core_1.ChainId.POLYGON, '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', 6, 'USDC', 'USD//C');
+-exports.DAI_POLYGON = new sdk_core_1.Token(sdk_core_1.ChainId.POLYGON, '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063', 18, 'DAI', 'Dai Stablecoin');
++export const WMATIC_POLYGON = new Token(ChainId.POLYGON, '0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270', 18, 'WMATIC', 'Wrapped MATIC');
++export const WETH_POLYGON = new Token(ChainId.POLYGON, '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619', 18, 'WETH', 'Wrapped Ether');
++export const USDC_POLYGON = new Token(ChainId.POLYGON, '0x2791bca1f2de4661ed88a30c99a7a9449aa84174', 6, 'USDC', 'USD//C');
++export const DAI_POLYGON = new Token(ChainId.POLYGON, '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063', 18, 'DAI', 'Dai Stablecoin');
+ //polygon mumbai tokens
+-exports.WMATIC_POLYGON_MUMBAI = new sdk_core_1.Token(sdk_core_1.ChainId.POLYGON_MUMBAI, '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889', 18, 'WMATIC', 'Wrapped MATIC');
+-exports.USDC_POLYGON_MUMBAI = new sdk_core_1.Token(sdk_core_1.ChainId.POLYGON_MUMBAI, '0xe11a86849d99f524cac3e7a0ec1241828e332c62', 6, 'USDC', 'USD//C');
+-exports.DAI_POLYGON_MUMBAI = new sdk_core_1.Token(sdk_core_1.ChainId.POLYGON_MUMBAI, '0x001b3b4d0f3714ca98ba10f6042daebf0b1b7b6f', 18, 'DAI', 'Dai Stablecoin');
+-exports.WETH_POLYGON_MUMBAI = new sdk_core_1.Token(sdk_core_1.ChainId.POLYGON_MUMBAI, '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa', 18, 'WETH', 'Wrapped Ether');
++export const WMATIC_POLYGON_MUMBAI = new Token(ChainId.POLYGON_MUMBAI, '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889', 18, 'WMATIC', 'Wrapped MATIC');
++export const USDC_POLYGON_MUMBAI = new Token(ChainId.POLYGON_MUMBAI, '0xe11a86849d99f524cac3e7a0ec1241828e332c62', 6, 'USDC', 'USD//C');
++export const DAI_POLYGON_MUMBAI = new Token(ChainId.POLYGON_MUMBAI, '0x001b3b4d0f3714ca98ba10f6042daebf0b1b7b6f', 18, 'DAI', 'Dai Stablecoin');
++export const WETH_POLYGON_MUMBAI = new Token(ChainId.POLYGON_MUMBAI, '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa', 18, 'WETH', 'Wrapped Ether');
+ // BNB chain Tokens
+-exports.BTC_BNB = new sdk_core_1.Token(sdk_core_1.ChainId.BNB, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'Binance BTC');
+-exports.BUSD_BNB = new sdk_core_1.Token(sdk_core_1.ChainId.BNB, '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', 18, 'BUSD', 'BUSD');
+-exports.DAI_BNB = new sdk_core_1.Token(sdk_core_1.ChainId.BNB, '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', 18, 'DAI', 'DAI');
+-exports.ETH_BNB = new sdk_core_1.Token(sdk_core_1.ChainId.BNB, '0x2170Ed0880ac9A755fd29B2688956BD959F933F8', 18, 'ETH', 'ETH');
+-exports.USDC_BNB = new sdk_core_1.Token(sdk_core_1.ChainId.BNB, '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', 18, 'USDC', 'USDC');
+-exports.USDT_BNB = new sdk_core_1.Token(sdk_core_1.ChainId.BNB, '0x55d398326f99059fF775485246999027B3197955', 18, 'USDT', 'USDT');
++export const BTC_BNB = new Token(ChainId.BNB, '0x7130d2A12B9BCbFAe4f2634d864A1Ee1Ce3Ead9c', 18, 'BTCB', 'Binance BTC');
++export const BUSD_BNB = new Token(ChainId.BNB, '0xe9e7CEA3DedcA5984780Bafc599bD69ADd087D56', 18, 'BUSD', 'BUSD');
++export const DAI_BNB = new Token(ChainId.BNB, '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', 18, 'DAI', 'DAI');
++export const ETH_BNB = new Token(ChainId.BNB, '0x2170Ed0880ac9A755fd29B2688956BD959F933F8', 18, 'ETH', 'ETH');
++export const USDC_BNB = new Token(ChainId.BNB, '0x8AC76a51cc950d9822D68b83fE1Ad97B32Cd580d', 18, 'USDC', 'USDC');
++export const USDT_BNB = new Token(ChainId.BNB, '0x55d398326f99059fF775485246999027B3197955', 18, 'USDT', 'USDT');
+ // Celo Tokens
+-exports.CELO = new sdk_core_1.Token(sdk_core_1.ChainId.CELO, '0x471EcE3750Da237f93B8E339c536989b8978a438', 18, 'CELO', 'Celo native asset');
+-exports.DAI_CELO = new sdk_core_1.Token(sdk_core_1.ChainId.CELO, '0xE4fE50cdD716522A56204352f00AA110F731932d', 18, 'DAI', 'Dai Stablecoin');
+-exports.CUSD_CELO = new sdk_core_1.Token(sdk_core_1.ChainId.CELO, '0x765DE816845861e75A25fCA122bb6898B8B1282a', 18, 'CUSD', 'Celo Dollar Stablecoin');
+-exports.CEUR_CELO = new sdk_core_1.Token(sdk_core_1.ChainId.CELO, '0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73', 18, 'CEUR', 'Celo Euro Stablecoin');
++export const CELO = new Token(ChainId.CELO, '0x471EcE3750Da237f93B8E339c536989b8978a438', 18, 'CELO', 'Celo native asset');
++export const DAI_CELO = new Token(ChainId.CELO, '0xE4fE50cdD716522A56204352f00AA110F731932d', 18, 'DAI', 'Dai Stablecoin');
++export const CUSD_CELO = new Token(ChainId.CELO, '0x765DE816845861e75A25fCA122bb6898B8B1282a', 18, 'CUSD', 'Celo Dollar Stablecoin');
++export const CEUR_CELO = new Token(ChainId.CELO, '0xD8763CBa276a3738E6DE85b4b3bF5FDed6D6cA73', 18, 'CEUR', 'Celo Euro Stablecoin');
+ // Celo Alfajores Tokens
+-exports.CELO_ALFAJORES = new sdk_core_1.Token(sdk_core_1.ChainId.CELO_ALFAJORES, '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9', 18, 'CELO', 'Celo native asset');
+-exports.DAI_CELO_ALFAJORES = new sdk_core_1.Token(sdk_core_1.ChainId.CELO_ALFAJORES, '0x7d91E51C8F218f7140188A155f5C75388630B6a8', 18, 'DAI', 'Dai Stablecoin');
+-exports.CUSD_CELO_ALFAJORES = new sdk_core_1.Token(sdk_core_1.ChainId.CELO_ALFAJORES, '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1', 18, 'CUSD', 'Celo Dollar Stablecoin');
+-exports.CEUR_CELO_ALFAJORES = new sdk_core_1.Token(sdk_core_1.ChainId.CELO_ALFAJORES, '0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F', 18, 'CEUR', 'Celo Euro Stablecoin');
++export const CELO_ALFAJORES = new Token(ChainId.CELO_ALFAJORES, '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9', 18, 'CELO', 'Celo native asset');
++export const DAI_CELO_ALFAJORES = new Token(ChainId.CELO_ALFAJORES, '0x7d91E51C8F218f7140188A155f5C75388630B6a8', 18, 'DAI', 'Dai Stablecoin');
++export const CUSD_CELO_ALFAJORES = new Token(ChainId.CELO_ALFAJORES, '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1', 18, 'CUSD', 'Celo Dollar Stablecoin');
++export const CEUR_CELO_ALFAJORES = new Token(ChainId.CELO_ALFAJORES, '0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F', 18, 'CEUR', 'Celo Euro Stablecoin');
+ // Avalanche Tokens
+-exports.DAI_AVAX = new sdk_core_1.Token(sdk_core_1.ChainId.AVALANCHE, '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70', 18, 'DAI.e', 'DAI.e Token');
+-exports.USDC_AVAX = new sdk_core_1.Token(sdk_core_1.ChainId.AVALANCHE, '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E', 6, 'USDC', 'USDC Token');
++export const DAI_AVAX = new Token(ChainId.AVALANCHE, '0xd586E7F844cEa2F87f50152665BCbc2C279D8d70', 18, 'DAI.e', 'DAI.e Token');
++export const USDC_AVAX = new Token(ChainId.AVALANCHE, '0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E', 6, 'USDC', 'USDC Token');
+ // Base Tokens
+-exports.USDC_BASE = new sdk_core_1.Token(sdk_core_1.ChainId.BASE, '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA', 6, 'USDbC', 'USD Base Coin');
++export const USDC_BASE = new Token(ChainId.BASE, '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA', 6, 'USDbC', 'USD Base Coin');
+ // Base Goerli Tokens 
+-exports.USDC_BASE_GOERLI = new sdk_core_1.Token(sdk_core_1.ChainId.BASE_GOERLI, '0x853154e2A5604E5C74a2546E2871Ad44932eB92C', 6, 'USDbC', 'USD Base Coin');
++export const USDC_BASE_GOERLI = new Token(ChainId.BASE_GOERLI, '0x853154e2A5604E5C74a2546E2871Ad44932eB92C', 6, 'USDbC', 'USD Base Coin');
+ // Gnosis Tokens
+-exports.USDC_ETHEREUM_GNOSIS = new sdk_core_1.Token(sdk_core_1.ChainId.GNOSIS, '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83', 6, 'USDC', 'USDC from Ethereum on Gnosis');
+-exports.WXDAI_GNOSIS = new sdk_core_1.Token(sdk_core_1.ChainId.GNOSIS, '0xe91d153e0b41518a2ce8dd3d7944fa863463a97d', 18, 'WXDAI', 'Wrapped XDAI on Gnosis');
+-exports.WBTC_GNOSIS = new sdk_core_1.Token(sdk_core_1.ChainId.GNOSIS, '0x8e5bbbb09ed1ebde8674cda39a0c169401db4252', 8, 'WBTC', 'Wrapped BTC from Ethereum on Gnosis');
++export const USDC_ETHEREUM_GNOSIS = new Token(ChainId.GNOSIS, '0xddafbb505ad214d7b80b1f830fccc89b60fb7a83', 6, 'USDC', 'USDC from Ethereum on Gnosis');
++export const WXDAI_GNOSIS = new Token(ChainId.GNOSIS, '0xe91d153e0b41518a2ce8dd3d7944fa863463a97d', 18, 'WXDAI', 'Wrapped XDAI on Gnosis');
++export const WBTC_GNOSIS = new Token(ChainId.GNOSIS, '0x8e5bbbb09ed1ebde8674cda39a0c169401db4252', 8, 'WBTC', 'Wrapped BTC from Ethereum on Gnosis');
+ // Moonbeam Tokens
+-exports.USDC_MOONBEAM = new sdk_core_1.Token(sdk_core_1.ChainId.MOONBEAM, '0x818ec0A7Fe18Ff94269904fCED6AE3DaE6d6dC0b', 6, 'USDC', 'USD Coin bridged using Multichain');
+-exports.WGLMR_MOONBEAM = new sdk_core_1.Token(sdk_core_1.ChainId.MOONBEAM, '0xAcc15dC74880C9944775448304B263D191c6077F', 18, 'WGLMR', 'Wrapped GLMR');
+-exports.DAI_MOONBEAM = new sdk_core_1.Token(sdk_core_1.ChainId.MOONBEAM, '0x818ec0A7Fe18Ff94269904fCED6AE3DaE6d6dC0b', 6, 'DAI', 'Dai on moonbeam bridged using Multichain');
+-exports.WBTC_MOONBEAM = new sdk_core_1.Token(sdk_core_1.ChainId.MOONBEAM, '0x922D641a426DcFFaeF11680e5358F34d97d112E1', 8, 'WBTC', 'Wrapped BTC bridged using Multichain');
+-class TokenProvider {
++export const USDC_MOONBEAM = new Token(ChainId.MOONBEAM, '0x818ec0A7Fe18Ff94269904fCED6AE3DaE6d6dC0b', 6, 'USDC', 'USD Coin bridged using Multichain');
++export const USDC_TAIKO_MAINNET = new Token(ChainId.TAIKO_MAINNET, '0x07d83526730c7438048D55A4fc0b850e2aaB6f0b', 6, 'USDC', 'USD Coin');
++export const USDC_TAIKO_HOODI = new Token(ChainId.TAIKO_HOODI, '0x18d5bB147f3D05D5f6c5E60Caf1daeeDBF5155B6', 6, 'USDC', 'USD Coin');
++export const TAIKO_TAIKO_HOODI = new Token(ChainId.TAIKO_HOODI, '0x96257D50DB02ba0153f888e919ff47A91951e979', 18, 'TAIKO', 'Taiko Token');
++export const WGLMR_MOONBEAM = new Token(ChainId.MOONBEAM, '0xAcc15dC74880C9944775448304B263D191c6077F', 18, 'WGLMR', 'Wrapped GLMR');
++export const DAI_MOONBEAM = new Token(ChainId.MOONBEAM, '0x818ec0A7Fe18Ff94269904fCED6AE3DaE6d6dC0b', 6, 'DAI', 'Dai on moonbeam bridged using Multichain');
++export const WBTC_MOONBEAM = new Token(ChainId.MOONBEAM, '0x922D641a426DcFFaeF11680e5358F34d97d112E1', 8, 'WBTC', 'Wrapped BTC bridged using Multichain');
++export class TokenProvider {
+     constructor(chainId, multicall2Provider) {
+         this.chainId = chainId;
+         this.multicall2Provider = multicall2Provider;
+@@ -100,14 +96,14 @@ class TokenProvider {
+             result =
+                 await this.multicall2Provider.callSameFunctionOnMultipleContracts({
+                     addresses,
+-                    contractInterface: IERC20Metadata__factory_1.IERC20Metadata__factory.createInterface(),
++                    contractInterface: IERC20Metadata__factory.createInterface(),
+                     functionName: 'symbol',
+                     providerConfig,
+                 });
+         }
+         catch (error) {
+-            util_1.log.error({ addresses }, `TokenProvider.getTokenSymbol[string] failed with error ${error}. Trying with bytes32.`);
+-            const bytes32Interface = new abi_1.Interface([
++            log.error({ addresses }, `TokenProvider.getTokenSymbol[string] failed with error ${error}. Trying with bytes32.`);
++            const bytes32Interface = new Interface([
+                 {
+                     inputs: [],
+                     name: 'symbol',
+@@ -133,7 +129,7 @@ class TokenProvider {
+                 isBytes32 = true;
+             }
+             catch (error) {
+-                util_1.log.fatal({ addresses }, `TokenProvider.getTokenSymbol[bytes32] failed with error ${error}.`);
++                log.fatal({ addresses }, `TokenProvider.getTokenSymbol[bytes32] failed with error ${error}.`);
+                 throw new Error('[TokenProvider.getTokenSymbol] Impossible to fetch token symbol.');
+             }
+         }
+@@ -142,7 +138,7 @@ class TokenProvider {
+     async getTokenDecimals(addresses, providerConfig) {
+         return this.multicall2Provider.callSameFunctionOnMultipleContracts({
+             addresses,
+-            contractInterface: IERC20Metadata__factory_1.IERC20Metadata__factory.createInterface(),
++            contractInterface: IERC20Metadata__factory.createInterface(),
+             functionName: 'decimals',
+             providerConfig,
+         });
+@@ -150,7 +146,7 @@ class TokenProvider {
+     async getTokens(_addresses, providerConfig) {
+         const addressToToken = {};
+         const symbolToToken = {};
+-        const addresses = (0, lodash_1.default)(_addresses)
++        const addresses = _(_addresses)
+             .map((address) => address.toLowerCase())
+             .uniq()
+             .value();
+@@ -167,21 +163,21 @@ class TokenProvider {
+                 const symbolResult = symbols[i];
+                 const decimalResult = decimals[i];
+                 if (!(symbolResult === null || symbolResult === void 0 ? void 0 : symbolResult.success) || !(decimalResult === null || decimalResult === void 0 ? void 0 : decimalResult.success)) {
+-                    util_1.log.info({
++                    log.info({
+                         symbolResult,
+                         decimalResult,
+                     }, `Dropping token with address ${address} as symbol or decimal are invalid`);
+                     continue;
+                 }
+                 const symbol = isBytes32
+-                    ? (0, strings_1.parseBytes32String)(symbolResult.result[0])
++                    ? parseBytes32String(symbolResult.result[0])
+                     : symbolResult.result[0];
+                 const decimal = decimalResult.result[0];
+-                addressToToken[address.toLowerCase()] = new sdk_core_1.Token(this.chainId, address, decimal, symbol);
++                addressToToken[address.toLowerCase()] = new Token(this.chainId, address, decimal, symbol);
+                 symbolToToken[symbol.toLowerCase()] =
+                     addressToToken[address.toLowerCase()];
+             }
+-            util_1.log.info(`Got token symbol and decimals for ${Object.values(addressToToken).length} out of ${addresses.length} tokens on-chain ${providerConfig ? `as of: ${providerConfig === null || providerConfig === void 0 ? void 0 : providerConfig.blockNumber}` : ''}`);
++            log.info(`Got token symbol and decimals for ${Object.values(addressToToken).length} out of ${addresses.length} tokens on-chain ${providerConfig ? `as of: ${providerConfig === null || providerConfig === void 0 ? void 0 : providerConfig.blockNumber}` : ''}`);
+         }
+         return {
+             getTokenByAddress: (address) => {
+@@ -196,100 +192,95 @@ class TokenProvider {
+         };
+     }
+ }
+-exports.TokenProvider = TokenProvider;
+-const DAI_ON = (chainId) => {
++export const DAI_ON = (chainId) => {
+     switch (chainId) {
+-        case sdk_core_1.ChainId.MAINNET:
+-            return exports.DAI_MAINNET;
+-        case sdk_core_1.ChainId.GOERLI:
+-            return exports.DAI_GOERLI;
+-        case sdk_core_1.ChainId.SEPOLIA:
+-            return exports.DAI_SEPOLIA;
+-        case sdk_core_1.ChainId.OPTIMISM:
+-            return exports.DAI_OPTIMISM;
+-        case sdk_core_1.ChainId.OPTIMISM_GOERLI:
+-            return exports.DAI_OPTIMISM_GOERLI;
+-        case sdk_core_1.ChainId.ARBITRUM_ONE:
+-            return exports.DAI_ARBITRUM;
+-        case sdk_core_1.ChainId.ARBITRUM_GOERLI:
+-            return exports.DAI_ARBITRUM_GOERLI;
+-        case sdk_core_1.ChainId.POLYGON:
+-            return exports.DAI_POLYGON;
+-        case sdk_core_1.ChainId.POLYGON_MUMBAI:
+-            return exports.DAI_POLYGON_MUMBAI;
+-        case sdk_core_1.ChainId.CELO:
+-            return exports.DAI_CELO;
+-        case sdk_core_1.ChainId.CELO_ALFAJORES:
+-            return exports.DAI_CELO_ALFAJORES;
+-        case sdk_core_1.ChainId.MOONBEAM:
+-            return exports.DAI_MOONBEAM;
+-        case sdk_core_1.ChainId.BNB:
+-            return exports.DAI_BNB;
+-        case sdk_core_1.ChainId.AVALANCHE:
+-            return exports.DAI_AVAX;
++        case ChainId.MAINNET:
++            return DAI_MAINNET;
++        case ChainId.GOERLI:
++            return DAI_GOERLI;
++        case ChainId.SEPOLIA:
++            return DAI_SEPOLIA;
++        case ChainId.OPTIMISM:
++            return DAI_OPTIMISM;
++        case ChainId.OPTIMISM_GOERLI:
++            return DAI_OPTIMISM_GOERLI;
++        case ChainId.ARBITRUM_ONE:
++            return DAI_ARBITRUM;
++        case ChainId.ARBITRUM_GOERLI:
++            return DAI_ARBITRUM_GOERLI;
++        case ChainId.POLYGON:
++            return DAI_POLYGON;
++        case ChainId.POLYGON_MUMBAI:
++            return DAI_POLYGON_MUMBAI;
++        case ChainId.CELO:
++            return DAI_CELO;
++        case ChainId.CELO_ALFAJORES:
++            return DAI_CELO_ALFAJORES;
++        case ChainId.MOONBEAM:
++            return DAI_MOONBEAM;
++        case ChainId.BNB:
++            return DAI_BNB;
++        case ChainId.AVALANCHE:
++            return DAI_AVAX;
+         default:
+             throw new Error(`Chain id: ${chainId} not supported`);
+     }
+ };
+-exports.DAI_ON = DAI_ON;
+-const USDT_ON = (chainId) => {
++export const USDT_ON = (chainId) => {
+     switch (chainId) {
+-        case sdk_core_1.ChainId.MAINNET:
+-            return exports.USDT_MAINNET;
+-        case sdk_core_1.ChainId.GOERLI:
+-            return exports.USDT_GOERLI;
+-        case sdk_core_1.ChainId.OPTIMISM:
+-            return exports.USDT_OPTIMISM;
+-        case sdk_core_1.ChainId.OPTIMISM_GOERLI:
+-            return exports.USDT_OPTIMISM_GOERLI;
+-        case sdk_core_1.ChainId.ARBITRUM_ONE:
+-            return exports.USDT_ARBITRUM;
+-        case sdk_core_1.ChainId.BNB:
+-            return exports.USDT_BNB;
++        case ChainId.MAINNET:
++            return USDT_MAINNET;
++        case ChainId.GOERLI:
++            return USDT_GOERLI;
++        case ChainId.OPTIMISM:
++            return USDT_OPTIMISM;
++        case ChainId.OPTIMISM_GOERLI:
++            return USDT_OPTIMISM_GOERLI;
++        case ChainId.ARBITRUM_ONE:
++            return USDT_ARBITRUM;
++        case ChainId.BNB:
++            return USDT_BNB;
+         default:
+             throw new Error(`Chain id: ${chainId} not supported`);
+     }
+ };
+-exports.USDT_ON = USDT_ON;
+-const USDC_ON = (chainId) => {
++export const USDC_ON = (chainId) => {
+     switch (chainId) {
+-        case sdk_core_1.ChainId.MAINNET:
+-            return exports.USDC_MAINNET;
+-        case sdk_core_1.ChainId.GOERLI:
+-            return exports.USDC_GOERLI;
+-        case sdk_core_1.ChainId.SEPOLIA:
+-            return exports.USDC_SEPOLIA;
+-        case sdk_core_1.ChainId.OPTIMISM:
+-            return exports.USDC_OPTIMISM;
+-        case sdk_core_1.ChainId.OPTIMISM_GOERLI:
+-            return exports.USDC_OPTIMISM_GOERLI;
+-        case sdk_core_1.ChainId.ARBITRUM_ONE:
+-            return exports.USDC_ARBITRUM;
+-        case sdk_core_1.ChainId.ARBITRUM_GOERLI:
+-            return exports.USDC_ARBITRUM_GOERLI;
+-        case sdk_core_1.ChainId.POLYGON:
+-            return exports.USDC_POLYGON;
+-        case sdk_core_1.ChainId.POLYGON_MUMBAI:
+-            return exports.USDC_POLYGON_MUMBAI;
+-        case sdk_core_1.ChainId.GNOSIS:
+-            return exports.USDC_ETHEREUM_GNOSIS;
+-        case sdk_core_1.ChainId.MOONBEAM:
+-            return exports.USDC_MOONBEAM;
+-        case sdk_core_1.ChainId.BNB:
+-            return exports.USDC_BNB;
+-        case sdk_core_1.ChainId.AVALANCHE:
+-            return exports.USDC_AVAX;
+-        case sdk_core_1.ChainId.BASE:
+-            return exports.USDC_BASE;
+-        case sdk_core_1.ChainId.BASE_GOERLI:
+-            return exports.USDC_BASE_GOERLI;
++        case ChainId.MAINNET:
++            return USDC_MAINNET;
++        case ChainId.GOERLI:
++            return USDC_GOERLI;
++        case ChainId.SEPOLIA:
++            return USDC_SEPOLIA;
++        case ChainId.OPTIMISM:
++            return USDC_OPTIMISM;
++        case ChainId.OPTIMISM_GOERLI:
++            return USDC_OPTIMISM_GOERLI;
++        case ChainId.ARBITRUM_ONE:
++            return USDC_ARBITRUM;
++        case ChainId.ARBITRUM_GOERLI:
++            return USDC_ARBITRUM_GOERLI;
++        case ChainId.POLYGON:
++            return USDC_POLYGON;
++        case ChainId.POLYGON_MUMBAI:
++            return USDC_POLYGON_MUMBAI;
++        case ChainId.GNOSIS:
++            return USDC_ETHEREUM_GNOSIS;
++        case ChainId.MOONBEAM:
++            return USDC_MOONBEAM;
++        case ChainId.BNB:
++            return USDC_BNB;
++        case ChainId.AVALANCHE:
++            return USDC_AVAX;
++        case ChainId.BASE:
++            return USDC_BASE;
++        case ChainId.BASE_GOERLI:
++            return USDC_BASE_GOERLI;
+         default:
+             throw new Error(`Chain id: ${chainId} not supported`);
+     }
+ };
+-exports.USDC_ON = USDC_ON;
+-const WNATIVE_ON = (chainId) => {
+-    return util_1.WRAPPED_NATIVE_CURRENCY[chainId];
++export const WNATIVE_ON = (chainId) => {
++    return WRAPPED_NATIVE_CURRENCY[chainId];
+ };
+-exports.WNATIVE_ON = WNATIVE_ON;
+-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidG9rZW4tcHJvdmlkZXIuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi9zcmMvcHJvdmlkZXJzL3Rva2VuLXByb3ZpZGVyLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7Ozs7Ozs7QUFBQSw0Q0FBK0M7QUFFL0Msb0RBQTREO0FBQzVELGdEQUFtRDtBQUNuRCxvREFBdUI7QUFFdkIsMkZBQXdGO0FBQ3hGLGtDQUF1RDtBQStCdkQsb0VBQW9FO0FBQ3ZELFFBQUEsWUFBWSxHQUFHLElBQUksZ0JBQUssQ0FDbkMsa0JBQU8sQ0FBQyxPQUFPLEVBQ2YsNENBQTRDLEVBQzVDLENBQUMsRUFDRCxNQUFNLEVBQ04sUUFBUSxDQUNULENBQUM7QUFDVyxRQUFBLFlBQVksR0FBRyxJQUFJLGdCQUFLLENBQ25DLGtCQUFPLENBQUMsT0FBTyxFQUNmLDRDQUE0QyxFQUM1QyxDQUFDLEVBQ0QsTUFBTSxFQUNOLFlBQVksQ0FDYixDQUFDO0FBQ1csUUFBQSxZQUFZLEdBQUcsSUFBSSxnQkFBSyxDQUNuQyxrQkFBTyxDQUFDLE9BQU8sRUFDZiw0Q0FBNEMsRUFDNUMsQ0FBQyxFQUNELE1BQU0sRUFDTixhQUFhLENBQ2QsQ0FBQztBQUNXLFFBQUEsV0FBVyxHQUFHLElBQUksZ0JBQUssQ0FDbEMsa0JBQU8sQ0FBQyxPQUFPLEVBQ2YsNENBQTRDLEVBQzVDLEVBQUUsRUFDRixLQUFLLEVBQ0wsZ0JBQWdCLENBQ2pCLENBQUM7QUFDVyxRQUFBLFdBQVcsR0FBRyxJQUFJLGdCQUFLLENBQ2xDLGtCQUFPLENBQUMsT0FBTyxFQUNmLDRDQUE0QyxFQUM1QyxFQUFFLEVBQ0YsS0FBSyxFQUNMLFNBQVMsQ0FDVixDQUFDO0FBQ1csUUFBQSxXQUFXLEdBQUcsSUFBSSxnQkFBSyxDQUNsQyxrQkFBTyxDQUFDLE9BQU8sRUFDZiw0Q0FBNEMsRUFDNUMsRUFBRSxFQUNGLEtBQUssRUFDTCxTQUFTLENBQ1YsQ0FBQztBQUVXLFFBQUEsWUFBWSxHQUFHLElBQUksZ0JB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
+\ No newline at end of file
++//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoidG9rZW4tcHJvdmlkZXIuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi8uLi8uLi9zcmMvcHJvdmlkZXJzL3Rva2VuLXByb3ZpZGVyLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBLE9BQU8sRUFBRSxTQUFTLEVBQUUsTUFBTSxvQkFBb0IsQ0FBQztBQUUvQyxPQUFPLEVBQUUsa0JBQWtCLEVBQUUsTUFBTSx3QkFBd0IsQ0FBQztBQUM1RCxPQUFPLEVBQUUsT0FBTyxFQUFFLEtBQUssRUFBRSxNQUFNLG1CQUFtQixDQUFDO0FBQ25ELE9BQU8sQ0FBQyxNQUFNLFFBQVEsQ0FBQztBQUV2QixPQUFPLEVBQUUsdUJBQXVCLEVBQUUsTUFBTSwrQ0FBK0MsQ0FBQztBQUN4RixPQUFPLEVBQUUsR0FBRyxFQUFFLHVCQUF1QixFQUFFLE1BQU0sU0FBUyxDQUFDO0FBK0J2RCxvRUFBb0U7QUFDcEUsTUFBTSxDQUFDLE1BQU0sWUFBWSxHQUFHLElBQUksS0FBSyxDQUNuQyxPQUFPLENBQUMsT0FBTyxFQUNmLDRDQUE0QyxFQUM1QyxDQUFDLEVBQ0QsTUFBTSxFQUNOLFFBQVEsQ0FDVCxDQUFDO0FBQ0YsTUFBTSxDQUFDLE1BQU0sWUFBWSxHQUFHLElBQUksS0FBSyxDQUNuQyxPQUFPLENBQUMsT0FBTyxFQUNmLDRDQUE0QyxFQUM1QyxDQUFDLEVBQ0QsTUFBTSxFQUNOLFlBQVksQ0FDYixDQUFDO0FBQ0YsTUFBTSxDQUFDLE1BQU0sWUFBWSxHQUFHLElBQUksS0FBSyxDQUNuQyxPQUFPLENBQUMsT0FBTyxFQUNmLDRDQUE0QyxFQUM1QyxDQUFDLEVBQ0QsTUFBTSxFQUNOLGFBQWEsQ0FDZCxDQUFDO0FBQ0YsTUFBTSxDQUFDLE1BQU0sV0FBVyxHQUFHLElBQUksS0FBSyxDQUNsQyxPQUFPLENBQUMsT0FBTyxFQUNmLDRDQUE0QyxFQUM1QyxFQUFFLEVBQ0YsS0FBSyxFQUNMLGdCQUFnQixDQUNqQixDQUFDO0FBQ0YsTUFBTSxDQUFDLE1BQU0sV0FBVyxHQUFHLElBQUksS0FBSyxDQUNsQyxPQUFPLENBQUMsT0FBTyxFQUNmLDRDQUE0QyxFQUM1QyxFQUFFLEVBQ0YsS0FBSyxFQUNMLFNBQVMsQ0FDVixDQUFDO0FBQ0YsTUFBTSxDQUFDLE1BQU0sV0FBVyxHQUFHLElBQUksS0FBSyxDQUNsQyxPQUFPLENBQUMsT0FBTyxFQUNmLDRDQUE0QyxFQUM1QyxFQUFFLEVBQ0YsS0FBSyxFQUNMLFNBQVMsQ0FDVixDQUFDO0FBRUYsTUFBTSxDQUFDLE1BQU0sWUFBWSxHQUFHLElBQUksS0FBSyxDQUNuQyxPQUFPLENBQUMsT0FBTyxFQUNmLDRDQUE0QyxFQUM1QyxFQUFFLEVBQ0YsTUFBTSxFQUNOLFlBQVksQ0FDYixDQUFDO0FBRUYsTUFBTSxDQUFDLE1BQU0sWUFBWSxHQUFHLElBQUksS0FBSyxDQUNuQyxPQUFPLENBQUMsT0FBTyxFQUNmLDRDQUE0QyxFQUM1QyxFQUFFLEVBQ0YsS0FBSyxFQUNMLGdCQUFnQixDQUNqQixDQUFDO0FBRUYsTUFBTSxDQUFDLE1BQU0sWUFBWSxHQUFHLElBQUksS0FBSyxDQUNuQyxPQUFPLENBQUMsT0FBTyxFQUNmLDRDQUE0QyxFQUM1QyxFQUFFLEVBQ0YsTUFBTSxFQUNOLFlBQVksQ0FDYixDQUFDO0FBQ0YsTUFBTSxDQUFDLE1BQU0sV0FBVyxHQUFHLElBQUksS0FBSyxDQUNsQyxPQUFPLENBQUMsT0FBTyxFQUNmLDRDQUE0QyxFQUM1QyxFQUFFLEVBQ0YsS0FBSyxFQUNMLFdBQVcsQ0FDWixDQUFDO0FBQ0YsTUFBTSxDQUFDLE1BQU0sV0FBVyxHQUFHLElBQUksS0FBSyxDQUNsQyxPQUFPLENBQUMsTUFBTSxFQUNkLDRDQUE0QyxFQUM1QyxDQUFDLEVBQ0QsTUFBTSxFQUNOLFFBQVEsQ0FDVCxDQUFDO0FBQ0YsTUFBTSxDQUFDLE1BQU0sV0FBVyxHQUFHLElBQUksS0FBSyxDQUNsQyxPQUFPLENBQUMsTUFBTSxFQUNkLDRDQUE0QyxFQUM1QyxFQUFFLEVBQ0YsTUFBTSxFQUNOLFlBQVksQ0FDYixDQUFDO0FBQ0YsTUFB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
+\ No newline at end of file
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/pool-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/pool-provider.js
+index 530fc75..477212a 100644
+--- a/node_modules/@uniswap/smart-order-router/build/main/providers/v2/pool-provider.js
++++ b/node_modules/@uniswap/smart-order-router/build/main/providers/v2/pool-provider.js
+@@ -31,6 +31,15 @@ class V2PoolProvider {
+         this.POOL_ADDRESS_CACHE = {};
+     }
+     async getPools(tokenPairs, providerConfig) {
++        // Taiko chains don't have Uniswap V2 deployed, return empty pools
++        if (this.chainId === 167000 || this.chainId === 167013) {
++            log_1.log.info(`Skipping V2 pools for Taiko chain ${this.chainId}`);
++            return {
++                getPool: () => undefined,
++                getPoolByAddress: () => undefined,
++                getAllPools: () => [],
++            };
++        }
+         const poolAddressSet = new Set();
+         const sortedTokenPairs = [];
+         const sortedPoolAddresses = [];
+@@ -82,6 +91,10 @@ class V2PoolProvider {
+         };
+     }
+     getPoolAddress(tokenA, tokenB) {
++        // Taiko chains don't have Uniswap V2 deployed
++        if (this.chainId === 167000 || this.chainId === 167013) {
++            throw new Error(`Uniswap V2 is not deployed on Taiko chain ${this.chainId}`);
++        }
+         const [token0, token1] = tokenA.sortsBefore(tokenB)
+             ? [tokenA, tokenB]
+             : [tokenB, tokenA];
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/static-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/static-subgraph-provider.js
+index 4e71f87..06845f1 100644
+--- a/node_modules/@uniswap/smart-order-router/build/main/providers/v3/static-subgraph-provider.js
++++ b/node_modules/@uniswap/smart-order-router/build/main/providers/v3/static-subgraph-provider.js
+@@ -97,6 +97,8 @@ const BASES_TO_CHECK_TRADES_AGAINST = {
+     ],
+     [sdk_core_1.ChainId.BASE_GOERLI]: [chains_1.WRAPPED_NATIVE_CURRENCY[sdk_core_1.ChainId.BASE_GOERLI]],
+     [sdk_core_1.ChainId.BASE]: [chains_1.WRAPPED_NATIVE_CURRENCY[sdk_core_1.ChainId.BASE], token_provider_1.USDC_BASE],
++    [sdk_core_1.ChainId.TAIKO_MAINNET]: [chains_1.WRAPPED_NATIVE_CURRENCY[sdk_core_1.ChainId.TAIKO_MAINNET], token_provider_1.USDC_TAIKO_MAINNET],
++    [sdk_core_1.ChainId.TAIKO_HOODI]: [chains_1.WRAPPED_NATIVE_CURRENCY[sdk_core_1.ChainId.TAIKO_HOODI], token_provider_1.USDC_TAIKO_HOODI, token_provider_1.TAIKO_TAIKO_HOODI],
+ };
+ /**
+  * Provider that uses a hardcoded list of V3 pools to generate a list of subgraph pools.
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/alpha-router.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/alpha-router.js
+index 5517475..175d881 100644
+--- a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/alpha-router.js
++++ b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/alpha-router.js
+@@ -122,6 +122,25 @@ class AlphaRouter {
+                         multicallChunk: 4,
+                     });
+                     break;
++                // Taiko chains - use high gas limits similar to Arbitrum
++                case 167000: // TAIKO_MAINNET
++                case 167013: // TAIKO_HOODI
++                    this.onChainQuoteProvider = new providers_2.OnChainQuoteProvider(chainId, provider, this.multicall2Provider, {
++                        retries: 2,
++                        minTimeout: 100,
++                        maxTimeout: 1000,
++                    }, {
++                        multicallChunk: 10,
++                        gasLimitPerCall: 12000000,
++                        quoteMinSuccessRate: 0.1,
++                    }, {
++                        gasLimitOverride: 30000000,
++                        multicallChunk: 6,
++                    }, {
++                        gasLimitOverride: 30000000,
++                        multicallChunk: 6,
++                    });
++                    break;
+                 default:
+                     this.onChainQuoteProvider = new providers_2.OnChainQuoteProvider(chainId, provider, this.multicall2Provider, {
+                         retries: 2,
+@@ -160,10 +179,16 @@ class AlphaRouter {
+             this.v3SubgraphProvider = v3SubgraphProvider;
+         }
+         else {
+-            this.v3SubgraphProvider = new providers_2.V3SubgraphProviderWithFallBacks([
+-                new providers_2.CachingV3SubgraphProvider(chainId, new providers_2.URISubgraphProvider(chainId, `https://cloudflare-ipfs.com/ipns/api.uniswap.org/v1/pools/v3/${chainName}.json`, undefined, 0), new providers_2.NodeJSCache(new node_cache_1.default({ stdTTL: 300, useClones: false }))),
+-                new providers_2.StaticV3SubgraphProvider(chainId, this.v3PoolProvider),
+-            ]);
++            // Taiko chains don't have deployed subgraphs, use static provider only
++            if (chainId === 167000 || chainId === 167013) {
++                this.v3SubgraphProvider = new providers_2.StaticV3SubgraphProvider(chainId, this.v3PoolProvider);
++            }
++            else {
++                this.v3SubgraphProvider = new providers_2.V3SubgraphProviderWithFallBacks([
++                    new providers_2.CachingV3SubgraphProvider(chainId, new providers_2.URISubgraphProvider(chainId, `https://cloudflare-ipfs.com/ipns/api.uniswap.org/v1/pools/v3/${chainName}.json`, undefined, 0), new providers_2.NodeJSCache(new node_cache_1.default({ stdTTL: 300, useClones: false }))),
++                    new providers_2.StaticV3SubgraphProvider(chainId, this.v3PoolProvider),
++                ]);
++            }
+         }
+         let gasPriceProviderInstance;
+         if (providers_1.JsonRpcProvider.isProvider(this.provider)) {
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/gas-model.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/gas-model.js
+index 2496ebe..19c0357 100644
+--- a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/gas-model.js
++++ b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/gas-model.js
+@@ -1,32 +1,31 @@
+-"use strict";
+-Object.defineProperty(exports, "__esModule", { value: true });
+-exports.IOnChainGasModelFactory = exports.IV2GasModelFactory = exports.usdGasTokensByChain = void 0;
+-const sdk_core_1 = require("@uniswap/sdk-core");
+-const token_provider_1 = require("../../../providers/token-provider");
++import { ChainId } from '@uniswap/sdk-core';
++import { CUSD_CELO, CUSD_CELO_ALFAJORES, DAI_ARBITRUM, DAI_AVAX, DAI_BNB, DAI_GOERLI, DAI_MAINNET, DAI_OPTIMISM, DAI_OPTIMISM_GOERLI, DAI_POLYGON_MUMBAI, DAI_SEPOLIA, USDC_ARBITRUM, USDC_ARBITRUM_GOERLI, USDC_AVAX, USDC_BASE, USDC_BNB, USDC_ETHEREUM_GNOSIS, USDC_GOERLI, USDC_MAINNET, USDC_MOONBEAM, USDC_OPTIMISM, USDC_OPTIMISM_GOERLI, USDC_POLYGON, USDC_SEPOLIA, USDC_TAIKO_MAINNET, USDC_TAIKO_HOODI, USDT_ARBITRUM, USDT_BNB, USDT_GOERLI, USDT_MAINNET, USDT_OPTIMISM, USDT_OPTIMISM_GOERLI, WBTC_GOERLI, } from '../../../providers/token-provider';
+ // When adding new usd gas tokens, ensure the tokens are ordered 
+ // from tokens with highest decimals to lowest decimals. For example,
+ // DAI_AVAX has 18 decimals and comes before USDC_AVAX which has 6 decimals.
+-exports.usdGasTokensByChain = {
+-    [sdk_core_1.ChainId.MAINNET]: [token_provider_1.DAI_MAINNET, token_provider_1.USDC_MAINNET, token_provider_1.USDT_MAINNET],
+-    [sdk_core_1.ChainId.ARBITRUM_ONE]: [token_provider_1.DAI_ARBITRUM, token_provider_1.USDC_ARBITRUM, token_provider_1.USDT_ARBITRUM],
+-    [sdk_core_1.ChainId.OPTIMISM]: [token_provider_1.DAI_OPTIMISM, token_provider_1.USDC_OPTIMISM, token_provider_1.USDT_OPTIMISM],
+-    [sdk_core_1.ChainId.OPTIMISM_GOERLI]: [
+-        token_provider_1.DAI_OPTIMISM_GOERLI,
+-        token_provider_1.USDC_OPTIMISM_GOERLI,
+-        token_provider_1.USDT_OPTIMISM_GOERLI,
++export const usdGasTokensByChain = {
++    [ChainId.MAINNET]: [DAI_MAINNET, USDC_MAINNET, USDT_MAINNET],
++    [ChainId.ARBITRUM_ONE]: [DAI_ARBITRUM, USDC_ARBITRUM, USDT_ARBITRUM],
++    [ChainId.OPTIMISM]: [DAI_OPTIMISM, USDC_OPTIMISM, USDT_OPTIMISM],
++    [ChainId.OPTIMISM_GOERLI]: [
++        DAI_OPTIMISM_GOERLI,
++        USDC_OPTIMISM_GOERLI,
++        USDT_OPTIMISM_GOERLI,
+     ],
+-    [sdk_core_1.ChainId.ARBITRUM_GOERLI]: [token_provider_1.USDC_ARBITRUM_GOERLI],
+-    [sdk_core_1.ChainId.GOERLI]: [token_provider_1.DAI_GOERLI, token_provider_1.USDC_GOERLI, token_provider_1.USDT_GOERLI, token_provider_1.WBTC_GOERLI],
+-    [sdk_core_1.ChainId.SEPOLIA]: [token_provider_1.USDC_SEPOLIA, token_provider_1.DAI_SEPOLIA],
+-    [sdk_core_1.ChainId.POLYGON]: [token_provider_1.USDC_POLYGON],
+-    [sdk_core_1.ChainId.POLYGON_MUMBAI]: [token_provider_1.DAI_POLYGON_MUMBAI],
+-    [sdk_core_1.ChainId.CELO]: [token_provider_1.CUSD_CELO],
+-    [sdk_core_1.ChainId.CELO_ALFAJORES]: [token_provider_1.CUSD_CELO_ALFAJORES],
+-    [sdk_core_1.ChainId.GNOSIS]: [token_provider_1.USDC_ETHEREUM_GNOSIS],
+-    [sdk_core_1.ChainId.MOONBEAM]: [token_provider_1.USDC_MOONBEAM],
+-    [sdk_core_1.ChainId.BNB]: [token_provider_1.USDT_BNB, token_provider_1.USDC_BNB, token_provider_1.DAI_BNB],
+-    [sdk_core_1.ChainId.AVALANCHE]: [token_provider_1.DAI_AVAX, token_provider_1.USDC_AVAX],
+-    [sdk_core_1.ChainId.BASE]: [token_provider_1.USDC_BASE],
++    [ChainId.ARBITRUM_GOERLI]: [USDC_ARBITRUM_GOERLI],
++    [ChainId.GOERLI]: [DAI_GOERLI, USDC_GOERLI, USDT_GOERLI, WBTC_GOERLI],
++    [ChainId.SEPOLIA]: [USDC_SEPOLIA, DAI_SEPOLIA],
++    [ChainId.POLYGON]: [USDC_POLYGON],
++    [ChainId.POLYGON_MUMBAI]: [DAI_POLYGON_MUMBAI],
++    [ChainId.CELO]: [CUSD_CELO],
++    [ChainId.CELO_ALFAJORES]: [CUSD_CELO_ALFAJORES],
++    [ChainId.GNOSIS]: [USDC_ETHEREUM_GNOSIS],
++    [ChainId.MOONBEAM]: [USDC_MOONBEAM],
++    [ChainId.BNB]: [USDT_BNB, USDC_BNB, DAI_BNB],
++    [ChainId.AVALANCHE]: [DAI_AVAX, USDC_AVAX],
++    [ChainId.BASE]: [USDC_BASE],
++    [ChainId.TAIKO_MAINNET]: [USDC_TAIKO_MAINNET],
++    [ChainId.TAIKO_HOODI]: [USDC_TAIKO_HOODI],
+ };
+ /**
+  * Factory for building gas models that can be used with any route to generate
+@@ -39,9 +38,8 @@ exports.usdGasTokensByChain = {
+  * @abstract
+  * @class IV2GasModelFactory
+  */
+-class IV2GasModelFactory {
++export class IV2GasModelFactory {
+ }
+-exports.IV2GasModelFactory = IV2GasModelFactory;
+ /**
+  * Factory for building gas models that can be used with any route to generate
+  * gas estimates.
+@@ -53,7 +51,6 @@ exports.IV2GasModelFactory = IV2GasModelFactory;
+  * @abstract
+  * @class IOnChainGasModelFactory
+  */
+-class IOnChainGasModelFactory {
++export class IOnChainGasModelFactory {
+ }
+-exports.IOnChainGasModelFactory = IOnChainGasModelFactory;
+-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZ2FzLW1vZGVsLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vLi4vc3JjL3JvdXRlcnMvYWxwaGEtcm91dGVyL2dhcy1tb2RlbHMvZ2FzLW1vZGVsLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiI7OztBQUNBLGdEQUFtRDtBQUluRCxzRUFnQzJDO0FBWTNDLGlFQUFpRTtBQUNqRSxxRUFBcUU7QUFDckUsNEVBQTRFO0FBQy9ELFFBQUEsbUJBQW1CLEdBQXVDO0lBQ3JFLENBQUMsa0JBQU8sQ0FBQyxPQUFPLENBQUMsRUFBRSxDQUFDLDRCQUFXLEVBQUUsNkJBQVksRUFBRSw2QkFBWSxDQUFDO0lBQzVELENBQUMsa0JBQU8sQ0FBQyxZQUFZLENBQUMsRUFBRSxDQUFDLDZCQUFZLEVBQUUsOEJBQWEsRUFBRSw4QkFBYSxDQUFDO0lBQ3BFLENBQUMsa0JBQU8sQ0FBQyxRQUFRLENBQUMsRUFBRSxDQUFDLDZCQUFZLEVBQUUsOEJBQWEsRUFBRSw4QkFBYSxDQUFDO0lBQ2hFLENBQUMsa0JBQU8sQ0FBQyxlQUFlLENBQUMsRUFBRTtRQUN6QixvQ0FBbUI7UUFDbkIscUNBQW9CO1FBQ3BCLHFDQUFvQjtLQUNyQjtJQUNELENBQUMsa0JBQU8sQ0FBQyxlQUFlLENBQUMsRUFBRSxDQUFDLHFDQUFvQixDQUFDO0lBQ2pELENBQUMsa0JBQU8sQ0FBQyxNQUFNLENBQUMsRUFBRSxDQUFDLDJCQUFVLEVBQUUsNEJBQVcsRUFBRSw0QkFBVyxFQUFFLDRCQUFXLENBQUM7SUFDckUsQ0FBQyxrQkFBTyxDQUFDLE9BQU8sQ0FBQyxFQUFFLENBQUMsNkJBQVksRUFBRSw0QkFBVyxDQUFDO0lBQzlDLENBQUMsa0JBQU8sQ0FBQyxPQUFPLENBQUMsRUFBRSxDQUFDLDZCQUFZLENBQUM7SUFDakMsQ0FBQyxrQkFBTyxDQUFDLGNBQWMsQ0FBQyxFQUFFLENBQUMsbUNBQWtCLENBQUM7SUFDOUMsQ0FBQyxrQkFBTyxDQUFDLElBQUksQ0FBQyxFQUFFLENBQUMsMEJBQVMsQ0FBQztJQUMzQixDQUFDLGtCQUFPLENBQUMsY0FBYyxDQUFDLEVBQUUsQ0FBQyxvQ0FBbUIsQ0FBQztJQUMvQyxDQUFDLGtCQUFPLENBQUMsTUFBTSxDQUFDLEVBQUUsQ0FBQyxxQ0FBb0IsQ0FBQztJQUN4QyxDQUFDLGtCQUFPLENBQUMsUUFBUSxDQUFDLEVBQUUsQ0FBQyw4QkFBYSxDQUFDO0lBQ25DLENBQUMsa0JBQU8sQ0FBQyxHQUFHLENBQUMsRUFBRSxDQUFDLHlCQUFRLEVBQUUseUJBQVEsRUFBRSx3QkFBTyxDQUFDO0lBQzVDLENBQUMsa0JBQU8sQ0FBQyxTQUFTLENBQUMsRUFBRSxDQUFDLHlCQUFRLEVBQUUsMEJBQVMsQ0FBQztJQUMxQyxDQUFDLGtCQUFPLENBQUMsSUFBSSxDQUFDLEVBQUUsQ0FBQywwQkFBUyxDQUFDO0NBQzVCLENBQUM7QUEyREY7Ozs7Ozs7Ozs7R0FVRztBQUNILE1BQXNCLGtCQUFrQjtDQU92QztBQVBELGdEQU9DO0FBRUQ7Ozs7Ozs7Ozs7R0FVRztBQUNILE1BQXNCLHVCQUF1QjtDQVk1QztBQVpELDBEQVlDIn0=
+\ No newline at end of file
++//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiZ2FzLW1vZGVsLmpzIiwic291cmNlUm9vdCI6IiIsInNvdXJjZXMiOlsiLi4vLi4vLi4vLi4vLi4vc3JjL3JvdXRlcnMvYWxwaGEtcm91dGVyL2dhcy1tb2RlbHMvZ2FzLW1vZGVsLnRzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUNBLE9BQU8sRUFBRSxPQUFPLEVBQVMsTUFBTSxtQkFBbUIsQ0FBQztBQUluRCxPQUFPLEVBQ0wsU0FBUyxFQUNULG1CQUFtQixFQUNuQixZQUFZLEVBQ1osUUFBUSxFQUNSLE9BQU8sRUFDUCxVQUFVLEVBQ1YsV0FBVyxFQUNYLFlBQVksRUFDWixtQkFBbUIsRUFDbkIsa0JBQWtCLEVBQ2xCLFdBQVcsRUFDWCxhQUFhLEVBQ2Isb0JBQW9CLEVBQ3BCLFNBQVMsRUFDVCxTQUFTLEVBQ1QsUUFBUSxFQUNSLG9CQUFvQixFQUNwQixXQUFXLEVBQ1gsWUFBWSxFQUNaLGFBQWEsRUFDYixhQUFhLEVBQ2Isb0JBQW9CLEVBQ3BCLFlBQVksRUFDWixZQUFZLEVBQ1osYUFBYSxFQUNiLFFBQVEsRUFDUixXQUFXLEVBQ1gsWUFBWSxFQUNaLGFBQWEsRUFDYixvQkFBb0IsRUFDcEIsV0FBVyxHQUNaLE1BQU0sbUNBQW1DLENBQUM7QUFZM0MsaUVBQWlFO0FBQ2pFLHFFQUFxRTtBQUNyRSw0RUFBNEU7QUFDNUUsTUFBTSxDQUFDLE1BQU0sbUJBQW1CLEdBQXVDO0lBQ3JFLENBQUMsT0FBTyxDQUFDLE9BQU8sQ0FBQyxFQUFFLENBQUMsV0FBVyxFQUFFLFlBQVksRUFBRSxZQUFZLENBQUM7SUFDNUQsQ0FBQyxPQUFPLENBQUMsWUFBWSxDQUFDLEVBQUUsQ0FBQyxZQUFZLEVBQUUsYUFBYSxFQUFFLGFBQWEsQ0FBQztJQUNwRSxDQUFDLE9BQU8sQ0FBQyxRQUFRLENBQUMsRUFBRSxDQUFDLFlBQVksRUFBRSxhQUFhLEVBQUUsYUFBYSxDQUFDO0lBQ2hFLENBQUMsT0FBTyxDQUFDLGVBQWUsQ0FBQyxFQUFFO1FBQ3pCLG1CQUFtQjtRQUNuQixvQkFBb0I7UUFDcEIsb0JBQW9CO0tBQ3JCO0lBQ0QsQ0FBQyxPQUFPLENBQUMsZUFBZSxDQUFDLEVBQUUsQ0FBQyxvQkFBb0IsQ0FBQztJQUNqRCxDQUFDLE9BQU8sQ0FBQyxNQUFNLENBQUMsRUFBRSxDQUFDLFVBQVUsRUFBRSxXQUFXLEVBQUUsV0FBVyxFQUFFLFdBQVcsQ0FBQztJQUNyRSxDQUFDLE9BQU8sQ0FBQyxPQUFPLENBQUMsRUFBRSxDQUFDLFlBQVksRUFBRSxXQUFXLENBQUM7SUFDOUMsQ0FBQyxPQUFPLENBQUMsT0FBTyxDQUFDLEVBQUUsQ0FBQyxZQUFZLENBQUM7SUFDakMsQ0FBQyxPQUFPLENBQUMsY0FBYyxDQUFDLEVBQUUsQ0FBQyxrQkFBa0IsQ0FBQztJQUM5QyxDQUFDLE9BQU8sQ0FBQyxJQUFJLENBQUMsRUFBRSxDQUFDLFNBQVMsQ0FBQztJQUMzQixDQUFDLE9BQU8sQ0FBQyxjQUFjLENBQUMsRUFBRSxDQUFDLG1CQUFtQixDQUFDO0lBQy9DLENBQUMsT0FBTyxDQUFDLE1BQU0sQ0FBQyxFQUFFLENBQUMsb0JBQW9CLENBQUM7SUFDeEMsQ0FBQyxPQUFPLENBQUMsUUFBUSxDQUFDLEVBQUUsQ0FBQyxhQUFhLENBQUM7SUFDbkMsQ0FBQyxPQUFPLENBQUMsR0FBRyxDQUFDLEVBQUUsQ0FBQyxRQUFRLEVBQUUsUUFBUSxFQUFFLE9BQU8sQ0FBQztJQUM1QyxDQUFDLE9BQU8sQ0FBQyxTQUFTLENBQUMsRUFBRSxDQUFDLFFBQVEsRUFBRSxTQUFTLENBQUM7SUFDMUMsQ0FBQyxPQUFPLENBQUMsSUFBSSxDQUFDLEVBQUUsQ0FBQyxTQUFTLENBQUM7Q0FDNUIsQ0FBQztBQTJERjs7Ozs7Ozs7OztHQVVHO0FBQ0gsTUFBTSxPQUFnQixrQkFBa0I7Q0FPdkM7QUFFRDs7Ozs7Ozs7OztHQVVHO0FBQ0gsTUFBTSxPQUFnQix1QkFBdUI7Q0FZNUMifQ==
+\ No newline at end of file
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v3/gas-costs.js b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v3/gas-costs.js
+index 76cd9f0..7fbdf82 100644
+--- a/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v3/gas-costs.js
++++ b/node_modules/@uniswap/smart-order-router/build/main/routers/alpha-router/gas-models/v3/gas-costs.js
+@@ -18,6 +18,8 @@ const BASE_SWAP_COST = (id) => {
+         case sdk_core_1.ChainId.AVALANCHE:
+         case sdk_core_1.ChainId.BASE:
+         case sdk_core_1.ChainId.BASE_GOERLI:
++        case 167000: // TAIKO_MAINNET
++        case 167013: // TAIKO_HOODI
+             return bignumber_1.BigNumber.from(2000);
+         case sdk_core_1.ChainId.ARBITRUM_ONE:
+         case sdk_core_1.ChainId.ARBITRUM_GOERLI:
+@@ -48,6 +50,8 @@ const COST_PER_INIT_TICK = (id) => {
+         case sdk_core_1.ChainId.OPTIMISM_GOERLI:
+         case sdk_core_1.ChainId.BASE:
+         case sdk_core_1.ChainId.BASE_GOERLI:
++        case 167000: // TAIKO_MAINNET
++        case 167013: // TAIKO_HOODI
+             return bignumber_1.BigNumber.from(31000);
+         case sdk_core_1.ChainId.ARBITRUM_ONE:
+         case sdk_core_1.ChainId.ARBITRUM_GOERLI:
+@@ -76,6 +80,8 @@ const COST_PER_HOP = (id) => {
+         case sdk_core_1.ChainId.AVALANCHE:
+         case sdk_core_1.ChainId.BASE:
+         case sdk_core_1.ChainId.BASE_GOERLI:
++        case 167000: // TAIKO_MAINNET
++        case 167013: // TAIKO_HOODI
+             return bignumber_1.BigNumber.from(80000);
+         case sdk_core_1.ChainId.ARBITRUM_ONE:
+         case sdk_core_1.ChainId.ARBITRUM_GOERLI:
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/addresses.js b/node_modules/@uniswap/smart-order-router/build/main/util/addresses.js
+index 9d77c31..ae5e2a0 100644
+--- a/node_modules/@uniswap/smart-order-router/build/main/util/addresses.js
++++ b/node_modules/@uniswap/smart-order-router/build/main/util/addresses.js
+@@ -9,13 +9,13 @@ exports.BNB_NONFUNGIBLE_POSITION_MANAGER_ADDRESS = sdk_core_1.CHAIN_TO_ADDRESSES
+ // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+ exports.BNB_SWAP_ROUTER_02_ADDRESS = sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BNB].swapRouter02Address;
+ exports.BNB_V3_MIGRATOR_ADDRESS = sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BNB].v3MigratorAddress;
+-exports.V3_CORE_FACTORY_ADDRESSES = Object.assign(Object.assign({}, constructSameAddressMap(v3_sdk_1.FACTORY_ADDRESS)), { [sdk_core_1.ChainId.CELO]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.CELO].v3CoreFactoryAddress, [sdk_core_1.ChainId.CELO_ALFAJORES]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.CELO_ALFAJORES].v3CoreFactoryAddress, [sdk_core_1.ChainId.OPTIMISM_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.OPTIMISM_GOERLI].v3CoreFactoryAddress, [sdk_core_1.ChainId.SEPOLIA]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.SEPOLIA].v3CoreFactoryAddress, [sdk_core_1.ChainId.ARBITRUM_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.ARBITRUM_GOERLI].v3CoreFactoryAddress, [sdk_core_1.ChainId.BNB]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BNB].v3CoreFactoryAddress, [sdk_core_1.ChainId.AVALANCHE]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.AVALANCHE].v3CoreFactoryAddress, [sdk_core_1.ChainId.BASE_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BASE_GOERLI].v3CoreFactoryAddress, [sdk_core_1.ChainId.BASE]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BASE].v3CoreFactoryAddress });
+-exports.QUOTER_V2_ADDRESSES = Object.assign(Object.assign({}, constructSameAddressMap('0x61fFE014bA17989E743c5F6cB21bF9697530B21e')), { [sdk_core_1.ChainId.CELO]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.CELO].quoterAddress, [sdk_core_1.ChainId.CELO_ALFAJORES]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.CELO_ALFAJORES].quoterAddress, [sdk_core_1.ChainId.OPTIMISM_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.OPTIMISM_GOERLI].quoterAddress, [sdk_core_1.ChainId.SEPOLIA]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.SEPOLIA].quoterAddress, [sdk_core_1.ChainId.ARBITRUM_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.ARBITRUM_GOERLI].quoterAddress, [sdk_core_1.ChainId.BNB]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BNB].quoterAddress, [sdk_core_1.ChainId.AVALANCHE]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.AVALANCHE].quoterAddress, [sdk_core_1.ChainId.BASE_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BASE_GOERLI].quoterAddress, [sdk_core_1.ChainId.BASE]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BASE].quoterAddress });
++exports.V3_CORE_FACTORY_ADDRESSES = Object.assign(Object.assign({}, constructSameAddressMap(v3_sdk_1.FACTORY_ADDRESS)), { [sdk_core_1.ChainId.CELO]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.CELO].v3CoreFactoryAddress, [sdk_core_1.ChainId.CELO_ALFAJORES]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.CELO_ALFAJORES].v3CoreFactoryAddress, [sdk_core_1.ChainId.OPTIMISM_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.OPTIMISM_GOERLI].v3CoreFactoryAddress, [sdk_core_1.ChainId.SEPOLIA]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.SEPOLIA].v3CoreFactoryAddress, [sdk_core_1.ChainId.ARBITRUM_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.ARBITRUM_GOERLI].v3CoreFactoryAddress, [sdk_core_1.ChainId.BNB]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BNB].v3CoreFactoryAddress, [sdk_core_1.ChainId.AVALANCHE]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.AVALANCHE].v3CoreFactoryAddress, [sdk_core_1.ChainId.BASE_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BASE_GOERLI].v3CoreFactoryAddress, [sdk_core_1.ChainId.BASE]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BASE].v3CoreFactoryAddress, [sdk_core_1.ChainId.TAIKO_MAINNET]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.TAIKO_MAINNET].v3CoreFactoryAddress, [sdk_core_1.ChainId.TAIKO_HOODI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.TAIKO_HOODI].v3CoreFactoryAddress });
++exports.QUOTER_V2_ADDRESSES = Object.assign(Object.assign({}, constructSameAddressMap('0x61fFE014bA17989E743c5F6cB21bF9697530B21e')), { [sdk_core_1.ChainId.CELO]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.CELO].quoterAddress, [sdk_core_1.ChainId.CELO_ALFAJORES]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.CELO_ALFAJORES].quoterAddress, [sdk_core_1.ChainId.OPTIMISM_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.OPTIMISM_GOERLI].quoterAddress, [sdk_core_1.ChainId.SEPOLIA]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.SEPOLIA].quoterAddress, [sdk_core_1.ChainId.ARBITRUM_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.ARBITRUM_GOERLI].quoterAddress, [sdk_core_1.ChainId.BNB]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BNB].quoterAddress, [sdk_core_1.ChainId.AVALANCHE]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.AVALANCHE].quoterAddress, [sdk_core_1.ChainId.BASE_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BASE_GOERLI].quoterAddress, [sdk_core_1.ChainId.BASE]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BASE].quoterAddress, [sdk_core_1.ChainId.TAIKO_MAINNET]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.TAIKO_MAINNET].quoterAddress, [sdk_core_1.ChainId.TAIKO_HOODI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.TAIKO_HOODI].quoterAddress });
+ exports.MIXED_ROUTE_QUOTER_V1_ADDRESSES = {
+     [sdk_core_1.ChainId.MAINNET]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.MAINNET].v1MixedRouteQuoterAddress,
+     [sdk_core_1.ChainId.GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.GOERLI].v1MixedRouteQuoterAddress,
+ };
+-exports.UNISWAP_MULTICALL_ADDRESSES = Object.assign(Object.assign({}, constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984')), { [sdk_core_1.ChainId.CELO]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.CELO].multicallAddress, [sdk_core_1.ChainId.CELO_ALFAJORES]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.CELO_ALFAJORES].multicallAddress, [sdk_core_1.ChainId.OPTIMISM_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.OPTIMISM_GOERLI].multicallAddress, [sdk_core_1.ChainId.SEPOLIA]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.SEPOLIA].multicallAddress, [sdk_core_1.ChainId.ARBITRUM_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.ARBITRUM_GOERLI].multicallAddress, [sdk_core_1.ChainId.BNB]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BNB].multicallAddress, [sdk_core_1.ChainId.AVALANCHE]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.AVALANCHE].multicallAddress, [sdk_core_1.ChainId.BASE_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BASE_GOERLI].multicallAddress, [sdk_core_1.ChainId.BASE]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BASE].multicallAddress });
++exports.UNISWAP_MULTICALL_ADDRESSES = Object.assign(Object.assign({}, constructSameAddressMap('0x1F98415757620B543A52E61c46B32eB19261F984')), { [sdk_core_1.ChainId.CELO]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.CELO].multicallAddress, [sdk_core_1.ChainId.CELO_ALFAJORES]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.CELO_ALFAJORES].multicallAddress, [sdk_core_1.ChainId.OPTIMISM_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.OPTIMISM_GOERLI].multicallAddress, [sdk_core_1.ChainId.SEPOLIA]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.SEPOLIA].multicallAddress, [sdk_core_1.ChainId.ARBITRUM_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.ARBITRUM_GOERLI].multicallAddress, [sdk_core_1.ChainId.BNB]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BNB].multicallAddress, [sdk_core_1.ChainId.AVALANCHE]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.AVALANCHE].multicallAddress, [sdk_core_1.ChainId.BASE_GOERLI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BASE_GOERLI].multicallAddress, [sdk_core_1.ChainId.BASE]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.BASE].multicallAddress, [sdk_core_1.ChainId.TAIKO_MAINNET]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.TAIKO_MAINNET].multicallAddress, [sdk_core_1.ChainId.TAIKO_HOODI]: sdk_core_1.CHAIN_TO_ADDRESSES_MAP[sdk_core_1.ChainId.TAIKO_HOODI].multicallAddress });
+ const SWAP_ROUTER_02_ADDRESSES = (chainId) => {
+     if (chainId == sdk_core_1.ChainId.BNB) {
+         return exports.BNB_SWAP_ROUTER_02_ADDRESS;
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/chains.js b/node_modules/@uniswap/smart-order-router/build/main/util/chains.js
+index 902362a..8273ae2 100644
+--- a/node_modules/@uniswap/smart-order-router/build/main/util/chains.js
++++ b/node_modules/@uniswap/smart-order-router/build/main/util/chains.js
+@@ -18,6 +18,8 @@ exports.SUPPORTED_CHAINS = [
+     sdk_core_1.ChainId.BNB,
+     sdk_core_1.ChainId.AVALANCHE,
+     sdk_core_1.ChainId.BASE,
++    sdk_core_1.ChainId.TAIKO_MAINNET,
++    sdk_core_1.ChainId.TAIKO_HOODI,
+     // Gnosis and Moonbeam don't yet have contracts deployed yet
+ ];
+ exports.V2_SUPPORTED = [
+@@ -77,6 +79,10 @@ const ID_TO_CHAIN_ID = (id) => {
+             return sdk_core_1.ChainId.BASE;
+         case 84531:
+             return sdk_core_1.ChainId.BASE_GOERLI;
++        case 167000:
++            return sdk_core_1.ChainId.TAIKO_MAINNET;
++        case 167013:
++            return sdk_core_1.ChainId.TAIKO_HOODI;
+         default:
+             throw new Error(`Unknown chain id: ${id}`);
+     }
+@@ -101,6 +107,8 @@ var ChainName;
+     ChainName["AVALANCHE"] = "avalanche-mainnet";
+     ChainName["BASE"] = "base-mainnet";
+     ChainName["BASE_GOERLI"] = "base-goerli";
++    ChainName["TAIKO_MAINNET"] = "taiko-mainnet";
++    ChainName["TAIKO_HOODI"] = "taiko-hoodi";
+ })(ChainName = exports.ChainName || (exports.ChainName = {}));
+ var NativeCurrencyName;
+ (function (NativeCurrencyName) {
+@@ -193,6 +201,8 @@ exports.NATIVE_CURRENCY = {
+     [sdk_core_1.ChainId.BNB]: NativeCurrencyName.BNB,
+     [sdk_core_1.ChainId.AVALANCHE]: NativeCurrencyName.AVALANCHE,
+     [sdk_core_1.ChainId.BASE]: NativeCurrencyName.ETHER,
++    [sdk_core_1.ChainId.TAIKO_MAINNET]: NativeCurrencyName.ETHER,
++    [sdk_core_1.ChainId.TAIKO_HOODI]: NativeCurrencyName.ETHER,
+ };
+ const ID_TO_NETWORK_NAME = (id) => {
+     switch (id) {
+@@ -230,6 +240,10 @@ const ID_TO_NETWORK_NAME = (id) => {
+             return ChainName.BASE;
+         case 84531:
+             return ChainName.BASE_GOERLI;
++        case 167000:
++            return ChainName.TAIKO_MAINNET;
++        case 167013:
++            return ChainName.TAIKO_HOODI;
+         default:
+             throw new Error(`Unknown chain id: ${id}`);
+     }
+diff --git a/node_modules/@uniswap/smart-order-router/build/main/util/gas-factory-helpers.js b/node_modules/@uniswap/smart-order-router/build/main/util/gas-factory-helpers.js
+index d7e1f0c..5634639 100644
+--- a/node_modules/@uniswap/smart-order-router/build/main/util/gas-factory-helpers.js
++++ b/node_modules/@uniswap/smart-order-router/build/main/util/gas-factory-helpers.js
+@@ -14,6 +14,10 @@ const util_1 = require("../util");
+ const methodParameters_1 = require("./methodParameters");
+ async function getV2NativePool(token, poolProvider) {
+     const chainId = token.chainId;
++    // Taiko chains don't have Uniswap V2 deployed
++    if (chainId === 167000 || chainId === 167013) {
++        return null;
++    }
+     const weth = util_1.WRAPPED_NATIVE_CURRENCY[chainId];
+     const poolAccessor = await poolProvider.getPools([[weth, token]]);
+     const pool = poolAccessor.getPool(weth, token);
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/caching-token-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/caching-token-provider.js
+index eff50f4..d89cef0 100644
+--- a/node_modules/@uniswap/smart-order-router/build/module/providers/caching-token-provider.js
++++ b/node_modules/@uniswap/smart-order-router/build/module/providers/caching-token-provider.js
+@@ -86,6 +86,14 @@ export const CACHE_SEED_TOKENS = {
+     [ChainId.BASE]: {
+         USDC: USDC_BASE,
+         WETH: WRAPPED_NATIVE_CURRENCY[ChainId.BASE],
++    },
++    [ChainId.TAIKO_MAINNET]: {
++        USDC: new Token(ChainId.TAIKO_MAINNET, '0x07d83526730c7438048D55A4fc0b850e2aaB6f0b', 6, 'USDC', 'USD Coin'),
++        WETH: WRAPPED_NATIVE_CURRENCY[ChainId.TAIKO_MAINNET],
++    },
++    [ChainId.TAIKO_HOODI]: {
++        USDC: new Token(ChainId.TAIKO_HOODI, '0x18d5bB147f3D05D5f6c5E60Caf1daeeDBF5155B6', 6, 'USDC', 'USD Coin'),
++        WETH: WRAPPED_NATIVE_CURRENCY[ChainId.TAIKO_HOODI],
+     }
+     // Currently we do not have providers for Moonbeam mainnet or Gnosis testnet
+ };
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/token-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/token-provider.js
+index 3b1efd9..dfb5666 100644
+--- a/node_modules/@uniswap/smart-order-router/build/module/providers/token-provider.js
++++ b/node_modules/@uniswap/smart-order-router/build/module/providers/token-provider.js
+@@ -78,6 +78,9 @@ export const WXDAI_GNOSIS = new Token(ChainId.GNOSIS, '0xe91d153e0b41518a2ce8dd3
+ export const WBTC_GNOSIS = new Token(ChainId.GNOSIS, '0x8e5bbbb09ed1ebde8674cda39a0c169401db4252', 8, 'WBTC', 'Wrapped BTC from Ethereum on Gnosis');
+ // Moonbeam Tokens
+ export const USDC_MOONBEAM = new Token(ChainId.MOONBEAM, '0x818ec0A7Fe18Ff94269904fCED6AE3DaE6d6dC0b', 6, 'USDC', 'USD Coin bridged using Multichain');
++export const USDC_TAIKO_MAINNET = new Token(ChainId.TAIKO_MAINNET, '0x07d83526730c7438048D55A4fc0b850e2aaB6f0b', 6, 'USDC', 'USD Coin');
++export const USDC_TAIKO_HOODI = new Token(ChainId.TAIKO_HOODI, '0x18d5bB147f3D05D5f6c5E60Caf1daeeDBF5155B6', 6, 'USDC', 'USD Coin');
++export const TAIKO_TAIKO_HOODI = new Token(ChainId.TAIKO_HOODI, '0x96257D50DB02ba0153f888e919ff47A91951e979', 18, 'TAIKO', 'Taiko Token');
+ export const WGLMR_MOONBEAM = new Token(ChainId.MOONBEAM, '0xAcc15dC74880C9944775448304B263D191c6077F', 18, 'WGLMR', 'Wrapped GLMR');
+ export const DAI_MOONBEAM = new Token(ChainId.MOONBEAM, '0x818ec0A7Fe18Ff94269904fCED6AE3DaE6d6dC0b', 6, 'DAI', 'Dai on moonbeam bridged using Multichain');
+ export const WBTC_MOONBEAM = new Token(ChainId.MOONBEAM, '0x922D641a426DcFFaeF11680e5358F34d97d112E1', 8, 'WBTC', 'Wrapped BTC bridged using Multichain');
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/pool-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/pool-provider.js
+index 51eb622..d9b261a 100644
+--- a/node_modules/@uniswap/smart-order-router/build/module/providers/v2/pool-provider.js
++++ b/node_modules/@uniswap/smart-order-router/build/module/providers/v2/pool-provider.js
+@@ -25,6 +25,15 @@ export class V2PoolProvider {
+         this.POOL_ADDRESS_CACHE = {};
+     }
+     async getPools(tokenPairs, providerConfig) {
++        // Taiko chains don't have Uniswap V2 deployed, return empty pools
++        if (this.chainId === 167000 || this.chainId === 167013) {
++            log.info(`Skipping V2 pools for Taiko chain ${this.chainId}`);
++            return {
++                getPool: () => undefined,
++                getPoolByAddress: () => undefined,
++                getAllPools: () => [],
++            };
++        }
+         const poolAddressSet = new Set();
+         const sortedTokenPairs = [];
+         const sortedPoolAddresses = [];
+@@ -76,6 +85,10 @@ export class V2PoolProvider {
+         };
+     }
+     getPoolAddress(tokenA, tokenB) {
++        // Taiko chains don't have Uniswap V2 deployed
++        if (this.chainId === 167000 || this.chainId === 167013) {
++            throw new Error(`Uniswap V2 is not deployed on Taiko chain ${this.chainId}`);
++        }
+         const [token0, token1] = tokenA.sortsBefore(tokenB)
+             ? [tokenA, tokenB]
+             : [tokenB, tokenA];
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/static-subgraph-provider.js b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/static-subgraph-provider.js
+index 26f8306..007c25a 100644
+--- a/node_modules/@uniswap/smart-order-router/build/module/providers/v3/static-subgraph-provider.js
++++ b/node_modules/@uniswap/smart-order-router/build/module/providers/v3/static-subgraph-provider.js
+@@ -6,7 +6,7 @@ import _ from 'lodash';
+ import { unparseFeeAmount } from '../../util/amounts';
+ import { WRAPPED_NATIVE_CURRENCY } from '../../util/chains';
+ import { log } from '../../util/log';
+-import { ARB_ARBITRUM, BTC_BNB, BUSD_BNB, CELO, CELO_ALFAJORES, CEUR_CELO, CEUR_CELO_ALFAJORES, CUSD_CELO, CUSD_CELO_ALFAJORES, DAI_ARBITRUM, DAI_AVAX, DAI_BNB, DAI_CELO, DAI_CELO_ALFAJORES, DAI_GOERLI, DAI_MAINNET, DAI_MOONBEAM, DAI_OPTIMISM, DAI_OPTIMISM_GOERLI, DAI_POLYGON_MUMBAI, ETH_BNB, OP_OPTIMISM, USDC_ARBITRUM, USDC_ARBITRUM_GOERLI, USDC_AVAX, USDC_BASE, USDC_BNB, USDC_ETHEREUM_GNOSIS, USDC_GOERLI, USDC_MAINNET, USDC_MOONBEAM, USDC_OPTIMISM, USDC_OPTIMISM_GOERLI, USDC_POLYGON, USDC_SEPOLIA, USDT_ARBITRUM, USDT_BNB, USDT_GOERLI, USDT_MAINNET, USDT_OPTIMISM, USDT_OPTIMISM_GOERLI, WBTC_ARBITRUM, WBTC_GNOSIS, WBTC_GOERLI, WBTC_MAINNET, WBTC_MOONBEAM, WBTC_OPTIMISM, WBTC_OPTIMISM_GOERLI, WETH_POLYGON, WMATIC_POLYGON, WMATIC_POLYGON_MUMBAI, WXDAI_GNOSIS } from '../token-provider';
++import { ARB_ARBITRUM, BTC_BNB, BUSD_BNB, CELO, CELO_ALFAJORES, CEUR_CELO, CEUR_CELO_ALFAJORES, CUSD_CELO, CUSD_CELO_ALFAJORES, DAI_ARBITRUM, DAI_AVAX, DAI_BNB, DAI_CELO, DAI_CELO_ALFAJORES, DAI_GOERLI, DAI_MAINNET, DAI_MOONBEAM, DAI_OPTIMISM, DAI_OPTIMISM_GOERLI, DAI_POLYGON_MUMBAI, ETH_BNB, OP_OPTIMISM, TAIKO_TAIKO_HOODI, USDC_ARBITRUM, USDC_ARBITRUM_GOERLI, USDC_AVAX, USDC_BASE, USDC_BNB, USDC_ETHEREUM_GNOSIS, USDC_GOERLI, USDC_MAINNET, USDC_MOONBEAM, USDC_OPTIMISM, USDC_OPTIMISM_GOERLI, USDC_POLYGON, USDC_SEPOLIA, USDC_TAIKO_HOODI, USDC_TAIKO_MAINNET, USDT_ARBITRUM, USDT_BNB, USDT_GOERLI, USDT_MAINNET, USDT_OPTIMISM, USDT_OPTIMISM_GOERLI, WBTC_ARBITRUM, WBTC_GNOSIS, WBTC_GOERLI, WBTC_MAINNET, WBTC_MOONBEAM, WBTC_OPTIMISM, WBTC_OPTIMISM_GOERLI, WETH_POLYGON, WMATIC_POLYGON, WMATIC_POLYGON_MUMBAI, WXDAI_GNOSIS } from '../token-provider';
+ const BASES_TO_CHECK_TRADES_AGAINST = {
+     [ChainId.MAINNET]: [
+         WRAPPED_NATIVE_CURRENCY[ChainId.MAINNET],
+@@ -91,6 +91,8 @@ const BASES_TO_CHECK_TRADES_AGAINST = {
+     ],
+     [ChainId.BASE_GOERLI]: [WRAPPED_NATIVE_CURRENCY[ChainId.BASE_GOERLI]],
+     [ChainId.BASE]: [WRAPPED_NATIVE_CURRENCY[ChainId.BASE], USDC_BASE],
++    [ChainId.TAIKO_MAINNET]: [WRAPPED_NATIVE_CURRENCY[ChainId.TAIKO_MAINNET], USDC_TAIKO_MAINNET],
++    [ChainId.TAIKO_HOODI]: [WRAPPED_NATIVE_CURRENCY[ChainId.TAIKO_HOODI], USDC_TAIKO_HOODI, TAIKO_TAIKO_HOODI],
+ };
+ /**
+  * Provider that uses a hardcoded list of V3 pools to generate a list of subgraph pools.
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/alpha-router.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/alpha-router.js
+index f4e9599..c9202c7 100644
+--- a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/alpha-router.js
++++ b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/alpha-router.js
+@@ -115,6 +115,25 @@ export class AlphaRouter {
+                         multicallChunk: 4,
+                     });
+                     break;
++                // Taiko chains - use high gas limits similar to Arbitrum
++                case 167000: // TAIKO_MAINNET
++                case 167013: // TAIKO_HOODI
++                    this.onChainQuoteProvider = new OnChainQuoteProvider(chainId, provider, this.multicall2Provider, {
++                        retries: 2,
++                        minTimeout: 100,
++                        maxTimeout: 1000,
++                    }, {
++                        multicallChunk: 10,
++                        gasLimitPerCall: 12000000,
++                        quoteMinSuccessRate: 0.1,
++                    }, {
++                        gasLimitOverride: 30000000,
++                        multicallChunk: 6,
++                    }, {
++                        gasLimitOverride: 30000000,
++                        multicallChunk: 6,
++                    });
++                    break;
+                 default:
+                     this.onChainQuoteProvider = new OnChainQuoteProvider(chainId, provider, this.multicall2Provider, {
+                         retries: 2,
+@@ -153,10 +172,16 @@ export class AlphaRouter {
+             this.v3SubgraphProvider = v3SubgraphProvider;
+         }
+         else {
+-            this.v3SubgraphProvider = new V3SubgraphProviderWithFallBacks([
+-                new CachingV3SubgraphProvider(chainId, new URISubgraphProvider(chainId, `https://cloudflare-ipfs.com/ipns/api.uniswap.org/v1/pools/v3/${chainName}.json`, undefined, 0), new NodeJSCache(new NodeCache({ stdTTL: 300, useClones: false }))),
+-                new StaticV3SubgraphProvider(chainId, this.v3PoolProvider),
+-            ]);
++            // Taiko chains don't have deployed subgraphs, use static provider only
++            if (chainId === 167000 || chainId === 167013) {
++                this.v3SubgraphProvider = new StaticV3SubgraphProvider(chainId, this.v3PoolProvider);
++            }
++            else {
++                this.v3SubgraphProvider = new V3SubgraphProviderWithFallBacks([
++                    new CachingV3SubgraphProvider(chainId, new URISubgraphProvider(chainId, `https://cloudflare-ipfs.com/ipns/api.uniswap.org/v1/pools/v3/${chainName}.json`, undefined, 0), new NodeJSCache(new NodeCache({ stdTTL: 300, useClones: false }))),
++                    new StaticV3SubgraphProvider(chainId, this.v3PoolProvider),
++                ]);
++            }
+         }
+         let gasPriceProviderInstance;
+         if (JsonRpcProvider.isProvider(this.provider)) {
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/gas-model.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/gas-model.js
+index 97cba0c..19c0357 100644
+--- a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/gas-model.js
++++ b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/gas-model.js
+@@ -1,5 +1,5 @@
+ import { ChainId } from '@uniswap/sdk-core';
+-import { CUSD_CELO, CUSD_CELO_ALFAJORES, DAI_ARBITRUM, DAI_AVAX, DAI_BNB, DAI_GOERLI, DAI_MAINNET, DAI_OPTIMISM, DAI_OPTIMISM_GOERLI, DAI_POLYGON_MUMBAI, DAI_SEPOLIA, USDC_ARBITRUM, USDC_ARBITRUM_GOERLI, USDC_AVAX, USDC_BASE, USDC_BNB, USDC_ETHEREUM_GNOSIS, USDC_GOERLI, USDC_MAINNET, USDC_MOONBEAM, USDC_OPTIMISM, USDC_OPTIMISM_GOERLI, USDC_POLYGON, USDC_SEPOLIA, USDT_ARBITRUM, USDT_BNB, USDT_GOERLI, USDT_MAINNET, USDT_OPTIMISM, USDT_OPTIMISM_GOERLI, WBTC_GOERLI, } from '../../../providers/token-provider';
++import { CUSD_CELO, CUSD_CELO_ALFAJORES, DAI_ARBITRUM, DAI_AVAX, DAI_BNB, DAI_GOERLI, DAI_MAINNET, DAI_OPTIMISM, DAI_OPTIMISM_GOERLI, DAI_POLYGON_MUMBAI, DAI_SEPOLIA, USDC_ARBITRUM, USDC_ARBITRUM_GOERLI, USDC_AVAX, USDC_BASE, USDC_BNB, USDC_ETHEREUM_GNOSIS, USDC_GOERLI, USDC_MAINNET, USDC_MOONBEAM, USDC_OPTIMISM, USDC_OPTIMISM_GOERLI, USDC_POLYGON, USDC_SEPOLIA, USDC_TAIKO_MAINNET, USDC_TAIKO_HOODI, USDT_ARBITRUM, USDT_BNB, USDT_GOERLI, USDT_MAINNET, USDT_OPTIMISM, USDT_OPTIMISM_GOERLI, WBTC_GOERLI, } from '../../../providers/token-provider';
+ // When adding new usd gas tokens, ensure the tokens are ordered 
+ // from tokens with highest decimals to lowest decimals. For example,
+ // DAI_AVAX has 18 decimals and comes before USDC_AVAX which has 6 decimals.
+@@ -24,6 +24,8 @@ export const usdGasTokensByChain = {
+     [ChainId.BNB]: [USDT_BNB, USDC_BNB, DAI_BNB],
+     [ChainId.AVALANCHE]: [DAI_AVAX, USDC_AVAX],
+     [ChainId.BASE]: [USDC_BASE],
++    [ChainId.TAIKO_MAINNET]: [USDC_TAIKO_MAINNET],
++    [ChainId.TAIKO_HOODI]: [USDC_TAIKO_HOODI],
+ };
+ /**
+  * Factory for building gas models that can be used with any route to generate
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v3/gas-costs.js b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v3/gas-costs.js
+index 542d9e5..1ce245f 100644
+--- a/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v3/gas-costs.js
++++ b/node_modules/@uniswap/smart-order-router/build/module/routers/alpha-router/gas-models/v3/gas-costs.js
+@@ -15,6 +15,8 @@ export const BASE_SWAP_COST = (id) => {
+         case ChainId.AVALANCHE:
+         case ChainId.BASE:
+         case ChainId.BASE_GOERLI:
++        case 167000: // TAIKO_MAINNET
++        case 167013: // TAIKO_HOODI
+             return BigNumber.from(2000);
+         case ChainId.ARBITRUM_ONE:
+         case ChainId.ARBITRUM_GOERLI:
+@@ -44,6 +46,8 @@ export const COST_PER_INIT_TICK = (id) => {
+         case ChainId.OPTIMISM_GOERLI:
+         case ChainId.BASE:
+         case ChainId.BASE_GOERLI:
++        case 167000: // TAIKO_MAINNET
++        case 167013: // TAIKO_HOODI
+             return BigNumber.from(31000);
+         case ChainId.ARBITRUM_ONE:
+         case ChainId.ARBITRUM_GOERLI:
+@@ -71,6 +75,8 @@ export const COST_PER_HOP = (id) => {
+         case ChainId.AVALANCHE:
+         case ChainId.BASE:
+         case ChainId.BASE_GOERLI:
++        case 167000: // TAIKO_MAINNET
++        case 167013: // TAIKO_HOODI
+             return BigNumber.from(80000);
+         case ChainId.ARBITRUM_ONE:
+         case ChainId.ARBITRUM_GOERLI:
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/addresses.js b/node_modules/@uniswap/smart-order-router/build/module/util/addresses.js
+index 2a85de3..8bd7177 100644
+--- a/node_modules/@uniswap/smart-order-router/build/module/util/addresses.js
++++ b/node_modules/@uniswap/smart-order-router/build/module/util/addresses.js
+@@ -17,6 +17,8 @@ export const V3_CORE_FACTORY_ADDRESSES = {
+     [ChainId.AVALANCHE]: CHAIN_TO_ADDRESSES_MAP[ChainId.AVALANCHE].v3CoreFactoryAddress,
+     [ChainId.BASE_GOERLI]: CHAIN_TO_ADDRESSES_MAP[ChainId.BASE_GOERLI].v3CoreFactoryAddress,
+     [ChainId.BASE]: CHAIN_TO_ADDRESSES_MAP[ChainId.BASE].v3CoreFactoryAddress,
++    [ChainId.TAIKO_MAINNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.TAIKO_MAINNET].v3CoreFactoryAddress,
++    [ChainId.TAIKO_HOODI]: CHAIN_TO_ADDRESSES_MAP[ChainId.TAIKO_HOODI].v3CoreFactoryAddress,
+     // TODO: Gnosis + Moonbeam contracts to be deployed
+ };
+ export const QUOTER_V2_ADDRESSES = {
+@@ -30,6 +32,8 @@ export const QUOTER_V2_ADDRESSES = {
+     [ChainId.AVALANCHE]: CHAIN_TO_ADDRESSES_MAP[ChainId.AVALANCHE].quoterAddress,
+     [ChainId.BASE_GOERLI]: CHAIN_TO_ADDRESSES_MAP[ChainId.BASE_GOERLI].quoterAddress,
+     [ChainId.BASE]: CHAIN_TO_ADDRESSES_MAP[ChainId.BASE].quoterAddress,
++    [ChainId.TAIKO_MAINNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.TAIKO_MAINNET].quoterAddress,
++    [ChainId.TAIKO_HOODI]: CHAIN_TO_ADDRESSES_MAP[ChainId.TAIKO_HOODI].quoterAddress,
+     // TODO: Gnosis + Moonbeam contracts to be deployed
+ };
+ export const MIXED_ROUTE_QUOTER_V1_ADDRESSES = {
+@@ -47,6 +51,8 @@ export const UNISWAP_MULTICALL_ADDRESSES = {
+     [ChainId.AVALANCHE]: CHAIN_TO_ADDRESSES_MAP[ChainId.AVALANCHE].multicallAddress,
+     [ChainId.BASE_GOERLI]: CHAIN_TO_ADDRESSES_MAP[ChainId.BASE_GOERLI].multicallAddress,
+     [ChainId.BASE]: CHAIN_TO_ADDRESSES_MAP[ChainId.BASE].multicallAddress,
++    [ChainId.TAIKO_MAINNET]: CHAIN_TO_ADDRESSES_MAP[ChainId.TAIKO_MAINNET].multicallAddress,
++    [ChainId.TAIKO_HOODI]: CHAIN_TO_ADDRESSES_MAP[ChainId.TAIKO_HOODI].multicallAddress,
+     // TODO: Gnosis + Moonbeam contracts to be deployed
+ };
+ export const SWAP_ROUTER_02_ADDRESSES = (chainId) => {
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/chains.js b/node_modules/@uniswap/smart-order-router/build/module/util/chains.js
+index 78fd5d1..72b769d 100644
+--- a/node_modules/@uniswap/smart-order-router/build/module/util/chains.js
++++ b/node_modules/@uniswap/smart-order-router/build/module/util/chains.js
+@@ -15,6 +15,8 @@ export const SUPPORTED_CHAINS = [
+     ChainId.BNB,
+     ChainId.AVALANCHE,
+     ChainId.BASE,
++    ChainId.TAIKO_MAINNET,
++    ChainId.TAIKO_HOODI,
+     // Gnosis and Moonbeam don't yet have contracts deployed yet
+ ];
+ export const V2_SUPPORTED = [
+@@ -74,6 +76,10 @@ export const ID_TO_CHAIN_ID = (id) => {
+             return ChainId.BASE;
+         case 84531:
+             return ChainId.BASE_GOERLI;
++        case 167000:
++            return ChainId.TAIKO_MAINNET;
++        case 167013:
++            return ChainId.TAIKO_HOODI;
+         default:
+             throw new Error(`Unknown chain id: ${id}`);
+     }
+@@ -97,6 +103,8 @@ export var ChainName;
+     ChainName["AVALANCHE"] = "avalanche-mainnet";
+     ChainName["BASE"] = "base-mainnet";
+     ChainName["BASE_GOERLI"] = "base-goerli";
++    ChainName["TAIKO_MAINNET"] = "taiko-mainnet";
++    ChainName["TAIKO_HOODI"] = "taiko-hoodi";
+ })(ChainName || (ChainName = {}));
+ export var NativeCurrencyName;
+ (function (NativeCurrencyName) {
+@@ -170,6 +178,16 @@ export const NATIVE_NAMES_BY_ID = {
+         'ETH',
+         'ETHER',
+         '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
++    ],
++    [ChainId.TAIKO_MAINNET]: [
++        'ETH',
++        'ETHER',
++        '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
++    ],
++    [ChainId.TAIKO_HOODI]: [
++        'ETH',
++        'ETHER',
++        '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee',
+     ]
+ };
+ export const NATIVE_CURRENCY = {
+@@ -189,6 +207,8 @@ export const NATIVE_CURRENCY = {
+     [ChainId.BNB]: NativeCurrencyName.BNB,
+     [ChainId.AVALANCHE]: NativeCurrencyName.AVALANCHE,
+     [ChainId.BASE]: NativeCurrencyName.ETHER,
++    [ChainId.TAIKO_MAINNET]: NativeCurrencyName.ETHER,
++    [ChainId.TAIKO_HOODI]: NativeCurrencyName.ETHER,
+ };
+ export const ID_TO_NETWORK_NAME = (id) => {
+     switch (id) {
+@@ -226,6 +246,10 @@ export const ID_TO_NETWORK_NAME = (id) => {
+             return ChainName.BASE;
+         case 84531:
+             return ChainName.BASE_GOERLI;
++        case 167000:
++            return ChainName.TAIKO_MAINNET;
++        case 167013:
++            return ChainName.TAIKO_HOODI;
+         default:
+             throw new Error(`Unknown chain id: ${id}`);
+     }
+@@ -283,7 +307,9 @@ export const WRAPPED_NATIVE_CURRENCY = {
+     [ChainId.MOONBEAM]: new Token(ChainId.MOONBEAM, '0xAcc15dC74880C9944775448304B263D191c6077F', 18, 'WGLMR', 'Wrapped GLMR'),
+     [ChainId.AVALANCHE]: new Token(ChainId.AVALANCHE, '0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7', 18, 'WAVAX', 'Wrapped AVAX'),
+     [ChainId.BASE]: new Token(ChainId.BASE, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether'),
+-    [ChainId.BASE_GOERLI]: new Token(ChainId.BASE_GOERLI, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether')
++    [ChainId.BASE_GOERLI]: new Token(ChainId.BASE_GOERLI, '0x4200000000000000000000000000000000000006', 18, 'WETH', 'Wrapped Ether'),
++    [ChainId.TAIKO_MAINNET]: new Token(ChainId.TAIKO_MAINNET, '0xA51894664A773981C6C112C43ce576f315d5b1B6', 18, 'WETH', 'Wrapped Ether'),
++    [ChainId.TAIKO_HOODI]: new Token(ChainId.TAIKO_HOODI, '0x3B39685B5495359c892DDD1057B5712F49976835', 18, 'WETH', 'Wrapped Ether')
+ };
+ function isMatic(chainId) {
+     return chainId === ChainId.POLYGON_MUMBAI || chainId === ChainId.POLYGON;
+diff --git a/node_modules/@uniswap/smart-order-router/build/module/util/gas-factory-helpers.js b/node_modules/@uniswap/smart-order-router/build/module/util/gas-factory-helpers.js
+index ac04960..101671b 100644
+--- a/node_modules/@uniswap/smart-order-router/build/module/util/gas-factory-helpers.js
++++ b/node_modules/@uniswap/smart-order-router/build/module/util/gas-factory-helpers.js
+@@ -8,6 +8,10 @@ import { log, WRAPPED_NATIVE_CURRENCY } from '../util';
+ import { buildTrade } from './methodParameters';
+ export async function getV2NativePool(token, poolProvider) {
+     const chainId = token.chainId;
++    // Taiko chains don't have Uniswap V2 deployed
++    if (chainId === 167000 || chainId === 167013) {
++        return null;
++    }
+     const weth = WRAPPED_NATIVE_CURRENCY[chainId];
+     const poolAccessor = await poolProvider.getPools([[weth, token]]);
+     const pool = poolAccessor.getPool(weth, token);

@@ -30,7 +30,7 @@ export const TAIKO_HOODI_ADDRESSES: ChainAddresses = {
   // Periphery Contracts
   router: '0x482233e4DBD56853530fA1918157CE59B60dF230', // SwapRouter02
   positionManager: '0x2C745eEDC8493D698545F92E5D69B5E9fA6bCE62', // NonfungiblePositionManager
-  quoterV2: '0x39d15C3272A54a04C98847302FFF0b44283715F9', // Quoter
+  quoterV2: '0xAC8D93657DCc5C0dE9d9AF2772aF9eA3A032a1C6', // QuoterV2
   multicall: '0x323dD97aF6DDc101eF306c5daA6aE34c15EA37B7',
   tickLens: '0x6283971D01E3f34cAa2a7163Bb38499eC01Cc63D',
 
