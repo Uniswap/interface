@@ -1,11 +1,10 @@
 import { Trans } from '@lingui/macro'
-import { BrowserEvent, InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
-import { Trace, TraceEvent } from 'analytics'
+import { InterfacePageName } from '@uniswap/analytics-events'
+import { Trace } from 'analytics'
 import { AboutFooter } from 'components/About/AboutFooter'
 import Card, { CardType } from 'components/About/Card'
 import { MAIN_CARDS, MORE_CARDS } from 'components/About/constants'
-import { BaseButton, ButtonPrimary } from 'components/Button'
-import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
+import { BaseButton } from 'components/Button'
 import Swap from 'pages/Swap'
 import { useMemo, useRef } from 'react'
 import { ArrowDownCircle } from 'react-feather'
@@ -285,7 +284,8 @@ const Link = styled(NativeLink)`
 export default function Landing() {
   const isDarkMode = useIsDarkMode()
   const cardsRef = useRef<HTMLDivElement>(null)
-  const shouldDisableNFTRoutes = useDisableNFTRoutes()
+  const shouldDisableNFTRoutes = true
+  // const shouldDisableNFTRoutes = useDisableNFTRoutes()
   const cards = useMemo(
     () => MAIN_CARDS.filter((card) => !(shouldDisableNFTRoutes && card.to.startsWith('/nft'))),
     [shouldDisableNFTRoutes]
@@ -321,7 +321,7 @@ export default function Landing() {
               )}
             </SubText>
           </SubTextContainer>
-          <ActionsContainer>
+          {/* <ActionsContainer>
             <TraceEvent
               events={[BrowserEvent.onClick]}
               name={SharedEventName.ELEMENT_CLICKED}
@@ -339,7 +339,7 @@ export default function Landing() {
                 <Trans>Learn more</Trans>
               </ButtonPrimary>
             </TraceEvent>
-          </ActionsContainer>
+          </ActionsContainer> */}
         </ContentContainer>
         <AboutContentContainer isDarkMode={isDarkMode}>
           <CardGrid cols={cards.length} ref={cardsRef}>

@@ -5,6 +5,8 @@ import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import { useWeb3React } from '@web3-react/core'
+import { isTaikoChain } from 'config/chains/taiko'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
 import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'
@@ -75,11 +77,24 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
 }
 
 export default function TokenTable() {
+  const { chainId } = useWeb3React()
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
+
+  // For Taiko chains, show empty state since there's no subgraph yet
+  const isTaiko = chainId && isTaikoChain(chainId)
+
   const { tokens, tokenSortRank, loadingTokens, sparklines } = useTopTokens(chainName)
 
   /* loading and error state */
-  if (loadingTokens && !tokens) {
+  if (isTaiko) {
+    return (
+      <NoTokensState
+        message={
+          <Trans>Token data is not yet available for Taiko. Please check back later.</Trans>
+        }
+      />
+    )
+  } else if (loadingTokens && !tokens) {
     return <LoadingTokenTable rowCount={PAGE_SIZE} />
   } else if (!tokens) {
     return (
