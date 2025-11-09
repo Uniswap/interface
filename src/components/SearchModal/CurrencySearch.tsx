@@ -155,13 +155,23 @@ export function CurrencySearch({
         ? filteredTokens
             .filter((token) => {
               if (onlyShowCurrenciesWithBalance) {
-                return balances[token.address?.toLowerCase()]?.usdValue > 0
+                const tokenBalance = balances[token.address?.toLowerCase()]
+                // For Taiko, check actual balance since usdValue is not available
+                if (isTaiko) {
+                  return tokenBalance && parseFloat(tokenBalance.balance?.toString() || '0') > 0
+                }
+                return tokenBalance?.usdValue > 0
               }
 
               // If there is no query, filter out unselected user-added tokens with no balance.
               if (!debouncedQuery && token instanceof UserAddedToken) {
                 if (selectedCurrency?.equals(token) || otherSelectedCurrency?.equals(token)) return true
-                return balances[token.address.toLowerCase()]?.usdValue > 0
+                const tokenBalance = balances[token.address.toLowerCase()]
+                // For Taiko, check actual balance since usdValue is not available
+                if (isTaiko) {
+                  return tokenBalance && parseFloat(tokenBalance.balance?.toString() || '0') > 0
+                }
+                return tokenBalance?.usdValue > 0
               }
               return true
             })
@@ -188,8 +198,13 @@ export function CurrencySearch({
     const s = debouncedQuery.toLowerCase().trim()
 
     const tokens = filteredSortedTokens.filter((t) => !(t.equals(wrapped) || (disableNonToken && t.isNative)))
+    const wrappedBalance = balances[wrapped.address]
     const shouldShowWrapped =
-      !onlyShowCurrenciesWithBalance || (!balancesAreLoading && balances[wrapped.address]?.usdValue > 0)
+      !onlyShowCurrenciesWithBalance ||
+      (!balancesAreLoading &&
+        (isTaiko
+          ? wrappedBalance && parseFloat(wrappedBalance.balance?.toString() || '0') > 0
+          : wrappedBalance?.usdValue > 0))
     const natives = (
       disableNonToken || native.equals(wrapped) ? [wrapped] : shouldShowWrapped ? [native, wrapped] : [native]
     ).filter((n) => n.symbol?.toLowerCase()?.indexOf(s) !== -1 || n.name?.toLowerCase()?.indexOf(s) !== -1)
