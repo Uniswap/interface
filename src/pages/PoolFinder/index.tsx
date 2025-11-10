@@ -12,21 +12,18 @@ import { useLocation } from 'react-router'
 import { Text } from 'rebass'
 
 import { ButtonDropdownLight } from '../../components/Button'
-import { LightCard } from '../../components/Card'
-import { BlueCard } from '../../components/Card'
+import { BlueCard, LightCard } from '../../components/Card'
 import { AutoColumn, ColumnCenter } from '../../components/Column'
 import CurrencyLogo from '../../components/Logo/CurrencyLogo'
 import { FindPoolTabs } from '../../components/NavigationTabs'
 import { MinimalPositionCard } from '../../components/PositionCard'
 import Row from '../../components/Row'
 import CurrencySearchModal from '../../components/SearchModal/CurrencySearchModal'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { nativeOnChain } from '../../constants/tokens'
 import { PairState, useV2Pair } from '../../hooks/useV2Pairs'
 import { useTokenBalance } from '../../state/connection/hooks'
 import { usePairAdder } from '../../state/user/hooks'
-import { StyledInternalLink } from '../../theme'
-import { ThemedText } from '../../theme'
+import { StyledInternalLink, ThemedText } from '../../theme'
 import { currencyId } from '../../utils/currencyId'
 import AppBody from '../AppBody'
 import { Dots } from '../Pool/styled'
@@ -235,7 +232,6 @@ export default function PoolFinder() {
             selectedCurrency={(activeField === Fields.TOKEN0 ? currency1 : currency0) ?? undefined}
           />
         </AppBody>
-        <SwitchLocaleLink />
       </>
     </Trace>
   )

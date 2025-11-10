@@ -6,7 +6,6 @@ import { Pair } from '@uniswap/v2-sdk'
 import { useWeb3React } from '@web3-react/core'
 import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import MigrateV2PositionCard from 'components/PositionCard/V2'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
@@ -185,7 +184,6 @@ export default function MigrateV2() {
           </AutoColumn>
         </AutoColumn>
       </BodyWrapper>
-      <SwitchLocaleLink />
     </>
   )
 }

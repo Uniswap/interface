@@ -44,7 +44,6 @@ import RangeBadge from '../../components/Badge/RangeBadge'
 import { SmallButtonPrimary } from '../../components/Button/index'
 import { getPriceOrderingFromPositionForUI } from '../../components/PositionListItem'
 import RateToggle from '../../components/RateToggle'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { usePositionTokenURI } from '../../hooks/usePositionTokenURI'
 import { TransactionType } from '../../state/transactions/types'
 import { calculateGasMargin } from '../../utils/calculateGasMargin'
@@ -1011,7 +1010,6 @@ function PositionPageContent() {
             </DarkCard>
           </AutoColumn>
         </PageWrapper>
-        <SwitchLocaleLink />
       </>
     </Trace>
   )

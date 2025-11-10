@@ -9,7 +9,6 @@ import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/s
 import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import Loader from 'components/Icons/LoadingSpinner'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import Toggle from 'components/Toggle'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
@@ -21,8 +20,7 @@ import { Button } from 'rebass/styled-components'
 import { useModalIsOpen, useToggleDelegateModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useTokenBalance } from 'state/connection/hooks'
-import { ProposalData, ProposalState } from 'state/governance/hooks'
-import { useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
+import { ProposalData, ProposalState, useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
 import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme'
 import { shortenAddress } from 'utils'
@@ -293,12 +291,9 @@ export default function Landing() {
               })}
           </TopSection>
 
-          <ThemedText.DeprecatedSubHeader color="text3">
-            <Trans>A minimum threshold of 0.25% of the total UNI supply is required to submit proposals</Trans>
-          </ThemedText.DeprecatedSubHeader>
+         
         </PageWrapper>
       </Trace>
-      <SwitchLocaleLink />
     </>
   )
 }

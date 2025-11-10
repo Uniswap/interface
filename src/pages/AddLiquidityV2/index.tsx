@@ -7,7 +7,6 @@ import { useWeb3React } from '@web3-react/core'
 import { sendAnalyticsEvent, TraceEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer'
 import UnsupportedCurrencyFooter from 'components/swap/UnsupportedCurrencyFooter'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useCallback, useState } from 'react'
@@ -513,7 +512,6 @@ export default function AddLiquidity() {
           </AutoColumn>
         </Wrapper>
       </AppBody>
-      <SwitchLocaleLink />
 
       {!addIsUnsupported ? (
         pair && !noLiquidity && pairState !== PairState.INVALID ? (

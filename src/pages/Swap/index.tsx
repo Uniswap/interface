@@ -33,7 +33,6 @@ import {
 } from 'components/swap/styled'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import SwapHeader from 'components/swap/SwapHeader'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { getChainInfo } from 'constants/chainInfo'
 import { asSupportedChain, isSupportedChain } from 'constants/chains'
@@ -69,14 +68,14 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
-import { UNIVERSAL_ROUTER_ADDRESS } from 'utils/patchUniversalRouter'
 import {
   isTaikoChain,
-  TAIKO_HOODI_CHAIN_ID,
-  TAIKO_MAINNET_CHAIN_ID,
   TAIKO_HOODI_ADDRESSES,
+  TAIKO_HOODI_CHAIN_ID,
   TAIKO_MAINNET_ADDRESSES,
+  TAIKO_MAINNET_CHAIN_ID,
 } from 'config/chains/taiko'
+import { UNIVERSAL_ROUTER_ADDRESS } from 'utils/patchUniversalRouter'
 
 import { useScreenSize } from '../../hooks/useScreenSize'
 import { useIsDarkMode } from '../../theme/components/ThemeToggle'
@@ -176,7 +175,6 @@ export default function SwapPage({ className }: { className?: string }) {
         />
         <NetworkAlert />
       </PageWrapper>
-      {location.pathname === '/swap' && <SwitchLocaleLink />}
     </Trace>
   )
 }

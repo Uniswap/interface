@@ -180,9 +180,9 @@ export const AboutFooter = () => {
         <LinkGroup>
           <LinkGroupTitle>Resources</LinkGroupTitle>
           <ExternalTextLink href="https://docs.taiko.xyz">Docs</ExternalTextLink>
-          <ExternalTextLink href="https://taiko.xyz/blog">Blog</ExternalTextLink>
+          <ExternalTextLink href="https://taiko.mirror.xyz/">Blog</ExternalTextLink>
           <ExternalTextLink href="https://github.com/taikoxyz">GitHub</ExternalTextLink>
-          <ExternalTextLink href="https://taiko.xyz/brand-kit">Brand Kit</ExternalTextLink>
+          <ExternalTextLink href="https://taiko.xyz/brand-assets">Brand Kit</ExternalTextLink>
         </LinkGroup>
         <LinkGroup>
           <LinkGroupTitle>Community</LinkGroupTitle>

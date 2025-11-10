@@ -19,7 +19,6 @@ import { CardBGImage, CardNoise, CardSection, DataCard } from '../../components/
 import FullPositionCard from '../../components/PositionCard'
 import { RowBetween, RowFixed } from '../../components/Row'
 import { Dots } from '../../components/swap/styled'
-import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
 import { BIG_INT_ZERO } from '../../constants/misc'
 import { useV2Pairs } from '../../hooks/useV2Pairs'
 import { useTokenBalancesWithLoadingIndicator } from '../../state/connection/hooks'
@@ -272,7 +271,6 @@ export default function Pool() {
             </AutoColumn>
           )}
         </PageWrapper>
-        <SwitchLocaleLink />
       </>
     </Trace>
   )
