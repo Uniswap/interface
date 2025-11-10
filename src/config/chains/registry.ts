@@ -31,6 +31,35 @@ export interface ChainConfig {
 }
 
 /**
+ * Environment variable to control which Taiko chains are enabled
+ * Set REACT_APP_TAIKO_CHAIN to:
+ * - 'mainnet' to enable only Taiko Mainnet
+ * - 'hoodi' to enable only Taiko Hoodi testnet
+ * - undefined/empty to enable all chains (default)
+ */
+const TAIKO_CHAIN_FILTER = process.env.REACT_APP_TAIKO_CHAIN?.toLowerCase()
+
+/**
+ * Check if a chain should be enabled based on environment variable
+ */
+function shouldEnableChain(chainId: number): boolean {
+  if (!TAIKO_CHAIN_FILTER) {
+    // No filter set - enable all chains
+    return true
+  }
+
+  if (TAIKO_CHAIN_FILTER === 'mainnet' && chainId === TAIKO_MAINNET_CHAIN_ID) {
+    return true
+  }
+
+  if (TAIKO_CHAIN_FILTER === 'hoodi' && chainId === TAIKO_HOODI_CHAIN_ID) {
+    return true
+  }
+
+  return false
+}
+
+/**
  * Registry of all known Taiko chains (both enabled and disabled)
  * This is the single source of truth for chain configurations
  */
@@ -40,16 +69,16 @@ const ALL_CHAINS: ChainConfig[] = [
     chainId: TAIKO_MAINNET_CHAIN_ID,
     addresses: TAIKO_MAINNET_ADDRESSES,
     metadata: TAIKO_MAINNET_METADATA,
-    enabled: true,
-    isDefault: true, // Production default
+    enabled: shouldEnableChain(TAIKO_MAINNET_CHAIN_ID),
+    isDefault: TAIKO_CHAIN_FILTER === 'mainnet' || !TAIKO_CHAIN_FILTER, // Production default if no filter or mainnet filter
   },
   // Taiko Hoodi - ENABLED (testnet, has all verified contracts)
   {
     chainId: TAIKO_HOODI_CHAIN_ID,
     addresses: TAIKO_HOODI_ADDRESSES,
     metadata: TAIKO_HOODI_METADATA,
-    enabled: true,
-    isDefault: false, // Testnet, not default
+    enabled: shouldEnableChain(TAIKO_HOODI_CHAIN_ID),
+    isDefault: TAIKO_CHAIN_FILTER === 'hoodi', // Default if hoodi filter is set
   },
 ]
 
