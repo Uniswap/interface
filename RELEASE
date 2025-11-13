@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmcXKJu5dG8FFG831szNgdEfs9U7XxCnRwbSuAygxy42Ph`
-- CIDv1: `bafybeigsx4i67rlwmg76alnqawpcpe2gugwvtu7dcgojfgxm2e4ap43gma`
+- CIDv0: `QmPSswCMSykfj3FKKV2dzxwbedFyRJZhMkdzSEgvvPfRAb`
+- CIDv1: `bafybeiaqoqqesaqanu2hofn4n2lhef4mweqlx2s5s2wxc747omlwa7nixq`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,67 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeigsx4i67rlwmg76alnqawpcpe2gugwvtu7dcgojfgxm2e4ap43gma.ipfs.dweb.link/
-- [ipfs://QmcXKJu5dG8FFG831szNgdEfs9U7XxCnRwbSuAygxy42Ph/](ipfs://QmcXKJu5dG8FFG831szNgdEfs9U7XxCnRwbSuAygxy42Ph/)
+- https://bafybeiaqoqqesaqanu2hofn4n2lhef4mweqlx2s5s2wxc747omlwa7nixq.ipfs.dweb.link/
+- [ipfs://QmPSswCMSykfj3FKKV2dzxwbedFyRJZhMkdzSEgvvPfRAb/](ipfs://QmPSswCMSykfj3FKKV2dzxwbedFyRJZhMkdzSEgvvPfRAb/)
 
-## 5.118.0 (2025-11-13)
-
-
-### Features
-
-* **web:** add bid distribution chart calculations (#24634) a4d4a0f
-* **web:** add bid distribution chart UI components (#24636) 0b17542
-* **web:** add dev tools for bid distribution chart testing (#24638) 875e7b9
-* **web:** add max valuation input (#24301) 31ae922
-* **web:** add network filtering to overview tab (#25105) 24d0bf4
-* **web:** add nft formatting support in activity table (#25034) c30f149
-* **web:** add solana support for web portfolio page (#25108) 1d13ffe
-* **web:** add toucan activities UX (#24763) f2ad86a
-* **web:** add Toucan chart infrastructure (#24633) f0d25d6
-* **web:** add toucan stats UX (#24764) 5558640
-* **web:** filter NFTs by chain (#25116) 245586f
-* **web:** implement chart hooks and main renderer (#24635) 5be2fe0
-* **web:** improve time hover formatting for activity table (#25035) 43e27ba
-* **web:** integrate chart into auction store and add supporting features (#24637) 66adc2e
-* **web:** Overview mini tokens table (#24805) 752b8e6
-* **web:** Portfolio Overview Limits table (#24817) 4a6e7aa
-* **web:** portfolio overview mini activity table (#24816) c870eb2
-* **web:** portfolio overview mini pools table (#24818) c380379
-* **web:** scaffold toucan auction activity + stats container (#24762) bfbb327
-* **web:** toucan add clearing price line (#24730) 0db762b
-* **web:** toucan bid distribution not started state (#24919) 2839785
-* **web:** v2 -> v3 migrate using the new flow (#22488) 86504f7
+### 5.118.1 (2025-11-13)
 
 
 ### Bug Fixes
 
-* **web:** add transaction to TransactionState redux prior to onModification (#25218) 5a4f64f
-* **web:** address feedback (#24949) ed03cfd
-* **web:** allow table row height prop to fix row overflow (#25099) 468bffd
-* **web:** ExpectedTransactionState types (#25152) d659705
-* **web:** filter token balance by selected chain (#25194) 9b6639f
-* **web:** fix issue with listpools endpoint returning an error (#25140) ebd8351
-* **web:** fix protocol stats calcs (#25123) 4b0f0ca
-* **web:** hide report option when we already know a position is hidden (#25209) 47aea4b
-* **web:** more dialog fixes (#24747) 0c37ec6
-* **web:** nft count should reflect search results (#24952) 0267bc5
-* **web:** notif system initialization (#25008) f30ffbf
-* **web:** prevent blank loading state in swap modal (#25144) b6f7698
-* **web:** revert table scroll update (#25111) a9084fd
-* **web:** use new Dialog to fix broken dialogs (#24742) a86c256
-* **web:** use new Dialog to fix Token Warning modal (#24744) ef0c42b
-
-
-### Continuous Integration
-
-* **web:** update sitemaps 20e677d
-
-
-### Styles
-
-* **web:** add support for network filter size transition (#25187) 0033e73
-* **web:** disconnected state style polishes (#24986) 0f7d20f
-* **web:** fix various alignment issues (#25195) 7b44676
-* **web:** style connect wallet banner in light and dark theme (#25110) 5cecfe5
+* **web:** fix tick invariant error (#25391) e074291
 
 

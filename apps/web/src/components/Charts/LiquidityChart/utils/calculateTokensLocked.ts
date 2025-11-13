@@ -21,7 +21,7 @@ export function calculateTokensLocked({
 }): { amount0Locked: number; amount1Locked: number } {
   try {
     const tickLower = tick.tick
-    const tickUpper = tick.tick + tickSpacing
+    const tickUpper = Math.min(TickMath.MAX_TICK, tick.tick + tickSpacing)
     const currSqrtPriceX96 = TickMath.getSqrtRatioAtTick(currentTick)
 
     const amount0BigInt = getAmount0({
