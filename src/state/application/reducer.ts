@@ -1,6 +1,7 @@
 import { createSlice, nanoid } from '@reduxjs/toolkit'
 import { ChainId } from '@uniswap/sdk-core'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
+import { getDefaultChainId } from 'config/chains'
 
 export enum PopupType {
   Transaction = 'transaction',
@@ -57,7 +58,7 @@ export interface ApplicationState {
 
 const initialState: ApplicationState = {
   fiatOnramp: { available: false, availabilityChecked: false },
-  chainId: null,
+  chainId: getDefaultChainId(),
   openModal: null,
   popupList: [],
 }

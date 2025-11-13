@@ -67,18 +67,9 @@ export const PageTabs = () => {
       <MenuItem href="/" isActive={pathname === '/'}>
         <Trans>Swap</Trans>
       </MenuItem>
-      {/* Temporarily hidden - Tokens page
-      <MenuItem href={`/tokens/${chainName.toLowerCase()}`} isActive={pathname.startsWith('/tokens')}>
-        <Trans>Tokens</Trans>
+      <MenuItem href="/explore" isActive={pathname.startsWith('/explore')}>
+        <Trans>Explore</Trans>
       </MenuItem>
-      */}
-      {/* Temporarily hidden - NFTs page
-      {!shouldDisableNFTRoutes && (
-        <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
-          <Trans>NFTs</Trans>
-        </MenuItem>
-      )}
-      */}
       <MenuItem href="/pools" dataTestId="pool-nav-link" isActive={isPoolActive}>
         <Trans>Pools</Trans>
       </MenuItem>

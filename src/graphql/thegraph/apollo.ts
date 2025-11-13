@@ -1,5 +1,6 @@
 import { ApolloClient, ApolloLink, concat, HttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client'
 import { ChainId } from '@uniswap/sdk-core'
+import { TAIKO_HOODI_CHAIN_ID } from 'config/chains'
 
 import store from '../../state/index'
 
@@ -11,6 +12,7 @@ const CHAIN_SUBGRAPH_URL: Record<number, string> = {
   [ChainId.CELO]: 'https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo?source=uniswap',
   [ChainId.BNB]: 'https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc?source=uniswap',
   [ChainId.AVALANCHE]: 'https://api.thegraph.com/subgraphs/name/lynnshaoyu/uniswap-v3-avax?source=uniswap',
+  [TAIKO_HOODI_CHAIN_ID]: 'https://api.goldsky.com/api/public/project_clz85cxrvng3n01ughcv5e7hg/subgraphs/uniswap-v3-taiko-hoodi-testnet/7060ecc/gn',
 }
 
 const httpLink = new HttpLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.MAINNET] })
@@ -62,4 +64,15 @@ export const chainToApolloClient: Record<number, ApolloClient<NormalizedCacheObj
     cache: new InMemoryCache(),
     link: new HttpLink({ uri: CHAIN_SUBGRAPH_URL[ChainId.AVALANCHE] }),
   }),
+  [TAIKO_HOODI_CHAIN_ID]: new ApolloClient({
+    cache: new InMemoryCache(),
+    link: new HttpLink({ uri: CHAIN_SUBGRAPH_URL[TAIKO_HOODI_CHAIN_ID] }),
+  }),
+}
+
+/**
+ * Get Apollo client for a specific chain
+ */
+export function getClient(chainId: number): ApolloClient<NormalizedCacheObject> {
+  return chainToApolloClient[chainId] || chainToApolloClient[ChainId.MAINNET]
 }

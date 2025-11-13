@@ -7,6 +7,10 @@ import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { useWeb3React } from '@web3-react/core'
 import { isTaikoChain } from 'config/chains/taiko'
+import { useTopTokensTaiko } from 'graphql/taiko/TaikoTopTokens'
+import { TimePeriod } from 'graphql/data/util'
+import { useAtomValue } from 'jotai'
+import { filterTimeAtom } from '../state'
 
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '../constants'
 import { HeaderRow, LoadedRow, LoadingRow } from './TokenRow'
@@ -79,30 +83,29 @@ function LoadingTokenTable({ rowCount = PAGE_SIZE }: { rowCount?: number }) {
 export default function TokenTable() {
   const { chainId } = useWeb3React()
   const chainName = validateUrlChainParam(useParams<{ chainName?: string }>().chainName)
+  const timePeriod = useAtomValue(filterTimeAtom)
 
-  // For Taiko chains, show empty state since there's no subgraph yet
+  // Check if this is a Taiko chain
   const isTaiko = chainId && isTaikoChain(chainId)
 
-  const { tokens, tokenSortRank, loadingTokens, sparklines } = useTopTokens(chainName)
+  // Use custom Taiko hook for Taiko chains, otherwise use standard hook
+  const standardResult = useTopTokens(chainName)
+  const taikoResult = useTopTokensTaiko(timePeriod)
+
+  // Select the appropriate result based on chain
+  const { tokens, tokenSortRank, loadingTokens, sparklines } = isTaiko ? taikoResult : standardResult
 
   /* loading and error state */
-  if (isTaiko) {
-    return (
-      <NoTokensState
-        message={
-          <Trans>Token data is not yet available for Taiko. Please check back later.</Trans>
-        }
-      />
-    )
-  } else if (loadingTokens && !tokens) {
+  if (loadingTokens && !tokens) {
     return <LoadingTokenTable rowCount={PAGE_SIZE} />
   } else if (!tokens) {
+    // Soft fail - show friendly error message if subgraph unavailable or query fails
     return (
       <NoTokensState
         message={
           <>
             <AlertTriangle size={16} />
-            <Trans>An error occurred loading tokens. Please try again.</Trans>
+            <Trans>Unable to load token data. Please try again later.</Trans>
           </>
         }
       />
