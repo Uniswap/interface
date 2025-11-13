@@ -11,7 +11,7 @@ export function PortfolioTabs() {
 
   return (
     <Flex>
-      <Flex row gap="$spacing24">
+      <Flex row gap="$spacing24" $sm={{ gap: '$spacing12', justifyContent: 'space-around' }}>
         {portfolioTabs.map((tab: PortfolioTabInfo) => {
           const tabPath = chainName ? `${tab.path}?chain=${chainName}` : tab.path
           const currentPage = getCurrentPageFromLocation(pathname)

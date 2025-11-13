@@ -165,6 +165,7 @@ export const TestID = {
   Swap: 'swap',
   SwapFormHeader: 'swap-form-header',
   SwapSettings: 'swap-settings',
+  SwitchAccount: 'switch-account',
   SwitchCurrenciesButton: 'switch-currencies-button',
   TableErrorModal: 'table-error-modal',
   TestnetsToggle: 'testnets-toggle',
@@ -213,7 +214,6 @@ export const TestID = {
   WalletSettingsRecoveryPhrase: 'wallet-settings-recovery-phrase',
   WatchWallet: 'watch-wallet',
   WCDappNetworks: 'wc-dapp-networks',
-  WCDappSwitchAccount: 'wc-dapp-switch-account',
   Web3StatusConnected: 'web3-status-connected',
   // alphabetize additional values.
 } as const

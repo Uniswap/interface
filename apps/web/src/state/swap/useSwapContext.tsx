@@ -1,9 +1,5 @@
 import { useContext } from 'react'
-import { SwapAndLimitContext, SwapContext } from 'state/swap/types'
-
-export function useSwapContext() {
-  return useContext(SwapContext)
-}
+import { SwapAndLimitContext } from 'state/swap/types'
 
 export function useSwapAndLimitContext() {
   const context = useContext(SwapAndLimitContext)

@@ -63,3 +63,15 @@ export type GetCallsStatusTransactionReceiptLog = z.infer<typeof GetCallsStatusT
 export type GetCallsStatusTransactionReceipt = z.infer<typeof GetCallsStatusTransactionReceiptSchema>
 export type GetCallsStatusParams = z.infer<typeof GetCallsStatusParamsSchema>
 export type GetCallsStatusResult = z.infer<typeof GetCallsStatusResultSchema>
+
+export enum DappVerificationStatus {
+  Verified = 'VERIFIED',
+  Unverified = 'UNVERIFIED',
+  Threat = 'THREAT',
+}
+
+export interface DappConnectionInfo {
+  name: string
+  url: string
+  icon: string | null
+}

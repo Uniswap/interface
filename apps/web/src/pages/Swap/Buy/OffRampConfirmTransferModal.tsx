@@ -231,6 +231,11 @@ export const OffRampConfirmTransferModal = ({
     _handleSend()
   }, [_handleSend, analyticsProperties])
 
+  const errorPrimaryButton = useMemo(
+    () => ({ text: t('common.close'), onPress: onClose, variant: 'default' as const }),
+    [t, onClose],
+  )
+
   if (offRampTransferDetailsLoading) {
     return null
   }
@@ -244,9 +249,7 @@ export const OffRampConfirmTransferModal = ({
         subtext={t('fiatOffRamp.error.populateSend.description')}
         icon={<AlertTriangleFilled color="$statusCritical" size="$icon.24" />}
         iconBackgroundColor="$surface3"
-        primaryButtonText={t('common.close')}
-        primaryButtonOnPress={onClose}
-        primaryButtonVariant="default"
+        primaryButton={errorPrimaryButton}
         modalName={ModalName.FiatOffRampConfirmTransferError}
       />
     )

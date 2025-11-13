@@ -112,6 +112,7 @@ export enum ElementName {
   MiniPortfolioNftTab = 'mini-portfolio-nft-tab',
   MiniPortfolioTokenRow = 'mini-portfolio-token-row',
   MiniPortfolioTokensTab = 'mini-portfolio-tokens-tab',
+  ModalButton = 'modal-button',
   MoonpayExplorerView = 'moonpay-explorer-view',
   NavbarSearchInput = 'navbar-search-input',
   NetworkButton = 'network-button',

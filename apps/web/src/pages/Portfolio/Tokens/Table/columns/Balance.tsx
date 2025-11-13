@@ -1,12 +1,12 @@
 import { TableText } from 'components/Table/styled'
 import { ValueWithFadedDecimals } from 'pages/Portfolio/components/ValueWithFadedDecimals/ValueWithFadedDecimals'
+import { EmptyTableCell } from 'pages/Portfolio/EmptyTableCell'
 import { TokenData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { memo } from 'react'
-import { EM_DASH } from 'ui/src'
 
 export const Balance = memo(function Balance({ value, symbol }: TokenData['balance']) {
   if (!value && value !== '0') {
-    return <TableText>{EM_DASH}</TableText>
+    return <EmptyTableCell />
   }
 
   return (

@@ -9,7 +9,7 @@ import type { SignTypedDataStepFields } from 'uniswap/src/features/transactions/
 import type { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
 import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
 import { WrapTransactionStep } from 'uniswap/src/features/transactions/steps/wrap'
-import { ExtractedBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
+import { PlanSagaAnalytics } from 'uniswap/src/features/transactions/swap/plan/types'
 import type { ClassicSwapSteps } from 'uniswap/src/features/transactions/swap/steps/classicSteps'
 import { SwapTransactionStep, SwapTransactionStepAsync } from 'uniswap/src/features/transactions/swap/steps/swap'
 import type { UniswapXSwapSteps } from 'uniswap/src/features/transactions/swap/steps/uniswapxSteps'
@@ -17,7 +17,6 @@ import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/s
 import { BridgeTrade, ChainedActionTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
-import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 
 export enum TransactionStepType {
   TokenApprovalTransaction = 'TokenApproval',
@@ -61,7 +60,7 @@ export interface OnChainTransactionFieldsBatched {
 }
 
 export interface HandleOnChainStepParams<T extends OnChainTransactionStep = OnChainTransactionStep> {
-  account: AccountDetails
+  account: { address: Address }
   info: TransactionTypeInfo
   step: T
   setCurrentStep: SetCurrentStepFn
@@ -78,7 +77,7 @@ export interface HandleOnChainStepParams<T extends OnChainTransactionStep = OnCh
 }
 
 export interface HandleSignatureStepParams<T extends SignatureTransactionStep = SignatureTransactionStep> {
-  account: AccountDetails
+  account: { address: Address }
   step: T
   setCurrentStep: SetCurrentStepFn
   ignoreInterrupt?: boolean
@@ -95,6 +94,6 @@ export interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'ste
   step: SwapTransactionStep | SwapTransactionStepAsync
   signature?: string
   trade: ClassicTrade | BridgeTrade | ChainedActionTrade
-  analytics: ExtractedBaseTradeAnalyticsProperties
+  analytics: PlanSagaAnalytics
   onTransactionHash?: (hash: string) => void
 }

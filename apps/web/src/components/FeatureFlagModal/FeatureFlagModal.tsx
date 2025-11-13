@@ -187,7 +187,6 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.UnichainFlashblocks} label="Enable Unichain Flashblocks" />
             <FeatureFlagOption flag={FeatureFlags.UniquoteEnabled} label="Enable Uniquote" />
             <FeatureFlagOption flag={FeatureFlags.ViemProviderEnabled} label="Enable Viem Provider" />
-            <FeatureFlagOption flag={FeatureFlags.InstantTokenBalanceUpdate} label="Instant token balance update" />
             <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
             <FeatureFlagOption flag={FeatureFlags.EnablePermitMismatchUX} label="Enable Permit2 mismatch detection" />
             <FeatureFlagOption
@@ -286,6 +285,9 @@ export default function FeatureFlagModal() {
               flag={FeatureFlags.PortfolioTokensAllocationChart}
               label="Enable Portfolio Tokens Allocation Chart"
             />
+          </FeatureFlagGroup>
+          <FeatureFlagGroup name="Notifications">
+            <FeatureFlagOption flag={FeatureFlags.NotificationSystem} label="Enable Notification System" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Misc">
             <FeatureFlagOption flag={FeatureFlags.BridgedAssetsBannerV2} label="Enable V2 Bridged Assets Banner" />

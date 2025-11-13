@@ -1,12 +1,13 @@
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import styled, { useTheme } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Check } from 'react-feather'
 import type { To } from 'react-router'
 import { Link } from 'react-router'
 import { ThemedText } from 'theme/components'
 import { ClickableStyle } from 'theme/components/styles'
+import { useSporeColors } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
 
 const InternalLinkMenuItem = styled(Link)`
@@ -43,7 +44,7 @@ export function MenuItem({
   isActive: boolean
   testId?: string
 }) {
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   if (!to) {
     return null
@@ -55,7 +56,7 @@ export function MenuItem({
         {logo && logo}
         <ThemedText.BodySmall data-testid={testId}>{label}</ThemedText.BodySmall>
       </Row>
-      {isActive && <Check color={theme.accent1} opacity={1} size={20} style={{ marginRight: '12px' }} />}
+      {isActive && <Check color={colors.accent1.val} opacity={1} size={20} style={{ marginRight: '12px' }} />}
     </InternalLinkMenuItem>
   )
 }

@@ -34,7 +34,11 @@ export interface Config {
   tradingApiWebTestEnv: string
   uniswapApiKey: string
   unitagsApiUrlOverride: string
+  uniswapNotifApiBaseUrlOverride: string
+  entryGatewayApiUrlOverride: string
   walletConnectProjectId: string
   walletConnectProjectIdBeta: string
   walletConnectProjectIdDev: string
+  enableSessionService: boolean
+  enableEntryGatewayProxy: boolean
 }

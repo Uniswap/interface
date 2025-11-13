@@ -35,10 +35,14 @@ export const getConfig = (): Config => {
     tradingApiWebTestEnv: process.env.REACT_APP_TRADING_API_TEST_ENV || '',
     uniswapApiKey: process.env.UNISWAP_API_KEY || '',
     unitagsApiUrlOverride: process.env.UNITAGS_API_URL_OVERRIDE || '',
+    uniswapNotifApiBaseUrlOverride: process.env.UNISWAP_NOTIF_API_BASE_URL_OVERRIDE || '',
+    entryGatewayApiUrlOverride: process.env.ENTRY_GATEWAY_API_URL_OVERRIDE || '',
     walletConnectProjectId:
       process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID || process.env.WALLETCONNECT_PROJECT_ID || '',
     walletConnectProjectIdBeta: process.env.WALLETCONNECT_PROJECT_ID_BETA || '',
     walletConnectProjectIdDev: process.env.WALLETCONNECT_PROJECT_ID_DEV || '',
+    enableSessionService: process.env.ENABLE_SESSION_SERVICE === 'true',
+    enableEntryGatewayProxy: process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY === 'true',
   }
   if (isNonTestDev) {
     // biome-ignore lint/suspicious/noConsole: Cannot use logger here, causes error from circular dep

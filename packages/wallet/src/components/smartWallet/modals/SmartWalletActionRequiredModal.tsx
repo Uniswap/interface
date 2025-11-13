@@ -82,14 +82,18 @@ export function SmartWalletActionRequiredModal({
       titleLoadingPlaceholderText={t('smartWallet.actionRequired.title')}
       subtext={t('smartWallet.actionRequired.description')}
       modalName={ModalName.SmartWalletActionRequiredModal}
-      primaryButtonText={ctaButtonText || ''}
-      primaryButtonOnClick={onConfirmCallback}
-      primaryButtonVariant="default"
-      primaryButtonDisabled={!canContinue || isLoading}
-      primaryButtonLoading={isLoading}
-      secondaryButtonText={t('smartWallet.actionRequired.reactivate')}
-      secondaryButtonOnClick={onReactivateCallback}
-      secondaryButtonEmphasis="text-only"
+      primaryButton={{
+        text: ctaButtonText || '',
+        onClick: onConfirmCallback,
+        variant: 'default',
+        disabled: !canContinue || isLoading,
+        loading: isLoading,
+      }}
+      secondaryButton={{
+        text: t('smartWallet.actionRequired.reactivate'),
+        onClick: onReactivateCallback,
+        emphasis: 'text-only',
+      }}
       alignment="top"
       onClose={onClose}
     >

@@ -298,7 +298,6 @@ export function generateCreatePositionTxRequest({
   return {
     type: LiquidityTransactionType.Create,
     unsigned: Boolean(validatedPermitRequest),
-    protocolVersion,
     createPositionRequestArgs: queryParams,
     action: {
       type: LiquidityTransactionType.Create,

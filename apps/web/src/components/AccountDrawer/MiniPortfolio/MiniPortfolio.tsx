@@ -2,10 +2,9 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { atom, useAtom } from 'jotai'
-import { useTheme } from 'lib/styled-components'
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Loader } from 'ui/src/loading/Loader'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -26,7 +25,7 @@ interface Page {
 
 export default function MiniPortfolio({ evmAddress, svmAddress }: { evmAddress?: string; svmAddress?: string }) {
   const { t } = useTranslation()
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   // Resumes at the last viewed page
   const [lastPage, setLastPage] = useAtom(lastPageAtom)
@@ -140,7 +139,7 @@ export default function MiniPortfolio({ evmAddress, svmAddress }: { evmAddress?:
                     )}
                     {showActivityIndicator && !hasPendingActivity && (
                       <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="4" cy="4" r="4" fill={theme.accent1} />
+                        <circle cx="4" cy="4" r="4" fill={colors.accent1.val} />
                       </svg>
                     )}
                   </Flex>

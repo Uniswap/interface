@@ -25,6 +25,7 @@ interface SessionInitializationService {
 function createSessionInitializationService(ctx: {
   sessionService: SessionService
   challengeSolverService: ChallengeSolverService
+  getShouldDisableAutoUpgradeSession?: () => boolean
   maxChallengeRetries?: number
 }): SessionInitializationService {
   async function handleChallengeFlow(attemptCount = 0): Promise<void> {
@@ -78,8 +79,8 @@ function createSessionInitializationService(ctx: {
     // Step 2: Initialize new session
     const initResponse = await ctx.sessionService.initSession()
 
-    // Step 3: Handle challenge if required
-    if (initResponse.needChallenge) {
+    // Step 3: Handle challenge if required and enabled
+    if (initResponse.needChallenge && !ctx.getShouldDisableAutoUpgradeSession?.()) {
       await handleChallengeFlow()
     }
 

@@ -1,5 +1,5 @@
 import { NetworkStatus } from '@apollo/client'
-import { usePortfolioAddress } from 'pages/Portfolio/hooks/usePortfolioAddress'
+import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
 import { useMemo } from 'react'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSortedPortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
@@ -23,16 +23,17 @@ export interface TokenData {
 }
 
 // Custom hook to format portfolio data
-export function useTransformTokenTableData({ chainIds }: { chainIds?: UniverseChainId[] }): {
+export function useTransformTokenTableData({ chainIds, limit }: { chainIds?: UniverseChainId[]; limit?: number }): {
   visible: TokenData[] | null
   hidden: TokenData[] | null
+  totalCount: number | null
   loading: boolean
   refetching: boolean
   error: Error | undefined
   refetch: (() => void) | undefined
   networkStatus: NetworkStatus
 } {
-  const portfolioAddress = usePortfolioAddress()
+  const { evmAddress, svmAddress } = usePortfolioAddresses()
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   const {
@@ -42,7 +43,8 @@ export function useTransformTokenTableData({ chainIds }: { chainIds?: UniverseCh
     refetch,
     networkStatus,
   } = useSortedPortfolioBalances({
-    evmAddress: portfolioAddress,
+    evmAddress,
+    svmAddress,
     chainIds,
   })
 
@@ -52,11 +54,20 @@ export function useTransformTokenTableData({ chainIds }: { chainIds?: UniverseCh
     const isRefetching = loading && !!sortedBalances
 
     if (isInitialLoading) {
-      return { visible: null, hidden: null, loading, refetching: false, error, refetch, networkStatus }
+      return {
+        visible: null,
+        hidden: null,
+        totalCount: null,
+        loading,
+        refetching: false,
+        error,
+        refetch,
+        networkStatus,
+      }
     }
 
     if (!sortedBalances) {
-      return { visible: [], hidden: [], loading, refetching: false, error, refetch, networkStatus }
+      return { visible: [], hidden: [], totalCount: 0, loading, refetching: false, error, refetch, networkStatus }
     }
 
     // Compute total USD across visible balances to determine allocation per token
@@ -94,6 +105,19 @@ export function useTransformTokenTableData({ chainIds }: { chainIds?: UniverseCh
 
     const hidden = sortedBalances.hiddenBalances.map((b) => mapBalanceToTokenData(b, 0))
 
-    return { visible, hidden, loading, refetching: isRefetching, refetch, networkStatus, error }
-  }, [loading, sortedBalances, convertFiatAmountFormatted, formatNumberOrString, error, refetch, networkStatus])
+    // Apply limit to visible tokens if specified
+    const limitedVisible = limit ? visible.slice(0, limit) : visible
+    const totalCount = visible.length
+
+    return {
+      visible: limitedVisible,
+      hidden,
+      totalCount,
+      loading,
+      refetching: isRefetching,
+      refetch,
+      networkStatus,
+      error,
+    }
+  }, [loading, sortedBalances, convertFiatAmountFormatted, formatNumberOrString, error, refetch, networkStatus, limit])
 }

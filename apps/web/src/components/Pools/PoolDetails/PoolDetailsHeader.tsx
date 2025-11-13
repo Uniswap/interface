@@ -16,7 +16,7 @@ import { DetailBubble } from 'components/Pools/PoolDetails/shared'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import { ActionButtonStyle } from 'components/Tokens/TokenDetails/shared'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import styled, { useTheme } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
@@ -24,7 +24,16 @@ import { Link } from 'react-router'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
-import { Flex, Shine, Text, TouchableArea, styled as tamaguiStyled, useIsTouchDevice, useMedia } from 'ui/src'
+import {
+  Flex,
+  Shine,
+  Text,
+  TouchableArea,
+  styled as tamaguiStyled,
+  useIsTouchDevice,
+  useMedia,
+  useSporeColors,
+} from 'ui/src'
 import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -157,7 +166,7 @@ const ContractsDropdownRow = ({
   chainId?: number
   tokens: (GraphQLApi.Token | undefined)[]
 }) => {
-  const theme = useTheme()
+  const colors = useSporeColors()
   const currency = tokens[0] && gqlToCurrency(tokens[0])
   const isPool = tokens.length === 2
   const currencies = isPool && tokens[1] ? [currency, gqlToCurrency(tokens[1])] : [currency]
@@ -192,7 +201,7 @@ const ContractsDropdownRow = ({
           </ThemedText.BodyPrimary>
           <ThemedText.BodySecondary>{shortenAddress({ address })}</ThemedText.BodySecondary>
         </Row>
-        <ExternalLinkIcon size="16px" stroke={theme.neutral2} />
+        <ExternalLinkIcon size="16px" stroke={colors.neutral2.val} />
       </ContractsDropdownRowContainer>
     </StyledExternalLink>
   )
@@ -214,7 +223,7 @@ const PoolDetailsHeaderActions = ({
   protocolVersion?: GraphQLApi.ProtocolVersion
 }) => {
   const { t } = useTranslation()
-  const theme = useTheme()
+  const colors = useSporeColors()
   const isTouchDevice = useIsTouchDevice()
   const [contractsModalIsOpen, toggleContractsModal] = useState(false)
 
@@ -225,9 +234,9 @@ const PoolDetailsHeaderActions = ({
         toggleOpen={toggleContractsModal}
         menuLabel={
           chainId === UniverseChainId.Mainnet ? (
-            <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
+            <EtherscanLogo width="18px" height="18px" fill={colors.neutral1.val} />
           ) : (
-            <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />
+            <ExplorerIcon width="18px" height="18px" fill={colors.neutral1.val} />
           )
         }
         tooltipText={isTouchDevice ? undefined : t('pool.explorers')}

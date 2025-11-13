@@ -3,12 +3,13 @@ import {
   filterTransactionDetailsFromActivityItems,
   getTransactionTypesForFilter,
 } from 'pages/Portfolio/Activity/Filters/utils'
-import { usePortfolioAddress } from 'pages/Portfolio/hooks/usePortfolioAddress'
+import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
 import { useMemo } from 'react'
 import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_DAY_MS } from 'utilities/src/time/time'
+import { filterDefinedWalletAddresses } from 'utils/filterDefinedWalletAddresses'
 
 function filterSwapsTypeLast7Days(transactions: ActivityItem[]): TransactionDetails[] {
   const allowedTypes = getTransactionTypesForFilter(ActivityFilterType.Swaps)
@@ -21,16 +22,12 @@ function filterSwapsTypeLast7Days(transactions: ActivityItem[]): TransactionDeta
 }
 
 export function useSwapsThisWeek() {
-  const portfolioAddress = usePortfolioAddress()
+  const { evmAddress, svmAddress } = usePortfolioAddresses()
 
   const { sectionData, isLoading } = useActivityData({
-    evmOwner: portfolioAddress,
-    ownerAddresses: [portfolioAddress],
-    swapCallbacks: {
-      useLatestSwapTransaction: () => undefined,
-      useSwapFormTransactionState: () => undefined,
-      onRetryGenerator: () => () => {},
-    },
+    evmOwner: evmAddress,
+    svmOwner: svmAddress,
+    ownerAddresses: filterDefinedWalletAddresses([evmAddress, svmAddress]),
     fiatOnRampParams: undefined,
   })
 

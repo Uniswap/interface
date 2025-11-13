@@ -1,4 +1,3 @@
-import { useTheme } from 'lib/styled-components'
 import { useEffect, useRef, useState } from 'react'
 import { Flex } from 'ui/src'
 
@@ -10,6 +9,7 @@ interface LiveDotRendererProps {
   chartModel: ChartModelWithLiveDot
   isHovering: boolean
   chartContainer?: HTMLElement | null
+  overrideColor?: string
 }
 
 // TODO(PORT-494): figure out why the dot isn't rendering at the correct coordinated after resize
@@ -52,10 +52,10 @@ function useHideOnResize(
   return hasResized
 }
 
-export function LiveDotRenderer({ chartModel, isHovering, chartContainer }: LiveDotRendererProps) {
+export function LiveDotRenderer({ chartModel, isHovering, chartContainer, overrideColor }: LiveDotRendererProps) {
   const [coordinates, setCoordinates] = useState<{ x: number; y: number } | null>(null)
   const hasResized = useHideOnResize(chartContainer, setCoordinates)
-  const theme = useTheme()
+  // const colors = useSporeColors()
   const rafRef = useRef<number | null>(null)
 
   useEffect(() => {
@@ -106,7 +106,7 @@ export function LiveDotRenderer({ chartModel, isHovering, chartContainer }: Live
           width: '10px',
           height: '10px',
           borderRadius: '50%',
-          backgroundColor: theme.accent1,
+          backgroundColor: overrideColor,
           opacity: 0.3,
           transform: 'translate(-50%, -50%)',
           animation: 'pulse 2s ease-in-out infinite',
@@ -118,7 +118,7 @@ export function LiveDotRenderer({ chartModel, isHovering, chartContainer }: Live
           width: '10px',
           height: '10px',
           borderRadius: '50%',
-          backgroundColor: theme.accent1,
+          backgroundColor: overrideColor,
           opacity: 0.3,
           transform: 'translate(-50%, -50%)',
           animation: 'pulse 2s ease-in-out infinite 0.5s',
@@ -131,11 +131,11 @@ export function LiveDotRenderer({ chartModel, isHovering, chartContainer }: Live
           width: '10px',
           height: '10px',
           borderRadius: '50%',
-          backgroundColor: theme.accent1,
+          backgroundColor: overrideColor,
           left: '50%',
           top: '50%',
           borderWidth: '2px',
-          borderColor: theme.surface1,
+          borderColor: overrideColor,
           transform: 'translate(-50%, -50%)',
         }}
       />

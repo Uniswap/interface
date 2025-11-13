@@ -56,12 +56,14 @@ export function NftsList({
   autoColumns = false,
   loadingSkeletonCount = 6,
   customLoadingState,
+  filteredNumHidden,
+  chainsFilter,
 }: NftsListProps): JSX.Element {
   const { t } = useTranslation()
 
   const {
     nfts,
-    numHidden,
+    numHidden: internalNumHidden,
     numShown,
     isErrorState,
     hasNextPage,
@@ -71,18 +73,22 @@ export function NftsList({
     networkStatus,
     onListEndReached,
     refetch,
-  } = useNftListRenderData({ owner, skip })
+  } = useNftListRenderData({ owner, skip, chainsFilter })
+
+  // Use filtered count if provided, otherwise use internal count
+  const numHidden = filteredNumHidden ?? internalNumHidden
 
   const onHiddenRowPressed = useCallback((): void => {
     setHiddenNftsExpanded(!hiddenNftsExpanded)
   }, [hiddenNftsExpanded, setHiddenNftsExpanded])
 
+  // Track NFTs loaded only when initial data loads, not when filtering changes
   useEffect(() => {
     sendAnalyticsEvent(WalletEventName.NFTsLoaded, {
       shown: numShown,
-      hidden: numHidden,
+      hidden: internalNumHidden,
     })
-  }, [numHidden, numShown])
+  }, [numShown, internalNumHidden])
 
   useEffect(() => {
     if (numHidden === 0 && hiddenNftsExpanded) {

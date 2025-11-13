@@ -13,7 +13,7 @@ export interface StackedLineData extends WhitespaceData<UTCTimestamp> {
 }
 
 interface TVLChartParams extends ChartModelParams<StackedLineData> {
-  colors: ColorTokens[]
+  chartColors: ColorTokens[] // renamed from 'colors' to avoid conflict
   gradients?: { start: string; end: string }[]
 }
 
@@ -42,7 +42,7 @@ class TVLChartModel extends ChartModel<StackedLineData> {
   }
 
   updateOptions(params: TVLChartParams) {
-    const isSingleLineChart = params.colors.length === 1
+    const isSingleLineChart = params.chartColors.length === 1
 
     super.updateOptions(params, {
       handleScale: false,
@@ -57,7 +57,7 @@ class TVLChartModel extends ChartModel<StackedLineData> {
         autoScale: true,
       },
     })
-    const { data, colors, gradients } = params
+    const { data, chartColors, gradients } = params
 
     // Handles changes in data, e.g. time period selection
     if (this.data !== data) {
@@ -67,7 +67,7 @@ class TVLChartModel extends ChartModel<StackedLineData> {
     }
 
     // For single line charts, use theme.accent1 as the color - this will be the token color in TokenDetails
-    const effectiveColors = isSingleLineChart ? [params.theme.accent1] : colors
+    const effectiveColors = isSingleLineChart ? [params.colors.accent1.val] : chartColors
 
     this.series.applyOptions({
       priceLineVisible: false,
@@ -84,22 +84,29 @@ interface LineChartProps {
   sources?: GraphQLApi.PriceSource[]
   data: StackedLineData[]
   stale: boolean
+  overrideColor?: string
 }
 
-export function LineChart({ height, data, sources, stale }: LineChartProps) {
+export function LineChart({ height, data, sources, stale, overrideColor }: LineChartProps) {
   const sporeColors = useSporeColors()
   // Theme handling is now done in the chart model via ThemeProvider
 
   const params = useMemo(() => {
-    const colors = sources?.map((source) => getProtocolColor(source)) ?? [sporeColors.accent1.val]
-    return { data, colors, stale }
+    const chartColors = sources?.map((source) => getProtocolColor(source)) ?? [sporeColors.accent1.val]
+    return { data, chartColors, stale }
   }, [data, sporeColors, sources, stale])
 
   const lastEntry = data[data.length - 1]
-  const isSingleLineChart = params.colors.length === 1
+  const isSingleLineChart = params.chartColors.length === 1
 
   return (
-    <Chart Model={TVLChartModel} params={params} height={height} showDottedBackground={isSingleLineChart}>
+    <Chart
+      Model={TVLChartModel}
+      params={params}
+      height={height}
+      showDottedBackground={isSingleLineChart}
+      overrideColor={overrideColor}
+    >
       {(crosshairData: StackedLineData | undefined) => (
         <ChartHeader
           value={(crosshairData ?? lastEntry).values.reduce((v, sum) => (sum += v), 0)}

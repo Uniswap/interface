@@ -1,14 +1,18 @@
+import { getTokenDetailsURL } from 'appGraphql/data/util'
 import { Currency } from '@uniswap/sdk-core'
 import { useModalState } from 'hooks/useModalState'
 import { useAtom } from 'jotai'
 import useIsConnected from 'pages/Portfolio/Header/hooks/useIsConnected'
 import { TokenData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
-import { PropsWithChildren, useMemo } from 'react'
+import { PropsWithChildren, useCallback, useMemo } from 'react'
+import { useNavigate } from 'react-router'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { TokenBalanceItemContextMenu } from 'uniswap/src/components/portfolio/TokenBalanceItemContextMenu'
 import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export function TokensContextMenuWrapper({
@@ -17,6 +21,7 @@ export function TokensContextMenuWrapper({
   children,
 }: PropsWithChildren<{ tokenData: TokenData; triggerMode?: ContextMenuTriggerMode }>): React.ReactNode {
   const isConnected = useIsConnected()
+  const navigate = useNavigate()
 
   const { openModal } = useModalState(ModalName.ReportTokenIssue)
   const [, setModalProps] = useAtom(ReportTokenIssueModalPropsAtom)
@@ -24,6 +29,23 @@ export function TokensContextMenuWrapper({
     setModalProps({ source: 'portfolio', currency, isMarkedSpam: portfolioBalance?.currencyInfo.isSpam })
     openModal()
   })
+
+  const copyAddressToClipboard = useCallback(async (address: string): Promise<void> => {
+    await setClipboard(address)
+  }, [])
+
+  const navigateToTokenDetails = useCallback(() => {
+    if (!tokenData.currencyInfo) {
+      return
+    }
+
+    const { currency } = tokenData.currencyInfo
+    const url = getTokenDetailsURL({
+      address: currency.isNative ? null : currency.address,
+      chain: toGraphQLChain(currency.chainId),
+    })
+    navigate(url)
+  }, [tokenData.currencyInfo, navigate])
 
   const portfolioBalance: PortfolioBalance | undefined = useMemo(() => {
     if (!tokenData.currencyInfo) {
@@ -50,6 +72,9 @@ export function TokensContextMenuWrapper({
       portfolioBalance={portfolioBalance}
       triggerMode={triggerMode}
       openReportTokenModal={() => openReportTokenModal(portfolioBalance.currencyInfo.currency)}
+      copyAddressToClipboard={copyAddressToClipboard}
+      onPressToken={navigateToTokenDetails}
+      disableNotifications={true}
     >
       {children}
     </TokenBalanceItemContextMenu>

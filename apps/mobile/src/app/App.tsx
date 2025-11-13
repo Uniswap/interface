@@ -3,7 +3,7 @@ import { loadDevMessages, loadErrorMessages } from '@apollo/client/dev'
 import { DdRum, RumActionType } from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
-import { ApiInit, getSessionService } from '@universe/api'
+import { ApiInit, getEntryGatewayUrl, getSessionService } from '@universe/api'
 import {
   DatadogSessionSampleRateKey,
   DynamicConfigs,
@@ -132,8 +132,7 @@ initializePortfolioQueryOverrides({ store })
 
 const sessionInitService = createSessionInitializationService({
   sessionService: getSessionService({
-    // TODO: Use real base url
-    getBaseUrl: () => 'https://entry-gateway.backend-dev.api.uniswap.org',
+    getBaseUrl: getEntryGatewayUrl,
   }),
   challengeSolverService: createChallengeSolverService(),
 })

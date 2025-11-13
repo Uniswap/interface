@@ -63,7 +63,7 @@ export function ActionTile({
   return (
     <Tile data-testid={dataTestId} onPress={onClick} disabled={disabled} p={padding}>
       {loading ? <LoadingButtonSpinner height={28} width={28} fill={accent1.val} /> : Icon}
-      <Text variant="subheading2" color="$accent1">
+      <Text variant="buttonLabel2" color="$accent1">
         {name}
       </Text>
     </Tile>

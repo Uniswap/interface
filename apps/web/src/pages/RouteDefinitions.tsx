@@ -18,7 +18,7 @@ const AddLiquidityV2WithTokenRedirects = lazy(() => import('pages/AddLiquidityV2
 const RedirectExplore = lazy(() => import('pages/Explore/redirects'))
 const LegacyMigrateV2 = lazy(() => import('pages/MigrateV2'))
 const LegacyMigrateV2Pair = lazy(() => import('pages/MigrateV2/MigrateV2Pair'))
-const MigrateV3 = lazy(() => import('pages/MigrateV3'))
+const MigrateV3 = lazy(() => import('pages/Migrate'))
 const NotFound = lazy(() => import('pages/NotFound'))
 const Pool = lazy(() => import('pages/Positions'))
 const LegacyPoolRedirects = lazy(() =>

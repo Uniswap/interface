@@ -7,7 +7,7 @@ import { TokenBalancesProvider } from 'appGraphql/data/apollo/TokenBalancesProvi
 import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
 import { datadogRum } from '@datadog/browser-rum'
-import { ApiInit, getSessionService } from '@universe/api'
+import { ApiInit, getEntryGatewayUrl, getSessionService } from '@universe/api'
 import type { StatsigUser } from '@universe/gating'
 import { createChallengeSolverService, createSessionInitializationService } from '@universe/sessions'
 import { QueryClientPersistProvider } from 'components/PersistQueryClient'
@@ -22,6 +22,7 @@ import { useAccount } from 'hooks/useAccount'
 import { useDeferredComponent } from 'hooks/useDeferredComponent'
 import { LanguageProvider } from 'i18n/LanguageProvider'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
+import { WebNotificationSystemManager } from 'notification-system/WebNotificationSystem'
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
 import App from 'pages/App'
 import type { PropsWithChildren } from 'react'
@@ -75,10 +76,11 @@ const loadWebAccountsStoreUpdater = () =>
 
 const sessionInitService = createSessionInitializationService({
   sessionService: getSessionService({
-    // TODO: Use real base url
-    getBaseUrl: () => 'https://entry-gateway.backend-dev.api.uniswap.org',
+    getBaseUrl: getEntryGatewayUrl,
   }),
   challengeSolverService: createChallengeSolverService(),
+  // disable auto upgrade for now
+  getShouldDisableAutoUpgradeSession: () => true,
 })
 
 function Updaters() {
@@ -185,6 +187,7 @@ createRoot(container).render(
                                       <ThemeProvider>
                                         <TamaguiProvider>
                                           <PortalProvider>
+                                            <WebNotificationSystemManager />
                                             <ThemedGlobalStyle />
                                             <App />
                                           </PortalProvider>

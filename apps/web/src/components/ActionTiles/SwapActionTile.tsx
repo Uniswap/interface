@@ -1,6 +1,6 @@
 import { ActionTileWithIconAnimation } from 'components/ActionTiles/ActionTileWithIconAnimation'
 import { useTranslation } from 'react-i18next'
-import { SwapDotted } from 'ui/src/components/icons/SwapDotted'
+import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
 import { FlexProps } from 'ui/src/components/layout/Flex'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -17,7 +17,7 @@ export function SwapActionTile({ padding = '$spacing12' }: { padding?: FlexProps
   return (
     <ActionTileWithIconAnimation
       dataTestId={TestID.PortfolioActionTileSwap}
-      Icon={SwapDotted}
+      Icon={CoinConvert}
       name={t('common.swap')}
       onClick={onPressSwap}
       padding={padding}

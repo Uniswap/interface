@@ -1,15 +1,13 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { GasStrategy, TradingApi } from '@universe/api'
 import isEqual from 'lodash/isEqual'
-import omit from 'lodash/omit'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { convertGasFeeToDisplayValue } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { createOrGetPlan } from 'uniswap/src/features/transactions/swap/plan/utils'
 import type { SwapTxAndGasInfoService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/swapTxAndGasInfoService'
 import { getSwapInputExceedsBalance } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import { ChainedSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type { ChainedActionTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { tryCatch } from 'utilities/src/errors'
 
 const UNUSED_CHAINED_ACTIONS_FIELDS: Pick<
   ChainedSwapTxAndGasInfo,
@@ -42,20 +40,13 @@ export function createChainedActionSwapTxAndGasInfoService(): SwapTxAndGasInfoSe
       const skip = getSwapInputExceedsBalance({ derivedSwapInfo })
 
       // TODO SWAP-485 - handle API error cases/skip conditions
-      let tradeResponse
-      if (planId) {
-        const { data } = await tryCatch(
-          skip ? Promise.resolve(undefined) : TradingApiClient.getExistingPlan({ planId }),
-        )
-        tradeResponse = data
-      } else {
-        const { data } = await tryCatch(
-          skip
-            ? Promise.resolve(undefined)
-            : TradingApiClient.createNewPlan({ quote: trade.quote.quote, routing: TradingApi.Routing.CHAINED }),
-        )
-        tradeResponse = data
-      }
+      const tradeResponse = skip
+        ? undefined
+        : await createOrGetPlan({
+            inputPlanId: planId,
+            quote: trade.quote.quote,
+            routing: TradingApi.Routing.CHAINED,
+          })
 
       // Preserve tradeId if previous fetch was skipped
       planId = tradeResponse?.planId ?? planId
@@ -92,24 +83,32 @@ export function createChainedActionSwapTxAndGasInfoService(): SwapTxAndGasInfoSe
 }
 
 /**
- * Compares the previous and new quotes and returns if they are effectively the same
- * based on user configured fields.
+ * Compares the previous and new quotes by explicitly comparing relevant fields
+ * based on user configured fields for each trade type.
  */
 function isSameQuote(params: {
   newQuote: TradingApi.Quote
   tradeType: TradeType
   prevQuote?: TradingApi.Quote
 }): boolean {
+  // TODO: SWAP-477 Use configuration hash instead of field comparison
   const { newQuote, tradeType, prevQuote } = params
-  const quoteIsEqualOmit = ['quoteId']
-  if (tradeType === TradeType.EXACT_INPUT) {
-    quoteIsEqualOmit.push('output.amount')
-  } else {
-    quoteIsEqualOmit.push('input.amount')
+
+  if (!prevQuote) {
+    return false
   }
 
-  if (!prevQuote || !isEqual(omit(newQuote, quoteIsEqualOmit), omit(prevQuote, quoteIsEqualOmit))) {
-    return false
+  const fields = ['chainId', 'swapper', 'tradeType', 'slippage']
+  if (tradeType === TradeType.EXACT_INPUT) {
+    fields.push('input')
+  } else {
+    fields.push('output')
+  }
+
+  for (let i = 0; i < fields.length; i++) {
+    if (!isEqual(newQuote[fields[i] as keyof TradingApi.Quote], prevQuote[fields[i] as keyof TradingApi.Quote])) {
+      return false
+    }
   }
   return true
 }

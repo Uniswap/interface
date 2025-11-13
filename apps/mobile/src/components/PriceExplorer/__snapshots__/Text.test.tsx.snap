@@ -298,6 +298,100 @@ exports[`RelativeChangeText renders loading state 1`] = `
       />
     </View>
   </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 2,
+        "opacity": 0,
+      }
+    }
+  >
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={16}
+      bbWidth={16}
+      collapsable={false}
+      fill="none"
+      focusable={false}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      strokeWidth={2}
+      style={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "height": 16,
+            "width": 16,
+          },
+          {
+            "flex": 0,
+            "height": 16,
+            "width": 16,
+          },
+        ]
+      }
+      vbHeight={24}
+      vbWidth={24}
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "strokeWidth",
+          ]
+        }
+        strokeWidth={2}
+      >
+        <RNSVGPath
+          d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+          fill={
+            {
+              "type": 2,
+            }
+          }
+          propList={
+            [
+              "fill",
+            ]
+          }
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+    <TextInput
+      allowFontScaling={true}
+      collapsable={false}
+      editable={false}
+      jestAnimatedStyle={
+        {
+          "value": {
+            "color": "#E10F0F",
+          },
+        }
+      }
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
+          "color": "#E10F0F",
+          "fontFamily": "Basel Grotesk",
+          "fontSize": 19,
+          "fontWeight": "400",
+          "lineHeight": 24.7,
+          "padding": 0,
+        }
+      }
+      testID="relative-change-text"
+      text="10.00%"
+      underlineColorAndroid="transparent"
+      value="10.00%"
+    />
+  </View>
 </View>
 `;
 
@@ -313,88 +407,99 @@ exports[`RelativeChangeText renders without error 1`] = `
   }
   testID="relative-price-change"
 >
-  <RNSVGSvgView
-    align="xMidYMid"
-    bbHeight={16}
-    bbWidth={16}
-    collapsable={false}
-    fill="none"
-    focusable={false}
-    meetOrSlice={0}
-    minX={0}
-    minY={0}
-    strokeWidth={2}
+  <View
     style={
-      [
-        {
-          "backgroundColor": "transparent",
-          "borderWidth": 0,
-        },
-        {
-          "height": 16,
-          "width": 16,
-        },
-        {
-          "flex": 0,
-          "height": 16,
-          "width": 16,
-        },
-      ]
+      {
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 2,
+        "opacity": 1,
+      }
     }
-    vbHeight={24}
-    vbWidth={24}
   >
-    <RNSVGGroup
-      fill={null}
-      propList={
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight={16}
+      bbWidth={16}
+      collapsable={false}
+      fill="none"
+      focusable={false}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
+      strokeWidth={2}
+      style={
         [
-          "fill",
-          "strokeWidth",
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "height": 16,
+            "width": 16,
+          },
+          {
+            "flex": 0,
+            "height": 16,
+            "width": 16,
+          },
         ]
       }
-      strokeWidth={2}
+      vbHeight={24}
+      vbWidth={24}
     >
-      <RNSVGPath
-        d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
-        fill={
-          {
-            "type": 2,
-          }
-        }
+      <RNSVGGroup
+        fill={null}
         propList={
           [
             "fill",
+            "strokeWidth",
           ]
         }
-      />
-    </RNSVGGroup>
-  </RNSVGSvgView>
-  <TextInput
-    allowFontScaling={true}
-    collapsable={false}
-    editable={false}
-    jestAnimatedStyle={
-      {
-        "value": {
+        strokeWidth={2}
+      >
+        <RNSVGPath
+          d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+          fill={
+            {
+              "type": 2,
+            }
+          }
+          propList={
+            [
+              "fill",
+            ]
+          }
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
+    <TextInput
+      allowFontScaling={true}
+      collapsable={false}
+      editable={false}
+      jestAnimatedStyle={
+        {
+          "value": {
+            "color": "#E10F0F",
+          },
+        }
+      }
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
           "color": "#E10F0F",
-        },
+          "fontFamily": "Basel Grotesk",
+          "fontSize": 19,
+          "fontWeight": "400",
+          "lineHeight": 24.7,
+          "padding": 0,
+        }
       }
-    }
-    maxFontSizeMultiplier={1.4}
-    style={
-      {
-        "color": "#E10F0F",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
-        "fontWeight": "400",
-        "lineHeight": 24.7,
-        "padding": 0,
-      }
-    }
-    testID="relative-change-text"
-    text="10.00%"
-    underlineColorAndroid="transparent"
-    value="10.00%"
-  />
+      testID="relative-change-text"
+      text="10.00%"
+      underlineColorAndroid="transparent"
+      value="10.00%"
+    />
+  </View>
 </View>
 `;

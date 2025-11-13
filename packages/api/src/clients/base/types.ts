@@ -7,8 +7,9 @@ export type CustomOptions = StandardFetchOptions & {
 
 export interface FetchClientContext {
   baseUrl: string
-  headers?: HeadersInit
+  getHeaders?: () => HeadersInit
   getSessionServiceBaseUrl: () => string
+  defaultOptions?: Omit<StandardFetchOptions, 'headers'>
 }
 
 export interface FetchClient {

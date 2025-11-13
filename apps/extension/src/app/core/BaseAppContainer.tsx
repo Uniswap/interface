@@ -1,4 +1,4 @@
-import { ApiInit, getSessionService } from '@universe/api'
+import { ApiInit, getEntryGatewayUrl, getSessionService } from '@universe/api'
 import { createChallengeSolverService, createSessionInitializationService } from '@universe/sessions'
 import { PropsWithChildren } from 'react'
 import { I18nextProvider } from 'react-i18next'
@@ -18,8 +18,7 @@ import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 const sessionInitializationService = createSessionInitializationService({
   sessionService: getSessionService({
-    // TODO: Use real base url
-    getBaseUrl: () => 'https://entry-gateway.backend-dev.api.uniswap.org',
+    getBaseUrl: getEntryGatewayUrl,
   }),
   challengeSolverService: createChallengeSolverService(),
 })

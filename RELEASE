@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmNMoMSDQVQwUdfxLqhLpM4bKgGMyEHU2LU2RfDFaRqACc`
-- CIDv1: `bafybeiaajnnkurqabznrl32buiydbsym77nt2np3d5xv5mgskkd6euk3au`
+- CIDv0: `QmcXKJu5dG8FFG831szNgdEfs9U7XxCnRwbSuAygxy42Ph`
+- CIDv1: `bafybeigsx4i67rlwmg76alnqawpcpe2gugwvtu7dcgojfgxm2e4ap43gma`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,65 +10,67 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiaajnnkurqabznrl32buiydbsym77nt2np3d5xv5mgskkd6euk3au.ipfs.dweb.link/
-- [ipfs://QmNMoMSDQVQwUdfxLqhLpM4bKgGMyEHU2LU2RfDFaRqACc/](ipfs://QmNMoMSDQVQwUdfxLqhLpM4bKgGMyEHU2LU2RfDFaRqACc/)
+- https://bafybeigsx4i67rlwmg76alnqawpcpe2gugwvtu7dcgojfgxm2e4ap43gma.ipfs.dweb.link/
+- [ipfs://QmcXKJu5dG8FFG831szNgdEfs9U7XxCnRwbSuAygxy42Ph/](ipfs://QmcXKJu5dG8FFG831szNgdEfs9U7XxCnRwbSuAygxy42Ph/)
 
-## 5.117.0 (2025-11-05)
+## 5.118.0 (2025-11-13)
 
 
 ### Features
 
-* **web:** add activity items to new mini portfolio (#24822) f0994c6
-* **web:** add infinite scroll for portfolio activity table (#24691) d71921f
-* **web:** add infinite scroll to minip on web activity (#23352) 78d6dcb
-* **web:** add NFT context menu (#24791) 10ed3e4
-* **web:** add report position option to context menus (#24840) b587dfc
-* **web:** add report position option to PDP (#24841) 97d0b94
-* **web:** add toast on report (#24717) 65c8cd6
-* **web:** add web entry points for token reporting (#24714) b83cb90
-* **web:** block timestamp countdown (#24632) 6a1da1d
-* **web:** dialog content container + spacing tweaks (#24239) 035026d
-* **web:** portfolio Overview tab (#24737) ed3f451
-* **web:** stub out new mini portfolio behind flag (#24821) 0602da3
-* **web:** toucan auction status (#24866) 0d9d56b
-* **web:** use shared token details hooks with unified 24hr change (#24726) 501d754
+* **web:** add bid distribution chart calculations (#24634) a4d4a0f
+* **web:** add bid distribution chart UI components (#24636) 0b17542
+* **web:** add dev tools for bid distribution chart testing (#24638) 875e7b9
+* **web:** add max valuation input (#24301) 31ae922
+* **web:** add network filtering to overview tab (#25105) 24d0bf4
+* **web:** add nft formatting support in activity table (#25034) c30f149
+* **web:** add solana support for web portfolio page (#25108) 1d13ffe
+* **web:** add toucan activities UX (#24763) f2ad86a
+* **web:** add Toucan chart infrastructure (#24633) f0d25d6
+* **web:** add toucan stats UX (#24764) 5558640
+* **web:** filter NFTs by chain (#25116) 245586f
+* **web:** implement chart hooks and main renderer (#24635) 5be2fe0
+* **web:** improve time hover formatting for activity table (#25035) 43e27ba
+* **web:** integrate chart into auction store and add supporting features (#24637) 66adc2e
+* **web:** Overview mini tokens table (#24805) 752b8e6
+* **web:** Portfolio Overview Limits table (#24817) 4a6e7aa
+* **web:** portfolio overview mini activity table (#24816) c870eb2
+* **web:** portfolio overview mini pools table (#24818) c380379
+* **web:** scaffold toucan auction activity + stats container (#24762) bfbb327
+* **web:** toucan add clearing price line (#24730) 0db762b
+* **web:** toucan bid distribution not started state (#24919) 2839785
+* **web:** v2 -> v3 migrate using the new flow (#22488) 86504f7
 
 
 ### Bug Fixes
 
-* **web:** calculate fiat delta from API percentage for multi-chain tokens (#24728) 36f4c68
-* **web:** data reporting abilities fixes (#25130) 9246200
-* **web:** default to mainnet for limits flow (#24884) 666bdb0
-* **web:** fix issue with listpools endpoint returning an error (#25141) 62f132b
-* **web:** fix nested scrollbar overflowY issue (#24688) 60d39f3
-* **web:** Fix non-reactive prices on explore tab (#24766) 4539d99
-* **web:** Load tokens until scrollbar appears- PORT-359 (#23085) 5a480cf
-* **web:** log interface swap finalization results for flashblocks (#24869) b800fb3
-* **web:** portfolio polishes (#24944) 6d94d95
-* **web:** position card context menu fixes and cleanup (#24839) 5568c4d
-* **web:** prevent blank loading state in swap modal 5790e16
-* **web:** remove bad import in server side worker code (#24803) 048e2a0
-* **web:** Remove unnecessary button outline on Switch (#24697) 6216bb8
-* **web:** revert table scroll update (#25113) 9d12691
+* **web:** add transaction to TransactionState redux prior to onModification (#25218) 5a4f64f
+* **web:** address feedback (#24949) ed03cfd
+* **web:** allow table row height prop to fix row overflow (#25099) 468bffd
+* **web:** ExpectedTransactionState types (#25152) d659705
+* **web:** filter token balance by selected chain (#25194) 9b6639f
+* **web:** fix issue with listpools endpoint returning an error (#25140) ebd8351
+* **web:** fix protocol stats calcs (#25123) 4b0f0ca
+* **web:** hide report option when we already know a position is hidden (#25209) 47aea4b
+* **web:** more dialog fixes (#24747) 0c37ec6
+* **web:** nft count should reflect search results (#24952) 0267bc5
+* **web:** notif system initialization (#25008) f30ffbf
+* **web:** prevent blank loading state in swap modal (#25144) b6f7698
+* **web:** revert table scroll update (#25111) a9084fd
+* **web:** use new Dialog to fix broken dialogs (#24742) a86c256
+* **web:** use new Dialog to fix Token Warning modal (#24744) ef0c42b
 
 
 ### Continuous Integration
 
-* **web:** update sitemaps c5134d4
-
-
-### Code Refactoring
-
-* **web:** Consolidate swap and wrap callbacks into useSwapHandlers (#24219) b151db3
-* **web:** Consolidate swap and wrap handlers into unified interface (#24184) 672c7be
+* **web:** update sitemaps 20e677d
 
 
 ### Styles
 
-* **web:** apply textured background to pool details page table variants (#25040) 8381ec0
-* **web:** fix portfolio page account header scroll animation (#24953) 13aef52
-* **web:** update activity tab filter to reflect designs (#24687) 68f73cb
-* **web:** update loading skeletons for NFT Cards (#24951) d556e00
-* **web:** update price chart styles (#24773) 5f231db
+* **web:** add support for network filter size transition (#25187) 0033e73
+* **web:** disconnected state style polishes (#24986) 0f7d20f
+* **web:** fix various alignment issues (#25195) 7b44676
+* **web:** style connect wallet banner in light and dark theme (#25110) 5cecfe5
 
 

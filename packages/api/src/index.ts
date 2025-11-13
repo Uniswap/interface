@@ -25,10 +25,13 @@ export { SharedQueryClient } from '@universe/api/src/clients/base/SharedQueryCli
 // Constants and URLs
 export {
   createHelpArticleUrl,
+  DEV_ENTRY_GATEWAY_API_BASE_URL,
   getCloudflareApiBaseUrl,
   getCloudflarePrefix,
   getServicePrefix,
   helpUrl,
+  PROD_ENTRY_GATEWAY_API_BASE_URL,
+  STAGING_ENTRY_GATEWAY_API_BASE_URL,
   TrafficFlows,
 } from '@universe/api/src/clients/base/urls'
 
@@ -37,7 +40,7 @@ export type { AuthData, SignedRequestParams, SignMessageFunc } from '@universe/a
 export { createSignedRequestBody, createSignedRequestParams } from '@universe/api/src/clients/base/auth'
 
 // GraphQL API
-export * as GraphQLApi from '@universe/api/src/clients/graphql/__generated__/types-and-hooks'
+export * as GraphQLApi from '@universe/api/src/clients/graphql/generated'
 export {
   useTokenBasicInfoPartsFragment,
   useTokenBasicProjectPartsFragment,
@@ -126,7 +129,10 @@ export {
 
 // Notifications API
 export { createNotificationsApiClient } from '@universe/api/src/clients/notifications/createNotificationsApiClient'
+export { BackgroundType, ContentStyle, OnClickAction } from '@universe/api/src/clients/notifications/types'
 export type {
+  AckNotificationRequest,
+  AckNotificationResponse,
   GetNotificationsRequest,
   GetNotificationsResponse,
   InAppNotification,
@@ -182,3 +188,5 @@ export {
 } from '@universe/api/src/clients/content/types'
 
 export { getTransport } from '@universe/api/src/transport'
+
+export { getEntryGatewayUrl } from '@universe/api/src/getEntryGatewayUrl'

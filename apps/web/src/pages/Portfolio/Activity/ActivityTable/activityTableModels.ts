@@ -39,6 +39,14 @@ type ActivityAmountModel =
       currency0AmountRaw: string
       currency1AmountRaw?: string
     }
+  | {
+      kind: 'nft'
+      nftImageUrl?: string
+      nftName: string
+      nftCollectionName?: string
+      purchaseCurrencyId?: string
+      purchaseAmountRaw?: string
+    }
 
 /**
  * Represents the type label and grouping for a transaction

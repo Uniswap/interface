@@ -50,8 +50,7 @@ export function buildActivityRowFragments(details: TransactionDetails): Activity
       }
 
     case TransactionType.Send: {
-      const currencyId =
-        typeInfo.assetType === AssetType.Currency ? buildCurrencyId(chainId, typeInfo.tokenAddress) : undefined
+      const currencyId = buildCurrencyId(chainId, typeInfo.tokenAddress)
 
       return {
         amount: {
@@ -62,13 +61,32 @@ export function buildActivityRowFragments(details: TransactionDetails): Activity
         counterparty: typeInfo.recipient ? getValidAddress({ address: typeInfo.recipient, chainId }) : null,
         typeLabel: {
           baseGroup: ActivityFilterType.Sends,
+          overrideLabelKey: 'transaction.status.send.success',
         },
       }
     }
 
     case TransactionType.Receive: {
-      const currencyId =
-        typeInfo.assetType === AssetType.Currency ? buildCurrencyId(chainId, typeInfo.tokenAddress) : undefined
+      // Handle NFT receives
+      if (typeInfo.assetType === AssetType.ERC721 || typeInfo.assetType === AssetType.ERC1155) {
+        return {
+          amount: typeInfo.nftSummaryInfo
+            ? {
+                kind: 'nft',
+                nftImageUrl: typeInfo.nftSummaryInfo.imageURL,
+                nftName: typeInfo.nftSummaryInfo.name,
+                nftCollectionName: typeInfo.nftSummaryInfo.collectionName,
+              }
+            : null,
+          counterparty: typeInfo.sender ? getValidAddress({ address: typeInfo.sender, chainId }) : null,
+          typeLabel: {
+            baseGroup: ActivityFilterType.Receives,
+          },
+        }
+      }
+
+      // Handle regular token receives
+      const currencyId = buildCurrencyId(chainId, typeInfo.tokenAddress)
 
       return {
         amount: {
@@ -79,6 +97,7 @@ export function buildActivityRowFragments(details: TransactionDetails): Activity
         counterparty: typeInfo.sender ? getValidAddress({ address: typeInfo.sender, chainId }) : null,
         typeLabel: {
           baseGroup: ActivityFilterType.Receives,
+          overrideLabelKey: 'transaction.status.receive.success',
         },
       }
     }
@@ -170,12 +189,14 @@ export function buildActivityRowFragments(details: TransactionDetails): Activity
       }
 
     case TransactionType.NFTMint: {
-      const currencyId = typeInfo.purchaseCurrencyId
       return {
         amount: {
-          kind: 'single',
-          currencyId,
-          amountRaw: typeInfo.purchaseCurrencyAmountRaw,
+          kind: 'nft',
+          nftImageUrl: typeInfo.nftSummaryInfo.imageURL,
+          nftName: typeInfo.nftSummaryInfo.name,
+          nftCollectionName: typeInfo.nftSummaryInfo.collectionName,
+          purchaseCurrencyId: typeInfo.purchaseCurrencyId,
+          purchaseAmountRaw: typeInfo.purchaseCurrencyAmountRaw,
         },
         counterparty: typeInfo.dappInfo?.address
           ? getValidAddress({ address: typeInfo.dappInfo.address, chainId })

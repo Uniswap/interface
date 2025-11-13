@@ -76,7 +76,7 @@
       }
     },
     "graphql:generate": {
-      "command": "graphql-codegen --config ./src/clients/graphql/codegen.config.ts",
+      "command": "graphql-codegen --config ./src/clients/graphql/codegen.config.ts && node --no-warnings=ExperimentalWarning --loader ts-node/esm ./scripts/fixGraphQLApiTypes.mts",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -84,7 +84,8 @@
       "inputs": [
         "{projectRoot}/src/clients/graphql/codegen.config.ts",
         "{projectRoot}/src/**/*.graphql",
-        "{projectRoot}/src/**/*.gql"
+        "{projectRoot}/src/**/*.gql",
+        "{projectRoot}/scripts/fixGraphQLApiTypes.mts"
       ],
       "outputs": ["{projectRoot}/src/clients/graphql/__generated__"]
     }

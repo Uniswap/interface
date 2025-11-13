@@ -1,179 +1,30 @@
 import { ApolloError } from '@apollo/client'
-import {
-  Cell,
-  CellContext,
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  Row,
-  RowData,
-  useReactTable,
-} from '@tanstack/react-table'
+import { ColumnDef, flexRender, getCoreRowModel, Row, RowData, useReactTable } from '@tanstack/react-table'
 import { useParentSize } from '@visx/responsive'
 import Loader from 'components/Icons/LoadingSpinner'
-import { ErrorModal } from 'components/Table/ErrorBox'
 import { ScrollButton, ScrollButtonProps } from 'components/Table/ScrollButton'
 import {
   CellContainer,
-  DataRow,
   HeaderRow,
   LOAD_MORE_BOTTOM_OFFSET,
   LoadingIndicator,
   LoadingIndicatorContainer,
-  NoDataFoundTableRow,
   SHOW_RETURN_TO_TOP_OFFSET,
   TableBodyContainer,
   TableContainer,
   TableHead,
-  TableRowLink,
   TableScrollMask,
 } from 'components/Table/styled'
-import { TableSizeProvider, useTableSize } from 'components/Table/TableSizeProvider'
-import { TableBodyProps } from 'components/Table/types'
+import { TableBody } from 'components/Table/TableBody'
+import { TableSizeProvider } from 'components/Table/TableSizeProvider'
 import { getCommonPinningStyles } from 'components/Table/utils'
 import useDebounce from 'hooks/useDebounce'
-import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { LinkProps } from 'react-router'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
-import { ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
-import { UseSporeColorsReturn, useSporeColors } from 'ui/src/hooks/useSporeColors'
-import { breakpoints, INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-
-const ROW_HEIGHT_DESKTOP = 56
-const ROW_HEIGHT_MOBILE_WEB = 48
-
-interface TableCellProps<T extends RowData> {
-  cell: Cell<T, unknown>
-  colors: UseSporeColorsReturn
-}
-
-function TableCellComponent<T extends RowData>({ cell, colors }: TableCellProps<T>): JSX.Element {
-  return (
-    <CellContainer style={getCommonPinningStyles(cell.column, colors)}>
-      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-    </CellContainer>
-  )
-}
-
-const TableCell = memo(TableCellComponent) as typeof TableCellComponent
-
-interface TableRowProps<T extends RowData> {
-  row: Row<T>
-  v2: boolean
-  rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
-}
-
-function TableRowComponent<T extends RowData>({ row, v2 = true, rowWrapper }: TableRowProps<T>): JSX.Element {
-  const analyticsContext = useTrace()
-  const rowOriginal = row.original as {
-    linkState: LinkProps['state']
-    testId: string
-    analytics?: {
-      elementName: ElementName
-      properties: Record<string, unknown>
-    }
-  }
-  const linkState = rowOriginal.linkState
-  const rowTestId = rowOriginal.testId
-  const colors = useSporeColors()
-  const { width: tableWidth } = useTableSize()
-  const rowHeight = useMemo(
-    () => (tableWidth <= breakpoints.lg ? ROW_HEIGHT_MOBILE_WEB : ROW_HEIGHT_DESKTOP),
-    [tableWidth],
-  )
-  const cells = row
-    .getVisibleCells()
-    .map((cell: Cell<T, unknown>) => <TableCell<T> key={cell.id} cell={cell} colors={colors} />)
-
-  const rowContent = (
-    <Trace
-      logPress
-      element={rowOriginal.analytics?.elementName}
-      properties={{
-        ...rowOriginal.analytics?.properties,
-        ...analyticsContext,
-      }}
-    >
-      <Flex group>
-        {'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
-          <TableRowLink to={rowOriginal.link} state={linkState} data-testid={rowTestId}>
-            <DataRow height={rowHeight} v2={v2}>
-              {cells}
-            </DataRow>
-          </TableRowLink>
-        ) : (
-          <DataRow height={rowHeight} data-testid={rowTestId} v2={v2}>
-            {cells}
-          </DataRow>
-        )}
-      </Flex>
-    </Trace>
-  )
-  return rowWrapper ? rowWrapper(row, rowContent) : rowContent
-}
-
-const TableRow = memo(TableRowComponent) as typeof TableRowComponent
-
-function TableBodyInner<T extends RowData>(
-  { table, loading, error, v2 = true, rowWrapper }: TableBodyProps<T>,
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const rows = table.getRowModel().rows
-  const { width: tableWidth } = useTableSize()
-  const skeletonRowHeight = useMemo(
-    () => (tableWidth <= breakpoints.lg ? ROW_HEIGHT_MOBILE_WEB : ROW_HEIGHT_DESKTOP),
-    [tableWidth],
-  )
-
-  if (loading || error) {
-    return (
-      <>
-        {Array.from({ length: 20 }, (_, rowIndex) => (
-          <DataRow key={`skeleton-row-${rowIndex}`} height={skeletonRowHeight} v2={v2}>
-            {table.getAllColumns().map((column, columnIndex) => (
-              <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>
-                {flexRender(column.columnDef.cell, {} as CellContext<T, any>)}
-              </CellContainer>
-            ))}
-          </DataRow>
-        ))}
-        {error && (
-          <ErrorModal
-            header={<Trans i18nKey="common.errorLoadingData.error" />}
-            subtitle={<Trans i18nKey="error.dataUnavailable" />}
-          />
-        )}
-      </>
-    )
-  }
-
-  if (!rows.length) {
-    return (
-      <NoDataFoundTableRow py="$spacing20">
-        <ThemedText.BodySecondary>
-          <Trans i18nKey="error.noData" />
-        </ThemedText.BodySecondary>
-      </NoDataFoundTableRow>
-    )
-  }
-
-  return (
-    <Flex ref={ref} position="relative">
-      {rows.map((row) => (
-        <TableRow<T> key={row.id} row={row} v2={v2} rowWrapper={rowWrapper} />
-      ))}
-    </Flex>
-  )
-}
-
-const TableBody = forwardRef(TableBodyInner) as unknown as <T extends RowData>(
-  p: TableBodyProps<T> & { ref?: React.Ref<HTMLDivElement> },
-) => JSX.Element
+import { useSporeColors } from 'ui/src/hooks/useSporeColors'
+import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 
 export function Table<T extends RowData>({
   columns,
@@ -191,6 +42,9 @@ export function Table<T extends RowData>({
   scrollGroup = 'table-sync',
   getRowId,
   rowWrapper,
+  loadingRowsCount = 20,
+  rowHeight,
+  compactRowHeight,
 }: {
   columns: ColumnDef<T, any>[]
   data: T[]
@@ -207,6 +61,9 @@ export function Table<T extends RowData>({
   scrollGroup?: string
   getRowId?: (originalRow: T, index: number, parent?: Row<T>) => string
   rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
+  loadingRowsCount?: number
+  rowHeight?: number
+  compactRowHeight?: number
 }) {
   const [loadingMore, setLoadingMore] = useState(false)
   const [showScrollRightButton, setShowScrollRightButton] = useState(false)
@@ -461,6 +318,9 @@ export function Table<T extends RowData>({
             error={error}
             v2={v2}
             rowWrapper={rowWrapper}
+            loadingRowsCount={loadingRowsCount}
+            rowHeight={rowHeight}
+            compactRowHeight={compactRowHeight}
             // @ts-ignore
             table={table}
             ref={tableBodyRef}

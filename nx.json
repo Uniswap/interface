@@ -154,9 +154,7 @@
         "{projectRoot}/src/data/**/*.graphql"
       ],
       "outputs": [
-        "{projectRoot}/src/**/types-and-hooks.ts",
         "{projectRoot}/src/data/graphql/**/__generated__/**",
-        "{projectRoot}/src/data/tradingApi/__generated__/**",
         "{projectRoot}/data/__generated__/**",
         "{projectRoot}/graphql/__generated__/**"
       ],

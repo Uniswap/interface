@@ -56,6 +56,7 @@ interface TokenMenuParams {
   openReportDataIssueModal?: () => void
   copyAddressToClipboard?: (address: string) => Promise<void>
   closeMenu: () => void
+  disableNotifications?: boolean
 }
 
 const CLOSE_MENU_DELAY = ONE_SECOND_MS / 4
@@ -71,6 +72,7 @@ export function useTokenContextMenuOptions({
   openReportDataIssueModal,
   copyAddressToClipboard,
   closeMenu,
+  disableNotifications,
 }: TokenMenuParams): MenuOptionItemWithId[] {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -158,7 +160,7 @@ export function useTokenContextMenuOptions({
     })
     dispatch(setTokenVisibility({ currencyId: normalizeCurrencyIdForMapLookup(currencyId), isVisible: !isVisible }))
 
-    if (tokenSymbolForNotification) {
+    if (tokenSymbolForNotification && !disableNotifications) {
       dispatch(
         pushNotification({
           type: AppNotificationType.AssetVisibility,
@@ -168,7 +170,16 @@ export function useTokenContextMenuOptions({
         }),
       )
     }
-  }, [updateCache, isVisible, portfolioBalance, currencyId, dispatch, tokenSymbolForNotification, t])
+  }, [
+    updateCache,
+    isVisible,
+    portfolioBalance,
+    currencyId,
+    dispatch,
+    tokenSymbolForNotification,
+    t,
+    disableNotifications,
+  ])
 
   const menuActions: MenuOptionItemWithId[] = useMemo(() => {
     const actions: MenuOptionItemWithId[] = [

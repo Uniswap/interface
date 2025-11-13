@@ -9,6 +9,7 @@ declare module 'react-native-dotenv' {
   export const APPSFLYER_APP_ID: string
   export const DATADOG_CLIENT_TOKEN: string
   export const DATADOG_PROJECT_ID: string
+  export const ENTRY_GATEWAY_API_URL_OVERRIDE: string
   export const FOR_API_URL_OVERRIDE: string
   export const GRAPHQL_URL_OVERRIDE: string
   export const INCLUDE_PROTOTYPE_FEATURES: string
@@ -25,6 +26,7 @@ declare module 'react-native-dotenv' {
   export const TRADING_API_URL_OVERRIDE: string
   export const UNISWAP_API_KEY: string
   export const UNITAGS_API_URL_OVERRIDE: string
+  export const UNISWAP_NOTIF_API_BASE_URL_OVERRIDE: string
   export const WALLETCONNECT_PROJECT_ID: string
   export const WALLETCONNECT_PROJECT_ID_BETA: string
   export const WALLETCONNECT_PROJECT_ID_DEV: string

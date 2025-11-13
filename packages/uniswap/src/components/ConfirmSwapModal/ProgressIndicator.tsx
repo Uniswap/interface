@@ -30,6 +30,11 @@ function areStepsEqual(currentStep: TransactionStep | undefined): (step: Transac
       return step.type === TransactionStepType.TokenApprovalTransaction && step.token === currentStep.token
     }
 
+    // TODO: SWAP-436 Handle proper typing for Chained Actions
+    if ('stepIndex' in step && 'stepIndex' in currentStep && step.stepIndex !== currentStep.stepIndex) {
+      return false
+    }
+
     return true
   }
 }

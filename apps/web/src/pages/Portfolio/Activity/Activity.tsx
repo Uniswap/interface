@@ -13,7 +13,8 @@ import {
   getTransactionTypesForFilter,
 } from 'pages/Portfolio/Activity/Filters/utils'
 import { SearchInput } from 'pages/Portfolio/components/SearchInput'
-import { usePortfolioAddress } from 'pages/Portfolio/hooks/usePortfolioAddress'
+import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, TouchableArea, useMedia } from 'ui/src'
@@ -29,6 +30,7 @@ import { TransactionDetails } from 'uniswap/src/features/transactions/types/tran
 import { useEvent } from 'utilities/src/react/hooks'
 import { useInfiniteScroll } from 'utilities/src/react/useInfiniteScroll'
 import { ONE_DAY_MS } from 'utilities/src/time/time'
+import { filterDefinedWalletAddresses } from 'utils/filterDefinedWalletAddresses'
 
 const DROPDOWN_MIN_WIDTH = {
   transactionType: 220,
@@ -82,17 +84,15 @@ export default function PortfolioActivity() {
   const [timePeriodExpanded, setTimePeriodExpanded] = useState(false)
   const [selectedTransaction, setSelectedTransaction] = useState<TransactionDetails | null>(null)
 
-  const portfolioAddress = usePortfolioAddress()
+  const { evmAddress, svmAddress } = usePortfolioAddresses()
+  const { chainId } = usePortfolioRoutes()
 
   const { sectionData, fetchNextPage, hasNextPage, isFetchingNextPage } = useActivityData({
-    evmOwner: portfolioAddress,
-    ownerAddresses: [portfolioAddress],
-    swapCallbacks: {
-      useLatestSwapTransaction: () => undefined,
-      useSwapFormTransactionState: () => undefined,
-      onRetryGenerator: () => () => {},
-    },
+    evmOwner: evmAddress,
+    svmOwner: svmAddress,
+    ownerAddresses: filterDefinedWalletAddresses([evmAddress, svmAddress]),
     fiatOnRampParams: undefined,
+    chainIds: chainId ? [chainId] : undefined,
   })
 
   const { sentinelRef } = useInfiniteScroll({

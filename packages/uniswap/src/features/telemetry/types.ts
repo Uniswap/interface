@@ -558,6 +558,26 @@ export type UniverseEventProperties = {
     label: string
   }
   [InterfaceEventName.NavbarResultSelected]: InterfaceSearchResultSelectionProperties
+  [InterfaceEventName.NotificationDismissed]: {
+    notification_id: string
+    notification_type: string
+  }
+  [InterfaceEventName.NotificationInteracted]: {
+    notification_id: string
+    notification_type: string
+    action: string
+  }
+  [InterfaceEventName.NotificationReceived]: {
+    notification_id: string
+    notification_type: string
+    source: string
+    timestamp: number
+  }
+  [InterfaceEventName.NotificationShown]: {
+    notification_id: string
+    notification_type: string
+    timestamp: number
+  }
   [InterfaceEventName.AccountDropdownButtonClicked]: undefined
   [InterfaceEventName.WalletProviderUsed]: {
     source: string

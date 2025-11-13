@@ -20,9 +20,9 @@ vi.mock('components/AccountDrawer/UniwalletModal', () => ({
   default: () => <div data-testid="mock-uniwallet-modal">Uniwallet Modal</div>,
 }))
 
-vi.mock('components/Banner/shared/Banners', () => ({
+vi.mock('components/Banner/shared/OutageBanners', () => ({
   __esModule: true,
-  Banners: () => <div data-testid="mock-banners">Banners</div>,
+  OutageBanners: () => <div data-testid="mock-outage-banners">Outage Banners</div>,
 }))
 
 vi.mock('components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal', () => ({
@@ -80,7 +80,7 @@ describe('ModalRegistry', () => {
       await act(async () => {
         render(<ModalRenderer modalName={ModalName.Banners} />)
       })
-      expect(screen.getByTestId('mock-banners')).toBeInTheDocument()
+      expect(screen.getByTestId('mock-outage-banners')).toBeInTheDocument()
     })
 
     it('renders modals with custom props', async () => {

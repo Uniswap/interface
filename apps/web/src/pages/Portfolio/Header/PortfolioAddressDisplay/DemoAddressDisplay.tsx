@@ -1,4 +1,4 @@
-import { ReactComponent as Unicon } from 'assets/svg/Emblem/default.svg'
+import { ReactComponent as Unicon } from 'assets/svg/demo-wallet-emblem.svg'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip, useSporeColors } from 'ui/src'
 import { Eye } from 'ui/src/components/icons/Eye'

@@ -1,5 +1,6 @@
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { SendModalProps } from 'pages/Swap/Send/SendReviewModal'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSporeColors } from 'ui/src'
 import { Dialog } from 'uniswap/src/components/dialog/Dialog'
@@ -8,6 +9,21 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 export const SmartContractSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendModalProps) => {
   const { t } = useTranslation()
   const colors = useSporeColors()
+
+  const primaryButton = useMemo(
+    () => ({
+      text: t('common.button.cancel'),
+      onPress: onDismiss,
+      variant: 'default' as const,
+      emphasis: 'secondary' as const,
+    }),
+    [t, onDismiss],
+  )
+
+  const secondaryButton = useMemo(
+    () => ({ text: t('common.button.continue'), onPress: onConfirm, variant: 'branded' as const }),
+    [t, onConfirm],
+  )
 
   return (
     <Dialog
@@ -18,13 +34,8 @@ export const SmartContractSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: Se
       title={t('speedBump.smartContractAddress.warning.title')}
       subtext={t('speedBump.smartContractAddress.warning.description')}
       modalName={ModalName.SmartContractSpeedBump}
-      primaryButtonText={t('common.button.cancel')}
-      primaryButtonOnPress={onDismiss}
-      primaryButtonVariant="default"
-      primaryButtonEmphasis="secondary"
-      secondaryButtonText={t('common.button.continue')}
-      secondaryButtonOnPress={onConfirm}
-      secondaryButtonVariant="branded"
+      primaryButton={primaryButton}
+      secondaryButton={secondaryButton}
       displayHelpCTA
     />
   )

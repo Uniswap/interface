@@ -52,6 +52,7 @@ export { createTurnstileMockSolver } from '@universe/sessions/src/challenge-solv
 export { createHashcashMockSolver } from '@universe/sessions/src/challenge-solvers/createHashcashMockSolver'
 export { createNoneMockSolver } from '@universe/sessions/src/challenge-solvers/createNoneMockSolver'
 export { createTurnstileSolver } from '@universe/sessions/src/challenge-solvers/createTurnstileSolver'
+export { createHashcashSolver } from '@universe/sessions/src/challenge-solvers/createHashcashSolver'
 export type {
   ChallengeSolver,
   ChallengeSolverService,

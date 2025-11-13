@@ -316,7 +316,6 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
 
     return {
       type: LiquidityTransactionType.Increase,
-      protocolVersion: positionInfo.version,
       action: {
         type: LiquidityTransactionType.Increase,
         currency0Amount: currencyAmounts.TOKEN0,

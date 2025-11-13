@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { CurrencyState, SerializedCurrencyState, SwapState } from 'state/swap/types'
-import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -20,44 +20,15 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { getParsedChainId } from 'utils/chainParams'
 
-export function useSwapActionHandlers(): {
-  onSwitchTokens: (options: { newOutputHasTax: boolean; previouslyEstimatedOutput: string }) => void
-} {
-  const { swapState, setSwapState } = useSwapContext()
+export function useOnSwitchTokens(): () => void {
   const { setCurrencyState } = useSwapAndLimitContext()
 
-  const onSwitchTokens = useCallback(
-    ({
-      newOutputHasTax,
-      previouslyEstimatedOutput,
-    }: {
-      newOutputHasTax: boolean
-      previouslyEstimatedOutput: string
-    }) => {
-      // To prevent swaps with FOT tokens as exact-outputs, we leave it as an exact-in swap and use the previously estimated output amount as the new exact-in amount.
-      if (newOutputHasTax && swapState.independentField === CurrencyField.INPUT) {
-        setSwapState((swapState) => ({
-          ...swapState,
-          typedValue: previouslyEstimatedOutput,
-        }))
-      } else {
-        setSwapState((prev) => ({
-          ...prev,
-          independentField: prev.independentField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT,
-        }))
-      }
-
-      setCurrencyState((prev) => ({
-        inputCurrency: prev.outputCurrency,
-        outputCurrency: prev.inputCurrency,
-      }))
-    },
-    [setCurrencyState, setSwapState, swapState.independentField],
-  )
-
-  return {
-    onSwitchTokens,
-  }
+  return useCallback(() => {
+    setCurrencyState((prev) => ({
+      inputCurrency: prev.outputCurrency,
+      outputCurrency: prev.inputCurrency,
+    }))
+  }, [setCurrencyState])
 }
 
 function parseFromURLParameter(urlParam: ParsedQs[string]): string | undefined {

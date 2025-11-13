@@ -104,11 +104,13 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
               txContext.permit.typedData.values.deadline as number,
             ),
             positionTokenPermitTransaction: undefined,
+            approvalPositionToken: undefined,
           })
         } else {
           return orderMigrateLiquiditySteps({
             permit: undefined,
             positionTokenPermitTransaction: positionTokenPermitTransactionStep,
+            approvalPositionToken,
             migrate: createMigratePositionStep(txContext.txRequest),
           })
         }

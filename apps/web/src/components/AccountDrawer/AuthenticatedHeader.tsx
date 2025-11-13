@@ -18,11 +18,10 @@ import StatusIcon from 'components/StatusIcon'
 import { useAccountsStore } from 'features/accounts/store/hooks'
 import { useIsUniswapExtensionConnected } from 'hooks/useIsUniswapExtensionConnected'
 import { useModalState } from 'hooks/useModalState'
-import { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
-import { Button, Flex, IconButton } from 'ui/src'
+import { Button, Flex, IconButton, useSporeColors } from 'ui/src'
 import { Shine } from 'ui/src/loading/Shine'
 import AnimatedNumber, {
   BALANCE_CHANGE_INDICATION_DURATION,
@@ -95,7 +94,7 @@ export default function AuthenticatedHeader({
   const isPermitMismatchUxEnabled = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
   const shouldShowDelegationMismatch = isPermitMismatchUxEnabled && isDelegationMismatch
   const [displayDelegationMismatchModal, setDisplayDelegationMismatchModal] = useState(false)
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   const amount = unclaimedAmount?.toFixed(0, { groupSeparator: ',' }) ?? '-'
 
@@ -117,7 +116,7 @@ export default function AuthenticatedHeader({
               size="small"
               emphasis="text-only"
               data-testid={TestID.WalletSettings}
-              icon={<Settings height={24} width={24} color={theme.neutral2} />}
+              icon={<Settings height={24} width={24} color={colors.neutral2.val} />}
               borderRadius="$rounded32"
               hoverStyle={{
                 backgroundColor: '$surface2',

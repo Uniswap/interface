@@ -135,7 +135,7 @@
     "@types/react-window": "1.8.2",
     "@typescript-eslint/utils": "6.20.0",
     "@uniswap/eslint-config": "workspace:^",
-    "@walletconnect/types": "2.21.4",
+    "@walletconnect/types": "2.23.0",
     "depcheck": "1.4.7",
     "eslint": "8.44.0",
     "eslint-plugin-rulesdir": "0.2.2",

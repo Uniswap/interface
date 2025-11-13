@@ -8,6 +8,7 @@ import { RightArrow } from 'ui/src/components/icons/RightArrow'
 import { iconSizes } from 'ui/src/theme'
 import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
+import { filterDefinedWalletAddresses } from 'utils/filterDefinedWalletAddresses'
 
 const MAX_RECENT_ACTIVITY_ITEMS = 3
 
@@ -29,12 +30,7 @@ export default function MiniPortfolioV2({ evmAddress, svmAddress }: { evmAddress
   const { renderActivityItem, sectionData } = useActivityData({
     evmOwner: evmAddress,
     svmOwner: svmAddress,
-    ownerAddresses: [evmAddress, svmAddress].filter(Boolean) as string[],
-    swapCallbacks: {
-      useLatestSwapTransaction: () => undefined,
-      useSwapFormTransactionState: () => undefined,
-      onRetryGenerator: () => () => {},
-    },
+    ownerAddresses: filterDefinedWalletAddresses([evmAddress, svmAddress]),
     fiatOnRampParams: undefined,
     skip: false,
   })

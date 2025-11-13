@@ -1,6 +1,5 @@
 export interface TrackingMetadata {
   timestamp: number
-  strategy: 'render' | 'dismiss' | 'duration' | 'max-views'
 }
 
 export interface NotificationTracker {
@@ -8,7 +7,7 @@ export interface NotificationTracker {
   isProcessed(notificationId: string): Promise<boolean>
   // Get all processed notification IDs
   getProcessedIds(): Promise<Set<string>>
-  // Track notification as processed
+  // Track notification as processed (acknowledged)
   track(notificationId: string, metadata: TrackingMetadata): Promise<void>
   // Optional cleanup for old entries
   cleanup?(olderThan: number): Promise<void>

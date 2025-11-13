@@ -203,7 +203,7 @@ function useDropdownOptions({
         showDivider: true,
       })
 
-      if (isDataReportingEnabled) {
+      if (isDataReportingEnabled && !liquidityPosition.isHidden) {
         options.push({
           onPress: reportPositionHandler,
           label: t('nft.reportSpam'),

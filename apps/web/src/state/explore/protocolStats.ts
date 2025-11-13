@@ -1,40 +1,44 @@
 import { TimestampedAmount } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { useContext, useMemo } from 'react'
 import { ExploreContext } from 'state/explore'
+import { logger } from 'utilities/src/logger/logger'
 
-function mapDataByTimestamp({
-  v2Data,
-  v3Data,
-  v4Data,
-}: {
-  v2Data?: TimestampedAmount[]
-  v3Data?: TimestampedAmount[]
-  v4Data?: TimestampedAmount[]
-}): Record<number, Record<string, number>> {
-  const dataByTime: Record<number, Record<string, number>> = {}
-  v2Data?.forEach((v2Point) => {
-    const timestamp = Number(v2Point.timestamp)
-    dataByTime[timestamp] = { v2: Number(v2Point.value), v3: 0, v4: 0 }
-  })
-  v3Data?.forEach((v3Point) => {
-    const timestamp = Number(v3Point.timestamp)
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!dataByTime[timestamp]) {
-      dataByTime[timestamp] = { v2: 0, v3: Number(v3Point.value), v4: 0 }
-    } else {
-      dataByTime[timestamp].v3 = Number(v3Point.value)
+/**
+ * Extracts the latest and previous values for a protocol from timestamped data.
+ * Uses the most recent data point available for each protocol, regardless of other protocols' timestamps.
+ * This prevents showing 0 values when protocols have data at different timestamps due to sync delays.
+ */
+function getLatestAndPreviousValues(
+  data: TimestampedAmount[] | undefined,
+  options?: { protocolName?: string; isLoading?: boolean },
+): {
+  latest: { value: number; timestamp: number }
+  previous: { value: number; timestamp: number }
+} {
+  if (!data || data.length === 0) {
+    // Only log warning if data is missing AND not currently loading
+    if (options?.protocolName && !options.isLoading) {
+      logger.warn(
+        'protocolStats',
+        'getLatestAndPreviousValues',
+        `No data available for protocol ${options.protocolName}`,
+      )
     }
-  })
-  v4Data?.forEach((v4Point) => {
-    const timestamp = Number(v4Point.timestamp)
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!dataByTime[timestamp]) {
-      dataByTime[timestamp] = { v2: 0, v3: 0, v4: Number(v4Point.value) }
-    } else {
-      dataByTime[timestamp].v4 = Number(v4Point.value)
+    return {
+      latest: { value: 0, timestamp: 0 },
+      previous: { value: 0, timestamp: 0 },
     }
-  })
-  return dataByTime
+  }
+
+  const sorted = [...data].sort((a, b) => Number(b.timestamp) - Number(a.timestamp))
+
+  return {
+    latest: { value: Number(sorted[0].value), timestamp: Number(sorted[0].timestamp) },
+    previous:
+      sorted.length > 1
+        ? { value: Number(sorted[1].value), timestamp: Number(sorted[1].timestamp) }
+        : { value: 0, timestamp: 0 },
+  }
 }
 
 /**
@@ -42,6 +46,8 @@ function mapDataByTimestamp({
  * - total 24h volume (sum of all protocols for the latest day)
  * - each protocol’s 24h volume (v2, v3, and v4)
  * - 24hr total volume percentage change
+ *
+ * Each protocol uses its own latest available data point, preventing 0 values when timestamps differ.
  */
 export function use24hProtocolVolume() {
   const {
@@ -52,54 +58,36 @@ export function use24hProtocolVolume() {
   const v3Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v3
   const v4Data: TimestampedAmount[] | undefined = data?.historicalProtocolVolume?.Month?.v4
 
-  const dataByTime = mapDataByTimestamp({ v2Data, v3Data, v4Data })
+  return useMemo(() => {
+    const v2 = getLatestAndPreviousValues(v2Data, { protocolName: 'V2', isLoading })
+    const v3 = getLatestAndPreviousValues(v3Data, { protocolName: 'V3', isLoading })
+    const v4 = getLatestAndPreviousValues(v4Data, { protocolName: 'V4', isLoading })
 
-  const sortedTimestamps = Object.keys(dataByTime)
-    .map(Number)
-    .sort((a, b) => b - a)
+    const totalLatest = v2.latest.value + v3.latest.value + v4.latest.value
+    const totalPrevious = v2.previous.value + v3.previous.value + v4.previous.value
 
-  // The first two timestamps represent the latest 24h snapshot and the previous one
-  const latestTimestamp = sortedTimestamps[0]
-  const previousTimestamp = sortedTimestamps[1]
-
-  // Get the volume values for the latest and previous periods; missing values default to 0
-  const latestVolumes = useMemo(
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    () => dataByTime[latestTimestamp] || { v2: 0, v3: 0, v4: 0 },
-    [dataByTime, latestTimestamp],
-  )
-  const previousVolumes = useMemo(
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    () => dataByTime[previousTimestamp] || { v2: 0, v3: 0, v4: 0 },
-    [dataByTime, previousTimestamp],
-  )
-
-  const totalLatest = (latestVolumes.v2 || 0) + (latestVolumes.v3 || 0) + (latestVolumes.v4 || 0)
-  const totalPrevious = (previousVolumes.v2 || 0) + (previousVolumes.v3 || 0) + (previousVolumes.v4 || 0)
-
-  const computeChangePercent = (latest: number, previous: number): number => {
-    // If previous is 0, we treat the change as 0 to avoid division by zero.
-    if (previous === 0) {
-      return 0
+    const computeChangePercent = (latest: number, previous: number): number => {
+      // If previous is 0, treat change as 0% rather than showing misleading "infinite growth".
+      // This handles cases like new protocol launches where there's no meaningful baseline for comparison.
+      if (previous === 0) {
+        return 0
+      }
+      return ((latest - previous) / previous) * 100
     }
-    return ((latest - previous) / previous) * 100
-  }
 
-  const totalChangePercent = computeChangePercent(totalLatest, totalPrevious)
+    const totalChangePercent = computeChangePercent(totalLatest, totalPrevious)
 
-  return useMemo(
-    () => ({
+    return {
       isLoading,
       totalVolume: totalLatest,
       totalChangePercent,
       protocolVolumes: {
-        v2: latestVolumes.v2,
-        v3: latestVolumes.v3,
-        v4: latestVolumes.v4,
+        v2: v2.latest.value,
+        v3: v3.latest.value,
+        v4: v4.latest.value,
       },
-    }),
-    [isLoading, totalLatest, latestVolumes, totalChangePercent],
-  )
+    }
+  }, [isLoading, v2Data, v3Data, v4Data])
 }
 
 /**
@@ -108,6 +96,8 @@ export function use24hProtocolVolume() {
  * - each protocol’s 24h TVL (v2, v3, and v4)
  * - 24hr total TVL percentage change
  * - each protocol’s 24hr TVL percentage change (v2, v3, and v4)
+ *
+ * Each protocol uses its own latest available data point, preventing 0 values when timestamps differ.
  */
 export function useDailyTVLWithChange() {
   const {
@@ -119,39 +109,21 @@ export function useDailyTVLWithChange() {
   const v4Data: TimestampedAmount[] | undefined = data?.dailyProtocolTvl?.v4
 
   return useMemo(() => {
-    const dataByTime = mapDataByTimestamp({ v2Data, v3Data, v4Data })
-    const sortedTimestamps = Object.keys(dataByTime)
-      .map(Number)
-      .sort((a, b) => b - a)
-
-    // If there’s no data available, return defaults
-    if (sortedTimestamps.length === 0) {
-      return {
-        isLoading,
-        totalTVL: 0,
-        totalChangePercent: 0,
-        protocolTVL: { v2: 0, v3: 0, v4: 0 },
-        protocolChangePercent: { v2: 0, v3: 0, v4: 0 },
-      }
-    }
-
-    // Latest snapshot
-    const latestTimestamp = sortedTimestamps[0]
-    const latest = dataByTime[latestTimestamp]
-
-    // Previous snapshot – if available; if not, default to zero values
-    const previousTimestamp = sortedTimestamps.length > 1 ? sortedTimestamps[1] : null
-    const previous = previousTimestamp ? dataByTime[previousTimestamp] : { v2: 0, v3: 0, v4: 0 }
+    const v2 = getLatestAndPreviousValues(v2Data, { protocolName: 'V2', isLoading })
+    const v3 = getLatestAndPreviousValues(v3Data, { protocolName: 'V3', isLoading })
+    const v4 = getLatestAndPreviousValues(v4Data, { protocolName: 'V4', isLoading })
 
     const protocolTVL = {
-      v2: latest.v2,
-      v3: latest.v3,
-      v4: latest.v4,
+      v2: v2.latest.value,
+      v3: v3.latest.value,
+      v4: v4.latest.value,
     }
 
-    const totalTVL = latest.v2 + latest.v3 + latest.v4
-    const previousTotal = previous.v2 + previous.v3 + previous.v4
+    const totalTVL = v2.latest.value + v3.latest.value + v4.latest.value
+    const previousTotal = v2.previous.value + v3.previous.value + v4.previous.value
 
+    // If previous is 0, treat change as 0% rather than showing misleading "infinite growth".
+    // This handles cases like new protocol launches where there's no meaningful baseline for comparison.
     const computeChangePercent = (latestVal: number, previousVal: number) =>
       previousVal === 0 ? 0 : ((latestVal - previousVal) / previousVal) * 100
 
@@ -159,9 +131,9 @@ export function useDailyTVLWithChange() {
     const totalChangePercent = computeChangePercent(totalTVL, previousTotal)
 
     // Individual protocol changes
-    const v2Change = computeChangePercent(latest.v2, previous.v2)
-    const v3Change = computeChangePercent(latest.v3, previous.v3)
-    const v4Change = computeChangePercent(latest.v4, previous.v4)
+    const v2Change = computeChangePercent(v2.latest.value, v2.previous.value)
+    const v3Change = computeChangePercent(v3.latest.value, v3.previous.value)
+    const v4Change = computeChangePercent(v4.latest.value, v4.previous.value)
 
     return {
       isLoading,

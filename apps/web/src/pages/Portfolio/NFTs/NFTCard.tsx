@@ -1,5 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { usePortfolioAddress } from 'pages/Portfolio/hooks/usePortfolioAddress'
+import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimateTransition, animationPresets, Flex, Popover, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -17,6 +17,7 @@ import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constan
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getNftExplorerLink, getOpenseaLink, openUri } from 'uniswap/src/utils/linking'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { filterDefinedWalletAddresses } from 'utils/filterDefinedWalletAddresses'
 
 const FLOAT_UP_ON_HOVER_OFFSET = -4
 
@@ -48,7 +49,7 @@ export function NFTCard(props: NftCardProps): JSX.Element {
   const { value: isPopoverOpen, toggle: togglePopover, setFalse: closePopover } = useBooleanState(false)
   const colors = useSporeColors()
   const { t } = useTranslation()
-  const portfolioAddress = usePortfolioAddress()
+  const { evmAddress, svmAddress } = usePortfolioAddresses()
   const { defaultChainId } = useEnabledChains()
 
   // Combine hover state and popover open state to keep hovered styles when popover is open
@@ -103,7 +104,7 @@ export function NFTCard(props: NftCardProps): JSX.Element {
     contractAddress: props.item.contractAddress,
     tokenId: props.item.tokenId,
     owner: props.owner,
-    walletAddresses: [portfolioAddress],
+    walletAddresses: filterDefinedWalletAddresses([evmAddress, svmAddress]),
     isSpam: props.item.isSpam,
     showNotification: false,
     chainId,

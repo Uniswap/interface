@@ -1,100 +1,19 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { PlanResponse, PlanStepStatus, TradingApi } from '@universe/api'
-import { call, delay, SagaGenerator } from 'typed-redux-saga'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { PlanStepStatus, TradingApi } from '@universe/api'
+import { call, delay } from 'typed-redux-saga'
 import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
-import type {
-  HandleApprovalStepParams,
-  HandleSignatureStepParams,
-  HandleSwapStepParams,
-} from 'uniswap/src/features/transactions/steps/types'
-import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
-import { ExtractedBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
+import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { TransactionAndPlanStep, transformSteps } from 'uniswap/src/features/transactions/swap/plan/planStepTransformer'
-import { findFirstActionableStep, stepHasFinalized } from 'uniswap/src/features/transactions/swap/plan/utils'
-import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { PlanParams } from 'uniswap/src/features/transactions/swap/plan/types'
+import {
+  createOrRefreshPlan,
+  findFirstActionableStep,
+  updateExistingPlanWithRetry,
+  waitForStepCompletion,
+} from 'uniswap/src/features/transactions/swap/plan/utils'
 import { isChained, requireRouting } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
-
-type SwapParams = {
-  selectChain: (chainId: number) => Promise<boolean>
-  startChainId?: number
-  account: SignerMnemonicAccountDetails
-  analytics: ExtractedBaseTradeAnalyticsProperties
-  swapTxContext: ValidatedSwapTxContext
-  setCurrentStep: SetCurrentStepFn
-  setSteps: (steps: TransactionStep[]) => void
-  getOnPressRetry: (error: Error | undefined) => (() => void) | undefined
-  disableOneClickSwap: () => void
-  onSuccess: () => void
-  onFailure: (error?: Error, onPressRetry?: () => void) => void
-  onTransactionHash?: (hash: string) => void
-  v4Enabled: boolean
-}
-
-type PlanCalls = {
-  handleApprovalTransactionStep: (params: HandleApprovalStepParams) => SagaGenerator<string>
-  handleSwapTransactionStep: (params: HandleSwapStepParams) => SagaGenerator<string>
-  handleSignatureStep: (params: HandleSignatureStepParams) => SagaGenerator<string>
-  getDisplayableError: ({
-    error,
-    step,
-    flow,
-  }: {
-    error: Error
-    step?: TransactionStep
-    flow?: string
-  }) => Error | undefined
-}
-
-const MAX_ATTEMPTS = 60
-
-/**
- * Waits for a the target step to complete by polling the plan for the given planId and targetStepId.
- *
- * @returns The updated steps or no steps
- */
-function* waitForStepCompletion(params: {
-  chainId: number
-  planId: string
-  targetStepId: string
-  currentStepIndex: number
-  inputAmount: CurrencyAmount<Currency>
-}): SagaGenerator<TransactionAndPlanStep[]> {
-  const { chainId, planId, targetStepId, currentStepIndex, inputAmount } = params
-
-  const pollingInterval = getChainInfo(chainId).tradingApiPollingIntervalMs
-  let attempt = 0
-
-  try {
-    while (attempt < MAX_ATTEMPTS) {
-      logger.debug('planSaga', 'waitForStepCompletion', 'waiting for step completion', {
-        currentStepIndex,
-        attempt,
-        maxAttempts: MAX_ATTEMPTS,
-      })
-
-      const tradeStatusResponse = yield* call(TradingApiClient.getExistingPlan, { planId })
-      const latestTargetStep = tradeStatusResponse.steps.find((_step) => _step.stepId === targetStepId)
-      if (!latestTargetStep) {
-        throw new Error(`Target stepId=${targetStepId} not found in latest plan.`)
-      }
-      if (stepHasFinalized(latestTargetStep)) {
-        return transformSteps(tradeStatusResponse.steps, inputAmount)
-      }
-      attempt++
-      yield* delay(pollingInterval)
-    }
-    throw new Error(`Exceeded ${MAX_ATTEMPTS} attempts waiting for step completion`)
-  } catch (error) {
-    logger.error(error, { tags: { file: 'planSaga', function: 'waitForStepCompletion' } })
-    throw error
-  }
-}
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 /**
  * Saga for executing a plan returned from the Trading API. This plan
@@ -106,7 +25,7 @@ function* waitForStepCompletion(params: {
  * to the TAPI to update the plan. As the steps are executed, the plan continues
  * to execute the next step until all last step is confirmed.
  */
-function* plan(params: SwapParams & PlanCalls) {
+export function* plan(params: PlanParams) {
   const {
     account,
     setCurrentStep,
@@ -130,16 +49,12 @@ function* plan(params: SwapParams & PlanCalls) {
 
   const { trade, planId: inputPlanId } = swapTxContext
 
-  let response: PlanResponse
-  if (!inputPlanId) {
-    // TODO: SWAP-429 - Update to ChainedQuoteResponse is added to the TAPI sdk
-    response = yield* call(TradingApiClient.createNewPlan, {
-      quote: swapTxContext.trade.quote.quote,
-      routing: swapTxContext.trade.quote.routing,
-    })
-  } else {
-    response = yield* call(TradingApiClient.updateExistingPlan, { planId: inputPlanId, steps: [] })
-  }
+  const response = yield* call(createOrRefreshPlan, {
+    inputPlanId,
+    quote: swapTxContext.trade.quote.quote,
+    routing: swapTxContext.trade.quote.routing,
+  })
+
   let steps: TransactionAndPlanStep[] = transformSteps(response.steps, swapTxContext.trade.inputAmount)
   const planId = response.planId
 
@@ -160,11 +75,17 @@ function* plan(params: SwapParams & PlanCalls) {
 
       logger.debug('planSaga', 'plan', '🚨 Starting step', currentStep)
 
-      // @ts-expect-error TODO: SWAP-458 - Temporary fix for chainId until fromChainId is finalized
-      const swapChainId = currentStep?.chainId || currentStep?.fromChainId || currentStep?.txRequest?.chainId
+      const swapChainId = currentStep?.tokenInChainId
       if (swapChainId) {
         yield* call(selectChain, swapChainId)
+        // TODO: SWAP-710
+        // Temporary workaround to allow the chain to switch since the next step is executed
+        // immediately after the chain switch.
+        yield* call(delay, ONE_SECOND_MS / 5)
       }
+
+      // TODO: SWAP-458. API-1530 should be fixed by now, if not request removal.
+      delete currentStep?.payload.gasFee
 
       switch (currentStep?.type) {
         case TransactionStepType.TokenRevocationTransaction:
@@ -197,9 +118,9 @@ function* plan(params: SwapParams & PlanCalls) {
 
       if (hash || signature) {
         logger.debug('planSaga', 'plan', '🚨 updating existing trade', planId, hash, signature)
-        yield* call(TradingApiClient.updateExistingPlan, {
+        yield* call(updateExistingPlanWithRetry, {
           planId,
-          steps: [{ stepId: currentStep.stepId, proof: { txHash: hash, signature } }],
+          steps: [{ stepIndex: currentStep.stepIndex, proof: { txHash: hash, signature } }],
         })
       } else {
         throw new Error('No hash or signature found.')
@@ -213,7 +134,7 @@ function* plan(params: SwapParams & PlanCalls) {
       const updatedSteps: TransactionAndPlanStep[] = yield* call(waitForStepCompletion, {
         chainId: swapChainId,
         planId,
-        targetStepId: currentStep.stepId,
+        targetStepIndex: currentStep.stepIndex,
         currentStepIndex,
         inputAmount: swapTxContext.trade.inputAmount,
       })
@@ -223,7 +144,7 @@ function* plan(params: SwapParams & PlanCalls) {
         steps = updatedSteps
         setSteps(steps)
         setCurrentStep({ step: nextStep, accepted: false })
-        currentStepIndex = steps.findIndex((s) => s.stepId === nextStep.stepId)
+        currentStepIndex = nextStep.stepIndex
       } else {
         throw new Error('No next step found')
       }
@@ -236,7 +157,7 @@ function* plan(params: SwapParams & PlanCalls) {
     if (displayableError) {
       logger.error(displayableError, { tags: { file: 'planSaga', function: 'plan' } })
     }
-    const onPressRetry = params.getOnPressRetry(displayableError)
+    const onPressRetry = params.getOnPressRetry?.(displayableError)
     onFailure(displayableError, onPressRetry)
     return
   }

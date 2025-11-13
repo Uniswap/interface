@@ -21,7 +21,6 @@ import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
-import { useTheme } from 'lib/styled-components'
 import { LimitExpirySection } from 'pages/Swap/Limit/LimitExpirySection'
 import LimitOrdersNotSupportedBanner from 'pages/Swap/Limit/LimitOrdersNotSupportedBanner'
 import { LimitPriceError } from 'pages/Swap/Limit/LimitPriceError'
@@ -32,10 +31,10 @@ import { getDefaultPriceInverted } from 'state/limit/hooks'
 import { LimitContextProvider, useLimitContext } from 'state/limit/LimitContext'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { LimitOrderTrade, TradeFillType } from 'state/routing/types'
-import { useSwapActionHandlers } from 'state/swap/hooks'
+import { useOnSwitchTokens } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
-import { Anchor, Button, Flex, styled as TamaguiStyled, Text, useIsShortMobileDevice } from 'ui/src'
+import { Anchor, Button, Flex, styled as TamaguiStyled, Text, useIsShortMobileDevice, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -94,8 +93,8 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   const [swapResult, setSwapResult] = useState<SwapResult>()
   const [swapError, setSwapError] = useState()
 
-  const theme = useTheme()
-  const { onSwitchTokens } = useSwapActionHandlers()
+  const onSwitchTokens = useOnSwitchTokens()
+  const colors = useSporeColors()
   const { formatCurrencyAmount } = useLocalizationContext()
   const accountDrawer = useAccountDrawer()
   const setMenu = useSetMenu()
@@ -158,7 +157,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   )
 
   const switchTokens = useCallback(() => {
-    onSwitchTokens({ newOutputHasTax: false, previouslyEstimatedOutput: limitState.outputAmount })
+    onSwitchTokens()
     setLimitState((prev) => {
       // Reset limit price settings when switching tokens
       return {
@@ -167,7 +166,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         limitPriceInverted: getDefaultPriceInverted(outputCurrency, inputCurrency),
       }
     })
-  }, [inputCurrency, limitState.outputAmount, onSwitchTokens, outputCurrency, setLimitState])
+  }, [inputCurrency, onSwitchTokens, outputCurrency, setLimitState])
 
   const onSelectCurrency = useCallback(
     // eslint-disable-next-line max-params
@@ -352,7 +351,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           element={ElementName.SwapTokensReverseArrowButton}
         >
           <ArrowContainer data-testid="swap-currency-button" onPress={switchTokens}>
-            <ArrowDown size="16" color={theme.neutral1} />
+            <ArrowDown size="16" color={colors.neutral1.val} />
           </ArrowContainer>
         </Trace>
       </ShortArrowWrapper>

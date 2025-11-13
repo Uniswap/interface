@@ -1,24 +1,33 @@
 import { DynamicConfigs, getDynamicConfigValue, SyncTransactionSubmissionChainIdsConfigKey } from '@universe/gating'
-import { call, put } from 'typed-redux-saga'
+import { call, put, SagaGenerator } from 'typed-redux-saga'
 import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import type { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
+import {
+  HandleApprovalStepParams,
+  HandleSignatureStepParams,
+  HandleSwapStepParams,
+} from 'uniswap/src/features/transactions/steps/types'
 import { FLASHBLOCKS_UI_SKIP_ROUTES } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
 import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
+import { plan } from 'uniswap/src/features/transactions/swap/plan/planSaga'
+import { getSwapTxRequest } from 'uniswap/src/features/transactions/swap/steps/swap'
+import { SwapExecutionCallbacks } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import type {
   SwapGasFeeEstimation,
   ValidatedSwapTxContext,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isChained, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import type { Logger } from 'utilities/src/logger/logger'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
+import { prepareTransactionServices } from 'wallet/src/features/transactions/shared/baseTransactionPreparationSaga'
 import {
   getShouldWaitBetweenTransactions,
   getSwapTransactionCount,
@@ -55,11 +64,9 @@ export type SwapParams = {
   account: SignerMnemonicAccountMeta
   analytics: SwapTradeBaseProperties
   swapTxContext: ValidatedSwapTxContext
-  onSuccess: () => void
-  onFailure: () => void
-  onPending: () => void
   preSignedTransaction?: PreSignedSwapTransaction
-}
+  getOnPressRetry?: (error: Error | undefined) => (() => void) | undefined
+} & SwapExecutionCallbacks
 
 /**
  * Helper function to handle approval transaction execution
@@ -172,6 +179,68 @@ function* executeTransactionStep(params: {
   return undefined // Async execution doesn't return a sync result
 }
 
+function* executeChainedSwap(params: SwapParams, dependencies: TransactionSagaDependencies) {
+  const { account, swapTxContext } = params
+
+  // TODO: SWAP-703 - Add private RPC support for chained swaps
+  const submitViaPrivateRpc = false
+  const delegationType = swapTxContext.includesDelegation ? DelegationType.Delegate : DelegationType.Auto
+
+  /**
+   * Reusable helper to prepare transaction services with common parameters
+   */
+  function* prepareServicesForChain(chainId: UniverseChainId) {
+    return yield* prepareTransactionServices(dependencies, {
+      account,
+      chainId,
+      submitViaPrivateRpc,
+      delegationType,
+    })
+  }
+
+  yield* plan({
+    ...params,
+    selectChain: (chainId: number) => Promise.resolve(true),
+    *handleApprovalTransactionStep(handleApprovalStepParams: HandleApprovalStepParams): SagaGenerator<string> {
+      const payload = handleApprovalStepParams.step.txRequest
+      const { transactionSigner } = yield* prepareServicesForChain(payload.chainId)
+      const preparedTransaction = yield* call([transactionSigner, transactionSigner.prepareTransaction], {
+        request: payload,
+      })
+
+      const signedTx = yield* call([transactionSigner, transactionSigner.signTransaction], preparedTransaction)
+      const result = yield* call([transactionSigner, transactionSigner.sendTransaction], { signedTx })
+      return result
+    },
+    *handleSwapTransactionStep(handleSwapStepParams: HandleSwapStepParams): SagaGenerator<string> {
+      const txRequest = yield* call(getSwapTxRequest, handleSwapStepParams.step, handleSwapStepParams.signature)
+      const { transactionSigner } = yield* prepareServicesForChain(txRequest.chainId)
+      const preparedTransaction = yield* call([transactionSigner, transactionSigner.prepareTransaction], {
+        request: txRequest,
+      })
+      const signedTx = yield* call([transactionSigner, transactionSigner.signTransaction], preparedTransaction)
+      const result = yield* call([transactionSigner, transactionSigner.sendTransaction], { signedTx })
+      return result
+    },
+    *handleSignatureStep(handleSignatureStepParams: HandleSignatureStepParams): SagaGenerator<string> {
+      const payload = handleSignatureStepParams.step
+      const { transactionSigner } = yield* prepareServicesForChain(payload.domain.chainId as UniverseChainId)
+      const result = yield* call([transactionSigner, transactionSigner.signTypedData], {
+        domain: payload.domain,
+        types: payload.types,
+        value: payload.values,
+      })
+      return result
+    },
+    getDisplayableError: ({ error }: { error: Error }) => {
+      dependencies.logger.error(error, {
+        tags: { file: 'executeSwapSaga', function: 'getDisplayableError' },
+        extra: { error },
+      })
+      return new Error(error.message)
+    },
+  })
+}
 /**
  * Factory function that creates an execute swap saga with injected dependencies
  */
@@ -183,6 +252,11 @@ export function createExecuteSwapSaga(
     const userSubmissionTimestampMs = Date.now()
     try {
       const { account, txId, analytics, onSuccess, onFailure, onPending, swapTxContext } = params
+
+      if (isChained(swapTxContext)) {
+        yield* executeChainedSwap(params, dependencies)
+        return
+      }
 
       const preSignedTransaction =
         params.preSignedTransaction ||

@@ -9,22 +9,28 @@ import { getSessionService } from '@universe/api/src/getSessionService'
 
 export function createFetchClient({
   baseUrl,
-  headers: additionalHeaders = {},
+  getHeaders,
   getSessionServiceBaseUrl,
+  defaultOptions = {},
 }: FetchClientContext): FetchClient {
   return {
     get context() {
-      return () => ({
-        baseUrl,
-        headers: additionalHeaders,
-        getSessionServiceBaseUrl,
-      })
+      return () => {
+        return {
+          baseUrl,
+          getHeaders,
+          getSessionServiceBaseUrl,
+          defaultOptions,
+        }
+      }
     },
 
     get fetch() {
       return async <T = Response>(path: string, options: StandardFetchOptions): Promise<T> => {
         const sessionService = getSessionService({ getBaseUrl: getSessionServiceBaseUrl })
         const sessionState = await sessionService.getSessionState()
+
+        const additionalHeaders = getHeaders?.() ?? {}
 
         const headers = new Headers({
           ...additionalHeaders,
@@ -34,6 +40,7 @@ export function createFetchClient({
           headers.set('x-session-id', sessionState.sessionId)
         }
         return fetch(`${baseUrl}${path}`, {
+          ...defaultOptions,
           ...options,
           headers,
         }) as Promise<T>

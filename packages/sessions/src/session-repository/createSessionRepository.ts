@@ -1,21 +1,18 @@
 import type { SessionServiceClient } from '@universe/sessions/src/session-repository/createSessionClient'
 import type { SessionRepository } from '@universe/sessions/src/session-repository/types'
 
-interface CreateSessionRepositoryDeps {
-  client: SessionServiceClient
-}
-
-export function createSessionRepository(ctx: CreateSessionRepositoryDeps): SessionRepository {
-  const { client } = ctx
-
+/**
+ * Creates a session repository that handles communication with the session service.
+ * This is the layer that makes actual API calls to the backend.
+ */
+function createSessionRepository(ctx: { client: SessionServiceClient }): SessionRepository {
   const initSession: SessionRepository['initSession'] = async () => {
     try {
-      // The proto expects an empty body - deviceId should be sent via header by transport
-      const response = await client.initSession({})
+      const response = await ctx.client.initSession({})
 
       return {
         sessionId: response.sessionId,
-        needChallenge: response.needChallenge,
+        needChallenge: response.needChallenge || false,
         extra: response.extra,
       }
     } catch (error) {
@@ -26,7 +23,7 @@ export function createSessionRepository(ctx: CreateSessionRepositoryDeps): Sessi
 
   const challenge: SessionRepository['challenge'] = async () => {
     try {
-      const response = await client.challenge({})
+      const response = await ctx.client.challenge({})
 
       return {
         challengeId: response.challengeId || '',
@@ -40,7 +37,7 @@ export function createSessionRepository(ctx: CreateSessionRepositoryDeps): Sessi
 
   const upgradeSession: SessionRepository['upgradeSession'] = async (request) => {
     try {
-      const verifyResponse = await client.verify({
+      const verifyResponse = await ctx.client.verify({
         solution: request.solution,
         challengeId: request.challengeId,
       })
@@ -56,7 +53,7 @@ export function createSessionRepository(ctx: CreateSessionRepositoryDeps): Sessi
 
   const deleteSession: SessionRepository['deleteSession'] = async () => {
     try {
-      await client.deleteSession({})
+      await ctx.client.deleteSession({})
       return {}
     } catch (error) {
       throw new Error(`Failed to delete session: ${error}`)
@@ -70,3 +67,5 @@ export function createSessionRepository(ctx: CreateSessionRepositoryDeps): Sessi
     deleteSession,
   }
 }
+
+export { createSessionRepository }

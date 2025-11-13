@@ -337,11 +337,6 @@ export function SelectTokensStep({
       return
     }
 
-    // If the tokens are locked, return
-    if (tokensLocked) {
-      return
-    }
-
     if (mostUsedFeeTier) {
       setPositionState((prevState) => ({
         ...prevState,
@@ -353,7 +348,7 @@ export function SelectTokensStep({
         ...trace,
       })
     }
-  }, [tokensLocked, mostUsedFeeTier, fee, setPositionState, trace])
+  }, [mostUsedFeeTier, fee, setPositionState, trace])
 
   const { chains } = useEnabledChains({ platform: Platform.EVM })
   const supportedChains = useMemo(() => {

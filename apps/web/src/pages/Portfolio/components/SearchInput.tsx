@@ -1,6 +1,8 @@
 import { Flex, Input } from 'ui/src'
 import { Search } from 'ui/src/components/icons/Search'
 
+const DEFAULT_SEARCH_INPUT_WIDTH = 280
+
 interface SearchInputProps {
   value: string
   onChangeText: (value: string) => void
@@ -8,9 +10,14 @@ interface SearchInputProps {
   width?: number | string
 }
 
-export function SearchInput({ value, onChangeText, placeholder = 'Search', width = 280 }: SearchInputProps) {
+export function SearchInput({
+  value,
+  onChangeText,
+  placeholder = 'Search',
+  width = DEFAULT_SEARCH_INPUT_WIDTH,
+}: SearchInputProps) {
   return (
-    <Flex position="relative">
+    <Flex position="relative" width={width}>
       <Input
         placeholder={placeholder}
         value={value}

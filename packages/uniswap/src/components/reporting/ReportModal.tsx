@@ -19,6 +19,7 @@ export type ReportOption<T extends string> = {
 
 export type ReportModalProps<T extends string> = {
   modalName: ModalNameType
+  modalTitle: string
   icon: GeneratedIcon
   reportOptions: ReportOption<T>[]
   textOptionValue: T
@@ -28,6 +29,7 @@ export type ReportModalProps<T extends string> = {
 
 export function ReportTokenModal<T extends string>({
   modalName,
+  modalTitle,
   currency,
   icon: Icon,
   reportOptions,
@@ -74,9 +76,7 @@ export function ReportTokenModal<T extends string>({
             <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
               <Icon size="$icon.24" color="$neutral2" />
             </Flex>
-            <Text variant="subheading1">
-              {t('reporting.token.report.title.withSymbol', { symbol: currency?.symbol ?? '' })}
-            </Text>
+            <Text variant="subheading1">{modalTitle}</Text>
           </Flex>
           <Flex gap="$spacing16">
             {reportOptions.map((option: ReportOption<T>) => {

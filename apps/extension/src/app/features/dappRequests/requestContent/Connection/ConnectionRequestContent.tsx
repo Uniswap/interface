@@ -1,27 +1,18 @@
 import { useTranslation } from 'react-i18next'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
-import { Flex, Text } from 'ui/src'
+import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
+import { AccountType } from 'uniswap/src/features/accounts/types'
+import { DappConnectionContent } from 'wallet/src/components/dappRequests/DappConnectionContent'
 
 export function ConnectionRequestContent(): JSX.Element {
   const { t } = useTranslation()
+  const { currentAccount } = useDappRequestQueueContext()
+
+  const isViewOnly = currentAccount.type === AccountType.Readonly
 
   return (
-    <DappRequestContent
-      showAllNetworks
-      confirmText={t('common.button.connect')}
-      title={t('dapp.request.connect.title')}
-    >
-      <Flex
-        backgroundColor="$surface2"
-        borderColor="$surface3"
-        borderRadius="$rounded12"
-        borderWidth="$spacing1"
-        p="$spacing12"
-      >
-        <Text color="$neutral2" variant="body4">
-          {t('dapp.request.connect.helptext')}
-        </Text>
-      </Flex>
+    <DappRequestContent confirmText={t('common.button.connect')} title={t('dapp.request.connect.title')}>
+      <DappConnectionContent isViewOnly={isViewOnly} />
     </DappRequestContent>
   )
 }

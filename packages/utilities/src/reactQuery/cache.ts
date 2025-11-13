@@ -3,6 +3,7 @@
  * Please order alphabetically to reduce merge conflicts.
  */
 export enum ReactQueryCacheKey {
+  AckNotification = 'AckNotification',
   ActivityScreenRefresh = 'ActivityScreenRefresh',
   AuctionApi = 'AuctionApi',
   BalanceAndUnitags = 'BalanceAndUnitags',
@@ -10,6 +11,7 @@ export enum ReactQueryCacheKey {
   CancelTransactionRequest = 'CancelTransactionRequest',
   CancelUniswapXTransactionRequest = 'CancelUniswapXTransactionRequest',
   CreateTransferTransaction = 'CreateTransferTransaction',
+  DialogVisibility = 'DialogVisibility',
   DensityChartData = 'DensityChartData',
   ExtensionBiometricUnlockCredential = 'ExtensionBiometricUnlockCredential',
   ExtensionBuiltInBiometricCapabilities = 'ExtensionBuiltInBiometricCapabilities',
@@ -24,6 +26,7 @@ export enum ReactQueryCacheKey {
   MismatchAccountBulk = 'MismatchAccountBulk',
   MnemonicUnlocked = 'MnemonicUnlocked',
   Notifications = 'Notifications',
+  NotificationSystem = 'NotificationSystem',
   OnboardingRedirect = 'OnboardingRedirect',
   OnchainBalances = 'OnchainBalances',
   OnchainENS = 'OnchainENS',

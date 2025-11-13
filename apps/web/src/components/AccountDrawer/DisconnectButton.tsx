@@ -6,11 +6,10 @@ import { useAccountsStore, useActiveConnector, useActiveWallet } from 'features/
 import { ExternalWallet } from 'features/accounts/store/types'
 import { useDisconnect } from 'hooks/useDisconnect'
 import { useSignOutWithPasskey } from 'hooks/useSignOutWithPasskey'
-import { useTheme } from 'lib/styled-components'
 import { PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Button, Flex, IconButton, Image, Text, Tooltip } from 'ui/src'
+import { Button, Flex, IconButton, Image, Text, Tooltip, useSporeColors } from 'ui/src'
 import { PlusCircle } from 'ui/src/components/icons/PlusCircle'
 import { SwitchArrows } from 'ui/src/components/icons/SwitchArrows'
 import { AppTFunction } from 'ui/src/i18n/types'
@@ -78,14 +77,14 @@ export function DisconnectButton() {
 }
 
 function PowerIconButton({ onPress, pointer }: { onPress?: () => void; pointer: boolean }) {
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   return (
     <IconButton
       size="small"
       emphasis="text-only"
       data-testid={TestID.WalletDisconnect}
-      icon={<Power height={24} width={24} color={theme.neutral2} />}
+      icon={<Power height={24} width={24} color={colors.neutral2.val} />}
       borderRadius="$rounded32"
       hoverStyle={{
         backgroundColor: '$surface2',
@@ -264,12 +263,12 @@ function SwitchWalletButtonRow({ variant, platform }: { variant: SwitchButtonVar
 function InLineDisconnectButton() {
   const onDisconnect = useOnDisconnect()
   const { t } = useTranslation()
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   return (
     <DisconnectTraceWrapper>
       <DisconnectMenuButtonRow onPress={onDisconnect}>
-        <Power height={16} width={16} color={theme.neutral1} />
+        <Power height={16} width={16} color={colors.neutral1.val} />
         <Text variant="buttonLabel3" color="$neutral1" lineHeight={20}>
           {t('common.button.disconnect')}
         </Text>

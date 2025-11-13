@@ -1,5 +1,4 @@
-import { useTheme } from 'lib/styled-components'
-import { Flex } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 
 interface CustomHoverMarkerProps {
@@ -8,7 +7,7 @@ interface CustomHoverMarkerProps {
 }
 
 export function CustomHoverMarker({ coordinates, lineColor }: CustomHoverMarkerProps): JSX.Element {
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   return (
     <Flex
@@ -42,7 +41,7 @@ export function CustomHoverMarker({ coordinates, lineColor }: CustomHoverMarkerP
           backgroundColor: lineColor,
           borderWidth: '2px',
           borderStyle: 'solid',
-          borderColor: theme.surface1,
+          borderColor: colors.surface1.val,
           transform: 'translate(-50%, -50%)',
         }}
       />

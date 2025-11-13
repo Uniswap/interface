@@ -105,11 +105,12 @@ interface ExpectedUserState {
 
 assert<Equals<UserState, ExpectedUserState>>()
 
-interface ExpectedTransactionState {
-  [address: Address]: Partial<
-    Record<UniverseChainId, { [txId: string]: TransactionDetails | InterfaceTransactionDetails }>
+type ExpectedTransactionState = Partial<
+  Record<
+    Address,
+    Partial<Record<UniverseChainId, { [txId: string]: TransactionDetails | InterfaceTransactionDetails }>>
   >
-}
+>
 
 assert<Equals<TransactionsState, ExpectedTransactionState>>()
 

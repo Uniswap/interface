@@ -30,7 +30,6 @@ const mockRevokeRequest = {
 describe('Liquidity', () => {
   const baseLiquidityTxContext: LiquidityTxAndGasInfo = {
     type: LiquidityTransactionType.Increase,
-    protocolVersion: 2,
     action: {
       type: LiquidityTransactionType.Increase,
       currency0Amount: createMockCurrencyAmount(USDC, '1000000'),

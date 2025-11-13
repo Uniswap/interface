@@ -161,7 +161,7 @@
     "g:pre-commit-checks": "nx affected -t typecheck,lint:biome --uncommitted --output-style=stream",
     "g:prepare": "nx run-many -t prepare --output-style=stream",
     "g:rm:local-packages": "bash ./scripts/remove-local-packages.sh",
-    "g:rm:nodemodules": "rm -rf node_modules **/node_modules",
+    "g:rm:nodemodules": "find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' +",
     "g:run-all-checks": "nx run-many -t typecheck,lint,test,build,check:circular",
     "g:run-fast-checks": "nx affected -t typecheck,lint,build --base=${NX_BASE:-HEAD~1} --head=${NX_HEAD:-HEAD}",
     "g:snapshots": "nx run-many -t snapshots",

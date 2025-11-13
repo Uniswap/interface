@@ -6,6 +6,7 @@ import { ActivityAddressCell } from 'pages/Portfolio/Activity/ActivityTable/Acti
 import { ActivityAmountCell } from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell'
 import { TimeCell } from 'pages/Portfolio/Activity/ActivityTable/TimeCell'
 import { TransactionTypeCell } from 'pages/Portfolio/Activity/ActivityTable/TransactionTypeCell'
+import { ACTIVITY_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Text } from 'ui/src'
@@ -36,14 +37,16 @@ function _ActivityTable({ data, loading = false, error = false, rowWrapper }: Ac
         ),
         cell: (info) => {
           if (showLoadingSkeleton) {
-            return <Cell loading={true} justifyContent="flex-start" />
+            return <Cell loading={true} justifyContent="flex-start" alignItems="flex-start" />
           }
           return (
-            <Cell justifyContent="flex-start">
-              <TimeCell timestamp={info.row.original.addedTime} />
+            <Cell justifyContent="flex-start" alignItems="flex-start">
+              <TimeCell timestamp={info.row.original.addedTime} showFullDateOnHover={true} />
             </Cell>
           )
         },
+        minSize: 140,
+        size: 140,
       }),
 
       // Type Column
@@ -117,7 +120,18 @@ function _ActivityTable({ data, loading = false, error = false, rowWrapper }: Ac
     [t, columnHelper, showLoadingSkeleton],
   )
 
-  return <Table columns={columns} data={data} loading={loading} error={error} v2={true} rowWrapper={rowWrapper} />
+  return (
+    <Table
+      columns={columns}
+      data={data}
+      loading={loading}
+      error={error}
+      v2={true}
+      rowWrapper={rowWrapper}
+      rowHeight={ACTIVITY_TABLE_ROW_HEIGHT}
+      compactRowHeight={ACTIVITY_TABLE_ROW_HEIGHT}
+    />
+  )
 }
 
 export const ActivityTable = memo(_ActivityTable)

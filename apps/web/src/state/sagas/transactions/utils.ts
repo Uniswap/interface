@@ -63,7 +63,6 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getInterfaceTransaction, isInterfaceTransaction } from 'uniswap/src/features/transactions/types/utils'
-import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -191,12 +190,18 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
     const { hash, data, nonce } = yield* call(submitTransaction, params)
     transaction = createTransaction(hash)
 
+    // Add transaction to local state to start polling for status
+    yield* put(addTransaction(transaction))
+
     if (step.txRequest.data !== data && onModification) {
       yield* call(onModification, { hash, data, nonce })
     }
   } else {
     const hash = yield* call(submitTransactionAsync, params)
     transaction = createTransaction(hash)
+
+    // Add transaction to local state to start polling for status
+    yield* put(addTransaction(transaction))
 
     if (onModification) {
       yield* spawn(handleOnModificationAsync, { onModification, hash, step })
@@ -205,9 +210,6 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
 
   // Trigger waiting UI after user accepts
   setCurrentStep({ step, accepted: true })
-
-  // Add transaction to local state to start polling for status
-  yield* put(addTransaction(transaction))
 
   // If the transaction flow was interrupted while awaiting input, throw an error after input is received
   yield* call(throwIfInterrupted)
@@ -415,7 +417,7 @@ function* findDuplicativeTx({
   allowDuplicativeTx,
 }: {
   info: TransactionInfo
-  account: AccountDetails
+  account: { address: Address }
   chainId: number
   allowDuplicativeTx?: boolean
 }) {
@@ -427,11 +429,7 @@ function* findDuplicativeTx({
     throw new Error(`Invalid chainId: ${chainId} is not a valid UniverseChainId`)
   }
 
-  const transactionMap = yield* select(
-    // TODO(INFRA-645): DO NOT REMOVE THIS OPTIONAL CHAINING OPERATOR UNTIL THE TYPE IS FIXED.
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    (state: InterfaceState) => state.transactions[account.address]?.[chainId] ?? {},
-  )
+  const transactionMap = yield* select((state: InterfaceState) => state.transactions[account.address]?.[chainId] ?? {})
 
   const transactionsForAccount = Object.values(transactionMap)
     .filter((tx) =>

@@ -46,6 +46,8 @@ export const ModalName = {
   DeletePasskeySpeedbump: 'delete-passkey-speedbump-modal',
   DeletePasskey: 'delete-passkey-modal',
   DevFlags: 'dev-flags-modal',
+  // TODO | Toucan: Remove once live auction data is implemented
+  DevMockDataSelector: 'dev-mock-data-selector',
   Dialog: 'dialog-modal',
   DownloadApp: 'download-app-modal',
   DynamicFeeTierSpeedbump: 'dynamic-fee-tier-speedbump-modal',

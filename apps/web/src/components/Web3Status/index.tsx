@@ -109,9 +109,12 @@ function Web3StatusInner() {
     accountDrawer.toggle()
   }, [accountDrawer])
 
-  const { hasPendingActivity, pendingActivityCount, isOnlyUnichainPendingActivity } = usePendingActivity()
+  const { hasPendingActivity, pendingActivityCount, hasL1PendingActivity } = usePendingActivity()
   const { accountIdentifier, hasUnitag } = useAccountIdentifier()
-  const showLoadingState = useShowPendingAfterDelay(hasPendingActivity, isOnlyUnichainPendingActivity)
+  const showLoadingState = useShowPendingAfterDelay({
+    hasPendingActivity,
+    hasL1PendingActivity,
+  })
 
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
   if (isConnecting && !isIFramed()) {

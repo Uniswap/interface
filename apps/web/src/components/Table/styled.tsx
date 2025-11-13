@@ -52,7 +52,7 @@ export const TableBodyContainer = styled(Flex, {
   '$platform-web': {
     overscrollBehaviorX: 'none',
     overflowX: 'auto',
-    overflowY: 'scroll',
+    overflowY: 'auto',
   },
   variants: {
     v2: {
@@ -116,7 +116,10 @@ export const DataRow = styled(TableRow, {
   variants: {
     v2: {
       true: {
-        hoverStyle: { backgroundColor: '$surface2Hovered' },
+        hoverStyle: {
+          backgroundColor: '$surface2Hovered',
+          transition: 'background-color 0ms',
+        },
       },
       false: {
         hoverStyle: { backgroundColor: '$surface1Hovered' },

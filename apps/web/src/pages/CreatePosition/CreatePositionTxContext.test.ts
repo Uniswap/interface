@@ -764,7 +764,6 @@ describe('generateCreatePositionTxRequest', () => {
       ).toEqual({
         type: LiquidityTransactionType.Create,
         unsigned: false,
-        protocolVersion: ProtocolVersion.V2,
         createPositionRequestArgs: undefined,
         action: {
           type: LiquidityTransactionType.Create,
@@ -805,7 +804,6 @@ describe('generateCreatePositionTxRequest', () => {
       ).toEqual({
         type: LiquidityTransactionType.Create,
         unsigned: true,
-        protocolVersion: ProtocolVersion.V2,
         createPositionRequestArgs: undefined,
         action: {
           type: LiquidityTransactionType.Create,
@@ -861,7 +859,6 @@ describe('generateCreatePositionTxRequest', () => {
       ).toEqual({
         type: LiquidityTransactionType.Create,
         unsigned: false,
-        protocolVersion: ProtocolVersion.V3,
         createPositionRequestArgs: undefined,
         action: {
           type: LiquidityTransactionType.Create,
@@ -903,7 +900,6 @@ describe('generateCreatePositionTxRequest', () => {
       ).toEqual({
         type: LiquidityTransactionType.Create,
         unsigned: true,
-        protocolVersion: ProtocolVersion.V3,
         createPositionRequestArgs: undefined,
         action: {
           type: LiquidityTransactionType.Create,
@@ -959,7 +955,6 @@ describe('generateCreatePositionTxRequest', () => {
       ).toEqual({
         type: LiquidityTransactionType.Create,
         unsigned: false,
-        protocolVersion: ProtocolVersion.V4,
         createPositionRequestArgs: {
           batchPermitData: undefined,
         },
@@ -1002,7 +997,6 @@ describe('generateCreatePositionTxRequest', () => {
       ).toEqual({
         type: LiquidityTransactionType.Create,
         unsigned: true,
-        protocolVersion: ProtocolVersion.V4,
         createPositionRequestArgs: {
           batchPermitData: {
             ...approvalCalldata.permitData,

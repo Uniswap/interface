@@ -89,6 +89,7 @@ export function ReportTokenDataModal({
   return (
     <ReportTokenModal
       modalName={ModalName.ReportTokenData}
+      modalTitle={t('reporting.token.data.title.withSymbol', { symbol: currency?.symbol ?? '' })}
       currency={currency}
       icon={ChartBarCrossed}
       reportOptions={reportOptions}

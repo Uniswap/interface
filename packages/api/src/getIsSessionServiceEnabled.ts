@@ -1,7 +1,7 @@
-const IS_SESSION_SERVICE_ENABLED = false
+import { getConfig } from '@universe/config'
 
 function getIsSessionServiceEnabled(): boolean {
-  return IS_SESSION_SERVICE_ENABLED
+  return getConfig().enableSessionService
 }
 
 export { getIsSessionServiceEnabled }

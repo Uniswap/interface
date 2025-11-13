@@ -4,20 +4,14 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
 import { DappRequestInfo, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
-import { Call, Capability } from 'wallet/src/features/dappRequests/types'
-
-export enum WalletConnectVerifyStatus {
-  Verified = 'VERIFIED',
-  Unverified = 'UNVERIFIED',
-  Threat = 'THREAT',
-}
+import { Call, Capability, DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
 
 export type WalletConnectPendingSession = {
   id: string
   chains: UniverseChainId[]
   dappRequestInfo: DappRequestInfo
   proposalNamespaces: ProposalTypes.OptionalNamespaces
-  verifyStatus: WalletConnectVerifyStatus
+  verifyStatus: DappVerificationStatus
 }
 
 export type WalletConnectSession = {

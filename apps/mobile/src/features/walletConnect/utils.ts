@@ -5,7 +5,6 @@ import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
   SignRequest,
   TransactionRequest,
-  WalletConnectVerifyStatus,
   WalletGetCallsStatusRequest,
   WalletGetCapabilitiesRequest,
   WalletSendCallsRequest,
@@ -16,7 +15,7 @@ import { EthMethod, EthSignMethod, WalletConnectEthMethod } from 'uniswap/src/fe
 import { DappRequestInfo, DappRequestType } from 'uniswap/src/types/walletConnect'
 import { hexToNumber } from 'utilities/src/addresses/hex'
 import { generateBatchId } from 'wallet/src/features/batchedTransactions/utils'
-import { GetCallsStatusParams, SendCallsParams } from 'wallet/src/features/dappRequests/types'
+import { DappVerificationStatus, GetCallsStatusParams, SendCallsParams } from 'wallet/src/features/dappRequests/types'
 /**
  * Construct WalletConnect 2.0 session namespaces to complete a new pairing. Used when approving a new pairing request.
  * Assumes each namespace has been validated and is supported by the app with `validateProposalNamespaces()`.
@@ -352,23 +351,23 @@ export async function pairWithWalletConnectURI(uri: string): Promise<void | Pair
  *
  * See https://docs.reown.com/walletkit/ios/verify
  */
-export function parseVerifyStatus(verifyContext?: Verify.Context): WalletConnectVerifyStatus {
+export function parseVerifyStatus(verifyContext?: Verify.Context): DappVerificationStatus {
   if (!verifyContext) {
-    return WalletConnectVerifyStatus.Unverified
+    return DappVerificationStatus.Unverified
   }
 
   const { verified } = verifyContext
 
   // Must check for isScam first, since valid URLs can still be scams
   if (verified.validation === 'INVALID' || verified.isScam) {
-    return WalletConnectVerifyStatus.Threat
+    return DappVerificationStatus.Threat
   }
 
   if (verified.validation === 'VALID') {
-    return WalletConnectVerifyStatus.Verified
+    return DappVerificationStatus.Verified
   }
 
   // Default to unverified status to enforce stricter warning if verification information is empty
   // Also covers 'UNKNOWN' case
-  return WalletConnectVerifyStatus.Unverified
+  return DappVerificationStatus.Unverified
 }

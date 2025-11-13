@@ -1,9 +1,27 @@
-// Mock the global fetch function
+jest.mock('@universe/gating', () => ({
+  ...jest.requireActual('@universe/gating'),
+  getFeatureFlag: jest.fn(),
+}))
+
+jest.mock('@universe/config', () => {
+  const { getConfig } = jest.requireActual('@universe/config/src/getConfig.web')
+  return {
+    getConfig,
+  }
+})
+
 const mockFetch = jest.fn()
 global.fetch = mockFetch
 
 import { TradingApi } from '@universe/api'
-import { checkWalletDelegation } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { TRADING_API_PATHS } from '@universe/api/src/clients/trading/createTradingApiClient'
+import { FeatureFlags, getFeatureFlag } from '@universe/gating'
+import {
+  checkWalletDelegation,
+  getFeatureFlaggedHeaders,
+  getQuoteHeaders,
+  TradingApiHeaders,
+} from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 
 // Helper function to create a mock Response
 const createMockResponse = (data: TradingApi.WalletCheckDelegationResponseBody): Partial<Response> => ({
@@ -457,3 +475,87 @@ describe('checkWalletDelegation', () => {
     })
   })
 })
+
+describe('getFeatureFlaggedHeaders', () => {
+  const mockGetFeatureFlag = getFeatureFlag as jest.MockedFunction<typeof getFeatureFlag>
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    mockGetFeatureFlag.mockReturnValue(false)
+  })
+
+  getAllTradingApiPaths().forEach((path) => {
+    it('should always include these headers for all endpoints', () => {
+      mockGetFeatureFlag.mockImplementation(
+        (flag) => flag === FeatureFlags.ViemProviderEnabled || flag === FeatureFlags.UniquoteEnabled,
+      )
+      const expectedHeaders = {
+        [TradingApiHeaders.UniversalRouterVersion]: TradingApi.UniversalRouterVersion._2_0,
+        [TradingApiHeaders.ViemProviderEnabled]: 'true',
+        [TradingApiHeaders.UniquoteEnabled]: 'true',
+      }
+      const headers = getFeatureFlaggedHeaders(path)
+      expect(headers).toEqual(expectedHeaders)
+    })
+
+    it(`Endpoint: ${path} should/should not UnirouteEnabled header when feature flag is enabled`, () => {
+      mockGetFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.UnirouteEnabled)
+      const headers = getFeatureFlaggedHeaders(path)
+      switch (path) {
+        case TRADING_API_PATHS.swap7702:
+        case TRADING_API_PATHS.quote:
+          expect(headers).toHaveProperty(TradingApiHeaders.UnirouteEnabled, 'true')
+          break
+        default:
+          expect(headers).not.toHaveProperty(TradingApiHeaders.UnirouteEnabled)
+          break
+      }
+    })
+
+    it(`Endpoint: ${path} should/should not include Erc20EthEnabled header when feature flag is enabled`, () => {
+      mockGetFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.EthAsErc20UniswapX)
+      const headers = getFeatureFlaggedHeaders(path)
+      switch (path) {
+        case TRADING_API_PATHS.quote:
+        case TRADING_API_PATHS.order:
+          expect(headers).toHaveProperty(TradingApiHeaders.Erc20EthEnabled, 'true')
+          break
+        default:
+          expect(headers).not.toHaveProperty(TradingApiHeaders.Erc20EthEnabled)
+          break
+      }
+    })
+
+    it(`Endpoint: ${path} should/should not include ChainedActionsEnabled header when feature flag is enabled`, () => {
+      mockGetFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.ChainedActions)
+      const headers = getFeatureFlaggedHeaders(path)
+      switch (path) {
+        case TRADING_API_PATHS.quote:
+        case TRADING_API_PATHS.plan:
+          expect(headers).toHaveProperty(TradingApiHeaders.ChainedActionsEnabled, 'true')
+          break
+        default:
+          expect(headers).not.toHaveProperty(TradingApiHeaders.ChainedActionsEnabled)
+          break
+      }
+    })
+  })
+})
+
+export function getAllTradingApiPaths(): Array<(typeof TRADING_API_PATHS)[keyof typeof TRADING_API_PATHS]> {
+  const paths: Array<(typeof TRADING_API_PATHS)[keyof typeof TRADING_API_PATHS]> = []
+
+  for (const value of Object.values(TRADING_API_PATHS)) {
+    if (typeof value === 'string') {
+      paths.push(value)
+    } else if (typeof value === 'object') {
+      for (const nestedValue of Object.values(value)) {
+        if (typeof nestedValue === 'string') {
+          paths.push(nestedValue)
+        }
+      }
+    }
+  }
+
+  return paths
+}

@@ -22,9 +22,9 @@ describe('createNotificationSystem', () => {
 
   function createMockDataSource(): {
     dataSource: NotificationDataSource
-    triggerNotifications: (notifications: InAppNotification[]) => void
+    triggerNotifications: (notifications: InAppNotification[], source?: string) => void
   } {
-    let callback: ((notifications: InAppNotification[]) => void) | undefined
+    let callback: ((notifications: InAppNotification[], source: string) => void) | undefined
 
     return {
       dataSource: {
@@ -33,9 +33,9 @@ describe('createNotificationSystem', () => {
         },
         stop: vi.fn().mockResolvedValue(undefined),
       },
-      triggerNotifications: (notifications): void => {
+      triggerNotifications: (notifications, source = 'test_source'): void => {
         if (callback) {
-          callback(notifications)
+          callback(notifications, source)
         }
       },
     }
@@ -66,11 +66,12 @@ describe('createNotificationSystem', () => {
   ): NotificationProcessor {
     return {
       process: vi.fn((notifications: InAppNotification[]) => {
-        if (filterFn) {
-          return Promise.resolve(filterFn(notifications))
-        }
-        // Default: return all notifications
-        return Promise.resolve(notifications)
+        const filteredNotifications = filterFn ? filterFn(notifications) : notifications
+        // Return NotificationProcessorResult with primary and chained
+        return Promise.resolve({
+          primary: filteredNotifications,
+          chained: new Map(),
+        })
       }),
     }
   }
@@ -114,8 +115,8 @@ describe('createNotificationSystem', () => {
 
       expect(system).toBeDefined()
       expect(typeof system.initialize).toBe('function')
-      expect(typeof system.onDismiss).toBe('function')
-      expect(typeof system.onButtonClick).toBe('function')
+      expect(typeof system.onNotificationClick).toBe('function')
+      expect(typeof system.onRenderFailed).toBe('function')
       expect(typeof system.destroy).toBe('function')
     })
 
@@ -285,7 +286,7 @@ describe('createNotificationSystem', () => {
   })
 
   describe('onDismiss', () => {
-    it('tracks dismissed notification with dismiss strategy', async () => {
+    it('does not track when notification is dismissed (only ACK tracks)', async () => {
       const { dataSource } = createMockDataSource()
       const { tracker, getTrackedCalls } = createMockTracker()
       const processor = createMockProcessor()
@@ -299,12 +300,12 @@ describe('createNotificationSystem', () => {
       })
 
       await system.initialize()
-      await system.onDismiss('id-1')
+      system.onNotificationClick('id-1', { type: 'dismiss' })
+      // Wait for async operations to complete
+      await new Promise((resolve) => setTimeout(resolve, 0))
 
       const trackedCalls = getTrackedCalls()
-      expect(trackedCalls).toHaveLength(1)
-      expect(trackedCalls[0].id).toBe('id-1')
-      expect(trackedCalls[0].metadata.strategy).toBe('dismiss')
+      expect(trackedCalls).toHaveLength(0) // Dismiss should NOT track
     })
 
     it('calls cleanup function for rendered notification', async () => {
@@ -329,7 +330,9 @@ describe('createNotificationSystem', () => {
 
       expect(getCleanupCallCount()).toBe(0)
 
-      await system.onDismiss('id-1')
+      system.onNotificationClick('id-1', { type: 'dismiss' })
+      // Wait for async cleanup to complete
+      await new Promise((resolve) => setTimeout(resolve, 0))
 
       expect(getCleanupCallCount()).toBe(1)
     })
@@ -350,21 +353,27 @@ describe('createNotificationSystem', () => {
       await system.initialize()
 
       // Dismiss notification that was never rendered
-      await system.onDismiss('non-existent-id')
+      system.onNotificationClick('non-existent-id', { type: 'dismiss' })
+      // Wait for async operations to complete
+      await new Promise((resolve) => setTimeout(resolve, 0))
 
-      // Should not throw and should still track
-      expect(tracker.track).toHaveBeenCalled()
+      // Should not throw and should NOT track (dismiss doesn't track)
+      expect(tracker.track).not.toHaveBeenCalled()
       expect(getCleanupCallCount()).toBe(0)
     })
 
-    it('adds dismissed notification to processed IDs', async () => {
+    it('dismissed notifications can be re-rendered (only ACK prevents re-render)', async () => {
       const { dataSource, triggerNotifications } = createMockDataSource()
       const { tracker } = createMockTracker()
       // Create processor that filters based on tracker's processed IDs
       const processor: NotificationProcessor = {
         process: vi.fn(async (notifications: InAppNotification[]) => {
           const processedIds = await tracker.getProcessedIds()
-          return notifications.filter((n) => !processedIds.has(n.id))
+          const filtered = notifications.filter((n) => !processedIds.has(n.id))
+          return {
+            primary: filtered,
+            chained: new Map(),
+          }
         }),
       }
       const { renderer, getRenderedNotifications } = createMockRenderer()
@@ -383,21 +392,115 @@ describe('createNotificationSystem', () => {
       // Render notification
       triggerNotifications([notification])
       await new Promise((resolve) => setTimeout(resolve, 10))
+      expect(getRenderedNotifications().length).toBe(1)
 
-      // Dismiss it
-      await system.onDismiss('id-1')
+      // Dismiss it (dismiss doesn't track)
+      system.onNotificationClick('id-1', { type: 'dismiss' })
+      await new Promise((resolve) => setTimeout(resolve, 0))
 
-      // Try to render it again - should not render
-      const renderedCountBefore = getRenderedNotifications().length
+      // Try to render it again - SHOULD render because dismiss doesn't track
       triggerNotifications([notification])
       await new Promise((resolve) => setTimeout(resolve, 10))
 
-      expect(getRenderedNotifications().length).toBe(renderedCountBefore)
+      expect(getRenderedNotifications().length).toBe(2) // Rendered twice!
     })
   })
 
-  describe('onButtonClick', () => {
-    it('handles button click without throwing', () => {
+  describe('onRenderFailed', () => {
+    it('cleans up the failed render without tracking', async () => {
+      const { dataSource, triggerNotifications } = createMockDataSource()
+      const { tracker, getTrackedCalls } = createMockTracker()
+      const processor = createMockProcessor()
+      const { renderer, getCleanupCallCount } = createMockRenderer()
+
+      const system = createNotificationSystem({
+        dataSources: [dataSource],
+        tracker,
+        processor,
+        renderer,
+      })
+
+      await system.initialize()
+
+      const notification = createMockNotification({ name: 'notif-1', timestamp: 1000, id: 'id-1' })
+      triggerNotifications([notification])
+      await new Promise((resolve) => setTimeout(resolve, 10))
+
+      // Call onRenderFailed instead of onDismiss
+      system.onRenderFailed('id-1')
+
+      // Should call cleanup but NOT track
+      expect(getCleanupCallCount()).toBe(1)
+      expect(getTrackedCalls()).toHaveLength(0)
+    })
+
+    it('allows notification to be re-rendered after failed render', async () => {
+      const { dataSource, triggerNotifications } = createMockDataSource()
+      const { tracker } = createMockTracker()
+      // Processor that filters based on tracker's processed IDs
+      const processor: NotificationProcessor = {
+        process: vi.fn(async (notifications: InAppNotification[]) => {
+          const processedIds = await tracker.getProcessedIds()
+          const filtered = notifications.filter((n) => !processedIds.has(n.id))
+          return {
+            primary: filtered,
+            chained: new Map(),
+          }
+        }),
+      }
+      const { renderer, getRenderedNotifications } = createMockRenderer()
+
+      const system = createNotificationSystem({
+        dataSources: [dataSource],
+        tracker,
+        processor,
+        renderer,
+      })
+
+      await system.initialize()
+
+      const notification = createMockNotification({ name: 'notif-1', timestamp: 1000, id: 'id-1' })
+
+      // First render
+      triggerNotifications([notification])
+      await new Promise((resolve) => setTimeout(resolve, 10))
+      expect(getRenderedNotifications()).toHaveLength(1)
+
+      // Mark as failed render
+      system.onRenderFailed('id-1')
+
+      // Should be able to render again (not in processedIds)
+      triggerNotifications([notification])
+      await new Promise((resolve) => setTimeout(resolve, 10))
+
+      // Should be rendered twice total (once initially, once after failed render cleanup)
+      expect(getRenderedNotifications()).toHaveLength(2)
+    })
+
+    it('handles onRenderFailed for non-rendered notification gracefully', () => {
+      const { dataSource } = createMockDataSource()
+      const { tracker, getTrackedCalls } = createMockTracker()
+      const processor = createMockProcessor()
+      const { renderer, getCleanupCallCount } = createMockRenderer()
+
+      const system = createNotificationSystem({
+        dataSources: [dataSource],
+        tracker,
+        processor,
+        renderer,
+      })
+
+      // Call onRenderFailed for notification that was never rendered
+      expect(() => system.onRenderFailed('non-existent-id')).not.toThrow()
+
+      // Should not track or call cleanup
+      expect(getTrackedCalls()).toHaveLength(0)
+      expect(getCleanupCallCount()).toBe(0)
+    })
+  })
+
+  describe('onNotificationClick', () => {
+    it('handles notification click without throwing', () => {
       const { dataSource } = createMockDataSource()
       const { tracker } = createMockTracker()
       const processor = createMockProcessor()
@@ -410,7 +513,7 @@ describe('createNotificationSystem', () => {
         renderer,
       })
 
-      expect(() => system.onButtonClick('id-1', 'primary-button')).not.toThrow()
+      expect(() => system.onNotificationClick('id-1', { type: 'button', index: 0 })).not.toThrow()
     })
   })
 
@@ -506,7 +609,7 @@ describe('createNotificationSystem', () => {
       expect(getRenderedNotifications()).toHaveLength(0)
     })
 
-    it('handles processor returning empty array', async () => {
+    it('handles processor returning empty primary array', async () => {
       const { dataSource, triggerNotifications } = createMockDataSource()
       const { tracker } = createMockTracker()
       const processor = createMockProcessor(() => []) // Always return empty

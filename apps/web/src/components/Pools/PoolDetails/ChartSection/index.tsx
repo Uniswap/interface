@@ -28,13 +28,13 @@ import {
 } from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { useAtomValue } from 'jotai/utils'
-import styled, { useTheme } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { EllipsisStyle } from 'theme/components/styles'
-import { Flex, SegmentedControl, Text, useMedia } from 'ui/src'
+import { Flex, SegmentedControl, Text, useMedia, useSporeColors } from 'ui/src'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -81,6 +81,8 @@ interface ChartSectionProps {
   loading: boolean
   isReversed: boolean
   chain?: GraphQLApi.Chain
+  tokenAColor: string
+  tokenBColor: string
 }
 
 /** Represents a variety of query result shapes, discriminated via additional `chartType` field. */
@@ -187,6 +189,8 @@ export default function ChartSection(props: ChartSectionProps) {
       timePeriod,
       tokenA: currencyA,
       tokenB: currencyB,
+      tokenAColor: props.tokenAColor,
+      tokenBColor: props.tokenBColor,
       chainId: fromGraphQLChain(props.chain) ?? defaultChainId,
       poolId: props.poolData.idOrAddress,
       hooks: props.poolData.hookAddress,
@@ -212,6 +216,7 @@ export default function ChartSection(props: ChartSectionProps) {
             data={activeQuery.entries}
             stale={stale}
             tokenFormatType={NumberType.TokenNonTx}
+            overrideColor={props.isReversed ? props.tokenBColor : props.tokenAColor}
           />
         )
       case ChartType.VOLUME:
@@ -292,6 +297,7 @@ function PriceChart({
   data,
   stale,
   tokenFormatType,
+  overrideColor,
 }: {
   tokenA: Token | NativeCurrency
   tokenB: Token | NativeCurrency
@@ -299,6 +305,7 @@ function PriceChart({
   data: PriceChartData[]
   stale: boolean
   tokenFormatType?: NumberType
+  overrideColor?: string
 }) {
   const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
   const [baseCurrency, quoteCurrency] = isReversed ? [tokenB, tokenA] : [tokenA, tokenB]
@@ -317,6 +324,7 @@ function PriceChart({
       params={params}
       showDottedBackground
       showLeftFadeOverlay
+      overrideColor={overrideColor}
     >
       {(crosshairData) => {
         const displayValue = crosshairData ?? lastPrice
@@ -353,6 +361,8 @@ function PriceChart({
 function LiquidityChart({
   tokenA,
   tokenB,
+  tokenAColor,
+  tokenBColor,
   feeTier,
   isReversed,
   chainId,
@@ -362,6 +372,8 @@ function LiquidityChart({
 }: {
   tokenA: Currency
   tokenB: Currency
+  tokenAColor: string
+  tokenBColor: string
   feeTier: FeeAmount
   isReversed: boolean
   chainId: UniverseChainId
@@ -404,18 +416,18 @@ function LiquidityChart({
     tickSpacing: poolData?.pools[0]?.tickSpacing,
   })
 
-  const theme = useTheme()
+  const colors = useSporeColors()
   const params = useMemo(() => {
     return {
       data: tickData?.barData ?? [],
-      tokenAColor: isReversed ? theme.token1 : theme.token0,
-      tokenBColor: isReversed ? theme.token0 : theme.token1,
-      highlightColor: theme.surface3,
+      tokenAColor,
+      tokenBColor,
+      highlightColor: colors.surface3.val,
       activeTick,
       activeTickProgress: tickData?.activeRangePercentage,
       hideTooltipBorder: true,
     }
-  }, [activeTick, isReversed, theme, tickData])
+  }, [activeTick, tokenAColor, tokenBColor, colors, tickData])
 
   if (loading) {
     return <LoadingChart />

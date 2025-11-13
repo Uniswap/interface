@@ -18,6 +18,8 @@ export function useGroupNftsByVisibility({
   nfts: Array<NFTItem | string>
   numHidden: number
   numShown: number
+  hiddenNfts: NFTItem[]
+  shownNfts: NFTItem[]
 } {
   const nftVisibility = useSelector(selectNftsVisibility)
   return useMemo(() => {
@@ -55,6 +57,8 @@ export function useGroupNftsByVisibility({
       ],
       numHidden: hidden.length,
       numShown: shown.length,
+      hiddenNfts: hidden,
+      shownNfts: shown,
     }
   }, [nftDataItems, nftVisibility, showHidden, allPagesFetched])
 }

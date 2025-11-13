@@ -119,6 +119,7 @@ export function ReportTokenIssueModal({
   return (
     <ReportTokenModal
       modalName={ModalName.ReportTokenIssue}
+      modalTitle={t('reporting.token.report.title.withSymbol', { symbol: currency?.symbol ?? '' })}
       currency={currency}
       icon={Flag}
       reportOptions={reportOptions}

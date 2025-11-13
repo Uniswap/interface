@@ -17,6 +17,7 @@ export function TokenBalanceItemContextMenu({
   copyAddressToClipboard,
   triggerMode,
   onPressToken: onPressToken,
+  disableNotifications,
 }: PropsWithChildren<TokenBalanceItemContextMenuProps>): JSX.Element {
   const { value: isOpen, setTrue: openMenu, setFalse: closeMenu } = useBooleanState(false)
   const isPrimaryTriggerMode = isExtensionApp || triggerMode === ContextMenuTriggerMode.Primary
@@ -31,6 +32,7 @@ export function TokenBalanceItemContextMenu({
     openReportTokenModal,
     copyAddressToClipboard,
     closeMenu,
+    disableNotifications,
   })
 
   const ignoreDefault = useCallback((e: React.MouseEvent<HTMLDivElement>) => {

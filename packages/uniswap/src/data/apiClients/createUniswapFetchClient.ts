@@ -25,7 +25,7 @@ export function createUniswapFetchClient({
 
   return createFetchClient({
     baseUrl,
-    headers,
+    getHeaders: () => headers,
     getSessionServiceBaseUrl: () => uniswapUrls.apiBaseUrlV2,
   })
 }

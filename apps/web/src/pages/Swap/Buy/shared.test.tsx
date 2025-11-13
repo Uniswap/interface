@@ -20,11 +20,6 @@ vi.mock('ui/src', () => ({
   useSporeColors: () => ({}),
 }))
 
-// Mock styled-components
-vi.mock('lib/styled-components', () => ({
-  useTheme: () => ({}),
-}))
-
 // Mock SVG
 vi.mock('ui/src/assets/backgrounds/for-connecting-v2.svg', () => ({
   ReactComponent: 'svg',

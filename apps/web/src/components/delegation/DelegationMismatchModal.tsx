@@ -3,9 +3,9 @@ import { WalletAlertBadge } from 'components/Badge/WalletAlertBadge'
 import { useWalletDisplay } from 'components/Web3Status/RecentlyConnectedModal'
 import { useAccount } from 'hooks/useAccount'
 import { useDisconnect } from 'hooks/useDisconnect'
-import { useTheme } from 'lib/styled-components'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { Blocked } from 'ui/src/components/icons/Blocked'
 import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -23,7 +23,7 @@ function DelegationMismatchModal({ onClose }: DelegationMismatchModalProps) {
   const account = useAccount()
   const { displayName } = useWalletDisplay(account.address)
   const disconnect = useDisconnect()
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   const walletName = account.connector?.name ?? t('common.your.connected.wallet')
   const iconSrc = account.connector?.icon
@@ -32,7 +32,7 @@ function DelegationMismatchModal({ onClose }: DelegationMismatchModalProps) {
     t('smartWallets.delegationMismatchModal.features.1ClickSwaps'),
     <>
       {t('smartWallets.delegationMismatchModal.features.gasFreeSwaps')}
-      <span style={{ color: theme.neutral2 }}>{` (${t('uniswapx.label')})`}</span>
+      <span style={{ color: colors.neutral2.val }}>{` (${t('uniswapx.label')})`}</span>
     </>,
     t('smartWallets.delegationMismatchModal.features.limitOrders'),
   ]
@@ -62,6 +62,26 @@ function DelegationMismatchModal({ onClose }: DelegationMismatchModalProps) {
     handleTrackModalDismissed()
   })
 
+  const primaryButton = useMemo(
+    () => ({
+      text: t('common.button.disconnect'),
+      onPress: handleSwitchWallets,
+      variant: 'default' as const,
+      emphasis: 'secondary' as const,
+    }),
+    [t, handleSwitchWallets],
+  )
+
+  const secondaryButton = useMemo(
+    () => ({
+      text: t('common.button.continue'),
+      onPress: handleContinue,
+      variant: 'default' as const,
+      emphasis: 'primary' as const,
+    }),
+    [t, handleContinue],
+  )
+
   return (
     <Trace logImpression modal={ModalName.DelegationMismatch}>
       <Dialog
@@ -77,14 +97,8 @@ function DelegationMismatchModal({ onClose }: DelegationMismatchModalProps) {
           </Text>
         }
         icon={<WalletAlertBadge walletIcon={iconSrc} />}
-        primaryButtonText={t('common.button.disconnect')}
-        primaryButtonOnPress={handleSwitchWallets}
-        primaryButtonVariant="default"
-        primaryButtonEmphasis="secondary"
-        secondaryButtonText={t('common.button.continue')}
-        secondaryButtonOnPress={handleContinue}
-        secondaryButtonVariant="default"
-        secondaryButtonEmphasis="primary"
+        primaryButton={primaryButton}
+        secondaryButton={secondaryButton}
         learnMoreUrl={uniswapUrls.helpArticleUrls.mismatchedImports}
         learnMoreTextColor="$accent1"
         learnMoreTextVariant="buttonLabel3"

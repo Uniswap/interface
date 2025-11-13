@@ -55,6 +55,8 @@ export function useSwapHandlers(): SwapHandlers {
         onPending,
         txId,
         isFiatInputMode,
+        setCurrentStep,
+        setSteps,
       } = params
 
       const { trade, gasFee } = swapTxContext
@@ -93,6 +95,8 @@ export function useSwapHandlers(): SwapHandlers {
           onFailure,
           onPending,
           preSignedTransaction,
+          setCurrentStep,
+          setSteps,
         }),
       )
 

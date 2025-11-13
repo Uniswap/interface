@@ -1,6 +1,7 @@
+import { toPlainMessage } from '@bufbuild/protobuf'
 import { queryOptions } from '@tanstack/react-query'
 import type { InAppNotification, NotificationsApiClient } from '@universe/api'
-import { logger } from 'utilities/src/logger/logger'
+import { getLogger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
@@ -41,9 +42,18 @@ export function getNotificationQueryOptions(
     queryKey: [ReactQueryCacheKey.Notifications],
     queryFn: async (): Promise<InAppNotification[]> => {
       try {
-        return await apiClient.getNotifications()
+        // Get the raw response from the API client
+        const response = await apiClient.getNotifications()
+
+        // Convert protobuf Messages to plain objects for React Query caching
+        // toPlainMessage strips the Message prototype chain and preserves numeric enum values
+        // It's schema-aware and automatically handles nested messages, making it resilient to schema changes
+        const serialized: InAppNotification[] = response.notifications.map((notification) =>
+          toPlainMessage(notification),
+        )
+        return serialized
       } catch (error) {
-        logger.error(error, {
+        getLogger().error(error, {
           tags: { file: 'notificationQueryOptions', function: 'queryFn' },
         })
         throw error
@@ -51,6 +61,7 @@ export function getNotificationQueryOptions(
     },
     refetchInterval: pollIntervalMs,
     refetchIntervalInBackground: true,
+    refetchOnWindowFocus: false,
     staleTime: pollIntervalMs - 1000,
     retry: 2,
     retryDelay: (attemptIndex: number): number => Math.min(1000 * 2 ** attemptIndex, 30000),

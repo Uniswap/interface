@@ -1,14 +1,14 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { SearchInput } from 'pages/Portfolio/components/SearchInput'
 import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
-import { usePortfolioAddress } from 'pages/Portfolio/hooks/usePortfolioAddress'
+import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
 import { useTransformTokenTableData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { TokensAllocationChart } from 'pages/Portfolio/Tokens/Table/TokensAllocationChart'
 import { TokensTable } from 'pages/Portfolio/Tokens/Table/TokensTable'
 import { filterTokensBySearch } from 'pages/Portfolio/Tokens/utils/filterTokensBySearch'
 import { memo, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, RemoveScroll, Text } from 'ui/src'
+import { Flex, RemoveScroll, Text, useMedia } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
@@ -28,7 +28,7 @@ const TokenCountIndicator = memo(({ count }: { count: number }) => {
         mx="$spacing8"
       />
       <Text variant="body3" color="$neutral2">
-        {t('portfolio.tokens.balance.totalTokens', { numTokens: count })}
+        {t('portfolio.tokens.balance.totalTokens', { numTokens: count, count })}
       </Text>
     </Flex>
   )
@@ -37,7 +37,8 @@ const TokenCountIndicator = memo(({ count }: { count: number }) => {
 TokenCountIndicator.displayName = 'TokenCountIndicator'
 
 export function PortfolioTokens() {
-  const portfolioAddress = usePortfolioAddress()
+  const portfolioAddresses = usePortfolioAddresses()
+  const media = useMedia()
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
   const { chains: enabledChains } = useEnabledChains()
@@ -78,15 +79,24 @@ export function PortfolioTokens() {
     <RemoveScroll enabled={loading}>
       <Trace logImpression page={InterfacePageName.PortfolioTokensPage}>
         <Flex flexDirection="column" gap="$spacing16">
-          <Flex row alignItems="baseline" justifyContent="space-between">
+          <Flex
+            row
+            alignItems="baseline"
+            justifyContent="space-between"
+            gap="$spacing8"
+            $md={{ flexDirection: 'column', alignItems: 'flex-start', gap: '$spacing24' }}
+          >
             <PortfolioBalance
-              owner={portfolioAddress}
+              evmOwner={portfolioAddresses.evmAddress}
+              svmOwner={portfolioAddresses.svmAddress}
               endText={tokenData ? <TokenCountIndicator count={tokenData.length} /> : undefined}
+              chainIds={effectiveChainId ? [effectiveChainId] : undefined}
             />
             <SearchInput
               value={search}
               onChangeText={setSearch}
               placeholder={t('tokens.table.search.placeholder.tokens')}
+              width={media.md ? '100%' : undefined}
             />
           </Flex>
 
