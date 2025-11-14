@@ -6,7 +6,9 @@ on:
 
 jobs:
   deploy-to-prod:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-lates
+    permissions:
+        contents: write
     steps:
       - uses: bullfrogsec/bullfrog@dcde5841b19b7ef693224207a7fdec67fce604db # v0.8.3
         with:
@@ -22,6 +24,21 @@ jobs:
           # The egress policy to enforce. Valid values are `audit` and `block`.
           # Default: audit
           egress-policy: audit
+              # NEW: Import GPG key for commit signing
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec
+        with:
+            gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+            git_user_signingkey: true
+            git_commit_gpgsign: true
+            git_tag_gpgsign: true
+            git_config_global: true
+              # NEW: Configure Git identity
+      - name: Configure Git
+          run: |
+            git config user.name "Uniswap Labs Service Account"
+            git config user.email "hello-happy-puppy@uniswap.org"
+
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
 
       - name: 🧷️ Get version
