@@ -24,7 +24,7 @@ jobs:
           # The egress policy to enforce. Valid values are `audit` and `block`.
           # Default: audit
           egress-policy: audit
-              # NEW: Import GPG key for commit signing
+              # NEW: Import GPG key for commit signing SA
       - name: Import GPG key
         uses: crazy-max/ghaction-import-gpg@e89d40939c28e39f97cf32126055eeae86ba74ec
         with:
