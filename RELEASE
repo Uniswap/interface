@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmPSswCMSykfj3FKKV2dzxwbedFyRJZhMkdzSEgvvPfRAb`
-- CIDv1: `bafybeiaqoqqesaqanu2hofn4n2lhef4mweqlx2s5s2wxc747omlwa7nixq`
+- CIDv0: `QmUiycg43tn8V8uqKcRMeSFZPYnX9qCHFK88Bg1YznJt5F`
+- CIDv1: `bafybeic63zdn3mceqpboz4wckzubcretvndr7bv472afnxifpgpqdoly7i`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,9 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiaqoqqesaqanu2hofn4n2lhef4mweqlx2s5s2wxc747omlwa7nixq.ipfs.dweb.link/
-- [ipfs://QmPSswCMSykfj3FKKV2dzxwbedFyRJZhMkdzSEgvvPfRAb/](ipfs://QmPSswCMSykfj3FKKV2dzxwbedFyRJZhMkdzSEgvvPfRAb/)
+- https://bafybeic63zdn3mceqpboz4wckzubcretvndr7bv472afnxifpgpqdoly7i.ipfs.dweb.link/
+- [ipfs://QmUiycg43tn8V8uqKcRMeSFZPYnX9qCHFK88Bg1YznJt5F/](ipfs://QmUiycg43tn8V8uqKcRMeSFZPYnX9qCHFK88Bg1YznJt5F/)
 
-### 5.118.1 (2025-11-13)
-
-
-### Bug Fixes
-
-* **web:** fix tick invariant error (#25391) e074291
+### 5.118.2 (2025-11-15)
 
 

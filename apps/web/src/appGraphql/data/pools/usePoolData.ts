@@ -130,7 +130,7 @@ export function usePoolData({
     const pool = dataV4?.v4Pool ?? dataV3?.v3Pool ?? dataV2?.v2Pair ?? undefined
     const feeTier: FeeData = {
       feeAmount: dataV4?.v4Pool?.feeTier ?? dataV3?.v3Pool?.feeTier ?? V2_DEFAULT_FEE_TIER,
-      tickSpacing: DEFAULT_TICK_SPACING,
+      tickSpacing: dataV4?.v4Pool?.tickSpacing ?? DEFAULT_TICK_SPACING,
       isDynamic: dataV4?.v4Pool?.isDynamicFee ?? false,
     }
     const poolId = dataV4?.v4Pool?.poolId ?? dataV3?.v3Pool?.address ?? dataV2?.v2Pair?.address ?? poolIdOrAddress

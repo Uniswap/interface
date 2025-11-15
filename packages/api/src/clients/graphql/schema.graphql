@@ -8,17 +8,6 @@ directive @aws_auth(
 ) on FIELD_DEFINITION
 
 """
-Tells the service which subscriptions will be published to when this mutation is
-called. This directive is deprecated use @aws_susbscribe directive instead.
-"""
-directive @aws_publish(
-  """
-  List of subscriptions which will be published to when this mutation is called.
-  """
-  subscriptions: [String]
-) on FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by an API key.
 """
 directive @aws_api_key on OBJECT | FIELD_DEFINITION
@@ -53,6 +42,17 @@ directive @aws_lambda on OBJECT | FIELD_DEFINITION
 Tells the service this field/object has access authorized by an OIDC token.
 """
 directive @aws_oidc on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service which subscriptions will be published to when this mutation is
+called. This directive is deprecated use @aws_susbscribe directive instead.
+"""
+directive @aws_publish(
+  """
+  List of subscriptions which will be published to when this mutation is called.
+  """
+  subscriptions: [String]
+) on FIELD_DEFINITION
 
 """
   Types, unions, and inputs (alphabetized):
@@ -1554,6 +1554,7 @@ type V4Pool {
   feeTier: Float
   isDynamicFee: Boolean
   hook: V4PoolHook
+  tickSpacing: Int
   totalLiquidityPercentChange24h: Amount
   cumulativeVolume(duration: HistoryDuration!): Amount
   historicalVolume(duration: HistoryDuration!): [TimestampedAmount]
