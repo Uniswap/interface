@@ -263,6 +263,7 @@ export default function PoolDetailsPage() {
                 token0={token0}
                 token1={token1}
                 feeTier={poolData?.feeTier?.feeAmount}
+                tickSpacing={poolData?.feeTier?.tickSpacing}
                 hookAddress={poolData?.hookAddress}
                 isDynamic={poolData?.feeTier?.isDynamic}
                 protocolVersion={poolData?.protocolVersion}

@@ -77,6 +77,7 @@ interface PoolDetailsStatsButtonsProps {
   token0?: GraphQLApi.Token
   token1?: GraphQLApi.Token
   feeTier?: number
+  tickSpacing?: number
   hookAddress?: string
   isDynamic?: boolean
   protocolVersion?: GraphQLApi.ProtocolVersion
@@ -146,6 +147,7 @@ export function PoolDetailsStatsButtons({
   token0,
   token1,
   feeTier,
+  tickSpacing,
   hookAddress,
   isDynamic,
   protocolVersion,
@@ -180,14 +182,9 @@ export function PoolDetailsStatsButtons({
         queryParams.set('currencyA', currency0Address)
         queryParams.set('currencyB', currency1Address)
         queryParams.set('chain', chainUrlParam)
-        if (feeTier) {
-          queryParams.set('feeTier', feeTier.toString())
-        }
+        queryParams.set('fee', JSON.stringify({ feeAmount: feeTier, tickSpacing, isDynamic }))
         if (hookAddress) {
           queryParams.set('hook', hookAddress)
-        }
-        if (isDynamic) {
-          queryParams.set('isDynamic', 'true')
         }
         const url = `/positions/create/${protocolVersion?.toLowerCase()}?${queryParams.toString()}`
         navigate(url, {
