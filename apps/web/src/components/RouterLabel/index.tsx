@@ -1,5 +1,5 @@
 import UniswapXRouterLabel from 'components/RouterLabel/UniswapXRouterLabel'
-import { DefaultTheme } from 'lib/styled-components'
+import type { DefaultTheme } from 'lib/styled-components'
 import { QuoteMethod, SubmittableTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { ThemedText } from 'theme/components'

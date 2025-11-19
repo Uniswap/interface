@@ -1,7 +1,7 @@
 import darkImage from 'assets/images/404-page-dark.png'
 import lightImage from 'assets/images/404-page-light.png'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'

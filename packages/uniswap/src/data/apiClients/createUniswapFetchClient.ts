@@ -1,4 +1,5 @@
-import { createFetchClient, type FetchClient } from '@universe/api'
+import { createFetchClient, type FetchClient, provideSessionService } from '@universe/api'
+import { getIsSessionServiceEnabled } from '@universe/gating'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { getVersionHeader } from 'uniswap/src/data/constants'
 import { isMobileApp, isWebApp } from 'utilities/src/platform'
@@ -26,6 +27,7 @@ export function createUniswapFetchClient({
   return createFetchClient({
     baseUrl,
     getHeaders: () => headers,
-    getSessionServiceBaseUrl: () => uniswapUrls.apiBaseUrlV2,
+    getSessionService: () =>
+      provideSessionService({ getBaseUrl: () => uniswapUrls.apiBaseUrlV2, getIsSessionServiceEnabled }),
   })
 }

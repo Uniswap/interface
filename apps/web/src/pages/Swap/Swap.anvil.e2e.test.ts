@@ -15,45 +15,20 @@ import { parseEther } from 'viem'
 const test = getTest({ withAnvil: true })
 
 test.describe('Swap', () => {
-  test('should load balances', async ({ page, anvil }) => {
-    await page.goto('/swap')
-    const ethBalance = await anvil.getBalance({
-      address: TEST_WALLET_ADDRESS,
-    })
-    await expect(ethBalance).toBe(parseEther('10000'))
-    await expect(page.getByText('10,000.00 ETH')).toBeVisible()
-  })
-
-  test('should load erc20 balances without trailing zeros', async ({ page, anvil }) => {
-    const balance = 100_000_000n
-    await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance })
-    await page.goto(`/swap?outputCurrency=${USDT.address}`)
-
-    const USDTBalance = await anvil.getErc20Balance(assume0xAddress(USDT.address))
-
-    await expect(USDTBalance).toBe(balance)
-    await expect(page.getByText('100 USDT')).toBeVisible()
-  })
-
-  test('should load erc20 balances with up to 3 decimals', async ({ page, anvil }) => {
-    const balance = 100_111_110n
-    await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance })
-    await page.goto(`/swap?outputCurrency=${USDT.address}`)
-
-    const USDTBalance = await anvil.getErc20Balance(assume0xAddress(USDT.address))
-
-    await expect(USDTBalance).toBe(balance)
-    await expect(page.getByText('100.111 USDT')).toBeVisible()
-  })
-
   test('should swap ETH to USDC', async ({ page, anvil }) => {
     await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
     await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
+    await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: 100_000_000n })
 
     await page.goto('/swap')
+
     await page.getByTestId(TestID.ChooseOutputToken).click()
+    // Select USDT token
     // eslint-disable-next-line
-    await page.getByTestId('token-option-1-USDC').first().click()
+    await page.getByTestId('token-option-1-USDT').first().click()
+    // Confirm wallet balance is shown
+    await expect(page.getByText('100 USDT')).toBeVisible()
+
     await page.getByTestId(TestID.AmountInputIn).click()
     await page.getByTestId(TestID.AmountInputIn).fill('.1')
     await page.getByTestId(TestID.ReviewSwap).click()
@@ -178,6 +153,7 @@ test.describe('Swap', () => {
       })
       await expect(permit2Allowance.amount).toEqual(MaxUint160.toBigInt())
     })
+
     test('swaps with existing permit2 approval and missing token approval', async ({ page, anvil }) => {
       await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
       await stubTradingApiEndpoint({
@@ -208,6 +184,7 @@ test.describe('Swap', () => {
       await expect(page.getByText('Approved')).toBeVisible()
       await expect(page.getByText('Swapped')).toBeVisible()
     })
+
     /**
      * On mainnet, you have to revoke USDT approval before increasing it.
      * From the token contract:

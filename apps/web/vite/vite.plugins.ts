@@ -19,13 +19,13 @@ const CSP_DIRECTIVE_MAP: Record<string, string> = {
 
 // This plugin is used in vite.config.mts
 // eslint-disable-next-line import/no-unused-modules
-export function cspMetaTagPlugin(): Plugin {
+export function cspMetaTagPlugin(mode?: string): Plugin {
   return {
     name: 'inject-csp-meta',
 
     transformIndexHtml(html) {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      const env = process.env.NODE_ENV ?? 'development'
+      const env = mode ?? process.env.NODE_ENV ?? 'development'
       const skip = process.env.VITE_SKIP_CSP === 'true'
 
       if (skip) {
@@ -37,8 +37,7 @@ export function cspMetaTagPlugin(): Plugin {
       const baseCSP = JSON.parse(fs.readFileSync(baseCSPPath, 'utf-8'))
 
       // Optionally extend with dev/staging
-      const envConfigFile =
-        env === 'development' ? 'dev-csp.json' : process.env.VITE_STAGING === 'true' ? 'vercel-csp.json' : null
+      const envConfigFile = env === 'development' ? 'dev-csp.json' : env === 'staging' ? 'staging-csp.json' : null
 
       if (envConfigFile) {
         const extraCSPPath = path.resolve(process.cwd(), 'public', envConfigFile)

@@ -66,6 +66,7 @@ export const BNB_CHAIN_INFO = {
   tokens,
   statusPage: undefined,
   supportsV4: true,
+  supportsNFTs: false,
   urlParam: 'bnb',
   wrappedNativeCurrency: {
     name: 'Wrapped BNB',

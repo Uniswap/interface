@@ -1,6 +1,6 @@
 import { type ConnectTransportOptions, createConnectTransport } from '@connectrpc/connect-web'
-import { getDeviceIdService } from '@universe/api/src/getDeviceIdService'
-import { getSessionStorage } from '@universe/api/src/getSessionStorage'
+import { provideDeviceIdService } from '@universe/api/src/provideDeviceIdService'
+import { provideSessionStorage } from '@universe/api/src/provideSessionStorage'
 import { isWebApp } from 'utilities/src/platform'
 
 interface SessionTransportOptions {
@@ -67,7 +67,7 @@ function getTransport(ctx: {
       if (isWebApp) {
         return null
       }
-      return getSessionStorage()
+      return provideSessionStorage()
         .get()
         .then((session) => session?.sessionId ?? null)
     },
@@ -75,7 +75,7 @@ function getTransport(ctx: {
       if (isWebApp) {
         return null
       }
-      return getDeviceIdService().getDeviceId()
+      return provideDeviceIdService().getDeviceId()
     },
     getHeaders: ctx.getHeaders,
     options: ctx.options,

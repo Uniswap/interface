@@ -78,7 +78,10 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 function* handleSwapTransactionStep(params: HandleSwapStepParams): SagaGenerator<string> {
   const { trade, step, signature, analytics, onTransactionHash } = params
 
-  const info = getSwapTransactionInfo(trade)
+  const info = getSwapTransactionInfo({
+    trade,
+    isFinalStep: 'is_final_step' in analytics ? analytics.is_final_step : undefined,
+  })
   const txRequest = yield* call(getSwapTxRequest, step, signature)
 
   const onModification = ({ hash, data }: VitalTxFields) => {
@@ -141,7 +144,7 @@ interface HandleSwapBatchedStepParams extends Omit<HandleOnChainStepParams, 'ste
 function* handleSwapTransactionBatchedStep(params: HandleSwapBatchedStepParams) {
   const { trade, step, disableOneClickSwap } = params
 
-  const info = getSwapTransactionInfo(trade)
+  const info = getSwapTransactionInfo({ trade })
 
   const batchId = yield* handleAtomicSendCalls({
     ...params,
@@ -182,6 +185,8 @@ function handleSwapTransactionAnalytics(params: {
       isBatched: Boolean(batchId),
       includedPermitTransactionStep: analytics.included_permit_transaction_step,
       batchId,
+      planId: analytics.plan_id,
+      stepIndex: analytics.step_index,
     }),
   )
 }

@@ -1,6 +1,12 @@
 import { queryOptions, useQuery } from '@tanstack/react-query'
-import { createFetchClient, createNotificationsApiClient, getEntryGatewayUrl, SharedQueryClient } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import {
+  createFetchClient,
+  createNotificationsApiClient,
+  getEntryGatewayUrl,
+  provideSessionService,
+  SharedQueryClient,
+} from '@universe/api'
+import { FeatureFlags, getIsSessionServiceEnabled, useFeatureFlag } from '@universe/gating'
 import {
   createApiNotificationTracker,
   createBaseNotificationProcessor,
@@ -16,10 +22,11 @@ import { createWebNotificationRenderer } from 'notification-system/notification-
 import { NotificationContainer } from 'notification-system/notification-renderer/NotificationContainer'
 import { useNotificationStore } from 'notification-system/notification-renderer/notificationStore'
 import { getNotificationTelemetry } from 'notification-system/telemetry/getNotificationTelemetry'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import store from 'state'
 import { useIsDarkMode } from 'ui/src'
+import { mapLocaleToBackendLocale } from 'uniswap/src/features/language/constants'
 import { getLocale } from 'uniswap/src/features/language/hooks'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
 import { getLogger } from 'utilities/src/logger/logger'
@@ -32,22 +39,25 @@ import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 function provideWebNotificationSystem(ctx: {
   getIsDarkMode: () => boolean
   navigate: (path: string) => void
+  getIsApiDataSourceEnabled: () => boolean
 }): NotificationSystem {
   const notifApiBaseUrl = getEntryGatewayUrl()
 
   const fetchClient = createFetchClient({
     baseUrl: notifApiBaseUrl,
     getHeaders: () => {
-      // Get the current language from Redux store and convert to Crowdin locale
+      // Get the current language from Redux store and convert to backend-supported locale format
       const currentLanguage = selectCurrentLanguage(store.getState())
       const locale = getLocale(currentLanguage)
+      const backendLocale = mapLocaleToBackendLocale(locale)
 
       return {
         'Content-Type': 'application/json',
-        'x-uniswap-locale': locale,
+        'x-uniswap-locale': backendLocale,
       }
     },
-    getSessionServiceBaseUrl: getEntryGatewayUrl,
+    getSessionService: () =>
+      provideSessionService({ getBaseUrl: () => getEntryGatewayUrl(), getIsSessionServiceEnabled }),
     defaultOptions: {
       credentials: 'include',
     },
@@ -89,13 +99,20 @@ function provideWebNotificationSystem(ctx: {
 
   const telemetry = getNotificationTelemetry()
 
+  const dataSources = ctx.getIsApiDataSourceEnabled() ? [backendDataSource, bannersDataSource] : [bannersDataSource]
+
   const notificationSystem = createNotificationSystem({
-    dataSources: [backendDataSource, bannersDataSource],
+    dataSources,
     tracker,
     processor,
     renderer,
     telemetry,
     onNavigate: (url: string) => {
+      if (url.startsWith('/')) {
+        ctx.navigate(url)
+        return
+      }
+
       try {
         // Parse the URL to check if it's same-origin
         const urlObj = new URL(url, window.location.origin)
@@ -128,6 +145,7 @@ function getNotificationSystemQueryOptions(ctx: {
   getIsDarkMode: () => boolean
   navigate: (path: string) => void
   getIsEnabled: () => boolean
+  getIsApiDataSourceEnabled: () => boolean
 }): QueryOptionsResult<NotificationSystem, Error, NotificationSystem, [ReactQueryCacheKey.NotificationSystem]> {
   return queryOptions({
     queryKey: [ReactQueryCacheKey.NotificationSystem],
@@ -141,6 +159,7 @@ function getNotificationSystemQueryOptions(ctx: {
 export function WebNotificationSystemManager(): JSX.Element | null {
   const isNotificationSystemEnabledFlag = useFeatureFlag(FeatureFlags.NotificationSystem)
   const isNotificationSystemEnabled = getIsNotificationSystemEnabled() || isNotificationSystemEnabledFlag
+  const isApiDataSourceEnabledFlag = useFeatureFlag(FeatureFlags.NotificationApiDataSource)
   const location = useLocation()
   const navigate = useNavigate()
 
@@ -149,17 +168,13 @@ export function WebNotificationSystemManager(): JSX.Element | null {
 
   // Get current values for banner conditions (using refs to avoid recreating system)
   const isDarkMode = useIsDarkMode()
-  const isDarkModeRef = useRef(isDarkMode)
-  isDarkModeRef.current = isDarkMode
-
-  const navigateRef = useRef(navigate)
-  navigateRef.current = navigate
 
   const { data: notificationSystem } = useQuery(
     getNotificationSystemQueryOptions({
-      getIsDarkMode: () => isDarkModeRef.current,
-      navigate: (path: string) => navigateRef.current(path),
+      getIsDarkMode: () => isDarkMode,
+      navigate: (path: string) => navigate(path),
       getIsEnabled: () => isNotificationSystemEnabled,
+      getIsApiDataSourceEnabled: () => isApiDataSourceEnabledFlag,
     }),
   )
 

@@ -170,6 +170,7 @@ export function useLiquidityBarData({
 
       // Calculate anchored active liquidity per tick
       const activeLiquidityByTick = calculateAnchoredLiquidityByTick({ ticksProcessed, activeTick, liquidity })
+      const poolTickSpacing = tickSpacing ?? TICK_SPACINGS[feeTier]
 
       const barData: LiquidityBarData[] = []
       for (let index = 0; index < ticksProcessed.length; index++) {
@@ -184,7 +185,7 @@ export function useLiquidityBarData({
 
         if (isActive && activeTick && currentTick) {
           activeRangeIndex = index
-          activeRangePercentage = (currentTick - t.tick) / TICK_SPACINGS[feeTier]
+          activeRangePercentage = 1 - (currentTick - t.tick) / poolTickSpacing
 
           price0 =
             version === ProtocolVersion.V3
@@ -196,7 +197,7 @@ export function useLiquidityBarData({
         const { amount0Locked, amount1Locked } = calculateTokensLocked({
           token0: sdkCurrencies.TOKEN0,
           token1: sdkCurrencies.TOKEN1,
-          tickSpacing: tickSpacing ?? TICK_SPACINGS[feeTier],
+          tickSpacing: poolTickSpacing,
           currentTick: currentTick ?? 0,
           amount: activeLiquidityByTick.get(t.tick) ?? JSBI.BigInt(0),
           tick: t,

@@ -3,7 +3,6 @@ import type { InAppNotification } from '@universe/api'
 import type { NotificationClickTarget } from '@universe/notifications'
 import { BannerTemplate } from 'notification-system/notification-renderer/BannerTemplate'
 import { memo, useMemo } from 'react'
-import { SOLANA_LOGO } from 'ui/src/assets'
 
 interface LowerLeftBannerNotificationProps {
   notification: InAppNotification
@@ -49,17 +48,10 @@ export const LowerLeftBannerNotification = memo(function LowerLeftBannerNotifica
     return undefined
   }, [content?.background])
 
-  const iconUrl = useMemo(() => {
-    if (notification.id === 'solana_promo_banner') {
-      return SOLANA_LOGO
-    }
-    return content?.iconLink ?? null
-  }, [notification.id, content?.iconLink])
-
   return (
     <BannerTemplate
       backgroundImageUrl={backgroundImageUrl}
-      iconUrl={iconUrl}
+      iconUrl={content?.iconLink}
       title={content?.title ?? ''}
       subtitle={content?.subtitle ?? ''}
       onClose={handleClose}

@@ -9,6 +9,7 @@ import PERMIT2_ABI from 'uniswap/src/abis/permit2'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { DAI, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { sleep } from 'utilities/src/time/timing'
 import { assume0xAddress } from 'utils/wagmi'
 import { type Address, erc20Abi } from 'viem'
 
@@ -233,12 +234,9 @@ export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: vo
       if (isTimeoutError(error)) {
         // Anvil timed out during snapshot, restart and retry
         console.error('Snapshot timeout, restarting Anvil...')
-        if (await getAnvilManager().restart()) {
-          await new Promise((resolve) => setTimeout(resolve, 2000))
-          snapshotId = await testAnvil.snapshot()
-        } else {
-          throw new Error('Failed to restart Anvil after snapshot timeout')
-        }
+        await getAnvilManager().restart()
+        await sleep(2000)
+        snapshotId = await testAnvil.snapshot()
       } else {
         throw error
       }
@@ -247,21 +245,30 @@ export const test = base.extend<{ anvil: AnvilClient; delegateToZeroAddress?: vo
     // Run the test
     await use(testAnvil)
 
+    // Check anvil health status
+    const isHealthy = await getAnvilManager().isHealthy()
+    if (!isHealthy) {
+      console.error('Anvil is not healthy after test, stopping...')
+      // Don't restart here - let the next test handle it
+      // This avoids race conditions between parallel tests
+      await getAnvilManager().stop()
+      return
+    }
+
     // Cleanup with auto-recovery
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (snapshotId) {
         await testAnvil.revert({ id: snapshotId })
       } else {
         await testAnvil.reset()
       }
     } catch (error) {
+      console.error('Cleanup failed:', error)
       if (isTimeoutError(error)) {
         console.error('Cleanup timeout, marking Anvil for restart...')
         // Don't restart here - let the next test handle it
         // This avoids race conditions between parallel tests
-      } else {
-        console.error('Cleanup failed:', error)
+      } else if (snapshotId) {
         try {
           await testAnvil.reset()
         } catch (resetError) {

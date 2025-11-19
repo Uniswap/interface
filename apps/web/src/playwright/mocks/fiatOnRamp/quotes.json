@@ -1,0 +1,69 @@
+{
+  "error": null,
+  "message": null,
+  "quotes": [
+    {
+      "countryCode": "US",
+      "destinationAmount": 0.03131402821107613,
+      "destinationCurrencyCode": "ETH",
+      "isMostRecentlyUsedProvider": false,
+      "serviceProvider": "STRIPE",
+      "serviceProviderDetails": {
+        "logos": {
+          "darkLogo": "https://images-serviceprovider.meld.io/STRIPE/short_logo_light.png",
+          "lightLogo": "https://images-serviceprovider.meld.io/STRIPE/short_logo_light.png"
+        },
+        "name": "Stripe",
+        "paymentMethods": ["Debit Card", "ACH"],
+        "serviceProvider": "STRIPE",
+        "supportUrl": "https://support.stripe.com/",
+        "url": "http://www.stripe.com"
+      },
+      "sourceAmount": 100,
+      "sourceCurrencyCode": "USD",
+      "totalFee": 2.19
+    },
+    {
+      "countryCode": "US",
+      "destinationAmount": 0.03034965,
+      "destinationCurrencyCode": "ETH",
+      "isMostRecentlyUsedProvider": true,
+      "serviceProvider": "COINBASEPAY",
+      "serviceProviderDetails": {
+        "logos": {
+          "darkLogo": "https://images-serviceprovider.meld.io/COINBASEPAY/short_logo_light.png",
+          "lightLogo": "https://images-serviceprovider.meld.io/COINBASEPAY/short_logo_light.png"
+        },
+        "name": "Coinbase",
+        "paymentMethods": ["Debit Card", "ACH"],
+        "serviceProvider": "COINBASEPAY",
+        "supportUrl": "https://help.coinbase.com/",
+        "url": "https://www.coinbase.com/"
+      },
+      "sourceAmount": 100,
+      "sourceCurrencyCode": "USD",
+      "totalFee": 2.83
+    },
+    {
+      "countryCode": "US",
+      "destinationAmount": 0.0303,
+      "destinationCurrencyCode": "ETH",
+      "isMostRecentlyUsedProvider": false,
+      "serviceProvider": "MOONPAY",
+      "serviceProviderDetails": {
+        "logos": {
+          "darkLogo": "https://images-serviceprovider.meld.io/MOONPAY/short_logo_light.png",
+          "lightLogo": "https://images-serviceprovider.meld.io/MOONPAY/short_logo_light.png"
+        },
+        "name": "MoonPay",
+        "serviceProvider": "MOONPAY",
+        "supportUrl": "https://www.moonpay.com/contact-us",
+        "url": "https://buy.moonpay.com",
+        "paymentMethods": ["Debit Card", "Apple Pay", "Google Pay", "PayPal"]
+      },
+      "sourceAmount": 100,
+      "sourceCurrencyCode": "USD",
+      "totalFee": 5.040000000000006
+    }
+  ]
+}

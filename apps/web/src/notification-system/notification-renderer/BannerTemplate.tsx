@@ -5,13 +5,13 @@ import { zIndexes } from 'ui/src/theme'
 
 const BANNER_WIDTH = 260
 const BANNER_HEIGHT = 150
-const GRADIENT_BACKGROUND_HEIGHT = 75 // Vertical midpoint of the banner
+const GRADIENT_BACKGROUND_HEIGHT = 64 // Vertical midpoint of the thumbnail
 const ICON_SIZE = 40
 
 const BannerContainer = styled(Flex, {
   borderRadius: '$rounded16',
   width: BANNER_WIDTH,
-  height: BANNER_HEIGHT,
+  minHeight: BANNER_HEIGHT,
   shadowColor: '$shadowColor',
   shadowOffset: { width: 0, height: 4 },
   shadowOpacity: 0.4,
@@ -34,7 +34,7 @@ const GradientBackground = styled(Flex, {
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
-  mask: 'linear-gradient(180deg, rgba(0,0,0,0.54) 0%, rgba(0,0,0,0.12) 100%)',
+  mask: 'linear-gradient(180deg, rgba(0,0,0,0.48) 0%, rgba(0,0,0,0) 100%)',
 })
 
 const IconContainer = styled(Flex, {
@@ -44,13 +44,12 @@ const IconContainer = styled(Flex, {
   backgroundPosition: 'center',
   backgroundRepeat: 'no-repeat',
   borderRadius: '$rounded6',
-  marginTop: '$spacing16',
 })
 
 const ContentWrapper = styled(Flex, {
-  gap: '$spacing8',
   flex: 1,
-  justifyContent: 'flex-end',
+  justifyContent: 'space-between',
+  paddingTop: 16,
 })
 
 function BannerXButton({ handleClose }: { handleClose: () => void }) {
@@ -111,20 +110,26 @@ export function BannerTemplate({
       {backgroundImageUrl && <GradientBackground backgroundImage={`url(${backgroundImageUrl})`} />}
 
       <ContentWrapper>
-        {iconUrl && <IconContainer backgroundImage={`url(${iconUrl})`} />}
+        <Flex gap="$spacing8">
+          {iconUrl ? (
+            <IconContainer backgroundImage={`url(${iconUrl})`} />
+          ) : (
+            <Flex width={ICON_SIZE} height={ICON_SIZE} backgroundColor="transparent" /> // placeholder icon
+          )}
 
-        {children || (
-          <Flex gap="$spacing4">
-            <Text variant="body3" color="$neutral1">
-              {title}
-            </Text>
-            {subtitle && (
-              <Text variant="body4" color="$neutral2">
-                {subtitle}
+          {children || (
+            <Flex gap="$spacing4">
+              <Text variant="body3" color="$neutral1">
+                {title}
               </Text>
-            )}
-          </Flex>
-        )}
+              {subtitle && (
+                <Text variant="body4" color="$neutral2">
+                  {subtitle}
+                </Text>
+              )}
+            </Flex>
+          )}
+        </Flex>
       </ContentWrapper>
     </BannerContainer>
   )

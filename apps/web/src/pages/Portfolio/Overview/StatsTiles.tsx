@@ -1,7 +1,9 @@
 import { ValueWithFadedDecimals } from 'pages/Portfolio/components/ValueWithFadedDecimals/ValueWithFadedDecimals'
 import { useSwapsThisWeek } from 'pages/Portfolio/Overview/hooks/useSwapsThisWeek'
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { EM_DASH, Flex, styled, Text, useMedia } from 'ui/src'
+import { ActivityRenderData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -16,7 +18,7 @@ const StatsContainer = styled(Flex, {
   variants: {
     singleRow: {
       true: {
-        flexDirection: 'row',
+        width: '50%',
       },
     },
   } as const,
@@ -24,35 +26,24 @@ const StatsContainer = styled(Flex, {
 
 const StatsGroup1 = styled(Flex, {
   flexDirection: 'row',
-  borderColor: BORDER_COLOR,
-  borderBottomWidth: 1,
   variants: {
     singleRow: {
       true: {
-        borderBottomWidth: 0,
-        borderRightWidth: 1,
-        width: '50%',
+        width: '100%',
       },
     },
   } as const,
 })
 
-const StatsGroup2 = styled(Flex, {
-  flexDirection: 'row',
-  variants: {
-    singleRow: {
-      true: {
-        width: '50%',
-      },
-    },
-  } as const,
-})
+interface OverviewStatsTilesProps {
+  activityData: ActivityRenderData
+}
 
-export function OverviewStatsTiles() {
+export const OverviewStatsTiles = memo(function OverviewStatsTiles({ activityData }: OverviewStatsTilesProps) {
   const { t } = useTranslation()
   const media = useMedia()
   const isSingleRow = !!media.xl && !media.md
-  const { count: swapCount, totalVolumeUSD, isLoading } = useSwapsThisWeek()
+  const { count: swapCount, totalVolumeUSD, isLoading } = useSwapsThisWeek(activityData)
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
   const hasVolumeData = totalVolumeUSD > 0
@@ -78,20 +69,6 @@ export function OverviewStatsTiles() {
           />
         </Flex>
       </StatsGroup1>
-      <StatsGroup2 singleRow={isSingleRow}>
-        <Flex borderRightWidth={BORDER_WIDTH} borderColor={BORDER_COLOR} padding="$spacing16" width="50%">
-          <Text variant="body3" color="$neutral2">
-            {t('portfolio.overview.stats.averageSwapSize')}
-          </Text>
-          <ValueWithFadedDecimals textProps={{ variant: 'heading3', color: '$neutral1' }} value={EM_DASH} />
-        </Flex>
-        <Flex padding="$spacing16" width="50%">
-          <Text variant="body3" color="$neutral2">
-            {t('portfolio.overview.stats.totalSwapVolume')}
-          </Text>
-          <ValueWithFadedDecimals textProps={{ variant: 'heading3', color: '$neutral1' }} value={EM_DASH} />
-        </Flex>
-      </StatsGroup2>
     </StatsContainer>
   )
-}
+})

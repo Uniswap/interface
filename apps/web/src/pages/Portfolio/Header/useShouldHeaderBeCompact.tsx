@@ -15,7 +15,7 @@ export function useShouldHeaderBeCompact(scrollY?: number): boolean {
       if (!prevIsCompact && scrollY > 120) {
         return true
       }
-      if (prevIsCompact && scrollY < 80) {
+      if (prevIsCompact && scrollY < 60) {
         return false
       }
       return prevIsCompact

@@ -7,13 +7,8 @@ import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRe
 import { handleExternallySubmittedUniswapXOrder } from 'src/app/features/dappRequests/handleUniswapX'
 import { useIsDappRequestConfirming } from 'src/app/features/dappRequests/hooks'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/shared'
-import {
-  DappRequest,
-  isBatchedSwapRequest,
-  isConnectionRequest,
-} from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { DappRequest, isBatchedSwapRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { AnimatePresence, Button, Flex, GetThemeValueForKey, styled, Text } from 'ui/src'
-import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappRequestType } from 'uniswap/src/features/dappRequests/types'
@@ -22,7 +17,6 @@ import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
-import { formatDappURL } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useThrottledCallback } from 'utilities/src/react/useThrottledCallback'
@@ -36,6 +30,7 @@ import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface DappRequestHeaderProps {
   title: string
+  verificationStatus?: DappVerificationStatus
   headerIcon?: JSX.Element
 }
 
@@ -84,6 +79,7 @@ export const AnimatedPane = styled(Flex, {
 export function DappRequestContent({
   chainId,
   title,
+  verificationStatus,
   headerIcon,
   confirmText,
   connectedAccountAddress,
@@ -98,10 +94,8 @@ export function DappRequestContent({
   disableConfirm,
   contentHorizontalPadding = '$spacing12',
 }: PropsWithChildren<DappRequestContentProps>): JSX.Element {
-  const { forwards, currentIndex, dappIconUrl, dappUrl, request } = useDappRequestQueueContext()
+  const { forwards, currentIndex, dappIconUrl, dappUrl } = useDappRequestQueueContext()
   const hostname = extractNameFromUrl(dappUrl).toUpperCase()
-  const showVerified =
-    request && isConnectionRequest(request.dappRequest) && formatDappURL(dappUrl) === UNISWAP_WEB_HOSTNAME
 
   return (
     <>
@@ -113,7 +107,7 @@ export function DappRequestContent({
             icon: dappIconUrl,
           }}
           title={title}
-          verificationStatus={showVerified ? DappVerificationStatus.Verified : undefined}
+          verificationStatus={verificationStatus}
           headerIcon={headerIcon}
         />
       </Flex>

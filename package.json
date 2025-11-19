@@ -18,6 +18,7 @@
     "@swc-node/register": "1.9.1",
     "@swc/core": "1.5.7",
     "@swc/helpers": "0.5.11",
+    "@types/bun": "1.3.1",
     "@types/inquirer": "9.0.8",
     "@types/node": "22.13.1",
     "@typescript-eslint/eslint-plugin": "6.20.0",
@@ -88,7 +89,7 @@
     "@typescript-eslint/eslint-plugin": "6.20.0",
     "@typescript-eslint/parser": "6.20.0",
     "@uniswap/router-sdk": "2.0.2",
-    "@uniswap/sdk-core": "7.7.2",
+    "@uniswap/sdk-core": "7.9.0",
     "@uniswap/v2-sdk": "4.15.2",
     "@wxt-dev/browser": "0.1.4",
     "@xmldom/xmldom": "0.7.7",
@@ -145,7 +146,7 @@
     "clean": "bash ./scripts/clean.sh",
     "lfg": "bun run g:prepare && bun run mobile env:local:download && bun run extension env:local:download && bun run g:build && bun run mobile pod && bun run mobile ios",
     "local:check": "./scripts/local-version-check.sh",
-    "preinstall": "./scripts/check-bun-version.sh",
+    "preinstall": "./scripts/check-runtime-versions.sh",
     "postinstall": "lefthook install && bun g:prepare",
     "g:build": "nx run-many -t build --parallel",
     "g:build:storybook": "nx run-many -t storybook:build --skip-nx-cache --parallel",
@@ -192,7 +193,8 @@
     "wallet:release:setup-cherry-pick-branches": "bunx tsx ./scripts/wallet-releases/generate-cherry-pick-branches-for-release.ts",
     "wallet:release:generate-cherry-pick-commit-command": "bunx tsx ./scripts/wallet-releases/generate-cherry-pick-commit-command.ts",
     "gating": "bun run --cwd packages/gating",
-    "notifications": "bun run --cwd packages/notifications"
+    "notifications": "bun run --cwd packages/notifications",
+    "cli": "bun run --cwd apps/cli"
   },
   "workspaces": ["apps/*", "packages/*", "config/*", "tools/uniswap-nx"],
   "patchedDependencies": {

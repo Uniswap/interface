@@ -26,7 +26,7 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "noUncheckedIndexedAccess": true,
-    "target": "es2015",
+    "target": "esnext",
     "module": "esnext",
     "lib": [
       "es2022",
@@ -39,33 +39,16 @@
       "node"
     ],
     "paths": {
-      "@universe/api/*": [
-        "packages/api/*"
-      ],
-      "@universe/config/*": [
-        "packages/config/*"
-      ],
-      "@universe/gating/*": [
-        "packages/gating/*"
-      ],
-      "@universe/notifications/*": [
-        "packages/notifications/*"
-      ],
-      "@universe/sessions/*": [
-        "packages/sessions/*"
-      ],
-      "ui/*": [
-        "packages/ui/*"
-      ],
-      "uniswap/*": [
-        "packages/uniswap/*"
-      ],
-      "utilities/*": [
-        "packages/utilities/*"
-      ],
-      "wallet/*": [
-        "packages/wallet/*"
-      ]
+      "@universe/api/*": ["packages/api/*"],
+      "@universe/config/*": ["packages/config/*"],
+      "@universe/gating/*": ["packages/gating/*"],
+      "@universe/notifications/*": ["packages/notifications/*"],
+      "@universe/sessions/*": ["packages/sessions/*"],
+      "ui/*": ["packages/ui/*"],
+      "uniswap/*": ["packages/uniswap/*"],
+      "utilities/*": ["packages/utilities/*"],
+      "wallet/*": ["packages/wallet/*"],
+      "@universe/cli/*": ["apps/cli/*"]
     }
   }
 }

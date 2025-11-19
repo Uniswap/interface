@@ -1,4 +1,4 @@
-import type { InAppNotification } from '@universe/api'
+import { type InAppNotification, OnClickAction } from '@universe/api'
 import type { NotificationDataSource } from '@universe/notifications/src/notification-data-source/NotificationDataSource'
 import type { NotificationProcessor } from '@universe/notifications/src/notification-processor/NotificationProcessor'
 import type { NotificationRenderer } from '@universe/notifications/src/notification-renderer/NotificationRenderer'
@@ -7,6 +7,7 @@ import type {
   NotificationTracker,
   TrackingMetadata,
 } from '@universe/notifications/src/notification-tracker/NotificationTracker'
+import { sleep } from 'utilities/src/time/timing'
 import { describe, expect, it, vi } from 'vitest'
 
 describe('createNotificationSystem', () => {
@@ -99,6 +100,72 @@ describe('createNotificationSystem', () => {
     }
   }
 
+  // Helper function to create a notification with specific button configuration
+  function createNotificationWithButton(params: {
+    id: string
+    timestamp: number
+    buttonLabel: string
+    buttonActions: OnClickAction[]
+    buttonLink?: string
+  }): InAppNotification {
+    return {
+      id: params.id,
+      notificationName: params.id,
+      timestamp: params.timestamp,
+      content: {
+        style: 'CONTENT_STYLE_MODAL',
+        title: `${params.id}-title`,
+        subtitle: '',
+        version: 0,
+        buttons: [
+          {
+            label: params.buttonLabel,
+            onClick: {
+              onClick: params.buttonActions,
+              onClickLink: params.buttonLink,
+            },
+          },
+        ],
+      },
+      metaData: {},
+      userId: 'user-1',
+    } as unknown as InAppNotification
+  }
+
+  // Helper function to create a notification with background onClick
+  function createNotificationWithBackground(params: {
+    id: string
+    timestamp: number
+    buttonLabel: string
+    buttonActions: OnClickAction[]
+    backgroundActions: OnClickAction[]
+    backgroundLink?: string
+  }): InAppNotification {
+    return {
+      id: params.id,
+      notificationName: params.id,
+      timestamp: params.timestamp,
+      content: {
+        style: 'CONTENT_STYLE_MODAL',
+        title: `${params.id}-title`,
+        buttons: [
+          {
+            label: params.buttonLabel,
+            onClick: { onClick: params.buttonActions },
+          },
+        ],
+        background: {
+          backgroundOnClick: {
+            onClick: params.backgroundActions,
+            onClickLink: params.backgroundLink,
+          },
+        },
+      },
+      metaData: {},
+      userId: 'user-1',
+    } as unknown as InAppNotification
+  }
+
   describe('initialization', () => {
     it('creates a notification system with required methods', () => {
       const { dataSource } = createMockDataSource()
@@ -168,7 +235,7 @@ describe('createNotificationSystem', () => {
       triggerNotifications(notifications)
 
       // Wait for async handling
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       expect(processor.process).toHaveBeenCalledWith(notifications)
       expect(getRenderedNotifications()).toHaveLength(2)
@@ -198,7 +265,7 @@ describe('createNotificationSystem', () => {
       triggerNotifications(notifications)
 
       // Wait for async handling
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       // Only notif-2 should be rendered (notif-1 was already processed)
       expect(getRenderedNotifications()).toHaveLength(1)
@@ -225,7 +292,7 @@ describe('createNotificationSystem', () => {
       triggerNotifications(notifications)
 
       // Wait for async handling
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       expect(renderer.canRender).toHaveBeenCalled()
       expect(getRenderedNotifications()).toHaveLength(0)
@@ -250,10 +317,10 @@ describe('createNotificationSystem', () => {
 
       // Trigger same notification twice
       triggerNotifications(notifications)
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       triggerNotifications(notifications)
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       // Should only be rendered once
       expect(getRenderedNotifications()).toHaveLength(1)
@@ -276,10 +343,10 @@ describe('createNotificationSystem', () => {
       await system.initialize()
 
       trigger1([createMockNotification({ name: 'notif-1', timestamp: 1000, id: 'id-1' })])
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       trigger2([createMockNotification({ name: 'notif-2', timestamp: 2000, id: 'id-2' })])
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       expect(getRenderedNotifications()).toHaveLength(2)
     })
@@ -302,7 +369,7 @@ describe('createNotificationSystem', () => {
       await system.initialize()
       system.onNotificationClick('id-1', { type: 'dismiss' })
       // Wait for async operations to complete
-      await new Promise((resolve) => setTimeout(resolve, 0))
+      await sleep(0)
 
       const trackedCalls = getTrackedCalls()
       expect(trackedCalls).toHaveLength(0) // Dismiss should NOT track
@@ -326,13 +393,13 @@ describe('createNotificationSystem', () => {
       const notifications = [createMockNotification({ name: 'notif-1', timestamp: 1000, id: 'id-1' })]
 
       triggerNotifications(notifications)
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       expect(getCleanupCallCount()).toBe(0)
 
       system.onNotificationClick('id-1', { type: 'dismiss' })
       // Wait for async cleanup to complete
-      await new Promise((resolve) => setTimeout(resolve, 0))
+      await sleep(0)
 
       expect(getCleanupCallCount()).toBe(1)
     })
@@ -355,7 +422,7 @@ describe('createNotificationSystem', () => {
       // Dismiss notification that was never rendered
       system.onNotificationClick('non-existent-id', { type: 'dismiss' })
       // Wait for async operations to complete
-      await new Promise((resolve) => setTimeout(resolve, 0))
+      await sleep(0)
 
       // Should not throw and should NOT track (dismiss doesn't track)
       expect(tracker.track).not.toHaveBeenCalled()
@@ -391,16 +458,16 @@ describe('createNotificationSystem', () => {
 
       // Render notification
       triggerNotifications([notification])
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
       expect(getRenderedNotifications().length).toBe(1)
 
       // Dismiss it (dismiss doesn't track)
       system.onNotificationClick('id-1', { type: 'dismiss' })
-      await new Promise((resolve) => setTimeout(resolve, 0))
+      await sleep(0)
 
       // Try to render it again - SHOULD render because dismiss doesn't track
       triggerNotifications([notification])
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       expect(getRenderedNotifications().length).toBe(2) // Rendered twice!
     })
@@ -424,7 +491,7 @@ describe('createNotificationSystem', () => {
 
       const notification = createMockNotification({ name: 'notif-1', timestamp: 1000, id: 'id-1' })
       triggerNotifications([notification])
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       // Call onRenderFailed instead of onDismiss
       system.onRenderFailed('id-1')
@@ -463,7 +530,7 @@ describe('createNotificationSystem', () => {
 
       // First render
       triggerNotifications([notification])
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
       expect(getRenderedNotifications()).toHaveLength(1)
 
       // Mark as failed render
@@ -471,7 +538,7 @@ describe('createNotificationSystem', () => {
 
       // Should be able to render again (not in processedIds)
       triggerNotifications([notification])
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       // Should be rendered twice total (once initially, once after failed render cleanup)
       expect(getRenderedNotifications()).toHaveLength(2)
@@ -561,7 +628,7 @@ describe('createNotificationSystem', () => {
       ]
 
       triggerNotifications(notifications)
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       expect(getCleanupCallCount()).toBe(0)
 
@@ -604,7 +671,7 @@ describe('createNotificationSystem', () => {
       await system.initialize()
 
       triggerNotifications([])
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       expect(getRenderedNotifications()).toHaveLength(0)
     })
@@ -627,7 +694,7 @@ describe('createNotificationSystem', () => {
       const notifications = [createMockNotification({ name: 'notif-1', timestamp: 1000, id: 'id-1' })]
 
       triggerNotifications(notifications)
-      await new Promise((resolve) => setTimeout(resolve, 10))
+      await sleep(10)
 
       expect(getRenderedNotifications()).toHaveLength(0)
     })
@@ -646,6 +713,292 @@ describe('createNotificationSystem', () => {
 
       await expect(system.initialize()).resolves.not.toThrow()
       expect(() => system.destroy()).not.toThrow()
+    })
+  })
+
+  describe('downstream chain tracking', () => {
+    it('tracks all downstream notifications when a notification is acknowledged', async () => {
+      const { dataSource, triggerNotifications } = createMockDataSource()
+      const { tracker, getTrackedCalls } = createMockTracker()
+
+      // Create chain: A → B → C
+      const notificationC = createNotificationWithButton({
+        id: 'notif-C',
+        timestamp: 3000,
+        buttonLabel: 'Dismiss',
+        buttonActions: [OnClickAction.DISMISS],
+      })
+
+      const notificationB = createNotificationWithButton({
+        id: 'notif-B',
+        timestamp: 2000,
+        buttonLabel: 'Show C',
+        buttonActions: [OnClickAction.POPUP, OnClickAction.DISMISS],
+        buttonLink: 'notif-C',
+      })
+
+      const notificationA = createNotificationWithButton({
+        id: 'notif-A',
+        timestamp: 1000,
+        buttonLabel: 'Show B',
+        buttonActions: [OnClickAction.POPUP, OnClickAction.ACK],
+        buttonLink: 'notif-B',
+      })
+
+      const processor: NotificationProcessor = {
+        process: vi.fn(async () => ({
+          primary: [notificationA],
+          chained: new Map([
+            ['notif-B', notificationB],
+            ['notif-C', notificationC],
+          ]),
+        })),
+      }
+      const { renderer } = createMockRenderer()
+
+      const system = createNotificationSystem({
+        dataSources: [dataSource],
+        tracker,
+        processor,
+        renderer,
+      })
+
+      await system.initialize()
+
+      triggerNotifications([notificationA, notificationB, notificationC])
+      await sleep(10)
+
+      // Click the button that has ACK action (triggers tracking)
+      system.onNotificationClick('notif-A', { type: 'button', index: 0 })
+      await sleep(10)
+
+      const trackedCalls = getTrackedCalls()
+      // Should track A, B, and C
+      expect(trackedCalls).toHaveLength(3)
+      expect(trackedCalls.map((c) => c.id)).toContain('notif-A')
+      expect(trackedCalls.map((c) => c.id)).toContain('notif-B')
+      expect(trackedCalls.map((c) => c.id)).toContain('notif-C')
+    })
+
+    it('tracks only the specific chain when multiple independent chains exist', async () => {
+      const { dataSource, triggerNotifications } = createMockDataSource()
+      const { tracker, getTrackedCalls } = createMockTracker()
+
+      // Create two independent chains: A → B and C → D
+      const notificationD = createNotificationWithButton({
+        id: 'notif-D',
+        timestamp: 4000,
+        buttonLabel: 'Dismiss',
+        buttonActions: [OnClickAction.DISMISS],
+      })
+
+      const notificationC = createNotificationWithButton({
+        id: 'notif-C',
+        timestamp: 3000,
+        buttonLabel: 'Show D',
+        buttonActions: [OnClickAction.POPUP, OnClickAction.ACK],
+        buttonLink: 'notif-D',
+      })
+
+      const notificationB = createNotificationWithButton({
+        id: 'notif-B',
+        timestamp: 2000,
+        buttonLabel: 'Dismiss',
+        buttonActions: [OnClickAction.DISMISS],
+      })
+
+      const notificationA = createNotificationWithButton({
+        id: 'notif-A',
+        timestamp: 1000,
+        buttonLabel: 'Show B',
+        buttonActions: [OnClickAction.POPUP, OnClickAction.ACK],
+        buttonLink: 'notif-B',
+      })
+
+      const processor: NotificationProcessor = {
+        process: vi.fn(async () => ({
+          primary: [notificationA, notificationC],
+          chained: new Map([
+            ['notif-B', notificationB],
+            ['notif-D', notificationD],
+          ]),
+        })),
+      }
+      const { renderer } = createMockRenderer()
+
+      const system = createNotificationSystem({
+        dataSources: [dataSource],
+        tracker,
+        processor,
+        renderer,
+      })
+
+      await system.initialize()
+
+      triggerNotifications([notificationA, notificationB, notificationC, notificationD])
+      await sleep(10)
+
+      // Acknowledge notification A (should track A and B, but NOT C or D)
+      system.onNotificationClick('notif-A', { type: 'button', index: 0 })
+      await sleep(10)
+
+      const trackedCalls = getTrackedCalls()
+      expect(trackedCalls).toHaveLength(2)
+      expect(trackedCalls.map((c) => c.id)).toContain('notif-A')
+      expect(trackedCalls.map((c) => c.id)).toContain('notif-B')
+      expect(trackedCalls.map((c) => c.id)).not.toContain('notif-C')
+      expect(trackedCalls.map((c) => c.id)).not.toContain('notif-D')
+    })
+
+    it('tracks notifications with background popup actions', async () => {
+      const { dataSource, triggerNotifications } = createMockDataSource()
+      const { tracker, getTrackedCalls } = createMockTracker()
+
+      const notificationB = createNotificationWithButton({
+        id: 'notif-B',
+        timestamp: 2000,
+        buttonLabel: 'Dismiss',
+        buttonActions: [OnClickAction.DISMISS],
+      })
+
+      const notificationA = createNotificationWithBackground({
+        id: 'notif-A',
+        timestamp: 1000,
+        buttonLabel: 'Acknowledge',
+        buttonActions: [OnClickAction.ACK],
+        backgroundActions: [OnClickAction.POPUP],
+        backgroundLink: 'notif-B',
+      })
+
+      const processor: NotificationProcessor = {
+        process: vi.fn(async () => ({
+          primary: [notificationA],
+          chained: new Map([['notif-B', notificationB]]),
+        })),
+      }
+      const { renderer } = createMockRenderer()
+
+      const system = createNotificationSystem({
+        dataSources: [dataSource],
+        tracker,
+        processor,
+        renderer,
+      })
+
+      await system.initialize()
+
+      triggerNotifications([notificationA, notificationB])
+      await sleep(10)
+
+      // Click button with ACK action
+      system.onNotificationClick('notif-A', { type: 'button', index: 0 })
+      await sleep(10)
+
+      const trackedCalls = getTrackedCalls()
+      // Should track both A and B (B is referenced via background popup)
+      expect(trackedCalls).toHaveLength(2)
+      expect(trackedCalls.map((c) => c.id)).toContain('notif-A')
+      expect(trackedCalls.map((c) => c.id)).toContain('notif-B')
+    })
+
+    it('handles circular references gracefully without infinite loops', async () => {
+      const { dataSource, triggerNotifications } = createMockDataSource()
+      const { tracker, getTrackedCalls } = createMockTracker()
+
+      // Create circular chain: A → B → A (pathological case)
+      const notificationB = createNotificationWithButton({
+        id: 'notif-B',
+        timestamp: 2000,
+        buttonLabel: 'Show A',
+        buttonActions: [OnClickAction.POPUP, OnClickAction.DISMISS],
+        buttonLink: 'notif-A',
+      })
+
+      const notificationA = createNotificationWithButton({
+        id: 'notif-A',
+        timestamp: 1000,
+        buttonLabel: 'Show B',
+        buttonActions: [OnClickAction.POPUP, OnClickAction.ACK],
+        buttonLink: 'notif-B',
+      })
+
+      const processor: NotificationProcessor = {
+        process: vi.fn(async () => ({
+          primary: [notificationA],
+          chained: new Map([['notif-B', notificationB]]),
+        })),
+      }
+      const { renderer } = createMockRenderer()
+
+      const system = createNotificationSystem({
+        dataSources: [dataSource],
+        tracker,
+        processor,
+        renderer,
+      })
+
+      await system.initialize()
+
+      triggerNotifications([notificationA, notificationB])
+      await sleep(10)
+
+      // Acknowledge A - should handle circular reference without hanging
+      system.onNotificationClick('notif-A', { type: 'button', index: 0 })
+      await sleep(10)
+
+      const trackedCalls = getTrackedCalls()
+      // Should track A and B exactly once each (no duplicates from circular reference)
+      expect(trackedCalls).toHaveLength(2)
+      expect(trackedCalls.filter((c) => c.id === 'notif-A')).toHaveLength(1)
+      expect(trackedCalls.filter((c) => c.id === 'notif-B')).toHaveLength(1)
+    })
+
+    it('does not track downstream notifications when notification is dismissed', async () => {
+      const { dataSource, triggerNotifications } = createMockDataSource()
+      const { tracker, getTrackedCalls } = createMockTracker()
+
+      const notificationB = createNotificationWithButton({
+        id: 'notif-B',
+        timestamp: 2000,
+        buttonLabel: 'Dismiss',
+        buttonActions: [OnClickAction.DISMISS],
+      })
+
+      const notificationA = createNotificationWithButton({
+        id: 'notif-A',
+        timestamp: 1000,
+        buttonLabel: 'Show B',
+        buttonActions: [OnClickAction.POPUP, OnClickAction.DISMISS],
+        buttonLink: 'notif-B',
+      })
+
+      const processor: NotificationProcessor = {
+        process: vi.fn(async () => ({
+          primary: [notificationA],
+          chained: new Map([['notif-B', notificationB]]),
+        })),
+      }
+      const { renderer } = createMockRenderer()
+
+      const system = createNotificationSystem({
+        dataSources: [dataSource],
+        tracker,
+        processor,
+        renderer,
+      })
+
+      await system.initialize()
+
+      triggerNotifications([notificationA, notificationB])
+      await sleep(10)
+
+      // Dismiss notification (has DISMISS but not ACK)
+      system.onNotificationClick('notif-A', { type: 'button', index: 0 })
+      await sleep(10)
+
+      const trackedCalls = getTrackedCalls()
+      // Should NOT track anything (DISMISS doesn't track)
+      expect(trackedCalls).toHaveLength(0)
     })
   })
 })

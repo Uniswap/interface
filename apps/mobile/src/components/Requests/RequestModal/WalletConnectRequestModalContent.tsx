@@ -59,6 +59,7 @@ type WalletConnectRequestModalContentProps = {
   hasSufficientFunds: boolean
   request: WalletConnectSigningRequest
   isBlocked: boolean
+  showSmartWalletActivation?: boolean
 }
 
 export function WalletConnectRequestModalContent({
@@ -66,6 +67,7 @@ export function WalletConnectRequestModalContent({
   hasSufficientFunds,
   isBlocked,
   gasFee,
+  showSmartWalletActivation,
 }: WalletConnectRequestModalContentProps): JSX.Element {
   const chainId = request.chainId
   const permitInfo = getPermitInfo(request)
@@ -107,6 +109,7 @@ export function WalletConnectRequestModalContent({
             }
             showNetworkLogo={hasGasFee}
             requestMethod={request.type}
+            showSmartWalletActivation={showSmartWalletActivation}
           />
           <AddressFooter activeAccountAddress={request.account} px="$spacing8" />
         </Flex>

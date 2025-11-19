@@ -100,13 +100,22 @@ export function* plan(params: PlanParams) {
         case TransactionStepType.SwapTransaction:
         case TransactionStepType.SwapTransactionAsync: {
           requireRouting(trade, [TradingApi.Routing.CLASSIC, TradingApi.Routing.BRIDGE, TradingApi.Routing.CHAINED])
+
+          const augmentedAnalytics = {
+            ...analytics,
+            // Augment analytics with plan context for chained actions
+            plan_id: planId,
+            step_index: currentStep.stepIndex,
+            is_final_step: isLastStep,
+          }
+
           hash = yield* call(handleSwapTransactionStep, {
             account,
             signature,
             step: currentStep,
             setCurrentStep,
             trade,
-            analytics,
+            analytics: augmentedAnalytics,
             allowDuplicativeTx: true,
           })
           break

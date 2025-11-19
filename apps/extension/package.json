@@ -17,7 +17,7 @@
     "@types/uuid": "9.0.1",
     "@uniswap/analytics-events": "2.43.0",
     "@uniswap/client-embeddedwallet": "0.0.16",
-    "@uniswap/sdk-core": "7.7.2",
+    "@uniswap/sdk-core": "7.9.0",
     "@uniswap/uniswapx-sdk": "3.0.0-beta.7",
     "@uniswap/universal-router-sdk": "4.19.5",
     "@uniswap/v3-sdk": "3.25.2",

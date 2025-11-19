@@ -59,6 +59,24 @@ export {
 } from '@universe/api/src/clients/jupiter/createJupiterApiClient'
 export type { JupiterExecuteResponse, JupiterOrderResponse } from '@universe/api/src/clients/jupiter/types'
 
+// Blockaid API
+export {
+  createBlockaidApiClient,
+  type BlockaidApiClient,
+} from '@universe/api/src/clients/blockaid/createBlockaidApiClient'
+export {
+  getBlockaidScanSiteResponseSchema,
+  getBlockaidScanTransactionRequestSchema,
+  getBlockaidScanTransactionResponseSchema,
+  DappVerificationStatus,
+  type BlockaidScanSiteRequest,
+  type BlockaidScanSiteResponse,
+  type BlockaidScanSiteHitResponse,
+  type BlockaidScanSiteMissResponse,
+  type BlockaidScanTransactionRequest,
+  type BlockaidScanTransactionResponse,
+} from '@universe/api/src/clients/blockaid/types'
+
 // Trading API
 export * as TradingApi from '@universe/api/src/clients/trading/__generated__'
 export {
@@ -92,6 +110,14 @@ export {
   type GasEstimateLegacy,
   type GasStrategy,
 } from '@universe/api/src/clients/trading/types'
+
+// Liquidity Service API
+export {
+  createLiquidityServiceClient,
+  LIQUIDITY_PATHS,
+  type LiquidityServiceClient,
+  type LiquidityServiceClientContext,
+} from '@universe/api/src/clients/liquidity/createLiquidityServiceClient'
 
 // Unitags API
 export {
@@ -172,7 +198,7 @@ export {
 
 // Session API
 export { ApiInit } from '@universe/api/src/components/ApiInit'
-export { getSessionService } from '@universe/api/src/getSessionService'
+export { provideSessionService } from '@universe/api/src/provideSessionService'
 
 export type {
   UseQueryApiHelperHookArgs,
@@ -190,3 +216,5 @@ export {
 export { getTransport } from '@universe/api/src/transport'
 
 export { getEntryGatewayUrl } from '@universe/api/src/getEntryGatewayUrl'
+
+export { provideUniswapIdentifierService } from '@universe/api/src/provideUniswapIdentifierService'

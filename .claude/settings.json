@@ -1,20 +1,32 @@
 {
-    "permissions": {
-      "deny": [
-        "Read(**/.env)",
-        "Edit(**/.env)",
-        "Read(~/.aws/**)",
-        "Edit(~/.aws/**)",
-        "Read(~/.ssh/**)",
-        "Edit(~/.ssh/**)",
-        "Read(~/.gnupg/**)",
-        "Edit(~/.gnupg/**)",
-        "Read(~/.git-credentials)",
-        "Edit(~/.git-credentials)",
-        "Read($HOME/Library/Keychains/**)",
-        "Edit($HOME/Library/Keychains/**)",
-        "Read(/private/etc/**)",
-        "Edit(/private/etc/**)"
-      ]
-    }
+  "permissions": {
+    "deny": [
+      "Read(**/.env)",
+      "Edit(**/.env)",
+      "Read(~/.aws/**)",
+      "Edit(~/.aws/**)",
+      "Read(~/.ssh/**)",
+      "Edit(~/.ssh/**)",
+      "Read(~/.gnupg/**)",
+      "Edit(~/.gnupg/**)",
+      "Read(~/.git-credentials)",
+      "Edit(~/.git-credentials)",
+      "Read($HOME/Library/Keychains/**)",
+      "Edit($HOME/Library/Keychains/**)",
+      "Read(/private/etc/**)",
+      "Edit(/private/etc/**)"
+    ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/skill-activation-prompt.sh"
+          }
+        ]
+      }
+    ]
   }
+}

@@ -1,6 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { isNativeCurrency } from '@uniswap/universal-router-sdk'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -76,8 +75,6 @@ export function useTokenContextMenuOptions({
 }: TokenMenuParams): MenuOptionItemWithId[] {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-
-  const isDataReportingEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
 
   const { defaultChainId } = useEnabledChains()
   const activeAddresses = useActiveAddresses()
@@ -247,7 +244,7 @@ export function useTokenContextMenuOptions({
       })
     }
 
-    if (isDataReportingEnabled && openReportDataIssueModal) {
+    if (openReportDataIssueModal) {
       actions.push({
         id: TokenMenuActionType.DataIssue,
         label: t('reporting.token.data.title'),
@@ -256,7 +253,7 @@ export function useTokenContextMenuOptions({
       })
     }
 
-    if (isDataReportingEnabled && !isNative) {
+    if (!isNative) {
       actions.push({
         id: TokenMenuActionType.ReportToken,
         label: t('reporting.token.report.title'),
@@ -294,7 +291,6 @@ export function useTokenContextMenuOptions({
     copyAddressToClipboard,
     openReportTokenModal,
     openReportDataIssueModal,
-    isDataReportingEnabled,
   ])
 
   return menuActions

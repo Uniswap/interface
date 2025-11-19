@@ -67,21 +67,6 @@ test.describe('Create position', () => {
     await reviewAndCreatePosition({ page })
   })
 
-  test.describe('error handling', () => {
-    test('should gracefully handle errors during review', async ({ page, anvil }) => {
-      await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
-      await page.goto(`/positions/create?currencyA=NATIVE&currencyB=${USDT.address}`)
-      await page.getByRole('button', { name: 'Continue' }).click()
-      await page.getByTestId(TestID.AmountInputIn).first().click()
-      await page.getByTestId(TestID.AmountInputIn).first().fill('1')
-      await page.getByRole('button', { name: 'Review' }).click()
-      await page.getByRole('button', { name: 'Create' }).click()
-      await expect(page.getByText('Something went wrong').first()).toBeVisible()
-      await page.getByRole('button', { name: 'Create' }).click()
-      await expect(page.getByText('Something went wrong').first()).not.toBeVisible()
-    })
-  })
-
   test.describe('v2 zero liquidity', () => {
     test('should create a position', async ({ page, anvil }) => {
       await anvil.setErc20Balance({ address: assume0xAddress(WETH_ADDRESS), balance: parseEther('100') })

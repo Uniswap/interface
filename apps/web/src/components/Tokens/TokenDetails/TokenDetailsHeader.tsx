@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
@@ -55,7 +54,6 @@ export const TokenDetailsHeader = () => {
   const media = useMedia()
   const isMobileScreen = media.sm
 
-  const isDataReportingEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
   const { openModal } = useModalState(ModalName.ReportTokenIssue)
   const [, setModalProps] = useAtom(ReportTokenIssueModalPropsAtom)
   const openReportTokenModal = useEvent(() => {
@@ -154,28 +152,24 @@ export const TokenDetailsHeader = () => {
           },
         ],
       },
-      ...(isDataReportingEnabled
-        ? [
-            {
-              title: t('common.report'),
-              actions: [
-                {
-                  title: t('reporting.token.data.title'),
-                  icon: <ChartBarCrossed size="$icon.18" color="$neutral1" />,
-                  onPress: openReportDataIssueModal,
-                  show: true,
-                },
-                {
-                  title: t('reporting.token.report.title'),
-                  textColor: '$statusCritical',
-                  icon: <Flag size="$icon.18" color="$statusCritical" />,
-                  onPress: openReportTokenModal,
-                  show: !currency.isNative,
-                },
-              ],
-            },
-          ]
-        : []),
+      {
+        title: t('common.report'),
+        actions: [
+          {
+            title: t('reporting.token.data.title'),
+            icon: <ChartBarCrossed size="$icon.18" color="$neutral1" />,
+            onPress: openReportDataIssueModal,
+            show: true,
+          },
+          {
+            title: t('reporting.token.report.title'),
+            textColor: '$statusCritical',
+            icon: <Flag size="$icon.18" color="$statusCritical" />,
+            onPress: openReportTokenModal,
+            show: !currency.isNative,
+          },
+        ],
+      },
     ]
   }, [
     t,
@@ -188,7 +182,6 @@ export const TokenDetailsHeader = () => {
     openReportDataIssueModal,
     desktopHeaderActions,
     currency.isNative,
-    isDataReportingEnabled,
     twitterShareName,
   ])
 
@@ -307,7 +300,6 @@ function DesktopTokenActions({
   openReportTokenModal,
   openReportDataIssueModal,
 }: DesktopTokenActionsProps) {
-  const isDataReportingEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
   return (
     <Flex row gap="$gap8" alignItems="center">
       {HeaderActions.map(
@@ -321,9 +313,7 @@ function DesktopTokenActions({
           ),
       )}
       <ShareButton name={twitterShareName} utmSource="share-tdp" />
-      {isDataReportingEnabled && (
-        <MoreButton openReportTokenModal={openReportTokenModal} openReportDataIssueModal={openReportDataIssueModal} />
-      )}
+      <MoreButton openReportTokenModal={openReportTokenModal} openReportDataIssueModal={openReportDataIssueModal} />
     </Flex>
   )
 }

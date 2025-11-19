@@ -10,8 +10,9 @@ import {
   OctagonExclamation,
   RotatableChevron,
 } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
+import { defaultHitslop, iconSizes } from 'ui/src/theme'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { DappScanInfoModal } from 'wallet/src/components/dappRequests/DappScanInfoModal'
 import { DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
 
 export function DappConnectionPermissions({
@@ -29,6 +30,7 @@ export function DappConnectionPermissions({
   const isInitiallyExpanded = verificationStatus !== DappVerificationStatus.Verified
 
   const { value: isExpanded, toggle: toggleExpanded, setValue: setIsExpanded } = useBooleanState(isInitiallyExpanded)
+  const { value: isInfoModalOpen, setTrue: openInfoModal, setFalse: closeInfoModal } = useBooleanState(false)
 
   const infoTextSize = 'body3'
 
@@ -129,7 +131,9 @@ export function DappConnectionPermissions({
               </Text>
             </Flex>
           </Flex>
-          <AlertCircleFilled color="$neutral3" size="$icon.20" flexShrink={0} />
+          <TouchableArea hitSlop={defaultHitslop} onPress={openInfoModal}>
+            <AlertCircleFilled color="$neutral3" size="$icon.20" flexShrink={0} />
+          </TouchableArea>
         </Flex>
       )}
 
@@ -159,9 +163,13 @@ export function DappConnectionPermissions({
               />
             </Flex>
           </Flex>
-          <AlertCircleFilled color="$neutral3" size="$icon.20" flexShrink={0} />
+          <TouchableArea hitSlop={defaultHitslop} onPress={openInfoModal}>
+            <AlertCircleFilled color="$neutral3" size="$icon.20" flexShrink={0} />
+          </TouchableArea>
         </Flex>
       )}
+
+      <DappScanInfoModal isOpen={isInfoModalOpen} onClose={closeInfoModal} />
     </Flex>
   )
 }

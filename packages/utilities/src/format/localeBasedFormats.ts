@@ -7,7 +7,6 @@ import { NumberType } from 'utilities/src/format/types'
 const numberFormatCache: Record<string, Intl.NumberFormat> = {}
 
 export const TOKEN_AMOUNT_DISPLAY_FLOOR = 0.00001
-export const TOKEN_AMOUNT_DISPLAY_FLOOR_FALLBACK = '<0.00001'
 
 function getNumberFormat({
   name,
@@ -89,33 +88,31 @@ export const FiveDecimalsMaxTwoDecimalsMinNoCommas: FormatCreator = {
   },
 }
 
-export const NoDecimals: FormatCreator = {
-  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return getNumberFormat({
-      name: 'NoDecimals',
-      locale,
-      props: {
-        notation: 'standard',
-        maximumFractionDigits: 0,
-        minimumFractionDigits: 0,
-      },
-    })
-  },
+/**
+ * Creates a FormatCreator with a fixed number of decimal places
+ * @param decimals - Number of decimal places (both min and max)
+ * @returns FormatCreator that formats numbers with the specified decimals
+ */
+export function NDecimals(decimals: number): FormatCreator {
+  return {
+    createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
+      return getNumberFormat({
+        name: `${decimals}Decimals`,
+        locale,
+        props: {
+          notation: 'standard',
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        },
+      })
+    },
+  }
 }
 
-export const ThreeDecimals: FormatCreator = {
-  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return getNumberFormat({
-      name: 'ThreeDecimals',
-      locale,
-      props: {
-        notation: 'standard',
-        maximumFractionDigits: 3,
-        minimumFractionDigits: 3,
-      },
-    })
-  },
-}
+export const NoDecimals: FormatCreator = NDecimals(0)
+export const ThreeDecimals: FormatCreator = NDecimals(3)
+export const TwoDecimals: FormatCreator = NDecimals(2)
+export const FiveDecimals: FormatCreator = NDecimals(5)
 
 export const NoDecimalsCurrency: FormatCreator = {
   createFormat: (locale: string, currencyCode: string): Intl.NumberFormat => {
@@ -240,20 +237,6 @@ const SevenSigFigsSciNotationCurrency: FormatCreator = {
         maximumSignificantDigits: 7,
         currency: currencyCode,
         style: 'currency',
-      },
-    })
-  },
-}
-
-export const TwoDecimals: FormatCreator = {
-  createFormat: (locale: string, _currencyCode: string): Intl.NumberFormat => {
-    return getNumberFormat({
-      name: 'TwoDecimals',
-      locale,
-      props: {
-        notation: 'standard',
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 2,
       },
     })
   },
@@ -451,13 +434,20 @@ export type Formatter = {
   defaultFormat: Format
 }
 
+const lessThanPostFormatModifier: FormatterRule['postFormatModifier'] = (formatted: string) => `<${formatted}`
+
 // these formatter objects dictate which formatter rule to use based on the interval that
 // the number falls into. for example, based on the rule set below, if your number
 // falls between 1 and 1e6, you'd use TwoDecimals as the formatter.
 export const tokenNonTxFormatter: Formatter = {
   rules: [
     { exact: 0, formatter: '0' },
-    { upperBound: 0.001, formatter: '<0.001' },
+    {
+      upperBound: 0.001,
+      overrideValue: 0.001,
+      formatter: ThreeDecimals,
+      postFormatModifier: lessThanPostFormatModifier,
+    },
     { upperBound: 1, formatter: ThreeDecimals },
     { upperBound: 1e6, formatter: TwoDecimals },
     { upperBound: 1e15, formatter: ShorthandTwoDecimals },
@@ -469,7 +459,12 @@ export const tokenNonTxFormatter: Formatter = {
 export const tokenTxFormatter: Formatter = {
   rules: [
     { exact: 0, formatter: '0' },
-    { upperBound: TOKEN_AMOUNT_DISPLAY_FLOOR, formatter: TOKEN_AMOUNT_DISPLAY_FLOOR_FALLBACK },
+    {
+      upperBound: TOKEN_AMOUNT_DISPLAY_FLOOR,
+      overrideValue: TOKEN_AMOUNT_DISPLAY_FLOOR,
+      formatter: FiveDecimals,
+      postFormatModifier: lessThanPostFormatModifier,
+    },
     { upperBound: 1, formatter: FiveDecimalsMaxTwoDecimalsMin },
     { upperBound: 10000, formatter: SixSigFigsTwoDecimals },
     { upperBound: Infinity, formatter: TwoDecimals },
@@ -490,7 +485,12 @@ export const swapTradeAmountFormatter: Formatter = {
 export const swapPriceFormatter: Formatter = {
   rules: [
     { exact: 0, formatter: '0' },
-    { upperBound: TOKEN_AMOUNT_DISPLAY_FLOOR, formatter: TOKEN_AMOUNT_DISPLAY_FLOOR_FALLBACK },
+    {
+      upperBound: TOKEN_AMOUNT_DISPLAY_FLOOR,
+      overrideValue: TOKEN_AMOUNT_DISPLAY_FLOOR,
+      formatter: FiveDecimals,
+      postFormatModifier: lessThanPostFormatModifier,
+    },
     ...swapTradeAmountFormatter.rules,
   ],
   defaultFormat: SixSigFigsTwoDecimalsNoCommas,
@@ -502,7 +502,7 @@ export const fiatTokenDetailsFormatter: Formatter = {
       upperBound: 0.00000001,
       overrideValue: 0.00000001,
       formatter: SmallestNumCurrency,
-      postFormatModifier: (formatted: string) => `<${formatted}`,
+      postFormatModifier: lessThanPostFormatModifier,
     },
     { upperBound: 0.1, formatter: ThreeSigFigsCurrency },
     { upperBound: 1.05, formatter: ThreeDecimalsCurrency },
@@ -518,7 +518,7 @@ export const fiatTokenPricesFormatter: Formatter = {
       upperBound: 0.00000001,
       overrideValue: 0.00000001,
       formatter: SmallestNumCurrency,
-      postFormatModifier: (formatted: string) => `<${formatted}`,
+      postFormatModifier: lessThanPostFormatModifier,
     },
     { upperBound: 1, formatter: ThreeSigFigsCurrency },
     { upperBound: 1e6, formatter: TwoDecimalsCurrency },
@@ -535,7 +535,7 @@ export const fiatTokenStatsFormatter: Formatter = {
       upperBound: 0.01,
       overrideValue: 0.01,
       formatter: SmallestNumCurrency,
-      postFormatModifier: (formatted: string) => `<${formatted}`,
+      postFormatModifier: lessThanPostFormatModifier,
     },
     { upperBound: 1000, formatter: TwoDecimalsCurrency },
     { upperBound: Infinity, formatter: ShorthandOneDecimalsCurrency },
@@ -547,7 +547,12 @@ const tokenQuantityStatsFormatter: Formatter = {
   rules: [
     // if token stat value is 0, we probably don't have the data for it, so show '-' as a placeholder
     { exact: 0, formatter: '-' },
-    { upperBound: 0.01, formatter: '<0.01' },
+    {
+      upperBound: 0.01,
+      overrideValue: 0.01,
+      formatter: TwoDecimals,
+      postFormatModifier: lessThanPostFormatModifier,
+    },
     { upperBound: 1000, formatter: TwoDecimals },
     { upperBound: Infinity, formatter: ShorthandOneDecimal },
   ],
@@ -561,7 +566,7 @@ export const fiatGasPriceFormatter: Formatter = {
       upperBound: 0.01,
       overrideValue: 0.01,
       formatter: SmallestNumCurrency,
-      postFormatModifier: (formatted: string) => `<${formatted}`,
+      postFormatModifier: lessThanPostFormatModifier,
     },
     { upperBound: 1e6, formatter: TwoDecimalsCurrency },
     { upperBound: Infinity, formatter: ShorthandTwoDecimalsCurrency },
@@ -601,7 +606,12 @@ export const portfolioBalanceFormatter: Formatter = {
 export const ntfTokenFloorPriceFormatter: Formatter = {
   rules: [
     { exact: 0, formatter: '0' },
-    { upperBound: 0.001, formatter: '<0.001' },
+    {
+      upperBound: 0.001,
+      overrideValue: 0.001,
+      formatter: ThreeDecimals,
+      postFormatModifier: lessThanPostFormatModifier,
+    },
     { upperBound: 1, formatter: ThreeDecimals },
     { upperBound: 1000, formatter: TwoDecimals },
     { upperBound: 1e15, formatter: ShorthandTwoDecimals },
@@ -644,7 +654,12 @@ const percentagesFourDecimalsFormatter: Formatter = {
 const fiatRewardsFormatter: Formatter = {
   rules: [
     { exact: 0, formatter: NoDecimalsCurrency },
-    { exact: 0.00000001, formatter: '<0.00000001' },
+    {
+      exact: 0.00000001,
+      overrideValue: 0.00000001,
+      formatter: NDecimals(8),
+      postFormatModifier: lessThanPostFormatModifier,
+    },
     {
       upperBound: 0.00000001,
       formatter: OneSigFigCurrency,

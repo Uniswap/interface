@@ -4,6 +4,8 @@ import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/ty
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import {
@@ -219,8 +221,14 @@ function* executeChainedSwap(params: SwapParams, dependencies: TransactionSagaDe
         request: txRequest,
       })
       const signedTx = yield* call([transactionSigner, transactionSigner.signTransaction], preparedTransaction)
-      const result = yield* call([transactionSigner, transactionSigner.sendTransaction], { signedTx })
-      return result
+      const hash = yield* call([transactionSigner, transactionSigner.sendTransaction], { signedTx })
+
+      yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
+        transaction_hash: hash,
+        ...handleSwapStepParams.analytics,
+      })
+
+      return hash
     },
     *handleSignatureStep(handleSignatureStepParams: HandleSignatureStepParams): SagaGenerator<string> {
       const payload = handleSignatureStepParams.step

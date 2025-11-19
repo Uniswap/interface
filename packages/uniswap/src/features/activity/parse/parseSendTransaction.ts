@@ -1,6 +1,7 @@
 import { Nft, OnChainTransaction, Token } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { SpamCode } from '@universe/api'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { extractDappInfo } from 'uniswap/src/features/activity/utils/extractDappInfo'
 import {
   AssetCase,
   deriveCurrencyAmountFromAssetResponse,
@@ -139,5 +140,6 @@ export function parseRestSendTransaction(transaction: OnChainTransaction): SendT
     recipient: firstTransfer.to,
     transactedUSDValue: undefined,
     isSpam,
+    dappInfo: extractDappInfo(transaction),
   }
 }

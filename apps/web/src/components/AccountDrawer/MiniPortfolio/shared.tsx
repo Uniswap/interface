@@ -1,6 +1,6 @@
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ArrowRight } from 'react-feather'
 import { ThemedText } from 'theme/components'

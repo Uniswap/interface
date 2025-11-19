@@ -21,11 +21,6 @@ export interface NotificationTelemetry {
   onNotificationShown(params: { notificationId: string; type: string; timestamp: number }): void
 
   /**
-   * Called when a user dismisses a notification
-   */
-  onNotificationDismissed(params: { notificationId: string; type: string }): void
-
-  /**
    * Called when a user interacts with a notification (clicks, etc.)
    */
   onNotificationInteracted(params: {
@@ -42,7 +37,6 @@ export function createNoopNotificationTelemetry(): NotificationTelemetry {
   return {
     onNotificationReceived: (): void => {},
     onNotificationShown: (): void => {},
-    onNotificationDismissed: (): void => {},
     onNotificationInteracted: (): void => {},
   }
 }

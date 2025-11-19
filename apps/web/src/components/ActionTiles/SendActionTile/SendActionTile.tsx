@@ -6,6 +6,8 @@ import { FlexProps } from 'ui/src'
 import { SendAction } from 'ui/src/components/icons/SendAction'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -24,15 +26,17 @@ export function SendActionTile({ onPress, padding }: { onPress?: () => void; pad
   })
 
   return (
-    <SendButtonTooltip isSolanaOnlyWallet={isSolanaOnlyWallet}>
-      <ActionTileWithIconAnimation
-        dataTestId={TestID.Send}
-        Icon={SendAction}
-        name={t('common.send.button')}
-        onClick={onPressSend}
-        disabled={isSolanaOnlyWallet}
-        padding={padding}
-      />
-    </SendButtonTooltip>
+    <Trace logPress element={ElementName.PortfolioActionSend}>
+      <SendButtonTooltip isSolanaOnlyWallet={isSolanaOnlyWallet}>
+        <ActionTileWithIconAnimation
+          dataTestId={TestID.Send}
+          Icon={SendAction}
+          name={t('common.send.button')}
+          onClick={onPressSend}
+          disabled={isSolanaOnlyWallet}
+          padding={padding}
+        />
+      </SendButtonTooltip>
+    </Trace>
   )
 }

@@ -51,5 +51,6 @@ export type ModalProps = PropsWithChildren<{
   gap?: ComponentProps<typeof View>['gap']
   flex?: ComponentProps<typeof View>['flex']
   zIndex?: number
+  borderWidth?: number
   focusHook?: ComponentProps<typeof BottomSheetView>['focusHook']
 }>

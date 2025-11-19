@@ -3,7 +3,9 @@ import { CONNECT_WALLET_FIXED_BOTTOM_SECTION_HEIGHT } from 'pages/Portfolio/cons
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, styled, Text, useIsDarkMode, useSporeColors } from 'ui/src'
-import { opacify } from 'ui/src/theme'
+import { opacify, zIndexes } from 'ui/src/theme'
+import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 
 function useBackgroundGradient() {
   const colors = useSporeColors()
@@ -18,6 +20,9 @@ function useBackgroundGradient() {
   return `linear-gradient(to top, ${gradientColors[0]} 0%, ${gradientColors[70]} 70%, ${gradientColors[80]} 80%, ${gradientColors[100]} 100%)`
 }
 
+// z-index needs to be hight than content buy below the sidebar
+const zIndex = zIndexes.header
+
 const FixedBottomButton = styled(Flex, {
   '$platform-web': {
     position: 'fixed',
@@ -26,7 +31,7 @@ const FixedBottomButton = styled(Flex, {
     right: 0,
     willChange: 'transform, opacity',
   },
-  zIndex: '$sticky',
+  zIndex,
   width: '100%',
   centered: true,
   animation: '300ms',
@@ -76,7 +81,7 @@ export function ConnectWalletFixedBottomButton({ shouldShow = false }: ConnectWa
       {/* Bottom fade overlay */}
       <Flex
         $platform-web={{ position: 'fixed', bottom: 0, left: 0, right: 0, willChange: 'transform, opacity' }}
-        zIndex="$sticky"
+        zIndex={zIndex}
         height={CONNECT_WALLET_FIXED_BOTTOM_SECTION_HEIGHT}
         width="100%"
         background={backgroundGradient}
@@ -104,16 +109,22 @@ export function ConnectWalletFixedBottomButton({ shouldShow = false }: ConnectWa
           <Text variant="body2" color="$neutral2">
             {t('portfolio.disconnected.connectWallet.cta')}
           </Text>
-          <Button
-            variant="branded"
-            size="medium"
-            width="fit-content"
-            maxHeight="48px"
-            margin="auto"
-            onPress={accountDrawer.open}
+          <Trace
+            logPress
+            eventOnTrigger={InterfaceEventName.ConnectWalletButtonClicked}
+            element={ElementName.PortfolioConnectWalletBottomButton}
           >
-            {t('common.connectWallet.button')}
-          </Button>
+            <Button
+              variant="branded"
+              size="medium"
+              width="fit-content"
+              maxHeight="48px"
+              margin="auto"
+              onPress={accountDrawer.open}
+            >
+              {t('common.connectWallet.button')}
+            </Button>
+          </Trace>
         </Flex>
       </FixedBottomButton>
     </>

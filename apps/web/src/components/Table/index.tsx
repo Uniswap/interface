@@ -26,6 +26,34 @@ import { Flex } from 'ui/src'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 
+function calculateScrollButtonTop(params: {
+  maxHeight?: number
+  isSticky: boolean
+  centerArrows: boolean
+  height: number
+  headerHeight: number
+}): number {
+  const { maxHeight, isSticky, centerArrows, height, headerHeight } = params
+
+  // When centerArrows is true, center based on table height
+  if (centerArrows && height > 0) {
+    return height / 2
+  }
+
+  // When maxHeight is set but centerArrows is false, still use table height
+  // (container-based positioning)
+  if (maxHeight) {
+    return height / 2
+  }
+
+  // When sticky and centerArrows is false, use window-based calculation
+  if (isSticky) {
+    return (window.innerHeight - (headerHeight + 12)) / 2
+  }
+
+  return 0
+}
+
 export function Table<T extends RowData>({
   columns,
   data,
@@ -45,6 +73,7 @@ export function Table<T extends RowData>({
   loadingRowsCount = 20,
   rowHeight,
   compactRowHeight,
+  centerArrows = false,
 }: {
   columns: ColumnDef<T, any>[]
   data: T[]
@@ -64,10 +93,12 @@ export function Table<T extends RowData>({
   loadingRowsCount?: number
   rowHeight?: number
   compactRowHeight?: number
+  centerArrows?: boolean
 }) {
   const [loadingMore, setLoadingMore] = useState(false)
   const [showScrollRightButton, setShowScrollRightButton] = useState(false)
   const [showScrollLeftButton, setShowScrollLeftButton] = useState(false)
+  const [showRightFadeOverlay, setShowRightFadeOverlay] = useState(false)
   const colors = useSporeColors()
   const [pinnedColumns, setPinnedColumns] = useState<string[]>([])
 
@@ -199,6 +230,13 @@ export function Table<T extends RowData>({
       if (showScrollLeftButton !== nextShowScrollLeftButton) {
         setShowScrollLeftButton(nextShowScrollLeftButton)
       }
+      // Hide overlay when table is full width or scrolled all the way to the right
+      const isFullWidth = maxScrollLeft <= 0
+      const isScrolledToRight = container.scrollLeft >= maxScrollLeft
+      const nextShowRightFadeOverlay = pinnedColumns.length > 0 && !isFullWidth && !isScrolledToRight
+      if (showRightFadeOverlay !== nextShowRightFadeOverlay) {
+        setShowRightFadeOverlay(nextShowRightFadeOverlay)
+      }
     }
 
     horizontalScrollHandler()
@@ -206,7 +244,7 @@ export function Table<T extends RowData>({
     return () => {
       container.removeEventListener('scroll', horizontalScrollHandler)
     }
-  }, [loading, showScrollLeftButton, showScrollRightButton])
+  }, [loading, showScrollLeftButton, showScrollRightButton, showRightFadeOverlay, pinnedColumns.length])
 
   const headerHeight = useMemo(() => {
     const header = document.getElementById('AppHeader')
@@ -214,14 +252,14 @@ export function Table<T extends RowData>({
   }, [])
 
   const scrollButtonTop = useMemo(() => {
-    if (maxHeight) {
-      return height / 2
-    } else if (isSticky) {
-      return (window.innerHeight - (headerHeight + 12)) / 2
-    }
-
-    return 0
-  }, [headerHeight, height, isSticky, maxHeight])
+    return calculateScrollButtonTop({
+      maxHeight,
+      isSticky,
+      centerArrows,
+      height,
+      headerHeight,
+    })
+  }, [headerHeight, height, isSticky, maxHeight, centerArrows])
 
   const onScrollButtonPress = useCallback(
     (direction: ScrollButtonProps['direction']) => () => {
@@ -276,7 +314,7 @@ export function Table<T extends RowData>({
                   top={scrollButtonTop}
                   left={table.getLeftTotalSize()}
                   pl="$spacing12"
-                  zIndex={zIndexes.default}
+                  zIndex={zIndexes.mask}
                 >
                   <ScrollButton
                     onPress={onScrollButtonPress('left')}
@@ -284,31 +322,43 @@ export function Table<T extends RowData>({
                     direction="left"
                   />
                 </Flex>
-                <Flex position="absolute" top={scrollButtonTop} right={0} pr="$spacing12" zIndex={zIndexes.default}>
+                <Flex position="absolute" top={scrollButtonTop} right={0} pr="$spacing12" zIndex={zIndexes.mask}>
                   <ScrollButton
                     onPress={onScrollButtonPress('right')}
                     opacity={showScrollRightButton ? 1 : 0}
                     direction="right"
                   />
                 </Flex>
-                <TableScrollMask
-                  top={isSticky ? '$spacing12' : 0}
-                  zIndex={zIndexes.dropdown - 1}
-                  borderTopRightRadius="$rounded20"
-                />
+                {(!v2 || showRightFadeOverlay) && (
+                  <TableScrollMask
+                    top={isSticky ? '$spacing12' : 0}
+                    zIndex={zIndexes.dropdown - 1}
+                    right={v2 ? 0 : 1}
+                    borderTopRightRadius={v2 ? '$rounded12' : '$rounded20'}
+                  />
+                )}
               </>
             )}
             <ScrollSyncPane group={scrollGroup}>
               <HeaderRow dimmed={!!error} v2={v2}>
                 {table.getFlatHeaders().map((header) => (
-                  <CellContainer key={header.id} style={getCommonPinningStyles(header.column, colors)}>
+                  <CellContainer
+                    key={header.id}
+                    style={getCommonPinningStyles({ column: header.column, colors, v2, isHeader: true })}
+                  >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </CellContainer>
                 ))}
               </HeaderRow>
             </ScrollSyncPane>
           </TableHead>
-          {hasPinnedColumns && <TableScrollMask zIndex={zIndexes.default} borderBottomRightRadius="$rounded20" />}
+          {hasPinnedColumns && (!v2 || showRightFadeOverlay) && (
+            <TableScrollMask
+              zIndex={zIndexes.default}
+              borderBottomRightRadius={v2 ? '$rounded12' : '$rounded20'}
+              right={v2 ? 0 : 1}
+            />
+          )}
         </>
       )}
       <ScrollSyncPane group={scrollGroup}>

@@ -39,10 +39,6 @@
         "{projectRoot}/src/**/*.ts",
         "{projectRoot}/src/**/*.tsx",
         "{projectRoot}/src/**/*.json",
-        "!{projectRoot}/src/**/*.spec.ts",
-        "!{projectRoot}/src/**/*.spec.tsx",
-        "!{projectRoot}/src/**/*.test.ts",
-        "!{projectRoot}/src/**/*.test.tsx",
         {
           "dependentTasksOutputFiles": "**/*.d.ts"
         }

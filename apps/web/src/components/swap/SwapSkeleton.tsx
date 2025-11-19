@@ -1,5 +1,5 @@
 import { ArrowContainer, ArrowWrapper } from 'components/swap/styled'
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { ArrowDown } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'

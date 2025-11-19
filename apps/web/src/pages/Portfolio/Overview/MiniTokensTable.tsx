@@ -1,22 +1,32 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { Table } from 'components/Table'
 import { TOKENS_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
 import { MAX_TOKENS_ROWS } from 'pages/Portfolio/Overview/constants'
 import { TableSectionHeader } from 'pages/Portfolio/Overview/TableSectionHeader'
 import { ViewAllButton } from 'pages/Portfolio/Overview/ViewAllButton'
-import { useTransformTokenTableData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
-import { TokenColumns, useTokenColumns } from 'pages/Portfolio/Tokens/Table/columns/createTokenColumns'
-import { TokensContextMenuWrapper } from 'pages/Portfolio/Tokens/Table/TokensContextMenuWrapper'
+import { useNavigateToTokenDetails } from 'pages/Portfolio/Tokens/hooks/useNavigateToTokenDetails'
+import { TokenData, useTransformTokenTableData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
+import { TokenColumns, useTokenColumns } from 'pages/Portfolio/Tokens/Table/columns/useTokenColumns'
+import { memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex } from 'ui/src'
+import { Flex, TouchableArea } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+
+const TOKENS_TABLE_MAX_HEIGHT = 800
+const TOKENS_TABLE_MAX_WIDTH = 1200
 
 interface MiniTokensTableProps {
   maxTokens?: number
   chainId?: UniverseChainId
 }
 
-export function MiniTokensTable({ maxTokens = 8, chainId }: MiniTokensTableProps) {
+export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, chainId }: MiniTokensTableProps) {
   const { t } = useTranslation()
+  const trace = useTrace()
+
   // Get token data with limit applied at the hook level
   const {
     visible: tokenData,
@@ -34,15 +44,25 @@ export function MiniTokensTable({ maxTokens = 8, chainId }: MiniTokensTableProps
     showLoadingSkeleton: loading || !!error,
   })
 
+  const navigateToTokenDetails = useNavigateToTokenDetails()
+
+  const handleTokenRowClick = useCallback(
+    (tokenData: TokenData) => {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        element: ElementName.PortfolioMiniTokenRow,
+        section: SectionName.PortfolioOverviewTab,
+        ...trace,
+      })
+      navigateToTokenDetails(tokenData)
+    },
+    [navigateToTokenDetails, trace],
+  )
+
   // Ensure we always have an array for the data prop
   const tableData = tokenData || []
 
   // Only show loading state if we don't have data yet (similar to TokensTableInner)
   const tableLoading = loading && !tokenData
-
-  if (tableData.length === 0 && !loading) {
-    return null
-  }
 
   return (
     <Flex grow gap="$gap12">
@@ -63,14 +83,22 @@ export function MiniTokensTable({ maxTokens = 8, chainId }: MiniTokensTableProps
             tableLoading
               ? undefined
               : (row, content) => (
-                  <TokensContextMenuWrapper tokenData={row.original}>{content}</TokensContextMenuWrapper>
+                  <TouchableArea onPress={() => handleTokenRowClick(row.original)}>{content}</TouchableArea>
                 )
           }
           rowHeight={TOKENS_TABLE_ROW_HEIGHT}
           compactRowHeight={TOKENS_TABLE_ROW_HEIGHT}
+          defaultPinnedColumns={['currencyInfo']}
+          maxWidth={TOKENS_TABLE_MAX_WIDTH}
+          centerArrows
+          maxHeight={TOKENS_TABLE_MAX_HEIGHT}
         />
       </TableSectionHeader>
-      <ViewAllButton href="/portfolio/tokens" label={t('portfolio.overview.miniTokensTable.viewAllTokens')} />
+      <ViewAllButton
+        href="/portfolio/tokens"
+        label={t('portfolio.overview.miniTokensTable.viewAllTokens')}
+        elementName={ElementName.PortfolioViewAllTokens}
+      />
     </Flex>
   )
-}
+})

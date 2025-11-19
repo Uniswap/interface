@@ -1,12 +1,12 @@
 import {
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
+  IncreasePositionTransactionStepBatched,
 } from 'uniswap/src/features/transactions/liquidity/steps/increasePosition'
 import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import { Permit2SignatureStep } from 'uniswap/src/features/transactions/steps/permit2Signature'
 import { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
 import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
-import { WrapTransactionStep } from 'uniswap/src/features/transactions/steps/wrap'
 
 export type IncreaseLiquiditySteps =
   | TokenApprovalTransactionStep
@@ -15,22 +15,10 @@ export type IncreaseLiquiditySteps =
   | Permit2TransactionStep
   | IncreasePositionTransactionStep
   | IncreasePositionTransactionStepAsync
+  | IncreasePositionTransactionStepBatched
 
 export type IncreaseLiquidityFlow =
   | {
-      wrap?: WrapTransactionStep
-      approvalToken0?: TokenApprovalTransactionStep
-      approvalToken1?: TokenApprovalTransactionStep
-      approvalPositionToken?: TokenApprovalTransactionStep
-      revokeToken0?: TokenRevocationTransactionStep
-      revokeToken1?: TokenRevocationTransactionStep
-      permit: undefined
-      token0PermitTransaction: undefined
-      token1PermitTransaction: undefined
-      increasePosition: IncreasePositionTransactionStep
-    }
-  | {
-      wrap?: WrapTransactionStep
       approvalToken0?: TokenApprovalTransactionStep
       approvalToken1?: TokenApprovalTransactionStep
       approvalPositionToken?: TokenApprovalTransactionStep
@@ -42,7 +30,6 @@ export type IncreaseLiquidityFlow =
       increasePosition: IncreasePositionTransactionStepAsync
     }
   | {
-      wrap?: WrapTransactionStep
       approvalToken0?: TokenApprovalTransactionStep
       approvalToken1?: TokenApprovalTransactionStep
       approvalPositionToken?: TokenApprovalTransactionStep
@@ -53,7 +40,6 @@ export type IncreaseLiquidityFlow =
       token1PermitTransaction: Permit2TransactionStep | undefined
       increasePosition: IncreasePositionTransactionStep
     }
-
 export function orderIncreaseLiquiditySteps(flow: IncreaseLiquidityFlow): IncreaseLiquiditySteps[] {
   const steps: IncreaseLiquiditySteps[] = []
 

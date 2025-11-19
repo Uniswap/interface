@@ -6,7 +6,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { LowerLeftBannerNotification } from 'notification-system/notification-renderer/LowerLeftBannerNotification'
 import { calculateStackingProps, MAX_STACKED_BANNERS } from 'notification-system/notification-renderer/stackingUtils'
 import { memo } from 'react'
-import { Portal } from 'ui/src'
+import { Portal, useMedia } from 'ui/src'
 
 interface StackedLowerLeftBannersProps {
   notifications: InAppNotification[]
@@ -30,6 +30,9 @@ export const StackedLowerLeftBanners = memo(function StackedLowerLeftBanners({
   notifications,
   onNotificationClick,
 }: StackedLowerLeftBannersProps) {
+  const media = useMedia()
+  const leftPosition = media.xl ? 20 : 40
+
   // Reverse the notifications so the first notification renders last (on top)
   const stackedNotifications = notifications.slice(0, MAX_STACKED_BANNERS).reverse()
 
@@ -56,7 +59,7 @@ export const StackedLowerLeftBanners = memo(function StackedLowerLeftBanners({
               }}
               style={{
                 position: 'fixed',
-                left: 40,
+                left: leftPosition,
                 bottom: 29,
                 willChange: 'transform, opacity',
               }}

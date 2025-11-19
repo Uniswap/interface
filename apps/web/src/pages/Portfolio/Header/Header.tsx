@@ -5,15 +5,32 @@ import { PortfolioAddressDisplay } from 'pages/Portfolio/Header/PortfolioAddress
 import { PortfolioTabs } from 'pages/Portfolio/Header/Tabs'
 import { useShouldHeaderBeCompact } from 'pages/Portfolio/Header/useShouldHeaderBeCompact'
 import { PortfolioTab } from 'pages/Portfolio/types'
-import { useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router'
 import { Flex, useMedia } from 'ui/src'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ElementName, InterfacePageName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useEvent } from 'utilities/src/react/hooks'
 import { getChainUrlParam } from 'utils/chainParams'
 
 const HEADER_TRANSITION = 'all 0.2s ease'
+
+function getPageNameFromTab(tab: PortfolioTab | undefined): InterfacePageName {
+  switch (tab) {
+    case PortfolioTab.Overview:
+      return InterfacePageName.PortfolioPage
+    case PortfolioTab.Tokens:
+      return InterfacePageName.PortfolioTokensPage
+    case PortfolioTab.Defi:
+      return InterfacePageName.PortfolioDefiPage
+    case PortfolioTab.Nfts:
+      return InterfacePageName.PortfolioNftsPage
+    case PortfolioTab.Activity:
+      return InterfacePageName.PortfolioActivityPage
+    default:
+      return InterfacePageName.PortfolioPage
+  }
+}
 
 function buildPortfolioUrl(tab: PortfolioTab | undefined, chainId: UniverseChainId | undefined): string {
   const chainUrlParam = chainId ? getChainUrlParam(chainId) : ''
@@ -30,27 +47,18 @@ export function PortfolioHeader({ scrollY }: PortfolioHeaderProps) {
   const media = useMedia()
   const { tab, chainId: currentChainId } = usePortfolioRoutes()
   const isCompact = useShouldHeaderBeCompact(scrollY)
-  const { chains: enabledChainIds } = useEnabledChains()
   const onNetworkPress = useEvent((chainId: UniverseChainId | undefined) => {
+    const currentPageName = getPageNameFromTab(tab)
+    const selectedChain = chainId ?? ('All' as const)
+
+    sendAnalyticsEvent(UniswapEventName.NetworkFilterSelected, {
+      element: ElementName.PortfolioNetworkFilter,
+      page: currentPageName,
+      chain: selectedChain,
+    })
+
     navigate(buildPortfolioUrl(tab, chainId))
   })
-  const availableNetworkOptions = useMemo(() => {
-    const isNFTsTab = tab === PortfolioTab.Nfts
-    if (isNFTsTab) {
-      return enabledChainIds.filter((chainId) => chainId !== UniverseChainId.Solana)
-    }
-    return enabledChainIds
-  }, [tab, enabledChainIds])
-
-  // Redirect away from Solana if user navigates to NFT tab while on Solana
-  useEffect(() => {
-    const isNFTsTab = tab === PortfolioTab.Nfts
-    const isOnSolana = currentChainId === UniverseChainId.Solana
-    if (isNFTsTab && isOnSolana) {
-      // Navigate to the same tab but without chain filter (shows all networks)
-      navigate(buildPortfolioUrl(tab, undefined), { replace: true })
-    }
-  }, [tab, currentChainId, navigate])
 
   return (
     <Flex
@@ -77,7 +85,6 @@ export function PortfolioHeader({ scrollY }: PortfolioHeaderProps) {
             currentChainId={currentChainId}
             size={media.md || isCompact ? 'small' : 'medium'}
             transition={HEADER_TRANSITION}
-            networks={availableNetworkOptions}
           />
         </Flex>
       </Flex>

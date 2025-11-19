@@ -16,14 +16,17 @@ import {
   type NotificationTracker,
 } from '@universe/notifications'
 import store from 'state/index'
-import { BRIDGED_ASSETS_V2_WEB_BANNER, SOLANA_BANNER_DARK, SOLANA_BANNER_LIGHT } from 'ui/src/assets'
+import { BRIDGED_ASSETS_V2_WEB_BANNER, SOLANA_BANNER_DARK, SOLANA_BANNER_LIGHT, SOLANA_LOGO } from 'ui/src/assets'
 import i18n from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 
 // Legacy storage keys from the old banner implementation
 const LEGACY_SOLANA_PROMO_STORAGE_KEY = 'solanaPromoHidden'
-const SOLANA_BANNER_ID = 'solana_promo_banner'
-const BRIDGING_BANNER_ID = 'bridging_popular_tokens_banner'
+// Using 'local:' prefix to indicate these are client-only notifications
+// This prevents the API tracker from sending AckNotification calls to the backend
+const SOLANA_BANNER_ID = 'local:solana_promo_banner'
+const SOLANA_MODAL_ID = 'local:solana_promo_modal'
+const BRIDGING_BANNER_ID = 'local:bridging_popular_tokens_banner'
 
 interface CreateLegacyBannersNotificationDataSourceContext {
   tracker: NotificationTracker
@@ -207,7 +210,7 @@ function createSolanaPromoBanner(isDarkMode: boolean): InAppNotification {
   const bannerImage = isDarkMode ? SOLANA_BANNER_DARK : SOLANA_BANNER_LIGHT
 
   return new Notification({
-    id: 'solana_promo_banner',
+    id: SOLANA_BANNER_ID,
     content: new Content({
       version: NotificationVersion.V0,
       style: ContentStyle.LOWER_LEFT_BANNER,
@@ -218,14 +221,14 @@ function createSolanaPromoBanner(isDarkMode: boolean): InAppNotification {
         link: bannerImage,
         backgroundOnClick: new OnClick({
           onClick: [OnClickAction.POPUP, OnClickAction.DISMISS, OnClickAction.ACK],
-          onClickLink: 'solana_promo_modal', // Links to chained modal
+          onClickLink: SOLANA_MODAL_ID, // Links to chained modal
         }),
       }),
-      buttons: [],
       onDismissClick: new OnClick({
         onClick: [OnClickAction.DISMISS, OnClickAction.ACK],
       }),
-      // TODO: Add iconUrl support to content schema if needed for SOLANA_LOGO
+      buttons: [],
+      iconLink: SOLANA_LOGO,
     }),
   })
 }
@@ -235,7 +238,7 @@ function createSolanaPromoBanner(isDarkMode: boolean): InAppNotification {
  */
 function createSolanaPromoModal(): InAppNotification {
   return new Notification({
-    id: 'solana_promo_modal',
+    id: SOLANA_MODAL_ID,
     content: new Content({
       version: NotificationVersion.V0,
       style: ContentStyle.MODAL,
@@ -245,19 +248,20 @@ function createSolanaPromoModal(): InAppNotification {
         backgroundType: BackgroundType.IMAGE,
         link: SOLANA_BANNER_LIGHT,
       }),
+      iconLink: SOLANA_LOGO,
       body: new Body({
         items: [
           new BodyItem({
             text: i18n.t('solanaPromo.modal.swapInstantly'),
-            // TODO: Add icon support - Lightning icon
+            iconUrl: 'custom:lightning-$accent1',
           }),
           new BodyItem({
             text: i18n.t('solanaPromo.modal.connectWallet'),
-            // TODO: Add icon support - Wallet icon
+            iconUrl: 'custom:wallet-$accent1',
           }),
           new BodyItem({
             text: i18n.t('solanaPromo.modal.viewTokenData'),
-            // TODO: Add icon support - Chart icon
+            iconUrl: 'custom:chart-$accent1',
           }),
         ],
       }),
@@ -283,7 +287,7 @@ function createSolanaPromoModal(): InAppNotification {
  */
 function createBridgingBanner(): InAppNotification {
   return new Notification({
-    id: 'bridging_popular_tokens_banner',
+    id: BRIDGING_BANNER_ID,
     content: new Content({
       version: NotificationVersion.V0,
       style: ContentStyle.LOWER_LEFT_BANNER,

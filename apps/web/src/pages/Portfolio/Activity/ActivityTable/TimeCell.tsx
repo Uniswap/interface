@@ -1,17 +1,19 @@
 import { TableText } from 'components/Table/styled'
-import { useMemo } from 'react'
-import { Flex, Text } from 'ui/src'
+import { memo, useMemo } from 'react'
+import { Flex, TextProps } from 'ui/src'
 import { useFormattedTimeForActivity } from 'uniswap/src/components/activity/hooks/useFormattedTime'
 import { FORMAT_TIME_SHORT, useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 
 const FORMAT_DATE_WITH_WEEKDAY = 'ddd MMM D, YYYY'
+const CELL_HEIGHT = 36
 
 interface TimeCellProps {
   timestamp: number
   showFullDateOnHover?: boolean
+  textAlign?: TextProps['textAlign']
 }
 
-export function TimeCell({ timestamp, showFullDateOnHover = false }: TimeCellProps) {
+function _TimeCell({ timestamp, showFullDateOnHover = false, textAlign = 'left' }: TimeCellProps) {
   const formattedTime = useFormattedTimeForActivity(timestamp)
   const localizedDayjs = useLocalizedDayjs()
 
@@ -24,49 +26,35 @@ export function TimeCell({ timestamp, showFullDateOnHover = false }: TimeCellPro
   }, [timestamp, localizedDayjs])
 
   return (
-    <Flex
-      position="relative"
-      width="100%"
-      justifyContent="center"
-      alignItems="flex-start"
-      overflow="hidden"
-      height={36}
-    >
-      {/* Abbreviated time - slides down and fades out on group hover */}
-      <TableText
-        variant="body3"
-        color="$neutral2"
+    <Flex position="relative" width="100%" overflow="hidden" height={CELL_HEIGHT}>
+      <Flex
+        position="absolute"
+        justifyContent="center"
+        flexDirection="column"
         animation={showFullDateOnHover ? 'fast' : undefined}
         y={0}
-        top={3}
-        opacity={1}
-        $group-hover={showFullDateOnHover ? { y: 10, opacity: 0 } : undefined}
+        $group-hover={showFullDateOnHover ? { y: -CELL_HEIGHT } : undefined}
+        width="100%"
       >
-        {formattedTime}
-      </TableText>
-      {/* Full date - slides up from below and fades in on group hover */}
-      {showFullDateOnHover && (
         <Flex
-          position="absolute"
-          top={0}
-          left={0}
-          height="100%"
+          height={CELL_HEIGHT}
           justifyContent="center"
-          flexDirection="column"
-          gap={0}
-          animation="fast"
-          y={10}
-          opacity={0}
-          $group-hover={{ y: 0, opacity: 1 }}
+          alignItems={textAlign === 'right' ? 'flex-end' : 'flex-start'}
         >
-          <Text variant="body3" color="$neutral2">
-            {dateLine}
-          </Text>
-          <Text variant="body3" color="$neutral2">
-            {timeLine}
-          </Text>
+          <TableText variant="body3" color="$neutral2" textAlign={textAlign} width="100%">
+            {formattedTime}
+          </TableText>
         </Flex>
-      )}
+        {showFullDateOnHover && (
+          <Flex height={CELL_HEIGHT} justifyContent="center" alignItems="center">
+            <TableText variant="body3" color="$neutral2" textAlign={textAlign} width="100%">
+              {dateLine} {timeLine}
+            </TableText>
+          </Flex>
+        )}
+      </Flex>
     </Flex>
   )
 }
+
+export const TimeCell = memo(_TimeCell)

@@ -7,6 +7,8 @@ export enum ReactQueryCacheKey {
   ActivityScreenRefresh = 'ActivityScreenRefresh',
   AuctionApi = 'AuctionApi',
   BalanceAndUnitags = 'BalanceAndUnitags',
+  BlockaidTransactionScan = 'BlockaidTransactionScan',
+  BlockaidVerification = 'BlockaidVerification',
   CameraPermission = 'CameraPermission',
   CancelTransactionRequest = 'CancelTransactionRequest',
   CancelUniswapXTransactionRequest = 'CancelUniswapXTransactionRequest',
@@ -18,9 +20,11 @@ export enum ReactQueryCacheKey {
   ExtractedColors = 'ExtractedColors',
   GeneratedAddresses = 'GeneratedAddresses',
   GetPortfolio = 'GetPortfolio',
+  GetPortfolioChart = 'GetPortfolioChart',
   IsErc20ContractAddress = 'IsErc20ContractAddress',
   IsSmartContractAddress = 'IsSmartContractAddress',
   LimitOrdersByHash = 'LimitOrdersByHash',
+  LiquidityService = 'LiquidityService',
   ListTransactions = 'ListTransactions',
   LocalActivities = 'localActivities',
   MismatchAccountBulk = 'MismatchAccountBulk',
@@ -70,4 +74,5 @@ export const DISABLE_CACHE_PERSISTENCE_TO_DISK: ReactQueryCacheKey[] = [
   ReactQueryCacheKey.ExtensionBuiltInBiometricCapabilities,
   // This ensures when a user switches mobile devices that the unique id will be reset
   ReactQueryCacheKey.UniqueId,
+  ReactQueryCacheKey.Session,
 ] as const

@@ -7,7 +7,7 @@ import { BLAST_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/blast'
 import { BNB_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/bnb'
 import { CELO_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/celo'
 import { MAINNET_CHAIN_INFO, SEPOLIA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
-import { MONAD_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/monad'
+import { MONAD_CHAIN_INFO, MONAD_TESTNET_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/monad'
 import { OPTIMISM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/optimism'
 import { POLYGON_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/polygon'
 import { SONEIUM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/soneium'
@@ -22,7 +22,9 @@ import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
 import { SolanaToken } from 'uniswap/src/features/tokens/SolanaToken'
 import { logger } from 'utilities/src/logger/logger'
 
-export const { USDT: USDT_MONAD_TESTNET } = MONAD_CHAIN_INFO.tokens
+export const { USDC: USDC_MONAD, AUSD: AUSD_MONAD } = MONAD_CHAIN_INFO.tokens
+
+export const { USDT: USDT_MONAD_TESTNET } = MONAD_TESTNET_CHAIN_INFO.tokens
 
 export const { USDC: USDC_SEPOLIA } = SEPOLIA_CHAIN_INFO.tokens
 
@@ -270,6 +272,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     18,
     'CELO',
     'Celo',
+  ),
+  [UniverseChainId.Monad]: new Token(
+    UniverseChainId.Monad,
+    '0x3bd359C1119dA7Da1D913D1C4D2B7c461115433A',
+    18,
+    'WMON',
+    'Wrapped Monad',
   ),
   [UniverseChainId.MonadTestnet]: new Token(
     UniverseChainId.MonadTestnet,

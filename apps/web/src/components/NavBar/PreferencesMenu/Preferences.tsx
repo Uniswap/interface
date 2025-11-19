@@ -1,6 +1,6 @@
 import { PreferencesHeader } from 'components/NavBar/PreferencesMenu/Header'
 import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { ChevronRight } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { ThemeSelector } from 'theme/components/ThemeToggle'

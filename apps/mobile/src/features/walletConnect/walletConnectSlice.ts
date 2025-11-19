@@ -25,6 +25,13 @@ export type WalletConnectSession = {
    * is tracking as the active account based on session events (approve session, change account, etc).
    */
   activeAccount: string
+
+  /**
+   * EIP-5792 capabilities for this session, stored in hex chainId format.
+   * Contains atomic batch support status per chain.
+   * Only populated if EIP-5792 feature flag was enabled during session approval.
+   */
+  capabilities?: Record<string, Capability>
 }
 
 interface BaseRequest {

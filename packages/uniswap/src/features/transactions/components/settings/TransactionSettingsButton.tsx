@@ -40,7 +40,19 @@ export const TransactionSettingsButton = memo(
         height={isWebApp ? '$spacing32' : 'auto'}
       >
         {IconLabel}
-        <IconComponent color={contentColor} size={iconSize} />
+        <Flex
+          animation="simple"
+          rotate="0deg"
+          hoverStyle={{
+            rotate: '90deg',
+          }}
+          $platform-web={{
+            cursor: 'pointer',
+            transition: 'transform 80ms ease-out',
+          }}
+        >
+          <IconComponent color={contentColor} hoverColor="$neutral2Hovered" size={iconSize} />
+        </Flex>
       </Flex>
     )
   },

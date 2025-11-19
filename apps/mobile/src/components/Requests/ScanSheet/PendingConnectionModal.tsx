@@ -1,4 +1,5 @@
 import { useBottomSheetInternal } from '@gorhom/bottom-sheet'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { getSdkError } from '@walletconnect/utils'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -6,7 +7,7 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
 import { ModalWithOverlay, ModalWithOverlayProps } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
-import { getSessionNamespaces } from 'src/features/walletConnect/utils'
+import { convertCapabilitiesToScopedProperties, getSessionNamespaces } from 'src/features/walletConnect/utils'
 import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
@@ -26,8 +27,16 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { DappConnectionContent } from 'wallet/src/components/dappRequests/DappConnectionContent'
 import { DappRequestHeader } from 'wallet/src/components/dappRequests/DappRequestHeader'
+import { getCapabilitiesCore } from 'wallet/src/features/batchedTransactions/utils'
+import { useBlockaidVerification } from 'wallet/src/features/dappRequests/hooks/useBlockaidVerification'
+import { useDappConnectionConfirmation } from 'wallet/src/features/dappRequests/hooks/useDappConnectionConfirmation'
 import { DappConnectionInfo, DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
-import { useActiveAccountWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { mergeVerificationStatuses } from 'wallet/src/features/dappRequests/verification'
+import {
+  useActiveAccountWithThrow,
+  useHasSmartWalletConsent,
+  useSignerAccounts,
+} from 'wallet/src/features/wallet/hooks'
 
 type Props = {
   pendingSession: WalletConnectPendingSession
@@ -43,12 +52,20 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
   const isViewOnly = activeAccount.type === AccountType.Readonly
 
   const didOpenFromDeepLink = useSelector(selectDidOpenFromDeepLink)
+  const hasSmartWalletConsent = useHasSmartWalletConsent()
+  const eip5792MethodsEnabled = useFeatureFlag(FeatureFlags.Eip5792Methods)
 
-  const [confirmedWarning, setConfirmedWarning] = useState(false)
   const [isConnecting, setIsConnecting] = useState(false)
 
-  const isThreat = pendingSession.verifyStatus === DappVerificationStatus.Threat
-  const disableConfirm = (isThreat && !confirmedWarning) || isViewOnly || isConnecting
+  // Merge WalletConnect verification with Blockaid verification
+  const { verificationStatus: blockaidStatus } = useBlockaidVerification(pendingSession.dappRequestInfo.url)
+  const finalVerificationStatus = mergeVerificationStatuses(pendingSession.verifyStatus, blockaidStatus)
+
+  const { confirmedWarning, setConfirmedWarning, disableConfirm } = useDappConnectionConfirmation({
+    verificationStatus: finalVerificationStatus,
+    isViewOnly,
+    isLoading: isConnecting,
+  })
 
   const signerAccounts = useSignerAccounts()
   const defaultSelectedAccountAddresses = useMemo(() => {
@@ -99,10 +116,18 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
       // Handle WC 2.0 session request
       if (approved) {
         const namespaces = getSessionNamespaces(orderedSelectedAccountAddresses, pendingSession.proposalNamespaces)
+        const capabilities = await getCapabilitiesCore({
+          address: activeAddress,
+          chainIds: pendingSession.chains,
+          hasSmartWalletConsent: hasSmartWalletConsent ?? false,
+        })
+
+        const scopedProperties = convertCapabilitiesToScopedProperties(capabilities)
 
         const session = await wcWeb3Wallet.approveSession({
           id: Number(pendingSession.id),
           namespaces,
+          ...(eip5792MethodsEnabled ? { scopedProperties } : {}),
         })
 
         dispatch(
@@ -118,6 +143,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
               chains: pendingSession.chains,
               namespaces,
               activeAccount: activeAddress,
+              ...(eip5792MethodsEnabled ? { capabilities } : {}),
             },
           }),
         )
@@ -152,6 +178,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
     }
   })
 
+  const isThreat = finalVerificationStatus === DappVerificationStatus.Threat
   const isThreatProps: Partial<ModalWithOverlayProps> = isThreat
     ? {
         cancelButtonText: t('walletConnect.pending.button.reject'),
@@ -183,7 +210,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         <PendingConnectionModalContent
           isViewOnly={isViewOnly}
           pendingSession={pendingSession}
-          verifyStatus={pendingSession.verifyStatus}
+          verifyStatus={finalVerificationStatus}
           allAccountAddresses={orderedAllAccountAddresses}
           selectedAccountAddresses={selectedAccountAddresses}
           setSelectedAccountAddresses={setSelectedAccountAddresses}

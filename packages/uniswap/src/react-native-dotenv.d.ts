@@ -33,6 +33,10 @@ declare module 'react-native-dotenv' {
   export const UNISWAP_NOTIF_API_BASE_URL_OVERRIDE: string
   export const ENTRY_GATEWAY_API_URL_OVERRIDE: string
   export const INCLUDE_PROTOTYPE_FEATURES: string
+  export const ENABLE_SESSION_SERVICE: string
+  export const ENABLE_SESSION_UPGRADE_AUTO: string
+  export const ENABLE_ENTRY_GATEWAY_PROXY: string
+  export const LIQUIDITY_SERVICE_URL_OVERRIDE: string
   export const GH_TOKEN_RN_CLI: string
   export const JUPITER_PROXY_URL: string
 }

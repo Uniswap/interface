@@ -11,7 +11,6 @@ import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 const TestWeb3Provider = createWeb3Provider({
   wagmiConfig,
   reconnectOnMount: false,
-  includeCapabilitiesEffects: false,
 })
 
 export default TestWeb3Provider

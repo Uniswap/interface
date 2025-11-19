@@ -1,0 +1,634 @@
+{
+  "fiatCurrencies": [
+    {
+      "fiatCurrencyCode": "AFN",
+      "displayName": "Afghani",
+      "symbol": "https://images-currency.meld.io/fiat/AFN/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "DZD",
+      "displayName": "Algerian Dinar",
+      "symbol": "https://images-currency.meld.io/fiat/DZD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "ARS",
+      "displayName": "Argentine Peso",
+      "symbol": "https://images-currency.meld.io/fiat/ARS/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "AMD",
+      "displayName": "Armenian Dram",
+      "symbol": "https://images-currency.meld.io/fiat/AMD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "AUD",
+      "displayName": "Australian Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/AUD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "AZN",
+      "displayName": "Azerbaijan Manat",
+      "symbol": "https://images-currency.meld.io/fiat/AZN/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "BSD",
+      "displayName": "Bahamian Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/BSD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "BHD",
+      "displayName": "Bahraini Dinar",
+      "symbol": "https://images-currency.meld.io/fiat/BHD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "THB",
+      "displayName": "Baht",
+      "symbol": "https://images-currency.meld.io/fiat/THB/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "PAB",
+      "displayName": "Balboa",
+      "symbol": "https://images-currency.meld.io/fiat/PAB/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "BYN",
+      "displayName": "Belarusian Ruble",
+      "symbol": "https://images-currency.meld.io/fiat/BYN/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "BZD",
+      "displayName": "Belize Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/BZD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "BMD",
+      "displayName": "Bermudian Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/BMD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "BOB",
+      "displayName": "Boliviano",
+      "symbol": "https://images-currency.meld.io/fiat/BOB/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "BRL",
+      "displayName": "Brazilian Real",
+      "symbol": "https://images-currency.meld.io/fiat/BRL/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "BND",
+      "displayName": "Brunei Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/BND/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "BGN",
+      "displayName": "Bulgarian Lev",
+      "symbol": "https://images-currency.meld.io/fiat/BGN/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "BIF",
+      "displayName": "Burundi Franc",
+      "symbol": "https://images-currency.meld.io/fiat/BIF/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "XOF",
+      "displayName": "CFA Franc BCEAO",
+      "symbol": "https://images-currency.meld.io/fiat/XOF/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "XAF",
+      "displayName": "CFA Franc BEAC",
+      "symbol": "https://images-currency.meld.io/fiat/XAF/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "CVE",
+      "displayName": "Cabo Verde Escudo",
+      "symbol": "https://images-currency.meld.io/fiat/CVE/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "CAD",
+      "displayName": "Canadian Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/CAD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "KYD",
+      "displayName": "Cayman Islands Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/KYD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "CLP",
+      "displayName": "Chilean Peso",
+      "symbol": "https://images-currency.meld.io/fiat/CLP/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "COP",
+      "displayName": "Colombian Peso",
+      "symbol": "https://images-currency.meld.io/fiat/COP/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "KMF",
+      "displayName": "Comorian Franc",
+      "symbol": "https://images-currency.meld.io/fiat/KMF/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "CDF",
+      "displayName": "Congolese Franc",
+      "symbol": "https://images-currency.meld.io/fiat/CDF/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "BAM",
+      "displayName": "Convertible Mark",
+      "symbol": "https://images-currency.meld.io/fiat/BAM/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "NIO",
+      "displayName": "Cordoba Oro",
+      "symbol": "https://images-currency.meld.io/fiat/NIO/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "CRC",
+      "displayName": "Costa Rican Colon",
+      "symbol": "https://images-currency.meld.io/fiat/CRC/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "HRK",
+      "displayName": "Croatian kuna",
+      "symbol": "https://images-currency.meld.io/fiat/HRK/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "CZK",
+      "displayName": "Czech Koruna",
+      "symbol": "https://images-currency.meld.io/fiat/CZK/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "GMD",
+      "displayName": "Dalasi",
+      "symbol": "https://images-currency.meld.io/fiat/GMD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "DKK",
+      "displayName": "Danish Krone",
+      "symbol": "https://images-currency.meld.io/fiat/DKK/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "MKD",
+      "displayName": "Denar",
+      "symbol": "https://images-currency.meld.io/fiat/MKD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "DJF",
+      "displayName": "Djibouti Franc",
+      "symbol": "https://images-currency.meld.io/fiat/DJF/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "DOP",
+      "displayName": "Dominican Peso",
+      "symbol": "https://images-currency.meld.io/fiat/DOP/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "VND",
+      "displayName": "Dong",
+      "symbol": "https://images-currency.meld.io/fiat/VND/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "EGP",
+      "displayName": "Egyptian Pound",
+      "symbol": "https://images-currency.meld.io/fiat/EGP/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "ETB",
+      "displayName": "Ethiopian Birr",
+      "symbol": "https://images-currency.meld.io/fiat/ETB/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "EUR",
+      "displayName": "Euro",
+      "symbol": "https://images-currency.meld.io/fiat/EUR/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "HUF",
+      "displayName": "Forint",
+      "symbol": "https://images-currency.meld.io/fiat/HUF/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "GHS",
+      "displayName": "Ghana Cedi",
+      "symbol": "https://images-currency.meld.io/fiat/GHS/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "HTG",
+      "displayName": "Gourde",
+      "symbol": "https://images-currency.meld.io/fiat/HTG/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "PYG",
+      "displayName": "Guarani",
+      "symbol": "https://images-currency.meld.io/fiat/PYG/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "GNF",
+      "displayName": "Guinean Franc",
+      "symbol": "https://images-currency.meld.io/fiat/GNF/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "HKD",
+      "displayName": "Hong Kong Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/HKD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "UAH",
+      "displayName": "Hryvnia",
+      "symbol": "https://images-currency.meld.io/fiat/UAH/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "ISK",
+      "displayName": "Iceland Krona",
+      "symbol": "https://images-currency.meld.io/fiat/ISK/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "INR",
+      "displayName": "Indian Rupee",
+      "symbol": "https://images-currency.meld.io/fiat/INR/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "IQD",
+      "displayName": "Iraqi Dinar",
+      "symbol": "https://images-currency.meld.io/fiat/IQD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "JMD",
+      "displayName": "Jamaican Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/JMD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "JOD",
+      "displayName": "Jordanian Dinar",
+      "symbol": "https://images-currency.meld.io/fiat/JOD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "KES",
+      "displayName": "Kenyan Shilling",
+      "symbol": "https://images-currency.meld.io/fiat/KES/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "PGK",
+      "displayName": "Kina",
+      "symbol": "https://images-currency.meld.io/fiat/PGK/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "KWD",
+      "displayName": "Kuwaiti Dinar",
+      "symbol": "https://images-currency.meld.io/fiat/KWD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "AOA",
+      "displayName": "Kwanza",
+      "symbol": "https://images-currency.meld.io/fiat/AOA/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "MMK",
+      "displayName": "Kyat",
+      "symbol": "https://images-currency.meld.io/fiat/MMK/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "LAK",
+      "displayName": "Lao Kip",
+      "symbol": "https://images-currency.meld.io/fiat/LAK/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "GEL",
+      "displayName": "Lari",
+      "symbol": "https://images-currency.meld.io/fiat/GEL/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "LBP",
+      "displayName": "Lebanese Pound",
+      "symbol": "https://images-currency.meld.io/fiat/LBP/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "ALL",
+      "displayName": "Lek",
+      "symbol": "https://images-currency.meld.io/fiat/ALL/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "HNL",
+      "displayName": "Lempira",
+      "symbol": "https://images-currency.meld.io/fiat/HNL/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "SLL",
+      "displayName": "Leone",
+      "symbol": "https://images-currency.meld.io/fiat/SLL/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "LRD",
+      "displayName": "Liberian Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/LRD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "LYD",
+      "displayName": "Libyan Dinar",
+      "symbol": "https://images-currency.meld.io/fiat/LYD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "MGA",
+      "displayName": "Malagasy Ariary",
+      "symbol": "https://images-currency.meld.io/fiat/MGA/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "MWK",
+      "displayName": "Malawi Kwacha",
+      "symbol": "https://images-currency.meld.io/fiat/MWK/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "MYR",
+      "displayName": "Malaysian Ringgit",
+      "symbol": "https://images-currency.meld.io/fiat/MYR/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "MXN",
+      "displayName": "Mexican Peso",
+      "symbol": "https://images-currency.meld.io/fiat/MXN/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "MDL",
+      "displayName": "Moldovan Leu",
+      "symbol": "https://images-currency.meld.io/fiat/MDL/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "MAD",
+      "displayName": "Moroccan Dirham",
+      "symbol": "https://images-currency.meld.io/fiat/MAD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "MZN",
+      "displayName": "Mozambique Metical",
+      "symbol": "https://images-currency.meld.io/fiat/MZN/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "NGN",
+      "displayName": "Naira",
+      "symbol": "https://images-currency.meld.io/fiat/NGN/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "ERN",
+      "displayName": "Nakfa",
+      "symbol": "https://images-currency.meld.io/fiat/ERN/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "NAD",
+      "displayName": "Namibia Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/NAD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "NPR",
+      "displayName": "Nepalese Rupee",
+      "symbol": "https://images-currency.meld.io/fiat/NPR/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "ILS",
+      "displayName": "New Israeli Sheqel",
+      "symbol": "https://images-currency.meld.io/fiat/ILS/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "TWD",
+      "displayName": "New Taiwan Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/TWD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "NZD",
+      "displayName": "New Zealand Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/NZD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "NOK",
+      "displayName": "Norwegian Krone",
+      "symbol": "https://images-currency.meld.io/fiat/NOK/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "MRU",
+      "displayName": "Ouguiya",
+      "symbol": "https://images-currency.meld.io/fiat/MRU/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "PKR",
+      "displayName": "Pakistan Rupee",
+      "symbol": "https://images-currency.meld.io/fiat/PKR/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "MOP",
+      "displayName": "Pataca",
+      "symbol": "https://images-currency.meld.io/fiat/MOP/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "UYU",
+      "displayName": "Peso Uruguayo",
+      "symbol": "https://images-currency.meld.io/fiat/UYU/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "PHP",
+      "displayName": "Philippine Peso",
+      "symbol": "https://images-currency.meld.io/fiat/PHP/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "GBP",
+      "displayName": "Pound Sterling",
+      "symbol": "https://images-currency.meld.io/fiat/GBP/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "BWP",
+      "displayName": "Pula",
+      "symbol": "https://images-currency.meld.io/fiat/BWP/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "QAR",
+      "displayName": "Qatari Rial",
+      "symbol": "https://images-currency.meld.io/fiat/QAR/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "GTQ",
+      "displayName": "Quetzal",
+      "symbol": "https://images-currency.meld.io/fiat/GTQ/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "ZAR",
+      "displayName": "Rand",
+      "symbol": "https://images-currency.meld.io/fiat/ZAR/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "OMR",
+      "displayName": "Rial Omani",
+      "symbol": "https://images-currency.meld.io/fiat/OMR/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "KHR",
+      "displayName": "Riel",
+      "symbol": "https://images-currency.meld.io/fiat/KHR/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "RON",
+      "displayName": "Romanian Leu",
+      "symbol": "https://images-currency.meld.io/fiat/RON/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "IDR",
+      "displayName": "Rupiah",
+      "symbol": "https://images-currency.meld.io/fiat/IDR/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "RWF",
+      "displayName": "Rwanda Franc",
+      "symbol": "https://images-currency.meld.io/fiat/RWF/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "SAR",
+      "displayName": "Saudi Riyal",
+      "symbol": "https://images-currency.meld.io/fiat/SAR/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "RSD",
+      "displayName": "Serbian Dinar",
+      "symbol": "https://images-currency.meld.io/fiat/RSD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "SCR",
+      "displayName": "Seychelles Rupee",
+      "symbol": "https://images-currency.meld.io/fiat/SCR/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "SGD",
+      "displayName": "Singapore Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/SGD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "PEN",
+      "displayName": "Sol",
+      "symbol": "https://images-currency.meld.io/fiat/PEN/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "KGS",
+      "displayName": "Som",
+      "symbol": "https://images-currency.meld.io/fiat/KGS/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "SOS",
+      "displayName": "Somali Shilling",
+      "symbol": "https://images-currency.meld.io/fiat/SOS/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "TJS",
+      "displayName": "Somoni",
+      "symbol": "https://images-currency.meld.io/fiat/TJS/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "LKR",
+      "displayName": "Sri Lanka Rupee",
+      "symbol": "https://images-currency.meld.io/fiat/LKR/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "SDG",
+      "displayName": "Sudanese Pound",
+      "symbol": "https://images-currency.meld.io/fiat/SDG/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "SEK",
+      "displayName": "Swedish Krona",
+      "symbol": "https://images-currency.meld.io/fiat/SEK/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "CHF",
+      "displayName": "Swiss Franc",
+      "symbol": "https://images-currency.meld.io/fiat/CHF/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "BDT",
+      "displayName": "Taka",
+      "symbol": "https://images-currency.meld.io/fiat/BDT/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "TZS",
+      "displayName": "Tanzanian Shilling",
+      "symbol": "https://images-currency.meld.io/fiat/TZS/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "KZT",
+      "displayName": "Tenge",
+      "symbol": "https://images-currency.meld.io/fiat/KZT/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "TTD",
+      "displayName": "Trinidad and Tobago Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/TTD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "MNT",
+      "displayName": "Tugrik",
+      "symbol": "https://images-currency.meld.io/fiat/MNT/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "TND",
+      "displayName": "Tunisian Dinar",
+      "symbol": "https://images-currency.meld.io/fiat/TND/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "TRY",
+      "displayName": "Turkish Lira",
+      "symbol": "https://images-currency.meld.io/fiat/TRY/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "TMT",
+      "displayName": "Turkmenistan New Manat",
+      "symbol": "https://images-currency.meld.io/fiat/TMT/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "AED",
+      "displayName": "UAE Dirham",
+      "symbol": "https://images-currency.meld.io/fiat/AED/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "USD",
+      "displayName": "US Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/USD/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "UGX",
+      "displayName": "Uganda Shilling",
+      "symbol": "https://images-currency.meld.io/fiat/UGX/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "UZS",
+      "displayName": "Uzbekistan Sum",
+      "symbol": "https://images-currency.meld.io/fiat/UZS/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "YER",
+      "displayName": "Yemeni Rial",
+      "symbol": "https://images-currency.meld.io/fiat/YER/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "JPY",
+      "displayName": "Yen",
+      "symbol": "https://images-currency.meld.io/fiat/JPY/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "CNY",
+      "displayName": "Yuan Renminbi",
+      "symbol": "https://images-currency.meld.io/fiat/CNY/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "ZMW",
+      "displayName": "Zambian Kwacha",
+      "symbol": "https://images-currency.meld.io/fiat/ZMW/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "ZWL",
+      "displayName": "Zimbabwe Dollar",
+      "symbol": "https://images-currency.meld.io/fiat/ZWL/symbol.png"
+    },
+    {
+      "fiatCurrencyCode": "PLN",
+      "displayName": "Zloty",
+      "symbol": "https://images-currency.meld.io/fiat/PLN/symbol.png"
+    }
+  ]
+}

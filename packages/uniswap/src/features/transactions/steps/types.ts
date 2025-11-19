@@ -30,6 +30,7 @@ export enum TransactionStepType {
   UniswapXSignature = 'UniswapXSignature',
   IncreasePositionTransaction = 'IncreasePositionTransaction',
   IncreasePositionTransactionAsync = 'IncreasePositionTransactionAsync',
+  IncreasePositionTransactionBatched = 'IncreasePositionTransactionBatched',
   DecreasePositionTransaction = 'DecreasePositionTransaction',
   MigratePositionTransaction = 'MigratePositionTransaction',
   MigratePositionTransactionAsync = 'MigratePositionTransactionAsync',

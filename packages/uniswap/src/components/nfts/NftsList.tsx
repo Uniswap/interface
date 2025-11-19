@@ -27,6 +27,12 @@ export type NftsListProps = Omit<
     customLoadingState?: JSX.Element
     /** Optional: override the numHidden count (e.g., for filtered results) */
     filteredNumHidden?: number
+    /** Optional: search string to filter NFTs by name, collection, token ID, or contract address */
+    searchString?: string
+    /** Optional: callback to receive filtered counts (shown and hidden) */
+    onFilteredCountsChange?: (params: { shown: number; hidden: number }) => void
+    /** Optional: custom render function for the ExpandoRow component */
+    renderExpandoRow?: (props: { isExpanded: boolean; label: string; onPress: () => void }) => JSX.Element
   },
   'renderItem' | 'data'
 > & {

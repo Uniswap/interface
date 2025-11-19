@@ -58,6 +58,7 @@ describe('swapFlowLoggers', () => {
       chain_id_out: mockChainId,
       id: mockHash,
       batch_id: mockBatchId,
+      is_final_step: true,
       ...mockAnalyticsContext,
     })
   })
@@ -87,6 +88,7 @@ describe('swapFlowLoggers', () => {
       order_hash: mockOrderHash,
       chain_id: mockChainId,
       id: 'mockId',
+      is_final_step: true,
       ...mockAnalyticsContext,
     })
   })

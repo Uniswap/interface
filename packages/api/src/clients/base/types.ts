@@ -1,3 +1,5 @@
+import type { SessionService } from '@universe/sessions'
+
 export type StandardFetchOptions = Parameters<typeof fetch>[1]
 
 export type CustomOptions = StandardFetchOptions & {
@@ -8,7 +10,7 @@ export type CustomOptions = StandardFetchOptions & {
 export interface FetchClientContext {
   baseUrl: string
   getHeaders?: () => HeadersInit
-  getSessionServiceBaseUrl: () => string
+  getSessionService: () => SessionService
   defaultOptions?: Omit<StandardFetchOptions, 'headers'>
 }
 

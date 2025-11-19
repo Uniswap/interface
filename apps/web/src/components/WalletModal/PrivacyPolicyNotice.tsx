@@ -1,4 +1,4 @@
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { Trans } from 'react-i18next'
 import { ExternalLink } from 'theme/components/Links'
 import { Text } from 'ui/src'

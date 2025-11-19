@@ -156,7 +156,7 @@ export default defineConfig(({ mode }) => {
         // ignores tsconfig files in Nx generator template directories
         skip: (dir) => dir.includes('files'),
       }),
-      env.REACT_APP_SKIP_CSP ? undefined : cspMetaTagPlugin(),
+      env.REACT_APP_SKIP_CSP ? undefined : cspMetaTagPlugin(mode),
       svgr({
         svgrOptions: {
           icon: false,

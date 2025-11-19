@@ -1,5 +1,5 @@
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import styled, { css } from 'lib/styled-components'
+import { css, styled } from 'lib/styled-components'
 import { FadePresence, FadePresenceAnimationType } from 'theme/components/FadePresence'
 import { useSporeColors } from 'ui/src'
 

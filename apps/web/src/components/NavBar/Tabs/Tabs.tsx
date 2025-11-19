@@ -1,8 +1,11 @@
 import { NavDropdown, NavDropdownTabWrapper } from 'components/NavBar/NavDropdown/index'
 import { TabsItem, TabsSection, useTabsContent } from 'components/NavBar/Tabs/TabsContent'
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { NavLink, useLocation } from 'react-router'
 import { Flex, Popover, styled, Text } from 'ui/src'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 
 const TabText = styled(Text, {
   justifyContent: 'center',
@@ -25,9 +28,10 @@ interface TItemProps {
   label: string
   path: string
   closeMenu: () => void
+  elementName?: ElementName
 }
-function Item({ icon, label, path, closeMenu }: TItemProps) {
-  return (
+function Item({ icon, label, path, closeMenu, elementName }: TItemProps) {
+  const content = (
     <NavLink to={path} style={{ textDecoration: 'none' }} onClick={closeMenu}>
       <Flex
         row
@@ -47,6 +51,16 @@ function Item({ icon, label, path, closeMenu }: TItemProps) {
       </Flex>
     </NavLink>
   )
+
+  if (elementName) {
+    return (
+      <Trace logPress element={elementName}>
+        {content}
+      </Trace>
+    )
+  }
+
+  return content
 }
 
 const Tab = ({
@@ -60,6 +74,7 @@ const Tab = ({
   path: string
   items?: TabsItem[]
 }) => {
+  const { t } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const popoverRef = useRef<Popover>(null)
   const location = useLocation()
@@ -71,12 +86,22 @@ const Tab = ({
   // biome-ignore lint/correctness/useExhaustiveDependencies: location dependency is sufficient for this effect
   useEffect(() => closeMenu(), [location, closeMenu])
 
-  const Label = (
+  const isPortfolioTab = label === t('common.portfolio')
+  const labelContent = (
     <NavLink to={path} style={{ textDecoration: 'none' }}>
       <TabText variant="subheading1" isActive={isActive || isOpen}>
         {label}
       </TabText>
     </NavLink>
+  )
+
+  // TODO: add tracing for other tabs
+  const Label = isPortfolioTab ? (
+    <Trace logPress element={ElementName.NavbarPortfolioTab}>
+      {labelContent}
+    </Trace>
+  ) : (
+    labelContent
   )
 
   if (!items) {
@@ -95,6 +120,7 @@ const Tab = ({
               label={item.label}
               path={item.href}
               closeMenu={closeMenu}
+              elementName={item.elementName}
             />
           ))}
         </NavDropdownTabWrapper>

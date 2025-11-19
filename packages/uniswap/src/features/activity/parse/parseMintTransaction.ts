@@ -1,4 +1,5 @@
 import { OnChainTransaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { extractDappInfo } from 'uniswap/src/features/activity/utils/extractDappInfo'
 import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
@@ -111,10 +112,7 @@ export function parseRestNFTMintTransaction(transaction: OnChainTransaction): NF
     purchaseCurrencyId: buildCurrencyId(nftTransfer.chainId, address),
     purchaseCurrencyAmountRaw: transaction.fee?.amount?.raw,
     transactedUSDValue: undefined,
-    dappInfo: {
-      name: transaction.protocol?.name,
-      icon: transaction.protocol?.logoUrl,
-    },
+    dappInfo: extractDappInfo(transaction),
     isSpam: nftTransfer.isSpam,
   }
 }

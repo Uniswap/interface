@@ -1,12 +1,12 @@
 import { BackgroundType } from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
 import type { InAppNotification } from '@universe/api'
 import type { NotificationClickTarget } from '@universe/notifications'
+import { memo, useMemo } from 'react'
 import {
   type ModalFeatureItem,
   ModalTemplate,
   type ModalTemplateButton,
-} from 'notification-system/notification-renderer/ModalTemplate'
-import { memo, useMemo } from 'react'
+} from 'uniswap/src/components/notifications/ModalTemplate'
 import { useEvent } from 'utilities/src/react/hooks'
 
 interface ModalNotificationProps {
@@ -56,11 +56,6 @@ export const ModalNotification = memo(function ModalNotification({
     return background?.backgroundOnClick && background.backgroundOnClick.onClick.length > 0
   }, [content.background])
 
-  const iconUrl = useMemo(() => {
-    // TODO: Parse from content.extra or add to API schema if needed
-    return undefined
-  }, [])
-
   const features = useMemo((): ModalFeatureItem[] => {
     if (!content.body?.items) {
       return []
@@ -93,7 +88,7 @@ export const ModalNotification = memo(function ModalNotification({
       onClose={handleClose}
       backgroundImageUrl={backgroundImageUrl}
       onBackgroundPress={hasBackgroundClick ? handleBackgroundPress : undefined}
-      iconUrl={iconUrl}
+      iconUrl={content.iconLink}
       title={content.title}
       subtitle={content.subtitle}
       features={features}

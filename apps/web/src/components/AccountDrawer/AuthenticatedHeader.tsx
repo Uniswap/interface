@@ -15,14 +15,17 @@ import { LimitedSupportBanner } from 'components/Banner/LimitedSupportBanner'
 import DelegationMismatchModal from 'components/delegation/DelegationMismatchModal'
 import { Settings } from 'components/Icons/Settings'
 import StatusIcon from 'components/StatusIcon'
+import { ExtensionRequestMethods, useUniswapExtensionRequest } from 'components/WalletModal/useWagmiConnectorWithId'
 import { useAccountsStore } from 'features/accounts/store/hooks'
 import { useIsUniswapExtensionConnected } from 'hooks/useIsUniswapExtensionConnected'
 import { useModalState } from 'hooks/useModalState'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
-import { Button, Flex, IconButton, useSporeColors } from 'ui/src'
+import { Button, Flex, IconButton, Image, useSporeColors } from 'ui/src'
+import { UNISWAP_LOGO } from 'ui/src/assets'
 import { Shine } from 'ui/src/loading/Shine'
+import { iconSizes } from 'ui/src/theme'
 import AnimatedNumber, {
   BALANCE_CHANGE_INDICATION_DURATION,
 } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
@@ -60,7 +63,10 @@ export default function AuthenticatedHeader({
     return Boolean(evmWalletId && svmWalletId && evmWalletId !== svmWalletId)
   }) // if different wallets are connected, do not show mini wallet icon
 
-  const shouldShowExtensionDeeplinks = useIsUniswapExtensionConnected() && !isSolanaConnected
+  const isUniswapExtensionConnected = useIsUniswapExtensionConnected()
+  const uniswapExtensionRequest = useUniswapExtensionRequest()
+  const shouldShowExtensionDeeplinks = isUniswapExtensionConnected && !isSolanaConnected && !isPortfolioPageEnabled
+  const shouldShowExtensionButton = isPortfolioPageEnabled && isUniswapExtensionConnected && !isSolanaConnected
 
   const { isTestnetModeEnabled } = useEnabledChains()
 
@@ -101,6 +107,11 @@ export default function AuthenticatedHeader({
   const shouldFadePortfolioDecimals =
     (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) && currencyComponents.symbolAtFront
 
+  const handleOpenExtensionSidebar = useCallback(() => {
+    uniswapExtensionRequest?.(ExtensionRequestMethods.OPEN_SIDEBAR, 'Tokens')
+    accountDrawer.close()
+  }, [uniswapExtensionRequest, accountDrawer])
+
   return (
     <>
       <Flex flex={1} px="$padding16" py={shouldShowExtensionDeeplinks ? '$spacing16' : '$spacing20'}>
@@ -112,6 +123,18 @@ export default function AuthenticatedHeader({
             size={48}
           />
           <Flex row gap="$spacing4">
+            {shouldShowExtensionButton && (
+              <IconButton
+                size="small"
+                emphasis="text-only"
+                icon={<Image height={iconSizes.icon24} source={UNISWAP_LOGO} width={iconSizes.icon24} />}
+                borderRadius="$rounded32"
+                hoverStyle={{
+                  backgroundColor: '$surface2',
+                }}
+                onPress={handleOpenExtensionSidebar}
+              />
+            )}
             <IconButton
               size="small"
               emphasis="text-only"
@@ -169,7 +192,7 @@ export default function AuthenticatedHeader({
                 <>
                   <Flex row gap="$gap8">
                     <Flex grow>
-                      <SendActionTile onPress={accountDrawer.close} />
+                      <SendActionTile onPress={isPortfolioPageEnabled ? undefined : accountDrawer.close} />
                     </Flex>
                     <Flex grow>
                       <ReceiveActionTile />

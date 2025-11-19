@@ -1,9 +1,10 @@
+import { ChartTooltip } from 'components/Charts/ChartTooltip'
 import { CustomHoverMarker } from 'components/Charts/CustomHoverMarker'
 import { useApplyChartTextureEffects } from 'components/Charts/hooks/useApplyChartTextureEffects'
 import { ChartModelWithLiveDot, LiveDotRenderer } from 'components/Charts/LiveDotRenderer'
+import { StaleBanner } from 'components/Charts/StaleBanner'
 import { PROTOCOL_LEGEND_ELEMENT_ID, SeriesDataItemType } from 'components/Charts/types'
 import { formatTickMarks } from 'components/Charts/utils'
-import { MissingDataBars } from 'components/Table/icons'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { atom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
@@ -19,9 +20,7 @@ import {
   TimeChartOptions,
 } from 'lightweight-charts'
 import { ReactElement, TouchEvent, useEffect, useMemo, useRef, useState } from 'react'
-import { Trans } from 'react-i18next'
-import { ThemedText } from 'theme/components'
-import { assertWebElement, ColorTokens, Flex, styled, TamaguiElement, useMedia, useSporeColors } from 'ui/src'
+import { assertWebElement, ColorTokens, Flex, TamaguiElement, useMedia, useSporeColors } from 'ui/src'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
@@ -341,8 +340,19 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
     [format, isLargeScreen, locale, params, colors, handleCrosshairMove],
   )
 
+  // Create a stable key that changes when chart data changes (e.g., time period change)
+  const dataKey = useMemo(() => {
+    if (params.data.length === 0) {
+      return undefined
+    }
+    const lastItem = params.data[params.data.length - 1]
+    return JSON.stringify(lastItem)
+  }, [params.data])
+
   // Chart model state should not affect React render cycles since the chart canvas is drawn outside of React, so we store via ref
   const chartModelRef = useRef<ChartModel<TDataType>>()
+  // Track when chart model is ready to trigger re-render for LiveDotRenderer
+  const [isChartModelReady, setIsChartModelReady] = useState(false)
 
   useApplyChartTextureEffects({ chartDivElement, showDottedBackground, showLeftFadeOverlay })
 
@@ -353,6 +363,8 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
       chartModelRef.current = new Model(chartDivElement, modelParams)
       // Providers the time period selector with a handle to refit the chart
       setRefitChartContent(() => () => chartModelRef.current?.fitContent())
+      // Trigger re-render so LiveDotRenderer can access the chart model
+      setIsChartModelReady(true)
     }
   }, [Model, chartDivElement, modelParams, setRefitChartContent])
 
@@ -368,6 +380,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
       // This ref's value will persist when being initially remounted in React.StrictMode.
       // The persisted IChartApi would err if utilized after calling remove(), so we manually clear the ref here.
       chartModelRef.current = undefined
+      setIsChartModelReady(false)
       setRefitChartContent(undefined)
     }
   }, [setRefitChartContent])
@@ -419,62 +432,15 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
         <CustomHoverMarker coordinates={hoverCoordinates} lineColor={colors.accent1.val} />
       )}
       {/* Live dot indicator at the end of line charts */}
-      {chartModelRef.current && chartDivElement && 'getLastPointCoordinates' in chartModelRef.current && (
+      {chartDivElement && isChartModelReady && chartModelRef.current && (
         <LiveDotRenderer
           chartModel={chartModelRef.current as ChartModelWithLiveDot}
           isHovering={!!crosshairData}
           chartContainer={chartDivElement as HTMLDivElement}
           overrideColor={overrideColor}
+          dataKey={dataKey}
         />
       )}
     </Flex>
-  )
-}
-
-const ChartTooltip = styled(Flex, {
-  alignItems: 'center',
-  position: 'absolute',
-  left: 0,
-  top: 0,
-  zIndex: '$tooltip',
-  borderWidth: 0,
-  borderStyle: 'solid',
-  pointerEvents: 'none', // Prevent tooltip from interfering with mouse events
-  variants: {
-    includeBorder: {
-      true: {
-        backgroundColor: '$surface5',
-        backdropFilter: 'blur(8px)',
-        borderRadius: '$rounded8',
-        borderColor: '$surface3',
-        borderWidth: 1,
-        p: '$spacing8',
-      },
-    },
-  },
-})
-
-const StaleBannerWrapper = styled(ChartTooltip, {
-  borderRadius: '$rounded16',
-  left: 'unset',
-  top: 'unset',
-  right: '$spacing12',
-  bottom: '$spacing40',
-  p: '$spacing12',
-  backgroundColor: '$surface4',
-})
-
-function StaleBanner() {
-  const colors = useSporeColors()
-  // TODO(WEB-3739): Update Chart UI to grayscale when data is stale
-  return (
-    <StaleBannerWrapper data-testid="chart-stale-banner">
-      <Flex row gap="$gap8">
-        <MissingDataBars color={colors.neutral1.val} />
-        <ThemedText.BodySmall>
-          <Trans i18nKey="common.dataOutdated" />
-        </ThemedText.BodySmall>
-      </Flex>
-    </StaleBannerWrapper>
   )
 }

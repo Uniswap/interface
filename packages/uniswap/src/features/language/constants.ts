@@ -256,3 +256,104 @@ export const mapLocaleToLanguage: Record<Locale, Language> = {
   [Locale.TurkishTurkey]: Language.Turkish,
   [Locale.VietnameseVietnam]: Language.Vietnamese,
 }
+
+/**
+ * List of locale codes supported by the backend notification service.
+ * These are simplified locale codes without country/region modifiers (except where specific variants are needed).
+ * Use this enum when sending locale information to backend APIs that expect this specific format.
+ *
+ * Note: The app does not currently support Filipino ('fil'), but it's included here for completeness.
+ */
+export enum BackendSupportedLocale {
+  ChineseSimplified = 'zh-CN',
+  ChineseTraditional = 'zh-TW',
+  Dutch = 'nl',
+  English = 'en',
+  Filipino = 'fil',
+  French = 'fr',
+  Indonesian = 'id',
+  Japanese = 'ja',
+  Korean = 'ko',
+  PortugueseBrazil = 'pt-BR',
+  Russian = 'ru',
+  SpanishLatam = 'es-419',
+  Turkish = 'tr',
+  Vietnamese = 'vi',
+}
+
+/**
+ * Mapping from internal Locale enum values (used for Crowdin integration) to backend-supported locale codes.
+ * The backend expects simplified locale codes, while the app uses more specific Crowdin locale formats.
+ */
+const localeToBackendLocaleMap: Record<Locale, BackendSupportedLocale | undefined> = {
+  // Chinese variants
+  [Locale.ChineseSimplified]: BackendSupportedLocale.ChineseSimplified,
+  [Locale.ChineseTraditional]: BackendSupportedLocale.ChineseTraditional,
+
+  // Dutch
+  [Locale.DutchNetherlands]: BackendSupportedLocale.Dutch,
+
+  // English
+  [Locale.EnglishUnitedStates]: BackendSupportedLocale.English,
+
+  // French
+  [Locale.FrenchFrance]: BackendSupportedLocale.French,
+
+  // Indonesian
+  [Locale.IndonesianIndonesia]: BackendSupportedLocale.Indonesian,
+
+  // Japanese
+  [Locale.JapaneseJapan]: BackendSupportedLocale.Japanese,
+
+  // Korean
+  [Locale.KoreanKorea]: BackendSupportedLocale.Korean,
+
+  // Portuguese - both variants map to pt-BR (Brazil) as it's the LATAM standard
+  [Locale.PortugueseBrazil]: BackendSupportedLocale.PortugueseBrazil,
+  [Locale.PortuguesePortugal]: BackendSupportedLocale.PortugueseBrazil,
+
+  // Russian
+  [Locale.RussianRussia]: BackendSupportedLocale.Russian,
+
+  // All Spanish variants map to es-419 (Latin America standard)
+  [Locale.SpanishSpain]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishLatam]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishBelize]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishCuba]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishDominicanRepublic]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishGuatemala]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishHonduras]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishMexico]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishNicaragua]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishPanama]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishPeru]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishPuertoRico]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishElSalvador]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishUnitedStates]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishArgentina]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishBolivia]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishChile]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishColombia]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishCostaRica]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishEcuador]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishParaguay]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishUruguay]: BackendSupportedLocale.SpanishLatam,
+  [Locale.SpanishVenezuela]: BackendSupportedLocale.SpanishLatam,
+
+  // Turkish
+  [Locale.TurkishTurkey]: BackendSupportedLocale.Turkish,
+
+  // Vietnamese
+  [Locale.VietnameseVietnam]: BackendSupportedLocale.Vietnamese,
+}
+
+/**
+ * Converts internal Locale enum values (used for Crowdin integration) to backend-supported locale codes.
+ * The backend expects simplified locale codes, while the app uses more specific Crowdin locale formats.
+ *
+ * @param locale - The internal Locale enum value
+ * @returns The corresponding backend-supported locale code, defaults to English if not found
+ */
+export function mapLocaleToBackendLocale(locale: Locale): BackendSupportedLocale {
+  return localeToBackendLocaleMap[locale] ?? BackendSupportedLocale.English
+}

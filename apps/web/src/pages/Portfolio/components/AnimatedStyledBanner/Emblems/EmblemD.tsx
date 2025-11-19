@@ -1,0 +1,29 @@
+import { EmblemProps } from 'pages/Portfolio/components/AnimatedStyledBanner/Emblems/types'
+import { useSporeColors } from 'ui/src'
+
+export function EmblemD({ fill = '#FF37C7', opacity = 1, ...props }: EmblemProps): JSX.Element {
+  const colors = useSporeColors()
+
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+      <path
+        d="M15 2C15 5.86599 11.866 9 8 9C4.13401 9 1 5.86599 1 2H4.5C6.433 2 8 3.567 8 5.5C8 3.567 9.567 2 11.5 2H15Z"
+        fill={colors.surface1.val}
+      />
+      <path
+        d="M1 9C1 12.866 4.13401 16 8 16C11.866 16 15 12.866 15 9H11.5C9.567 9 8 10.567 8 12.5C8 10.567 6.433 9 4.5 9H1Z"
+        fill={colors.surface1.val}
+      />
+      <path
+        d="M15 2C15 5.86599 11.866 9 8 9C4.13401 9 1 5.86599 1 2H4.5C6.433 2 8 3.567 8 5.5C8 3.567 9.567 2 11.5 2H15Z"
+        fill={fill}
+        opacity={opacity}
+      />
+      <path
+        d="M1 9C1 12.866 4.13401 16 8 16C11.866 16 15 12.866 15 9H11.5C9.567 9 8 10.567 8 12.5C8 10.567 6.433 9 4.5 9H1Z"
+        fill={fill}
+        opacity={opacity}
+      />
+    </svg>
+  )
+}

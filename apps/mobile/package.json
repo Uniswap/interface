@@ -109,7 +109,7 @@
     "@uniswap/analytics-events": "2.43.0",
     "@uniswap/client-explore": "0.0.17",
     "@uniswap/ethers-rs-mobile": "0.0.5",
-    "@uniswap/sdk-core": "7.7.2",
+    "@uniswap/sdk-core": "7.9.0",
     "@universe/api": "workspace:^",
     "@universe/gating": "workspace:^",
     "@universe/sessions": "workspace:^",

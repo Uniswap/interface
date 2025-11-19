@@ -1,3 +1,5 @@
+import { getPortfolio } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
+import { Mocks } from 'playwright/mocks/mocks'
 import { expect, type Page } from 'playwright/test'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -28,6 +30,17 @@ export async function mockUnitagResponse({
         address,
       }),
     })
+  })
+}
+
+/**
+ * Mocks the GetPortfolio API response
+ * @param page The Playwright page
+ */
+// eslint-disable-next-line import/no-unused-modules
+export async function mockGetPortfolioResponse({ page }: { page: Page }) {
+  await page.route(`**/${getPortfolio.service.typeName}/${getPortfolio.name}`, async (route) => {
+    await route.fulfill({ path: Mocks.DataApiService.get_portfolio })
   })
 }
 

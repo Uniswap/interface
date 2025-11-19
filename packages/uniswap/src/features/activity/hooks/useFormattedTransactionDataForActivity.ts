@@ -47,7 +47,10 @@ interface UseFormattedTransactionDataOptions {
   chainIds?: UniverseChainId[]
 }
 
-type FormattedTransactionInputs = UseFormattedTransactionDataOptions & TransactionListQueryArgs
+type FormattedTransactionInputs = UseFormattedTransactionDataOptions &
+  TransactionListQueryArgs & {
+    showLoadingOnRefetch?: boolean
+  }
 
 export interface FormattedTransactionDataResult extends PaginationControls {
   hasData: boolean
@@ -70,6 +73,7 @@ export function useFormattedTransactionDataForActivity({
   pageSize,
   skip,
   chainIds,
+  showLoadingOnRefetch = false,
   ...queryOptions
 }: FormattedTransactionInputs): FormattedTransactionDataResult {
   const { t } = useTranslation()
@@ -80,6 +84,7 @@ export function useFormattedTransactionDataForActivity({
   const {
     data: formattedTransactions,
     loading,
+    isFetching,
     error,
     refetch,
     networkStatus,
@@ -133,7 +138,10 @@ export function useFormattedTransactionDataForActivity({
   const hasData = Boolean(formattedTransactions?.length)
 
   // show loading if no data and fetching, or refetching when there is error (for UX when "retry" is clicked).
-  const showLoading = (!hasData && loading) || (Boolean(error) && networkStatus === NetworkStatus.loading)
+  const showLoading =
+    (!hasData && loading) ||
+    (Boolean(error) && networkStatus === NetworkStatus.loading) ||
+    (showLoadingOnRefetch && isFetching && !isFetchingNextPage)
 
   const sectionData = useMemo(
     () =>
@@ -169,7 +177,7 @@ export function useFormattedTransactionDataForActivity({
     sectionData: memoizedSectionData,
     hasData,
     isError: error ?? undefined,
-    isLoading: loading,
+    isLoading: showLoading,
     keyExtractor,
     fetchNextPage,
     hasNextPage: hasNextPage && !hasReachedLimit(transactions),

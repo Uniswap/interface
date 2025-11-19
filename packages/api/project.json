@@ -14,8 +14,9 @@
     "typecheck": {},
     "prepare": {
       "executor": "nx:noop",
-      "dependsOn": ["tradingapi:generate", "graphql:generate"],
-      "cache": true
+      "dependsOn": ["graphql:generate", "tradingapi:generate"],
+      "parallel": false,
+      "cache": false
     },
     "check:deps:usage": {
       "command": "depcheck",
@@ -59,7 +60,7 @@
       },
       "cache": true,
       "inputs": [
-        "{projectRoot}/src/clients/trading/__generated__/models",
+        "{projectRoot}/src/clients/trading/__generated__",
         "{projectRoot}/scripts/modifyTradingApiTypes.mts",
         "{projectRoot}/src/clients/trading/types.ts",
         {

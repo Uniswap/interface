@@ -28,7 +28,7 @@ import {
 } from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { useAtomValue } from 'jotai/utils'
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'

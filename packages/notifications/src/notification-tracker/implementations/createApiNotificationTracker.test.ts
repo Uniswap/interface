@@ -263,6 +263,45 @@ describe('createApiNotificationTracker', () => {
   })
 
   describe('integration scenarios', () => {
+    it('prevents race condition: isProcessed returns true immediately after track is called', async () => {
+      const mockApiClient = createMockApiClient()
+      const mockStorage = createMockStorage()
+
+      // Simulate slow storage writes (e.g., IndexedDB or localStorage)
+      let storageWriteResolver: (() => void) | undefined
+      const storageWritePromise = new Promise<void>((resolve) => {
+        storageWriteResolver = resolve
+      })
+      mockStorage.add.mockReturnValue(storageWritePromise)
+
+      // Storage hasn't been written to yet
+      mockStorage.has.mockResolvedValue(false)
+
+      const tracker = createApiNotificationTracker({
+        notificationsApiClient: mockApiClient,
+        storage: mockStorage,
+      })
+
+      // Initially not processed
+      expect(await tracker.isProcessed('notif-1')).toBe(false)
+
+      // Start tracking (but don't await - simulates in-flight acknowledgment)
+      const trackPromise = tracker.track('notif-1', mockMetadata)
+
+      // CRITICAL: Even though storage.has still returns false and storage write hasn't completed,
+      // isProcessed should return true due to in-memory pending set
+      // This prevents notifications from re-appearing when data source refetches
+      expect(await tracker.isProcessed('notif-1')).toBe(true)
+
+      // Complete the storage write
+      storageWriteResolver?.()
+      await trackPromise
+
+      // Still processed after storage write completes
+      mockStorage.has.mockResolvedValue(true)
+      expect(await tracker.isProcessed('notif-1')).toBe(true)
+    })
+
     it('handles complete notification lifecycle', async () => {
       const mockApiClient = createMockApiClient()
       const mockStorage = createMockStorage()
@@ -292,7 +331,7 @@ describe('createApiNotificationTracker', () => {
       expect(mockStorage.deleteOlderThan).toHaveBeenCalled()
     })
 
-    it('throws when storage operations fail after successful API call', async () => {
+    it('marks notification as processed even when storage fails (UX priority)', async () => {
       const mockApiClient = createMockApiClient()
       const mockStorage = createMockStorage()
 
@@ -301,15 +340,21 @@ describe('createApiNotificationTracker', () => {
         storage: mockStorage,
       })
 
-      // Simulate storage failure after successful API call
+      // Simulate storage failure
       mockStorage.add.mockRejectedValue(new Error('Storage quota exceeded'))
+      mockStorage.has.mockResolvedValue(false)
 
-      // Track should fail if storage fails, even after successful API call
-      await expect(tracker.track('notif-1', mockMetadata)).rejects.toThrow('Storage quota exceeded')
+      // Track should not throw - errors are caught and logged
+      await expect(tracker.track('notif-1', mockMetadata)).resolves.not.toThrow()
 
+      // Verify API was called
       expect(mockApiClient.ackNotification).toHaveBeenCalledWith({
         ids: ['notif-1'],
       })
+
+      // CRITICAL: Even though storage failed, the notification should still be
+      // considered processed due to in-memory pending set (UX priority)
+      expect(await tracker.isProcessed('notif-1')).toBe(true)
     })
 
     it('tracks same notification multiple times independently without deduplication', async () => {

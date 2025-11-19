@@ -12,9 +12,8 @@ import { isInvalidPrice, isInvalidRange } from 'components/Liquidity/utils/price
 import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { useMigrateV2ToV3LPPositionQuery } from 'uniswap/src/data/apiClients/liquidityService/useMigrateV2ToV3LPPositionQuery'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
-import { useMigrateV2ToV3LPPositionQuery } from 'uniswap/src/data/apiClients/tradingApi/useMigrateV2ToV3LPPositionQuery'
 import { useMigrateV3LpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useMigrateV3LpPositionCalldataQuery'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -40,11 +39,9 @@ function isV3ToV4MigrationPositionInfo(
 function buildApprovalParams({
   positionInfo,
   address,
-  generatePermitAsTransaction,
 }: {
   positionInfo: V2PairInfo | V3PositionInfo
   address: string
-  generatePermitAsTransaction: boolean | undefined
 }): TradingApi.CheckApprovalLPRequest | undefined {
   if (isV3ToV4MigrationPositionInfo(positionInfo)) {
     return {
@@ -53,7 +50,7 @@ function buildApprovalParams({
       chainId: positionInfo.currency0Amount.currency.chainId,
       protocol: TradingApi.ProtocolItems.V3,
       positionToken: positionInfo.tokenId,
-      generatePermitAsTransaction,
+      generatePermitAsTransaction: false, // when batching is supported check canBatchTransactions
     }
   } else {
     return {
@@ -193,7 +190,6 @@ export function useMigrateLPPositionTxInfo({
 
   const { creatingPoolOrPair, protocolVersion, positionState, currentTransactionStep, poolOrPair, ticks, price } =
     useCreateLiquidityContext()
-  const generatePermitAsTransaction = useUniswapContext().getCanSignPermits?.(positionInfo?.chainId)
 
   const invalidPrice = isInvalidPrice(price)
   const invalidRange = isInvalidRange(ticks[0], ticks[1])
@@ -204,8 +200,8 @@ export function useMigrateLPPositionTxInfo({
       return undefined
     }
 
-    return buildApprovalParams({ positionInfo, address, generatePermitAsTransaction })
-  }, [positionInfo, address, generatePermitAsTransaction])
+    return buildApprovalParams({ positionInfo, address })
+  }, [positionInfo, address])
 
   const {
     data: migrateTokenApprovals,
@@ -361,6 +357,7 @@ export function useMigrateLPPositionTxInfo({
 
     return {
       type: LiquidityTransactionType.Migrate,
+      canBatchTransactions: false, // when batching is supported check canBatchTransactions
       migratePositionRequestArgs: isV3ToV4Migration
         ? (migratePositionRequestArgs as TradingApi.MigrateLPPositionRequest)
         : undefined,

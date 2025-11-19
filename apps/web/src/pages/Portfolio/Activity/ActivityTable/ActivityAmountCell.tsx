@@ -1,7 +1,9 @@
+/* eslint-disable max-lines */
 import { NftAmountDisplay } from 'pages/Portfolio/Activity/ActivityTable/NftAmountDisplay'
 import { buildActivityRowFragments } from 'pages/Portfolio/Activity/ActivityTable/registry'
 import { TokenAmountDisplay } from 'pages/Portfolio/Activity/ActivityTable/TokenAmountDisplay'
 import { getTransactionTypeFilterOptions } from 'pages/Portfolio/Activity/Filters/utils'
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
@@ -20,6 +22,7 @@ import {
   INFINITE_APPROVAL_AMOUNT,
   REVOKE_APPROVAL_AMOUNT,
   TransactionDetails,
+  TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -204,7 +207,7 @@ function formatSingleCompactAmountText(amount: string | undefined, symbol: strin
   return `${amount} ${symbol}`
 }
 
-export function ActivityAmountCell({ transaction, variant = 'full' }: ActivityAmountCellProps) {
+function _ActivityAmountCell({ transaction, variant = 'full' }: ActivityAmountCellProps) {
   const formatter = useLocalizationContext()
   const { t } = useTranslation()
   const { chainId } = transaction
@@ -284,6 +287,14 @@ export function ActivityAmountCell({ transaction, variant = 'full' }: ActivityAm
     formatter,
     isApproximateAmount: false,
   })
+
+  if (transaction.status === TransactionStatus.Failed) {
+    return (
+      <Text variant="body3" color="$neutral2">
+        {t('notification.transaction.unknown.fail.short')}
+      </Text>
+    )
+  }
 
   if (!amount) {
     return <EmptyCell />
@@ -482,5 +493,10 @@ export function ActivityAmountCell({ transaction, variant = 'full' }: ActivityAm
         />
       )
     }
+
+    default:
+      return <EmptyCell />
   }
 }
+
+export const ActivityAmountCell = memo(_ActivityAmountCell)

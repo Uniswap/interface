@@ -53,7 +53,15 @@ export interface ApiNotificationTrackerContext {
 export function createApiNotificationTracker(ctx: ApiNotificationTrackerContext): NotificationTracker {
   const { notificationsApiClient, storage } = ctx
 
+  // Track in-flight acknowledgments to prevent race conditions
+  // If a notification is being acknowledged but storage write hasn't completed yet,
+  // this ensures isProcessed() returns true immediately to prevent re-appearing notifications
+  const pendingAcks = new Set<string>()
+
   const isProcessed = async (notificationId: string): Promise<boolean> => {
+    if (pendingAcks.has(notificationId)) {
+      return true
+    }
     return storage.has(notificationId)
   }
 
@@ -62,11 +70,39 @@ export function createApiNotificationTracker(ctx: ApiNotificationTrackerContext)
   }
 
   const track = async (notificationId: string, metadata: TrackingMetadata): Promise<void> => {
+    // Immediately mark as pending (synchronous) to prevent race condition
+    // where data source refetches before storage write completes
+    pendingAcks.add(notificationId)
+
+    // Check if this is a local-only notification (client-defined, not from backend)
+    const isLocalNotification = notificationId.startsWith('local:')
+
     // Attempt to call the backend API to acknowledge the notification
     try {
-      await notificationsApiClient.ackNotification({
-        ids: [notificationId],
-      })
+      await Promise.all([
+        // Skip API call for local notifications since the backend has no knowledge of them
+        isLocalNotification
+          ? Promise.resolve()
+          : notificationsApiClient.ackNotification({
+              ids: [notificationId],
+            }),
+        // Even if API fails, update localStorage so the notification stays dismissed
+        // from the user's perspective. This prioritizes UX over perfect backend consistency.
+        //
+        // Tradeoff: If localStorage is later cleared but the backend never received the ack,
+        // the notification could reappear. However, by the time localStorage is cleaned up
+        // or cleared, the notification will typically be expired on the backend anyway.
+        storage
+          .add(notificationId, { timestamp: metadata.timestamp })
+          .catch((storageError) => {
+            getLogger().error(
+              `Storage write failed for notification ${notificationId}: ${storageError instanceof Error ? storageError.message : String(storageError)}`,
+              {
+                tags: { file: 'createApiNotificationTracker', function: 'track' },
+              },
+            )
+          }),
+      ])
     } catch (error) {
       getLogger().error(
         `Failed to acknowledge notification ${notificationId}: ${error instanceof Error ? error.message : String(error)}`,
@@ -77,18 +113,11 @@ export function createApiNotificationTracker(ctx: ApiNotificationTrackerContext)
           },
         },
       )
+      // Keep notification in pendingAcks even on error - prioritize UX
+      // The user dismissed it, so it should stay dismissed from their perspective
     }
-
-    // Even if API fails, update localStorage so the notification stays dismissed
-    // from the user's perspective. This prioritizes UX over perfect backend consistency.
-    //
-    // Tradeoff: If localStorage is later cleared but the backend never received the ack,
-    // the notification could reappear. However, by the time localStorage is cleaned up
-    // or cleared, the notification will typically be expired on the backend anyway.
-    //
-    // Future enhancement: Consider adding a multi-session retry queue to sync failed acks.
-    // This would provide both good UX and eventual consistency.
-    await storage.add(notificationId, { timestamp: metadata.timestamp })
+    // Note: We intentionally don't remove from pendingAcks after completion
+    // Once acknowledged, it should always be considered processed
   }
 
   const cleanup = async (olderThan: number): Promise<void> => {

@@ -1,8 +1,6 @@
 import type {
   GetLPPriceDiscrepancyRequest,
   GetLPPriceDiscrepancyResponse,
-  MigrateV2ToV3LPPositionRequest,
-  MigrateV2ToV3LPPositionResponse,
   PoolInfoRequest,
   PoolInfoResponse,
 } from '@uniswap/client-trading/dist/trading/v1/api_pb'
@@ -115,7 +113,6 @@ export interface TradingApiClient {
   checkLpApproval: (params: CheckApprovalLPRequest, headers?: HeadersInit) => Promise<CheckApprovalLPResponse>
   claimLpFees: (params: ClaimLPFeesRequest) => Promise<ClaimLPFeesResponse>
   migrateV3ToV4LpPosition: (params: MigrateLPPositionRequest) => Promise<MigrateLPPositionResponse>
-  migrateV2ToV3LpPosition: (params: MigrateV2ToV3LPPositionRequest) => Promise<MigrateV2ToV3LPPositionResponse>
   fetchPoolInfo: (params: PoolInfoRequest) => Promise<PoolInfoResponse>
   fetchClaimLpIncentiveRewards: (params: ClaimLPRewardsRequest) => Promise<ClaimLPRewardsResponse>
   fetchWalletEncoding7702: (params: WalletEncode7702RequestBody) => Promise<Encode7702ResponseBody>
@@ -339,18 +336,6 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     }),
   })
 
-  const migrateV2ToV3LpPosition = createFetcher<MigrateV2ToV3LPPositionRequest, MigrateV2ToV3LPPositionResponse>({
-    client,
-    url: getApiPath(TRADING_API_PATHS.lp.migrateV2ToV3),
-    method: 'post',
-    transformRequest: async ({ params }) => ({
-      headers: getFeatureFlagHeaders(TRADING_API_PATHS.lp.migrateV2ToV3),
-      params: {
-        ...params,
-      },
-    }),
-  })
-
   const fetchClaimLpIncentiveRewards = createFetcher<ClaimLPRewardsRequest, ClaimLPRewardsResponse>({
     client,
     url: getApiPath(TRADING_API_PATHS.lp.claimRewards),
@@ -469,7 +454,6 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     checkLpApproval,
     claimLpFees,
     migrateV3ToV4LpPosition,
-    migrateV2ToV3LpPosition,
     fetchPoolInfo,
     fetchClaimLpIncentiveRewards,
     fetchWalletEncoding7702,

@@ -9,11 +9,11 @@ const test = getTest()
 test.describe('Buy Crypto Form', () => {
   test.beforeEach(async ({ page }) => {
     const mockRoutes = [
-      { pattern: '**/fiat-on-ramp/get-country', file: Mocks.FiatOnRamp.get_country },
-      { pattern: '**/fiat-on-ramp/supported-fiat-currencies*', file: Mocks.FiatOnRamp.supported_fiat_currencies },
-      { pattern: '**/fiat-on-ramp/supported-countries*', file: Mocks.FiatOnRamp.supported_countries },
-      { pattern: '**/fiat-on-ramp/supported-tokens*', file: Mocks.FiatOnRamp.supported_tokens },
-      { pattern: '**/fiat-on-ramp/quote*', file: Mocks.FiatOnRamp.quotes },
+      { pattern: '**/GetCountry', file: Mocks.FiatOnRamp.get_country },
+      { pattern: '**/SupportedFiatCurrencies', file: Mocks.FiatOnRamp.supported_fiat_currencies },
+      { pattern: '**/SupportedCountries', file: Mocks.FiatOnRamp.supported_countries },
+      { pattern: '**/SupportedTokens', file: Mocks.FiatOnRamp.supported_tokens },
+      { pattern: '**/Quote', file: Mocks.FiatOnRamp.quotes },
     ]
 
     for (const { pattern, file } of mockRoutes) {

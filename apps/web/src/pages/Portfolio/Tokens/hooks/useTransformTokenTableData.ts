@@ -5,20 +5,17 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useSortedPortfolioBalances } from 'uniswap/src/features/dataApi/balances/balances'
 import type { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { NumberType } from 'utilities/src/format/types'
 
 export interface TokenData {
   id: string
   currencyInfo: CurrencyInfo | null // Full currency info including logoUrl
-  price: string
+  price: number
   change1d: number | undefined
   balance: {
-    value: string
+    value: number
     symbol: string | undefined
   }
-  value: string
-  rawValue: Maybe<number>
+  value: number
   allocation: number
 }
 
@@ -34,7 +31,6 @@ export function useTransformTokenTableData({ chainIds, limit }: { chainIds?: Uni
   networkStatus: NetworkStatus
 } {
   const { evmAddress, svmAddress } = usePortfolioAddresses()
-  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   const {
     data: sortedBalances,
@@ -74,25 +70,19 @@ export function useTransformTokenTableData({ chainIds, limit }: { chainIds?: Uni
     const totalUSDVisible = sortedBalances.balances.reduce((sum, b) => sum + (b.balanceUSD ?? 0), 0)
 
     const mapBalanceToTokenData = (balance: PortfolioBalance, allocationFromTotal?: number): TokenData => {
-      const price =
-        balance.balanceUSD && balance.quantity > 0
-          ? convertFiatAmountFormatted(balance.balanceUSD / balance.quantity, NumberType.FiatTokenPrice)
-          : '$0.00'
-
-      const formattedBalance = formatNumberOrString({ value: balance.quantity, type: NumberType.TokenNonTx })
-      const value = convertFiatAmountFormatted(balance.balanceUSD, NumberType.PortfolioBalance)
+      const balanceUSD = balance.balanceUSD ?? 0
+      const priceRaw = balanceUSD > 0 && balance.quantity > 0 ? balanceUSD / balance.quantity : 0
 
       return {
         id: balance.id,
         currencyInfo: balance.currencyInfo,
-        price,
+        price: priceRaw,
         change1d: balance.relativeChange24 || undefined,
         balance: {
-          value: formattedBalance,
+          value: balance.quantity,
           symbol: balance.currencyInfo.currency.symbol,
         },
-        value,
-        rawValue: balance.balanceUSD,
+        value: balanceUSD,
         allocation: allocationFromTotal ?? 0,
       }
     }
@@ -119,5 +109,5 @@ export function useTransformTokenTableData({ chainIds, limit }: { chainIds?: Uni
       networkStatus,
       error,
     }
-  }, [loading, sortedBalances, convertFiatAmountFormatted, formatNumberOrString, error, refetch, networkStatus, limit])
+  }, [loading, sortedBalances, error, refetch, networkStatus, limit])
 }

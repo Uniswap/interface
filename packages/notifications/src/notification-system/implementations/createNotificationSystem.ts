@@ -106,15 +106,6 @@ export function createNotificationSystem(config: NotificationSystemConfig): Noti
    * Cleans up the render without tracking (tracking only happens on ACK)
    */
   async function handleDismiss(notificationId: string): Promise<void> {
-    const notification = activeNotifications.get(notificationId)
-
-    if (notification) {
-      telemetry?.onNotificationDismissed({
-        notificationId,
-        type: notification.content?.style.toString() ?? 'unknown',
-      })
-    }
-
     const cleanup = activeRenders.get(notificationId)
     if (cleanup) {
       cleanup()
@@ -125,15 +116,84 @@ export function createNotificationSystem(config: NotificationSystemConfig): Noti
   }
 
   /**
-   * Internal method to handle acknowledging a notification
-   * Tracks the notification as acknowledged/processed
+   * Gets all downstream notification IDs in the chain starting from a notification
+   * Checks all possible click targets: buttons, background, and dismiss button
+   *
+   * @param notification - The notification object to start traversing from
+   * @returns Array of downstream notification IDs
    */
-  async function handleAcknowledge(notificationId: string): Promise<void> {
-    await tracker.track(notificationId, {
-      timestamp: Date.now(),
-    })
+  function getDownstreamNotificationIds(notification: InAppNotification): string[] {
+    const visited = new Set<string>()
+    const downstream: string[] = []
 
-    // TODO: send onAcknowledge analytics event
+    function traverse(currentNotification: InAppNotification): void {
+      if (visited.has(currentNotification.id)) {
+        return
+      }
+      visited.add(currentNotification.id)
+
+      // Extract popup targets from buttons
+      const buttons = currentNotification.content?.buttons ?? []
+      for (const button of buttons) {
+        if (button.onClick?.onClick.includes(OnClickAction.POPUP) && button.onClick.onClickLink) {
+          const targetId = button.onClick.onClickLink
+          if (!visited.has(targetId)) {
+            downstream.push(targetId)
+          }
+          // Look up the next notification in the chain
+          const nextNotification = activeNotifications.get(targetId) ?? chainedNotifications.get(targetId)
+          if (nextNotification) {
+            traverse(nextNotification)
+          }
+        }
+      }
+
+      // Extract popup target from background click
+      const backgroundOnClick = currentNotification.content?.background?.backgroundOnClick
+      if (backgroundOnClick?.onClick.includes(OnClickAction.POPUP) && backgroundOnClick.onClickLink) {
+        const targetId = backgroundOnClick.onClickLink
+        if (!visited.has(targetId)) {
+          downstream.push(targetId)
+        }
+        // Look up the next notification in the chain
+        const nextNotification = activeNotifications.get(targetId) ?? chainedNotifications.get(targetId)
+        if (nextNotification) {
+          traverse(nextNotification)
+        }
+      }
+
+      // Extract popup target from dismiss button click
+      const onDismissClick = currentNotification.content?.onDismissClick
+      if (onDismissClick?.onClick.includes(OnClickAction.POPUP) && onDismissClick.onClickLink) {
+        const targetId = onDismissClick.onClickLink
+        if (!visited.has(targetId)) {
+          downstream.push(targetId)
+        }
+        // Look up the next notification in the chain
+        const nextNotification = activeNotifications.get(targetId) ?? chainedNotifications.get(targetId)
+        if (nextNotification) {
+          traverse(nextNotification)
+        }
+      }
+    }
+
+    traverse(notification)
+    return downstream
+  }
+
+  /**
+   * Internal method to handle acknowledging a notification
+   * Tracks the notification as acknowledged/processed, along with all downstream chained notifications
+   *
+   * @param notification - The notification object
+   */
+  async function handleAcknowledge(notification: InAppNotification): Promise<void> {
+    const timestamp = Date.now()
+
+    await tracker.track(notification.id, { timestamp })
+
+    const downstreamIds = getDownstreamNotificationIds(notification)
+    await Promise.all(downstreamIds.map(async (downstreamId) => tracker.track(downstreamId, { timestamp })))
   }
 
   return {
@@ -236,7 +296,7 @@ export function createNotificationSystem(config: NotificationSystemConfig): Noti
             })
             break
           case OnClickAction.ACK:
-            handleAcknowledge(notificationId).catch((error: unknown) => {
+            handleAcknowledge(notification).catch((error: unknown) => {
               getLogger().error(error, {
                 tags: {
                   file: 'createNotificationSystem',

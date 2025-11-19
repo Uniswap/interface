@@ -25,13 +25,6 @@ export function getNotificationTelemetry(): NotificationTelemetry {
       })
     },
 
-    onNotificationDismissed(params) {
-      sendAnalyticsEvent(InterfaceEventName.NotificationDismissed, {
-        notification_id: params.notificationId,
-        notification_type: params.type,
-      })
-    },
-
     onNotificationInteracted(params) {
       sendAnalyticsEvent(InterfaceEventName.NotificationInteracted, {
         notification_id: params.notificationId,

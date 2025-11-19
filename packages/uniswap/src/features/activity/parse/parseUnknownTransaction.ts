@@ -1,4 +1,5 @@
 import { OnChainTransaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { extractDappInfo } from 'uniswap/src/features/activity/utils/extractDappInfo'
 import { AssetCase, isRestTokenSpam } from 'uniswap/src/features/activity/utils/remote'
 import { TransactionType, UnknownTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 
@@ -26,11 +27,6 @@ export function parseRestUnknownTransaction(transaction: OnChainTransaction): Un
     type: TransactionType.Unknown,
     tokenAddress,
     isSpam,
-    dappInfo: transaction.protocol?.name
-      ? {
-          name: transaction.protocol.name,
-          icon: transaction.protocol.logoUrl,
-        }
-      : undefined,
+    dappInfo: extractDappInfo(transaction),
   }
 }

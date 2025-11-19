@@ -1,15 +1,13 @@
-import { getTokenDetailsURL } from 'appGraphql/data/util'
 import { Currency } from '@uniswap/sdk-core'
 import { useModalState } from 'hooks/useModalState'
 import { useAtom } from 'jotai'
 import useIsConnected from 'pages/Portfolio/Header/hooks/useIsConnected'
+import { useNavigateToTokenDetails } from 'pages/Portfolio/Tokens/hooks/useNavigateToTokenDetails'
 import { TokenData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { PropsWithChildren, useCallback, useMemo } from 'react'
-import { useNavigate } from 'react-router'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { TokenBalanceItemContextMenu } from 'uniswap/src/components/portfolio/TokenBalanceItemContextMenu'
 import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
-import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
@@ -21,31 +19,9 @@ export function TokensContextMenuWrapper({
   children,
 }: PropsWithChildren<{ tokenData: TokenData; triggerMode?: ContextMenuTriggerMode }>): React.ReactNode {
   const isConnected = useIsConnected()
-  const navigate = useNavigate()
 
   const { openModal } = useModalState(ModalName.ReportTokenIssue)
   const [, setModalProps] = useAtom(ReportTokenIssueModalPropsAtom)
-  const openReportTokenModal = useEvent((currency: Currency) => {
-    setModalProps({ source: 'portfolio', currency, isMarkedSpam: portfolioBalance?.currencyInfo.isSpam })
-    openModal()
-  })
-
-  const copyAddressToClipboard = useCallback(async (address: string): Promise<void> => {
-    await setClipboard(address)
-  }, [])
-
-  const navigateToTokenDetails = useCallback(() => {
-    if (!tokenData.currencyInfo) {
-      return
-    }
-
-    const { currency } = tokenData.currencyInfo
-    const url = getTokenDetailsURL({
-      address: currency.isNative ? null : currency.address,
-      chain: toGraphQLChain(currency.chainId),
-    })
-    navigate(url)
-  }, [tokenData.currencyInfo, navigate])
 
   const portfolioBalance: PortfolioBalance | undefined = useMemo(() => {
     if (!tokenData.currencyInfo) {
@@ -55,13 +31,30 @@ export function TokensContextMenuWrapper({
     return {
       id: tokenData.id,
       cacheId: tokenData.id,
-      quantity: parseFloat(tokenData.balance.value),
-      balanceUSD: tokenData.rawValue,
+      quantity: tokenData.balance.value,
+      balanceUSD: tokenData.value,
       currencyInfo: tokenData.currencyInfo,
       relativeChange24: tokenData.change1d,
       isHidden: false,
     }
-  }, [tokenData.currencyInfo, tokenData.id, tokenData.balance.value, tokenData.change1d, tokenData.rawValue])
+  }, [tokenData.currencyInfo, tokenData.id, tokenData.balance.value, tokenData.change1d, tokenData.value])
+
+  const openReportTokenModal = useEvent((currency: Currency) => {
+    setModalProps({ source: 'portfolio', currency, isMarkedSpam: portfolioBalance?.currencyInfo.isSpam })
+    openModal()
+  })
+
+  const copyAddressToClipboard = useCallback(async (address: string): Promise<void> => {
+    await setClipboard(address)
+  }, [])
+
+  const navigateToTokenDetails = useNavigateToTokenDetails()
+
+  const openReportTokenModalForCurrency = useCallback(() => {
+    if (portfolioBalance) {
+      openReportTokenModal(portfolioBalance.currencyInfo.currency)
+    }
+  }, [portfolioBalance, openReportTokenModal])
 
   if (!portfolioBalance || !isConnected) {
     return children
@@ -71,9 +64,9 @@ export function TokensContextMenuWrapper({
     <TokenBalanceItemContextMenu
       portfolioBalance={portfolioBalance}
       triggerMode={triggerMode}
-      openReportTokenModal={() => openReportTokenModal(portfolioBalance.currencyInfo.currency)}
+      openReportTokenModal={openReportTokenModalForCurrency}
       copyAddressToClipboard={copyAddressToClipboard}
-      onPressToken={navigateToTokenDetails}
+      onPressToken={() => navigateToTokenDetails(tokenData)}
       disableNotifications={true}
     >
       {children}

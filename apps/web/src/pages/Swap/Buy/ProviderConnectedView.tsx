@@ -1,4 +1,4 @@
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
 import { Trans, useTranslation } from 'react-i18next'
 import { ExternalLink } from 'theme/components/Links'

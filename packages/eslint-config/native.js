@@ -200,6 +200,8 @@ module.exports = {
         '@jambit/typed-redux-saga/use-typed-effects': 'error',
         '@jambit/typed-redux-saga/delegate-effects': 'error',
         'no-console': 'error',
+        // React Native specific: Percentage transforms crash on Android
+        'local-rules/no-transform-percentage-strings': 'error',
         'react/forbid-elements': [
           'error',
           {

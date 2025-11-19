@@ -1,4 +1,4 @@
-import { BotDetectionType } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
+import { ChallengeType } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
 import { createHashcashSolver } from '@universe/sessions/src/challenge-solvers/createHashcashSolver'
 import type { ChallengeData } from '@universe/sessions/src/challenge-solvers/types'
 import { describe, expect, it } from 'vitest'
@@ -19,7 +19,7 @@ describe('createHashcashSolver', () => {
   it('successfully solves a valid challenge', async () => {
     const challengeData: ChallengeData = {
       challengeId: 'test-challenge-123',
-      botDetectionType: BotDetectionType.BOT_DETECTION_HASHCASH,
+      challengeType: ChallengeType.HASHCASH,
       extra: {
         challengeData: JSON.stringify(backendExample),
       },
@@ -37,14 +37,13 @@ describe('createHashcashSolver', () => {
     expect(parts.length).toBe(3)
     expect(parts[0]).toBe('Uniswap')
     expect(parts[1]).toBe(backendExample.nonce)
-    // @ts-expect-error - ok in a test
-    expect(parseInt(parts[2])).toBeGreaterThanOrEqual(0)
+    expect(Number.parseInt(parts[2], 10)).toBeGreaterThanOrEqual(0)
   })
 
   it('throws error when challengeData is missing', async () => {
     const challengeData: ChallengeData = {
       challengeId: 'test-challenge-123',
-      botDetectionType: BotDetectionType.BOT_DETECTION_HASHCASH,
+      challengeType: ChallengeType.HASHCASH,
       extra: {}, // Missing challengeData
     }
 
@@ -54,7 +53,7 @@ describe('createHashcashSolver', () => {
   it('throws error when challengeData is not valid JSON', async () => {
     const challengeData: ChallengeData = {
       challengeId: 'test-challenge-123',
-      botDetectionType: BotDetectionType.BOT_DETECTION_HASHCASH,
+      challengeType: ChallengeType.HASHCASH,
       extra: {
         challengeData: 'not-valid-json{',
       },
@@ -71,7 +70,7 @@ describe('createHashcashSolver', () => {
 
     const challengeData: ChallengeData = {
       challengeId: 'test-challenge-123',
-      botDetectionType: BotDetectionType.BOT_DETECTION_HASHCASH,
+      challengeType: ChallengeType.HASHCASH,
       extra: {
         challengeData: JSON.stringify(invalidChallenge),
       },
@@ -89,7 +88,7 @@ describe('createHashcashSolver', () => {
 
     const challengeData: ChallengeData = {
       challengeId: 'test-challenge-123',
-      botDetectionType: BotDetectionType.BOT_DETECTION_HASHCASH,
+      challengeType: ChallengeType.HASHCASH,
       extra: {
         challengeData: JSON.stringify(invalidChallenge),
       },
@@ -107,7 +106,7 @@ describe('createHashcashSolver', () => {
 
     const challengeData: ChallengeData = {
       challengeId: 'test-challenge-123',
-      botDetectionType: BotDetectionType.BOT_DETECTION_HASHCASH,
+      challengeType: ChallengeType.HASHCASH,
       extra: {
         challengeData: JSON.stringify(expiredChallenge),
       },
@@ -125,7 +124,7 @@ describe('createHashcashSolver', () => {
 
     const challengeData: ChallengeData = {
       challengeId: 'test-challenge-123',
-      botDetectionType: BotDetectionType.BOT_DETECTION_HASHCASH,
+      challengeType: ChallengeType.HASHCASH,
       extra: {
         challengeData: JSON.stringify(impossibleChallenge),
       },
@@ -137,7 +136,7 @@ describe('createHashcashSolver', () => {
   it('handles missing extra field gracefully', async () => {
     const challengeData: ChallengeData = {
       challengeId: 'test-challenge-123',
-      botDetectionType: BotDetectionType.BOT_DETECTION_HASHCASH,
+      challengeType: ChallengeType.HASHCASH,
       // No extra field at all
     }
 

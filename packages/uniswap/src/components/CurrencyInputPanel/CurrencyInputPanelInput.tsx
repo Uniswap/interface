@@ -141,7 +141,7 @@ export const CurrencyInputPanelInput = memo(
           alignItems="center"
           justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}
           py="$spacing8"
-          minHeight={MIN_INPUT_FONT_SIZE * 1.2 + 2 * spacing.spacing8}
+          minHeight={MIN_INPUT_FONT_SIZE + spacing.spacing36}
           style={shakeStyle}
         >
           {isFiatMode && (

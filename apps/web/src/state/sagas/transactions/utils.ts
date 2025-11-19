@@ -509,18 +509,31 @@ export async function getSigner(account: string): Promise<JsonRpcSigner> {
 }
 
 type SwapInfo = ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
-export function getSwapTransactionInfo(
-  trade: ClassicTrade | BridgeTrade | SolanaTrade | ChainedActionTrade,
-): SwapInfo | BridgeTransactionInfo
-export function getSwapTransactionInfo(trade: UniswapXTrade): SwapInfo & { isUniswapXOrder: true }
-export function getSwapTransactionInfo(
-  trade: ClassicTrade | BridgeTrade | UniswapXTrade | SolanaTrade | ChainedActionTrade,
-): SwapInfo | BridgeTransactionInfo {
+export function getSwapTransactionInfo(params: {
+  trade: ClassicTrade | BridgeTrade | SolanaTrade | ChainedActionTrade
+  isFinalStep?: boolean
+}): SwapInfo | BridgeTransactionInfo
+export function getSwapTransactionInfo(params: {
+  trade: UniswapXTrade
+  isFinalStep?: boolean
+}): SwapInfo & { isUniswapXOrder: true }
+export function getSwapTransactionInfo({
+  trade,
+  isFinalStep,
+}: {
+  trade: ClassicTrade | BridgeTrade | UniswapXTrade | SolanaTrade | ChainedActionTrade
+  isFinalStep?: boolean
+}): SwapInfo | BridgeTransactionInfo {
+  const commonAttributes = {
+    inputCurrencyId: currencyId(trade.inputAmount.currency),
+    outputCurrencyId: currencyId(trade.outputAmount.currency),
+    isFinalStep: isFinalStep ?? true, // If no `isFinalStep` is provided, we assume it's not a multi-step transaction and default to `true`
+  }
+
   if (trade.routing === TradingApi.Routing.BRIDGE) {
     return {
       type: TransactionType.Bridge,
-      inputCurrencyId: currencyId(trade.inputAmount.currency),
-      outputCurrencyId: currencyId(trade.outputAmount.currency),
+      ...commonAttributes,
       inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
       outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
       quoteId: trade.quote.requestId,
@@ -530,8 +543,7 @@ export function getSwapTransactionInfo(
 
   return {
     type: TransactionType.Swap,
-    inputCurrencyId: currencyId(trade.inputAmount.currency),
-    outputCurrencyId: currencyId(trade.outputAmount.currency),
+    ...commonAttributes,
     isUniswapXOrder: isUniswapX(trade),
     ...(trade.tradeType === TradeType.EXACT_INPUT
       ? {

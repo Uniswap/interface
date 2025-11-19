@@ -1,5 +1,6 @@
 import { utils } from 'ethers'
 import {
+  convertCapabilitiesToScopedProperties,
   decodeMessage,
   getAccountAddressFromEIP155String,
   getChainIdFromEIP155String,
@@ -496,6 +497,90 @@ describe(parseGetCallsStatusRequest, () => {
         icon: mockDapp.icons[0],
         requestType: DappRequestType.WalletConnectSessionRequest,
       },
+    })
+  })
+})
+
+describe(convertCapabilitiesToScopedProperties, () => {
+  it('converts single chain capability to CAIP-2 format', () => {
+    const capabilities = {
+      '0xa': {
+        atomic: { status: 'supported' },
+      },
+    }
+
+    const result = convertCapabilitiesToScopedProperties(capabilities)
+
+    expect(result).toEqual({
+      'eip155:10': {
+        atomic: { status: 'supported' },
+      },
+    })
+  })
+
+  it('converts multiple chain capabilities to CAIP-2 format', () => {
+    const capabilities = {
+      '0x1': {
+        atomic: { status: 'supported' },
+      },
+      '0x89': {
+        atomic: { status: 'unsupported' },
+      },
+      '0xa': {
+        atomic: { status: 'supported' },
+        paymasterService: { supported: true },
+      },
+    }
+
+    const result = convertCapabilitiesToScopedProperties(capabilities)
+
+    expect(result).toEqual({
+      'eip155:1': {
+        atomic: { status: 'supported' },
+      },
+      'eip155:137': {
+        atomic: { status: 'unsupported' },
+      },
+      'eip155:10': {
+        atomic: { status: 'supported' },
+        paymasterService: { supported: true },
+      },
+    })
+  })
+
+  it('returns empty object when given empty capabilities', () => {
+    const capabilities = {}
+
+    const result = convertCapabilitiesToScopedProperties(capabilities)
+
+    expect(result).toEqual({})
+  })
+
+  it('handles invalid hex chain IDs that cause errors', () => {
+    const capabilities = {
+      '0x1': {
+        atomic: { status: 'supported' },
+      },
+      'invalid-hex': {
+        atomic: { status: 'unsupported' },
+      },
+      '0x89': {
+        atomic: { status: 'supported' },
+      },
+    }
+
+    const result = convertCapabilitiesToScopedProperties(capabilities)
+
+    // hexToNumber returns NaN for invalid hex, which should be excluded
+    // The function continues execution despite the invalid chain ID
+    expect(result).toHaveProperty('eip155:1')
+    expect(result).toHaveProperty('eip155:137')
+    expect(result).not.toHaveProperty('eip155:NaN')
+    expect(result['eip155:1']).toEqual({
+      atomic: { status: 'supported' },
+    })
+    expect(result['eip155:137']).toEqual({
+      atomic: { status: 'supported' },
     })
   })
 })

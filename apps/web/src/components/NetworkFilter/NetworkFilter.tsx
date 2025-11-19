@@ -152,7 +152,7 @@ export default function NetworkFilter({
                 />
               )}
               {showDisplayName && (
-                <Text variant={NetworkLabelTextVariants[size]} color="$neutral2" transition={transition}>
+                <Text variant={NetworkLabelTextVariants[size]} transition={transition}>
                   {isAllNetworks ? t('transaction.network.all') : chainInfo.label}
                 </Text>
               )}

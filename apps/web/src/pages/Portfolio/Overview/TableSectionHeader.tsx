@@ -1,4 +1,4 @@
-import { PropsWithChildren } from 'react'
+import { memo, PropsWithChildren } from 'react'
 import { Flex, Text } from 'ui/src'
 
 interface TableSectionHeaderProps {
@@ -7,7 +7,12 @@ interface TableSectionHeaderProps {
   loading?: boolean
 }
 
-export function TableSectionHeader({ title, subtitle, loading, children }: PropsWithChildren<TableSectionHeaderProps>) {
+export const TableSectionHeader = memo(function TableSectionHeader({
+  title,
+  subtitle,
+  loading,
+  children,
+}: PropsWithChildren<TableSectionHeaderProps>) {
   return (
     <Flex gap="$gap16">
       <Flex gap="$gap4">
@@ -21,4 +26,4 @@ export function TableSectionHeader({ title, subtitle, loading, children }: Props
       {children}
     </Flex>
   )
-}
+})

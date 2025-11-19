@@ -96,13 +96,12 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       const chainUrlParam = getChainInfo(chainId).urlParam
       openSendModal()
       closeSearchModal()
-      accountDrawer.close()
 
       const newPathname = location.pathname === '/' ? '/send' : location.pathname
       const currencyAddressParam = currencyAddress ? `&sendCurrency=${currencyAddress}` : ''
       navigate(`${newPathname}?sendChain=${chainUrlParam}${currencyAddressParam}`)
     },
-    [openSendModal, closeSearchModal, accountDrawer, navigate, location],
+    [openSendModal, closeSearchModal, navigate, location],
   )
 
   const navigateToReceive = useOpenReceiveCryptoModal({

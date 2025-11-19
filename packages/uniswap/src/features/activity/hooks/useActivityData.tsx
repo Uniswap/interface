@@ -32,6 +32,7 @@ export type UseActivityDataProps = {
   extraTransactions?: ActivityItem[]
   onPressEmptyState?: () => void
   chainIds?: UniverseChainId[]
+  showLoadingOnRefetch?: boolean
 }
 
 export type ActivityRenderData = PaginationControls & {
@@ -55,6 +56,7 @@ export function useActivityData({
   skip,
   extraTransactions,
   chainIds,
+  showLoadingOnRefetch = false,
 }: UseActivityDataProps): ActivityRenderData {
   const { t } = useTranslation()
 
@@ -79,6 +81,7 @@ export function useActivityData({
       hideSpamTokens,
       skip,
       chainIds,
+      showLoadingOnRefetch,
     })
 
   const sectionDataWithExtra: ActivityItem[] | undefined = useMemo(() => {

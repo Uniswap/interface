@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import styled, { keyframes } from 'lib/styled-components'
+import { keyframes, styled } from 'lib/styled-components'
 import { parseToRgb } from 'polished'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'

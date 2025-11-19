@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Checkbox, Flex, GeneratedIcon, Text, TouchableArea } from 'ui/src'
@@ -23,14 +22,12 @@ export type ReportModalProps<T extends string> = {
   icon: GeneratedIcon
   reportOptions: ReportOption<T>[]
   textOptionValue: T
-  currency?: Currency
   submitReport: ({ checkedItems, reportText }: { checkedItems: Set<T>; reportText: string }) => void
 }
 
-export function ReportTokenModal<T extends string>({
+export function ReportModal<T extends string>({
   modalName,
   modalTitle,
-  currency,
   icon: Icon,
   reportOptions,
   textOptionValue,
@@ -45,11 +42,11 @@ export function ReportTokenModal<T extends string>({
   const { keyboardHeight } = useBottomSheetSafeKeyboard()
 
   // Clear form whenever a new currency is selected
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we intentionally retrigger on currency change or open/close
+  // biome-ignore lint/correctness/useExhaustiveDependencies: we intentionally retrigger on open/close
   useEffect(() => {
     setCheckedItems(new Set())
     setReportText('')
-  }, [currency, isOpen])
+  }, [isOpen])
 
   const handleItemPress = useEvent((option: T) => {
     setCheckedItems((prev) => {

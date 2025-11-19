@@ -4,8 +4,7 @@ import {
   STAGING_ENTRY_GATEWAY_API_BASE_URL,
 } from '@universe/api/src/clients/base/urls'
 import { getConfig } from '@universe/config'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
-
+import { Environment, getCurrentEnv } from 'utilities/src/environment/getCurrentEnv'
 /**
  * Returns the appropriate Entry Gateway API base URL based on the current environment.
  * When proxy is enabled, returns the proxy path. Otherwise returns the direct URL.
@@ -25,14 +24,17 @@ export function getEntryGatewayUrl(): string {
     return override
   }
 
-  // Determine URL based on environment
-  let url: string
-  if (isDevEnv()) {
-    url = DEV_ENTRY_GATEWAY_API_BASE_URL
-  } else if (isBetaEnv()) {
-    url = STAGING_ENTRY_GATEWAY_API_BASE_URL
-  } else {
-    url = PROD_ENTRY_GATEWAY_API_BASE_URL
+  const environment = getCurrentEnv({
+    isVercelEnvironment: config.isVercelEnvironment,
+  })
+  switch (environment) {
+    case Environment.DEV:
+      return DEV_ENTRY_GATEWAY_API_BASE_URL
+    case Environment.STAGING:
+      return STAGING_ENTRY_GATEWAY_API_BASE_URL
+    case Environment.PROD:
+      return PROD_ENTRY_GATEWAY_API_BASE_URL
+    default:
+      throw new Error(`Invalid environment: ${environment}`)
   }
-  return url
 }

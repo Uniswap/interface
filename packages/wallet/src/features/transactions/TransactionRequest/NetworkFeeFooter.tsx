@@ -62,8 +62,8 @@ export function NetworkFeeFooter({
       <ContentRow
         label={
           <Flex>
-            <Flex row gap="$spacing4">
-              <Text color="$neutral1" variant={variant}>
+            <Flex row gap="$spacing4" alignItems="center">
+              <Text color="$neutral2" variant={variant}>
                 {t('transaction.networkCost.label')}
               </Text>
               <NetworkFeeWarning includesDelegation={showSmartWalletActivation} chainId={chainId} />

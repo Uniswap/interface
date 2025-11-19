@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
-import { Flex } from 'ui/src'
+import { useEffect, useState } from 'react'
+import { Flex, useSporeColors } from 'ui/src'
 
 export interface ChartModelWithLiveDot {
   getLastPointCoordinates?: () => { x: number; y: number } | null
+  fitContent?: () => void
 }
 
 interface LiveDotRendererProps {
@@ -10,81 +11,79 @@ interface LiveDotRendererProps {
   isHovering: boolean
   chartContainer?: HTMLElement | null
   overrideColor?: string
+  dataKey?: string | number // Tracks when chart data changes (e.g., time period change)
 }
 
-// TODO(PORT-494): figure out why the dot isn't rendering at the correct coordinated after resize
-function useHideOnResize(
-  chartContainer: HTMLElement | null | undefined,
-  setCoordinates: (coordinates: { x: number; y: number } | null) => void,
-): boolean {
-  const [hasResized, setHasResized] = useState(false)
-
-  useEffect(() => {
-    if (!chartContainer || hasResized) {
-      return undefined
-    }
-
-    // Track if this is the first callback (initial layout)
-    let isFirstCallback = true
-
-    // Permanently hide dot after any resize (until page refresh)
-    const resizeObserver = new ResizeObserver(() => {
-      // Ignore the first callback (initial layout measurement)
-      if (isFirstCallback) {
-        isFirstCallback = false
-        return
-      }
-
-      // This is a real resize after initial layout
-      setHasResized(true)
-      // Clear coordinates immediately when resize is detected to prevent wrong positioning
-      setCoordinates(null)
-      // Stop observing once resize is detected since dot will never show again
-      resizeObserver.disconnect()
-    })
-    resizeObserver.observe(chartContainer)
-
-    return () => {
-      resizeObserver.disconnect()
-    }
-  }, [chartContainer, setCoordinates, hasResized])
-
-  return hasResized
-}
-
-export function LiveDotRenderer({ chartModel, isHovering, chartContainer, overrideColor }: LiveDotRendererProps) {
+export function LiveDotRenderer({
+  chartModel,
+  isHovering,
+  chartContainer,
+  overrideColor,
+  dataKey,
+}: LiveDotRendererProps) {
+  const colors = useSporeColors()
   const [coordinates, setCoordinates] = useState<{ x: number; y: number } | null>(null)
-  const hasResized = useHideOnResize(chartContainer, setCoordinates)
-  // const colors = useSporeColors()
-  const rafRef = useRef<number | null>(null)
+  const [isResizing, setIsResizing] = useState(false)
 
   useEffect(() => {
     // Only render if the chart model has getLastPointCoordinates method
-    if (!('getLastPointCoordinates' in chartModel)) {
+    if (!('getLastPointCoordinates' in chartModel) || !dataKey) {
       return undefined
     }
 
     const updateCoordinates = () => {
-      // Stop updating if resize has occurred
-      if (hasResized) {
-        return
-      }
       const coords = chartModel.getLastPointCoordinates?.()
+      // Update coordinates when data changes (dataKey triggers this effect)
       setCoordinates(coords ?? null)
-      rafRef.current = requestAnimationFrame(updateCoordinates)
     }
 
+    // Try immediately
     updateCoordinates()
 
+    // Listen to chart container resize events
+    let resizeObserver: ResizeObserver | null = null
+    let rafId: number | null = null
+
+    if (chartContainer) {
+      resizeObserver = new ResizeObserver(() => {
+        // Cancel pending RAF to prevent multiple chains
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId)
+        }
+
+        // Hide dot when resize starts
+        setIsResizing(true)
+
+        // Use multiple requestAnimationFrame calls to ensure chart has fully re-laid out,
+        // including axis labels which can change the available chart area
+        rafId = requestAnimationFrame(() => {
+          // Refit chart content to prevent overflow on resize
+          // This needs to happen after axis labels have rendered and layout is stable
+          if ('fitContent' in chartModel && typeof chartModel.fitContent === 'function') {
+            chartModel.fitContent()
+          }
+          // Wait one more frame for fitContent to take effect before updating coordinates
+          rafId = requestAnimationFrame(() => {
+            updateCoordinates()
+            setIsResizing(false)
+            rafId = null
+          })
+        })
+      })
+      resizeObserver.observe(chartContainer)
+    }
+
     return () => {
-      if (rafRef.current !== null) {
-        cancelAnimationFrame(rafRef.current)
-        rafRef.current = null
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId)
+      }
+      if (resizeObserver) {
+        resizeObserver.disconnect()
       }
     }
-  }, [chartModel, hasResized])
+  }, [chartModel, chartContainer, dataKey])
 
-  if (!coordinates || isHovering || hasResized) {
+  if (!coordinates || isHovering || isResizing) {
     return null
   }
 
@@ -135,7 +134,7 @@ export function LiveDotRenderer({ chartModel, isHovering, chartContainer, overri
           left: '50%',
           top: '50%',
           borderWidth: '2px',
-          borderColor: overrideColor,
+          borderColor: colors.surface1.val,
           transform: 'translate(-50%, -50%)',
         }}
       />

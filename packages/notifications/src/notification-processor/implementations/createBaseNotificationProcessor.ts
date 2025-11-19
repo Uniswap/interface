@@ -1,10 +1,17 @@
-import { ContentStyle, type InAppNotification, OnClickAction } from '@universe/api'
+import {
+  Background,
+  Body,
+  BodyItem,
+  Notification,
+} from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
+import { BackgroundType, ContentStyle, type InAppNotification, OnClickAction } from '@universe/api'
 import { createNotificationProcessor } from '@universe/notifications/src/notification-processor/implementations/createNotificationProcessor'
 import {
   type NotificationProcessor,
   type NotificationProcessorResult,
 } from '@universe/notifications/src/notification-processor/NotificationProcessor'
 import { type NotificationTracker } from '@universe/notifications/src/notification-tracker/NotificationTracker'
+import { MONAD_LOGO_FILLED, MONAD_TEST_BANNER_LIGHT } from 'ui/src/assets'
 import { getLogger } from 'utilities/src/logger/logger'
 
 /**
@@ -76,12 +83,16 @@ export function createBaseNotificationProcessor(tracker: NotificationTracker): N
         return true
       })
 
+      // Step 3.5: Process notifications to inject hardcoded images for v1 (before CDN support)
+      const processedPrimary = filteredPrimary.map(injectHardcodedImages)
+      const processedChained = filteredChained.map(injectHardcodedImages)
+
       // Step 4: Limit the number of primary notifications per content style
-      const limitedPrimary = limitNotifications(filteredPrimary)
+      const limitedPrimary = limitNotifications(processedPrimary)
 
       // Step 5: Convert chained notifications to a Map for fast lookup
       const chainedMap = new Map<string, InAppNotification>()
-      for (const notification of filteredChained) {
+      for (const notification of processedChained) {
         chainedMap.set(notification.id, notification)
       }
 
@@ -221,4 +232,66 @@ function limitNotifications(notifications: InAppNotification[]): InAppNotificati
   }
 
   return limited
+}
+
+/**
+ * Injects hardcoded images for specific notifications (v1 workaround before CDN support).
+ *
+ * For Monad notifications:
+ * - LOWER_LEFT_BANNER: Adds MONAD_TEST_BANNER_LIGHT as background and MONAD_LOGO_FILLED as icon
+ * - MODAL: Adds MONAD_LOGO_FILLED as icon, MONAD_TEST_BANNER_LIGHT as background, and hardcoded feature list
+ *
+ * This is a temporary solution until remote image uploads and CDN are available.
+ */
+function injectHardcodedImages(notification: InAppNotification): InAppNotification {
+  const notificationId = notification.id.toLowerCase()
+  const style = notification.content?.style
+
+  if (!notificationId.includes('monad')) {
+    return notification
+  }
+
+  // Create a new Notification instance from the plain message and clone it
+  const notificationObj = new Notification(notification)
+  const cloned = notificationObj.clone()
+
+  if (style === ContentStyle.LOWER_LEFT_BANNER) {
+    if (cloned.content) {
+      cloned.content.iconLink = MONAD_LOGO_FILLED
+      cloned.content.background = new Background({
+        backgroundType: BackgroundType.IMAGE,
+        link: MONAD_TEST_BANNER_LIGHT,
+        backgroundOnClick: cloned.content.background?.backgroundOnClick,
+      })
+    }
+  } else if (style === ContentStyle.MODAL) {
+    if (cloned.content) {
+      cloned.content.iconLink = MONAD_LOGO_FILLED
+      cloned.content.background = new Background({
+        backgroundType: BackgroundType.IMAGE,
+        link: MONAD_TEST_BANNER_LIGHT,
+        backgroundOnClick: cloned.content.background?.backgroundOnClick,
+      })
+
+      // Hardcode feature list with temporary icon format
+      cloned.content.body = new Body({
+        items: [
+          new BodyItem({
+            text: cloned.content.body?.items[0]?.text,
+            iconUrl: 'custom:coin-convert-$neutral2',
+          }),
+          new BodyItem({
+            text: cloned.content.body?.items[1]?.text,
+            iconUrl: 'custom:ethereum-$neutral2',
+          }),
+          new BodyItem({
+            text: cloned.content.body?.items[2]?.text,
+            iconUrl: 'custom:gas-$neutral2',
+          }),
+        ],
+      })
+    }
+  }
+
+  return cloned
 }

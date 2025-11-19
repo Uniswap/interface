@@ -5,6 +5,7 @@ import { CellContainer, DataRow, NoDataFoundTableRow } from 'components/Table/st
 import { TableRow } from 'components/Table/TableRow'
 import { useTableSize } from 'components/Table/TableSizeProvider'
 import { TableBodyProps } from 'components/Table/types'
+import { getColumnSizingStyles } from 'components/Table/utils'
 import { forwardRef, useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
@@ -37,15 +38,20 @@ function TableBodyInner<T extends RowData>(
   if (loading || error) {
     return (
       <>
-        {Array.from({ length: loadingRowsCount }, (_, rowIndex) => (
-          <DataRow key={`skeleton-row-${rowIndex}`} height={skeletonRowHeight} v2={v2}>
-            {table.getAllColumns().map((column, columnIndex) => (
-              <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>
-                {flexRender(column.columnDef.cell, {} as CellContext<T, any>)}
-              </CellContainer>
-            ))}
-          </DataRow>
-        ))}
+        <Flex>
+          {Array.from({ length: loadingRowsCount }, (_, rowIndex) => (
+            <DataRow key={`skeleton-row-${rowIndex}`} height={skeletonRowHeight} v2={v2}>
+              {table.getAllColumns().map((column, columnIndex) => (
+                <CellContainer
+                  key={`skeleton-row-${rowIndex}-column-${columnIndex}`}
+                  style={getColumnSizingStyles(column)}
+                >
+                  {flexRender(column.columnDef.cell, {} as CellContext<T, any>)}
+                </CellContainer>
+              ))}
+            </DataRow>
+          ))}
+        </Flex>
         {error && (
           <ErrorModal
             header={<Trans i18nKey="common.errorLoadingData.error" />}

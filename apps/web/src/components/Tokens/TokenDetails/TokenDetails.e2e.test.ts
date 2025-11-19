@@ -15,14 +15,9 @@ test.describe('Token details', () => {
   })
 
   test('UNI token should have all information populated', async ({ page, graphql }) => {
-    await graphql.intercept('TokenWeb', Mocks.TokenWeb.uni_token, {
-      chain: 'ETHEREUM',
-      address: UNI_ADDRESS,
-    })
-    await graphql.intercept('Token', Mocks.Token.uni_token, {
-      chain: 'ETHEREUM',
-      address: UNI_ADDRESS,
-    })
+    await graphql.intercept('TokenWeb', Mocks.TokenWeb.uni_token)
+    await graphql.intercept('Token', Mocks.Token.uni_token)
+    await graphql.intercept('TokenPrice', Mocks.Token.uni_token_price)
     await page.setViewportSize({ width: 1440, height: 900 })
     // $UNI token
     await page.goto(`/explore/tokens/ethereum/${UNI_ADDRESS}`)

@@ -162,6 +162,8 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   isBatched,
   batchId,
   includedPermitTransactionStep,
+  planId,
+  stepIndex,
 }: {
   trade: SubmittableTrade | ClassicTrade | UniswapXTrade | BridgeTrade | ChainedActionTrade
   allowedSlippage: Percent
@@ -173,6 +175,8 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   isBatched?: boolean
   batchId?: string
   includedPermitTransactionStep?: boolean
+  planId?: string
+  stepIndex?: number
 }) => ({
   ...trace,
   total_balances_usd: portfolioBalanceUsd,
@@ -181,6 +185,8 @@ export const formatSwapSignedAnalyticsEventProperties = ({
   token_out_amount_usd: fiatValues.amountOut,
   // measures the amount of time the user took to sign the permit message or swap tx in their wallet
   time_to_sign_since_request_ms: timeToSignSinceRequestMs,
+  plan_id: planId,
+  step_index: stepIndex,
   ...['routing' in trade ? getRouteAnalyticsData(trade) : undefined],
   ...formatCommonPropertiesForTrade({
     trade,

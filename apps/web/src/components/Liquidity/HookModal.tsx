@@ -1,4 +1,8 @@
-import { FlagWarning, getFlagsFromContractAddress, getFlagWarning } from 'components/Liquidity/utils/getFlagWarnings'
+import {
+  type FlagWarning,
+  getFlagsFromContractAddress,
+  getFlagWarning,
+} from 'components/Liquidity/utils/getFlagWarnings'
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components/CopyHelper'
@@ -14,6 +18,7 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 
 function HookWarnings({ flags, hasDangerous }: { flags: FlagWarning[]; hasDangerous: boolean }) {
@@ -198,7 +203,13 @@ export function HookModal({
               </Button>
             </Trace>
             <Trace logPress element={ElementName.Continue}>
-              <Button isDisabled={!canContinue} size="small" variant="branded" onPress={handleContinue}>
+              <Button
+                isDisabled={!canContinue}
+                size="small"
+                variant="branded"
+                onPress={handleContinue}
+                data-testid={TestID.HookModalContinueButton}
+              >
                 {t('common.button.continue')}
               </Button>
             </Trace>

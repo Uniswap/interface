@@ -22,18 +22,24 @@ bun lint
 bun lint:fix
 
 # Run tests
-bun run test                    # Run all tests
+bun run test                   # Run all tests
 bun run test:watch             # Watch mode
 bun run test:set1              # Components only
 bun run test:set2              # Pages and state
 bun run test:set3              # Hooks, NFT, utils
 bun run test:set4              # Remaining tests
 
-# Run E2E tests
-bun playwright:test
-
 # Build for production
 bun build:production
+
+# Run production preview web server
+bun preview
+
+# Run E2E Playwright tests
+bun e2e                         # Run all e2e tests
+bun e2e:no-anvil                # Run non-anvil e2e tests
+bun e2e:anvil                   # Run anvil e2e tests
+bun e2e ExampleTest.e2e.test    # Run a specific test file
 ```
 
 ### Monorepo Commands (from root)

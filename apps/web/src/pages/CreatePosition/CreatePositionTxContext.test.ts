@@ -89,6 +89,7 @@ describe('generateAddLiquidityApprovalParams', () => {
     expect(
       generateAddLiquidityApprovalParams({
         address: '0x0000000000000000000000000000000000000000',
+        canBatchTransactions: false,
         protocolVersion: ProtocolVersion.V4,
         displayCurrencies: { TOKEN0: USDT, TOKEN1: ETH_MAINNET },
         currencyAmounts: {
@@ -98,11 +99,11 @@ describe('generateAddLiquidityApprovalParams', () => {
       }),
     ).toEqual({
       walletAddress: '0x0000000000000000000000000000000000000000',
+      generatePermitAsTransaction: false,
       token0: USDT.address,
       token1: ZERO_ADDRESS,
       simulateTransaction: true,
       protocol: TradingApi.ProtocolItems.V4,
-      generatePermitAsTransaction: undefined,
       amount0: '1000000000000000000',
       amount1: '1000000000000000000',
       chainId: UniverseChainId.Mainnet,
@@ -119,7 +120,7 @@ describe('generateAddLiquidityApprovalParams', () => {
           TOKEN0: CurrencyAmount.fromRawAmount(USDT, '1000000000000000000'),
           TOKEN1: CurrencyAmount.fromRawAmount(ETH_MAINNET, '1000000000000000000'),
         },
-        generatePermitAsTransaction: true,
+        canBatchTransactions: true,
       }),
     ).toEqual({
       walletAddress: '0x0000000000000000000000000000000000000000',
@@ -753,6 +754,7 @@ describe('generateCreatePositionTxRequest', () => {
     it('returns tx request', () => {
       expect(
         generateCreatePositionTxRequest({
+          canBatchTransactions: false,
           createCalldata,
           protocolVersion: ProtocolVersion.V2,
           poolOrPair: undefined,
@@ -764,6 +766,7 @@ describe('generateCreatePositionTxRequest', () => {
       ).toEqual({
         type: LiquidityTransactionType.Create,
         unsigned: false,
+        canBatchTransactions: false,
         createPositionRequestArgs: undefined,
         action: {
           type: LiquidityTransactionType.Create,
@@ -792,6 +795,7 @@ describe('generateCreatePositionTxRequest', () => {
     it('returns tx request for all tx types', () => {
       expect(
         generateCreatePositionTxRequest({
+          canBatchTransactions: false,
           createCalldata,
           approvalCalldata,
           protocolVersion: ProtocolVersion.V2,
@@ -804,6 +808,7 @@ describe('generateCreatePositionTxRequest', () => {
       ).toEqual({
         type: LiquidityTransactionType.Create,
         unsigned: true,
+        canBatchTransactions: false,
         createPositionRequestArgs: undefined,
         action: {
           type: LiquidityTransactionType.Create,
@@ -848,6 +853,7 @@ describe('generateCreatePositionTxRequest', () => {
     it('returns tx request', () => {
       expect(
         generateCreatePositionTxRequest({
+          canBatchTransactions: false,
           createCalldata,
           protocolVersion: ProtocolVersion.V3,
           poolOrPair: undefined,
@@ -859,6 +865,7 @@ describe('generateCreatePositionTxRequest', () => {
       ).toEqual({
         type: LiquidityTransactionType.Create,
         unsigned: false,
+        canBatchTransactions: false,
         createPositionRequestArgs: undefined,
         action: {
           type: LiquidityTransactionType.Create,
@@ -888,6 +895,7 @@ describe('generateCreatePositionTxRequest', () => {
     it('returns tx request for all tx types', () => {
       expect(
         generateCreatePositionTxRequest({
+          canBatchTransactions: false,
           createCalldata,
           approvalCalldata,
           protocolVersion: ProtocolVersion.V3,
@@ -900,6 +908,7 @@ describe('generateCreatePositionTxRequest', () => {
       ).toEqual({
         type: LiquidityTransactionType.Create,
         unsigned: true,
+        canBatchTransactions: false,
         createPositionRequestArgs: undefined,
         action: {
           type: LiquidityTransactionType.Create,
@@ -944,6 +953,7 @@ describe('generateCreatePositionTxRequest', () => {
     it('returns tx request', () => {
       expect(
         generateCreatePositionTxRequest({
+          canBatchTransactions: false,
           createCalldata,
           protocolVersion: ProtocolVersion.V4,
           poolOrPair: undefined,
@@ -955,6 +965,7 @@ describe('generateCreatePositionTxRequest', () => {
       ).toEqual({
         type: LiquidityTransactionType.Create,
         unsigned: false,
+        canBatchTransactions: false,
         createPositionRequestArgs: {
           batchPermitData: undefined,
         },
@@ -985,6 +996,7 @@ describe('generateCreatePositionTxRequest', () => {
     it('returns tx request for all tx types', () => {
       expect(
         generateCreatePositionTxRequest({
+          canBatchTransactions: false,
           createCalldata,
           approvalCalldata,
           protocolVersion: ProtocolVersion.V4,
@@ -997,6 +1009,7 @@ describe('generateCreatePositionTxRequest', () => {
       ).toEqual({
         type: LiquidityTransactionType.Create,
         unsigned: true,
+        canBatchTransactions: false,
         createPositionRequestArgs: {
           batchPermitData: {
             ...approvalCalldata.permitData,

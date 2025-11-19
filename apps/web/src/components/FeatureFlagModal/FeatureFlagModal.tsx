@@ -8,19 +8,23 @@ import {
   getOverrideAdapter,
   Layers,
   NetworkRequestsConfigKey,
+  useDynamicConfigValue,
   useFeatureFlagWithExposureLoggingDisabled,
 } from '@universe/gating'
 import { useModalState } from 'hooks/useModalState'
-import styledDep from 'lib/styled-components'
+import { styled as styledDep } from 'lib/styled-components'
 import { useExternallyConnectableExtensionId } from 'pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
 import type { ChangeEvent, PropsWithChildren } from 'react'
-import { useCallback } from 'react'
+import { memo } from 'react'
 import { Button, Flex, ModalCloseIcon, styled, Text } from 'ui/src'
 import { ExperimentRow, LayerRow } from 'uniswap/src/components/gating/Rows'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { TRUSTED_CHROME_EXTENSION_IDS } from 'utilities/src/environment/extensionId'
+import { useEvent } from 'utilities/src/react/hooks'
+
+const FLAG_VARIANTS = ['Enabled', 'Disabled'] as const
 
 const CenteredRow = styled(Flex, {
   flexDirection: 'row',
@@ -41,7 +45,10 @@ interface FeatureFlagProps {
   flag: FeatureFlags
 }
 
-function FeatureFlagGroup({ name, children }: PropsWithChildren<{ name: string }>) {
+const FeatureFlagGroup = memo(function FeatureFlagGroup({
+  name,
+  children,
+}: PropsWithChildren<{ name: string }>): JSX.Element {
   return (
     <>
       <CenteredRow key={name}>
@@ -50,7 +57,7 @@ function FeatureFlagGroup({ name, children }: PropsWithChildren<{ name: string }
       {children}
     </>
   )
-}
+})
 
 const FlagVariantSelection = styledDep.select`
   border-radius: 12px;
@@ -66,20 +73,17 @@ const FlagVariantSelection = styledDep.select`
   }
 `
 
-function Variant({ option }: { option: string }) {
+const Variant = memo(function Variant({ option }: { option: string }): JSX.Element {
   return <option value={option}>{option}</option>
-}
+})
 
-function FeatureFlagOption({ flag, label }: FeatureFlagProps) {
+const FeatureFlagOption = memo(function FeatureFlagOption({ flag, label }: FeatureFlagProps): JSX.Element {
   const enabled = useFeatureFlagWithExposureLoggingDisabled(flag)
   const name = getFeatureFlagName(flag)
 
-  const onFlagVariantChange = useCallback(
-    (e: ChangeEvent<HTMLSelectElement>) => {
-      getOverrideAdapter().overrideGate(name, e.target.value === 'Enabled' ? true : false)
-    },
-    [name],
-  )
+  const onFlagVariantChange = useEvent((e: ChangeEvent<HTMLSelectElement>) => {
+    getOverrideAdapter().overrideGate(name, e.target.value === 'Enabled' ? true : false)
+  })
 
   return (
     <CenteredRow key={flag}>
@@ -90,15 +94,15 @@ function FeatureFlagOption({ flag, label }: FeatureFlagProps) {
         </Text>
       </FlagInfo>
       <FlagVariantSelection id={name} onChange={onFlagVariantChange} value={enabled ? 'Enabled' : 'Disabled'}>
-        {['Enabled', 'Disabled'].map((variant) => (
+        {FLAG_VARIANTS.map((variant) => (
           <Variant key={variant} option={variant} />
         ))}
       </FlagVariantSelection>
     </CenteredRow>
   )
-}
+})
 
-function DynamicConfigDropdown<
+const DynamicConfigDropdown = memo(function DynamicConfigDropdown<
   Conf extends Exclude<DynamicConfigs, DynamicConfigs.GasStrategies>,
   Key extends DynamicConfigKeys[Conf],
 >({
@@ -115,18 +119,16 @@ function DynamicConfigDropdown<
   label: string
   options: Array<string | number> | Record<string, string | number>
   selected: unknown[]
-  parser: (opt: string) => any
+  parser: (opt: string) => unknown
   allowMultiple?: boolean
-}) {
-  const handleSelectChange = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const selectedValues = Array.from(e.target.selectedOptions, (opt) => parser(opt.value))
-      getOverrideAdapter().overrideDynamicConfig(config, {
-        [configKey]: allowMultiple ? selectedValues : selectedValues[0],
-      })
-    },
-    [allowMultiple, config, configKey, parser],
-  )
+}): JSX.Element {
+  const handleSelectChange = useEvent((e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedValues = Array.from(e.target.selectedOptions, (opt) => parser(opt.value))
+    getOverrideAdapter().overrideDynamicConfig(config, {
+      [configKey]: allowMultiple ? selectedValues : selectedValues[0],
+    })
+  })
+
   return (
     <CenteredRow key={config}>
       <FlagInfo>
@@ -135,28 +137,39 @@ function DynamicConfigDropdown<
           {label}
         </Text>
       </FlagInfo>
-      <select multiple={allowMultiple} onChange={handleSelectChange}>
+      <select
+        multiple={allowMultiple}
+        onChange={handleSelectChange}
+        value={allowMultiple ? selected.map(String) : String(selected[0] ?? '')}
+      >
         {Array.isArray(options)
           ? options.map((opt) => (
-              <option key={opt} value={opt} selected={selected.includes(opt)}>
+              <option key={opt} value={opt}>
                 {opt}
               </option>
             ))
           : Object.entries(options).map(([key, value]) => (
-              <option key={key} value={value} selected={selected.includes(value)}>
+              <option key={key} value={value}>
                 {key}
               </option>
             ))}
       </select>
     </CenteredRow>
   )
-}
+})
 
-export default function FeatureFlagModal() {
+export default function FeatureFlagModal(): JSX.Element {
   const { isOpen, closeModal } = useModalState(ModalName.FeatureFlags)
-  const removeAllOverrides = () => {
+  const externallyConnectableExtensionId = useExternallyConnectableExtensionId()
+
+  const removeAllOverrides = useEvent(() => {
     getOverrideAdapter().removeAllOverrides()
-  }
+  })
+
+  const handleReload = useEvent(() => {
+    window.location.reload()
+  })
+
   return (
     <Modal name={ModalName.FeatureFlags} isModalOpen={isOpen} onClose={closeModal} padding={0}>
       <Flex py="$gap20" px="$gap16" gap="$gap8">
@@ -170,6 +183,13 @@ export default function FeatureFlagModal() {
           <ModalCloseIcon onClose={closeModal} />
         </CenteredRow>
         <Flex maxHeight="600px" pb="$gap8" overflow="scroll" $md={{ maxHeight: 'unset' }}>
+          <FeatureFlagGroup name="Sessions">
+            <FeatureFlagOption flag={FeatureFlags.SessionsServiceEnabled} label="Enable Sessions Service" />
+            <FeatureFlagOption flag={FeatureFlags.SessionsUpgradeAutoEnabled} label="Enable Sessions Upgrade Auto" />
+          </FeatureFlagGroup>
+          <FeatureFlagGroup name="Monad">
+            <FeatureFlagOption flag={FeatureFlags.Monad} label="Enable Monad UX" />
+          </FeatureFlagGroup>
           <FeatureFlagGroup name="Solana">
             <FeatureFlagOption flag={FeatureFlags.Solana} label="Enable Solana UX" />
             <FeatureFlagOption flag={FeatureFlags.SolanaPromo} label="Turn on Solana promo banners" />
@@ -232,7 +252,7 @@ export default function FeatureFlagModal() {
           <FeatureFlagGroup name="Embedded Wallet">
             <FeatureFlagOption flag={FeatureFlags.EmbeddedWallet} label="Add internal embedded wallet functionality" />
             <DynamicConfigDropdown
-              selected={[useExternallyConnectableExtensionId()]}
+              selected={[externallyConnectableExtensionId]}
               options={TRUSTED_CHROME_EXTENSION_IDS}
               parser={(id) => id}
               config={DynamicConfigs.ExternallyConnectableExtension}
@@ -248,9 +268,6 @@ export default function FeatureFlagModal() {
               label="Disable extension deeplinks for testing mini portfolio UI on web"
             />
           </FeatureFlagGroup>
-          <FeatureFlagGroup name="Data Reporting">
-            <FeatureFlagOption flag={FeatureFlags.DataReportingAbilities} label="Enable Data Reporting Abilities" />
-          </FeatureFlagGroup>
           <FeatureFlagGroup name="Search">
             <FeatureFlagOption
               flag={FeatureFlags.PoolSearch}
@@ -261,14 +278,7 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.Soneium} label="Enable Soneium" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Network Requests">
-            <DynamicConfigDropdown
-              selected={[30]}
-              options={[1, 10, 20, 30]}
-              parser={Number.parseInt}
-              config={DynamicConfigs.NetworkRequests}
-              configKey={NetworkRequestsConfigKey.BalanceMaxRefetchAttempts}
-              label="Max refetch attempts"
-            />
+            <NetworkRequestsConfig />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Debug">
             <FeatureFlagOption flag={FeatureFlags.TraceJsonRpc} label="Enables JSON-RPC tracing" />
@@ -288,6 +298,10 @@ export default function FeatureFlagModal() {
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Notifications">
             <FeatureFlagOption flag={FeatureFlags.NotificationSystem} label="Enable Notification System" />
+            <FeatureFlagOption
+              flag={FeatureFlags.NotificationApiDataSource}
+              label="Enable API Data Source for Notifications"
+            />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Misc">
             <FeatureFlagOption flag={FeatureFlags.BridgedAssetsBannerV2} label="Enable V2 Bridged Assets Banner" />
@@ -305,10 +319,30 @@ export default function FeatureFlagModal() {
             </Flex>
           </FeatureFlagGroup>
         </Flex>
-        <Button onPress={window.location.reload} variant="default" emphasis="secondary" size="small" fill={false}>
+        <Button onPress={handleReload} variant="default" emphasis="secondary" size="small" fill={false}>
           Reload
         </Button>
       </Flex>
     </Modal>
+  )
+}
+
+function NetworkRequestsConfig() {
+  const currentValue = useDynamicConfigValue({
+    config: DynamicConfigs.NetworkRequests,
+    key: NetworkRequestsConfigKey.BalanceMaxRefetchAttempts,
+    defaultValue: 30,
+  })
+
+  return (
+    <DynamicConfigDropdown
+      selected={[currentValue]}
+      options={[1, 10, 20, 30]}
+      parser={Number.parseInt}
+      config={DynamicConfigs.NetworkRequests}
+      configKey={NetworkRequestsConfigKey.BalanceMaxRefetchAttempts}
+      allowMultiple={false}
+      label="Max refetch attempts"
+    />
   )
 }

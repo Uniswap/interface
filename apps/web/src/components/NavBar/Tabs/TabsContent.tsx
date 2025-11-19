@@ -11,6 +11,7 @@ import { CreditCard } from 'ui/src/components/icons/CreditCard'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { ReceiveAlt } from 'ui/src/components/icons/ReceiveAlt'
 import { Wallet } from 'ui/src/components/icons/Wallet'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
 export type TabsSection = {
   title: string
@@ -23,6 +24,7 @@ export type TabsSection = {
 
 export type TabsItem = MenuItem & {
   icon?: JSX.Element
+  elementName?: ElementName
 }
 
 export const useTabsContent = (): TabsSection[] => {
@@ -117,11 +119,13 @@ export const useTabsContent = (): TabsSection[] => {
                 label: t('portfolio.overview.title'),
                 href: '/portfolio',
                 internal: true,
+                elementName: ElementName.NavbarPortfolioDropdownOverview,
               },
               {
                 label: t('portfolio.tokens.title'),
                 href: '/portfolio/tokens',
                 internal: true,
+                elementName: ElementName.NavbarPortfolioDropdownTokens,
               },
               ...(isPortfolioDefiTabEnabled
                 ? [
@@ -129,6 +133,7 @@ export const useTabsContent = (): TabsSection[] => {
                       label: t('portfolio.defi.title'),
                       href: '/portfolio/defi',
                       internal: true,
+                      elementName: ElementName.NavbarPortfolioDropdownDefi,
                     },
                   ]
                 : []),
@@ -136,11 +141,13 @@ export const useTabsContent = (): TabsSection[] => {
                 label: t('portfolio.nfts.title'),
                 href: '/portfolio/nfts',
                 internal: true,
+                elementName: ElementName.NavbarPortfolioDropdownNfts,
               },
               {
                 label: t('portfolio.activity.title'),
                 href: '/portfolio/activity',
                 internal: true,
+                elementName: ElementName.NavbarPortfolioDropdownActivity,
               },
             ],
           },

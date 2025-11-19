@@ -1,5 +1,10 @@
-import { ApiInit, getEntryGatewayUrl, getSessionService } from '@universe/api'
-import { createChallengeSolverService, createSessionInitializationService } from '@universe/sessions'
+import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
+import { getIsSessionServiceEnabled, getIsSessionUpgradeAutoEnabled } from '@universe/gating'
+import {
+  createChallengeSolverService,
+  createSessionInitializationService,
+  SessionInitializationService,
+} from '@universe/sessions'
 import { PropsWithChildren } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { GraphqlProvider } from 'src/app/apollo'
@@ -16,12 +21,16 @@ import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary
 import { AccountsStoreContextProvider } from 'wallet/src/features/accounts/store/provider'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
-const sessionInitializationService = createSessionInitializationService({
-  sessionService: getSessionService({
-    getBaseUrl: getEntryGatewayUrl,
-  }),
-  challengeSolverService: createChallengeSolverService(),
-})
+const provideSessionInitializationService = (): SessionInitializationService =>
+  createSessionInitializationService({
+    getSessionService: () =>
+      provideSessionService({
+        getBaseUrl: getEntryGatewayUrl,
+        getIsSessionServiceEnabled,
+      }),
+    challengeSolverService: createChallengeSolverService(),
+    getIsSessionUpgradeAutoEnabled,
+  })
 
 export function BaseAppContainer({
   children,
@@ -39,7 +48,10 @@ export function BaseAppContainer({
                     <SmartWalletNudgesProvider>
                       <LocalizationContextProvider>
                         <TraceUserProperties />
-                        <ApiInit sessionInitService={sessionInitializationService} />
+                        <ApiInit
+                          getSessionInitService={provideSessionInitializationService}
+                          getIsSessionServiceEnabled={getIsSessionServiceEnabled}
+                        />
                         {children}
                       </LocalizationContextProvider>
                     </SmartWalletNudgesProvider>
