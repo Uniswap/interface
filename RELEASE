@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `Qme9KAEQ5d6hT9drXBZCLEHvxCcTaitz4RkSLPriko8Jgr`
-- CIDv1: `bafybeihk2n7ulmdeaqpwny2app5zm5akswkw5njb6hjw2rraf3u3les5am`
+- CIDv0: `QmTc9oJFYAwPhhTQi5NnPteHcvSYp7ZWiQ2V1WoanZjHU3`
+- CIDv1: `bafybeicoime5g2ighwvdo4r4x32cc3zpa7khfzrke4aym7gv7wbnl2jika`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,94 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeihk2n7ulmdeaqpwny2app5zm5akswkw5njb6hjw2rraf3u3les5am.ipfs.dweb.link/
-- [ipfs://Qme9KAEQ5d6hT9drXBZCLEHvxCcTaitz4RkSLPriko8Jgr/](ipfs://Qme9KAEQ5d6hT9drXBZCLEHvxCcTaitz4RkSLPriko8Jgr/)
+- https://bafybeicoime5g2ighwvdo4r4x32cc3zpa7khfzrke4aym7gv7wbnl2jika.ipfs.dweb.link/
+- [ipfs://QmTc9oJFYAwPhhTQi5NnPteHcvSYp7ZWiQ2V1WoanZjHU3/](ipfs://QmTc9oJFYAwPhhTQi5NnPteHcvSYp7ZWiQ2V1WoanZjHU3/)
 
-## 5.119.0 (2025-11-19)
-
-
-### Features
-
-* **web:** add data reporting for pools (#25217) e5540de
-* **web:** add hidden tokens explainer to portfolio on web (#25461) 3fa67e1
-* **web:** add logger to session initialization service (#25310) 918e1f7
-* **web:** Add mocks for GetPortfolio, V1/Swap, and FOR requests (#25071) 24e52e7
-* **web:** add Portfolio Balance chart (#25347) d13e1d1
-* **web:** add side scroll indicators to Portfolio tables (#25385) 84e222f
-* **web:** add support for pending transactions in activity table (#25401) 2ae6102
-* **web:** Add test url builder utility (#25072) 697dd34
-* **web:** Coalesce CreatePosition e2e tests to reduce redundancy (#25125) 2481ce4
-* **web:** Create e2e test CLAUDE skill (#25326) 5f88ad1
-* **web:** Disable anvil block, code size, and fee limits for e2e tests (#25238) 7143e86
-* **web:** filter portfolio historical balance chart by selected network (#25456) 2f56169
-* **web:** get USD value for Swapped this week value (#25365) 2ea14c2
-* **web:** Harden and increase anvil health checks (#25137) ccc0915
-* **web:** improve activity address column to match desigsn (#25164) 55cd47a
-* **web:** override staging entry gateway BE url (#25519) b7a6056
-* **web:** Portfolio Empty States (#25366) e3e08f7
-* **web:** portfolio on web analytics stack (#25574) 1463c9d
-* **web:** Replace ActivityTab e2e test with unit tests (#25173) c199937
-* **web:** Replace CreatePosition error e2e test with unit tests (#25190) a7943b5
-* **web:** Replace redundant swap e2e test with unit tests (#25268) 8a5386e
-* **web:** Replace UniswapX fee e2e test with unit tests (#25172) 28e4599
-* **web:** show ext-specific button and miniportfoliov2 when ext connected (#25251) 061e0e5
-* **web:** show loading skeleton when changing networks on activity tab (#25196) 5a1e27d
+### 5.119.1 (2025-11-20)
 
 
 ### Bug Fixes
 
-* **web:** add manual overrides to address column in activity table (#25426) 663697f
-* **web:** Add missing withAnvil param for remove/v2 redirect test (#25267) efef018
-* **web:** add new backend corn-staging url to staging CSP (#25522) 945c057
-* **web:** cloud tests updated USDC symbol (#25346) 2210015
-* **web:** consistent context menu and click into token behavior (#25458) 27328a6
-* **web:** correctly detect build mode in CSP plugin (#25528) bddc434
-* **web:** Don't overflow Social icons on Company menu (#25063) 2992b7c
-* **web:** Ensure Statsig is init before feature flag reads (#25315) 8c6e5ff
-* **web:** Fix broken TokenDetailsSwap e2e test and combine some (#25077) 6d97c8c
-* **web:** Fix graphql mocking for Token Details e2e test (#25135) ccd286d
-* **web:** Fix react error from DynamicConfigDropdown in FeatureFlagModal (#25316) 340b977
-* **web:** Fix text overflow on dropdowns (#25334) 2ed3ce1
-* **web:** fix tick invariant error (#25390) c7a3707
-* **web:** fix zIndex of fixed bottom bar to go behind mini portfolio side bar (#25459) 1a13b54
-* **web:** Fixes for AccountDrawer.e2e.test.ts (#25076) 0c03ba2
-* **web:** Fixes for Buy.e2e.test.ts (#25075) 7de39e7
-* **web:** Fixes for WalletConnection.e2e.test.ts (#25074) df2f20a
-* **web:** further improve activity table parsing (#25444) d3c11bf
-* **web:** make tokens table more performant (#25248) e5f62e2
-* **web:** nft loader and spacing fixes (#25369) 6799acc
-* **web:** notifs track chained actions (#25551) 54a8e0e
-* **web:** optimize Portfolio Overview (#25341) bfd80ab
-* **web:** performance enhancements for Activity tab (#25336) 97e1be7
-* **web:** prevent multiple nft context menus from being open (#25307) 78928fb
-* **web:** remove arbitrary context menu entry + memoize parts (#25370) 5b95824
-* **web:** Remove unnecessary trading api overrides for e2e tests (#25069) 6084180
-* **web:** show - for undefined fees in pools table (#25325) 080797f
-* **web:** support batched transactions for the create + increase flows (#25171) 5da17b9
-* **web:** token and pool gap fix (#25438) 6e8c190
-* **web:** Update mini portfolio showing + button consistency (#25368) aaaa4ac
-* **web:** upload sourcemaps with correct path to datadog (#25350) 9fd9c60
-
-
-### Continuous Integration
-
-* **web:** update sitemaps 1b9ae1d
-
-
-### Styles
-
-* **web:** add 2px spacing between rows in v2 table (#25306) 83a8a80
-* **web:** align designs for search input on portfolio vs page header (#25308) b966852
-* **web:** fix column sizing and loading skeleton alignment (#25227) 363a1b1
-* **web:** fix filter button overflow issue (#25165) e9bad13
-* **web:** fix network button font (#25183) 88cdf47
-* **web:** fix some alignment/sizing with address column (#25255) e649ffa
-* **web:** fix time hover animation in activity table (#25226) 935480c
-* **web:** make activity arrow icon its own column and fix timeCell alignment (#25230) 12a5748
-
-
-### Code Refactoring
-
-* **web:** improve perf of feature flag modal (#25275) 2106910
+* **web:** show txns hash on activity table for all swaps until protocol data improves (#25649) 8571bc3
 
 
