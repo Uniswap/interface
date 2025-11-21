@@ -1,12 +1,10 @@
-import { ChartPeriod } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { ChartPeriod, GetPortfolioChartResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { GraphQLApi } from '@universe/api'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { PriceChart, PriceChartData } from 'components/Charts/PriceChart'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { UTCTimestamp } from 'lightweight-charts'
-import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
-import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   Flex,
@@ -18,8 +16,6 @@ import {
   useMedia,
   useSporeColors,
 } from 'ui/src'
-import { useGetPortfolioHistoricalValueChartQuery } from 'uniswap/src/data/rest/getPortfolioChart'
-import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -70,17 +66,29 @@ function convertPortfolioChartDataToPriceChartData(
 
 interface PortfolioChartProps {
   isPortfolioZero: boolean
+  chartData?: GetPortfolioChartResponse
+  isPending: boolean
+  error?: Error | null
+  selectedPeriod: ChartPeriod
+  setSelectedPeriod: (period: ChartPeriod) => void
+  portfolioTotalBalanceUSD?: number
+  isTotalValueMatch: boolean
 }
 
-export function PortfolioChart({ isPortfolioZero }: PortfolioChartProps): JSX.Element {
+export function PortfolioChart({
+  isPortfolioZero,
+  chartData: portfolioChartData,
+  isPending,
+  error,
+  portfolioTotalBalanceUSD,
+  selectedPeriod,
+  setSelectedPeriod,
+  isTotalValueMatch,
+}: PortfolioChartProps): JSX.Element {
   const { t } = useTranslation()
   const media = useMedia()
   const colors = useSporeColors()
-  const { chainId } = usePortfolioRoutes()
-  const portfolioAddresses = usePortfolioAddresses()
-  const { chains: chainIds } = useEnabledChains()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const [selectedPeriod, setSelectedPeriod] = useState<ChartPeriod>(ChartPeriod.DAY)
 
   const periodOptions = useMemo<Array<SegmentedControlOption<string>>>(() => {
     const options: Array<[ChartPeriod, string]> = [
@@ -100,22 +108,12 @@ export function PortfolioChart({ isPortfolioZero }: PortfolioChartProps): JSX.El
     }))
   }, [selectedPeriod, t])
 
-  const { data, isPending, error } = useGetPortfolioHistoricalValueChartQuery({
-    input: {
-      evmAddress: portfolioAddresses.evmAddress,
-      svmAddress: portfolioAddresses.svmAddress,
-      chainIds: chainId ? [chainId] : chainIds,
-      chartPeriod: selectedPeriod,
-    },
-    enabled: !!(portfolioAddresses.evmAddress || portfolioAddresses.svmAddress),
-  })
-
   const chartData = useMemo(() => {
-    if (!data?.points) {
+    if (!portfolioChartData?.points) {
       return []
     }
-    return convertPortfolioChartDataToPriceChartData(data.points)
-  }, [data])
+    return convertPortfolioChartDataToPriceChartData(portfolioChartData.points)
+  }, [portfolioChartData])
 
   // Determine color based on portfolio balance change
   const chartColor = useMemo(() => {
@@ -163,14 +161,18 @@ export function PortfolioChart({ isPortfolioZero }: PortfolioChartProps): JSX.El
           <Separator borderBottomWidth={3} borderColor="$surface3" position="absolute" top="60%" left="0" right="0" />
         </Flex>
       ) : (
-        <PriceChart
-          data={chartData}
-          height={CHART_HEIGHT}
-          type={PriceChartType.LINE}
-          stale={false}
-          timePeriod={chartPeriodToHistoryDuration(selectedPeriod)}
-          overrideColor={chartColor}
-        />
+        <Flex pointerEvents={isTotalValueMatch ? 'auto' : 'none'}>
+          <PriceChart
+            data={chartData}
+            height={CHART_HEIGHT}
+            type={PriceChartType.LINE}
+            stale={false}
+            timePeriod={chartPeriodToHistoryDuration(selectedPeriod)}
+            overrideColor={chartColor}
+            headerTotalValueOverride={portfolioTotalBalanceUSD}
+            hideYAxis={!isTotalValueMatch}
+          />
+        </Flex>
       )}
       <Flex
         $md={{ width: '100%' }}
