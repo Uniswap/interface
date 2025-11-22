@@ -1,6 +1,6 @@
 /* eslint-env node */
 
-const fs = require('fs')
+const fs = require('fs').promises
 const { parseStringPromise, Builder } = require('xml2js')
 
 // Inline version of normalizeTokenAddressForCache to avoid PNG import issues
