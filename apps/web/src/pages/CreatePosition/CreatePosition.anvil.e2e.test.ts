@@ -94,6 +94,21 @@ test.describe('Create position', () => {
     })
   })
 
+  test.describe('v2 no pair', () => {
+    test('should create a pair', async ({ page, anvil }) => {
+      // random coins that are unlikely to have a v2 pair
+      const randomCoin1 = '0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c'
+      const randomCoin2 = '0x3081f70000e8CF8Be2aFCaE3Db6B9D9c796CaEc5'
+      await anvil.setErc20Balance({ address: assume0xAddress(WETH_ADDRESS), balance: parseEther('100') })
+      await page.goto(
+        `/positions/create/v2?currencyA=${randomCoin1}&currencyB=${randomCoin2}&chain=ethereum&fee=undefined&hook=undefined&priceRangeState={"priceInverted":false,"fullRange":false,"minPrice":"","maxPrice":"","initialPrice":"","inputMode":"price"}&depositState={"exactField":"TOKEN0","exactAmounts":{}}`,
+      )
+      await expect(page.getByText('Creating new pool').first()).toBeVisible()
+      await page.getByRole('button', { name: 'Continue' }).click()
+      await expect(page.url()).toContain('step=1')
+    })
+  })
+
   test.describe('Custom fee tier', () => {
     test('should create a position with a custom fee tier', async ({ page, anvil }) => {
       await stubTradingApiEndpoint({

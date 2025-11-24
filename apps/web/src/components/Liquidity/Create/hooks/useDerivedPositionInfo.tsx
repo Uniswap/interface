@@ -148,16 +148,16 @@ function useGetLegacyPoolOrPair({
   }, [pool, protocolVersion, sortedCurrencies])
 
   const creatingPoolOrPair = useMemo(() => {
-    if (!fee) {
-      return false
-    }
-
     if (protocolVersion === ProtocolVersion.UNSPECIFIED) {
       return false
     }
 
     if (protocolVersion === ProtocolVersion.V2) {
       return pairResult[0] === PairState.NOT_EXISTS
+    }
+
+    if (!fee) {
+      return false
     }
 
     if (protocolVersion === ProtocolVersion.V3) {
