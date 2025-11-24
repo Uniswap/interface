@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmbPB8nBMG3yXcCXDfNLGGFeqapooM1hXEesT6YVHR4A2T`
-- CIDv1: `bafybeigbzv7gphjjopikparoblamcq56dkcjsm4jyyaajj3fveke2cfwca`
+- CIDv0: `QmQnLKt6cNikkDbuWwWk4ff53z8nE8UkNvSaFaASBUe88u`
+- CIDv1: `bafybeibejoyf6nwfx7e2yegqssu3gtcx7oifdiqccnuf3hbzyhrvxqwchy`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,9 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeigbzv7gphjjopikparoblamcq56dkcjsm4jyyaajj3fveke2cfwca.ipfs.dweb.link/
-- [ipfs://QmbPB8nBMG3yXcCXDfNLGGFeqapooM1hXEesT6YVHR4A2T/](ipfs://QmbPB8nBMG3yXcCXDfNLGGFeqapooM1hXEesT6YVHR4A2T/)
+- https://bafybeibejoyf6nwfx7e2yegqssu3gtcx7oifdiqccnuf3hbzyhrvxqwchy.ipfs.dweb.link/
+- [ipfs://QmQnLKt6cNikkDbuWwWk4ff53z8nE8UkNvSaFaASBUe88u/](ipfs://QmQnLKt6cNikkDbuWwWk4ff53z8nE8UkNvSaFaASBUe88u/)
 
-### 5.119.4 (2025-11-24)
+### 5.119.5 (2025-11-24)
+
+
+### Bug Fixes
+
+* **web:** Monad cherry-picks for web 2 (#25752) f66f7d8
 
 
