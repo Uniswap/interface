@@ -9,7 +9,11 @@ import { ApolloProvider } from '@apollo/client'
 import { datadogRum } from '@datadog/browser-rum'
 import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
 import type { StatsigUser } from '@universe/gating'
-import { getIsSessionServiceEnabled, getIsSessionUpgradeAutoEnabled } from '@universe/gating'
+import {
+  getIsSessionServiceEnabled,
+  getIsSessionUpgradeAutoEnabled,
+  useIsSessionServiceEnabled,
+} from '@universe/gating'
 import { createChallengeSolverService, createSessionInitializationService } from '@universe/sessions'
 import { QueryClientPersistProvider } from 'components/PersistQueryClient'
 import { createWeb3Provider, WalletCapabilitiesEffects } from 'components/Web3Provider/createWeb3Provider'
@@ -92,6 +96,7 @@ const provideSessionInitService = () =>
 
 function Updaters() {
   const location = useLocation()
+  const isSessionServiceEnabled = useIsSessionServiceEnabled()
 
   const ListsUpdater = useDeferredComponent(loadListsUpdater)
   const SystemThemeUpdater = useDeferredComponent(loadSystemThemeUpdater)
@@ -116,10 +121,7 @@ function Updaters() {
       {FiatOnRampTransactionsUpdater && <FiatOnRampTransactionsUpdater />}
       {WebAccountsStoreUpdater && <WebAccountsStoreUpdater />}
       <AccountsStoreDevTool />
-      <ApiInit
-        getSessionInitService={provideSessionInitService}
-        getIsSessionServiceEnabled={getIsSessionServiceEnabled}
-      />
+      <ApiInit getSessionInitService={provideSessionInitService} isSessionServiceEnabled={isSessionServiceEnabled} />
     </>
   )
 }

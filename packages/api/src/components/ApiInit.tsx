@@ -6,7 +6,7 @@ import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 interface ApiInitProps {
   getSessionInitService: () => SessionInitializationService
-  getIsSessionServiceEnabled: () => boolean
+  isSessionServiceEnabled: boolean
 }
 function createInitServiceQuery(ctx: {
   getSessionInitService: () => SessionInitializationService
@@ -31,15 +31,12 @@ function createInitServiceQuery(ctx: {
   })
 }
 
-function ApiInit({ getSessionInitService, getIsSessionServiceEnabled }: ApiInitProps): null {
+function ApiInit({ getSessionInitService, isSessionServiceEnabled }: ApiInitProps): null {
   const [query] = useState(() => createInitServiceQuery({ getSessionInitService }))
-
-  // Short-circuit if session service is disabled
-  const shouldInitialize = getIsSessionServiceEnabled()
 
   useQuery({
     ...query,
-    enabled: shouldInitialize,
+    enabled: isSessionServiceEnabled,
   })
 
   return null
