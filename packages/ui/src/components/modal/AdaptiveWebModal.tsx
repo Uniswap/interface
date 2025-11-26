@@ -231,9 +231,6 @@ export function AdaptiveWebModal({
           </Adapt>
         )}
 
-      {/* TODO(WEB-7196): on latest Tamagui upgrade to 1.125.17, stacking sheets/dialogs on mweb is broken because Adapt isn't playing nice with Dialog.Portal zIndexes.
-       * Dialog.Portal also does not like zIndex={undefined}, so temp giving it a dummy value of zIndexes.background
-       */}
       <Dialog.Portal zIndex={zIndex ?? zIndexes.modal}>
         <Overlay key="overlay" zIndex={zIndexes.modalBackdrop} />
         <Flex

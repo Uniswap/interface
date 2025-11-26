@@ -13,6 +13,7 @@ import { Button, Flex, IconButton, Image, Text, Tooltip, useSporeColors } from '
 import { PlusCircle } from 'ui/src/components/icons/PlusCircle'
 import { SwitchArrows } from 'ui/src/components/icons/SwitchArrows'
 import { type AppTFunction } from 'ui/src/i18n/types'
+import { zIndexes } from 'ui/src/theme'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
@@ -99,7 +100,7 @@ function DisconnectMenuTooltip({ children }: PropsWithChildren) {
   return (
     <Tooltip placement="bottom-end">
       <Tooltip.Trigger>{children}</Tooltip.Trigger>
-      <Tooltip.Content pointerEvents="auto" paddingVertical={8} paddingHorizontal={8}>
+      <Tooltip.Content pointerEvents="auto" paddingVertical={8} paddingHorizontal={8} zIndex={zIndexes.overlay}>
         <DisconnectMenu />
       </Tooltip.Content>
     </Tooltip>

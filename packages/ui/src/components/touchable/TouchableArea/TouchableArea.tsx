@@ -1,5 +1,5 @@
 import { BlurView, type BlurViewProps } from 'expo-blur'
-import { Children, cloneElement, forwardRef, isValidElement, memo, type ReactNode, useMemo } from 'react'
+import React, { Children, cloneElement, forwardRef, isValidElement, memo, type ReactNode, useMemo } from 'react'
 import { type GestureResponderEvent, StyleSheet } from 'react-native'
 import type { ColorTokens } from 'tamagui'
 import { type TamaguiElement, withStaticProperties, type YStackProps } from 'tamagui'
@@ -48,12 +48,20 @@ const WithInjectedColors = memo(function WithInjectedColors({
       return child
     }
 
+    const childElement = child as ReactElementWithAnyProps
+
+    // Don't inject colors into TouchableArea components - they handle their own styling
+    // This prevents infinite loops with nested TouchableAreas
+    if (childElement.type === TouchableAreaComponentWithoutMemo || childElement.type === TouchableAreaComponent) {
+      return child
+    }
+
     // We don't want to override this if it's already set
-    let groupHover: TextProps['$group-hover'] = child.props['$group-hover']
+    let groupHover: TextProps['$group-hover'] = childElement.props['$group-hover']
 
     // decide which color properties to use
-    const maybeColor: string | ColorTokens = child.props.color ?? '$accent3'
-    const maybeBackgroundColor: string | ColorTokens = child.props.backgroundColor
+    const maybeColor: string | ColorTokens = childElement.props.color ?? '$accent3'
+    const maybeBackgroundColor: string | ColorTokens = childElement.props.backgroundColor
 
     // if we don't have a group hover, and we have a color or background color, we can get a hover color
     if (!groupHover && [maybeColor, maybeBackgroundColor].some((val) => typeof val === 'string')) {
@@ -123,8 +131,19 @@ const TouchableAreaComponentWithoutMemo = forwardRef<TamaguiElement, TouchableAr
     return finalStyle
   }, [scaleTo, activeOpacity, pressStyleProp])
 
-  const animation = isTestEnv() ? undefined : (animationProp ?? DEFAULT_ANIMATION_PROPS.animation)
-  const animateOnly = isTestEnv() ? undefined : (animateOnlyProp ?? DEFAULT_ANIMATION_PROPS.animateOnly)
+  // Tamagui bug: when animation prop is set alongside $group-* props, fatal exceptions occur in React 19
+  // Solution: only include animation/animateOnly in props spread when explicitly set (not null)
+  const animationAndAnimateOnly: { animation?: YStackProps['animation']; animateOnly?: YStackProps['animateOnly'] } =
+    useMemo(() => {
+      const animation = isTestEnv() ? undefined : (animationProp ?? DEFAULT_ANIMATION_PROPS.animation)
+      const animateOnly = isTestEnv() ? undefined : (animateOnlyProp ?? DEFAULT_ANIMATION_PROPS.animateOnly)
+
+      if (animationProp === null) {
+        return {}
+      }
+
+      return { animation, animateOnly }
+    }, [animationProp, animateOnlyProp])
 
   // Wrap onPress to stop propagation if needed
   const handlePress = useEvent((event: TouchableAreaEvent): void => {
@@ -173,8 +192,6 @@ const TouchableAreaComponentWithoutMemo = forwardRef<TamaguiElement, TouchableAr
         ref={ref}
         hoverable={hoverable}
         hitSlop={hitSlop}
-        animation={animation}
-        animateOnly={animateOnly}
         variant={variant}
         pressStyle={pressStyle}
         onLayout={onLayout}
@@ -182,6 +199,7 @@ const TouchableAreaComponentWithoutMemo = forwardRef<TamaguiElement, TouchableAr
         onPressIn={onPressIn ? handlePressIn : undefined}
         onPressOut={onPressOut ? handlePressOut : undefined}
         {...restProps}
+        {...animationAndAnimateOnly}
         width={width}
         height={height}
       >
@@ -203,8 +221,6 @@ const TouchableAreaComponentWithoutMemo = forwardRef<TamaguiElement, TouchableAr
     <TouchableAreaFrame
       ref={ref}
       hoverable={hoverable}
-      animation={animation}
-      animateOnly={animateOnly}
       variant={variant}
       hitSlop={hitSlop}
       pressStyle={pressStyle}
@@ -213,6 +229,7 @@ const TouchableAreaComponentWithoutMemo = forwardRef<TamaguiElement, TouchableAr
       onPressIn={onPressIn ? handlePressIn : undefined}
       onPressOut={onPressOut ? handlePressOut : undefined}
       {...restProps}
+      {...animationAndAnimateOnly}
       width={width}
       height={height}
     >

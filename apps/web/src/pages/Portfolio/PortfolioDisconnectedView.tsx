@@ -101,19 +101,21 @@ export default function PortfolioDisconnectedView() {
             eventOnTrigger={InterfaceEventName.ConnectWalletButtonClicked}
             element={ElementName.ConnectWalletButton}
           >
-            <Button
-              variant="branded"
-              emphasis="primary"
-              size="large"
-              maxHeight="fit-content"
-              alignSelf="flex-start"
-              $lg={{ alignSelf: 'center' }}
-              onPress={() => accountDrawer.open()}
-            >
-              <Text variant="buttonLabel1" color="$white">
-                {t('common.connectWallet.button')}
-              </Text>
-            </Button>
+            {/* Wrap in a flex with set height to avoid growing too tall in firefox */}
+            <Flex height="54px">
+              <Button
+                variant="branded"
+                emphasis="primary"
+                size="large"
+                alignSelf="flex-start"
+                $lg={{ alignSelf: 'center' }}
+                onPress={() => accountDrawer.open()}
+              >
+                <Text variant="buttonLabel1" color="$white">
+                  {t('common.connectWallet.button')}
+                </Text>
+              </Button>
+            </Flex>
           </Trace>
         </Flex>
 

@@ -36,7 +36,7 @@ export function TransactionLoadingState(): JSX.Element {
       >
         <SpinningLoader size={iconSizes.icon20} color="$neutral2" />
         <Text color="$neutral2" variant="body3">
-          {t('dapp.transaction.preview.loading')}
+          {t('dapp.transaction.preview')}
         </Text>
       </Flex>
     </Flex>

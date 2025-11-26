@@ -77,10 +77,14 @@ async function killExistingProcess(port: number): Promise<void> {
   }
 }
 
+export type AnvilClient = ReturnType<typeof createTestClient> &
+  ReturnType<typeof publicActions> &
+  ReturnType<typeof walletActions>
+
 /**
  * Create an Anvil client for interacting with the local node
  */
-function createAnvilClient(ctx: { url: string; timeout?: number }) {
+function createAnvilClient(ctx: { url: string; timeout?: number }): AnvilClient {
   return createTestClient({
     account: privateKeyToAccount(TEST_WALLET_PRIVATE_KEY),
     chain: mainnet,
@@ -375,5 +379,3 @@ function _resetAnvilManager(): void {
   }
   managerInstance = null
 }
-
-export type AnvilClient = ReturnType<typeof createAnvilClient>

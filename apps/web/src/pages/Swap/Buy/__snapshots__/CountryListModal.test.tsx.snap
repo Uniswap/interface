@@ -1,20 +1,196 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`CountryListModal > should render options and call select callback 1`] = `
+.c0 {
+  padding: 16px;
+  padding-left: 40px;
+  height: 40px;
+  align-items: center;
+  width: 100%;
+  white-space: nowrap;
+  background-color: #F9F9F9;
+  border: none;
+  outline: none;
+  border-radius: 12px;
+  color: #131313;
+  border-style: solid;
+  border: 1px solid rgba(19, 19, 19, 0.08);
+  -webkit-appearance: none;
+  font-weight: 485;
+  font-size: 16px;
+  transition: border 100ms;
+}
+
+.c0 ::placeholder {
+  color: rgba(19, 19, 19, 0.35);
+  font-size: 16px;
+}
+
+.c0 :focus {
+  border: 1px solid rgba(19, 19, 19, 0.08);
+  background-color: #F9F9F9;
+  outline: none;
+}
+
 <span
   class=""
   style="display: contents;"
 >
-  <span
-    class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
-  >
-    <h2
-      class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
-      data-disable-theme="true"
-      id="title-:r4:"
-      role="heading"
-    />
-  </span>
+  <div>
+    <span
+      class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+    >
+      <div />
+    </span>
+    <div>
+      <div />
+      <div
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-700px _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
+      >
+        <div>
+          <div
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _backgroundColor-surface1 _width-10037 _flexGrow-1 _position-relative"
+          >
+            <div
+              class="_pt-_sm_t-space-non101 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _flexShrink-1 _pt-t-space-spa1360334051 _pr-t-space-spa1360334051 _pb-t-space-spa1360334051 _pl-t-space-spa1360334051 _gap-t-space-spa1360334080"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _justifyContent-space-betwe3241"
+              >
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                  data-disable-theme="true"
+                >
+                  Select your region
+                </span>
+                <div
+                  class="is_TouchableArea  t_group_true"
+                  data-testid="CountryListModal-close"
+                  role="button"
+                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: [object Object];"
+                  tabindex="0"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                  >
+                    <svg
+                      fill="none"
+                      stroke-width="8"
+                      style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _position-relative _height-10037 _flexGrow-1"
+              >
+                <svg
+                  data-testid="mocked-svg"
+                />
+                <input
+                  autocomplete="off"
+                  class="c0"
+                  data-testid="for-country-search-input"
+                  id="for-country-search-input"
+                  placeholder="Search by country or region"
+                  type="text"
+                  value=""
+                />
+              </div>
+            </div>
+            <div
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                data-testid="country-list-wrapper"
+              >
+                <div
+                  style="position: relative; height: 100px; width: 100%; overflow: auto; will-change: transform; direction: ltr;"
+                >
+                  <div
+                    style="height: 56px; width: 100%;"
+                  >
+                    <div
+                      class="_backgroundColor-0hover-surface2 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _height-t-size-spac100347420 _pr-t-space-spa1360334051 _pl-t-space-spa1360334051 _justifyContent-space-betwe3241 _alignItems-center _cursor-pointer"
+                      style="position: absolute; left: 0px; top: 0px; height: 56px; width: 100%;"
+                    >
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _gap-t-space-spa1360334080"
+                      >
+                        <div
+                          class="is_Avatar _display-flex _flexBasis-auto _boxSizing-border-box _minHeight-32px _minWidth-32px _flexShrink-0 _flexDirection-column _alignItems-center _justifyContent-center _position-relative _overflowX-hidden _overflowY-hidden _width-32px _height-32px _maxWidth-32px _maxHeight-32px _borderTopLeftRadius-100000px _borderTopRightRadius-100000px _borderBottomRightRadius-100000px _borderBottomLeftRadius-100000px _pt-0px _pr-0px _pb-0px _pl-0px"
+                        >
+                          <div
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-absolute _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _top-0px _left-0px _right-0px _bottom-0px _zIndex-1"
+                          >
+                            <div
+                              aria-label="Country flag"
+                              class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                              style="width: 32px; height: 32px;"
+                            >
+                              <div
+                                class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
+                                style="background-image: url(https://images-country.meld.io/US/flag.svg);"
+                              />
+                              <img
+                                alt="Country flag"
+                                class="css-accessibilityImage-9pa8cd"
+                                draggable="false"
+                                src="https://images-country.meld.io/US/flag.svg"
+                              />
+                            </div>
+                          </div>
+                          <div
+                            class="is_AvatarFallback _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-0px _left-0px _right-0px _bottom-0px _zIndex-0 _backgroundColor-neutral3"
+                          />
+                        </div>
+                        <span
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                          data-disable-theme="true"
+                        >
+                          United States
+                        </span>
+                      </div>
+                      <svg
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-width="8"
+                        style="width: 24px; height: 24px; color: rgb(19, 19, 19);"
+                        viewBox="0 0 48 48"
+                      >
+                        <line
+                          stroke="currentColor"
+                          x1="11"
+                          x2="18"
+                          y1="26"
+                          y2="33"
+                        />
+                        <line
+                          stroke="currentColor"
+                          x1="18"
+                          x2="38"
+                          y1="33"
+                          y2="14"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   <div
     style="display: contents;"
   />

@@ -12,11 +12,13 @@ import { SendReviewScreen } from 'src/features/send/SendReviewScreen'
 import { useWalletRestore } from 'src/features/wallet/useWalletRestore'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { TransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/TransactionSettingsStoreContextProvider'
 import { TransactionModal } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
 import {
   TransactionScreen,
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
+import { SwapFormStoreContextProvider } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContextProvider'
 import { SendContextProvider, useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 
 export function SendFlow(): JSX.Element {
@@ -45,9 +47,13 @@ export function SendFlow(): JSX.Element {
       walletNeedsRestore={walletNeedsRestore}
       onClose={onClose}
     >
-      <SendContextProvider prefilledTransactionState={initialState}>
-        <CurrentScreen screenOverride={initialState?.sendScreen} />
-      </SendContextProvider>
+      <TransactionSettingsStoreContextProvider>
+        <SwapFormStoreContextProvider>
+          <SendContextProvider prefilledTransactionState={initialState}>
+            <CurrentScreen screenOverride={initialState?.sendScreen} />
+          </SendContextProvider>
+        </SwapFormStoreContextProvider>
+      </TransactionSettingsStoreContextProvider>
     </TransactionModal>
   )
 }

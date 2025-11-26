@@ -8,7 +8,7 @@ import { TransactionType } from 'uniswap/src/features/transactions/types/transac
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export type CurrencyInputPanelRef = {
-  textInputRef: RefObject<TextInput>
+  textInputRef: RefObject<TextInput | null>
   triggerShakeAnimation: () => void
 }
 

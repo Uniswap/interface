@@ -6,12 +6,7 @@ exports[`renders a DecimalNumber 1`] = `
   maxFontSizeMultiplier={1.4}
   style={
     {
-      "color": {
-        "dynamic": {
-          "dark": "#FFFFFF",
-          "light": "#131313",
-        },
-      },
+      "color": "#131313",
       "fontFamily": "Basel Grotesk",
       "fontSize": 19,
       "fontWeight": "400",
@@ -26,12 +21,7 @@ exports[`renders a DecimalNumber 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": {
-          "dynamic": {
-            "dark": "rgba(255, 255, 255, 0.38)",
-            "light": "rgba(19, 19, 19, 0.35)",
-          },
-        },
+        "color": "rgba(19, 19, 19, 0.35)",
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -52,12 +42,7 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
   maxFontSizeMultiplier={1.4}
   style={
     {
-      "color": {
-        "dynamic": {
-          "dark": "#FFFFFF",
-          "light": "#131313",
-        },
-      },
+      "color": "#131313",
       "fontFamily": "Basel Grotesk",
       "fontSize": 19,
       "fontWeight": "400",
@@ -72,12 +57,7 @@ exports[`renders a DecimalNumber without a comma separator 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": {
-          "dynamic": {
-            "dark": "rgba(255, 255, 255, 0.38)",
-            "light": "rgba(19, 19, 19, 0.35)",
-          },
-        },
+        "color": "rgba(19, 19, 19, 0.35)",
         "fontFamily": "Basel Grotesk",
         "fontSize": 19,
         "fontWeight": "400",
@@ -98,12 +78,7 @@ exports[`renders a DecimalNumber without a decimal part 1`] = `
   maxFontSizeMultiplier={1.4}
   style={
     {
-      "color": {
-        "dynamic": {
-          "dark": "#FFFFFF",
-          "light": "#131313",
-        },
-      },
+      "color": "#131313",
       "fontFamily": "Basel Grotesk",
       "fontSize": 19,
       "fontWeight": "400",

@@ -72,7 +72,7 @@ export type HeaderConfig = {
 }
 
 export type ScrollPair = {
-  list: RefObject<FlatList> | RefObject<FlashList<unknown>>
+  list: RefObject<FlatList | null> | RefObject<FlashList<unknown> | null>
   position: Animated.SharedValue<number>
   index: number
 }

@@ -449,3 +449,47 @@ export const getBlockaidScanTransactionResponseSchema = () =>
   })
 
 export type BlockaidScanTransactionResponse = z.infer<ReturnType<typeof getBlockaidScanTransactionResponseSchema>>
+
+// JSON-RPC Scan Types
+
+/**
+ * Lazy-loaded Zod schema factory for JSON-RPC data
+ */
+const getJsonRpcDataSchema = () =>
+  z.object({
+    method: z.enum([
+      'eth_sendTransaction',
+      'eth_sendRawTransaction',
+      'eth_signTransaction',
+      'eth_signTypedData',
+      'eth_signTypedData_v1',
+      'eth_signTypedData_v2',
+      'eth_signTypedData_v3',
+      'eth_signTypedData_v4',
+      'eth_sendUserOperation',
+      'personal_sign',
+      'eth_sign',
+      'wallet_sendCalls',
+    ]),
+    params: z.array(z.unknown()),
+  })
+
+/**
+ * Lazy-loaded Zod schema factory for Blockaid scan JSON-RPC request
+ */
+export const getBlockaidScanJsonRpcRequestSchema = () =>
+  z.object({
+    chain: z.string(),
+    options: z.array(z.enum(['validation', 'simulation', 'gas_estimation', 'events'])).optional(),
+    metadata: getMetadataDappSchema(),
+    block: z.union([z.number(), z.string()]).optional(),
+    state_override: z.record(z.unknown()).optional(),
+    simulate_with_estimated_gas: z.boolean().optional(),
+    account_address: z.string().optional(),
+    data: getJsonRpcDataSchema(),
+  })
+
+export type BlockaidScanJsonRpcRequest = z.infer<ReturnType<typeof getBlockaidScanJsonRpcRequestSchema>>
+
+// JSON-RPC scan response uses the same response type as transaction scan
+export type BlockaidScanJsonRpcResponse = BlockaidScanTransactionResponse

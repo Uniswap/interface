@@ -6,13 +6,22 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
 interface ViewAllButtonProps {
-  href: string
   label: string
   elementName: ElementName
+  href?: string
+  onPress?: () => void
 }
 
-export const ViewAllButton = memo(function ViewAllButton({ href, label, elementName }: ViewAllButtonProps) {
+export const ViewAllButton = memo(function ViewAllButton({ href, label, elementName, onPress }: ViewAllButtonProps) {
   const navigate = useNavigate()
+
+  const handlePress = () => {
+    if (onPress) {
+      onPress()
+    } else if (href) {
+      navigate(href)
+    }
+  }
 
   return (
     <Flex row width="max-content">
@@ -21,7 +30,7 @@ export const ViewAllButton = memo(function ViewAllButton({ href, label, elementN
           variant="default"
           emphasis="tertiary"
           size="small"
-          onPress={() => navigate(href)}
+          onPress={handlePress}
           icon={<ArrowRight />}
           iconPosition="after"
           width="max-content"

@@ -38,7 +38,7 @@ const StyledLinkOut = styled(ArrowDown)`
 `
 
 export function PrivacyPolicyModal() {
-  const node = useRef<HTMLDivElement>()
+  const node = useRef<HTMLDivElement>(undefined)
   const { isOpen, closeModal } = useModalState(ModalName.PrivacyPolicy)
   const { t } = useTranslation()
 

@@ -2,27 +2,25 @@
 
 exports[`ProviderConnectedView > should render the component and call callbacks 1`] = `
 .c0 {
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #FF37C7;
   stroke: #FF37C7;
   font-weight: 500;
 }
 
-.c0:hover {
+.c0 :hover {
   opacity: 0.6;
 }
 
-.c0:active {
+.c0 :active {
   opacity: 0.4;
 }
 
 .c1 {
   font-weight: 535;
-  color: rgba(19,19,19,0.35);
+  color: rgba(19, 19, 19, 0.35);
 }
 
 <span
@@ -42,9 +40,10 @@ exports[`ProviderConnectedView > should render the component and call callbacks 
       class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row-reverse _alignItems-center _justifyContent-space-betwe3241 _zIndex-2"
     >
       <div
-        class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
+        class="is_TouchableArea  t_group_true"
         data-testid="ConnectingViewWrapper-close"
         role="button"
+        style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: [object Object];"
         tabindex="0"
       >
         <div

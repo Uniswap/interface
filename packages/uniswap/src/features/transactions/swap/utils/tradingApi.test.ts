@@ -61,7 +61,8 @@ describe('useQuoteRoutingParams', () => {
       }),
     )
     expect(result.current).toEqual({
-      routingPreference: TradingApi.RoutingPreference.BEST_PRICE,
+      hooksOptions: TradingApi.HooksOptions.V4_HOOKS_INCLUSIVE,
+      protocols: [TradingApi.ProtocolItems.V2, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V4],
     })
   })
 

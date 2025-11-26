@@ -196,32 +196,39 @@ export function ContextMenu({
             closeDelay={(closeDelay ?? 0) + ANIMATION_TIME}
             handleCloseMenu={handleMenuClose}
             onPress={() => {
-              try {
-                // run both actions; `onPressAny` will not run if `onPressAction` throws
-                onPressAction()
-                onPressAny?.({ name: label, index, indexPath: [index] })
-                // Track analytics if enabled
-                if (trackItemClicks && elementName && sectionName) {
-                  sendAnalyticsEvent(UniswapEventName.ContextMenuItemClicked, {
-                    element: elementName,
-                    section: sectionName,
-                    menu_item: label,
-                    menu_item_index: index,
-                    ...trace,
+              // close the menu first to allow the closing animation to trigger asap
+              setIsMenuVisible(false)
+              closeMenu()
+              // pushes the main action (problematic navigation action) to the end of the event loop
+              // to allow the menu to close properly before
+              setTimeout(() => {
+                try {
+                  // run both actions; `onPressAny` will not run if `onPressAction` throws
+                  onPressAction()
+                  onPressAny?.({ name: label, index, indexPath: [index] })
+                  // Track analytics if enabled
+                  if (trackItemClicks && elementName && sectionName) {
+                    sendAnalyticsEvent(UniswapEventName.ContextMenuItemClicked, {
+                      element: elementName,
+                      section: sectionName,
+                      menu_item: label,
+                      menu_item_index: index,
+                      ...trace,
+                    })
+                  }
+                } catch (error) {
+                  logger.error(error, {
+                    tags: { file: 'ContextMenuV2.tsx', function: 'createPressHandler' },
                   })
                 }
-              } catch (error) {
-                logger.error(error, {
-                  tags: { file: 'ContextMenuV2.tsx', function: 'createPressHandler' },
-                })
-              }
+              }, 0)
             }}
             {...otherProps}
           />
         </Fragment>
       ),
     )
-  }, [handleMenuClose, menuItems, onPressAny, trackItemClicks, elementName, sectionName, trace])
+  }, [handleMenuClose, menuItems, onPressAny, trackItemClicks, elementName, sectionName, trace, closeMenu])
 
   // Render the menu content component
   const MenuContent = useCallback(
@@ -250,17 +257,9 @@ export function ContextMenu({
   // since only one of them can be pressed at a time, we don't have to worry about the event being propagated
   return (
     <>
-      <Portal
-        display={isOpen || isMenuVisible ? 'flex' : 'none'}
-        contain="none"
-        position="unset"
-        // pass events through if menu is fading out
-        pointerEvents={!isOpen ? 'none' : 'auto'}
-        onPress={(e) => {
-          e.stopPropagation()
-        }}
-      >
+      <Portal>
         <Flex
+          pointerEvents={!isOpen ? 'none' : 'auto'}
           height="100%"
           width="100%"
           top={0}

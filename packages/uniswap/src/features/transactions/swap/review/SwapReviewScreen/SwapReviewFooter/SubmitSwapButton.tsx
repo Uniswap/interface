@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Button, Flex, useIsShortMobileDevice } from 'ui/src'
 import { Passkey } from 'ui/src/components/icons/Passkey'
@@ -9,6 +9,8 @@ import type { PasskeyAuthStatus } from 'uniswap/src/features/transactions/compon
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModalContext'
 import { FlashblocksConfirmButton } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/FlashblocksConfirmButton'
 import { useIsUnichainFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
+import { DelayedSubmissionText } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/DelayedSubmissionText'
+import { PendingSwapButton } from 'uniswap/src/features/transactions/swap/review/SwapReviewScreen/SwapReviewFooter/PendingSwapButton'
 import {
   useSwapFormStore,
   useSwapFormStoreDerivedSwapInfo,
@@ -16,13 +18,10 @@ import {
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isChained, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isWebApp } from 'utilities/src/platform'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-
-const KEEP_OPEN_MSG_DELAY = 3 * ONE_SECOND_MS
 
 interface SubmitSwapButtonProps {
   disabled: boolean
@@ -47,6 +46,7 @@ export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }:
     trade: s.trade,
   }))
   const indicative = Boolean(!trade && indicativeTrade)
+  const isChainedTrade = trade?.routing && isChained({ routing: trade.routing })
 
   const swapTxContext = useSwapTxStore((s) => s)
   const actionText = getActionText({
@@ -78,13 +78,16 @@ export function SubmitSwapButton({ disabled, onSubmit, showPendingUI, warning }:
       )
     }
     case showPendingUI: {
+      if (isChainedTrade && !isWebApp) {
+        return <PendingSwapButton disabled={disabled} onSubmit={onSubmit} />
+      }
       return (
         <Button loading variant="branded" emphasis="primary" size={size}>
           <DelayedSubmissionText />
         </Button>
       )
     }
-    case isConfirmed && isFlashblocksEnabled: {
+    case isConfirmed && isFlashblocksEnabled && !isChainedTrade: {
       // this has side effects for the balance logic as well
       return <FlashblocksConfirmButton size={size} />
     }
@@ -181,29 +184,6 @@ export const getActionText = ({
   }
 
   return isAuthenticated ? textMap[action].authenticated : textMap[action].default
-}
-
-function DelayedSubmissionText(): JSX.Element {
-  const { t } = useTranslation()
-  const [showKeepOpenMessage, setShowKeepOpenMessage] = useState(false)
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setShowKeepOpenMessage(true), KEEP_OPEN_MSG_DELAY)
-    return () => clearTimeout(timeout)
-  }, [])
-
-  // Use different key to re-trigger animation when message changes
-  const key = showKeepOpenMessage ? 'submitting-text-msg1' : 'submitting-text-msg2'
-
-  return (
-    <AnimatePresence key={key}>
-      <Flex animateEnterExit="fadeInDownOutDown" animation="quicker">
-        <Button.Text>
-          {showKeepOpenMessage ? t('swap.button.submitting.keep.open') : t('swap.button.submitting')}
-        </Button.Text>
-      </Flex>
-    </AnimatePresence>
-  )
 }
 
 function ConfirmInWalletText({ passkeyAuthStatus }: { passkeyAuthStatus?: PasskeyAuthStatus }): JSX.Element {

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 export function usePreventOverflowBelowFold(isVisible = true): {
   maxHeight: number
-  ref: React.RefObject<HTMLDivElement>
+  ref: React.RefObject<HTMLDivElement | null>
 } {
   const ref = useRef<HTMLDivElement>(null)
   const [maxHeight, setMaxHeight] = useState(0)

@@ -1,10 +1,41 @@
 import type { ReactNode } from 'react'
 import type { ColorTokens, IconProps } from 'ui/src'
 import { Flex, Text } from 'ui/src'
+import { borderRadii } from 'ui/src/theme'
+import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { AssetLogo } from 'wallet/src/components/dappRequests/AssetLogo'
 import type { TransactionAsset } from 'wallet/src/features/dappRequests/types'
+
+/**
+ * Helper function to format asset amount with locale-specific number formatting
+ * @param asset - The transaction asset to format
+ * @param formatNumberOrString - Locale formatter function
+ * @returns Formatted amount with symbol
+ */
+function formatAmountWithLocale(
+  asset: TransactionAsset,
+  formatNumberOrString: LocalizationContextState['formatNumberOrString'],
+): string {
+  if (!asset.amount) {
+    return asset.symbol ?? asset.name ?? ''
+  }
+
+  const formattedAmount = formatNumberOrString({
+    value: asset.amount,
+    type: NumberType.TokenNonTx,
+  })
+
+  return `${formattedAmount} ${asset.symbol ?? ''}`
+}
+
+const getBorderRadius = (type: TransactionAsset['type']): number => {
+  if (type === 'ERC20' || type === 'NATIVE') {
+    return borderRadii.roundedFull
+  }
+  return borderRadii.rounded12
+}
 
 interface TransactionAssetListProps {
   assets: TransactionAsset[]
@@ -28,10 +59,10 @@ export function TransactionAssetList({
   formatAmount,
   showUsdValue = false,
 }: TransactionAssetListProps): JSX.Element | null {
-  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   const renderAssetDetails = (asset: TransactionAsset): ReactNode => {
-    const amountText = formatAmount ? formatAmount(asset) : `${asset.amount ?? ''} ${asset.symbol ?? ''}`
+    const amountText = formatAmount ? formatAmount(asset) : formatAmountWithLocale(asset, formatNumberOrString)
 
     return (
       <Flex row gap="$spacing8" alignItems="center">
@@ -58,14 +89,14 @@ export function TransactionAssetList({
         <Flex row gap="$spacing12" alignItems="center" justifyContent="space-between">
           <Flex flex={1} gap="$spacing4">
             <Flex row gap="$spacing8" height={20} alignItems="center">
-              <Icon color={iconColor} size="$icon.12" />
+              <Icon color={iconColor} size="$icon.16" />
               <Text color="$neutral2" variant="body3">
                 {titleText}
               </Text>
             </Flex>
             {renderAssetDetails(asset)}
           </Flex>
-          <AssetLogo logoUrl={asset.logoUrl} />
+          <AssetLogo logoUrl={asset.logoUrl} borderRadius={getBorderRadius(asset.type)} />
         </Flex>
       </Flex>
     )
@@ -75,7 +106,7 @@ export function TransactionAssetList({
   return (
     <Flex gap="$spacing4">
       <Flex row gap="$spacing8" height="$spacing20" alignItems="center">
-        <Icon color={iconColor} size="$icon.12" />
+        <Icon color={iconColor} size="$icon.16" />
         <Text color="$neutral2" variant="body3">
           {titleText}
         </Text>
@@ -87,7 +118,7 @@ export function TransactionAssetList({
               <Flex row gap="$spacing4" alignItems="center" flex={1}>
                 {renderAssetDetails(asset)}
               </Flex>
-              <AssetLogo logoUrl={asset.logoUrl} />
+              <AssetLogo logoUrl={asset.logoUrl} borderRadius={getBorderRadius(asset.type)} />
             </Flex>
           )
         })}

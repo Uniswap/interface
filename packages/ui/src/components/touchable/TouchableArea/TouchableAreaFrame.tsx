@@ -1,7 +1,6 @@
 import { styled, YStack, type YStackProps } from 'tamagui'
 import { FOCUS_SCALE } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/constants'
 import { withCommonPressStyle } from 'ui/src/components/buttons/Button/components/CustomButtonFrame/utils'
-import { isTestEnv } from 'utilities/src/environment/env'
 import { isWebPlatform } from 'utilities/src/platform'
 
 type TouchableAreaVariant = 'unstyled' | 'none' | 'outlined' | 'filled' | 'raised' | 'floating'
@@ -20,9 +19,6 @@ export const TouchableAreaFrame = styled(YStack, {
   tag: 'div',
   role: 'button',
   group: true,
-  // TODO(MOB-2826): tests are picking up weird animationStyle on snapshots
-  animation: isTestEnv() ? undefined : 'simple',
-  animateOnly: isTestEnv() ? undefined : ['transform', 'opacity'],
   pressStyle: withCommonPressStyle({}),
   borderRadius: '$rounded12',
   backgroundColor: '$transparent',

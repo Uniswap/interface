@@ -26,11 +26,37 @@ export function calculateTickSpacingFromFeeAmount(feeAmount: number): number {
   return Math.max(Math.round((2 * feeAmount) / 100), 1)
 }
 
-export function getFeeTierKey(feeTier?: number, isDynamicFee?: boolean): string | undefined {
-  if (feeTier === undefined) {
+export function getFeeTierKey({
+  feeTier,
+  tickSpacing,
+  isDynamicFee,
+}: {
+  feeTier: number
+  tickSpacing: number
+  isDynamicFee?: boolean
+}): string
+export function getFeeTierKey({
+  feeTier,
+  tickSpacing,
+  isDynamicFee,
+}: {
+  feeTier?: number
+  tickSpacing?: number
+  isDynamicFee?: boolean
+}): string | undefined
+export function getFeeTierKey({
+  feeTier,
+  tickSpacing,
+  isDynamicFee,
+}: {
+  feeTier?: number
+  tickSpacing?: number
+  isDynamicFee?: boolean
+}): string | undefined {
+  if (feeTier === undefined || tickSpacing === undefined) {
     return undefined
   }
-  return feeTier + (isDynamicFee ? '-dynamic' : '')
+  return `${feeTier}-${tickSpacing}${isDynamicFee ? '-dynamic' : ''}`
 }
 
 export function getFeeTierTitle(feeAmount: number, isDynamic?: boolean): string {
@@ -70,7 +96,11 @@ export function mergeFeeTiers({
       continue
     }
 
-    const key = getFeeTierKey(feeTier.feeAmount, isDynamicFeeTier(feeTier))
+    const key = getFeeTierKey({
+      feeTier: feeTier.feeAmount,
+      tickSpacing: feeTier.tickSpacing,
+      isDynamicFee: isDynamicFeeTier(feeTier),
+    })
     if (key) {
       result[key] = {
         fee: feeTier,
@@ -91,7 +121,7 @@ export function mergeFeeTiers({
 function getDefaultFeeTiersForChain(
   chainId: UniverseChainId | undefined,
   protocolVersion: ProtocolVersion,
-): Record<FeeAmount, { isDynamic: boolean; feeAmount: FeeAmount; tickSpacing: number }> {
+): Record<string, { isDynamic: boolean; feeAmount: FeeAmount; tickSpacing: number }> {
   const feeData = Object.values(defaultFeeTiers)
     .filter((feeTier) => {
       // Only filter by chain support if we're on V3
@@ -104,10 +134,10 @@ function getDefaultFeeTiersForChain(
 
   return feeData.reduce(
     (acc, fee) => {
-      acc[fee.feeAmount] = fee
+      acc[getFeeTierKey({ feeTier: fee.feeAmount, tickSpacing: fee.tickSpacing, isDynamicFee: fee.isDynamic })] = fee
       return acc
     },
-    {} as Record<FeeAmount, { isDynamic: boolean; feeAmount: FeeAmount; tickSpacing: number }>,
+    {} as Record<string, { isDynamic: boolean; feeAmount: FeeAmount; tickSpacing: number }>,
   )
 }
 
@@ -125,7 +155,14 @@ export function getDefaultFeeTiersForChainWithDynamicFeeTier({
     return feeTiers
   }
 
-  return { ...feeTiers, [DYNAMIC_FEE_DATA.feeAmount]: DYNAMIC_FEE_DATA }
+  return {
+    ...feeTiers,
+    [getFeeTierKey({
+      feeTier: DYNAMIC_FEE_DATA.feeAmount,
+      tickSpacing: DYNAMIC_FEE_DATA.tickSpacing,
+      isDynamicFee: DYNAMIC_FEE_DATA.isDynamic,
+    })]: DYNAMIC_FEE_DATA,
+  }
 }
 
 /* eslint-disable @typescript-eslint/no-unnecessary-condition */
@@ -135,69 +172,19 @@ export function getDefaultFeeTiersWithData({
   protocolVersion,
 }: {
   chainId?: UniverseChainId
-  feeTierData: Record<number, FeeTierData>
+  feeTierData: Record<string, FeeTierData>
   protocolVersion: ProtocolVersion
 }) {
   const defaultFeeTiersForChain = getDefaultFeeTiersForChain(chainId, protocolVersion)
 
-  const feeTiers = [
-    {
-      tier: FeeAmount.LOWEST,
-      value: defaultFeeTiersForChain[FeeAmount.LOWEST],
-      title: getFeeTierTitle(FeeAmount.LOWEST),
-      selectionPercent: feeTierData[FeeAmount.LOWEST]?.percentage,
-      tvl: feeTierData[FeeAmount.LOWEST]?.tvl,
-      boostedApr: feeTierData[FeeAmount.LOWEST]?.boostedApr,
-    },
-    {
-      tier: FeeAmount.LOW_200,
-      value: defaultFeeTiersForChain[FeeAmount.LOW_200],
-      title: getFeeTierTitle(FeeAmount.LOW_200),
-      selectionPercent: feeTierData[FeeAmount.LOW_200]?.percentage,
-      tvl: feeTierData[FeeAmount.LOW_200]?.tvl,
-      boostedApr: feeTierData[FeeAmount.LOW_200]?.boostedApr,
-    },
-    {
-      tier: FeeAmount.LOW_300,
-      value: defaultFeeTiersForChain[FeeAmount.LOW_300],
-      title: getFeeTierTitle(FeeAmount.LOW_300),
-      selectionPercent: feeTierData[FeeAmount.LOW_300]?.percentage,
-      tvl: feeTierData[FeeAmount.LOW_300]?.tvl,
-      boostedApr: feeTierData[FeeAmount.LOW_300]?.boostedApr,
-    },
-    {
-      tier: FeeAmount.LOW_400,
-      value: defaultFeeTiersForChain[FeeAmount.LOW_400],
-      title: getFeeTierTitle(FeeAmount.LOW_400),
-      selectionPercent: feeTierData[FeeAmount.LOW_400]?.percentage,
-      tvl: feeTierData[FeeAmount.LOW_400]?.tvl,
-      boostedApr: feeTierData[FeeAmount.LOW_400]?.boostedApr,
-    },
-    {
-      tier: FeeAmount.LOW,
-      value: defaultFeeTiersForChain[FeeAmount.LOW],
-      title: getFeeTierTitle(FeeAmount.LOW),
-      selectionPercent: feeTierData[FeeAmount.LOW]?.percentage,
-      tvl: feeTierData[FeeAmount.LOW]?.tvl,
-      boostedApr: feeTierData[FeeAmount.LOW]?.boostedApr,
-    },
-    {
-      tier: FeeAmount.MEDIUM,
-      value: defaultFeeTiersForChain[FeeAmount.MEDIUM],
-      title: getFeeTierTitle(FeeAmount.MEDIUM),
-      selectionPercent: feeTierData[FeeAmount.MEDIUM]?.percentage,
-      tvl: feeTierData[FeeAmount.MEDIUM]?.tvl,
-      boostedApr: feeTierData[FeeAmount.MEDIUM]?.boostedApr,
-    },
-    {
-      tier: FeeAmount.HIGH,
-      value: defaultFeeTiersForChain[FeeAmount.HIGH],
-      title: getFeeTierTitle(FeeAmount.HIGH),
-      selectionPercent: feeTierData[FeeAmount.HIGH]?.percentage,
-      tvl: feeTierData[FeeAmount.HIGH]?.tvl,
-      boostedApr: feeTierData[FeeAmount.HIGH]?.boostedApr,
-    },
-  ] as const
+  const feeTiers = Object.entries(defaultFeeTiersForChain).map(([key, feeData]) => ({
+    tier: feeData.feeAmount,
+    value: feeData,
+    title: getFeeTierTitle(feeData.feeAmount, feeData.isDynamic),
+    selectionPercent: feeTierData[key]?.percentage,
+    tvl: feeTierData[key]?.tvl,
+    boostedApr: feeTierData[key]?.boostedApr,
+  }))
 
   // For V4, include the top 8 fee tiers sorted by TVL
   if (protocolVersion === ProtocolVersion.V4) {
@@ -212,11 +199,19 @@ export function getDefaultFeeTiersWithData({
           boostedApr: data.boostedApr,
         }))
         // if tvl is less than MIN_FEE_TIER_TVL and not default fee tier, filter it out
-        .filter(
-          (feeTier) =>
+        // or if it is a default fee tier, include it
+        .filter((feeTier) => {
+          return (
             parseFloat(feeTier.tvl) >= MIN_FEE_TIER_TVL ||
-            Object.keys(defaultFeeTiersForChain).includes(feeTier.tier.toString()),
-        )
+            Object.keys(defaultFeeTiersForChain).includes(
+              getFeeTierKey({
+                feeTier: feeTier.tier,
+                tickSpacing: feeTier.value.tickSpacing,
+                isDynamicFee: feeTier.value.isDynamic,
+              }),
+            )
+          )
+        })
         .sort(sortFeeTiersByTvl)
         .slice(0, 4)
     )
@@ -226,7 +221,15 @@ export function getDefaultFeeTiersWithData({
   return feeTiers
     .filter(
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      (feeTier) => feeTier.value !== undefined && Object.keys(feeTierData).includes(feeTier.tier.toString()),
+      (feeTier) =>
+        feeTier.value !== undefined &&
+        Object.keys(feeTierData).includes(
+          getFeeTierKey({
+            feeTier: feeTier.value.feeAmount,
+            tickSpacing: feeTier.value.tickSpacing,
+            isDynamicFee: feeTier.value.isDynamic,
+          }),
+        ),
     )
     .sort(sortFeeTiersByTvl)
 }

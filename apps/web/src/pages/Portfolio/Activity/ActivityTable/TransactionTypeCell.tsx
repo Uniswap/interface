@@ -4,6 +4,7 @@ import { getTransactionTypeFilterOptions } from 'pages/Portfolio/Activity/Filter
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, SpinningLoader } from 'ui/src'
+import { Receipt } from 'ui/src/components/icons/Receipt'
 import { getTransactionSummaryTitle } from 'uniswap/src/features/activity/utils/getTransactionSummaryTitle'
 import {
   TEMPORARY_TRANSACTION_STATUSES,
@@ -34,7 +35,7 @@ function _TransactionTypeCell({ transaction }: TransactionTypeCellProps) {
   // Get the icon from the filter options based on base group
   const transactionTypeOptions = getTransactionTypeFilterOptions(t)
   const typeOption = typeLabel?.baseGroup ? transactionTypeOptions[typeLabel.baseGroup] : null
-  const IconComponent = typeOption?.icon
+  const IconComponent = typeOption?.icon ?? Receipt
 
   // Use override label key if provided, otherwise use the base group label
   const label = typeLabel?.overrideLabelKey
@@ -43,7 +44,7 @@ function _TransactionTypeCell({ transaction }: TransactionTypeCellProps) {
 
   return (
     <Flex row alignItems="center" gap="$gap8">
-      {IconComponent && <IconComponent size="$icon.16" color="$neutral1" />}
+      <IconComponent size="$icon.16" color="$neutral1" />
       <TableText variant="body3">{label}</TableText>
     </Flex>
   )

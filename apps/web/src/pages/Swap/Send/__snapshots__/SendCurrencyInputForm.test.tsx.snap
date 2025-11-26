@@ -9,8 +9,6 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
   font-weight: 485;
   outline: none;
   border: none;
-  -webkit-flex: 1 1 auto;
-  -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   background-color: transparent;
   font-size: 28px;
@@ -22,7 +20,7 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
   text-align: right;
 }
 
-.c1::-webkit-search-decoration {
+.c1 ::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
@@ -30,25 +28,13 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
   -moz-appearance: textfield;
 }
 
-.c1::-webkit-outer-spin-button,
-.c1::-webkit-inner-spin-button {
+.c1 ::-webkit-outer-spin-button,
+.c1 ::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-.c1::-webkit-input-placeholder {
-  color: rgba(19,19,19,0.35);
-}
-
-.c1::-moz-placeholder {
-  color: rgba(19,19,19,0.35);
-}
-
-.c1:-ms-input-placeholder {
-  color: rgba(19,19,19,0.35);
-}
-
-.c1::placeholder {
-  color: rgba(19,19,19,0.35);
+.c1 ::placeholder {
+  color: rgba(19, 19, 19, 0.35);
 }
 
 .c2 {
@@ -62,19 +48,7 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
   line-height: 60px;
 }
 
-.c2::-webkit-input-placeholder {
-  opacity: 1;
-}
-
-.c2::-moz-placeholder {
-  opacity: 1;
-}
-
-.c2:-ms-input-placeholder {
-  opacity: 1;
-}
-
-.c2::placeholder {
+.c2 ::placeholder {
   opacity: 1;
 }
 
@@ -90,9 +64,6 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
 }
 
 .c0 {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
   color: #131313;
   text-align: left;
@@ -103,9 +74,6 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
 
 .c4 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
@@ -254,7 +222,7 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
           >
             <div
-              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-rotate270de41674"
+              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; transform: [object Object];"
             >
               <svg
                 fill="none"
@@ -274,16 +242,287 @@ exports[`SendCurrencyInputform > renders input in fiat correctly 1`] = `
         </div>
       </div>
     </div>
-    <span
-      class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
-    >
-      <h2
-        class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
-        data-disable-theme="true"
-        id="title-:r1u:"
-        role="heading"
-      />
-    </span>
+    <div>
+      <span
+        class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+      >
+        <div />
+      </span>
+      <div>
+        <div />
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-700px _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
+        >
+          <div>
+            <div
+              class="_display-flex _alignItems-stretch _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _width-10037 _flexGrow-1 _flexShrink-1 _flexBasis-auto"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _gap-t-space-spa94665593"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
+                >
+                  <span
+                    class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+                    data-disable-theme="true"
+                  >
+                    Select a token
+                  </span>
+                  <div
+                    class="is_TouchableArea  t_group_true"
+                    role="button"
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: [object Object];"
+                    tabindex="0"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _mr-16px _ml-16px"
+                >
+                  <div
+                    style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-width: 0px; flex-shrink: 1; flex-direction: row; flex-grow: 1; align-items: center; background-color: rgb(249, 249, 249); border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; gap: 8px; min-height: 48px; margin: 4px 0px 4px 0px; padding: 0px 16px 0px 16px;"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa94665589 _pb-t-space-spa94665589"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 26 26"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M11.9166 2.16663C6.53185 2.16663 2.16663 6.53185 2.16663 11.9166C2.16663 17.3014 6.53185 21.6666 11.9166 21.6666C14.2203 21.6666 16.3374 20.8677 18.0059 19.5318L22.2462 23.7783C22.669 24.2017 23.3549 24.2022 23.7783 23.7794C24.2017 23.3566 24.2022 22.6707 23.7794 22.2473L19.5373 17.999C20.8699 16.3316 21.6666 14.2171 21.6666 11.9166C21.6666 6.53185 17.3014 2.16663 11.9166 2.16663ZM11.9166 4.33329C7.72847 4.33329 4.33329 7.72847 4.33329 11.9166C4.33329 16.1048 7.72847 19.5 11.9166 19.5C16.1048 19.5 19.5 16.1048 19.5 11.9166C19.5 7.72847 16.1048 4.33329 11.9166 4.33329Z"
+                          fill="currentColor"
+                          fill-opacity="0.63"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _alignSelf-stretch _mr-t-space-spa94665593 _overflowX-hidden _overflowY-hidden"
+                    >
+                      <span
+                        class="_dsp_contents"
+                      >
+                        <input
+                          autocapitalize="none"
+                          autocomplete="on"
+                          autocorrect="off"
+                          class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pr-t-space-non101 _pl-t-space-non101 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _outlineColor-transparent _pt-t-space-non101 _pb-t-space-non101 _position-absolute _top-0px _width-10037"
+                          data-disable-theme="true"
+                          data-testid="explore-search-input"
+                          dir="auto"
+                          enterkeyhint="done"
+                          inputmode="text"
+                          placeholder="Search tokens"
+                          rows="1"
+                          spellcheck="false"
+                          style="--placeholderTextColor: var(--neutral2);"
+                          tabindex="0"
+                          type="text"
+                          value=""
+                          virtualkeyboardpolicy="auto"
+                        />
+                      </span>
+                    </div>
+                    <div
+                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column;"
+                    >
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center"
+                      >
+                        <div
+                          class="is_TouchableArea  t_group_true"
+                          role="button"
+                          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: [object Object];"
+                          tabindex="0"
+                        >
+                          <div
+                            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665593 _pt-t-space-non101 _pb-t-space-non101 _color-accent3"
+                            data-testid="chain-selector"
+                          >
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                              data-testid="all-networks-logo"
+                            >
+                              <div
+                                class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                                style="width: 20px; height: 20px;"
+                              >
+                                <div
+                                  class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                                  style="background-image: url(all-networks-logo.png);"
+                                />
+                                <img
+                                  alt=""
+                                  class="css-accessibilityImage-9pa8cd"
+                                  draggable="false"
+                                  src="all-networks-logo.png"
+                                />
+                              </div>
+                            </div>
+                            <div
+                              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; transform: [object Object];"
+                            >
+                              <svg
+                                fill="none"
+                                stroke-width="8"
+                                style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  clip-rule="evenodd"
+                                  d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _gap-t-space-spa1360334080 _mr-t-space-spa94665593 _ml-t-space-spa94665593 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080"
+                >
+                  <svg
+                    fill="none"
+                    stroke-width="8"
+                    style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                    data-disable-theme="true"
+                  >
+                    Only Mainnet tokens are available for limits.
+                  </span>
+                </div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
+                >
+                  <div
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; width: 100%; flex-grow: 1; transform: [object Object];"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-100dvh"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      >
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface1 _width-10037 _justifyContent-space-betwe3241 _pb-t-space-spa94665589 _pt-t-space-spa1360334080 _pr-t-space-spa1360334051 _pl-t-space-spa1360334051 _alignItems-center"
+                          data-testid="section-header-yourTokens"
+                        >
+                          <div
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa94665593 _flexGrow-1"
+                          >
+                            <svg
+                              fill="none"
+                              stroke-width="8"
+                              style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M7.5 18.01C7.5 18.74 7.72001 19.4 8.13 19.97C5.45 19.8 3 18.82 3 17.01V16.13C4.05 16.95 5.6 17.5 7.5 17.68V18.01ZM7.53998 13.94C7.52998 13.95 7.53003 13.96 7.53003 13.97C7.51003 14.07 7.5 14.17 7.5 14.27V16.18C5.08 15.9 3 14.94 3 13.27V12.39C4.05 13.22 5.61003 13.77 7.53003 13.94H7.53998ZM11.44 10.28C9.92 10.75 8.73001 11.52 8.07001 12.48C5.41001 12.31 3 11.33 3 9.53003V8.84998C4.31 9.87998 6.41 10.48 9 10.48C9.87 10.48 10.69 10.41 11.44 10.28ZM15 8.84998V9.53003C15 9.62003 14.99 9.70003 14.98 9.78003C14.19 9.78003 13.44 9.84997 12.74 9.96997C13.64 9.69997 14.4 9.31998 15 8.84998ZM9 3C6 3 3 3.99999 3 5.98999C3 7.99999 6 8.97998 9 8.97998C12 8.97998 15 7.99999 15 5.98999C15 3.99999 12 3 9 3ZM15 18.76C12.49 18.76 10.35 18.1 9 17.03V18.01C9 20 12 21 15 21C18 21 21 20 21 18.01V17.03C19.65 18.1 17.51 18.76 15 18.76ZM15 11.28C11.69 11.28 9 12.62 9 14.27C9 15.92 11.69 17.26 15 17.26C18.31 17.26 21 15.92 21 14.27C21 12.62 18.31 11.28 15 11.28Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                            <div
+                              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _flexGrow-1"
+                            >
+                              <span
+                                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                                data-disable-theme="true"
+                              >
+                                Your tokens
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
+                        >
+                          <div
+                            class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa1360334076 _width-10037"
+                          >
+                            <div
+                              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa94665593"
+                            >
+                              <div
+                                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa94665593 _mt-t-space-spa94665593"
+                              >
+                                <span
+                                  class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+                                  data-disable-theme="true"
+                                >
+                                  No tokens yet
+                                </span>
+                                <span
+                                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                                  data-disable-theme="true"
+                                >
+                                  Buy crypto with a card or bank to send tokens.
+                                </span>
+                              </div>
+                            </div>
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334076"
+                            >
+                              <div
+                                class="is_TouchableArea  t_group_true"
+                                role="button"
+                                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: [object Object];"
+                                tabindex="0"
+                              >
+                                <span
+                                  class="font_button _color-_grouptrue-hover_accent1Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+                                  data-disable-theme="true"
+                                >
+                                  Buy crypto
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        style="overflow: visible; height: 0px;"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div
     style="display: contents;"
@@ -300,8 +539,6 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
   font-weight: 485;
   outline: none;
   border: none;
-  -webkit-flex: 1 1 auto;
-  -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   background-color: transparent;
   font-size: 28px;
@@ -313,7 +550,7 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
   text-align: right;
 }
 
-.c0::-webkit-search-decoration {
+.c0 ::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
@@ -321,25 +558,13 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
   -moz-appearance: textfield;
 }
 
-.c0::-webkit-outer-spin-button,
-.c0::-webkit-inner-spin-button {
+.c0 ::-webkit-outer-spin-button,
+.c0 ::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-.c0::-webkit-input-placeholder {
-  color: rgba(19,19,19,0.35);
-}
-
-.c0::-moz-placeholder {
-  color: rgba(19,19,19,0.35);
-}
-
-.c0:-ms-input-placeholder {
-  color: rgba(19,19,19,0.35);
-}
-
-.c0::placeholder {
-  color: rgba(19,19,19,0.35);
+.c0 ::placeholder {
+  color: rgba(19, 19, 19, 0.35);
 }
 
 .c1 {
@@ -353,19 +578,7 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
   line-height: 60px;
 }
 
-.c1::-webkit-input-placeholder {
-  opacity: 1;
-}
-
-.c1::-moz-placeholder {
-  opacity: 1;
-}
-
-.c1:-ms-input-placeholder {
-  opacity: 1;
-}
-
-.c1::placeholder {
+.c1 ::placeholder {
   opacity: 1;
 }
 
@@ -382,9 +595,6 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
 
 .c3 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
@@ -527,7 +737,7 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
           >
             <div
-              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-rotate270de41674"
+              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; transform: [object Object];"
             >
               <svg
                 fill="none"
@@ -547,16 +757,287 @@ exports[`SendCurrencyInputform > renders input in token amount correctly 1`] = `
         </div>
       </div>
     </div>
-    <span
-      class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
-    >
-      <h2
-        class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
-        data-disable-theme="true"
-        id="title-:r2v:"
-        role="heading"
-      />
-    </span>
+    <div>
+      <span
+        class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+      >
+        <div />
+      </span>
+      <div>
+        <div />
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-700px _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
+        >
+          <div>
+            <div
+              class="_display-flex _alignItems-stretch _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _width-10037 _flexGrow-1 _flexShrink-1 _flexBasis-auto"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _gap-t-space-spa94665593"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
+                >
+                  <span
+                    class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+                    data-disable-theme="true"
+                  >
+                    Select a token
+                  </span>
+                  <div
+                    class="is_TouchableArea  t_group_true"
+                    role="button"
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: [object Object];"
+                    tabindex="0"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _mr-16px _ml-16px"
+                >
+                  <div
+                    style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-width: 0px; flex-shrink: 1; flex-direction: row; flex-grow: 1; align-items: center; background-color: rgb(249, 249, 249); border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; gap: 8px; min-height: 48px; margin: 4px 0px 4px 0px; padding: 0px 16px 0px 16px;"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa94665589 _pb-t-space-spa94665589"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 26 26"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M11.9166 2.16663C6.53185 2.16663 2.16663 6.53185 2.16663 11.9166C2.16663 17.3014 6.53185 21.6666 11.9166 21.6666C14.2203 21.6666 16.3374 20.8677 18.0059 19.5318L22.2462 23.7783C22.669 24.2017 23.3549 24.2022 23.7783 23.7794C24.2017 23.3566 24.2022 22.6707 23.7794 22.2473L19.5373 17.999C20.8699 16.3316 21.6666 14.2171 21.6666 11.9166C21.6666 6.53185 17.3014 2.16663 11.9166 2.16663ZM11.9166 4.33329C7.72847 4.33329 4.33329 7.72847 4.33329 11.9166C4.33329 16.1048 7.72847 19.5 11.9166 19.5C16.1048 19.5 19.5 16.1048 19.5 11.9166C19.5 7.72847 16.1048 4.33329 11.9166 4.33329Z"
+                          fill="currentColor"
+                          fill-opacity="0.63"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _alignSelf-stretch _mr-t-space-spa94665593 _overflowX-hidden _overflowY-hidden"
+                    >
+                      <span
+                        class="_dsp_contents"
+                      >
+                        <input
+                          autocapitalize="none"
+                          autocomplete="on"
+                          autocorrect="off"
+                          class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pr-t-space-non101 _pl-t-space-non101 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _outlineColor-transparent _pt-t-space-non101 _pb-t-space-non101 _position-absolute _top-0px _width-10037"
+                          data-disable-theme="true"
+                          data-testid="explore-search-input"
+                          dir="auto"
+                          enterkeyhint="done"
+                          inputmode="text"
+                          placeholder="Search tokens"
+                          rows="1"
+                          spellcheck="false"
+                          style="--placeholderTextColor: var(--neutral2);"
+                          tabindex="0"
+                          type="text"
+                          value=""
+                          virtualkeyboardpolicy="auto"
+                        />
+                      </span>
+                    </div>
+                    <div
+                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column;"
+                    >
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center"
+                      >
+                        <div
+                          class="is_TouchableArea  t_group_true"
+                          role="button"
+                          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: [object Object];"
+                          tabindex="0"
+                        >
+                          <div
+                            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665593 _pt-t-space-non101 _pb-t-space-non101 _color-accent3"
+                            data-testid="chain-selector"
+                          >
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                              data-testid="all-networks-logo"
+                            >
+                              <div
+                                class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                                style="width: 20px; height: 20px;"
+                              >
+                                <div
+                                  class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                                  style="background-image: url(all-networks-logo.png);"
+                                />
+                                <img
+                                  alt=""
+                                  class="css-accessibilityImage-9pa8cd"
+                                  draggable="false"
+                                  src="all-networks-logo.png"
+                                />
+                              </div>
+                            </div>
+                            <div
+                              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; transform: [object Object];"
+                            >
+                              <svg
+                                fill="none"
+                                stroke-width="8"
+                                style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  clip-rule="evenodd"
+                                  d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _gap-t-space-spa1360334080 _mr-t-space-spa94665593 _ml-t-space-spa94665593 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080"
+                >
+                  <svg
+                    fill="none"
+                    stroke-width="8"
+                    style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                    data-disable-theme="true"
+                  >
+                    Only Mainnet tokens are available for limits.
+                  </span>
+                </div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
+                >
+                  <div
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; width: 100%; flex-grow: 1; transform: [object Object];"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-100dvh"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      >
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface1 _width-10037 _justifyContent-space-betwe3241 _pb-t-space-spa94665589 _pt-t-space-spa1360334080 _pr-t-space-spa1360334051 _pl-t-space-spa1360334051 _alignItems-center"
+                          data-testid="section-header-yourTokens"
+                        >
+                          <div
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa94665593 _flexGrow-1"
+                          >
+                            <svg
+                              fill="none"
+                              stroke-width="8"
+                              style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M7.5 18.01C7.5 18.74 7.72001 19.4 8.13 19.97C5.45 19.8 3 18.82 3 17.01V16.13C4.05 16.95 5.6 17.5 7.5 17.68V18.01ZM7.53998 13.94C7.52998 13.95 7.53003 13.96 7.53003 13.97C7.51003 14.07 7.5 14.17 7.5 14.27V16.18C5.08 15.9 3 14.94 3 13.27V12.39C4.05 13.22 5.61003 13.77 7.53003 13.94H7.53998ZM11.44 10.28C9.92 10.75 8.73001 11.52 8.07001 12.48C5.41001 12.31 3 11.33 3 9.53003V8.84998C4.31 9.87998 6.41 10.48 9 10.48C9.87 10.48 10.69 10.41 11.44 10.28ZM15 8.84998V9.53003C15 9.62003 14.99 9.70003 14.98 9.78003C14.19 9.78003 13.44 9.84997 12.74 9.96997C13.64 9.69997 14.4 9.31998 15 8.84998ZM9 3C6 3 3 3.99999 3 5.98999C3 7.99999 6 8.97998 9 8.97998C12 8.97998 15 7.99999 15 5.98999C15 3.99999 12 3 9 3ZM15 18.76C12.49 18.76 10.35 18.1 9 17.03V18.01C9 20 12 21 15 21C18 21 21 20 21 18.01V17.03C19.65 18.1 17.51 18.76 15 18.76ZM15 11.28C11.69 11.28 9 12.62 9 14.27C9 15.92 11.69 17.26 15 17.26C18.31 17.26 21 15.92 21 14.27C21 12.62 18.31 11.28 15 11.28Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                            <div
+                              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _flexGrow-1"
+                            >
+                              <span
+                                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                                data-disable-theme="true"
+                              >
+                                Your tokens
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
+                        >
+                          <div
+                            class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa1360334076 _width-10037"
+                          >
+                            <div
+                              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa94665593"
+                            >
+                              <div
+                                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa94665593 _mt-t-space-spa94665593"
+                              >
+                                <span
+                                  class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+                                  data-disable-theme="true"
+                                >
+                                  No tokens yet
+                                </span>
+                                <span
+                                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                                  data-disable-theme="true"
+                                >
+                                  Buy crypto with a card or bank to send tokens.
+                                </span>
+                              </div>
+                            </div>
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334076"
+                            >
+                              <div
+                                class="is_TouchableArea  t_group_true"
+                                role="button"
+                                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: [object Object];"
+                                tabindex="0"
+                              >
+                                <span
+                                  class="font_button _color-_grouptrue-hover_accent1Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+                                  data-disable-theme="true"
+                                >
+                                  Buy crypto
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        style="overflow: visible; height: 0px;"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div
     style="display: contents;"
@@ -573,8 +1054,6 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
   font-weight: 485;
   outline: none;
   border: none;
-  -webkit-flex: 1 1 auto;
-  -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   background-color: transparent;
   font-size: 28px;
@@ -586,7 +1065,7 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
   text-align: right;
 }
 
-.c1::-webkit-search-decoration {
+.c1 ::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
@@ -594,25 +1073,13 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
   -moz-appearance: textfield;
 }
 
-.c1::-webkit-outer-spin-button,
-.c1::-webkit-inner-spin-button {
+.c1 ::-webkit-outer-spin-button,
+.c1 ::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-.c1::-webkit-input-placeholder {
-  color: rgba(19,19,19,0.35);
-}
-
-.c1::-moz-placeholder {
-  color: rgba(19,19,19,0.35);
-}
-
-.c1:-ms-input-placeholder {
-  color: rgba(19,19,19,0.35);
-}
-
-.c1::placeholder {
-  color: rgba(19,19,19,0.35);
+.c1 ::placeholder {
+  color: rgba(19, 19, 19, 0.35);
 }
 
 .c2 {
@@ -626,19 +1093,7 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
   line-height: 60px;
 }
 
-.c2::-webkit-input-placeholder {
-  opacity: 1;
-}
-
-.c2::-moz-placeholder {
-  opacity: 1;
-}
-
-.c2:-ms-input-placeholder {
-  opacity: 1;
-}
-
-.c2::placeholder {
+.c2 ::placeholder {
   opacity: 1;
 }
 
@@ -654,23 +1109,17 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
 }
 
 .c0 {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
   color: #131313;
   text-align: left;
   font-size: 70px;
   font-weight: 500;
   line-height: 60px;
-  color: rgba(19,19,19,0.35);
+  color: rgba(19, 19, 19, 0.35);
 }
 
 .c4 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
@@ -817,7 +1266,7 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row"
           >
             <div
-              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _transform-rotate270de41674"
+              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; transform: [object Object];"
             >
               <svg
                 fill="none"
@@ -837,16 +1286,287 @@ exports[`SendCurrencyInputform > should render placeholder values 1`] = `
         </div>
       </div>
     </div>
-    <span
-      class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
-    >
-      <h2
-        class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
-        data-disable-theme="true"
-        id="title-:rt:"
-        role="heading"
-      />
-    </span>
+    <div>
+      <span
+        class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
+      >
+        <div />
+      </span>
+      <div>
+        <div />
+        <div
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-700px _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _justifyContent-center _overflowX-hidden _overflowY-hidden"
+        >
+          <div>
+            <div
+              class="_display-flex _alignItems-stretch _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-column _width-10037 _flexGrow-1 _flexShrink-1 _flexBasis-auto"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _gap-t-space-spa94665593"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
+                >
+                  <span
+                    class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-f-lineHeigh1262266530 _fontWeight-f-weight-bo3548"
+                    data-disable-theme="true"
+                  >
+                    Select a token
+                  </span>
+                  <div
+                    class="is_TouchableArea  t_group_true"
+                    role="button"
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: [object Object];"
+                    tabindex="0"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 24px; height: 24px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _mr-16px _ml-16px"
+                >
+                  <div
+                    style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-width: 0px; flex-shrink: 1; flex-direction: row; flex-grow: 1; align-items: center; background-color: rgb(249, 249, 249); border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; gap: 8px; min-height: 48px; margin: 4px 0px 4px 0px; padding: 0px 16px 0px 16px;"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa94665589 _pb-t-space-spa94665589"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 26 26"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M11.9166 2.16663C6.53185 2.16663 2.16663 6.53185 2.16663 11.9166C2.16663 17.3014 6.53185 21.6666 11.9166 21.6666C14.2203 21.6666 16.3374 20.8677 18.0059 19.5318L22.2462 23.7783C22.669 24.2017 23.3549 24.2022 23.7783 23.7794C24.2017 23.3566 24.2022 22.6707 23.7794 22.2473L19.5373 17.999C20.8699 16.3316 21.6666 14.2171 21.6666 11.9166C21.6666 6.53185 17.3014 2.16663 11.9166 2.16663ZM11.9166 4.33329C7.72847 4.33329 4.33329 7.72847 4.33329 11.9166C4.33329 16.1048 7.72847 19.5 11.9166 19.5C16.1048 19.5 19.5 16.1048 19.5 11.9166C19.5 7.72847 16.1048 4.33329 11.9166 4.33329Z"
+                          fill="currentColor"
+                          fill-opacity="0.63"
+                          fill-rule="evenodd"
+                        />
+                      </svg>
+                    </div>
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _alignSelf-stretch _mr-t-space-spa94665593 _overflowX-hidden _overflowY-hidden"
+                    >
+                      <span
+                        class="_dsp_contents"
+                      >
+                        <input
+                          autocapitalize="none"
+                          autocomplete="on"
+                          autocorrect="off"
+                          class="css-textinput-11aywtz r-placeholderTextColor-6taxm2 is_Input font_body _borderTopColor-0hover-borderColor69916956 _borderRightColor-0hover-borderColor69916956 _borderBottomColor-0hover-borderColor69916956 _borderLeftColor-0hover-borderColor69916956 _borderTopColor-0focus-borderColor68052152 _borderRightColor-0focus-borderColor68052152 _borderBottomColor-0focus-borderColor68052152 _borderLeftColor-0focus-borderColor68052152 _outlineColor-0focus-visible-outlineColo114 _outlineWidth-0focus-visible-2px _outlineStyle-0focus-visible-solid _fontFamily-f-family _fontWeight-f-weight-bo3548 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _pr-t-space-non101 _pl-t-space-non101 _height-10037 _borderTopLeftRadius-t-radius-tr3728 _borderTopRightRadius-t-radius-tr3728 _borderBottomRightRadius-t-radius-tr3728 _borderBottomLeftRadius-t-radius-tr3728 _borderTopWidth-t-space-non101 _borderRightWidth-t-space-non101 _borderBottomWidth-t-space-non101 _borderLeftWidth-t-space-non101 _outlineWidth-0px _color-color _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _backgroundColor-transparent _minWidth-0px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _outlineColor-transparent _pt-t-space-non101 _pb-t-space-non101 _position-absolute _top-0px _width-10037"
+                          data-disable-theme="true"
+                          data-testid="explore-search-input"
+                          dir="auto"
+                          enterkeyhint="done"
+                          inputmode="text"
+                          placeholder="Search tokens"
+                          rows="1"
+                          spellcheck="false"
+                          style="--placeholderTextColor: var(--neutral2);"
+                          tabindex="0"
+                          type="text"
+                          value=""
+                          virtualkeyboardpolicy="auto"
+                        />
+                      </span>
+                    </div>
+                    <div
+                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column;"
+                    >
+                      <div
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center"
+                      >
+                        <div
+                          class="is_TouchableArea  t_group_true"
+                          role="button"
+                          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: [object Object];"
+                          tabindex="0"
+                        >
+                          <div
+                            class="_color-_grouptrue-hover_accent3Hove112785 _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa94665593 _pt-t-space-non101 _pb-t-space-non101 _color-accent3"
+                            data-testid="chain-selector"
+                          >
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                              data-testid="all-networks-logo"
+                            >
+                              <div
+                                class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
+                                style="width: 20px; height: 20px;"
+                              >
+                                <div
+                                  class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                                  style="background-image: url(all-networks-logo.png);"
+                                />
+                                <img
+                                  alt=""
+                                  class="css-accessibilityImage-9pa8cd"
+                                  draggable="false"
+                                  src="all-networks-logo.png"
+                                />
+                              </div>
+                            </div>
+                            <div
+                              style="display: flex; align-items: center; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; justify-content: center; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; transform: [object Object];"
+                            >
+                              <svg
+                                fill="none"
+                                stroke-width="8"
+                                style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  clip-rule="evenodd"
+                                  d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                                  fill="currentColor"
+                                  fill-rule="evenodd"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface2 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _gap-t-space-spa1360334080 _mr-t-space-spa94665593 _ml-t-space-spa94665593 _pt-t-space-spa1360334080 _pr-t-space-spa1360334080 _pb-t-space-spa1360334080 _pl-t-space-spa1360334080"
+                >
+                  <svg
+                    fill="none"
+                    stroke-width="8"
+                    style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                  <span
+                    class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                    data-disable-theme="true"
+                  >
+                    Only Mainnet tokens are available for limits.
+                  </span>
+                </div>
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1"
+                >
+                  <div
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; width: 100%; flex-grow: 1; transform: [object Object];"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 _maxHeight-100dvh"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      >
+                        <div
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-surface1 _width-10037 _justifyContent-space-betwe3241 _pb-t-space-spa94665589 _pt-t-space-spa1360334080 _pr-t-space-spa1360334051 _pl-t-space-spa1360334051 _alignItems-center"
+                          data-testid="section-header-yourTokens"
+                        >
+                          <div
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _gap-t-space-spa94665593 _flexGrow-1"
+                          >
+                            <svg
+                              fill="none"
+                              stroke-width="8"
+                              style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                d="M7.5 18.01C7.5 18.74 7.72001 19.4 8.13 19.97C5.45 19.8 3 18.82 3 17.01V16.13C4.05 16.95 5.6 17.5 7.5 17.68V18.01ZM7.53998 13.94C7.52998 13.95 7.53003 13.96 7.53003 13.97C7.51003 14.07 7.5 14.17 7.5 14.27V16.18C5.08 15.9 3 14.94 3 13.27V12.39C4.05 13.22 5.61003 13.77 7.53003 13.94H7.53998ZM11.44 10.28C9.92 10.75 8.73001 11.52 8.07001 12.48C5.41001 12.31 3 11.33 3 9.53003V8.84998C4.31 9.87998 6.41 10.48 9 10.48C9.87 10.48 10.69 10.41 11.44 10.28ZM15 8.84998V9.53003C15 9.62003 14.99 9.70003 14.98 9.78003C14.19 9.78003 13.44 9.84997 12.74 9.96997C13.64 9.69997 14.4 9.31998 15 8.84998ZM9 3C6 3 3 3.99999 3 5.98999C3 7.99999 6 8.97998 9 8.97998C12 8.97998 15 7.99999 15 5.98999C15 3.99999 12 3 9 3ZM15 18.76C12.49 18.76 10.35 18.1 9 17.03V18.01C9 20 12 21 15 21C18 21 21 20 21 18.01V17.03C19.65 18.1 17.51 18.76 15 18.76ZM15 11.28C11.69 11.28 9 12.62 9 14.27C9 15.92 11.69 17.26 15 17.26C18.31 17.26 21 15.92 21 14.27C21 12.62 18.31 11.28 15 11.28Z"
+                                fill="currentColor"
+                              />
+                            </svg>
+                            <div
+                              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _alignItems-center _flexGrow-1"
+                            >
+                              <span
+                                class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-bo3548"
+                                data-disable-theme="true"
+                              >
+                                Your tokens
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div
+                          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _pt-t-space-spa1360334076 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076"
+                        >
+                          <div
+                            class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa1360334076 _width-10037"
+                          >
+                            <div
+                              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa94665593"
+                            >
+                              <div
+                                class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _gap-t-space-spa94665593 _mt-t-space-spa94665593"
+                              >
+                                <span
+                                  class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+                                  data-disable-theme="true"
+                                >
+                                  No tokens yet
+                                </span>
+                                <span
+                                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548"
+                                  data-disable-theme="true"
+                                >
+                                  Buy crypto with a card or bank to send tokens.
+                                </span>
+                              </div>
+                            </div>
+                            <div
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-spa1360334076"
+                            >
+                              <div
+                                class="is_TouchableArea  t_group_true"
+                                role="button"
+                                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: [object Object];"
+                                tabindex="0"
+                              >
+                                <span
+                                  class="font_button _color-_grouptrue-hover_accent1Hove112785 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-accent1 _fontFamily-f-family _wordWrap-break-word _textAlign-center _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+                                  data-disable-theme="true"
+                                >
+                                  Buy crypto
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div
+                        style="overflow: visible; height: 0px;"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
   <div
     style="display: contents;"

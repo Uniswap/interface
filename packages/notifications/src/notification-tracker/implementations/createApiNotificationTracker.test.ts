@@ -1,3 +1,4 @@
+import type { QueryClient } from '@tanstack/react-query'
 import type { NotificationsApiClient } from '@universe/api'
 import { createApiNotificationTracker } from '@universe/notifications/src/notification-tracker/implementations/createApiNotificationTracker'
 import type { TrackingMetadata } from '@universe/notifications/src/notification-tracker/NotificationTracker'
@@ -8,6 +9,11 @@ describe('createApiNotificationTracker', () => {
     ({
       ackNotification: vi.fn().mockResolvedValue(undefined),
     }) as unknown as NotificationsApiClient
+
+  const createMockQueryClient = (): QueryClient =>
+    ({
+      fetchQuery: vi.fn((options) => options.queryFn()),
+    }) as unknown as QueryClient
 
   const createMockStorage = (): {
     has: Mock<(notificationId: string) => Promise<boolean>>
@@ -33,6 +39,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 
@@ -49,6 +56,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 
@@ -68,6 +76,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 
@@ -85,6 +94,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 
@@ -106,6 +116,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 
@@ -140,6 +151,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 
@@ -164,6 +176,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 
@@ -182,6 +195,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 
@@ -206,6 +220,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 
@@ -227,6 +242,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 
@@ -244,6 +260,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 
@@ -279,6 +296,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 
@@ -308,6 +326,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 
@@ -337,6 +356,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 
@@ -363,6 +383,7 @@ describe('createApiNotificationTracker', () => {
 
       const tracker = createApiNotificationTracker({
         notificationsApiClient: mockApiClient,
+        queryClient: createMockQueryClient(),
         storage: mockStorage,
       })
 

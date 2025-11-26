@@ -10,10 +10,33 @@ exports[`TokenItem renders without error 1`] = `
     collapsable={false}
     focusVisibleStyle={{}}
     forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {},
       }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
     }
     onBlur={[Function]}
     onClick={[Function]}
@@ -27,27 +50,33 @@ exports[`TokenItem renders without error 1`] = `
     onStartShouldSetResponder={[Function]}
     role="button"
     style={
-      {
-        "backgroundColor": "transparent",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
-        "flexDirection": "column",
-        "opacity": 1,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      }
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+        {},
+      ]
     }
     testID="token-item-tkn"
   >
     <View
       collapsable={false}
-      onBlur={[Function]}
-      onFocus={[Function]}
+      jestAnimatedProps={
+        {
+          "value": {},
+        }
+      }
       style={
         {
           "alignItems": "center",
@@ -62,8 +91,6 @@ exports[`TokenItem renders without error 1`] = `
       }
     >
       <View
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "alignItems": "center",
@@ -74,8 +101,6 @@ exports[`TokenItem renders without error 1`] = `
         }
       >
         <View
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
               "flexDirection": "column",
@@ -87,16 +112,9 @@ exports[`TokenItem renders without error 1`] = `
           <Text
             allowFontScaling={true}
             maxFontSizeMultiplier={1.4}
-            onBlur={[Function]}
-            onFocus={[Function]}
             style={
               {
-                "color": {
-                  "dynamic": {
-                    "dark": "rgba(255, 255, 255, 0.65)",
-                    "light": "rgba(19, 19, 19, 0.63)",
-                  },
-                },
+                "color": "rgba(19, 19, 19, 0.63)",
                 "fontFamily": "Basel Grotesk",
                 "fontSize": 15,
                 "fontWeight": "400",
@@ -109,8 +127,6 @@ exports[`TokenItem renders without error 1`] = `
           </Text>
         </View>
         <View
-          onBlur={[Function]}
-          onFocus={[Function]}
           pointerEvents="auto"
           style={
             {
@@ -125,8 +141,6 @@ exports[`TokenItem renders without error 1`] = `
           testID="token-logo"
         >
           <View
-            onBlur={[Function]}
-            onFocus={[Function]}
             style={
               {
                 "backgroundColor": "#FFFFFF",
@@ -168,8 +182,6 @@ exports[`TokenItem renders without error 1`] = `
         </View>
       </View>
       <View
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "flex": 1,
@@ -183,16 +195,9 @@ exports[`TokenItem renders without error 1`] = `
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
           numberOfLines={1}
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
-              "color": {
-                "dynamic": {
-                  "dark": "#FFFFFF",
-                  "light": "#131313",
-                },
-              },
+              "color": "#131313",
               "fontFamily": "Basel Grotesk",
               "fontSize": 19,
               "fontWeight": "400",
@@ -207,16 +212,9 @@ exports[`TokenItem renders without error 1`] = `
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
           numberOfLines={1}
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
-              "color": {
-                "dynamic": {
-                  "dark": "rgba(255, 255, 255, 0.65)",
-                  "light": "rgba(19, 19, 19, 0.63)",
-                },
-              },
+              "color": "rgba(19, 19, 19, 0.63)",
               "fontFamily": "Basel Grotesk",
               "fontSize": 17,
               "fontWeight": "400",
@@ -228,8 +226,6 @@ exports[`TokenItem renders without error 1`] = `
         />
       </View>
       <View
-        onBlur={[Function]}
-        onFocus={[Function]}
         onLayout={[Function]}
         style={
           {
@@ -240,8 +236,6 @@ exports[`TokenItem renders without error 1`] = `
         }
       >
         <View
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
               "flexDirection": "row",
@@ -249,8 +243,6 @@ exports[`TokenItem renders without error 1`] = `
           }
         >
           <View
-            onBlur={[Function]}
-            onFocus={[Function]}
             style={
               {
                 "alignItems": "flex-end",
@@ -263,16 +255,9 @@ exports[`TokenItem renders without error 1`] = `
             <Text
               allowFontScaling={true}
               maxFontSizeMultiplier={1.4}
-              onBlur={[Function]}
-              onFocus={[Function]}
               style={
                 {
-                  "color": {
-                    "dynamic": {
-                      "dark": "#FFFFFF",
-                      "light": "#131313",
-                    },
-                  },
+                  "color": "#131313",
                   "fontFamily": "Basel Grotesk",
                   "fontSize": 19,
                   "fontWeight": "400",
@@ -285,8 +270,6 @@ exports[`TokenItem renders without error 1`] = `
               -
             </Text>
             <View
-              onBlur={[Function]}
-              onFocus={[Function]}
               style={
                 {
                   "alignItems": "center",
@@ -298,8 +281,6 @@ exports[`TokenItem renders without error 1`] = `
               testID="relative-change"
             >
               <View
-                onBlur={[Function]}
-                onFocus={[Function]}
                 style={
                   {
                     "flexDirection": "column",
@@ -309,16 +290,9 @@ exports[`TokenItem renders without error 1`] = `
                 <Text
                   allowFontScaling={true}
                   maxFontSizeMultiplier={1.4}
-                  onBlur={[Function]}
-                  onFocus={[Function]}
                   style={
                     {
-                      "color": {
-                        "dynamic": {
-                          "dark": "rgba(255, 255, 255, 0.65)",
-                          "light": "rgba(19, 19, 19, 0.63)",
-                        },
-                      },
+                      "color": "rgba(19, 19, 19, 0.63)",
                       "fontFamily": "Basel Grotesk",
                       "fontSize": 17,
                       "fontWeight": "400",

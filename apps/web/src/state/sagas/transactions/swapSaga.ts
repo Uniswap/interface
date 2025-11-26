@@ -13,7 +13,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { handleAtomicSendCalls } from 'state/sagas/transactions/5792'
 import { useGetOnPressRetry } from 'state/sagas/transactions/retry'
 import { jupiterSwap } from 'state/sagas/transactions/solana'
-import { handleUniswapXSignatureStep } from 'state/sagas/transactions/uniswapx'
+import { handleUniswapXPlanSignatureStep, handleUniswapXSignatureStep } from 'state/sagas/transactions/uniswapx'
 import {
   getDisplayableError,
   getSwapTransactionInfo,
@@ -80,7 +80,8 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams): SagaGenerator
 
   const info = getSwapTransactionInfo({
     trade,
-    isFinalStep: 'is_final_step' in analytics ? analytics.is_final_step : undefined,
+    isFinalStep: analytics.is_final_step,
+    swapStartTimestamp: analytics.swap_start_timestamp,
   })
   const txRequest = yield* call(getSwapTxRequest, step, signature)
 
@@ -142,9 +143,12 @@ interface HandleSwapBatchedStepParams extends Omit<HandleOnChainStepParams, 'ste
   disableOneClickSwap: () => void
 }
 function* handleSwapTransactionBatchedStep(params: HandleSwapBatchedStepParams) {
-  const { trade, step, disableOneClickSwap } = params
+  const { trade, step, disableOneClickSwap, analytics } = params
 
-  const info = getSwapTransactionInfo({ trade })
+  const info = getSwapTransactionInfo({
+    trade,
+    swapStartTimestamp: analytics.swap_start_timestamp,
+  })
 
   const batchId = yield* handleAtomicSendCalls({
     ...params,
@@ -202,6 +206,7 @@ type SwapParams = SwapExecutionCallbacks & {
   disableOneClickSwap: () => void
   onTransactionHash?: (hash: string) => void
   v4Enabled: boolean
+  swapStartTimestamp?: number
 }
 
 function* swap(params: SwapParams) {
@@ -246,22 +251,22 @@ function* swap(params: SwapParams) {
       switch (step.type) {
         case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {
-          yield* call(handleApprovalTransactionStep, { account, step, setCurrentStep })
+          yield* call(handleApprovalTransactionStep, { address: account.address, step, setCurrentStep })
           break
         }
         case TransactionStepType.Permit2Signature: {
-          signature = yield* call(handleSignatureStep, { account, step, setCurrentStep })
+          signature = yield* call(handleSignatureStep, { address: account.address, step, setCurrentStep })
           break
         }
         case TransactionStepType.Permit2Transaction: {
-          yield* call(handlePermitTransactionStep, { account, step, setCurrentStep })
+          yield* call(handlePermitTransactionStep, { address: account.address, step, setCurrentStep })
           break
         }
         case TransactionStepType.SwapTransaction:
         case TransactionStepType.SwapTransactionAsync: {
           requireRouting(trade, [TradingApi.Routing.CLASSIC, TradingApi.Routing.BRIDGE])
           yield* call(handleSwapTransactionStep, {
-            account,
+            address: account.address,
             signature,
             step,
             setCurrentStep,
@@ -274,7 +279,7 @@ function* swap(params: SwapParams) {
         case TransactionStepType.SwapTransactionBatched: {
           requireRouting(trade, [TradingApi.Routing.CLASSIC, TradingApi.Routing.BRIDGE])
           yield* call(handleSwapTransactionBatchedStep, {
-            account,
+            address: account.address,
             step,
             setCurrentStep,
             trade,
@@ -285,7 +290,7 @@ function* swap(params: SwapParams) {
         }
         case TransactionStepType.UniswapXSignature: {
           requireRouting(trade, UNISWAPX_ROUTING_VARIANTS)
-          yield* call(handleUniswapXSignatureStep, { account, step, setCurrentStep, trade, analytics })
+          yield* call(handleUniswapXSignatureStep, { address: account.address, step, setCurrentStep, trade, analytics })
           break
         }
         default: {
@@ -359,6 +364,7 @@ export function useSwapCallback(): SwapCallback {
         trace,
         isBatched,
         includedPermitTransactionStep,
+        swapStartTimestamp,
       })
 
       const account = isSVMChain(trade.inputAmount.currency.chainId) ? wallet.svmAccount : wallet.evmAccount
@@ -384,15 +390,18 @@ export function useSwapCallback(): SwapCallback {
         onTransactionHash: (hash: string): void => {
           updateSwapForm({ txHash: hash, txHashReceivedTime: Date.now() })
         },
+        swapStartTimestamp,
       }
       if (swapTxContext.trade.routing === TradingApi.Routing.CHAINED) {
         appDispatch(
           planSaga.actions.trigger({
             ...swapParams,
+            address: account.address,
             handleApprovalTransactionStep,
             handleSwapTransactionStep,
             handleSignatureStep,
             getDisplayableError,
+            handleUniswapXPlanSignatureStep,
           }),
         )
       } else {

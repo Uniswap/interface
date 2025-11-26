@@ -13,10 +13,14 @@ interface UseBlockaidTransactionScanResult {
 
 /**
  * Creates an efficient cache key from a transaction scan request.
- * @param request The transaction scan request
- * @returns An array of cache key components
+ * @param request The transaction scan request or null
+ * @returns An array of cache key components, or an array with null if request is null
  */
-function createTransactionScanCacheKey(request: BlockaidScanTransactionRequest): unknown[] {
+function createTransactionScanCacheKey(request: BlockaidScanTransactionRequest | null): unknown[] {
+  if (!request) {
+    return [null]
+  }
+
   // Hash the transaction data object to avoid storing large hex strings in cache keys
   const dataHash = hashKey([request.data])
 
@@ -34,10 +38,8 @@ export function useBlockaidTransactionScan(
   enabled = true,
 ): UseBlockaidTransactionScanResult {
   const { data: scanResult, isLoading } = useQuery({
-    queryKey: request
-      ? [ReactQueryCacheKey.BlockaidTransactionScan, ...createTransactionScanCacheKey(request)]
-      : [ReactQueryCacheKey.BlockaidTransactionScan, null],
-    queryFn: () => (request ? BlockaidApiClient.scanTransaction(request) : null),
+    queryKey: [ReactQueryCacheKey.BlockaidTransactionScan, ...createTransactionScanCacheKey(request)],
+    queryFn: () => BlockaidApiClient.scanTransaction(request),
     staleTime: FIVE_MINUTES_MS,
     enabled: enabled && Boolean(request),
     // Don't retry on failures - we want to fail fast and show null

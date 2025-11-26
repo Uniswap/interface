@@ -15,7 +15,6 @@ import {
   StatsigCustomAppValue,
   StatsigUser,
   Storage,
-  useIsSessionServiceEnabled,
   WALLET_FEATURE_FLAG_NAMES,
 } from '@universe/gating'
 import {
@@ -362,7 +361,6 @@ function DataUpdaters(): JSX.Element {
   const { locale } = useCurrentLanguageInfo()
   const { code } = useAppFiatCurrencyInfo()
   const finishedOnboarding = useSelector(selectFinishedOnboarding)
-  const isSessionServiceEnabled = useIsSessionServiceEnabled()
 
   useDatadogUserAttributesTracking({ isOnboarded: !!finishedOnboarding })
   useHeartbeatReporter({ isOnboarded: !!finishedOnboarding })
@@ -389,7 +387,7 @@ function DataUpdaters(): JSX.Element {
       <TraceUserProperties />
       <ApiInit
         getSessionInitService={provideSessionInitializationService}
-        isSessionServiceEnabled={isSessionServiceEnabled}
+        getIsSessionServiceEnabled={getIsSessionServiceEnabled}
       />
       <TransactionHistoryUpdater />
     </>

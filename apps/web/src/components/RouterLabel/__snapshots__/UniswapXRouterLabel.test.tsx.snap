@@ -6,9 +6,9 @@ exports[`UniswapXRouterLabel > matches snapshot 1`] = `
   color: #4673fa;
 }
 
-@supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent) {
+@supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
   .c0 {
-    background-image: linear-gradient(91.39deg,#4673fa -101.76%,#9646fa 101.76%);
+    background-image: linear-gradient(91.39deg, #4673fa -101.76%, #9646fa 101.76%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }

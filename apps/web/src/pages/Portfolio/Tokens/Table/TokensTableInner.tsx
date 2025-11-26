@@ -76,6 +76,8 @@ export function TokensTableInner({
         compactRowHeight={TOKENS_TABLE_ROW_HEIGHT}
         defaultPinnedColumns={['currencyInfo']}
         maxWidth={1200}
+        maxHeight={700}
+        centerArrows
       />
     </>
   )

@@ -2,6 +2,9 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "extends": "nx/presets/npm.json",
   "defaultBase": "main",
+  "tui": {
+    "enabled": false
+  },
   "targetDefaults": {
     "prepare": {
       "inputs": ["default", "dependencies"],
@@ -26,7 +29,7 @@
       "cache": true
     },
     "typecheck": {
-      "command": "tsc -b",
+      "command": "NODE_OPTIONS=--max_old_space_size=8192 tsc -b",
       "options": {
         "cwd": "{projectRoot}"
       },

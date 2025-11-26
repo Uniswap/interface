@@ -22,7 +22,7 @@ export class ContractManager {
       throw Error(`Invalid address for contract: ${address}`)
     }
     this._contracts[chainId] ??= {}
-    if (this._contracts[chainId]?.[address]) {
+    if (this._contracts[chainId][address]) {
       throw new Error(`Contract already exists for: ${chainId} ${address}`)
     } else {
       logger.debug('ContractManager', 'createContract', `Creating a new contract for: ${chainId} ${address}`)

@@ -181,7 +181,7 @@ export const makeSelectTransaction = (): Selector<
         return undefined
       }
 
-      const addressTxs = transactions[address]?.[chainId]
+      const addressTxs = transactions[address][chainId]
       if (!addressTxs) {
         return undefined
       }

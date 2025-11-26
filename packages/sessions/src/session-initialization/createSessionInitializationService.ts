@@ -164,16 +164,15 @@ function createSessionInitializationService(ctx: {
         await handleChallengeFlow()
       }
 
-      const finalSessionId = challengeRequiredButDisabled ? '' : initResponse.sessionId || ''
+      const finalSessionId = initResponse.sessionId || ''
       ctx
         .getLogger?.()
         .info('createSessionInitializationService', 'createSessionInitializationService', 'Session initialized', {
           sessionId: finalSessionId,
           isNewSession: true,
+          challengeCompleted: !challengeRequiredButDisabled,
         })
 
-      // Return the result
-      // If challenge is required but disabled, return empty session ID (session not valid)
       return {
         sessionId: finalSessionId,
         isNewSession: true,

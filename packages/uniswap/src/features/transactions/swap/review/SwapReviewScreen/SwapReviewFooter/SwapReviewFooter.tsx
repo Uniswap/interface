@@ -12,6 +12,7 @@ import { useSwapReviewTransactionStore } from 'uniswap/src/features/transactions
 import { useSwapReviewWarningStore } from 'uniswap/src/features/transactions/swap/review/stores/swapReviewWarningStore/useSwapReviewWarningStore'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { isChained } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { UnichainPoweredMessage } from 'uniswap/src/features/transactions/TransactionDetails/UnichainPoweredMessage'
 import { getShouldDisplayTokenWarningCard } from 'uniswap/src/features/transactions/TransactionDetails/utils/getShouldDisplayTokenWarningCard'
 import { isWebPlatform } from 'utilities/src/platform'
@@ -21,9 +22,14 @@ export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | 
   const { onPrev } = useSwapOnPrevious()
   const { disabled, showPendingUI, warning, onSubmit } = useSwapSubmitButton()
   const isShortMobileDevice = useIsShortMobileDevice()
-  const { chainId } = useSwapReviewTransactionStore((s) => ({ chainId: s.chainId }))
-
-  const isUnichain = !!(chainId && [UniverseChainId.Unichain, UniverseChainId.UnichainSepolia].includes(chainId))
+  const showUnichainPoweredMessage = useSwapReviewTransactionStore((s) => {
+    const isUnichain = s.chainId && [UniverseChainId.Unichain, UniverseChainId.UnichainSepolia].includes(s.chainId)
+    if (!isUnichain) {
+      return false
+    }
+    const routing = s.derivedSwapInfo.trade.trade?.routing
+    return routing !== undefined && !isChained({ routing })
+  })
 
   if (showInterfaceReviewSteps) {
     return null
@@ -31,7 +37,7 @@ export const SwapReviewFooter = memo(function SwapReviewFooter(): JSX.Element | 
 
   return (
     <TransactionModalFooterContainer>
-      {isUnichain && <UnichainPoweredMessage />}
+      {showUnichainPoweredMessage && <UnichainPoweredMessage />}
       <Flex row gap="$spacing8">
         {!isWebPlatform && !showPendingUI && (
           <IconButton

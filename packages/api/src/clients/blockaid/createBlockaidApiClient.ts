@@ -1,5 +1,6 @@
 import type { FetchClient } from '@universe/api/src/clients/base/types'
 import {
+  type BlockaidScanJsonRpcRequest,
   type BlockaidScanSiteRequest,
   type BlockaidScanSiteResponse,
   type BlockaidScanTransactionRequest,
@@ -12,12 +13,14 @@ import { logger } from 'utilities/src/logger/logger'
 
 export interface BlockaidApiClient {
   scanSite: (url: string) => Promise<DappVerificationStatus>
-  scanTransaction: (request: BlockaidScanTransactionRequest) => Promise<BlockaidScanTransactionResponse | null>
+  scanTransaction: (request: BlockaidScanTransactionRequest | null) => Promise<BlockaidScanTransactionResponse | null>
+  scanJsonRpc: (request: BlockaidScanJsonRpcRequest | null) => Promise<BlockaidScanTransactionResponse | null>
 }
 
 export const BLOCKAID_API_PATHS = {
   scanSite: '/v0/site/scan',
   scanTransaction: '/v0/evm/transaction/scan',
+  scanJsonRpc: '/v0/evm/json-rpc/scan',
 }
 
 // Timeout for Blockaid API requests (5 seconds)
@@ -77,36 +80,36 @@ export function createBlockaidApiClient(ctx: { fetchClient: FetchClient }): Bloc
   }
 
   async function scanTransaction(
-    request: BlockaidScanTransactionRequest,
+    request: BlockaidScanTransactionRequest | null,
   ): Promise<BlockaidScanTransactionResponse | null> {
+    if (!request) {
+      return null
+    }
+
+    const abortController = new AbortController()
+    const timeoutId = setTimeout(() => abortController.abort(), BLOCKAID_TIMEOUT_MS)
+
     try {
-      const abortController = new AbortController()
-      const timeoutId = setTimeout(() => abortController.abort(), BLOCKAID_TIMEOUT_MS)
+      const result = await ctx.fetchClient.post(BLOCKAID_API_PATHS.scanTransaction, {
+        body: JSON.stringify(request),
+        signal: abortController.signal,
+      })
 
-      try {
-        const result = await ctx.fetchClient.post(BLOCKAID_API_PATHS.scanTransaction, {
-          body: JSON.stringify(request),
-          signal: abortController.signal,
+      const response = getBlockaidScanTransactionResponseSchema().safeParse(result)
+      if (!response.success) {
+        logger.error(new Error('Blockaid API response schema validation failed'), {
+          tags: { file: 'createBlockaidApiClient', function: 'scanTransaction' },
+          extra: {
+            chain: request.chain,
+            account: request.account_address,
+            domain: request.metadata.domain,
+            validationError: response.error.message,
+            receivedData: result,
+          },
         })
-
-        const response = getBlockaidScanTransactionResponseSchema().safeParse(result)
-        if (!response.success) {
-          logger.error(new Error('Blockaid API response schema validation failed'), {
-            tags: { file: 'createBlockaidApiClient', function: 'scanTransaction' },
-            extra: {
-              chain: request.chain,
-              account: request.account_address,
-              domain: request.metadata.domain,
-              validationError: response.error.message,
-              receivedData: result,
-            },
-          })
-          return null
-        }
-        return response.data
-      } finally {
-        clearTimeout(timeoutId)
+        return null
       }
+      return response.data
     } catch (error) {
       // Log for observability but return null as safe default
       logger.error(error, {
@@ -117,11 +120,66 @@ export function createBlockaidApiClient(ctx: { fetchClient: FetchClient }): Bloc
         extra: { chain: request.chain, account: request.account_address, domain: request.metadata.domain },
       })
       return null
+    } finally {
+      clearTimeout(timeoutId)
+    }
+  }
+
+  async function scanJsonRpc(
+    request: BlockaidScanJsonRpcRequest | null,
+  ): Promise<BlockaidScanTransactionResponse | null> {
+    if (!request) {
+      return null
+    }
+
+    const abortController = new AbortController()
+    const timeoutId = setTimeout(() => abortController.abort(), BLOCKAID_TIMEOUT_MS)
+
+    try {
+      const result = await ctx.fetchClient.post(BLOCKAID_API_PATHS.scanJsonRpc, {
+        body: JSON.stringify(request),
+        signal: abortController.signal,
+      })
+
+      const response = getBlockaidScanTransactionResponseSchema().safeParse(result)
+      if (!response.success) {
+        logger.error(new Error('Blockaid API response schema validation failed'), {
+          tags: { file: 'createBlockaidApiClient', function: 'scanJsonRpc' },
+          extra: {
+            chain: request.chain,
+            account: request.account_address,
+            domain: request.metadata.domain,
+            method: request.data.method,
+            validationError: response.error.message,
+            receivedData: result,
+          },
+        })
+        return null
+      }
+      return response.data
+    } catch (error) {
+      // Log for observability but return null as safe default
+      logger.error(error, {
+        tags: {
+          file: 'createBlockaidApiClient',
+          function: 'scanJsonRpc',
+        },
+        extra: {
+          chain: request.chain,
+          account: request.account_address,
+          domain: request.metadata.domain,
+          method: request.data.method,
+        },
+      })
+      return null
+    } finally {
+      clearTimeout(timeoutId)
     }
   }
 
   return {
     scanSite,
     scanTransaction,
+    scanJsonRpc,
   }
 }

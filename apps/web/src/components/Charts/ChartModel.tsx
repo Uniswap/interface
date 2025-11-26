@@ -350,7 +350,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   }, [params.data])
 
   // Chart model state should not affect React render cycles since the chart canvas is drawn outside of React, so we store via ref
-  const chartModelRef = useRef<ChartModel<TDataType>>()
+  const chartModelRef = useRef<ChartModel<TDataType>>(undefined)
   // Track when chart model is ready to trigger re-render for LiveDotRenderer
   const [isChartModelReady, setIsChartModelReady] = useState(false)
 
@@ -386,7 +386,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   }, [setRefitChartContent])
 
   useOnClickOutside({
-    node: { current: chartDivElement } as React.RefObject<HTMLDivElement>,
+    node: { current: chartDivElement } as React.RefObject<HTMLDivElement | null>,
     handler: () => {
       setCrosshairData(undefined)
       setHoverCoordinates(null)

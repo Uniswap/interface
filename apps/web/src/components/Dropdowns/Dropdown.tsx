@@ -67,7 +67,6 @@ export function Dropdown({
               direction={isOpen ? 'up' : 'down'}
               height={iconSizes.icon20}
               width={iconSizes.icon20}
-              $group-item-hover={{}}
             />
           )}
         </Flex>

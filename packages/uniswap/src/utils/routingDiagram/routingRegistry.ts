@@ -2,7 +2,10 @@ import { TradingApi } from '@universe/api'
 import { useMemo } from 'react'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { jupiterRoutingProvider } from 'uniswap/src/utils/routingDiagram/routingProviders/jupiterRoutingProvider'
-import { uniswapRoutingProvider } from 'uniswap/src/utils/routingDiagram/routingProviders/uniswapRoutingProvider'
+import {
+  uniswapChainedRoutingProvider,
+  uniswapRoutingProvider,
+} from 'uniswap/src/utils/routingDiagram/routingProviders/uniswapRoutingProvider'
 import type { RoutingDiagramEntry, RoutingProvider } from 'uniswap/src/utils/routingDiagram/types'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -12,6 +15,7 @@ import { logger } from 'utilities/src/logger/logger'
  */
 const ROUTING_PROVIDER_MAP: Record<TradingApi.Routing, RoutingProvider | undefined> = {
   [TradingApi.Routing.CLASSIC]: uniswapRoutingProvider,
+  [TradingApi.Routing.CHAINED]: uniswapChainedRoutingProvider,
   [TradingApi.Routing.JUPITER]: jupiterRoutingProvider,
   [TradingApi.Routing.DUTCH_V2]: undefined,
   [TradingApi.Routing.DUTCH_V3]: undefined,
@@ -21,7 +25,6 @@ const ROUTING_PROVIDER_MAP: Record<TradingApi.Routing, RoutingProvider | undefin
   [TradingApi.Routing.PRIORITY]: undefined,
   [TradingApi.Routing.WRAP]: undefined,
   [TradingApi.Routing.UNWRAP]: undefined,
-  [TradingApi.Routing.CHAINED]: undefined,
 } as const
 
 export function getRoutingProvider(routing: TradingApi.Routing): RoutingProvider | undefined {

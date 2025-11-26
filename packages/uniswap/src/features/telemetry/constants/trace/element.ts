@@ -81,6 +81,7 @@ export enum ElementName {
   EmptyStateReceive = 'empty-state-receive',
   Enable = 'enable',
   EtherscanView = 'etherscan-view',
+  ExploreAuctionsTab = 'explore-auctions-tab',
   ExploreBanner = 'explore-banner',
   ExplorePoolsTab = 'explore-pools-tab',
   ExploreSearchInput = 'explore_search_input',

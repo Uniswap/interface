@@ -10,62 +10,39 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
 
 .c1 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: space-between;
-  -webkit-box-align: space-between;
-  -ms-flex-align: space-between;
   align-items: space-between;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
 .c2 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
 .c4 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c10 {
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #FF37C7;
   stroke: #FF37C7;
   font-weight: 500;
 }
 
-.c10:hover {
+.c10 :hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c10 :active {
   opacity: 0.4;
 }
 
@@ -85,8 +62,6 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
 }
 
 .c6 {
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
   flex-shrink: 0;
 }
 
@@ -94,82 +69,65 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
-  background-color: rgba(19,19,19,0.08);
+  background-color: rgba(19, 19, 19, 0.08);
   font-size: 14px;
   font-weight: 535;
   line-height: 16px;
-  width: -webkit-max-content;
-  width: -moz-max-content;
   width: max-content;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c8:hover {
+.c8 :hover {
   opacity: 0.6;
 }
 
-.c8:active {
+.c8 :active {
   opacity: 0.4;
 }
 
 .c9 {
   width: 16px;
   height: 16px;
-  color: rgba(19,19,19,0.63);
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
+  color: rgba(19, 19, 19, 0.63);
   flex-shrink: 0;
 }
 
 .c11 {
   padding: 8px;
   border-radius: 20px;
-  background-color: rgba(19,19,19,0.08);
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+  background-color: rgba(19, 19, 19, 0.08);
   display: flex;
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c11:hover {
+.c11 :hover {
   opacity: 0.6;
 }
 
-.c11:active {
+.c11 :active {
   opacity: 0.4;
 }
 
 .c7 {
   gap: 8px;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
   flex-shrink: 0;
-  width: -webkit-max-content;
-  width: -moz-max-content;
   width: max-content;
 }
 
-@media (max-width:1024px) and (min-width:380px) {
+@media (max-width: 1024px) and (min-width: 380px) {
   .c5 {
     display: block;
   }
 }
 
-@media (max-width:1024px) and (min-width:380px) {
+@media (max-width: 1024px) and (min-width: 380px) {
   .c6 {
-    color: rgba(19,19,19,0.63);
+    color: rgba(19, 19, 19, 0.63);
   }
 }
 
@@ -178,6 +136,7 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
     style="display: contents;"
   >
     <div
+      align="space-between"
       class="c0 c1"
     >
       <div
@@ -328,80 +287,48 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
 
 .c1 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: space-between;
-  -webkit-box-align: space-between;
-  -ms-flex-align: space-between;
   align-items: space-between;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
 .c2 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
 .c7 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
 }
 
 .c4 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c11 {
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #FF37C7;
   stroke: #FF37C7;
   font-weight: 500;
 }
 
-.c11:hover {
+.c11 :hover {
   opacity: 0.6;
 }
 
-.c11:active {
+.c11 :active {
   opacity: 0.4;
 }
 
@@ -418,24 +345,20 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c3:hover {
+.c3 :hover {
   opacity: 0.6;
 }
 
-.c3:active {
+.c3 :active {
   opacity: 0.4;
 }
 
 .c6 {
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
   flex-shrink: 0;
 }
 
@@ -443,82 +366,65 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
-  background-color: rgba(19,19,19,0.08);
+  background-color: rgba(19, 19, 19, 0.08);
   font-size: 14px;
   font-weight: 535;
   line-height: 16px;
-  width: -webkit-max-content;
-  width: -moz-max-content;
   width: max-content;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
   flex-shrink: 0;
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c9:hover {
+.c9 :hover {
   opacity: 0.6;
 }
 
-.c9:active {
+.c9 :active {
   opacity: 0.4;
 }
 
 .c10 {
   width: 16px;
   height: 16px;
-  color: rgba(19,19,19,0.63);
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
+  color: rgba(19, 19, 19, 0.63);
   flex-shrink: 0;
 }
 
 .c12 {
   padding: 8px;
   border-radius: 20px;
-  background-color: rgba(19,19,19,0.08);
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+  background-color: rgba(19, 19, 19, 0.08);
   display: flex;
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c12:hover {
+.c12 :hover {
   opacity: 0.6;
 }
 
-.c12:active {
+.c12 :active {
   opacity: 0.4;
 }
 
 .c8 {
   gap: 8px;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
   flex-shrink: 0;
-  width: -webkit-max-content;
-  width: -moz-max-content;
   width: max-content;
 }
 
-@media (max-width:1024px) and (min-width:380px) {
+@media (max-width: 1024px) and (min-width: 380px) {
   .c5 {
     display: block;
   }
 }
 
-@media (max-width:1024px) and (min-width:380px) {
+@media (max-width: 1024px) and (min-width: 380px) {
   .c6 {
-    color: rgba(19,19,19,0.63);
+    color: rgba(19, 19, 19, 0.63);
   }
 }
 
@@ -527,6 +433,7 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
     style="display: contents;"
   >
     <div
+      align="space-between"
       class="c0 c1"
     >
       <div
@@ -562,6 +469,7 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
         >
           <div
             class="c0 c7"
+            gap="4px"
           >
             USDC 
             <svg

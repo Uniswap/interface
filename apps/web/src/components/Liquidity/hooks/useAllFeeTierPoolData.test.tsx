@@ -14,7 +14,7 @@ vi.mock('uniswap/src/data/rest/getPools', () => ({
 const useGetPoolsByTokensMock = vi.mocked(useGetPoolsByTokens)
 
 const DEFAULT_FEE_TIER_DATA = {
-  '100': {
+  '100-1': {
     fee: { feeAmount: 100, tickSpacing: 1, isDynamic: false },
     formattedFee: '0.01%',
     totalLiquidityUsd: 0,
@@ -22,7 +22,7 @@ const DEFAULT_FEE_TIER_DATA = {
     created: false,
     tvl: '0',
   },
-  '500': {
+  '500-10': {
     fee: { feeAmount: 500, tickSpacing: 10, isDynamic: false },
     formattedFee: '0.05%',
     totalLiquidityUsd: 0,
@@ -30,7 +30,7 @@ const DEFAULT_FEE_TIER_DATA = {
     created: false,
     tvl: '0',
   },
-  '3000': {
+  '3000-60': {
     fee: { feeAmount: 3000, tickSpacing: 60, isDynamic: false },
     formattedFee: '0.30%',
     totalLiquidityUsd: 0,
@@ -38,7 +38,7 @@ const DEFAULT_FEE_TIER_DATA = {
     created: false,
     tvl: '0',
   },
-  '10000': {
+  '10000-200': {
     fee: { feeAmount: 10000, tickSpacing: 200, isDynamic: false },
     formattedFee: '1%',
     totalLiquidityUsd: 0,
@@ -86,7 +86,7 @@ describe('useAllFeeTierPoolData', () => {
     expect(result.current).toEqual({
       feeTierData: {
         ...DEFAULT_FEE_TIER_DATA,
-        '500': {
+        '500-60': {
           id: 'pool1',
           fee: {
             feeAmount: 500,
@@ -132,7 +132,7 @@ describe('useAllFeeTierPoolData', () => {
     expect(result.current).toEqual({
       feeTierData: {
         ...DEFAULT_FEE_TIER_DATA,
-        '500': {
+        '500-60': {
           id: 'pool1',
           fee: {
             feeAmount: 500,
@@ -178,7 +178,7 @@ describe('useAllFeeTierPoolData', () => {
     expect(result.current).toEqual({
       feeTierData: {
         ...DEFAULT_FEE_TIER_DATA,
-        '500': {
+        '500-60': {
           id: 'pool1',
           fee: {
             feeAmount: 500,
@@ -192,7 +192,7 @@ describe('useAllFeeTierPoolData', () => {
           created: true,
           boostedApr: 0.1,
         },
-        '3000': {
+        '3000-60': {
           id: 'pool2',
           fee: {
             feeAmount: 3000,
@@ -238,7 +238,7 @@ describe('useAllFeeTierPoolData', () => {
     expect(result.current).toEqual({
       feeTierData: {
         ...DEFAULT_FEE_TIER_DATA,
-        '100-dynamic': {
+        '100-60-dynamic': {
           id: 'pool-dyn',
           fee: {
             feeAmount: 100,

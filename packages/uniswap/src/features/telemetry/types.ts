@@ -195,6 +195,7 @@ export type SwapTradeBaseProperties = {
   plan_id?: string
   step_index?: number
   is_final_step?: boolean
+  swap_start_timestamp?: number
 } & ITraceContext
 
 type BaseSwapTransactionResultProperties = {
@@ -228,6 +229,7 @@ type BaseSwapTransactionResultProperties = {
   includes_delegation?: SwapTradeBaseProperties['includes_delegation']
   is_smart_wallet_transaction?: SwapTradeBaseProperties['is_smart_wallet_transaction']
   is_final_step?: boolean
+  swap_start_timestamp?: number
 }
 
 type ClassicSwapTransactionResultProperties = BaseSwapTransactionResultProperties
@@ -753,8 +755,10 @@ export type UniverseEventProperties = {
     actual: string
   } & LiquidityAnalyticsProperties
   [LiquidityEventName.PriceDiscrepancyChecked]: {
+    event_name: LiquidityEventName
     status: OnChainStatus
     price_discrepancy: string
+    absolute_price_discrepancy: number
     sqrt_ratio_x96_before: string
     sqrt_ratio_x96_after: string
   } & LiquidityAnalyticsProperties

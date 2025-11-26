@@ -43,6 +43,7 @@ interface DappRequestFooterProps {
   onConfirm?: (requestToCancel?: DappRequestStoreItem) => void
   showNetworkCost?: boolean
   showSmartWalletActivation?: boolean
+  showAddressFooter?: boolean
   transactionGasFeeResult?: GasFeeResult
   isUniswapX?: boolean
   disableConfirm?: boolean
@@ -92,6 +93,7 @@ export function DappRequestContent({
   children,
   isUniswapX,
   disableConfirm,
+  showAddressFooter = true,
   contentHorizontalPadding = '$spacing12',
 }: PropsWithChildren<DappRequestContentProps>): JSX.Element {
   const { forwards, currentIndex, dappIconUrl, dappUrl } = useDappRequestQueueContext()
@@ -124,6 +126,7 @@ export function DappRequestContent({
         maybeCloseOnConfirm={maybeCloseOnConfirm}
         showNetworkCost={showNetworkCost}
         showSmartWalletActivation={showSmartWalletActivation}
+        showAddressFooter={showAddressFooter}
         transactionGasFeeResult={transactionGasFeeResult}
         disableConfirm={disableConfirm}
         onCancel={onCancel}
@@ -144,6 +147,7 @@ function DappRequestFooter({
   onConfirm,
   showNetworkCost,
   showSmartWalletActivation,
+  showAddressFooter,
   transactionGasFeeResult,
   isUniswapX,
   disableConfirm,
@@ -227,7 +231,7 @@ function DappRequestFooter({
 
   return (
     <>
-      <Flex gap="$spacing8" mt="$spacing8" px="$spacing12">
+      <Flex gap="$spacing8" mt={showNetworkCost || showAddressFooter ? '$spacing8' : '$none'} px="$spacing12">
         {!hasSufficientGas && (
           <Flex pb="$spacing8">
             <Text color="$statusWarning" variant="body3">
@@ -247,13 +251,15 @@ function DappRequestFooter({
             showSmartWalletActivation={showSmartWalletActivation}
           />
         )}
-        <AddressFooter
-          activeAccountAddress={activeAccount.address}
-          connectedAccountAddress={connectedAccountAddress || currentAccount.address}
-          px="$spacing8"
-        />
+        {showAddressFooter && (
+          <AddressFooter
+            activeAccountAddress={activeAccount.address}
+            connectedAccountAddress={connectedAccountAddress || currentAccount.address}
+            px="$spacing8"
+          />
+        )}
         <WarningSection request={request.dappRequest} />
-        <Flex row gap="$spacing12" pt="$spacing8">
+        <Flex row gap="$spacing12">
           <Button flexBasis={1} size="medium" emphasis="secondary" onPress={handleOnCancel}>
             {t('common.button.cancel')}
           </Button>

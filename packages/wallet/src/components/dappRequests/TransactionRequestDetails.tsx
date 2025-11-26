@@ -66,8 +66,8 @@ export function TransactionRequestDetails({
     <Flex gap="$spacing12" px="$spacing16">
       {/* Function name */}
       {functionName && (
-        <Flex row alignItems="center" justifyContent="space-between" height={16}>
-          <Flex row gap="$spacing8" alignItems="center">
+        <Flex row alignItems="center" justifyContent="space-between" minHeight={16}>
+          <Flex row gap="$spacing8" alignItems="center" flexShrink={0}>
             <Code color="$neutral2" size="$icon.16" />
             <Text color="$neutral2" variant="body4">
               {t('dapp.request.fallback.function.label')}
@@ -78,10 +78,10 @@ export function TransactionRequestDetails({
             borderColor="$surface3"
             borderWidth="$spacing1"
             px="$spacing8"
-            py="$spacing2"
             borderRadius="$rounded8"
+            flexShrink={1}
           >
-            <Text color={detailsColor} variant="body4">
+            <Text color={detailsColor} verticalAlign="center" variant="monospace" fontSize={12} numberOfLines={1}>
               {functionName}
             </Text>
           </Flex>
@@ -99,7 +99,7 @@ export function TransactionRequestDetails({
           </Flex>
           <TouchableArea onPress={handleOpenContract}>
             <Flex row gap="$spacing4" alignItems="center">
-              <Text color={detailsColor} variant="body4">
+              <Text color={detailsColor} verticalAlign="center" variant="body4">
                 {contractName}
               </Text>
               <ExternalLink color="$neutral3" size="$icon.16" />

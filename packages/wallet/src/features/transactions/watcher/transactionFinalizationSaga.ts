@@ -158,6 +158,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
       submitViaPrivateRpc: isUniswapX(payload) ? false : payload.options.submitViaPrivateRpc,
       transactedUSDValue,
       is_final_step: typeInfo.isFinalStep ?? true, // If no `isFinalStep` is provided, we assume it's not a multi-step transaction and default to `true`
+      swap_start_timestamp: typeInfo.swapStartTimestamp,
       ...swapProperties,
       ...bridgeProperties,
       ...getRouteAnalyticsData(payload),

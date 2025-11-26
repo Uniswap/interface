@@ -74,6 +74,7 @@ export function useSwapHandlers(): SwapHandlers {
         trace,
         includesDelegation: swapTxContext.includesDelegation,
         isSmartWalletTransaction,
+        swapStartTimestamp,
       })
 
       // Get the best available signed transaction

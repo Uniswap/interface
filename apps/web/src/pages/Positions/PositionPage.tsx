@@ -1028,6 +1028,7 @@ const PriceDisplay = ({
             {tokenASymbol} = 1 {tokenBSymbol}
           </Text>
           <TouchableArea
+            animation={null}
             $group-hover={{ opacity: 1 }}
             opacity={0}
             onPress={() => {

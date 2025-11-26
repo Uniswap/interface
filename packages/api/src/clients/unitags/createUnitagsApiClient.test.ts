@@ -302,6 +302,7 @@ describe('UnitagsApiClient', () => {
       // Clear and reset mocks
       vi.resetModules()
       vi.clearAllMocks()
+      vi.resetModules() // Reset module cache
       mockFetchers = {}
 
       // Mock implementation that stores fetchers

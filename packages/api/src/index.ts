@@ -68,6 +68,7 @@ export {
   getBlockaidScanSiteResponseSchema,
   getBlockaidScanTransactionRequestSchema,
   getBlockaidScanTransactionResponseSchema,
+  getBlockaidScanJsonRpcRequestSchema,
   DappVerificationStatus,
   type BlockaidScanSiteRequest,
   type BlockaidScanSiteResponse,
@@ -75,6 +76,8 @@ export {
   type BlockaidScanSiteMissResponse,
   type BlockaidScanTransactionRequest,
   type BlockaidScanTransactionResponse,
+  type BlockaidScanJsonRpcRequest,
+  type BlockaidScanJsonRpcResponse,
 } from '@universe/api/src/clients/blockaid/types'
 
 // Trading API

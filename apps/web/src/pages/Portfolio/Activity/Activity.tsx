@@ -3,14 +3,13 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { POPUP_MEDIUM_DISMISS_MS } from 'components/Popups/constants'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
-import { Cell } from 'components/Table/Cell'
-import { DataRow } from 'components/Table/styled'
 import { ActivityFilters } from 'pages/Portfolio/Activity/ActivityFilters'
 import { ActivityTable } from 'pages/Portfolio/Activity/ActivityTable/ActivityTable'
 import {
   filterTransactionDetailsFromActivityItems,
   getTransactionTypesForFilter,
 } from 'pages/Portfolio/Activity/Filters/utils'
+import { PaginationSkeletonRow } from 'pages/Portfolio/Activity/PaginationSkeletonRow'
 import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
 import { useCallback, useMemo, useState } from 'react'
@@ -189,19 +188,7 @@ export default function PortfolioActivity() {
                 <ActivityTable data={transactionData} loading={isLoading} error={error} rowWrapper={rowWrapper} />
 
                 {/* Show skeleton loading indicator while fetching next page */}
-                {isFetchingNextPage && (
-                  <DataRow v2={true}>
-                    {[...Array(4)].map((_, index) => (
-                      <Cell
-                        key={index}
-                        loading={true}
-                        justifyContent="flex-start"
-                        grow
-                        {...(index === 2 && { minWidth: '280px' })}
-                      />
-                    ))}
-                  </DataRow>
-                )}
+                {isFetchingNextPage && <PaginationSkeletonRow />}
 
                 {/* Intersection observer sentinel for infinite scroll */}
                 <Flex ref={sentinelRef} height={1} my={10} />

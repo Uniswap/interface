@@ -304,41 +304,42 @@ export function Table<T extends RowData>({
 
   const content = (
     <TableContainer maxWidth={maxWidth} maxHeight={maxHeight} position="relative" ref={parentRef}>
-      {!hideHeader && (
-        <>
-          <TableHead $isSticky={isSticky} $top={headerHeight}>
-            {hasPinnedColumns && (
-              <>
-                <Flex
-                  position="absolute"
-                  top={scrollButtonTop}
-                  left={table.getLeftTotalSize()}
-                  pl="$spacing12"
-                  zIndex={zIndexes.mask}
-                >
-                  <ScrollButton
-                    onPress={onScrollButtonPress('left')}
-                    opacity={showScrollLeftButton ? 1 : 0}
-                    direction="left"
-                  />
-                </Flex>
-                <Flex position="absolute" top={scrollButtonTop} right={0} pr="$spacing12" zIndex={zIndexes.mask}>
-                  <ScrollButton
-                    onPress={onScrollButtonPress('right')}
-                    opacity={showScrollRightButton ? 1 : 0}
-                    direction="right"
-                  />
-                </Flex>
-                {(!v2 || showRightFadeOverlay) && (
-                  <TableScrollMask
-                    top={isSticky ? '$spacing12' : 0}
-                    zIndex={zIndexes.dropdown - 1}
-                    right={v2 ? 0 : 1}
-                    borderTopRightRadius={v2 ? '$rounded12' : '$rounded20'}
-                  />
-                )}
-              </>
-            )}
+      <>
+        <TableHead $isSticky={isSticky} $top={headerHeight}>
+          {hasPinnedColumns && (
+            <>
+              <Flex
+                position="absolute"
+                top={scrollButtonTop}
+                left={table.getLeftTotalSize()}
+                pl="$spacing12"
+                zIndex={zIndexes.mask}
+              >
+                <ScrollButton
+                  onPress={onScrollButtonPress('left')}
+                  opacity={showScrollLeftButton ? 1 : 0}
+                  direction="left"
+                />
+              </Flex>
+              <Flex position="absolute" top={scrollButtonTop} right={0} pr="$spacing12" zIndex={zIndexes.mask}>
+                <ScrollButton
+                  onPress={onScrollButtonPress('right')}
+                  opacity={showScrollRightButton ? 1 : 0}
+                  direction="right"
+                />
+              </Flex>
+              {(!v2 || showRightFadeOverlay) && (
+                <TableScrollMask
+                  top={isSticky ? '$spacing12' : 0}
+                  zIndex={zIndexes.dropdown - 1}
+                  right={v2 ? 0 : 1}
+                  borderTopRightRadius={v2 ? '$rounded12' : '$rounded20'}
+                />
+              )}
+            </>
+          )}
+
+          {!hideHeader && (
             <ScrollSyncPane group={scrollGroup}>
               <HeaderRow dimmed={!!error} v2={v2}>
                 {table.getFlatHeaders().map((header) => (
@@ -351,16 +352,16 @@ export function Table<T extends RowData>({
                 ))}
               </HeaderRow>
             </ScrollSyncPane>
-          </TableHead>
-          {hasPinnedColumns && (!v2 || showRightFadeOverlay) && (
-            <TableScrollMask
-              zIndex={zIndexes.default}
-              borderBottomRightRadius={v2 ? '$rounded12' : '$rounded20'}
-              right={v2 ? 0 : 1}
-            />
           )}
-        </>
-      )}
+        </TableHead>
+        {hasPinnedColumns && (!v2 || showRightFadeOverlay) && (
+          <TableScrollMask
+            zIndex={zIndexes.default}
+            borderBottomRightRadius={v2 ? '$rounded12' : '$rounded20'}
+            right={v2 ? 0 : 1}
+          />
+        )}
+      </>
       <ScrollSyncPane group={scrollGroup}>
         <TableBodyContainer maxHeight={computedBodyMaxHeight} v2={v2}>
           <TableBody

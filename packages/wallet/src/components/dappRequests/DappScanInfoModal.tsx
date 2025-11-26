@@ -14,9 +14,11 @@ import { isMobileApp } from 'utilities/src/platform'
 interface DappScanInfoModalProps {
   isOpen: boolean
   onClose: () => void
+  title: string
+  description: string
 }
 
-export function DappScanInfoModal({ isOpen, onClose }: DappScanInfoModalProps): JSX.Element {
+export function DappScanInfoModal({ isOpen, onClose, title, description }: DappScanInfoModalProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
@@ -47,10 +49,10 @@ export function DappScanInfoModal({ isOpen, onClose }: DappScanInfoModalProps): 
 
         <Flex alignItems="center" gap="$spacing12">
           <Text color="$neutral1" textAlign="center" variant="subheading1">
-            {t('dapp.request.scanInfo.title')}
+            {title}
           </Text>
           <Text color="$neutral2" textAlign="center" variant="body3">
-            {t('dapp.request.scanInfo.description')}
+            {description}
           </Text>
           <TouchableArea
             display="flex"

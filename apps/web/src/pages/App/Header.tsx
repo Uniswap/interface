@@ -1,6 +1,7 @@
 import Navbar from 'components/NavBar/index'
 import { MobileAppPromoBanner, useMobileAppPromoBannerEligible } from 'components/TopLevelBanners/MobileAppPromoBanner'
 import { UkBanner, useRenderUkBanner } from 'components/TopLevelBanners/UkBanner'
+import { useRenderUniswapWrapped2025Banner } from 'components/TopLevelBanners/UniswapWrapped2025Banner'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import { useScroll } from 'hooks/useScroll'
 import { GRID_AREAS } from 'pages/App/utils/shared'
@@ -16,6 +17,7 @@ export const Header = memo(function Header() {
   const navHasBottomBorder = isScrolledDown
   const renderUkBanner = useRenderUkBanner()
   const extensionEligible = useMobileAppPromoBannerEligible()
+  const renderUniswapWrapped2025Banner = useRenderUniswapWrapped2025Banner()
 
   return (
     <Flex
@@ -40,6 +42,7 @@ export const Header = memo(function Header() {
       <Flex position="relative" zIndex={zIndexes.sticky} pointerEvents="auto">
         {extensionEligible && <MobileAppPromoBanner />}
         {renderUkBanner && <UkBanner />}
+        {renderUniswapWrapped2025Banner}
       </Flex>
       <Flex
         width="100%"

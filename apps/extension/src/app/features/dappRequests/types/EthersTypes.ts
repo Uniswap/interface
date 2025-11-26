@@ -44,7 +44,7 @@ export const EthersTransactionRequestSchema = z.object({
   data: BytesLikeSchema.optional(),
   value: BigNumberishSchema.optional(),
   chainId: HexadecimalNumberSchema.optional(),
-  type: z.number().optional(),
+  type: z.union([z.number(), HexadecimalNumberSchema]).optional(),
   accessList: AccessListishSchema.optional(),
   maxPriorityFeePerGas: BigNumberishSchema.optional(),
   maxFeePerGas: BigNumberishSchema.optional(),

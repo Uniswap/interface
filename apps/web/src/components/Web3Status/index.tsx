@@ -90,7 +90,7 @@ const ExistingUserCTAButton = forwardRef<HTMLDivElement, { onPress: () => void }
   )
 })
 
-export const Web3StatusRef = atom<RefObject<HTMLElement> | undefined>(undefined)
+export const Web3StatusRef = atom<RefObject<HTMLElement | null> | undefined>(undefined)
 
 function Web3StatusInner() {
   const activeAddresses = useActiveAddresses()

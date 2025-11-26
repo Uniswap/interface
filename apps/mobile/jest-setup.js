@@ -1,6 +1,7 @@
-// Setups and mocks can go here
-// For example: https://reactnavigation.org/docs/testing/
-
+// From https://reactnavigation.org/docs/testing/#setting-up-jest
+import 'react-native-gesture-handler/jestSetup';
+import { setUpTests } from 'react-native-reanimated';
+// Other
 import 'core-js' // necessary so setImmediate works in tests
 import 'utilities/jest-package-mocks'
 import 'uniswap/jest-package-mocks'
@@ -10,6 +11,11 @@ import 'config/jest-presets/ui/ui-package-mocks'
 import 'uniswap/src/i18n' // Uses real translations for tests
 
 import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js'
+
+setUpTests()
+
+// Silence the warning: Animated: `useNativeDriver` is not supported because the native animated module is missing
+jest.mock('react-native/Libraries/Animated/NativeAnimatedModule');
 
 jest.mock('@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery', () => {})
 
@@ -65,6 +71,22 @@ jest.mock('@react-native-community/netinfo', () => ({ ...mockRNCNetInfo, NetInfo
 jest.mock('react-native', () => {
   const RN = jest.requireActual('react-native') // use original implementation, which comes with mocks out of the box
 
+  // Mock Linking module within React Native
+  RN.Linking = {
+    openURL: jest.fn(),
+    addEventListener: jest.fn(),
+    removeEventListener: jest.fn(),
+    canOpenURL: jest.fn(),
+    getInitialURL: jest.fn(),
+  }
+
+  // Mock Share module within React Native
+  RN.Share = {
+    share: jest.fn(),
+    sharedAction: 'sharedAction',
+    dismissedAction: 'dismissedAction',
+  }
+
   return RN
 })
 
@@ -74,20 +96,8 @@ jest.mock('@react-navigation/elements', () => ({
 
 require('react-native-reanimated').setUpTests()
 
-jest.mock('react-native/Libraries/Share/Share', () => ({
-  share: jest.fn(),
-}))
-
 jest.mock('@react-native-firebase/auth', () => () => ({
   signInAnonymously: jest.fn(),
-}))
-
-jest.mock('react-native/Libraries/Linking/Linking', () => ({
-  openURL: jest.fn(),
-  addEventListener: jest.fn(),
-  removeEventListener: jest.fn(),
-  canOpenURL: jest.fn(),
-  getInitialURL: jest.fn(),
 }))
 
 jest.mock("react-native-bootsplash", () => {

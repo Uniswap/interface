@@ -1,0 +1,37 @@
+diff --git a/node_modules/@expo/config-plugins/.bun-tag-bbdd69059182ec4a b/.bun-tag-bbdd69059182ec4a
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/build/android/Package.js b/build/android/Package.js
+index da703111a3e4d240d331ed33ccba00b62df8bcd5..6e59d05addede44c91e635746b06e2290dc6c31f 100644
+--- a/build/android/Package.js
++++ b/build/android/Package.js
+@@ -282,8 +282,15 @@ async function getApplicationIdAsync(projectRoot) {
+   }
+   const buildGradle = await _fs().default.promises.readFile(buildGradlePath, 'utf8');
+   const matchResult = buildGradle.match(/applicationId ['"](.*)['"]/);
++  let applicationId = matchResult?.[1] ?? null;
++
++  // In Debug mode, append .dev suffix (matching the dev flavor)
++  if (applicationId && process.env.EXPO_BUILD_CONFIGURATION === 'Debug') {
++    applicationId += '.dev';
++  }
++
+   // TODO add fallback for legacy cases to read from AndroidManifest.xml
+-  return matchResult?.[1] ?? null;
++  return applicationId;
+ }
+ 
+ /**
+diff --git a/build/ios/BundleIdentifier.js b/build/ios/BundleIdentifier.js
+index fc56b2dabe9ed536926c658453251f17668ad72e..8d4af92e0777c1e6b53d6d9558a60c8429c3233a 100644
+--- a/build/ios/BundleIdentifier.js
++++ b/build/ios/BundleIdentifier.js
+@@ -123,7 +123,7 @@ function setBundleIdentifier(config, infoPlist) {
+  */
+ function getBundleIdentifierFromPbxproj(projectRoot, {
+   targetName,
+-  buildConfiguration = 'Release'
++  buildConfiguration = process.env.EXPO_BUILD_CONFIGURATION || 'Release'
+ } = {}) {
+   let pbxprojPath;
+   try {

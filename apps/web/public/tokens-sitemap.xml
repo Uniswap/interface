@@ -11350,4 +11350,19 @@
     <lastmod>2025-11-14T22:25:25.270Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/ethereum/0x3081f70000e8cf8be2afcae3db6b9d9c796caec5</loc>
+    <lastmod>2025-11-21T21:20:26.726Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/solana/9AvytnUKsLxPxFHFqS6VLxaxt5p6BhYNr53SD2Chpump</loc>
+    <lastmod>2025-11-21T21:20:26.726Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/tokens/solana/TNSRxcUxoT9xBG3de7PiJyTDYu7kskLqcpddxnEJAS6</loc>
+    <lastmod>2025-11-21T21:20:26.726Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

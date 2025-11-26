@@ -4,7 +4,7 @@ import { RefObject, useCallback, useEffect, useRef } from 'react'
 export function usePrevious<T>(value: T): T | undefined {
   // The ref object is a generic container whose current property is mutable ...
   // ... and can hold any value, similar to an instance property on a class
-  const ref = useRef<T>()
+  const ref = useRef<T>(undefined)
 
   // Store current value in ref
   useEffect(() => {
@@ -18,7 +18,7 @@ export function usePrevious<T>(value: T): T | undefined {
 // modified from https://usehooks.com/useMemoCompare/
 export function useMemoCompare<T>(next: () => T, compare: (a: T | undefined, b: T) => boolean): T {
   // Ref for storing previous value
-  const previousRef = useRef<T>()
+  const previousRef = useRef<T>(undefined)
   const previous = previousRef.current
   const nextValue = next()
 
@@ -43,9 +43,9 @@ export function useOnClickOutside<T extends HTMLElement>({
   ignoredNodes = [],
   event = 'mousedown',
 }: {
-  node: RefObject<T | undefined>
+  node: RefObject<T | undefined | null>
   handler?: () => void
-  ignoredNodes?: Array<RefObject<HTMLElement | undefined>>
+  ignoredNodes?: Array<RefObject<HTMLElement | undefined | null>>
   event?: 'mousedown' | 'mouseup'
 }): void {
   const handlerRef = useRef<undefined | (() => void)>(handler)

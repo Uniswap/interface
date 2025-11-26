@@ -7,10 +7,34 @@ exports[`BackButton renders without error 1`] = `
   focusVisibleStyle={{}}
   forwardedRef={[Function]}
   hitSlop={24}
+  jestAnimatedProps={
+    {
+      "value": {},
+    }
+  }
   jestAnimatedStyle={
     {
       "value": {},
     }
+  }
+  jestInlineStyle={
+    [
+      {
+        "alignItems": "center",
+        "backgroundColor": "transparent",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
   }
   onBlur={[Function]}
   onClick={[Function]}
@@ -24,27 +48,28 @@ exports[`BackButton renders without error 1`] = `
   onStartShouldSetResponder={[Function]}
   role="button"
   style={
-    {
-      "alignItems": "center",
-      "backgroundColor": "transparent",
-      "borderBottomLeftRadius": 12,
-      "borderBottomRightRadius": 12,
-      "borderTopLeftRadius": 12,
-      "borderTopRightRadius": 12,
-      "flexDirection": "column",
-      "opacity": 1,
-      "transform": [
-        {
-          "scale": 1,
-        },
-      ],
-    }
+    [
+      {
+        "alignItems": "center",
+        "backgroundColor": "transparent",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+      {},
+    ]
   }
   testID="back"
 >
   <View
-    onBlur={[Function]}
-    onFocus={[Function]}
     style={
       {
         "alignItems": "center",
@@ -56,6 +81,11 @@ exports[`BackButton renders without error 1`] = `
     <View
       collapsable={false}
       forwardedRef={[Function]}
+      jestAnimatedProps={
+        {
+          "value": {},
+        }
+      }
       jestAnimatedStyle={
         {
           "value": {
@@ -71,23 +101,34 @@ exports[`BackButton renders without error 1`] = `
           },
         }
       }
-      onBlur={[Function]}
-      onFocus={[Function]}
+      jestInlineStyle={
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "justifyContent": "center",
+          },
+        ]
+      }
       style={
-        {
-          "alignItems": "center",
-          "borderBottomLeftRadius": 999999,
-          "borderBottomRightRadius": 999999,
-          "borderTopLeftRadius": 999999,
-          "borderTopRightRadius": 999999,
-          "flexDirection": "column",
-          "justifyContent": "center",
-          "transform": [
-            {
-              "rotate": "0deg",
-            },
-          ],
-        }
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "justifyContent": "center",
+          },
+          {
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "transform": [
+              {
+                "rotate": "0deg",
+              },
+            ],
+          },
+        ]
       }
     >
       <RNSVGSvgView
@@ -154,16 +195,9 @@ exports[`BackButton renders without error 1`] = `
     <Text
       allowFontScaling={true}
       maxFontSizeMultiplier={1.4}
-      onBlur={[Function]}
-      onFocus={[Function]}
       style={
         {
-          "color": {
-            "dynamic": {
-              "dark": "rgba(255, 255, 255, 0.65)",
-              "light": "rgba(19, 19, 19, 0.63)",
-            },
-          },
+          "color": "rgba(19, 19, 19, 0.63)",
           "fontFamily": "Basel Grotesk",
           "fontSize": 19,
           "fontWeight": "400",

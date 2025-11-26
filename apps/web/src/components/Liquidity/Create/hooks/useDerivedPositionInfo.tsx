@@ -75,7 +75,10 @@ export function getSortedCurrenciesForProtocol({
 }
 
 function filterPoolByFeeTier(pool: Pool, feeTier: FeeData): Pool | undefined {
-  if (getFeeTierKey(feeTier.feeAmount, feeTier.isDynamic) === getFeeTierKey(pool.fee, pool.isDynamicFee)) {
+  if (
+    getFeeTierKey({ feeTier: feeTier.feeAmount, tickSpacing: feeTier.tickSpacing, isDynamicFee: feeTier.isDynamic }) ===
+    getFeeTierKey({ feeTier: pool.fee, tickSpacing: pool.tickSpacing, isDynamicFee: pool.isDynamicFee })
+  ) {
     return pool
   }
   return undefined

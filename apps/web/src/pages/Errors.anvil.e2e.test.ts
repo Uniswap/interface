@@ -10,86 +10,96 @@ import { type HexString } from 'utilities/src/addresses/hex'
 
 const test = getTest({ withAnvil: true })
 
-test.describe('Errors', () => {
-  test('wallet rejection', async ({ page, anvil }) => {
-    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
-    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
+test.describe(
+  'Errors',
+  {
+    tag: '@team:apps-infra',
+    annotation: [
+      { type: 'DD_TAGS[team]', description: 'apps-infra' },
+      { type: 'DD_TAGS[test.type]', description: 'web-e2e' },
+    ],
+  },
+  () => {
+    test('wallet rejection', async ({ page, anvil }) => {
+      await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+      await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.quote })
 
-    await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
+      await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
-    const nonceBefore = await anvil.getTransactionCount({ address: TEST_WALLET_ADDRESS })
+      const nonceBefore = await anvil.getTransactionCount({ address: TEST_WALLET_ADDRESS })
 
-    // Enter amount to swap
-    await page.getByTestId(TestID.AmountInputOut).fill('1')
+      // Enter amount to swap
+      await page.getByTestId(TestID.AmountInputOut).fill('1')
 
-    // Wait for input value to be populated
-    await expect(page.getByTestId(TestID.AmountInputIn)).toHaveValue(/.+/)
+      // Wait for input value to be populated
+      await expect(page.getByTestId(TestID.AmountInputIn)).toHaveValue(/.+/)
 
-    // Submit transaction
-    await page.getByTestId(TestID.ReviewSwap).click()
+      // Submit transaction
+      await page.getByTestId(TestID.ReviewSwap).click()
 
-    // Set rejection flag before clicking Swap
-    await rejectNextTransaction(page)
+      // Set rejection flag before clicking Swap
+      await rejectNextTransaction(page)
 
-    await page.getByTestId(TestID.Swap).click()
+      await page.getByTestId(TestID.Swap).click()
 
-    await anvil.mine({ blocks: 1 })
-    const nonceAfter = await anvil.getTransactionCount({ address: TEST_WALLET_ADDRESS })
+      await anvil.mine({ blocks: 1 })
+      const nonceAfter = await anvil.getTransactionCount({ address: TEST_WALLET_ADDRESS })
 
-    // Verify transaction was rejected - nonce should not have changed
-    expect(nonceAfter).toBe(nonceBefore)
-  })
-
-  test.skip('transaction past deadline', async ({ page, anvil }) => {
-    await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
-    await stubTradingApiEndpoint({
-      page,
-      endpoint: uniswapUrls.tradingApiPaths.quote,
-      modifyRequestData: (data) => ({
-        ...data,
-        protocols: ['V2', 'V3'],
-      }),
+      // Verify transaction was rejected - nonce should not have changed
+      expect(nonceAfter).toBe(nonceBefore)
     })
 
-    await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
+    test.skip('transaction past deadline', async ({ page, anvil }) => {
+      await stubTradingApiEndpoint({ page, endpoint: uniswapUrls.tradingApiPaths.swap })
+      await stubTradingApiEndpoint({
+        page,
+        endpoint: uniswapUrls.tradingApiPaths.quote,
+        modifyRequestData: (data) => ({
+          ...data,
+          protocols: ['V2', 'V3'],
+        }),
+      })
 
-    // Enter amount to swap
-    await page.getByTestId(TestID.AmountInputOut).fill('1')
+      await page.goto(`/swap?inputCurrency=ETH&outputCurrency=${USDC_MAINNET.address}`)
 
-    // Wait for input value to be populated
-    await expect(page.getByTestId(TestID.AmountInputIn)).toHaveValue(/.+/)
+      // Enter amount to swap
+      await page.getByTestId(TestID.AmountInputOut).fill('1')
 
-    // Submit transaction
-    await page.getByTestId(TestID.ReviewSwap).click()
-    await page.getByTestId(TestID.Swap).click()
+      // Wait for input value to be populated
+      await expect(page.getByTestId(TestID.AmountInputIn)).toHaveValue(/.+/)
 
-    // Get the hash of the transaction in the mempool
-    let hash: HexString | undefined
-    const startTime = performance.now()
-    const timeoutMs = 5000
-    while (!hash) {
-      if (performance.now() - startTime > timeoutMs) {
-        throw new Error('Timeout: Transaction hash not found within 5 seconds')
+      // Submit transaction
+      await page.getByTestId(TestID.ReviewSwap).click()
+      await page.getByTestId(TestID.Swap).click()
+
+      // Get the hash of the transaction in the mempool
+      let hash: HexString | undefined
+      const startTime = performance.now()
+      const timeoutMs = 5000
+      while (!hash) {
+        if (performance.now() - startTime > timeoutMs) {
+          throw new Error('Timeout: Transaction hash not found within 5 seconds')
+        }
+
+        const poolContent = await anvil.getTxpoolContent()
+        const currentTransaction = Object.entries(
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+          poolContent.pending[normalizeAddress(TEST_WALLET_ADDRESS, AddressStringFormat.Lowercase) as HexString] ?? {},
+        )[0]
+
+        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+        hash = currentTransaction[1]?.hash
       }
 
-      const poolContent = await anvil.getTxpoolContent()
-      const currentTransaction = Object.entries(
-        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-        poolContent.pending[normalizeAddress(TEST_WALLET_ADDRESS, AddressStringFormat.Lowercase) as HexString] ?? {},
-      )[0]
+      await anvil.dropTransaction({
+        hash: hash as HexString,
+      })
+      await anvil.mine({
+        blocks: 1,
+      })
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      hash = currentTransaction[1]?.hash
-    }
-
-    await anvil.dropTransaction({
-      hash: hash as HexString,
+      // Verify failure state by checking the button text
+      await expect(page.getByText('Swap failed')).toBeVisible()
     })
-    await anvil.mine({
-      blocks: 1,
-    })
-
-    // Verify failure state by checking the button text
-    await expect(page.getByText('Swap failed')).toBeVisible()
-  })
-})
+  },
+)

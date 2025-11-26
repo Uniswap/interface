@@ -1,5 +1,6 @@
 import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { PortfolioTabInfo, usePortfolioTabs } from 'pages/Portfolio/Header/hooks/usePortfolioTabs'
+import { buildPortfolioUrl, pathToPortfolioTab } from 'pages/Portfolio/utils/portfolioUrls'
 import { Link, useLocation } from 'react-router'
 import { Flex, Separator, Text } from 'ui/src'
 import { ElementName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'
@@ -25,14 +26,15 @@ function getTabElementName(pageName: InterfacePageName): ElementName {
 
 export function PortfolioTabs() {
   const { pathname } = useLocation()
-  const { chainName } = usePortfolioRoutes()
+  const { chainId } = usePortfolioRoutes()
   const portfolioTabs = usePortfolioTabs()
 
   return (
     <Flex>
       <Flex row gap="$spacing24" $sm={{ gap: '$spacing12', justifyContent: 'space-around' }}>
         {portfolioTabs.map((tab: PortfolioTabInfo) => {
-          const tabPath = chainName ? `${tab.path}?chain=${chainName}` : tab.path
+          const portfolioTab = pathToPortfolioTab(tab.path)
+          const tabPath = buildPortfolioUrl(portfolioTab, chainId)
           const currentPage = getCurrentPageFromLocation(pathname)
           const isActive = currentPage === tab.pageName
           const elementName = getTabElementName(tab.pageName)

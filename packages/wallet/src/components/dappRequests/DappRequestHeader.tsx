@@ -7,7 +7,7 @@ import { DappConnectionInfo, DappVerificationStatus } from 'wallet/src/features/
 
 interface DappRequestHeaderProps {
   dappInfo: DappConnectionInfo
-  title: string
+  title: string | { element: JSX.Element }
   verificationStatus?: DappVerificationStatus
   headerIcon?: JSX.Element
 }
@@ -30,7 +30,7 @@ export function DappRequestHeader({
   return (
     <Flex gap="$spacing8">
       {headerIcon || <DappHeaderIcon dappInfo={dappInfo} />}
-      <Text variant="subheading1">{title}</Text>
+      {typeof title === 'string' ? <Text variant="subheading1">{title}</Text> : title.element}
       <Flex row gap="$spacing4" alignItems="center">
         <LinkButton
           justifyContent="flex-start"

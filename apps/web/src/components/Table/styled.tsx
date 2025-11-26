@@ -117,7 +117,7 @@ export const DataRow = styled(TableRow, {
     v2: {
       true: {
         hoverStyle: {
-          backgroundColor: '$surface2Hovered',
+          backgroundColor: '$surface1Hovered',
           transition: 'background-color 0ms',
         },
       },
@@ -249,8 +249,7 @@ export const FilterHeaderRow = styled(Flex, {
   alignItems: 'center',
   userSelect: 'none',
   gap: '$gap4',
-  animation: 'fast',
-
+  transition: 'all 0.1s ease-in-out',
   ...ClickableTamaguiStyle,
 
   variants: {

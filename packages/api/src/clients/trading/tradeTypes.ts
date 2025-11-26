@@ -57,7 +57,9 @@ export interface PlanStep {
   output?: string
   swapper?: string
   recipient?: string
+  /**@deprecated use TODO: SWAP-458 - update with proper typings once available stepType instead */
   stepSwapType?: string
+  stepType?: string
   gasUseEstimate?: string
   gasFeeUSD?: string
   gasFeeQuote?: string

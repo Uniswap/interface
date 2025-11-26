@@ -185,17 +185,8 @@ exports[`DoubleLogo > renders with two undefined currencies 1`] = `
   line-height: 32px;
   text-align: center;
   width: 32px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
   position: relative;
 }

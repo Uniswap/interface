@@ -10,53 +10,31 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
 
 .c6 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
 }
 
 .c9 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
 }
 
 .c7 {
   position: relative;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
 }
 
 .c4 {
-  -webkit-filter: none;
   filter: none;
   opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
   transition: opacity 250ms ease-in-out;
 }
 
@@ -67,23 +45,17 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
 
 .c0 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c8 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
 .c1 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
 }
 
 .c3 {
@@ -95,9 +67,9 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
   color: #4673fa;
 }
 
-@supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent) {
+@supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
   .c10 {
-    background-image: linear-gradient(91.39deg,#4673fa -101.76%,#9646fa 101.76%);
+    background-image: linear-gradient(91.39deg, #4673fa -101.76%, #9646fa 101.76%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -108,7 +80,7 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
     style="display: contents;"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -139,6 +111,7 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
                   >
                     <div
                       class="c5 c6 c7"
+                      gap="xs"
                     >
                       <svg
                         data-testid="gas-estimate-uniswapx-icon"
@@ -176,6 +149,7 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
                       >
                         <div
                           class="c5 c9"
+                          gap="sm"
                         >
                           <div
                             class="c10"
@@ -197,7 +171,7 @@ exports[`SwapLineItem.tsx > dutch order eth input 1`] = `
       </div>
     </div>
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -240,53 +214,31 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
 
 .c6 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
 }
 
 .c9 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
 }
 
 .c7 {
   position: relative;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
 }
 
 .c4 {
-  -webkit-filter: none;
   filter: none;
   opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
   transition: opacity 250ms ease-in-out;
 }
 
@@ -297,23 +249,17 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
 
 .c0 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c8 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
 .c1 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
 }
 
 .c3 {
@@ -325,9 +271,9 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
   color: #4673fa;
 }
 
-@supports (-webkit-background-clip:text) and (-webkit-text-fill-color:transparent) {
+@supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {
   .c10 {
-    background-image: linear-gradient(91.39deg,#4673fa -101.76%,#9646fa 101.76%);
+    background-image: linear-gradient(91.39deg, #4673fa -101.76%, #9646fa 101.76%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   }
@@ -338,7 +284,7 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
     style="display: contents;"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -369,6 +315,7 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
                   >
                     <div
                       class="c5 c6 c7"
+                      gap="xs"
                     >
                       <svg
                         data-testid="gas-estimate-uniswapx-icon"
@@ -406,6 +353,7 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
                       >
                         <div
                           class="c5 c9"
+                          gap="sm"
                         >
                           <div
                             class="c10"
@@ -427,7 +375,7 @@ exports[`SwapLineItem.tsx > dutch v2 order eth input 1`] = `
       </div>
     </div>
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -470,53 +418,31 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
 
 .c6 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
 }
 
 .c10 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
 }
 
 .c7 {
   position: relative;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
 }
 
 .c4 {
-  -webkit-filter: none;
   filter: none;
   opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
   transition: opacity 250ms ease-in-out;
 }
 
@@ -527,23 +453,17 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
 
 .c0 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c9 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
 .c1 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
 }
 
 .c3 {
@@ -556,8 +476,8 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
   width: 16px;
 }
 
-.c8 > * {
-  fill: rgba(19,19,19,0.35);
+.c8>* {
+  fill: rgba(19, 19, 19, 0.35);
 }
 
 <span
@@ -565,7 +485,7 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
     style="display: contents;"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -596,6 +516,7 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
                   >
                     <div
                       class="c5 c6 c7"
+                      gap="xs"
                     >
                       <svg
                         class="c8"
@@ -617,6 +538,7 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
                       >
                         <div
                           class="c5 c10"
+                          gap="sm"
                         >
                           $1.00
                         </div>
@@ -631,7 +553,7 @@ exports[`SwapLineItem.tsx > exact input 1`] = `
       </div>
     </div>
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -674,53 +596,31 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
 
 .c6 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
 }
 
 .c10 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
 }
 
 .c7 {
   position: relative;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
 }
 
 .c4 {
-  -webkit-filter: none;
   filter: none;
   opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
   transition: opacity 250ms ease-in-out;
 }
 
@@ -731,23 +631,17 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
 
 .c0 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c9 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
 .c1 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
 }
 
 .c3 {
@@ -760,8 +654,8 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
   width: 16px;
 }
 
-.c8 > * {
-  fill: rgba(19,19,19,0.35);
+.c8>* {
+  fill: rgba(19, 19, 19, 0.35);
 }
 
 <span
@@ -769,7 +663,7 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
     style="display: contents;"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -800,6 +694,7 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
                   >
                     <div
                       class="c5 c6 c7"
+                      gap="xs"
                     >
                       <svg
                         class="c8"
@@ -821,6 +716,7 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
                       >
                         <div
                           class="c5 c10"
+                          gap="sm"
                         >
                           $1.00
                         </div>
@@ -835,7 +731,7 @@ exports[`SwapLineItem.tsx > exact input api 1`] = `
       </div>
     </div>
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -878,53 +774,31 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
 
 .c6 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
 }
 
 .c10 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
 }
 
 .c7 {
   position: relative;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
 }
 
 .c4 {
-  -webkit-filter: none;
   filter: none;
   opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
   transition: opacity 250ms ease-in-out;
 }
 
@@ -935,23 +809,17 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
 
 .c0 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c9 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
 .c1 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
 }
 
 .c3 {
@@ -964,8 +832,8 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
   width: 16px;
 }
 
-.c8 > * {
-  fill: rgba(19,19,19,0.35);
+.c8>* {
+  fill: rgba(19, 19, 19, 0.35);
 }
 
 <span
@@ -973,7 +841,7 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
     style="display: contents;"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1004,6 +872,7 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
                   >
                     <div
                       class="c5 c6 c7"
+                      gap="xs"
                     >
                       <svg
                         class="c8"
@@ -1025,6 +894,7 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
                       >
                         <div
                           class="c5 c10"
+                          gap="sm"
                         >
                           -
                         </div>
@@ -1039,7 +909,7 @@ exports[`SwapLineItem.tsx > exact output 1`] = `
       </div>
     </div>
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1082,53 +952,31 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
 
 .c6 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
 }
 
 .c10 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
 }
 
 .c7 {
   position: relative;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
 }
 
 .c4 {
-  -webkit-filter: none;
   filter: none;
   opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
   transition: opacity 250ms ease-in-out;
 }
 
@@ -1139,23 +987,17 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
 
 .c0 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c9 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
 .c1 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
 }
 
 .c3 {
@@ -1168,8 +1010,8 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
   width: 16px;
 }
 
-.c8 > * {
-  fill: rgba(19,19,19,0.35);
+.c8>* {
+  fill: rgba(19, 19, 19, 0.35);
 }
 
 <span
@@ -1177,7 +1019,7 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
     style="display: contents;"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1208,6 +1050,7 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
                   >
                     <div
                       class="c5 c6 c7"
+                      gap="xs"
                     >
                       <svg
                         class="c8"
@@ -1229,6 +1072,7 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
                       >
                         <div
                           class="c5 c10"
+                          gap="sm"
                         >
                           $1.00
                         </div>
@@ -1243,7 +1087,7 @@ exports[`SwapLineItem.tsx > fee on buy 1`] = `
       </div>
     </div>
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1286,53 +1130,31 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
 
 .c6 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
 }
 
 .c10 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
 }
 
 .c7 {
   position: relative;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
   width: fit-content;
   margin: -xs;
 }
 
 .c4 {
-  -webkit-filter: none;
   filter: none;
   opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
   transition: opacity 250ms ease-in-out;
 }
 
@@ -1343,23 +1165,17 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
 
 .c0 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c9 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
 .c1 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
 }
 
 .c3 {
@@ -1372,8 +1188,8 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
   width: 16px;
 }
 
-.c8 > * {
-  fill: rgba(19,19,19,0.35);
+.c8>* {
+  fill: rgba(19, 19, 19, 0.35);
 }
 
 <span
@@ -1381,7 +1197,7 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
     style="display: contents;"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1412,6 +1228,7 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
                   >
                     <div
                       class="c5 c6 c7"
+                      gap="xs"
                     >
                       <svg
                         class="c8"
@@ -1433,6 +1250,7 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
                       >
                         <div
                           class="c5 c10"
+                          gap="sm"
                         >
                           $1.00
                         </div>
@@ -1447,7 +1265,7 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
       </div>
     </div>
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1483,11 +1301,9 @@ exports[`SwapLineItem.tsx > fee on sell 1`] = `
 exports[`SwapLineItem.tsx > preview exact in 1`] = `
 <DocumentFragment>
   .c4 {
-  -webkit-animation: fAQEyV 1.5s infinite;
   animation: fAQEyV 1.5s infinite;
-  -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
-  background: linear-gradient( to left, #FFFFFF 25%, rgba(19,19,19,0.08) 50%, #FFFFFF 75% );
+  background: linear-gradient(     to left,     #FFFFFF 25%,     rgba(19, 19, 19, 0.08) 50%,     #FFFFFF 75%   );
   background-size: 400%;
   will-change: background-position;
   border-radius: 12px;
@@ -1502,20 +1318,17 @@ exports[`SwapLineItem.tsx > preview exact in 1`] = `
 
 .c0 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c1 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
 }
 
 .c5 {
   cursor: auto;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
 }
 
 .c3 {
@@ -1528,7 +1341,7 @@ exports[`SwapLineItem.tsx > preview exact in 1`] = `
     style="display: contents;"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1560,7 +1373,7 @@ exports[`SwapLineItem.tsx > preview exact in 1`] = `
       </div>
     </div>
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1593,11 +1406,9 @@ exports[`SwapLineItem.tsx > preview exact in 1`] = `
 exports[`SwapLineItem.tsx > syncing 1`] = `
 <DocumentFragment>
   .c2 {
-  -webkit-animation: fAQEyV 1.5s infinite;
   animation: fAQEyV 1.5s infinite;
-  -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
-  background: linear-gradient( to left, #FFFFFF 25%, rgba(19,19,19,0.08) 50%, #FFFFFF 75% );
+  background: linear-gradient(     to left,     #FFFFFF 25%,     rgba(19, 19, 19, 0.08) 50%,     #FFFFFF 75%   );
   background-size: 400%;
   will-change: background-position;
   border-radius: 12px;
@@ -1607,15 +1418,12 @@ exports[`SwapLineItem.tsx > syncing 1`] = `
 
 .c0 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c1 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
 }
 
 <span
@@ -1623,7 +1431,7 @@ exports[`SwapLineItem.tsx > syncing 1`] = `
     style="display: contents;"
   >
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"
@@ -1643,7 +1451,7 @@ exports[`SwapLineItem.tsx > syncing 1`] = `
       </div>
     </div>
     <div
-      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _justifyContent-space-betwe3241 _width-10037"

@@ -29,9 +29,9 @@ export function Ticker({ itemPoint }: { itemPoint: ItemPoint<InteractiveToken> }
       position="absolute"
       flex={1}
       row
-      animation="100ms"
       opacity={0}
       x={0}
+      transition="all 0.1s ease-in-out"
       gap={20}
       $group-item-hover={{
         opacity: 1,

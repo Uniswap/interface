@@ -36,6 +36,7 @@ local.properties
 *.jks
 keystore.properties
 *.aab
+.kotlin/
 
 # node.js
 #
@@ -120,8 +121,16 @@ ios/WidgetsCore/Env.swift
 ios/OneSignalNotificationServiceExtension/Env.swift
 
 # Expo
-.expo/
+.expo
+dist/
+web-build/
 
 # Maestro E2E Scripts (compiled/generated)
 .maestro/scripts/dist/
 .maestro/scripts/performance/dist/
+
+# rnef (deprecated)
+.rnef/
+
+coverage/
+

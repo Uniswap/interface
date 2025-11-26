@@ -219,11 +219,11 @@ const resetMetroCache = async (): Promise<void> => {
 const buildForSimulator = async (config: BuildConfig): Promise<void> => {
   printBuildInfo(config, 'iOS Simulator')
 
-  const args = ['rnef', 'run:ios', '--scheme', 'Uniswap', '--configuration', config.configuration]
+  const args = ['expo', 'run:ios', '--scheme', 'Uniswap', '--configuration', config.configuration]
 
   if (config.simulator) {
     const simulatorName = config.simulator.split('(')[0]?.trim()
-    args.push(`--device="${simulatorName}"`)
+    args.push(`--device=${simulatorName}`)
   }
 
   log.info(`Command: bun run ${args.join(' ')}\n`)
@@ -241,13 +241,13 @@ const buildForDevice = async (config: BuildConfig): Promise<void> => {
   printBuildInfo(config, 'iOS Device')
 
   const args = [
-    'rnef',
+    'expo',
     'run:ios',
     '--scheme',
     config.scheme,
     '--configuration',
     config.configuration,
-    '--destination',
+    '--device',
     'device',
   ]
 

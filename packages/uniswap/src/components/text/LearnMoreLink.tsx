@@ -13,6 +13,7 @@ export const LearnMoreLink = ({
   textColor = '$accent1',
   centered = false,
   display,
+  onlyUseText = false,
   componentType = 'TouchableArea',
 }: {
   url: string
@@ -20,6 +21,7 @@ export const LearnMoreLink = ({
   textColor?: TextProps['color']
   centered?: boolean
   display?: TouchableAreaProps['display']
+  onlyUseText?: boolean
   componentType?: 'Button' | 'TouchableArea'
 }): JSX.Element => {
   const { t } = useTranslation()
@@ -36,6 +38,7 @@ export const LearnMoreLink = ({
 
   return (
     <TouchableTextLink
+      onlyUseText={onlyUseText}
       color={textColor as TouchableTextLinkProps['color']}
       link={url}
       textAlign={centered ? 'center' : undefined}

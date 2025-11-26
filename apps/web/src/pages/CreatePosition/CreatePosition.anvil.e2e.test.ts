@@ -25,129 +25,140 @@ function modifyGasLimit(data: { create: { gasLimit: string } }) {
   }
 }
 
-test.describe('Create position', () => {
-  test('Create position with full range', async ({ page, anvil, graphql }) => {
-    await stubTradingApiEndpoint({
-      page,
-      endpoint: uniswapUrls.tradingApiPaths.createLp,
-      modifyResponseData: modifyGasLimit,
-    })
-    await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
-    await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
-    await page.goto('/positions/create')
-    await page.getByRole('button', { name: 'Choose token' }).click()
-    await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
-    // eslint-disable-next-line
-    await page.getByTestId('token-option-1-USDT').first().click()
-    await page.getByRole('button', { name: 'Continue' }).click()
-    await graphql.waitForResponse('PoolPriceHistory')
-    await graphql.waitForResponse('AllV4Ticks')
-    await page.getByText('Full range').click()
-    await reviewAndCreatePosition({ page })
-  })
-
-  test('Create position with custom range', async ({ page, anvil, graphql }) => {
-    await stubTradingApiEndpoint({
-      page,
-      endpoint: uniswapUrls.tradingApiPaths.createLp,
-      modifyResponseData: modifyGasLimit,
-    })
-    await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
-    await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
-    await page.goto('/positions/create')
-    await page.getByRole('button', { name: 'Choose token' }).click()
-    await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
-    // eslint-disable-next-line
-    await page.getByTestId('token-option-1-USDT').first().click()
-    await page.getByRole('button', { name: 'Continue' }).click()
-    await graphql.waitForResponse('PoolPriceHistory')
-    await graphql.waitForResponse('AllV4Ticks')
-    await page.getByTestId(TestID.RangeInputIncrement + '-0').click()
-    await page.getByTestId(TestID.RangeInputDecrement + '-1').click()
-    await reviewAndCreatePosition({ page })
-  })
-
-  test.describe('v2 zero liquidity', () => {
-    test('should create a position', async ({ page, anvil }) => {
-      await anvil.setErc20Balance({ address: assume0xAddress(WETH_ADDRESS), balance: parseEther('100') })
-      await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
-      await anvil.setV2PoolReserves({
-        pairAddress: assume0xAddress(
-          computePairAddress({
-            factoryAddress: V2_FACTORY_ADDRESSES[UniverseChainId.Mainnet],
-            tokenA: WETH,
-            tokenB: USDT,
-          }),
-        ),
-        reserve0: 0n,
-        reserve1: 0n,
-      })
-      await page.goto(`/positions/create/v2?currencyA=${WETH_ADDRESS}&currencyB=${USDT.address}`)
-      await page.getByRole('button', { name: 'Continue' }).click()
-      await page.getByTestId(TestID.AmountInputIn).last().click()
-      await page.getByTestId(TestID.AmountInputIn).last().fill('10000')
-      await page.getByTestId(TestID.AmountInputIn).first().click()
-      await page.getByTestId(TestID.AmountInputIn).first().fill('1')
-      await page.getByRole('button', { name: 'Review' }).click()
-      await page.getByRole('button', { name: 'Create' }).click()
-      await expect(page.getByText('Creating position')).toBeVisible()
-    })
-  })
-
-  test.describe('v2 no pair', () => {
-    test('should create a pair', async ({ page, anvil }) => {
-      // random coins that are unlikely to have a v2 pair
-      const randomCoin1 = '0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c'
-      const randomCoin2 = '0x3081f70000e8CF8Be2aFCaE3Db6B9D9c796CaEc5'
-      await anvil.setErc20Balance({ address: assume0xAddress(WETH_ADDRESS), balance: parseEther('100') })
-      await page.goto(
-        `/positions/create/v2?currencyA=${randomCoin1}&currencyB=${randomCoin2}&chain=ethereum&fee=undefined&hook=undefined&priceRangeState={"priceInverted":false,"fullRange":false,"minPrice":"","maxPrice":"","initialPrice":"","inputMode":"price"}&depositState={"exactField":"TOKEN0","exactAmounts":{}}`,
-      )
-      await expect(page.getByText('Creating new pool').first()).toBeVisible()
-      await page.getByRole('button', { name: 'Continue' }).click()
-      await expect(page.url()).toContain('step=1')
-    })
-  })
-
-  test.describe('Custom fee tier', () => {
-    test('should create a position with a custom fee tier', async ({ page, anvil }) => {
+test.describe(
+  'Create position',
+  {
+    tag: '@team:apps-lp',
+    annotation: [
+      { type: 'DD_TAGS[team]', description: 'apps-lp' },
+      { type: 'DD_TAGS[test.type]', description: 'web-e2e' },
+    ],
+  },
+  () => {
+    test('Create position with full range', async ({ page, anvil, graphql }) => {
       await stubTradingApiEndpoint({
         page,
         endpoint: uniswapUrls.tradingApiPaths.createLp,
         modifyResponseData: modifyGasLimit,
       })
+      await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
-      await page.goto(`/positions/create?currencyA=NATIVE&currencyB=${USDT.address}`)
-      await page.getByRole('button', { name: 'More', exact: true }).click()
-      await page.getByText('Search or create other fee').click()
-      await page.getByRole('button', { name: 'Create new fee tier' }).click()
-      await page.getByPlaceholder('0').fill('3.1415')
-      await page.getByRole('button', { name: 'Create new fee tier' }).click()
-      await expect(page.getByText('New tier').first()).toBeVisible()
-      await expect(page.getByText('Creating new pool')).toBeVisible()
+      await page.goto('/positions/create')
+      await page.getByRole('button', { name: 'Choose token' }).click()
+      await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
+      // eslint-disable-next-line
+      await page.getByTestId('token-option-1-USDT').first().click()
       await page.getByRole('button', { name: 'Continue' }).click()
+      await graphql.waitForResponse('PoolPriceHistory')
+      await graphql.waitForResponse('AllV4Ticks')
+      await page.getByText('Full range').click()
       await reviewAndCreatePosition({ page })
     })
 
-    test('should create a position with a dynamic fee tier', async ({ page, anvil }) => {
-      const HOOK_ADDRESS = '0x09DEA99D714A3a19378e3D80D1ad22Ca46085080'
+    test('Create position with custom range', async ({ page, anvil, graphql }) => {
       await stubTradingApiEndpoint({
         page,
         endpoint: uniswapUrls.tradingApiPaths.createLp,
         modifyResponseData: modifyGasLimit,
       })
+      await graphql.intercept('SearchTokens', Mocks.Token.search_token_tether)
       await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
-      await page.goto(`/positions/create?currencyA=NATIVE&currencyB=${USDT.address}&hook=${HOOK_ADDRESS}`)
-      await page.getByRole('button', { name: 'More', exact: true }).click()
-      await page.getByText('Search or create other fee').click()
-      await page.getByText('Dynamic fee').click()
+      await page.goto('/positions/create')
+      await page.getByRole('button', { name: 'Choose token' }).click()
+      await page.getByTestId(TestID.ExploreSearchInput).fill(USDT.address)
+      // eslint-disable-next-line
+      await page.getByTestId('token-option-1-USDT').first().click()
       await page.getByRole('button', { name: 'Continue' }).click()
-      await page.getByRole('button', { name: 'Continue' }).click()
-      await page.getByRole('button', { name: 'Continue' }).click()
+      await graphql.waitForResponse('PoolPriceHistory')
+      await graphql.waitForResponse('AllV4Ticks')
+      await page.getByTestId(TestID.RangeInputIncrement + '-0').click()
+      await page.getByTestId(TestID.RangeInputDecrement + '-1').click()
       await reviewAndCreatePosition({ page })
     })
-  })
-})
+
+    test.describe('v2 zero liquidity', () => {
+      test('should create a position', async ({ page, anvil }) => {
+        await anvil.setErc20Balance({ address: assume0xAddress(WETH_ADDRESS), balance: parseEther('100') })
+        await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
+        await anvil.setV2PoolReserves({
+          pairAddress: assume0xAddress(
+            computePairAddress({
+              factoryAddress: V2_FACTORY_ADDRESSES[UniverseChainId.Mainnet],
+              tokenA: WETH,
+              tokenB: USDT,
+            }),
+          ),
+          reserve0: 0n,
+          reserve1: 0n,
+        })
+        await page.goto(`/positions/create/v2?currencyA=${WETH_ADDRESS}&currencyB=${USDT.address}`)
+        await page.getByRole('button', { name: 'Continue' }).click()
+        await page.getByTestId(TestID.AmountInputIn).last().click()
+        await page.getByTestId(TestID.AmountInputIn).last().fill('10000')
+        await page.getByTestId(TestID.AmountInputIn).first().click()
+        await page.getByTestId(TestID.AmountInputIn).first().fill('1')
+        await page.getByRole('button', { name: 'Review' }).click()
+        await page.getByRole('button', { name: 'Create' }).click()
+        await expect(page.getByText('Creating position')).toBeVisible()
+      })
+    })
+
+    test.describe('v2 no pair', () => {
+      test('should create a pair', async ({ page, anvil }) => {
+        // random coins that are unlikely to have a v2 pair
+        const randomCoin1 = '0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c'
+        const randomCoin2 = '0x3081f70000e8CF8Be2aFCaE3Db6B9D9c796CaEc5'
+
+        await anvil.setErc20Balance({ address: assume0xAddress(WETH_ADDRESS), balance: parseEther('100') })
+        await page.goto(
+          `/positions/create/v2?currencyA=${randomCoin1}&currencyB=${randomCoin2}&chain=ethereum&fee=undefined&hook=undefined&priceRangeState={"priceInverted":false,"fullRange":false,"minPrice":"","maxPrice":"","initialPrice":"","inputMode":"price"}&depositState={"exactField":"TOKEN0","exactAmounts":{}}`,
+        )
+        await expect(page.getByText('Creating new pool').first()).toBeVisible()
+        await page.getByRole('button', { name: 'Continue' }).click()
+        await expect(page.url()).toContain('step=1')
+      })
+    })
+
+    test.describe('Custom fee tier', () => {
+      test('should create a position with a custom fee tier', async ({ page, anvil }) => {
+        await stubTradingApiEndpoint({
+          page,
+          endpoint: uniswapUrls.tradingApiPaths.createLp,
+          modifyResponseData: modifyGasLimit,
+        })
+        await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
+        await page.goto(`/positions/create?currencyA=NATIVE&currencyB=${USDT.address}`)
+        await page.getByRole('button', { name: 'More', exact: true }).click()
+        await page.getByText('Search or create other fee').click()
+        await page.getByRole('button', { name: 'Create new fee tier' }).click()
+        await page.getByPlaceholder('0').fill('3.1415')
+        await page.getByRole('button', { name: 'Create new fee tier' }).click()
+        await expect(page.getByText('New tier').first()).toBeVisible()
+        await expect(page.getByText('Creating new pool')).toBeVisible()
+        await page.getByRole('button', { name: 'Continue' }).click()
+        await reviewAndCreatePosition({ page })
+      })
+
+      test('should create a position with a dynamic fee tier', async ({ page, anvil }) => {
+        const HOOK_ADDRESS = '0x09DEA99D714A3a19378e3D80D1ad22Ca46085080'
+        await stubTradingApiEndpoint({
+          page,
+          endpoint: uniswapUrls.tradingApiPaths.createLp,
+          modifyResponseData: modifyGasLimit,
+        })
+        await anvil.setErc20Balance({ address: assume0xAddress(USDT.address), balance: ONE_MILLION_USDT })
+        await page.goto(`/positions/create?currencyA=NATIVE&currencyB=${USDT.address}&hook=${HOOK_ADDRESS}`)
+        await page.getByRole('button', { name: 'More', exact: true }).click()
+        await page.getByText('Search or create other fee').click()
+        await page.getByText('Dynamic fee').click()
+        await page.getByRole('button', { name: 'Continue' }).click()
+        await page.getByRole('button', { name: 'Continue' }).click()
+        await page.getByRole('button', { name: 'Continue' }).click()
+        await reviewAndCreatePosition({ page })
+      })
+    })
+  },
+)
 
 async function reviewAndCreatePosition({ page }: { page: Page }) {
   await page.getByTestId(TestID.AmountInputIn).first().click()

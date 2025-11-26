@@ -51,7 +51,7 @@ export function OTPInput(): JSX.Element {
   const [failedAttemptCount, setFailedAttemptCount] = useState<number>(0)
   const [characterSequence, setCharacterSequence] = useState<CharacterSequence>(INITIAL_CHARACTER_SEQUENCE)
 
-  const inputRefs = useRef<RefObject<TextInput>[]>([])
+  const inputRefs = useRef<RefObject<TextInput | null>[]>([])
   inputRefs.current = new Array(6).fill(null).map((_, i) => inputRefs.current[i] || createRef<TextInput>())
 
   // Add all accounts from mnemonic.

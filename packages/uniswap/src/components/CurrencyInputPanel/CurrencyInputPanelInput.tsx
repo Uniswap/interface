@@ -87,7 +87,7 @@ export const CurrencyInputPanelInput = memo(
 
       const { value, color } = indicativeQuoteTextDisplay
 
-      const inputRef = useRef<TextInput>(null)
+      const inputRef = useRef<TextInput | null>(null)
 
       const { shakeStyle, triggerShakeAnimation } = shakeAnimation
 

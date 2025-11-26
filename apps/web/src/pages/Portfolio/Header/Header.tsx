@@ -5,13 +5,13 @@ import { PortfolioAddressDisplay } from 'pages/Portfolio/Header/PortfolioAddress
 import { PortfolioTabs } from 'pages/Portfolio/Header/Tabs'
 import { useShouldHeaderBeCompact } from 'pages/Portfolio/Header/useShouldHeaderBeCompact'
 import { PortfolioTab } from 'pages/Portfolio/types'
+import { buildPortfolioUrl } from 'pages/Portfolio/utils/portfolioUrls'
 import { useNavigate } from 'react-router'
 import { Flex, useMedia } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ElementName, InterfacePageName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useEvent } from 'utilities/src/react/hooks'
-import { getChainUrlParam } from 'utils/chainParams'
 
 const HEADER_TRANSITION = 'all 0.2s ease'
 
@@ -30,12 +30,6 @@ function getPageNameFromTab(tab: PortfolioTab | undefined): InterfacePageName {
     default:
       return InterfacePageName.PortfolioPage
   }
-}
-
-function buildPortfolioUrl(tab: PortfolioTab | undefined, chainId: UniverseChainId | undefined): string {
-  const chainUrlParam = chainId ? getChainUrlParam(chainId) : ''
-  const currentPath = tab === PortfolioTab.Overview ? '/portfolio' : `/portfolio/${tab}`
-  return `${currentPath}${chainId ? `?chain=${chainUrlParam}` : ''}`
 }
 
 interface PortfolioHeaderProps {

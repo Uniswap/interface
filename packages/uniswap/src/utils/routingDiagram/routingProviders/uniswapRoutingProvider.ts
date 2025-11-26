@@ -5,7 +5,7 @@ import { Pool as V3Pool } from '@uniswap/v3-sdk'
 import { Pool as V4Pool } from '@uniswap/v4-sdk'
 import { DYNAMIC_FEE_AMOUNT, V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isChained, isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import type { RoutingDiagramEntry, RoutingHop, RoutingProvider } from 'uniswap/src/utils/routingDiagram/types'
 
@@ -103,6 +103,23 @@ export const uniswapRoutingProvider: RoutingProvider = {
         protocolLabel,
       }
     })
+  },
+
+  getDescription: (t) => t('swap.routing.uniswapAutoRouter.description'),
+}
+
+export const uniswapChainedRoutingProvider: RoutingProvider = {
+  name: 'Uniswap API',
+  icon: undefined,
+  iconColor: '$neutral1',
+
+  getRoutingEntries: (trade: Trade): RoutingDiagramEntry[] => {
+    if (!isChained(trade)) {
+      throw new Error(`Invalid call to uniswapProvider.getRoutingEntries with non-chained trade: ${trade.routing}`)
+    }
+
+    // TODO: SWAP-770 - Implement chained routing diagram
+    return []
   },
 
   getDescription: (t) => t('swap.routing.uniswapAutoRouter.description'),

@@ -59,7 +59,7 @@ function _SelectorBaseList<T extends OnchainItemListOption>({
   contentContainerStyle,
 }: SelectorBaseListProps<T>): JSX.Element {
   const { t } = useTranslation()
-  const sectionListRef = useRef<OnchainItemListRef>()
+  const sectionListRef = useRef<OnchainItemListRef>(undefined)
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: +chainFilter
   useEffect(() => {

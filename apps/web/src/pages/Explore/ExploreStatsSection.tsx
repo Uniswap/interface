@@ -79,6 +79,8 @@ const ExploreStatsSection = ({ shouldHideStats = false }: { shouldHideStats?: bo
     protocolChangePercent.v4,
   ])
 
+  const visibleStats = media.md ? exploreStatsSectionData.slice(0, 2) : exploreStatsSectionData
+
   return (
     <AnimatePresence>
       {!shouldHideStats && (
@@ -91,7 +93,7 @@ const ExploreStatsSection = ({ shouldHideStats = false }: { shouldHideStats?: bo
           exitStyle={{ opacity: 0, y: -10 }}
           transition="opacity 0.3s ease, transform 0.3s ease"
         >
-          {exploreStatsSectionData.map((data, index) => (
+          {visibleStats.map((data, index) => (
             <Flex
               key={data.label}
               borderLeftWidth={index === 0 ? 0 : '$spacing1'}
@@ -100,7 +102,6 @@ const ExploreStatsSection = ({ shouldHideStats = false }: { shouldHideStats?: bo
               flex={1}
               cursor={data.protocolPopoverFormattedData ? 'pointer' : 'default'}
               transition="opacity 0.3s ease, transform 0.3s ease"
-              display={media.md && index > 1 ? 'none' : 'flex'}
             >
               {isTouchable || !data.protocolPopoverFormattedData ? (
                 <StatDisplay data={data} isLoading={isStatDataLoading} />
@@ -128,7 +129,7 @@ const StatDisplay = memo(({ data, isLoading, isHoverable }: StatDisplayProps) =>
   const { t } = useTranslation()
 
   return (
-    <Flex group gap="$spacing4" animation="simple" minHeight="$spacing60">
+    <Flex transition="all 0.1s ease-in-out" group gap="$spacing4" minHeight="$spacing60">
       <Text variant="body4" color="$neutral2" $group-hover={{ color: isHoverable ? '$neutral2Hovered' : '$neutral2' }}>
         {data.label}
       </Text>

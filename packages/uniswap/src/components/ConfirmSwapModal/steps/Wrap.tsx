@@ -4,7 +4,12 @@ import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { WrapTransactionStep } from 'uniswap/src/features/transactions/steps/wrap'
 
-export function WrapTransactionStepRow({ step, status }: StepRowProps<WrapTransactionStep>): JSX.Element {
+export function WrapTransactionStepRow({
+  step,
+  status,
+  currentStepIndex,
+  totalStepsCount,
+}: StepRowProps<WrapTransactionStep>): JSX.Element {
   const { t } = useTranslation()
 
   const { amount } = step
@@ -27,6 +32,8 @@ export function WrapTransactionStepRow({ step, status }: StepRowProps<WrapTransa
         text: t('common.whyWrap', { symbol }),
       }}
       status={status}
+      currentStepIndex={currentStepIndex}
+      totalStepsCount={totalStepsCount}
     />
   )
 }

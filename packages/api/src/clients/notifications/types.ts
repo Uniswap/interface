@@ -1,5 +1,4 @@
 import type { PlainMessage } from '@bufbuild/protobuf'
-import type { QueryClient } from '@tanstack/react-query'
 import {
   BackgroundType,
   Button,
@@ -16,7 +15,6 @@ import { FetchClient } from '@universe/api/src/clients/base/types'
 
 export interface NotificationsClientContext {
   fetchClient: FetchClient
-  queryClient: QueryClient
   getApiPathPrefix?: () => string
 }
 

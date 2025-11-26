@@ -1,8 +1,8 @@
-import { memo, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import type { View } from 'react-native'
+import React, { memo, PropsWithChildren, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import type { LayoutChangeEvent, View } from 'react-native'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { GestureResponderEvent } from 'react-native'
-import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
+import Animated, { useSharedValue } from 'react-native-reanimated'
 import {
   AnimatePresence,
   Flex,
@@ -11,6 +11,7 @@ import {
   Portal,
   styled,
   TouchableArea,
+  TouchableAreaProps,
   useIsDarkMode,
 } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -22,10 +23,48 @@ import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { isAndroid, isTouchable, isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { executeWithFrameDelay } from 'utilities/src/react/delayUtils'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useTimeout } from 'utilities/src/time/timing'
 
 const DEFAULT_MIN_WIDTH = 225
 const MIN_HEIGHT = 250
+
+const enterStyle = { y: -20, opacity: 0 }
+const exitStyle = { y: -10, opacity: 0 }
+
+const contentContainerStyle = {
+  padding: spacing.spacing8,
+}
+
+const MenuOptionItem = ({
+  onPress,
+  closeOnSelect,
+  handleClose,
+  render,
+  testID,
+}: {
+  onPress: () => void
+  closeOnSelect: boolean
+  handleClose: DropdownContentProps['handleClose']
+  render: () => React.ReactNode
+  testID: string
+}): JSX.Element => {
+  const handleOnPress: TouchableAreaProps['onPress'] = useEvent((event) => {
+    executeWithFrameDelay({
+      firstAction: () => {
+        if (closeOnSelect) {
+          handleClose?.(event)
+        }
+      },
+      secondAction: onPress,
+    })
+  })
+  return (
+    <TouchableArea hoverable borderRadius="$rounded8" onPress={handleOnPress}>
+      <Flex testID={testID}>{render()}</Flex>
+    </TouchableArea>
+  )
+}
 
 type LayoutMeasurements = {
   x: number
@@ -192,13 +231,22 @@ const ActionSheetBackdropWithContent = memo(function ActionSheetBackdropWithCont
   const [shouldRender, setShouldRender] = useState(false)
   useTimeout(() => setShouldRender(true), 0)
 
+  const isSheetOpenMemo = useMemo(() => ({ isOpen }), [isOpen])
+
   if (!shouldRender) {
     return null
   }
 
+  const zIndex =
+    typeof styles?.dropdownZIndex === 'number'
+      ? styles.dropdownZIndex
+      : typeof styles?.dropdownZIndex === 'boolean'
+        ? Number(styles.dropdownZIndex)
+        : zIndexes.popover
+
   return (
-    <Portal zIndex={styles?.dropdownZIndex || zIndexes.popover}>
-      <AnimatePresence custom={{ isOpen }}>
+    <Portal zIndex={zIndex}>
+      <AnimatePresence custom={isSheetOpenMemo}>
         {toggleMeasurements && (
           <>
             <OverKeyboardContent visible={isOpen}>
@@ -267,14 +315,6 @@ function DropdownContent({
   const scrollOffset = useSharedValue(0)
   const [contentHeight, setContentHeight] = useState(0)
 
-  const scrollHandler = useAnimatedScrollHandler(
-    (event) => (scrollOffset.value = event.contentOffset.y),
-    // There seems to be a bug in `reanimated` that's causing the dependency array to not be automatically injected by the babel plugin,
-    // but it causes a crash when manually added on web. This is a workaround until the bug is fixed.
-    // The performance impact of not having the array is minimal on web, so this should be fine for now.
-    isWebPlatform ? undefined : [scrollOffset],
-  )
-
   const containerProps = useMemo<FlexProps>(() => {
     if (alignment === 'left') {
       return {
@@ -334,6 +374,10 @@ function DropdownContent({
     return { top }
   }, [toggleMeasurements.y, windowScrollY, fullHeight, toggleMeasurements.height])
 
+  const handleOnLayout = useCallback((event: LayoutChangeEvent) => {
+    setContentHeight(event.nativeEvent.layout.height)
+  }, [])
+
   return (
     <TouchableWhenOpen
       animation="fast"
@@ -343,8 +387,8 @@ function DropdownContent({
       testID="dropdown-content"
       {...position}
       {...containerProps}
-      enterStyle={{ y: -20, opacity: 0 }}
-      exitStyle={{ y: -10, opacity: 0 }}
+      enterStyle={enterStyle}
+      exitStyle={exitStyle}
     >
       <BaseCard.Shadow
         backgroundColor="$surface1"
@@ -356,42 +400,24 @@ function DropdownContent({
       >
         <Flex row maxHeight={maxHeight}>
           <Animated.ScrollView
-            contentContainerStyle={{
-              padding: spacing.spacing8,
-            }}
+            contentContainerStyle={contentContainerStyle}
             scrollEnabled={overflowsContainer}
             scrollEventThrottle={16}
             showsVerticalScrollIndicator={isWebPlatform}
-            onScroll={scrollHandler}
+            onScroll={(event) => {
+              scrollOffset.value = event.nativeEvent.contentOffset.y
+            }}
           >
-            <Flex
-              gap={dropdownGap}
-              onLayout={({
-                nativeEvent: {
-                  layout: { height },
-                },
-              }) => {
-                setContentHeight(height)
-              }}
-            >
-              {options.map(({ key, onPress, render }: MenuItemProp) => (
-                <TouchableArea
+            <Flex gap={dropdownGap} onLayout={handleOnLayout}>
+              {options.map(({ key, onPress, render }) => (
+                <MenuOptionItem
                   key={key}
-                  hoverable
-                  borderRadius="$rounded8"
-                  onPress={(event) => {
-                    executeWithFrameDelay({
-                      firstAction: () => {
-                        if (closeOnSelect) {
-                          handleClose?.(event)
-                        }
-                      },
-                      secondAction: onPress,
-                    })
-                  }}
-                >
-                  <Flex testID={key}>{render()}</Flex>
-                </TouchableArea>
+                  testID={key}
+                  closeOnSelect={closeOnSelect}
+                  handleClose={handleClose}
+                  render={render}
+                  onPress={onPress}
+                />
               ))}
             </Flex>
           </Animated.ScrollView>
@@ -418,6 +444,10 @@ type BackdropProps = {
   handleClose?: FlexProps['onPress']
 }
 
+const backdropEnterExitStyle = {
+  opacity: 0,
+}
+
 function Backdrop({ handleClose, opacity: opacityProp }: BackdropProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
 
@@ -427,12 +457,8 @@ function Backdrop({ handleClose, opacity: opacityProp }: BackdropProps): JSX.Ele
     <TouchableWhenOpen
       animation="100ms"
       backgroundColor="$black"
-      enterStyle={{
-        opacity: 0,
-      }}
-      exitStyle={{
-        opacity: 0,
-      }}
+      enterStyle={backdropEnterExitStyle}
+      exitStyle={backdropEnterExitStyle}
       flex={1}
       inset={0}
       opacity={opacity}

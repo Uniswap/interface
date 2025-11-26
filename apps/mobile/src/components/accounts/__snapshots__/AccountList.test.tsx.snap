@@ -113,8 +113,6 @@ exports[`AccountList renders without error 1`] = `
             }
           >
             <View
-              onBlur={[Function]}
-              onFocus={[Function]}
               style={
                 {
                   "alignItems": "flex-start",
@@ -125,8 +123,6 @@ exports[`AccountList renders without error 1`] = `
               testID="account-item/0x82D56A352367453f74FC0dC7B071b311da373Fa6"
             >
               <View
-                onBlur={[Function]}
-                onFocus={[Function]}
                 style={
                   {
                     "flex": 1,
@@ -135,8 +131,6 @@ exports[`AccountList renders without error 1`] = `
                 }
               >
                 <View
-                  onBlur={[Function]}
-                  onFocus={[Function]}
                   onLayout={[Function]}
                   style={
                     {
@@ -148,8 +142,6 @@ exports[`AccountList renders without error 1`] = `
                   }
                 >
                   <View
-                    onBlur={[Function]}
-                    onFocus={[Function]}
                     style={
                       {
                         "flexDirection": "column",
@@ -158,46 +150,19 @@ exports[`AccountList renders without error 1`] = `
                     }
                   >
                     <View
-                      onBlur={[Function]}
-                      onFocus={[Function]}
                       style={
                         {
-                          "backgroundColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
-                          "borderBottomColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
+                          "backgroundColor": "transparent",
+                          "borderBottomColor": "transparent",
                           "borderBottomLeftRadius": 999999,
                           "borderBottomRightRadius": 999999,
                           "borderBottomWidth": 0,
-                          "borderLeftColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
+                          "borderLeftColor": "transparent",
                           "borderLeftWidth": 0,
-                          "borderRightColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
+                          "borderRightColor": "transparent",
                           "borderRightWidth": 0,
                           "borderStyle": "solid",
-                          "borderTopColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
+                          "borderTopColor": "transparent",
                           "borderTopLeftRadius": 999999,
                           "borderTopRightRadius": 999999,
                           "borderTopWidth": 0,
@@ -210,8 +175,6 @@ exports[`AccountList renders without error 1`] = `
                       testID="account-icon"
                     >
                       <View
-                        onBlur={[Function]}
-                        onFocus={[Function]}
                         style={
                           [
                             {
@@ -224,8 +187,6 @@ exports[`AccountList renders without error 1`] = `
                         }
                       >
                         <View
-                          onBlur={[Function]}
-                          onFocus={[Function]}
                           style={
                             {
                               "flexDirection": "column",
@@ -295,8 +256,6 @@ exports[`AccountList renders without error 1`] = `
                     </View>
                   </View>
                   <View
-                    onBlur={[Function]}
-                    onFocus={[Function]}
                     style={
                       {
                         "flexDirection": "column",
@@ -306,8 +265,6 @@ exports[`AccountList renders without error 1`] = `
                     }
                   >
                     <View
-                      onBlur={[Function]}
-                      onFocus={[Function]}
                       style={
                         {
                           "flexDirection": "row",
@@ -316,8 +273,6 @@ exports[`AccountList renders without error 1`] = `
                       }
                     >
                       <View
-                        onBlur={[Function]}
-                        onFocus={[Function]}
                         style={
                           {
                             "alignItems": "center",
@@ -333,16 +288,9 @@ exports[`AccountList renders without error 1`] = `
                           ellipsizeMode="tail"
                           maxFontSizeMultiplier={1.4}
                           numberOfLines={1}
-                          onBlur={[Function]}
-                          onFocus={[Function]}
                           style={
                             {
-                              "color": {
-                                "dynamic": {
-                                  "dark": "#FFFFFF",
-                                  "light": "#131313",
-                                },
-                              },
+                              "color": "#131313",
                               "flexShrink": 1,
                               "fontFamily": "Basel Grotesk",
                               "fontSize": 19,
@@ -356,17 +304,10 @@ exports[`AccountList renders without error 1`] = `
                       </View>
                     </View>
                     <View
-                      onBlur={[Function]}
-                      onFocus={[Function]}
                       style={
                         {
                           "alignItems": "center",
-                          "backgroundColor": {
-                            "dynamic": {
-                              "dark": "transparent",
-                              "light": "transparent",
-                            },
-                          },
+                          "backgroundColor": "transparent",
                           "borderBottomLeftRadius": 999999,
                           "borderBottomRightRadius": 999999,
                           "borderTopLeftRadius": 999999,
@@ -384,16 +325,9 @@ exports[`AccountList renders without error 1`] = `
                       <Text
                         allowFontScaling={true}
                         maxFontSizeMultiplier={1.4}
-                        onBlur={[Function]}
-                        onFocus={[Function]}
                         style={
                           {
-                            "color": {
-                              "dynamic": {
-                                "dark": "rgba(255, 255, 255, 0.65)",
-                                "light": "rgba(19, 19, 19, 0.63)",
-                              },
-                            },
+                            "color": "rgba(19, 19, 19, 0.63)",
                             "fontFamily": "Basel Grotesk",
                             "fontSize": 15,
                             "fontWeight": "400",
@@ -411,16 +345,9 @@ exports[`AccountList renders without error 1`] = `
               <Text
                 allowFontScaling={true}
                 maxFontSizeMultiplier={1.4}
-                onBlur={[Function]}
-                onFocus={[Function]}
                 style={
                   {
-                    "color": {
-                      "dynamic": {
-                        "dark": "rgba(255, 255, 255, 0.65)",
-                        "light": "rgba(19, 19, 19, 0.63)",
-                      },
-                    },
+                    "color": "rgba(19, 19, 19, 0.63)",
                     "fontFamily": "Basel Grotesk",
                     "fontSize": 17,
                     "fontWeight": "400",

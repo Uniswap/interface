@@ -9,11 +9,7 @@ import { ApolloProvider } from '@apollo/client'
 import { datadogRum } from '@datadog/browser-rum'
 import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
 import type { StatsigUser } from '@universe/gating'
-import {
-  getIsSessionServiceEnabled,
-  getIsSessionUpgradeAutoEnabled,
-  useIsSessionServiceEnabled,
-} from '@universe/gating'
+import { getIsSessionServiceEnabled, getIsSessionUpgradeAutoEnabled } from '@universe/gating'
 import { createChallengeSolverService, createSessionInitializationService } from '@universe/sessions'
 import { QueryClientPersistProvider } from 'components/PersistQueryClient'
 import { createWeb3Provider, WalletCapabilitiesEffects } from 'components/Web3Provider/createWeb3Provider'
@@ -26,7 +22,7 @@ import { ExternalWalletProvider } from 'features/wallet/providers/ExternalWallet
 import { useDeferredComponent } from 'hooks/useDeferredComponent'
 import { LanguageProvider } from 'i18n/LanguageProvider'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
-import { WebNotificationSystemManager } from 'notification-system/WebNotificationSystem'
+import { WebNotificationServiceManager } from 'notification-service/WebNotificationService'
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
 import App from 'pages/App'
 import type { PropsWithChildren } from 'react'
@@ -96,7 +92,6 @@ const provideSessionInitService = () =>
 
 function Updaters() {
   const location = useLocation()
-  const isSessionServiceEnabled = useIsSessionServiceEnabled()
 
   const ListsUpdater = useDeferredComponent(loadListsUpdater)
   const SystemThemeUpdater = useDeferredComponent(loadSystemThemeUpdater)
@@ -121,7 +116,10 @@ function Updaters() {
       {FiatOnRampTransactionsUpdater && <FiatOnRampTransactionsUpdater />}
       {WebAccountsStoreUpdater && <WebAccountsStoreUpdater />}
       <AccountsStoreDevTool />
-      <ApiInit getSessionInitService={provideSessionInitService} isSessionServiceEnabled={isSessionServiceEnabled} />
+      <ApiInit
+        getSessionInitService={provideSessionInitService}
+        getIsSessionServiceEnabled={getIsSessionServiceEnabled}
+      />
     </>
   )
 }
@@ -202,7 +200,7 @@ const RootApp = (): JSX.Element => {
                                         <ThemeProvider>
                                           <TamaguiProvider>
                                             <PortalProvider>
-                                              <WebNotificationSystemManager />
+                                              <WebNotificationServiceManager />
                                               <ThemedGlobalStyle />
                                               <App />
                                             </PortalProvider>

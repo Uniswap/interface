@@ -192,6 +192,7 @@ function TokenWarningModalContent({
             <Text color="$neutral2" textAlign="center" variant="body3">
               {`${subtitleText} `}
               <LearnMoreLink
+                onlyUseText
                 display="inline"
                 textColor="$neutral1"
                 textVariant="buttonLabel3"

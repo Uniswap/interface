@@ -361,6 +361,8 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
 
   // True if this is the final step in a multi-step flow (e.g., chained actions)
   isFinalStep?: boolean
+  // Timestamp when the swap flow started (from Redux timing.swap.startTimestamp)
+  swapStartTimestamp?: number
 }
 
 export interface BridgeTransactionInfo extends BaseTransactionInfo {
@@ -375,6 +377,8 @@ export interface BridgeTransactionInfo extends BaseTransactionInfo {
   depositConfirmed?: boolean // interface only
   // True if this is the final step in a multi-step flow (e.g., chained actions)
   isFinalStep?: boolean
+  // Timestamp when the swap flow started (from Redux timing.swap.startTimestamp)
+  swapStartTimestamp?: number
 }
 
 export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {
@@ -602,6 +606,32 @@ export type TransactionTypeInfo =
   | MigrateV2LiquidityToV3TransactionInfo
   | MigrateV3LiquidityToV4TransactionInfo
   | LpIncentivesClaimTransactionInfo
+
+/**
+ * Typeguard to check if a `TransactionTypeInfo` has a specific attribute.
+ * Useful when you need to access an attribute that is only in a subset of `TransactionTypeInfo`s.
+ */
+export function transactionTypeInfoHasAttribute<K extends AllKeysOf<TransactionTypeInfo>>(
+  typeInfo: TransactionTypeInfo,
+  attribute: K,
+): typeInfo is TransactionTypeInfo & Record<K, ExtractPropertyType<TransactionTypeInfo, K>> {
+  return attribute in typeInfo
+}
+
+/**
+ * Extracts an attribute from a `TransactionTypeInfo` if it exists, otherwise returns undefined.
+ * Useful when you need to safely access an attribute that is only in a subset of `TransactionTypeInfo`s.
+ */
+export function extractTransactionTypeInfoAttribute<K extends AllKeysOf<TransactionTypeInfo>>(
+  typeInfo: TransactionTypeInfo,
+  attribute: K,
+): ExtractPropertyType<TransactionTypeInfo, K> | undefined {
+  if (transactionTypeInfoHasAttribute(typeInfo, attribute)) {
+    // Type assertion is safe here because the type guard verifies the attribute exists
+    return (typeInfo as Record<K, unknown>)[attribute] as ExtractPropertyType<TransactionTypeInfo, K>
+  }
+  return undefined
+}
 
 export enum TransactionDetailsType {
   Transaction = 'TransactionDetails',

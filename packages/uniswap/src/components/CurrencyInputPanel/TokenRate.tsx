@@ -21,8 +21,8 @@ export function TokenRate({ initialInverse = false }: { initialInverse?: boolean
         '$group-hover': {
           opacity: 1,
         },
+        animation: null,
         opacity: 0,
-        animation: 'simple',
       })}
       style={{
         // prevents highlight on double click (useless since the text changes on click anyways)

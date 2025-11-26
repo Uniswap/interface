@@ -1,4 +1,5 @@
-import { useCallback, useMemo } from 'react'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
@@ -12,9 +13,14 @@ import {
   ParsedCall,
   SendCallsRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { TransactionType, TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { BatchedRequestDetailsContent } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
+import { DappSendCallsScanningContent } from 'wallet/src/components/dappRequests/DappSendCallsScanningContent'
+import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
+import { shouldDisableConfirm } from 'wallet/src/features/dappRequests/utils/riskUtils'
 
 interface SendCallsRequestContentProps {
   dappRequest: SendCallsRequest
@@ -24,7 +30,73 @@ interface SendCallsRequestContentProps {
   onCancel: () => Promise<void>
 }
 
-function SendCallsRequestContent({
+/**
+ * Implementation with Blockaid scanning
+ */
+function SendCallsRequestContentWithScanning({
+  dappRequest,
+  transactionGasFeeResult,
+  showSmartWalletActivation,
+  onConfirm,
+  onCancel,
+}: SendCallsRequestContentProps): JSX.Element {
+  const { t } = useTranslation()
+  const { dappUrl, currentAccount } = useDappRequestQueueContext()
+  const lastChainId = useDappLastChainId(dappUrl)
+  const chainId = toSupportedChainId(dappRequest.chainId) ?? lastChainId
+  const { value: confirmedRisk, setValue: setConfirmedRisk } = useBooleanState(false)
+  // Initialize with null to indicate scan hasn't completed yet
+  const [riskLevel, setRiskLevel] = useState<TransactionRiskLevel | null>(null)
+
+  if (!chainId) {
+    return (
+      <SendCallsRequestContentLegacy
+        dappRequest={dappRequest}
+        transactionGasFeeResult={transactionGasFeeResult}
+        showSmartWalletActivation={showSmartWalletActivation}
+        onConfirm={onConfirm}
+        onCancel={onCancel}
+      />
+    )
+  }
+
+  const disableConfirm = shouldDisableConfirm({
+    riskLevel,
+    confirmedRisk,
+    hasGasFee: !!transactionGasFeeResult.value,
+  })
+
+  return (
+    <DappRequestContent
+      chainId={chainId}
+      confirmText={t('common.button.confirm')}
+      title={t('dapp.request.base.title')}
+      transactionGasFeeResult={transactionGasFeeResult}
+      disableConfirm={disableConfirm}
+      onCancel={onCancel}
+      onConfirm={() => onConfirm()}
+      showAddressFooter={false}
+    >
+      <DappSendCallsScanningContent
+        chainId={chainId}
+        account={currentAccount.address}
+        calls={dappRequest.calls}
+        dappUrl={dappUrl}
+        gasFee={transactionGasFeeResult}
+        requestMethod={dappRequest.type}
+        showSmartWalletActivation={showSmartWalletActivation}
+        confirmedRisk={confirmedRisk}
+        onConfirmRisk={setConfirmedRisk}
+        onRiskLevelChange={setRiskLevel}
+      />
+    </DappRequestContent>
+  )
+}
+
+/**
+ * Legacy implementation (existing behavior when feature flag is off)
+ */
+function SendCallsRequestContentLegacy({
   dappRequest,
   transactionGasFeeResult,
   showSmartWalletActivation,
@@ -56,6 +128,7 @@ function SendCallsRequestContent({
 export function SendCallsRequestHandler({ request }: { request: DappRequestStoreItemForSendCallsTxn }): JSX.Element {
   const { dappUrl, currentAccount, onConfirm, onCancel } = useDappRequestQueueContext()
   const chainId = useDappLastChainId(dappUrl) ?? request.dappInfo?.lastChainId
+  const blockaidTransactionScanning = useFeatureFlag(FeatureFlags.BlockaidTransactionScanning)
 
   const { dappRequest } = request
 
@@ -92,7 +165,15 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
     await onCancel(request)
   }, [onCancel, request])
 
-  return parsedSwapCalldata ? (
+  return blockaidTransactionScanning ? (
+    <SendCallsRequestContentWithScanning
+      dappRequest={dappRequest}
+      transactionGasFeeResult={gasFeeResult}
+      showSmartWalletActivation={showSmartWalletActivation}
+      onCancel={onCancelRequest}
+      onConfirm={onConfirmRequest}
+    />
+  ) : parsedSwapCalldata ? (
     <SwapRequestContent
       parsedCalldata={parsedSwapCalldata}
       transactionGasFeeResult={gasFeeResult}
@@ -101,12 +182,12 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
       onConfirm={onConfirmRequest}
     />
   ) : (
-    <SendCallsRequestContent
+    <SendCallsRequestContentLegacy
       dappRequest={dappRequest}
       transactionGasFeeResult={gasFeeResult}
       showSmartWalletActivation={showSmartWalletActivation}
-      onCancel={onCancelRequest}
       onConfirm={onConfirmRequest}
+      onCancel={onCancelRequest}
     />
   )
 }

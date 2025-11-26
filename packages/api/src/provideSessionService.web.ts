@@ -22,7 +22,6 @@ function provideSessionService(ctx: {
     return createNoopSessionService()
   }
   if (isWebApp) {
-    // Web doesn't have a session service (cookies are automatically handled by the browser)
     return getWebAppSessionService(ctx)
   }
   return getExtensionSessionService(ctx)

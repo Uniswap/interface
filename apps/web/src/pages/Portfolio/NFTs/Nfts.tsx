@@ -11,6 +11,7 @@ import { Flex, Text, useMedia } from 'ui/src'
 import { NftsList } from 'uniswap/src/components/nfts/NftsList'
 import { NftsListEmptyState } from 'uniswap/src/components/nfts/NftsListEmptyState'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { ElementName, InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -37,10 +38,11 @@ export function PortfolioNfts(): JSX.Element {
   const media = useMedia()
   const navigate = useNavigate()
   // TODO(PORT-485): Solana NFTs are not supported yet, add empty state for NFTs when connected to a Solana wallet only
-  const { evmAddress } = usePortfolioAddresses()
+  const { evmAddress, svmAddress } = usePortfolioAddresses()
   const { chainId: selectedChainId } = usePortfolioRoutes()
   const nftsContainerRef = useRef<HTMLDivElement>(null)
   const owner = assume0xAddress(evmAddress) ?? ''
+  const isSolanaOnlyWallet = Boolean(svmAddress && !evmAddress)
 
   const [search, setSearch] = useState('')
   const [filteredShownCount, setFilteredShownCount] = useState<number>(0)
@@ -92,6 +94,11 @@ export function PortfolioNfts(): JSX.Element {
   // Custom empty state for chain filtering
   const chainFilterEmptyState = useMemo(() => {
     if (!selectedChainId) {
+      if (isSolanaOnlyWallet) {
+        const solanaChainName = getChainLabel(UniverseChainId.Solana)
+        const title = t('tokens.nfts.list.notSupported.title', { chainName: solanaChainName })
+        return <NftsListEmptyState description={null} title={title} />
+      }
       return undefined
     }
     const chainName = getChainLabel(selectedChainId)
@@ -108,7 +115,7 @@ export function PortfolioNfts(): JSX.Element {
         title={title}
       />
     )
-  }, [handleShowAllNetworks, selectedChainId, t])
+  }, [handleShowAllNetworks, selectedChainId, t, isSolanaOnlyWallet])
 
   return (
     <Trace logImpression page={InterfacePageName.PortfolioNftsPage}>
@@ -145,7 +152,7 @@ export function PortfolioNfts(): JSX.Element {
               onFilteredCountsChange={handleFilteredCountsChange}
               skip={!owner}
               renderExpandoRow={renderExpandoRow}
-              customEmptyState={selectedChainId ? chainFilterEmptyState : undefined}
+              customEmptyState={selectedChainId || isSolanaOnlyWallet ? chainFilterEmptyState : undefined}
             />
           </Flex>
         </Trace>

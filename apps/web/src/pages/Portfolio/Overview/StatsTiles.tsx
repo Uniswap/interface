@@ -10,20 +10,6 @@ import { NumberType } from 'utilities/src/format/types'
 const BORDER_COLOR = '$surface3'
 const BORDER_WIDTH = 1
 
-const StatsContainer = styled(Flex, {
-  borderWidth: BORDER_WIDTH,
-  borderColor: BORDER_COLOR,
-  borderRadius: '$rounded16',
-  overflow: 'hidden',
-  variants: {
-    singleRow: {
-      true: {
-        width: '50%',
-      },
-    },
-  } as const,
-})
-
 const StatsGroup1 = styled(Flex, {
   flexDirection: 'row',
   variants: {
@@ -49,7 +35,13 @@ export const OverviewStatsTiles = memo(function OverviewStatsTiles({ activityDat
   const hasVolumeData = totalVolumeUSD > 0
 
   return (
-    <StatsContainer singleRow={isSingleRow}>
+    <Flex
+      borderWidth={BORDER_WIDTH}
+      borderColor={BORDER_COLOR}
+      borderRadius="$rounded16"
+      overflow="hidden"
+      width="100%"
+    >
       <StatsGroup1 singleRow={isSingleRow}>
         <Flex borderRightWidth={BORDER_WIDTH} borderColor={BORDER_COLOR} padding="$spacing16" width="50%">
           <Text variant="body3" color="$neutral2">
@@ -69,6 +61,6 @@ export const OverviewStatsTiles = memo(function OverviewStatsTiles({ activityDat
           />
         </Flex>
       </StatsGroup1>
-    </StatsContainer>
+    </Flex>
   )
 })

@@ -5,20 +5,46 @@ exports[`AnimatedText renders without error 1`] = `
   allowFontScaling={true}
   collapsable={false}
   editable={false}
+  jestAnimatedProps={
+    {
+      "value": {
+        "text": "Rendered",
+      },
+    }
+  }
   jestAnimatedStyle={
     {
       "value": {},
     }
   }
+  jestInlineStyle={
+    [
+      {
+        "padding": 0,
+      },
+      {
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 17,
+        "fontWeight": "400",
+        "lineHeight": 22.1,
+      },
+      undefined,
+    ]
+  }
   maxFontSizeMultiplier={1.4}
   style={
-    {
-      "fontFamily": "Basel Grotesk",
-      "fontSize": 17,
-      "fontWeight": "400",
-      "lineHeight": 22.1,
-      "padding": 0,
-    }
+    [
+      {
+        "padding": 0,
+      },
+      {
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 17,
+        "fontWeight": "400",
+        "lineHeight": 22.1,
+      },
+      undefined,
+    ]
   }
   text="Rendered"
   underlineColorAndroid="transparent"

@@ -42,7 +42,7 @@ export function TokensTable({ visible, hidden, loading, refetching, error }: Tok
     // - Each TokensTableInner uses externalScrollSync=true to skip its own ScrollSync wrapper
     // - Both tables use ScrollSyncPane with scrollGroup="portfolio-tokens" for coordination
     // - DO NOT remove this outer ScrollSync wrapper without updating the Table components
-    <ScrollSync horizontal>
+    <ScrollSync horizontal vertical={false}>
       <Flex gap="$spacing16">
         <TokensTableInner tokenData={visible} loading={tableLoading} error={error} />
         {hidden.length > 0 && (

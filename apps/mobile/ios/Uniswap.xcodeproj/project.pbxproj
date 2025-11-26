@@ -137,7 +137,6 @@
 		0DE251482C13B69D005F47F9 /* OnRampServiceProvider.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE251452C13B69D005F47F9 /* OnRampServiceProvider.graphql.swift */; };
 		0DE251492C13B69D005F47F9 /* OnRampTransactionDetails.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0DE251462C13B69D005F47F9 /* OnRampTransactionDetails.graphql.swift */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
-		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		1440B371A1C9A42F3E91DAAE /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF5F26A06553EFDD4D99214 /* ExpoModulesProvider.swift */; };
 		147F4DFD43CE86324A066003 /* FeedTransactionListQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EFADDBB38BB9261933C1349 /* FeedTransactionListQuery.graphql.swift */; };
 		15193A0A3CE80FF72AAB54B4 /* SafetyLevel.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F8093091A9E5FC0D6284BA /* SafetyLevel.graphql.swift */; };
@@ -212,6 +211,7 @@
 		845327D60EFBB850189D6AB3 /* Amount.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C3461E088654B80ABE3DE7 /* Amount.graphql.swift */; };
 		86038259E487A108DDC2948B /* Image.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C9047B981FA322A727947F7 /* Image.graphql.swift */; };
 		8971E73E041A6283E2684481 /* TokenProject.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8856DFFC7FDC9BF105B0B4E3 /* TokenProject.graphql.swift */; };
+		8B2A92172EB3E78E00990413 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B2A92162EB3E78E00990413 /* AppDelegate.swift */; };
 		8BCFF1F648887F78894F1071 /* ContractInput.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED050A208757F137DBDA57D /* ContractInput.graphql.swift */; };
 		8D85F349FEF81A52FB93EAAB /* AssetChange.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4C849A7805FCCEE8C8C3E6 /* AssetChange.graphql.swift */; };
 		8E6DA65AC5CAE9F9A67F9E38 /* TopTokensQuery.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 243576FAC8D2801F9D99ECC9 /* TopTokensQuery.graphql.swift */; };
@@ -268,7 +268,6 @@
 		9FCEBF002A95A8E00079EDDB /* RNWalletConnect.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FCEBEFE2A95A8E00079EDDB /* RNWalletConnect.m */; };
 		9FCEBF012A95A8E00079EDDB /* RNWalletConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FCEBEFF2A95A8E00079EDDB /* RNWalletConnect.swift */; };
 		9FCEBF042A95A99C0079EDDB /* RCTThemeModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FCEBF032A95A99B0079EDDB /* RCTThemeModule.m */; };
-		9FEC9B8B2A858CF1003CD019 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 9FEC9B8A2A858CF1003CD019 /* AppDelegate.m */; };
 		A250CF455F6CEFB64ABFC277 /* HomeScreenTokenParts.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB772B265A35BFBC3A7761AD /* HomeScreenTokenParts.graphql.swift */; };
 		A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */; };
 		A3551F2CAC134AD49D40927F /* Basel-Grotesk-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = 6F33E8069B7B40AFB313B8B0 /* Basel-Grotesk-Book.otf */; };
@@ -588,10 +587,8 @@
 		1193B3A845BC3BE8CAA00D01 /* Pods-OneSignalNotificationServiceExtension.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-OneSignalNotificationServiceExtension.release.xcconfig"; path = "Target Support Files/Pods-OneSignalNotificationServiceExtension/Pods-OneSignalNotificationServiceExtension.release.xcconfig"; sourceTree = "<group>"; };
 		1276D33B06E840B8E6839F39 /* TokenProjectDescriptionQuery.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenProjectDescriptionQuery.graphql.swift; path = WidgetsCore/MobileSchema/Operations/Queries/TokenProjectDescriptionQuery.graphql.swift; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* Uniswap.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Uniswap.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = Uniswap/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Uniswap/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Uniswap/Info.plist; sourceTree = "<group>"; };
-		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Uniswap/main.m; sourceTree = "<group>"; };
 		15092E550A1C78508ABA3280 /* Pods_OneSignalNotificationServiceExtension.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_OneSignalNotificationServiceExtension.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		166A9AE7203545C397E683E8 /* OffRampTransfer.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OffRampTransfer.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/OffRampTransfer.graphql.swift; sourceTree = "<group>"; };
 		178644A78AB62609EFDB66B3 /* Pods-Uniswap.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.release.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.release.xcconfig"; sourceTree = "<group>"; };
@@ -686,6 +683,8 @@
 		87442A651C068E552BEA89C6 /* MobileSchema.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MobileSchema.graphql.swift; path = WidgetsCore/MobileSchema/MobileSchema.graphql.swift; sourceTree = "<group>"; };
 		87CF9B03AE29A19C5B0F4E35 /* OnRampTransactionDetails.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = OnRampTransactionDetails.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/OnRampTransactionDetails.graphql.swift; sourceTree = "<group>"; };
 		8856DFFC7FDC9BF105B0B4E3 /* TokenProject.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokenProject.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/TokenProject.graphql.swift; sourceTree = "<group>"; };
+		8B2A92162EB3E78E00990413 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Uniswap/AppDelegate.swift; sourceTree = "<group>"; };
+		8B2A92182EB3E79500990413 /* Uniswap-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "Uniswap-Bridging-Header.h"; path = "Uniswap/Uniswap-Bridging-Header.h"; sourceTree = "<group>"; };
 		8C9047B981FA322A727947F7 /* Image.graphql.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Image.graphql.swift; path = WidgetsCore/MobileSchema/Schema/Objects/Image.graphql.swift; sourceTree = "<group>"; };
 		8E89C3A62AB8AAA400C84DE5 /* MnemonicConfirmationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicConfirmationView.swift; sourceTree = "<group>"; };
 		8E89C3A72AB8AAA400C84DE5 /* MnemonicDisplayView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MnemonicDisplayView.swift; sourceTree = "<group>"; };
@@ -738,7 +737,6 @@
 		9FCEBEFF2A95A8E00079EDDB /* RNWalletConnect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RNWalletConnect.swift; path = Uniswap/WalletConnect/RNWalletConnect.swift; sourceTree = "<group>"; };
 		9FCEBF022A95A99B0079EDDB /* RCTThemeModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RCTThemeModule.h; path = Appearance/RCTThemeModule.h; sourceTree = "<group>"; };
 		9FCEBF032A95A99B0079EDDB /* RCTThemeModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RCTThemeModule.m; path = Appearance/RCTThemeModule.m; sourceTree = "<group>"; };
-		9FEC9B8A2A858CF1003CD019 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = Uniswap/AppDelegate.m; sourceTree = "<group>"; };
 		A32F9FBC272343C8002CFCDB /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A3F0A5B0272B1DFA00895B25 /* KeychainSwiftDistrib.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainSwiftDistrib.swift; sourceTree = "<group>"; };
 		A70E4DD32C25DA0A002D6D86 /* NetworkFee.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetworkFee.graphql.swift; path = MobileSchema/Schema/Objects/NetworkFee.graphql.swift; sourceTree = "<group>"; };
@@ -1207,8 +1205,6 @@
 				07B067692A7D6EC8001DD9B9 /* Widget */,
 				03DD298C2A4CE34B00E3E0F5 /* Appearance */,
 				F35AFD3627EE49230011A725 /* Uniswap.entitlements */,
-				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
-				9FEC9B8A2A858CF1003CD019 /* AppDelegate.m */,
 				45FFF7DD2E8C2A3A00362570 /* Notifications */,
 				6C84F055283D83CF0071FA2E /* Onboarding */,
 				6CE631B928186D4500716D29 /* WalletConnect */,
@@ -1217,10 +1213,11 @@
 				6CA91BDD2A95226200C4063E /* RNCloudBackupsManager */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
-				13B07FB71A68108700A75B9A /* main.m */,
 				BF9176E944C84910B1C0B057 /* SplashScreen.storyboard */,
 				FD7304CD28A364FC0085BDEA /* Colors.xcassets */,
 				FD7304CF28A3650A0085BDEA /* Colors.swift */,
+				8B2A92162EB3E78E00990413 /* AppDelegate.swift */,
+				8B2A92182EB3E79500990413 /* Uniswap-Bridging-Header.h */,
 			);
 			name = Uniswap;
 			sourceTree = "<group>";
@@ -1834,7 +1831,7 @@
 				9F7898182A819D62004D5A98 /* Embed Frameworks */,
 				163678CCBB906C7B12421609 /* [CP] Embed Pods Frameworks */,
 				0487071ABBC71F28EF79F4AA /* [CP] Copy Pods Resources */,
-				A98B71284330BF95E7CAB037 /* [CP-User] [RNFB] Core Configuration */,
+				868B6279F959D6931E7A870E /* [CP-User] [RNFB] Core Configuration */,
 			);
 			buildRules = (
 			);
@@ -2003,7 +2000,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export PROJECT_ROOT=$PWD/..\nexport EXTRA_PACKAGER_ARGS=\"--sourcemap-output $PROJECT_ROOT/main.jsbundle.map\"\n\nset -e\nif [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\nsource \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\nsource \"$PODS_ROOT/../.xcode.env.local\"\nfi\nexport CONFIG_CMD=\"dummy-workaround-value\"\nexport CLI_PATH=\"$(\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('@rnef/cli/package.json')) + '/dist/src/bin.js'\")\"\n\nWITH_ENVIRONMENT=\"../../../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"../../../node_modules/react-native/scripts/react-native-xcode.sh\"\n\n/bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n";
+			shellScript = "if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\n# The project root by default is one level up from the ios directory\nexport PROJECT_ROOT=\"$PROJECT_DIR\"/..\n\nif [[ \"$CONFIGURATION\" = *Debug* ]]; then\n  export SKIP_BUNDLING=1\nfi\nif [[ -z \"$ENTRY_FILE\" ]]; then\n  # Set the entry JS file using the bundler's entry resolution.\n  export ENTRY_FILE=\"$(\"$NODE_BINARY\" -e \"require('expo/scripts/resolveAppEntry')\" \"$PROJECT_ROOT\" ios absolute | tail -n 1)\"\nfi\n\nif [[ -z \"$CLI_PATH\" ]]; then\n  # Use Expo CLI\n  export CLI_PATH=\"$(\"$NODE_BINARY\" --print \"require.resolve('@expo/cli')\")\"\nfi\nif [[ -z \"$BUNDLE_COMMAND\" ]]; then\n  # Default Expo CLI command for bundling\n  export BUNDLE_COMMAND=\"export:embed\"\nfi\n\n`\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'\"`\n";
 		};
 		0487071ABBC71F28EF79F4AA /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2400,7 +2397,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		A98B71284330BF95E7CAB037 /* [CP-User] [RNFB] Core Configuration */ = {
+		868B6279F959D6931E7A870E /* [CP-User] [RNFB] Core Configuration */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2429,7 +2426,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\nexport SOURCEMAP_FILE=$DERIVED_FILE_DIR/main.jsbundle.map\n\nset -e\nif [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\nsource \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\nsource \"$PODS_ROOT/../.xcode.env.local\"\nfi\nexport CONFIG_CMD=\"dummy-workaround-value\"\nexport CLI_PATH=\"$(\"$NODE_BINARY\" --print \"require('path').dirname(require.resolve('@rnef/cli/package.json')) + '/dist/src/bin.js'\")\"\n\nWITH_ENVIRONMENT=\"../../../node_modules/react-native/scripts/xcode/with-environment.sh\"\nDATADOG_XCODE=\"./sourcemaps-datadog.sh\"\n\nif [[ -n \"$DATADOG_API_KEY\" ]]; then\n  # JS source maps\n  /bin/sh -c \"$WITH_ENVIRONMENT $DATADOG_XCODE\"\n  # iOS dSYM\n  ../../../node_modules/.bin/datadog-ci dsyms upload $DWARF_DSYM_FOLDER_PATH\nelse\n  echo \"Ignoring upload step for local, API key is missing.\"\nfi\n";
+			shellScript = "set -e\n\nWITH_ENVIRONMENT=\"../../../node_modules/react-native/scripts/xcode/with-environment.sh\"\nREACT_NATIVE_XCODE=\"./sourcemaps-datadog.sh\"\n\nexport SOURCEMAP_FILE=$DERIVED_FILE_DIR/main.jsbundle.map\n\nif [[ -n \"$DATADOG_API_KEY\" && \"$SKIP_DATADOG_UPLOAD\" != \"true\" ]]; then\n  echo \"warning: Starting Datadog Uploads\"\n  echo \"warning: Build Configuration: $CONFIGURATION\"\n  echo \"warning: Product Name: $PRODUCT_NAME\"\n  echo \"warning: Source Map File: $SOURCEMAP_FILE\"\n  echo \"warning: dSYM Path: $DWARF_DSYM_FOLDER_PATH\"\n  echo \"\"\n\n  # JS source maps\n  echo \"warning: Uploading JS source maps...\"\n  \n  /bin/sh -c \"$WITH_ENVIRONMENT $REACT_NATIVE_XCODE\"\n\n  echo \"warning: \"\n\n  # iOS dSYM\n  echo \"warning: Uploading iOS dSYMs...\"\n  echo \"warning: dSYM command: datadog-ci dsyms upload $DWARF_DSYM_FOLDER_PATH\"\n\n  DSYM_LOG=$(mktemp)\n  if ../../../node_modules/.bin/datadog-ci dsyms upload $DWARF_DSYM_FOLDER_PATH 2>&1 | tee \"$DSYM_LOG\"; then\n    echo \"warning: dSYM upload completed successfully\"\n    rm -f \"$DSYM_LOG\"\n  else\n    DSYM_EXIT_CODE=$?\n    echo \"warning: \"\n    echo \"warning: dSYM Upload Failed\"\n    echo \"warning: Exit Code: $DSYM_EXIT_CODE\"\n    echo \"warning: \"\n    echo \"warning:Full Error Output:\"\n    echo \"warning: ---\"\n    echo \"warning: $(cat \"$DSYM_LOG\")\"\n    echo \"warning: ---\"\n    echo \"warning: \"\n    echo \"warning: Debug Information:\"\n    echo \"warning:   - datadog-ci version: $(../../../node_modules/.bin/datadog-ci version 2>&1 || echo 'Failed to get version')\"\n    echo \"warning:   - dSYM folder exists: $([ -d \\\"$DWARF_DSYM_FOLDER_PATH\\\" ] && echo 'Yes' || echo 'No')\"\n    echo \"warning:   - dSYM contents: $(ls -la \\\"$DWARF_DSYM_FOLDER_PATH\\\" 2>&1 || echo 'Failed to list')\"\n    echo \"warning:   - DATADOG_API_KEY set: $([ -n \\\"$DATADOG_API_KEY\\\" ] && echo 'Yes (${#DATADOG_API_KEY} chars)' || echo 'No')\"\n    echo \"warning:   - Working directory: $(pwd)\"\n    echo \"warning: \"\n    echo \"warning: This is non-critical. Build will continue.\"\n    rm -f \"$DSYM_LOG\"\n  fi\n\n  echo \"warning: \"\n  echo \"warning: Datadog upload phase completed (build continues regardless of upload status)\"\nelse\n  echo \"warning: Skipping Datadog upload (DATADOG_API_KEY not set or SKIP_DATADOG_UPLOAD=true)\"\nfi\n\n# Always exit 0 to not fail the build\nexit 0\n";
 		};
 		F5C7F44CBF58F052A43EB4AA /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2486,7 +2483,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
+			shellScript = "if [[ -f \"$PODS_ROOT/../.xcode.env\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env\"\nfi\nif [[ -f \"$PODS_ROOT/../.xcode.env.local\" ]]; then\n  source \"$PODS_ROOT/../.xcode.env.local\"\nfi\n\nexport RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > `$NODE_BINARY --print \"require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/.packager.env'\"`\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open `$NODE_BINARY --print \"require('path').dirname(require.resolve('expo/package.json')) + '/scripts/launchPackager.command'\"` || echo \"Can't start packager automatically\"\n  fi\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		FD54D51B296C780A007A37E9 /* Copy configuration-specific GoogleServices-Info.plist */ = {
@@ -2810,7 +2807,6 @@
 				8E89C3B22AB8AAA400C84DE5 /* MnemonicTextField.swift in Sources */,
 				FD7304D028A3650A0085BDEA /* Colors.swift in Sources */,
 				8E89C3AF2AB8AAA400C84DE5 /* MnemonicDisplayView.swift in Sources */,
-				9FEC9B8B2A858CF1003CD019 /* AppDelegate.m in Sources */,
 				45FFF7E12E8C2E6900362570 /* SilentPushEventEmitter.swift in Sources */,
 				6BC7D0802B5FF02400617C95 /* EncryptionUtils.swift in Sources */,
 				03C788232C10E7390011E5DC /* ActionButtons.swift in Sources */,
@@ -2826,6 +2822,7 @@
 				6BC7D07F2B5FF02400617C95 /* ScantasticEncryption.swift in Sources */,
 				07B0676C2A7D6EC8001DD9B9 /* RNWidgets.swift in Sources */,
 				8E89C3AE2AB8AAA400C84DE5 /* MnemonicConfirmationView.swift in Sources */,
+				8B2A92172EB3E78E00990413 /* AppDelegate.swift in Sources */,
 				5B4398EC2DD3B22C00F6BE08 /* PrivateKeyDisplayManager.m in Sources */,
 				5B4398ED2DD3B22C00F6BE08 /* PrivateKeyDisplayManager.swift in Sources */,
 				5B4398EE2DD3B22C00F6BE08 /* PrivateKeyDisplayView.swift in Sources */,
@@ -2835,7 +2832,6 @@
 				649A7A782D9AE70B00B53589 /* KeychainUtils.swift in Sources */,
 				649A7A792D9AE70B00B53589 /* KeychainConstants.swift in Sources */,
 				9FCEBF002A95A8E00079EDDB /* RNWalletConnect.m in Sources */,
-				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				6CA91BE32A95226200C4063E /* RNCloudStorageBackupsManager.swift in Sources */,
 				9FCEBF042A95A99C0079EDDB /* RCTThemeModule.m in Sources */,
 				9FCEBF012A95A8E00079EDDB /* RNWalletConnect.swift in Sources */,
@@ -3001,7 +2997,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3054,7 +3050,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -3107,7 +3103,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -3160,7 +3156,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCore;
@@ -3198,7 +3194,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3234,7 +3230,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -3269,7 +3265,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -3304,7 +3300,7 @@
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 15.1;
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = schemes.WidgetsCoreTests;
@@ -3351,7 +3347,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3397,7 +3393,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.widgets;
@@ -3443,7 +3439,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.widgets;
@@ -3489,7 +3485,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.widgets;
@@ -3531,7 +3527,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3574,7 +3570,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.WidgetIntentExtension;
@@ -3617,7 +3613,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.WidgetIntentExtension;
@@ -3660,7 +3656,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.WidgetIntentExtension;
@@ -3680,7 +3676,7 @@
 			baseConfigurationReference = A7C9F415D0E128A43003E071 /* Pods-Uniswap.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon${BUNDLE_ID_SUFFIX}";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon$(BUNDLE_ID_SUFFIX)";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				BUNDLE_ID_SUFFIX = .dev;
 				CLANG_ENABLE_MODULES = YES;
@@ -3696,14 +3692,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.uniswap.mobile${BUNDLE_ID_SUFFIX}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev;
 				PRODUCT_NAME = Uniswap;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Uniswap/RNEthersRs/RNEthersRS-Bridging-Header.h";
@@ -3718,7 +3714,7 @@
 			baseConfigurationReference = 178644A78AB62609EFDB66B3 /* Pods-Uniswap.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon${BUNDLE_ID_SUFFIX}";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon$(BUNDLE_ID_SUFFIX)";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				BUNDLE_ID_SUFFIX = "";
 				CLANG_ENABLE_MODULES = YES;
@@ -3734,14 +3730,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.uniswap.mobile${BUNDLE_ID_SUFFIX}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile;
 				PRODUCT_NAME = Uniswap;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile";
 				SWIFT_OBJC_BRIDGING_HEADER = "Uniswap/RNEthersRs/RNEthersRS-Bridging-Header.h";
@@ -3829,6 +3825,7 @@
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
+				SWIFT_VERSION = 5.0;
 				USE_HERMES = true;
 			};
 			name = Debug;
@@ -3903,6 +3900,7 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
 				USE_HERMES = true;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -3936,7 +3934,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_DEBUG";
@@ -3981,7 +3979,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.OneSignalNotificationServiceExtension;
@@ -4066,6 +4064,7 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
 				USE_HERMES = true;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -4076,7 +4075,7 @@
 			baseConfigurationReference = 62CEA9F2D5176D20A6402A3E /* Pods-Uniswap.beta.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon${BUNDLE_ID_SUFFIX}";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon$(BUNDLE_ID_SUFFIX)";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				BUNDLE_ID_SUFFIX = .beta;
 				CLANG_ENABLE_MODULES = YES;
@@ -4092,14 +4091,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.uniswap.mobile${BUNDLE_ID_SUFFIX}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta;
 				PRODUCT_NAME = Uniswap;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.beta";
 				SWIFT_OBJC_BRIDGING_HEADER = "Uniswap/RNEthersRs/RNEthersRS-Bridging-Header.h";
@@ -4164,7 +4163,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.beta.OneSignalNotificationServiceExtension;
@@ -4249,6 +4248,7 @@
 				OTHER_LDFLAGS = "$(inherited)";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../../../node_modules/react-native";
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5.0;
 				USE_HERMES = true;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -4259,7 +4259,7 @@
 			baseConfigurationReference = 56FE9C9AF785221B7E3F4C04 /* Pods-Uniswap.dev.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = "$(inherited)";
-				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon${BUNDLE_ID_SUFFIX}";
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon$(BUNDLE_ID_SUFFIX)";
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "";
 				BUNDLE_ID_SUFFIX = .dev;
 				CLANG_ENABLE_MODULES = YES;
@@ -4275,14 +4275,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.uniswap.mobile${BUNDLE_ID_SUFFIX}";
+				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev;
 				PRODUCT_NAME = Uniswap;
 				PROVISIONING_PROFILE_SPECIFIER = "match AppStore com.uniswap.mobile.dev";
 				SWIFT_OBJC_BRIDGING_HEADER = "Uniswap/RNEthersRs/RNEthersRS-Bridging-Header.h";
@@ -4347,7 +4347,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.62.1;
+				MARKETING_VERSION = 1.63.1;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "$(inherited) -D EXPO_CONFIGURATION_RELEASE";
 				PRODUCT_BUNDLE_IDENTIFIER = com.uniswap.mobile.dev.OneSignalNotificationServiceExtension;

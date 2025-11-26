@@ -63,8 +63,6 @@ export function createBuildQuoteRequest(
 
   return function buildQuoteRequest(validatedInput: ValidatedTradeInput): QuoteRequestResult {
     const routingParams = getRoutingParams({
-      tokenInChainId: validatedInput.tokenInChainId,
-      tokenOutChainId: validatedInput.tokenOutChainId,
       isUSDQuote: validatedInput.isUSDQuote,
     })
 

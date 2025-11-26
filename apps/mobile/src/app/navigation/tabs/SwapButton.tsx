@@ -32,7 +32,7 @@ export function SwapButton({ onLongPress, onClose }: SwapButtonProps): JSX.Eleme
   const { hapticFeedback } = useHapticFeedback()
   const { navigate } = useAppStackNavigation()
 
-  const longPressTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const longPressTimerRef = useRef<NodeJS.Timeout | number | null>(null)
   const hasTriggeredLongPressHaptic = useRef(false)
 
   const activeAccountAddress = useActiveAccountAddressWithThrow()

@@ -1,9 +1,5 @@
 import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
-import {
-  getIsSessionServiceEnabled,
-  getIsSessionUpgradeAutoEnabled,
-  useIsSessionServiceEnabled,
-} from '@universe/gating'
+import { getIsSessionServiceEnabled, getIsSessionUpgradeAutoEnabled } from '@universe/gating'
 import {
   createChallengeSolverService,
   createSessionInitializationService,
@@ -36,35 +32,6 @@ const provideSessionInitializationService = (): SessionInitializationService =>
     getIsSessionUpgradeAutoEnabled,
   })
 
-function BaseAppContainerInner({ children }: PropsWithChildren): JSX.Element {
-  const isSessionServiceEnabled = useIsSessionServiceEnabled()
-
-  return (
-    <I18nextProvider i18n={i18n}>
-      <SharedWalletProvider reduxStore={getReduxStore()}>
-        <ErrorBoundary>
-          <AccountsStoreContextProvider>
-            <GraphqlProvider>
-              <BlankUrlProvider>
-                <SmartWalletNudgesProvider>
-                  <LocalizationContextProvider>
-                    <TraceUserProperties />
-                    <ApiInit
-                      getSessionInitService={provideSessionInitializationService}
-                      isSessionServiceEnabled={isSessionServiceEnabled}
-                    />
-                    {children}
-                  </LocalizationContextProvider>
-                </SmartWalletNudgesProvider>
-              </BlankUrlProvider>
-            </GraphqlProvider>
-          </AccountsStoreContextProvider>
-        </ErrorBoundary>
-      </SharedWalletProvider>
-    </I18nextProvider>
-  )
-}
-
 export function BaseAppContainer({
   children,
   appName,
@@ -72,7 +39,28 @@ export function BaseAppContainer({
   return (
     <Trace>
       <ExtensionStatsigProvider appName={appName}>
-        <BaseAppContainerInner>{children}</BaseAppContainerInner>
+        <I18nextProvider i18n={i18n}>
+          <SharedWalletProvider reduxStore={getReduxStore()}>
+            <ErrorBoundary>
+              <AccountsStoreContextProvider>
+                <GraphqlProvider>
+                  <BlankUrlProvider>
+                    <SmartWalletNudgesProvider>
+                      <LocalizationContextProvider>
+                        <TraceUserProperties />
+                        <ApiInit
+                          getSessionInitService={provideSessionInitializationService}
+                          getIsSessionServiceEnabled={getIsSessionServiceEnabled}
+                        />
+                        {children}
+                      </LocalizationContextProvider>
+                    </SmartWalletNudgesProvider>
+                  </BlankUrlProvider>
+                </GraphqlProvider>
+              </AccountsStoreContextProvider>
+            </ErrorBoundary>
+          </SharedWalletProvider>
+        </I18nextProvider>
       </ExtensionStatsigProvider>
     </Trace>
   )

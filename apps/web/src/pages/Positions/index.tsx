@@ -83,7 +83,7 @@ function DisconnectedWalletView() {
             {connectedWithoutEVM ? t('pool.connectEthereumToView') : t('positions.welcome.connect.description')}
           </Text>
         </Flex>
-        <Flex row gap="$gap8">
+        <Flex row gap="$gap8" $md={{ width: '100%' }} width={connectedWithoutEVM ? '100%' : '45%'}>
           {!connectedWithoutEVM && (
             <Button
               variant="default"
@@ -98,13 +98,7 @@ function DisconnectedWalletView() {
               {t('position.new')}
             </Button>
           )}
-          <Button
-            variant="default"
-            size="small"
-            width={connectedWithoutEVM ? '100%' : 240}
-            borderRadius="$rounded12"
-            onPress={handleConnectWallet}
-          >
+          <Button variant="default" size="small" borderRadius="$rounded12" onPress={handleConnectWallet}>
             {connectedWithoutEVM ? t('common.connectAWallet.button.evm') : t('common.connectWallet.button')}
           </Button>
         </Flex>
@@ -152,7 +146,7 @@ function EmptyPositionsView() {
         <Text variant="body2" color="$neutral2" maxWidth={420}>
           {t('positions.noPositions.description')}
         </Text>
-        <Flex row gap="$gap8">
+        <Flex row gap="$gap8" $md={{ width: '100%' }} width="45%">
           <Button
             variant="default"
             size="small"
@@ -168,7 +162,6 @@ function EmptyPositionsView() {
           <Button
             variant="default"
             size="small"
-            width={240}
             tag="a"
             href="/positions/create/v4"
             $platform-web={{
