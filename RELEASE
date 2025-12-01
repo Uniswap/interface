@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmWkKS6r4PsaUCmRLuK4UYLJTzoMUmchG4Hg2aV8FjBisd`
-- CIDv1: `bafybeid45wr3ffrhjew54zla2scgbqwqxaeusfpt3wcooypuvrlpul5x5q`
+- CIDv0: `QmQSZ5B5asTKTcrUQjXaSjqoK987tHnMxzkcR4tc8kPVym`
+- CIDv1: `bafybeia7hj6dmquaef5l5rwth7kj22ffyflqo7v6h57rn5yrpk3bjxm6rq`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,63 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeid45wr3ffrhjew54zla2scgbqwqxaeusfpt3wcooypuvrlpul5x5q.ipfs.dweb.link/
-- [ipfs://QmWkKS6r4PsaUCmRLuK4UYLJTzoMUmchG4Hg2aV8FjBisd/](ipfs://QmWkKS6r4PsaUCmRLuK4UYLJTzoMUmchG4Hg2aV8FjBisd/)
+- https://bafybeia7hj6dmquaef5l5rwth7kj22ffyflqo7v6h57rn5yrpk3bjxm6rq.ipfs.dweb.link/
+- [ipfs://QmQSZ5B5asTKTcrUQjXaSjqoK987tHnMxzkcR4tc8kPVym/](ipfs://QmQSZ5B5asTKTcrUQjXaSjqoK987tHnMxzkcR4tc8kPVym/)
 
-## 5.120.0 (2025-11-26)
-
-
-### Features
-
-* **web:** add analytics events for disconnected state (#25498) a376650
-* **web:** add analytics events to tokens tab (#25502) 5ff49d5
-* **web:** add analytics for activity & overview tabs (#25541) cb35643
-* **web:** add disconnected state to wrapped experience (#25448) 3dcd73b
-* **web:** add explore page table (#25536) 304e07f
-* **web:** add iframe Uniswap Wrapped page (#25124) a1029d6
-* **web:** add nav portfolio analytics (#25501) 53e7940
-* **web:** add section tracing for portfolio tabs (#25499) b0ef491
-* **web:** Add step count to review progress (#25513) 68c39ba
-* **web:** add uniswap wrapped banner (#25313) adfb85d
-* **web:** add wrapped nav entrypoint (#25324) 2bcae33
-* **web:** nfts tab analytics (#25503) 5b3bedf
-* **web:** override staging entry gateway BE url (#25504) a50af7e
-* **web:** track overview action tile events (#25500) 55a0952
-* **web:** Update the swap review UI (#25530) 01092e0
+### 5.120.1 (2025-12-01)
 
 
 ### Bug Fixes
 
-* **web:** add max-height for tokens table and disable vertical scroll sync (#25577) 3ffa333
-* **web:** add new backend corn-staging url to staging CSP (#25523) 7bd3f4f
-* **web:** add x-request-source to all notifications requests (#25678) 1be77db
-* **web:** correctly detect build mode in CSP plugin (#25527) cd80872
-* **web:** Don't show loading state of Swap on landing page (#25514) b5da191
-* **web:** Fix step complete icon (#25654) 0129711
-* **web:** Fix type of ToucanChartSeries (#25181) 759ee46
-* **web:** handle solana only wallet connection for Portfolio (#25831) dd822ed
-* **web:** improve infinite scroll loading skeleton on activity table (#25563) 02d1ddd
-* **web:** improve responsive stats tiles (#25561) 9637d17
-* **web:** iterate on view more button on new mini portfolio (#25562) 5a827b5
-* **web:** notification service - staging fixes (#25549) 05b1b09
-* **web:** portfolio balance chart match/mismatch logic (#25675) 71707d2
-* **web:** Scroll token list, when user hides hidden tokens (#25442) b832367
-* **web:** show txns hash on activity table for all swaps until protocol data improves (#25645) e34278d
-
-
-### Continuous Integration
-
-* **web:** update sitemaps 77dced6
-
-
-### Styles
-
-* **web:** improve empty state on activity tabe (#25560) ce9fef7
-* **web:** table v2 hover color (#25564) ecb43c3
-
-
-### Code Refactoring
-
-* **web:** Refactor and prepare swap review for CA (#25512) 44f2353
+* **web:** disable tamagui compiler in production temporarily (#25933) 603c56f
 
 

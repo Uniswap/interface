@@ -1,5 +1,4 @@
 import { cloudflare } from '@cloudflare/vite-plugin'
-import { tamaguiPlugin } from '@tamagui/vite-plugin'
 import react from '@vitejs/plugin-react'
 import reactOxc from '@vitejs/plugin-react-oxc'
 import { execSync } from 'child_process'
@@ -185,14 +184,6 @@ export default defineConfig(({ mode }) => {
       },
       portWarningPlugin(isProduction),
       reactPlugin(),
-      isProduction
-        ? tamaguiPlugin({
-            config: '../../packages/ui/src/tamagui.config.ts',
-            components: ['ui', 'uniswap', 'utilities'],
-            optimize: true,
-            importsWhitelist: ['constants.js'],
-          })
-        : undefined,
       tsconfigPaths({
         // ignores tsconfig files in Nx generator template directories
         skip: (dir) => dir.includes('files'),
