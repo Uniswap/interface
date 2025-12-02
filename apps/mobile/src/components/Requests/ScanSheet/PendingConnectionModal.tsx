@@ -1,15 +1,13 @@
 import { useBottomSheetInternal } from '@gorhom/bottom-sheet'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { getSdkError } from '@walletconnect/utils'
 import React, { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
-import { DappHeaderIcon } from 'src/components/Requests/DappHeaderIcon'
 import { ModalWithOverlay, ModalWithOverlayProps } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
-import { AccountSelectPopover } from 'src/components/Requests/ScanSheet/AccountSelectPopover'
-import { SitePermissions } from 'src/components/Requests/ScanSheet/SitePermissions'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
-import { getSessionNamespaces } from 'src/features/walletConnect/utils'
+import { convertCapabilitiesToScopedProperties, getSessionNamespaces } from 'src/features/walletConnect/utils'
 import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
@@ -17,21 +15,28 @@ import {
   removePendingSession,
   setDidOpenFromDeepLink,
   WalletConnectPendingSession,
-  WalletConnectVerifyStatus,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, Text, useSporeColors } from 'ui/src'
-import { Verified } from 'ui/src/components/icons'
+import { Flex } from 'ui/src'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { DappRequestType, WalletConnectEvent, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
-import { formatDappURL } from 'utilities/src/format/urls'
 import { useEvent } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { LinkButton } from 'wallet/src/components/buttons/LinkButton'
-import { useActiveAccountWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { DappConnectionContent } from 'wallet/src/components/dappRequests/DappConnectionContent'
+import { DappRequestHeader } from 'wallet/src/components/dappRequests/DappRequestHeader'
+import { getCapabilitiesCore } from 'wallet/src/features/batchedTransactions/utils'
+import { useBlockaidVerification } from 'wallet/src/features/dappRequests/hooks/useBlockaidVerification'
+import { useDappConnectionConfirmation } from 'wallet/src/features/dappRequests/hooks/useDappConnectionConfirmation'
+import { DappConnectionInfo, DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
+import { mergeVerificationStatuses } from 'wallet/src/features/dappRequests/verification'
+import {
+  useActiveAccountWithThrow,
+  useHasSmartWalletConsent,
+  useSignerAccounts,
+} from 'wallet/src/features/wallet/hooks'
 
 type Props = {
   pendingSession: WalletConnectPendingSession
@@ -47,12 +52,20 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
   const isViewOnly = activeAccount.type === AccountType.Readonly
 
   const didOpenFromDeepLink = useSelector(selectDidOpenFromDeepLink)
+  const hasSmartWalletConsent = useHasSmartWalletConsent()
+  const eip5792MethodsEnabled = useFeatureFlag(FeatureFlags.Eip5792Methods)
 
-  const [confirmedWarning, setConfirmedWarning] = useState(false)
   const [isConnecting, setIsConnecting] = useState(false)
 
-  const isThreat = pendingSession.verifyStatus === WalletConnectVerifyStatus.Threat
-  const disableConfirm = (isThreat && !confirmedWarning) || isViewOnly || isConnecting
+  // Merge WalletConnect verification with Blockaid verification
+  const { verificationStatus: blockaidStatus } = useBlockaidVerification(pendingSession.dappRequestInfo.url)
+  const finalVerificationStatus = mergeVerificationStatuses(pendingSession.verifyStatus, blockaidStatus)
+
+  const { confirmedWarning, setConfirmedWarning, disableConfirm } = useDappConnectionConfirmation({
+    verificationStatus: finalVerificationStatus,
+    isViewOnly,
+    isLoading: isConnecting,
+  })
 
   const signerAccounts = useSignerAccounts()
   const defaultSelectedAccountAddresses = useMemo(() => {
@@ -103,10 +116,18 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
       // Handle WC 2.0 session request
       if (approved) {
         const namespaces = getSessionNamespaces(orderedSelectedAccountAddresses, pendingSession.proposalNamespaces)
+        const capabilities = await getCapabilitiesCore({
+          address: activeAddress,
+          chainIds: pendingSession.chains,
+          hasSmartWalletConsent: hasSmartWalletConsent ?? false,
+        })
+
+        const scopedProperties = convertCapabilitiesToScopedProperties(capabilities)
 
         const session = await wcWeb3Wallet.approveSession({
           id: Number(pendingSession.id),
           namespaces,
+          ...(eip5792MethodsEnabled ? { scopedProperties } : {}),
         })
 
         dispatch(
@@ -122,6 +143,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
               chains: pendingSession.chains,
               namespaces,
               activeAccount: activeAddress,
+              ...(eip5792MethodsEnabled ? { capabilities } : {}),
             },
           }),
         )
@@ -156,8 +178,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
     }
   })
 
-  const dappName = pendingSession.dappRequestInfo.name || pendingSession.dappRequestInfo.url || ''
-
+  const isThreat = finalVerificationStatus === DappVerificationStatus.Threat
   const isThreatProps: Partial<ModalWithOverlayProps> = isThreat
     ? {
         cancelButtonText: t('walletConnect.pending.button.reject'),
@@ -188,9 +209,8 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
       >
         <PendingConnectionModalContent
           isViewOnly={isViewOnly}
-          dappName={dappName}
-          verifyStatus={pendingSession.verifyStatus}
           pendingSession={pendingSession}
+          verifyStatus={finalVerificationStatus}
           allAccountAddresses={orderedAllAccountAddresses}
           selectedAccountAddresses={selectedAccountAddresses}
           setSelectedAccountAddresses={setSelectedAccountAddresses}
@@ -206,9 +226,8 @@ type PendingConnectionModalContentProps = {
   allAccountAddresses: string[]
   selectedAccountAddresses: string[]
   setSelectedAccountAddresses: (addresses: string[]) => void
-  dappName: string
   pendingSession: WalletConnectPendingSession
-  verifyStatus: WalletConnectVerifyStatus
+  verifyStatus: DappVerificationStatus
   isViewOnly: boolean
   onConfirmWarning: (confirmed: boolean) => void
   confirmedWarning: boolean
@@ -218,7 +237,6 @@ function PendingConnectionModalContent({
   allAccountAddresses,
   selectedAccountAddresses,
   setSelectedAccountAddresses,
-  dappName,
   pendingSession,
   verifyStatus,
   isViewOnly,
@@ -226,73 +244,37 @@ function PendingConnectionModalContent({
   confirmedWarning,
 }: PendingConnectionModalContentProps): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
-
   const { animatedFooterHeight } = useBottomSheetInternal()
 
   const bottomSpacerStyle = useAnimatedStyle(() => ({
     height: animatedFooterHeight.value,
   }))
 
+  const dappInfo: DappConnectionInfo = {
+    name: pendingSession.dappRequestInfo.name,
+    url: pendingSession.dappRequestInfo.url,
+    icon: pendingSession.dappRequestInfo.icon,
+  }
+
   return (
     <>
-      <Flex gap="$spacing8" pb="$spacing24">
-        <DappHeaderIcon dappRequestInfo={pendingSession.dappRequestInfo} />
-        <Text variant="subheading1">
-          {t('walletConnect.pending.title', {
-            dappName,
-          })}
-        </Text>
-        <Flex row gap="$spacing4" alignItems="center">
-          <LinkButton
-            justifyContent="flex-start"
-            color={
-              verifyStatus === WalletConnectVerifyStatus.Threat
-                ? colors.statusCritical.val
-                : verifyStatus === WalletConnectVerifyStatus.Unverified
-                  ? colors.neutral2.val
-                  : colors.accent1.val
-            }
-            label={formatDappURL(pendingSession.dappRequestInfo.url)}
-            showIcon={false}
-            textVariant="buttonLabel4"
-            url={pendingSession.dappRequestInfo.url}
-          />
-          {verifyStatus === WalletConnectVerifyStatus.Verified && (
-            <Verified color={colors.accent1.val} size="$icon.16" />
-          )}
-        </Flex>
+      <Flex pb="$spacing24">
+        <DappRequestHeader
+          dappInfo={dappInfo}
+          title={t('dapp.request.connect.title')}
+          verificationStatus={verifyStatus}
+        />
       </Flex>
-      <SitePermissions
-        verifyStatus={pendingSession.verifyStatus}
+      <DappConnectionContent
+        verificationStatus={verifyStatus}
         confirmedWarning={confirmedWarning}
+        allAccountAddresses={allAccountAddresses}
+        selectedAccountAddresses={selectedAccountAddresses}
+        setSelectedAccountAddresses={setSelectedAccountAddresses}
+        isViewOnly={isViewOnly}
+        bottomSpacing={<Animated.View style={bottomSpacerStyle} />}
         onConfirmWarning={onConfirmWarning}
       />
-      {!isViewOnly && (
-        <Flex pb="$spacing12" pt="$spacing16" px="$spacing8">
-          <AccountSelectPopover
-            selectedAccountAddresses={selectedAccountAddresses}
-            setSelectedAccountAddresses={setSelectedAccountAddresses}
-            allAccountAddresses={allAccountAddresses}
-          />
-        </Flex>
-      )}
-      {isViewOnly && (
-        <Flex
-          centered
-          row
-          backgroundColor="$surface2"
-          borderRadius="$rounded12"
-          minHeight={40}
-          p="$spacing8"
-          mt="$spacing16"
-        >
-          <Text color="$neutral2" variant="body2">
-            {t('home.warning.viewOnly')}
-          </Text>
-        </Flex>
-      )}
-      <Animated.View style={bottomSpacerStyle} />
     </>
   )
 }

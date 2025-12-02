@@ -5,10 +5,14 @@ import { AnimatePresence, Flex, Portal, Separator, TouchableArea, useWindowDimen
 import { DropdownMenuSheetItem } from 'ui/src/components/dropdownMenuSheet/DropdownMenuSheetItem'
 import { spacing, zIndexes } from 'ui/src/theme'
 import { ContextMenuProps } from 'uniswap/src/components/menus/ContextMenuV2'
+import { useContextMenuTracking } from 'uniswap/src/components/menus/hooks/useContextMenuTracking'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { useHapticFeedback } from 'uniswap/src/features/settings/useHapticFeedback/useHapticFeedback'
+import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const MIN_CONTEXT_MENU_WIDTH = 205
 
@@ -39,6 +43,9 @@ export function ContextMenu({
   isOpen,
   closeMenu,
   openMenu,
+  elementName,
+  sectionName,
+  trackItemClicks = false,
 }: PropsWithChildren<ContextMenuProps>): JSX.Element {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions()
   const maxUsableWidth = screenWidth - MIN_MENU_PADDING
@@ -50,19 +57,27 @@ export function ContextMenu({
   const triggerRef = useRef<View>(null)
 
   const { hapticFeedback } = useHapticFeedback()
+  const trace = useTrace()
 
   // Menu measurement and visibility states
   const [measuredMenuDimensions, setMeasuredMenuDimensions] = useState<{ width: number; height: number } | null>(null)
   const [isMenuVisible, setIsMenuVisible] = useState(false)
 
+  const trackedCloseMenu = useContextMenuTracking({
+    isOpen,
+    closeMenu,
+    elementName,
+    sectionName,
+  })
+
   const handleMenuClose = useCallback(() => {
     // used to delay unmount of the menu until the animation is done
-    closeMenu()
+    trackedCloseMenu()
     setTimeout(() => {
       setIsMenuVisible(false)
       setMeasuredMenuDimensions(null) // Reset dimensions for next open
     }, ANIMATION_TIME)
-  }, [closeMenu])
+  }, [trackedCloseMenu])
 
   const [position, setPosition] = useState<{
     left: number | undefined
@@ -179,27 +194,41 @@ export function ContextMenu({
             disabled={itemDisabled}
             destructive={destructive}
             closeDelay={(closeDelay ?? 0) + ANIMATION_TIME}
-            handleCloseMenu={() => {
-              closeMenu()
-              setIsMenuVisible(false)
-            }}
+            handleCloseMenu={handleMenuClose}
             onPress={() => {
-              try {
-                // run both actions; `onPressAny` will not run if `onPressAction` throws
-                onPressAction()
-                onPressAny?.({ name: label, index, indexPath: [index] })
-              } catch (error) {
-                logger.error(error, {
-                  tags: { file: 'ContextMenuV2.tsx', function: 'createPressHandler' },
-                })
-              }
+              // close the menu first to allow the closing animation to trigger asap
+              setIsMenuVisible(false)
+              closeMenu()
+              // pushes the main action (problematic navigation action) to the end of the event loop
+              // to allow the menu to close properly before
+              setTimeout(() => {
+                try {
+                  // run both actions; `onPressAny` will not run if `onPressAction` throws
+                  onPressAction()
+                  onPressAny?.({ name: label, index, indexPath: [index] })
+                  // Track analytics if enabled
+                  if (trackItemClicks && elementName && sectionName) {
+                    sendAnalyticsEvent(UniswapEventName.ContextMenuItemClicked, {
+                      element: elementName,
+                      section: sectionName,
+                      menu_item: label,
+                      menu_item_index: index,
+                      ...trace,
+                    })
+                  }
+                } catch (error) {
+                  logger.error(error, {
+                    tags: { file: 'ContextMenuV2.tsx', function: 'createPressHandler' },
+                  })
+                }
+              }, 0)
             }}
             {...otherProps}
           />
         </Fragment>
       ),
     )
-  }, [closeMenu, menuItems, onPressAny])
+  }, [handleMenuClose, menuItems, onPressAny, trackItemClicks, elementName, sectionName, trace, closeMenu])
 
   // Render the menu content component
   const MenuContent = useCallback(
@@ -228,17 +257,9 @@ export function ContextMenu({
   // since only one of them can be pressed at a time, we don't have to worry about the event being propagated
   return (
     <>
-      <Portal
-        display={isOpen || isMenuVisible ? 'flex' : 'none'}
-        contain="none"
-        position="unset"
-        // pass events through if menu is fading out
-        pointerEvents={!isOpen ? 'none' : 'auto'}
-        onPress={(e) => {
-          e.stopPropagation()
-        }}
-      >
+      <Portal>
         <Flex
+          pointerEvents={!isOpen ? 'none' : 'auto'}
           height="100%"
           width="100%"
           top={0}

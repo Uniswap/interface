@@ -55,6 +55,8 @@ export function useSwapHandlers(): SwapHandlers {
         onPending,
         txId,
         isFiatInputMode,
+        setCurrentStep,
+        setSteps,
       } = params
 
       const { trade, gasFee } = swapTxContext
@@ -72,6 +74,7 @@ export function useSwapHandlers(): SwapHandlers {
         trace,
         includesDelegation: swapTxContext.includesDelegation,
         isSmartWalletTransaction,
+        swapStartTimestamp,
       })
 
       // Get the best available signed transaction
@@ -93,6 +96,8 @@ export function useSwapHandlers(): SwapHandlers {
           onFailure,
           onPending,
           preSignedTransaction,
+          setCurrentStep,
+          setSteps,
         }),
       )
 

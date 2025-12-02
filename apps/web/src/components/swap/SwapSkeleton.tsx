@@ -1,9 +1,9 @@
 import { ArrowContainer, ArrowWrapper } from 'components/swap/styled'
-import styled, { useTheme } from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { ArrowDown } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { styled as TamaguiStyled } from 'ui/src'
+import { styled as TamaguiStyled, useSporeColors } from 'ui/src'
 
 const StyledArrowWrapper = TamaguiStyled(ArrowWrapper, {
   position: 'absolute',
@@ -84,7 +84,7 @@ function FloatingButton() {
 }
 
 export function SwapSkeleton() {
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   return (
     <LoadingWrapper>
@@ -95,7 +95,7 @@ export function SwapSkeleton() {
       <OutputWrapper>
         <StyledArrowWrapper clickable={false}>
           <ArrowContainer>
-            <ArrowDown size="16" color={theme.neutral3} />
+            <ArrowDown size="16" color={colors.neutral3.val} />
           </ArrowContainer>
         </StyledArrowWrapper>
         <InputColumn>

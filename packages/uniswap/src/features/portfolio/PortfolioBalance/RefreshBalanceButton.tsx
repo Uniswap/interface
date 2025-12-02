@@ -77,10 +77,12 @@ export function RefreshBalanceButton({ onPress, isLoading }: { onPress: () => vo
       <Tooltip.Trigger>
         <TouchableArea
           group
+          animation={null}
           $group-hover={{ opacity: 1 }}
           opacity={0}
           flex={1}
           alignItems="center"
+          transition="all 0.1s ease-in-out"
           justifyContent="center"
           // manually set disabled state using props, so we don't break hover state
           cursor={isLoading ? 'auto' : 'pointer'}

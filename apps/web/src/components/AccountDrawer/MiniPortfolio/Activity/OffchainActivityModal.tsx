@@ -22,14 +22,14 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import { TFunction } from 'i18next'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import styled, { useTheme } from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useUniswapXOrderByOrderHash } from 'state/transactions/hooks'
 import { ThemedText } from 'theme/components'
 import { Divider } from 'theme/components/Dividers'
-import { Button, Flex, TouchableArea } from 'ui/src'
+import { Button, Flex, TouchableArea, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -173,7 +173,7 @@ export function OrderContent({ order, onCancel }: { order: UniswapXOrderDetails;
   const amountsDefined = !!amounts?.inputAmount.currency && !!amounts.outputAmount.currency
   const fiatValueInput = useUSDPrice(amounts?.inputAmount)
   const fiatValueOutput = useUSDPrice(amounts?.outputAmount)
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   const explorerLink = order.hash
     ? getExplorerLink({ chainId: order.chainId, data: order.hash, type: ExplorerDataType.TRANSACTION })
@@ -241,7 +241,7 @@ export function OrderContent({ order, onCancel }: { order: UniswapXOrderDetails;
           isLoading={false}
           headerTextProps={{ fontSize: '24px', lineHeight: '32px' }}
         />
-        <ArrowDown color={theme.neutral3} />
+        <ArrowDown color={colors.neutral3.val} />
         <SwapModalHeaderAmount
           field={CurrencyField.OUTPUT}
           label={undefined}

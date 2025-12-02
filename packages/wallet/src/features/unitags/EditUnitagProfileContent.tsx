@@ -369,7 +369,7 @@ export function EditUnitagProfileContent({
             </Flex>
 
             <Flex row gap="$spacing24" px={PADDING_WIDTH} pt="$spacing16">
-              <Flex flex={1} gap="$spacing24">
+              <Flex flex={1.5} gap="$spacing24">
                 <Text color="$neutral2" pt="$spacing4" variant="subheading1">
                   {t('unitags.profile.bio.label')}
                 </Text>
@@ -382,7 +382,7 @@ export function EditUnitagProfileContent({
                   </Text>
                 )}
               </Flex>
-              <Flex flex={3} gap="$spacing24">
+              <Flex flex={2.5} gap="$spacing24">
                 {!loading ? (
                   <TextInput
                     autoCorrect

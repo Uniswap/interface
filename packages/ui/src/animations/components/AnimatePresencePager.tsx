@@ -64,7 +64,7 @@ export function TransitionItem({
 }: {
   animationType?: AnimationType
   childKey?: string | number
-  animation?: AnimationTransitionType
+  animation?: Omit<AnimationTransitionType, 'unset'>
   distance?: number
   children?: ReactNode
 }): JSX.Element {
@@ -90,7 +90,7 @@ export function AnimateTransition({
   children: ReactNode
   animationType?: AnimationType
   distance?: number
-  animation?: AnimationTransitionType
+  animation?: Omit<AnimationTransitionType, 'unset'>
 }): JSX.Element {
   const childrenArray = Children.toArray(children)
 
@@ -110,7 +110,7 @@ export function AnimatedPager({
   children,
 }: {
   currentIndex: number
-  animation?: AnimationTransitionType
+  animation?: Omit<AnimationTransitionType, 'unset'>
   distance?: number
   children: ReactNode
 }): JSX.Element {

@@ -1,15 +1,14 @@
 import { Dropdown, InternalMenuItem } from 'components/Dropdowns/Dropdown'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { useFilteredChainIds } from 'components/NetworkFilter/useFilteredChains'
-import { useTheme } from 'lib/styled-components'
 import { ExploreTab } from 'pages/Explore/constants'
 import type { Dispatch, SetStateAction } from 'react'
 import { memo, useCallback, useState } from 'react'
 import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
-import type { FlexProps } from 'ui/src'
-import { ElementAfterText, Flex, ScrollView, styled, Text } from 'ui/src'
+import type { FlexProps, TextProps } from 'ui/src'
+import { ElementAfterText, Flex, ScrollView, styled, Text, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import Badge from 'uniswap/src/components/badge/Badge'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -30,6 +29,16 @@ const NetworkLabel = styled(Flex, {
   gap: '$gap8',
 })
 
+// dropdown sizes per design
+enum DropdownSizeVariants {
+  Large = 'large',
+  Medium = 'medium',
+  Small = 'small',
+  XSmall = 'xsmall',
+}
+
+type DropdownSize = DropdownSizeVariants | 'large' | 'medium' | 'small' | 'xsmall'
+
 const StyledDropdown = {
   maxHeight: 350,
   minWidth: 256,
@@ -37,23 +46,68 @@ const StyledDropdown = {
   py: 0,
 } satisfies FlexProps
 
+const ButtonStyles: Record<DropdownSizeVariants, FlexProps> = {
+  [DropdownSizeVariants.Large]: {
+    height: 48,
+    pl: '$spacing16',
+    pr: '$spacing12',
+  },
+  [DropdownSizeVariants.Medium]: {
+    height: 40,
+    pl: '$spacing12',
+  },
+  [DropdownSizeVariants.Small]: {
+    height: 32,
+    borderRadius: '$rounded12',
+    pl: '$spacing12',
+    gap: '$gap6',
+  },
+  [DropdownSizeVariants.XSmall]: {
+    height: 28,
+    borderRadius: '$rounded12',
+    pl: '$spacing6',
+    pr: '$spacing6',
+    gap: '$gap4',
+  },
+}
+
+const NetworkLogoSizes: Record<DropdownSizeVariants, number> = {
+  [DropdownSizeVariants.Large]: iconSizes.icon24,
+  [DropdownSizeVariants.Medium]: iconSizes.icon20,
+  [DropdownSizeVariants.Small]: iconSizes.icon16,
+  [DropdownSizeVariants.XSmall]: iconSizes.icon16,
+}
+
+const NetworkLabelTextVariants: Record<DropdownSizeVariants, TextProps['variant']> = {
+  [DropdownSizeVariants.Large]: 'buttonLabel2',
+  [DropdownSizeVariants.Medium]: 'buttonLabel3',
+  [DropdownSizeVariants.Small]: 'buttonLabel4',
+  [DropdownSizeVariants.XSmall]: 'buttonLabel4',
+}
+
 export default function NetworkFilter({
   showMultichainOption = true,
   showDisplayName = false,
   position = 'left',
   onPress,
   currentChainId,
+  size = DropdownSizeVariants.Medium,
+  transition,
+  networks,
 }: {
   showMultichainOption?: boolean
   showDisplayName?: boolean
+  size?: DropdownSize
   position?: 'left' | 'right'
   onPress: (chainId: UniverseChainId | undefined) => void
   currentChainId: UniverseChainId | undefined
+  transition?: FlexProps['transition']
+  networks?: UniverseChainId[]
 }) {
   const { t } = useTranslation()
   const [isMenuOpen, toggleMenu] = useState(false)
   const isSupportedChainCallback = useIsSupportedChainIdCallback()
-  const filteredChainIds = useFilteredChainIds()
+  const filteredChainIds = useFilteredChainIds(networks)
   const chainInfo = currentChainId ? getChainInfo(currentChainId) : null
   const isAllNetworks = chainInfo === null
 
@@ -64,6 +118,7 @@ export default function NetworkFilter({
       }
       const chainInfo = getChainInfo(chainId)
       const supported = isBackendSupportedChainId(chainId)
+
       return (
         <TableNetworkItem
           key={chainId}
@@ -87,22 +142,23 @@ export default function NetworkFilter({
           menuLabel={
             <NetworkLabel>
               {(!currentChainId || !isSupportedChainCallback(currentChainId)) && showMultichainOption ? (
-                <NetworkLogo chainId={null} />
+                <NetworkLogo size={NetworkLogoSizes[size]} chainId={null} transition={transition} />
               ) : (
                 <ChainLogo
                   chainId={currentChainId ?? UniverseChainId.Mainnet}
-                  size={iconSizes.icon20}
+                  size={NetworkLogoSizes[size]}
                   testId={TestID.TokensNetworkFilterSelected}
+                  transition={transition}
                 />
               )}
               {showDisplayName && (
-                <Text variant="body2" color="$neutral2">
+                <Text variant={NetworkLabelTextVariants[size]} transition={transition}>
                   {isAllNetworks ? t('transaction.network.all') : chainInfo.label}
                 </Text>
               )}
             </NetworkLabel>
           }
-          buttonStyle={{ height: 40 }}
+          buttonStyle={ButtonStyles[size]}
           dropdownStyle={StyledDropdown}
           adaptToSheet
           allowFlip
@@ -140,7 +196,7 @@ const TableNetworkItem = memo(function TableNetworkItem({
   unsupported?: boolean
   currentChainId?: UniverseChainId | undefined
 }) {
-  const theme = useTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
   const currentChainInfo = currentChainId ? getChainInfo(currentChainId) : undefined
   const newChains = useNewChainIds()
@@ -193,7 +249,7 @@ const TableNetworkItem = memo(function TableNetworkItem({
         {unsupported ? (
           <Badge fontSize={10}>{t('settings.setting.beta.tooltip')}</Badge>
         ) : isCurrentChain ? (
-          <Check size={iconSizes.icon16} color={theme.accent1} />
+          <Check size={iconSizes.icon16} color={colors.accent1.val} />
         ) : null}
       </InternalMenuItem>
     </Trace>

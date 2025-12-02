@@ -35,3 +35,5 @@ tsconfig.tsbuildinfo
 
 # E2E test artifacts
 e2e/test-results/
+
+coverage/

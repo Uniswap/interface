@@ -34,6 +34,9 @@ export function SwapFormButton({ tokenColor }: { tokenColor?: string }): JSX.Ele
   const isShowingWebFORNudge = useIsShowingWebFORNudge()
   const setIsShowingWebFORNudge = useSetIsShowingWebFORNudge()
   const promptWebFORNudge = useIsWebFORNudgeEnabled() && !swapRedirectCallback && !isShowingWebFORNudge
+  // Only show loading state if the trade is `indicative` and we're not on the landing page.
+  // This is so that the `Get Started` button is always enabled/clickable.
+  const shouldShowLoading = !!indicative && !swapRedirectCallback
 
   // preload cex transfer providers to avoid flickering when showing web for nudge
   useCexTransferProviders({ isDisabled: !promptWebFORNudge })
@@ -50,7 +53,7 @@ export function SwapFormButton({ tokenColor }: { tokenColor?: string }): JSX.Ele
             variant={buttonVariant}
             emphasis={buttonEmphasis}
             // TODO(WALL-7186): make loading state more representative of the trade state
-            loading={!!indicative}
+            loading={shouldShowLoading}
             isDisabled={disabled}
             backgroundColor={buttonBackgroundColor}
             size={isShortMobileDevice ? 'small' : 'large'}

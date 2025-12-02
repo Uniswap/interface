@@ -71,6 +71,7 @@ export function SettingsManageConnectionsScreen(): JSX.Element {
 
         const DeleteDappButton = (
           <TouchableArea
+            animation={null}
             $group-hover={{ display: 'flex' }}
             display="none"
             p="$spacing2"

@@ -9,12 +9,11 @@ import { CurrencySettings } from 'components/NavBar/PreferencesMenu/Currency'
 import { LanguageSettings } from 'components/NavBar/PreferencesMenu/Language'
 import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
 import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
-import { useTheme } from 'lib/styled-components'
 import { Socials } from 'pages/Landing/sections/Footer'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Accordion, AnimateTransition, Flex, Separator, Square, Text } from 'ui/src'
+import { Accordion, AnimateTransition, Flex, Separator, Square, Text, useSporeColors } from 'ui/src'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 function MenuSection({
@@ -26,7 +25,7 @@ function MenuSection({
   children: JSX.Element | JSX.Element[]
   collapsible?: boolean
 }) {
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   return (
     <Accordion.Item value={title} disabled={!collapsible}>
@@ -39,7 +38,7 @@ function MenuSection({
               </Text>
               {collapsible && (
                 <Square animation="200ms" rotate={open ? '-180deg' : '0deg'}>
-                  <ChevronDown size="16px" color={theme.neutral2} />
+                  <ChevronDown size="16px" color={colors.neutral2.val} />
                 </Square>
               )}
             </>

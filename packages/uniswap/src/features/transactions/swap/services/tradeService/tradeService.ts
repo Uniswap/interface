@@ -5,6 +5,7 @@ import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
 import { type ValidatedTradeInput } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/buildQuoteRequest'
 import { IndicativeTrade, Trade, type UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
 export interface TradeWithGasEstimates {
+  quoteHash?: string
   trade: Trade | null
   gasEstimate?: GasEstimate
 }

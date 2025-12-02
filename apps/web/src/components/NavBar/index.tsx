@@ -8,9 +8,10 @@ import { SearchBar } from 'components/NavBar/SearchBar'
 import { useIsSearchBarVisible } from 'components/NavBar/SearchBar/useIsSearchBarVisible'
 import { Tabs } from 'components/NavBar/Tabs/Tabs'
 import TestnetModeTooltip from 'components/NavBar/TestnetMode/TestnetModeTooltip'
+import { UniswapWrappedEntry } from 'components/NavBar/UniswapWrappedEntry'
 import Web3Status from 'components/Web3Status'
 import { PageType, useIsPage } from 'hooks/useIsPage'
-import deprecatedStyled, { css } from 'lib/styled-components'
+import { css, styled as deprecatedStyled } from 'lib/styled-components'
 import { Flex, styled, Nav as TamaguiNav, useMedia } from 'ui/src'
 import { breakpoints, INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 import { useConnectionStatus } from 'uniswap/src/features/accounts/store/hooks'
@@ -69,6 +70,7 @@ export default function Navbar() {
         {isSearchBarVisible && <SearchBar />}
 
         <Right>
+          <UniswapWrappedEntry />
           {!isSearchBarVisible && <SearchBar />}
           {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
           {!isConnected && <PreferenceMenu />}

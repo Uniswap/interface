@@ -420,10 +420,16 @@ export function FeeTierSearchModal() {
                         </Text>
                       </Flex>
                     </Flex>
-                    {getFeeTierKey(pool.fee.feeAmount, pool.fee.isDynamic) ===
-                      getFeeTierKey(selectedFee?.feeAmount, selectedFee?.isDynamic) && (
-                      <CheckCircleFilled size="$icon.24" color="$accent3" />
-                    )}
+                    {getFeeTierKey({
+                      feeTier: pool.fee.feeAmount,
+                      tickSpacing: pool.fee.tickSpacing,
+                      isDynamicFee: pool.fee.isDynamic,
+                    }) ===
+                      getFeeTierKey({
+                        feeTier: selectedFee?.feeAmount,
+                        tickSpacing: selectedFee?.tickSpacing,
+                        isDynamicFee: selectedFee?.isDynamic,
+                      }) && <CheckCircleFilled size="$icon.24" color="$accent3" />}
                   </Flex>
                 ))}
             </Flex>

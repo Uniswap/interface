@@ -1,13 +1,13 @@
 import Column from 'components/deprecated/Column'
 import { useModalInitialState } from 'hooks/useModalInitialState'
 import { ModalState } from 'hooks/useModalState'
-import styled, { useTheme } from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { Slash } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { CopyHelper } from 'theme/components/CopyHelper'
 import { ExternalLink } from 'theme/components/Links'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
@@ -19,14 +19,14 @@ const ContentWrapper = styled(Column)`
 `
 
 export default function ConnectedAccountBlocked({ isOpen, closeModal }: ModalState) {
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   const blockedAddress = useModalInitialState(ModalName.BlockedAccount)?.blockedAddress
 
   return (
     <Modal name={ModalName.AccountBlocked} isModalOpen={isOpen} onClose={closeModal} padding={0}>
       <ContentWrapper>
-        <Slash size="22px" color={theme.neutral2} />
+        <Slash size="22px" color={colors.neutral2.val} />
         <ThemedText.DeprecatedLargeHeader lineHeight={2} marginBottom={1} marginTop={1}>
           <Trans i18nKey="common.blockedAddress" />
         </ThemedText.DeprecatedLargeHeader>

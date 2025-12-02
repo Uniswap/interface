@@ -212,7 +212,7 @@ export function SelectTokensStep({
   currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
 } & FlexProps) {
-  const { loadingA, loadingB, fee: parsedQsFee } = useLiquidityUrlState()
+  const { loadingA, loadingB } = useLiquidityUrlState()
   const { formatPercent } = useLocalizationContext()
   const { t } = useTranslation()
   const { setSelectedChainId } = useMultichainContext()
@@ -331,21 +331,9 @@ export function SelectTokensStep({
     return undefined
   }, [hasExistingFeeTiers, feeTierData])
 
-  // If the userApprovedHook changes, we want to reset the default fee tier in the useEffect below.
   useEffect(() => {
-    if (userApprovedHook) {
-      setPositionState((prevState) => ({ ...prevState, fee: undefined }))
-    }
-  }, [userApprovedHook, setPositionState])
-
-  useEffect(() => {
-    // If the user has provided a fee tier (url), return
-    if (parsedQsFee) {
-      return
-    }
-
-    // If the tokens are locked, return
-    if (tokensLocked) {
+    // If a fee tier is already set, return
+    if (fee) {
       return
     }
 
@@ -360,7 +348,7 @@ export function SelectTokensStep({
         ...trace,
       })
     }
-  }, [tokensLocked, mostUsedFeeTier, parsedQsFee, setPositionState, trace])
+  }, [mostUsedFeeTier, fee, setPositionState, trace])
 
   const { chains } = useEnabledChains({ platform: Platform.EVM })
   const supportedChains = useMemo(() => {
@@ -444,10 +432,15 @@ export function SelectTokensStep({
     // to ensure the current selected fee tier rewards APR matches the same fee tier in the fee tier selector,
     // grab the rewards tier from the fee tier directly
     const matchingFeeTier = Object.values(feeTierData).find(
-      (tier) => getFeeTierKey(tier.fee.feeAmount, tier.fee.isDynamic) === getFeeTierKey(fee?.feeAmount, fee?.isDynamic),
+      (tier) =>
+        getFeeTierKey({
+          feeTier: tier.fee.feeAmount,
+          tickSpacing: tier.fee.tickSpacing,
+          isDynamicFee: tier.fee.isDynamic,
+        }) === getFeeTierKey({ feeTier: fee?.feeAmount, tickSpacing: fee?.tickSpacing, isDynamicFee: fee?.isDynamic }),
     )
     return matchingFeeTier?.boostedApr && matchingFeeTier.boostedApr > 0 ? matchingFeeTier.boostedApr : undefined
-  }, [isLpIncentivesEnabled, protocolVersion, feeTierData, fee?.feeAmount, fee?.isDynamic])
+  }, [isLpIncentivesEnabled, protocolVersion, feeTierData, fee?.feeAmount, fee?.isDynamic, fee?.tickSpacing])
 
   const defaultFeeTiers = getDefaultFeeTiersWithData({ chainId: token0?.chainId, feeTierData, protocolVersion })
 
@@ -548,9 +541,17 @@ export function SelectTokensStep({
                           )}
                         </Text>
                         {fee &&
-                        getFeeTierKey(fee.feeAmount, fee.isDynamic) ===
+                        getFeeTierKey({
+                          feeTier: fee.feeAmount,
+                          tickSpacing: fee.tickSpacing,
+                          isDynamicFee: fee.isDynamic,
+                        }) ===
                           (mostUsedFeeTier &&
-                            getFeeTierKey(mostUsedFeeTier.fee.feeAmount, mostUsedFeeTier.fee.isDynamic)) ? (
+                            getFeeTierKey({
+                              feeTier: mostUsedFeeTier.fee.feeAmount,
+                              tickSpacing: mostUsedFeeTier.fee.tickSpacing,
+                              isDynamicFee: mostUsedFeeTier.fee.isDynamic,
+                            })) ? (
                           <MouseoverTooltip text={t('fee.tier.recommended.description')}>
                             <Flex
                               justifyContent="center"
@@ -568,8 +569,16 @@ export function SelectTokensStep({
                         ) : fee &&
                           defaultFeeTiers.find(
                             (tier) =>
-                              getFeeTierKey(tier.value.feeAmount, tier.value.isDynamic) ===
-                              getFeeTierKey(fee.feeAmount, fee.isDynamic),
+                              getFeeTierKey({
+                                feeTier: tier.value.feeAmount,
+                                tickSpacing: tier.value.tickSpacing,
+                                isDynamicFee: tier.value.isDynamic,
+                              }) ===
+                              getFeeTierKey({
+                                feeTier: fee.feeAmount,
+                                tickSpacing: fee.tickSpacing,
+                                isDynamicFee: fee.isDynamic,
+                              }),
                           ) ? null : fee ? (
                           <Flex justifyContent="center" borderRadius="$rounded6" backgroundColor="$surface3" px={7}>
                             <Text variant="buttonLabel4">
@@ -661,12 +670,24 @@ export function SelectTokensStep({
                     >
                       {defaultFeeTiers.map((feeTier) => (
                         <FeeTier
-                          key={feeTier.value.feeAmount}
+                          key={getFeeTierKey({
+                            feeTier: feeTier.value.feeAmount,
+                            tickSpacing: feeTier.value.tickSpacing,
+                            isDynamicFee: feeTier.value.isDynamic,
+                          })}
                           feeTier={feeTier}
                           selected={
                             !!fee &&
-                            getFeeTierKey(feeTier.value.feeAmount, feeTier.value.isDynamic) ===
-                              getFeeTierKey(fee.feeAmount, fee.isDynamic)
+                            getFeeTierKey({
+                              feeTier: feeTier.value.feeAmount,
+                              tickSpacing: feeTier.value.tickSpacing,
+                              isDynamicFee: feeTier.value.isDynamic,
+                            }) ===
+                              getFeeTierKey({
+                                feeTier: fee.feeAmount,
+                                tickSpacing: fee.tickSpacing,
+                                isDynamicFee: fee.isDynamic,
+                              })
                           }
                           onSelect={handleFeeTierSelect}
                           isLpIncentivesEnabled={isLpIncentivesEnabled}

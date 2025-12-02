@@ -14,7 +14,7 @@ const pools = [
   {
     address: '0xD1F1baD4c9E6c44DeC1e9bF3B94902205c5Cd6C3',
     network: 'optimism',
-    name: 'USDC/WLD',
+    name: 'USDC.e/WLD',
     image: 'http://localhost:3000/api/image/pools/optimism/0xD1F1baD4c9E6c44DeC1e9bF3B94902205c5Cd6C3',
   },
 ]

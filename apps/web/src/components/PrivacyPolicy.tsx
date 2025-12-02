@@ -3,7 +3,7 @@ import Card, { DarkGrayCard } from 'components/Card/cards'
 import { AutoColumn } from 'components/deprecated/Column'
 import Row, { AutoRow, RowBetween } from 'components/deprecated/Row'
 import { useModalState } from 'hooks/useModalState'
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { useEffect, useMemo, useRef } from 'react'
 import { ArrowDown, Info } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -38,7 +38,7 @@ const StyledLinkOut = styled(ArrowDown)`
 `
 
 export function PrivacyPolicyModal() {
-  const node = useRef<HTMLDivElement>()
+  const node = useRef<HTMLDivElement>(undefined)
   const { isOpen, closeModal } = useModalState(ModalName.PrivacyPolicy)
   const { t } = useTranslation()
 

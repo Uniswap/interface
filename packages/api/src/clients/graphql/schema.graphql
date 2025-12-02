@@ -8,33 +8,14 @@ directive @aws_auth(
 ) on FIELD_DEFINITION
 
 """
-Tells the service which subscriptions will be published to when this mutation is
-called. This directive is deprecated use @aws_susbscribe directive instead.
-"""
-directive @aws_publish(
-  """
-  List of subscriptions which will be published to when this mutation is called.
-  """
-  subscriptions: [String]
-) on FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by an API key.
-"""
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
-
-"""
 Tells the service this field/object has access authorized by sigv4 signing.
 """
 directive @aws_iam on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by a Cognito User Pools token.
+Tells the service this field/object has access authorized by an OIDC token.
 """
-directive @aws_cognito_user_pools(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
+directive @aws_oidc on OBJECT | FIELD_DEFINITION
 
 """Tells the service which mutation triggers this subscription."""
 directive @aws_subscribe(
@@ -50,9 +31,28 @@ Tells the service this field/object has access authorized by a Lambda Authorizer
 directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by an OIDC token.
+Tells the service this field/object has access authorized by an API key.
 """
-directive @aws_oidc on OBJECT | FIELD_DEFINITION
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service this field/object has access authorized by a Cognito User Pools token.
+"""
+directive @aws_cognito_user_pools(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on OBJECT | FIELD_DEFINITION
+
+"""
+Tells the service which subscriptions will be published to when this mutation is
+called. This directive is deprecated use @aws_susbscribe directive instead.
+"""
+directive @aws_publish(
+  """
+  List of subscriptions which will be published to when this mutation is called.
+  """
+  subscriptions: [String]
+) on FIELD_DEFINITION
 
 """
   Types, unions, and inputs (alphabetized):
@@ -207,6 +207,7 @@ enum Chain {
   ASTROCHAIN_SEPOLIA
   WORLDCHAIN
   MONAD_TESTNET
+  MONAD
   ARBITRUM_SEPOLIA
   BASE_SEPOLIA
   SOLANA
@@ -1554,6 +1555,7 @@ type V4Pool {
   feeTier: Float
   isDynamicFee: Boolean
   hook: V4PoolHook
+  tickSpacing: Int
   totalLiquidityPercentChange24h: Amount
   cumulativeVolume(duration: HistoryDuration!): Amount
   historicalVolume(duration: HistoryDuration!): [TimestampedAmount]

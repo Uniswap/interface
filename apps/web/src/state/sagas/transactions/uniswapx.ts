@@ -7,14 +7,17 @@ import {
   handleSignatureStep,
   TransactionBreadcrumbStatus,
 } from 'state/sagas/transactions/utils'
-import { call, put } from 'typed-redux-saga'
+import { call, put, SagaGenerator } from 'typed-redux-saga'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { InterfaceEventName, SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/errors'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
-import { HandleSignatureStepParams } from 'uniswap/src/features/transactions/steps/types'
+import {
+  HandleSignatureStepParams,
+  HandleUniswapXPlanSignatureStepParams,
+} from 'uniswap/src/features/transactions/steps/types'
 import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/steps/signOrder'
 import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
@@ -31,7 +34,7 @@ interface HandleUniswapXSignatureStepParams extends HandleSignatureStepParams<Un
 }
 
 export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStepParams) {
-  const { analytics, step, trade, account } = params
+  const { analytics, step, trade, address } = params
   const { quote, routing } = trade.quote
   const orderHash = quote.orderId
   const chainId = trade.inputAmount.currency.chainId
@@ -55,11 +58,12 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
 
   const signature = yield* call(handleSignatureStep, params)
 
-  if (Date.now() / 1000 > step.deadline) {
-    throw new HandledTransactionInterrupt('User signed after deadline')
-  }
+  checkDeadline(step.deadline)
 
-  const swapInfo = getSwapTransactionInfo(trade)
+  const swapInfo = getSwapTransactionInfo({
+    trade,
+    swapStartTimestamp: analytics.swap_start_timestamp,
+  })
   addTransactionBreadcrumb({ step, data: { routing, ...swapInfo }, status: TransactionBreadcrumbStatus.InProgress })
   sendAnalyticsEvent(
     SwapEventName.SwapSigned,
@@ -97,7 +101,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
     routing,
     orderHash,
     chainId,
-    from: account.address,
+    from: address,
     typeInfo: swapInfo,
     status: TransactionStatus.Pending,
     queueStatus: QueuedOrderStatus.Waiting,
@@ -110,4 +114,33 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   yield* put(addTransaction(transaction))
 
   popupRegistry.addPopup({ type: PopupType.Order, orderHash }, orderHash)
+}
+
+export function* handleUniswapXPlanSignatureStep(params: HandleUniswapXPlanSignatureStepParams): SagaGenerator<string> {
+  const { step } = params
+
+  // Check before requiring user to sign an expired deadline
+  checkDeadline(step.deadline)
+
+  // TODO: SWAP-446 address analytics InterfaceEventName.UniswapXSignatureRequested
+
+  const signature = yield* call(handleSignatureStep, params)
+
+  // Check again after user has signed to ensure they didn't sign after the deadline
+  checkDeadline(step.deadline)
+
+  // TODO: SWAP-446 address analytics SwapEventName.SwapSigned
+  return signature
+}
+
+/**
+ * Helper function to check a signature deadline.
+ *
+ * @throws {HandledTransactionInterrupt} if the deadline has expired
+ * @param deadline
+ */
+const checkDeadline = (deadlineSeconds: number) => {
+  if (Date.now() / 1000 > deadlineSeconds) {
+    throw new HandledTransactionInterrupt('User signed after deadline')
+  }
 }

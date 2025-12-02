@@ -158,6 +158,8 @@ export function createTransactionParamsFactory(context: BaseTransactionContext):
       trade: swapTxContext.trade,
       transactedUSDValue,
       gasEstimate: gasFeeEstimation.swapEstimate,
+      swapStartTimestamp: context.analytics.swap_start_timestamp,
+      isFinalStep: context.analytics.is_final_step,
     })
 
     const options: TransactionOptions = {
@@ -217,6 +219,8 @@ export function createTransactionParamsFactory(context: BaseTransactionContext):
       trade: swapTxContext.trade,
       transactedUSDValue,
       gasEstimate: gasFeeEstimation.swapEstimate,
+      swapStartTimestamp: context.analytics.swap_start_timestamp,
+      isFinalStep: context.analytics.is_final_step,
     })
 
     const submitOrderParams: SubmitUniswapXOrderParams = {

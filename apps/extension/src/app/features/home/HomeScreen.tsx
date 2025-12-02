@@ -21,7 +21,12 @@ import { HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { Flex, Loader, styled, Text, TouchableArea } from 'ui/src'
 import { SMART_WALLET_UPGRADE_VIDEO } from 'ui/src/assets'
+import { buildWrappedUrl } from 'uniswap/src/components/banners/shared/utils'
+import { UniswapWrapped2025Banner } from 'uniswap/src/components/banners/UniswapWrapped2025Banner/UniswapWrapped2025Banner'
 import { NFTS_TAB_DATA_DEPENDENCIES } from 'uniswap/src/components/nfts/constants'
+import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
+import { selectHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/selectors'
+import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
@@ -71,6 +76,25 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
   const isSmartWalletEnabled = useFeatureFlag(FeatureFlags.SmartWallet)
   const [isSmartWalletEnabledModalOpen, setIsSmartWalletEnabledModalOpen] = useState(false)
   const dispatch = useDispatch()
+
+  // UniswapWrapped2025 banner state
+  const isWrappedBannerEnabled = useFeatureFlag(FeatureFlags.UniswapWrapped2025)
+  const hasDismissedWrappedBanner = useSelector(selectHasDismissedUniswapWrapped2025Banner)
+  const shouldShowWrappedBanner = isWrappedBannerEnabled && !hasDismissedWrappedBanner
+
+  const handleDismissWrappedBanner = useCallback(() => {
+    dispatch(setHasDismissedUniswapWrapped2025Banner(true))
+  }, [dispatch])
+
+  const handlePressWrappedBanner = useCallback(() => {
+    try {
+      const url = buildWrappedUrl(UNISWAP_WEB_URL, address)
+      window.open(url, '_blank')
+      dispatch(setHasDismissedUniswapWrapped2025Banner(true))
+    } catch (error) {
+      logger.error(error, { tags: { file: 'HomeScreen', function: 'handlePressWrappedBanner' } })
+    }
+  }, [address, dispatch])
 
   useEffect(() => {
     if (selectedTab) {
@@ -169,12 +193,32 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
               <PinReminder style="popup" onClose={onClosePinRequest} />
             </Flex>
           )}
+          {shouldShowWrappedBanner && (
+            <Flex width="calc(100% + 24px)" ml={-12} mt={-12}>
+              <UniswapWrapped2025Banner
+                handleDismiss={handleDismissWrappedBanner}
+                handlePress={handlePressWrappedBanner}
+                bannerHeight={80}
+              />
+              <Flex
+                height="$spacing12"
+                width="100%"
+                mt={-12}
+                mb={-12}
+                backgroundColor="$surface1"
+                borderTopLeftRadius={24}
+                borderTopRightRadius={24}
+                flexShrink={0}
+                zIndex="$overlay"
+              />
+            </Flex>
+          )}
           <Flex grow gap="$spacing8">
             <Flex pl="$spacing4" position="relative" pt="$spacing4">
               <PortfolioHeader address={address} />
             </Flex>
             <Flex pb="$spacing8" pl="$spacing4">
-              <PortfolioBalance owner={address} />
+              <PortfolioBalance evmOwner={address} />
             </Flex>
 
             <PortfolioActionButtons />

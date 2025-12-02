@@ -2,9 +2,9 @@ import sockImg from 'assets/svg/socks.svg'
 import { CONNECTOR_ICON_OVERRIDE_MAP } from 'components/Web3Provider/constants'
 import { useActiveAddresses, useActiveWallet } from 'features/accounts/store/hooks'
 import { useHasSocks } from 'hooks/useSocksBalance'
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { flexColumnNoWrap } from 'theme/styles'
-import { Flex } from 'ui/src/components/layout'
+import { Flex, FlexProps } from 'ui/src/components/layout'
 import { breakpoints } from 'ui/src/theme'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -91,11 +91,13 @@ export default function StatusIcon({
   showMiniIcons = true,
   showConnectedIndicator,
   address,
+  transition,
 }: {
   size?: number
   showMiniIcons?: boolean
   showConnectedIndicator?: boolean
   address?: string
+  transition?: FlexProps['transition']
 }) {
   const activeAddresses = useActiveAddresses()
   const hasSocks = useHasSocks()
@@ -105,7 +107,7 @@ export default function StatusIcon({
 
   return (
     <IconWrapper size={size} data-testid="StatusIconRoot">
-      <AccountIcon address={addressToDisplay} size={size} />
+      <AccountIcon address={addressToDisplay} size={size} transition={transition} />
       {showConnectedIndicator ? <MiniConnectedIndicator /> : showMiniIcons && <MiniWalletIcon platform={platform} />}
       {hasSocks && showMiniIcons && <Socks />}
     </IconWrapper>

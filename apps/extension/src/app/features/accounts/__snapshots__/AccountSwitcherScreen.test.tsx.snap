@@ -15,7 +15,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
           <h2
             class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
             data-disable-theme="true"
-            id="title-:r5:"
+            id="Dialog--:r5:-title"
             role="heading"
           />
         </span>
@@ -25,7 +25,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
           <h2
             class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
             data-disable-theme="true"
-            id="title-:rc:"
+            id="Dialog--:rg:-title"
             role="heading"
           />
         </span>
@@ -35,7 +35,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
           <h2
             class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
             data-disable-theme="true"
-            id="title-:ri:"
+            id="Dialog--:rq:-title"
             role="heading"
           />
         </span>
@@ -47,8 +47,10 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
           >
             <div
               class=" is_TouchableArea  t_group_true"
+              jestanimatedprops="[object Object]"
+              jestinlinestyle="[object Object]"
               role="button"
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1);"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
               tabindex="0"
             >
               <svg
@@ -80,43 +82,50 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                 aria-expanded="false"
                 aria-haspopup="dialog"
                 class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-                data-state="closed"
               >
-                <div>
-                  <div
-                    class=" is_TouchableArea  t_group_true"
-                    role="button"
-                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; padding: 8px 8px 8px 8px; transform: scale(1);"
-                    tabindex="0"
-                  >
-                    <svg
-                      fill="none"
-                      stroke-width="8"
-                      style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
-                      viewBox="0 0 18 4"
+                <div
+                  aria-expanded="false"
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                  data-state="closed"
+                >
+                  <div>
+                    <div
+                      class=" is_TouchableArea  t_group_true"
+                      jestanimatedprops="[object Object]"
+                      jestinlinestyle="[object Object]"
+                      role="button"
+                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; padding: 8px 8px 8px 8px; transform: scale(1);"
+                      tabindex="0"
                     >
-                      <path
-                        d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                      />
-                      <path
-                        d="M16 3C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2C15 2.55228 15.4477 3 16 3Z"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                      />
-                      <path
-                        d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                      />
-                    </svg>
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 18 4"
+                      >
+                        <path
+                          d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                        />
+                        <path
+                          d="M16 3C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2C15 2.55228 15.4477 3 16 3Z"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                        />
+                        <path
+                          d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                        />
+                      </svg>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -139,6 +148,8 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                     data-testid="account-icon"
                   >
                     <div
+                      jestanimatedprops="[object Object]"
+                      jestinlinestyle="[object Object]"
                       style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
                     >
                       <svg
@@ -183,7 +194,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                       class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa1360334080"
                     >
                       <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _alignItems-center _gap-t-space-spa94665589 _flexShrink-1 _justifyContent-center"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _alignItems-center _gap-t-space-spa94665589 _flexShrink-1 _justifyContent-center _width-0px"
                       >
                         <span
                           class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-18px _lineHeight-24px _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _textAlign-center _flexShrink-1"
@@ -195,8 +206,10 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                     <div
                       class=" is_TouchableArea  t_group_true"
                       data-testid="copy"
+                      jestanimatedprops="[object Object]"
+                      jestinlinestyle="[object Object]"
                       role="button"
-                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1);"
+                      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
                       tabindex="0"
                     >
                       <div
@@ -215,6 +228,8 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-0px _left-0px"
                           >
                             <div
+                              jestanimatedprops="[object Object]"
+                              jestinlinestyle="[object Object]"
                               style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; flex-grow: 1; transform: translateX(0px); opacity: 1; width: 100%;"
                             >
                               <svg
@@ -247,6 +262,8 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                   class=" is_Button  t_group_item"
                   data-testid="account-card"
                   dd-action-name="Edit label"
+                  jestanimatedprops="[object Object]"
+                  jestinlinestyle="[object Object]"
                   style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(19, 19, 19, 0.08); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
                 >
                   <span
@@ -275,32 +292,37 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                   aria-expanded="false"
                   aria-haspopup="dialog"
                   class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-                  data-state="closed"
                 >
                   <div
-                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _cursor-pointer _gap-t-space-spa1360334080 _mt-t-space-spa1360334080 _pb-t-space-spa94665589 _pr-t-space-spa1360334080 _pl-t-space-spa1360334080"
+                    aria-expanded="false"
+                    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                    data-state="closed"
                   >
                     <div
-                      class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _backgroundColor-surface1 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _height-32px _pt-t-space-spa94665593 _pr-t-space-spa94665593 _pb-t-space-spa94665593 _pl-t-space-spa94665593 _width-32px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-0px0px10pxv169431092"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _cursor-pointer _gap-t-space-spa1360334080 _mt-t-space-spa1360334080 _pb-t-space-spa94665589 _pr-t-space-spa1360334080 _pl-t-space-spa1360334080"
                     >
-                      <svg
-                        fill="none"
-                        stroke-width="2"
-                        style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
-                        viewBox="0 0 24 24"
+                      <div
+                        class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _backgroundColor-surface1 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _height-32px _pt-t-space-spa94665593 _pr-t-space-spa94665593 _pb-t-space-spa94665593 _pl-t-space-spa94665593 _width-32px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-0px0px10pxv169431092"
                       >
-                        <path
-                          d="M19 11H13V5C13 4.448 12.552 4 12 4C11.448 4 11 4.448 11 5V11H5C4.448 11 4 11.448 4 12C4 12.552 4.448 13 5 13H11V19C11 19.552 11.448 20 12 20C12.552 20 13 19.552 13 19V13H19C19.552 13 20 12.552 20 12C20 11.448 19.552 11 19 11Z"
-                          fill="currentColor"
-                        />
-                      </svg>
+                        <svg
+                          fill="none"
+                          stroke-width="2"
+                          style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M19 11H13V5C13 4.448 12.552 4 12 4C11.448 4 11 4.448 11 5V11H5C4.448 11 4 11.448 4 12C4 12.552 4.448 13 5 13H11V19C11 19.552 11.448 20 12 20C12.552 20 13 19.552 13 19V13H19C19.552 13 20 12.552 20 12C20 11.448 19.552 11 19 11Z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
+                      <span
+                        class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _pt-t-space-spa94665593 _pb-t-space-spa94665593 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+                        data-disable-theme="true"
+                      >
+                        Add wallet
+                      </span>
                     </div>
-                    <span
-                      class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _pt-t-space-spa94665593 _pb-t-space-spa94665593 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
-                      data-disable-theme="true"
-                    >
-                      Add wallet
-                    </span>
                   </div>
                 </div>
               </div>
@@ -312,6 +334,45 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
         />
       </span>
     </div>
+    <span
+      style="z-index: 1060; position: fixed; inset: 0; contain: strict; pointer-events: none;"
+    >
+      <span
+        class=" "
+        style="display: contents;"
+      >
+        <span
+          class="t_sub_theme t_light is_Theme"
+          style="display: contents;"
+        />
+      </span>
+    </span>
+    <span
+      style="z-index: 1060; position: fixed; inset: 0; contain: strict; pointer-events: none;"
+    >
+      <span
+        class=" "
+        style="display: contents;"
+      >
+        <span
+          class="t_sub_theme t_light is_Theme"
+          style="display: contents;"
+        />
+      </span>
+    </span>
+    <span
+      style="z-index: 1060; position: fixed; inset: 0; contain: strict; pointer-events: none;"
+    >
+      <span
+        class=" "
+        style="display: contents;"
+      >
+        <span
+          class="t_sub_theme t_light is_Theme"
+          style="display: contents;"
+        />
+      </span>
+    </span>
   </body>,
   "container": <div>
     <span
@@ -324,7 +385,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
         <h2
           class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
           data-disable-theme="true"
-          id="title-:r5:"
+          id="Dialog--:r5:-title"
           role="heading"
         />
       </span>
@@ -334,7 +395,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
         <h2
           class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
           data-disable-theme="true"
-          id="title-:rc:"
+          id="Dialog--:rg:-title"
           role="heading"
         />
       </span>
@@ -344,7 +405,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
         <h2
           class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
           data-disable-theme="true"
-          id="title-:ri:"
+          id="Dialog--:rq:-title"
           role="heading"
         />
       </span>
@@ -356,8 +417,10 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
         >
           <div
             class=" is_TouchableArea  t_group_true"
+            jestanimatedprops="[object Object]"
+            jestinlinestyle="[object Object]"
             role="button"
-            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1);"
+            style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
             tabindex="0"
           >
             <svg
@@ -389,43 +452,50 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
               aria-expanded="false"
               aria-haspopup="dialog"
               class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-              data-state="closed"
             >
-              <div>
-                <div
-                  class=" is_TouchableArea  t_group_true"
-                  role="button"
-                  style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; padding: 8px 8px 8px 8px; transform: scale(1);"
-                  tabindex="0"
-                >
-                  <svg
-                    fill="none"
-                    stroke-width="8"
-                    style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
-                    viewBox="0 0 18 4"
+              <div
+                aria-expanded="false"
+                class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                data-state="closed"
+              >
+                <div>
+                  <div
+                    class=" is_TouchableArea  t_group_true"
+                    jestanimatedprops="[object Object]"
+                    jestinlinestyle="[object Object]"
+                    role="button"
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; border-top-left-radius: 999999px; border-top-right-radius: 999999px; border-bottom-right-radius: 999999px; border-bottom-left-radius: 999999px; padding: 8px 8px 8px 8px; transform: scale(1);"
+                    tabindex="0"
                   >
-                    <path
-                      d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                    />
-                    <path
-                      d="M16 3C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2C15 2.55228 15.4477 3 16 3Z"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                    />
-                    <path
-                      d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z"
-                      stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                    />
-                  </svg>
+                    <svg
+                      fill="none"
+                      stroke-width="8"
+                      style="width: 20px; height: 20px; color: rgba(19, 19, 19, 0.63);"
+                      viewBox="0 0 18 4"
+                    >
+                      <path
+                        d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                      />
+                      <path
+                        d="M16 3C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2C15 2.55228 15.4477 3 16 3Z"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                      />
+                      <path
+                        d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                      />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
@@ -448,6 +518,8 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                   data-testid="account-icon"
                 >
                   <div
+                    jestanimatedprops="[object Object]"
+                    jestinlinestyle="[object Object]"
                     style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
                   >
                     <svg
@@ -492,7 +564,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                     class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-t-space-spa1360334080"
                   >
                     <div
-                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _alignItems-center _gap-t-space-spa94665589 _flexShrink-1 _justifyContent-center"
+                      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexDirection-row _alignItems-center _gap-t-space-spa94665589 _flexShrink-1 _justifyContent-center _width-0px"
                     >
                       <span
                         class="font_heading _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _wordWrap-break-word _fontFamily-f-family _fontSize-18px _lineHeight-24px _fontWeight-f-weight-bo3548 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _whiteSpace-initial _textAlign-center _flexShrink-1"
@@ -504,8 +576,10 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                   <div
                     class=" is_TouchableArea  t_group_true"
                     data-testid="copy"
+                    jestanimatedprops="[object Object]"
+                    jestinlinestyle="[object Object]"
                     role="button"
-                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1);"
+                    style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
                     tabindex="0"
                   >
                     <div
@@ -524,6 +598,8 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _top-0px _left-0px"
                         >
                           <div
+                            jestanimatedprops="[object Object]"
+                            jestinlinestyle="[object Object]"
                             style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; flex-grow: 1; transform: translateX(0px); opacity: 1; width: 100%;"
                           >
                             <svg
@@ -556,6 +632,8 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                 class=" is_Button  t_group_item"
                 data-testid="account-card"
                 dd-action-name="Edit label"
+                jestanimatedprops="[object Object]"
+                jestinlinestyle="[object Object]"
                 style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgba(19, 19, 19, 0.08); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: pointer; height: auto; align-self: stretch; flex-grow: 1; outline-color: rgba(0, 0, 0, 0); padding: 8px 12px 8px 12px; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; gap: 8px; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; transform: scale(1);"
               >
                 <span
@@ -584,32 +662,37 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                 aria-expanded="false"
                 aria-haspopup="dialog"
                 class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
-                data-state="closed"
               >
                 <div
-                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _cursor-pointer _gap-t-space-spa1360334080 _mt-t-space-spa1360334080 _pb-t-space-spa94665589 _pr-t-space-spa1360334080 _pl-t-space-spa1360334080"
+                  aria-expanded="false"
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                  data-state="closed"
                 >
                   <div
-                    class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _backgroundColor-surface1 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _height-32px _pt-t-space-spa94665593 _pr-t-space-spa94665593 _pb-t-space-spa94665593 _pl-t-space-spa94665593 _width-32px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-0px0px10pxv169431092"
+                    class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _cursor-pointer _gap-t-space-spa1360334080 _mt-t-space-spa1360334080 _pb-t-space-spa94665589 _pr-t-space-spa1360334080 _pl-t-space-spa1360334080"
                   >
-                    <svg
-                      fill="none"
-                      stroke-width="2"
-                      style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
-                      viewBox="0 0 24 24"
+                    <div
+                      class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _backgroundColor-surface1 _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro1041013639 _borderTopRightRadius-t-radius-ro1041013639 _borderBottomRightRadius-t-radius-ro1041013639 _borderBottomLeftRadius-t-radius-ro1041013639 _borderTopWidth-t-space-spa94665586 _borderRightWidth-t-space-spa94665586 _borderBottomWidth-t-space-spa94665586 _borderLeftWidth-t-space-spa94665586 _height-32px _pt-t-space-spa94665593 _pr-t-space-spa94665593 _pb-t-space-spa94665593 _pl-t-space-spa94665593 _width-32px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-0px0px10pxv169431092"
                     >
-                      <path
-                        d="M19 11H13V5C13 4.448 12.552 4 12 4C11.448 4 11 4.448 11 5V11H5C4.448 11 4 11.448 4 12C4 12.552 4.448 13 5 13H11V19C11 19.552 11.448 20 12 20C12.552 20 13 19.552 13 19V13H19C19.552 13 20 12.552 20 12C20 11.448 19.552 11 19 11Z"
-                        fill="currentColor"
-                      />
-                    </svg>
+                      <svg
+                        fill="none"
+                        stroke-width="2"
+                        style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.63);"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M19 11H13V5C13 4.448 12.552 4 12 4C11.448 4 11 4.448 11 5V11H5C4.448 11 4 11.448 4 12C4 12.552 4.448 13 5 13H11V19C11 19.552 11.448 20 12 20C12.552 20 13 19.552 13 19V13H19C19.552 13 20 12.552 20 12C20 11.448 19.552 11 19 11Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </div>
+                    <span
+                      class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _pt-t-space-spa94665593 _pb-t-space-spa94665593 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
+                      data-disable-theme="true"
+                    >
+                      Add wallet
+                    </span>
                   </div>
-                  <span
-                    class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _pt-t-space-spa94665593 _pb-t-space-spa94665593 _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-me3083741"
-                    data-disable-theme="true"
-                  >
-                    Add wallet
-                  </span>
                 </div>
               </div>
             </div>

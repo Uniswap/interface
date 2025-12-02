@@ -4,7 +4,7 @@ import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceIn
 import { LimitContext } from 'state/limit/LimitContext'
 import { MultichainContext } from 'state/multichain/types'
 import { SwapAndLimitContext } from 'state/swap/types'
-import { act, render, screen } from 'test-utils/render'
+import { act, renderWithUniswapContext, screen } from 'test-utils/render'
 import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
@@ -50,7 +50,7 @@ describe('LimitPriceInputPanel', () => {
   it('should render the component with no currencies selected', async () => {
     const onCurrencySelect = vi.fn()
     await act(async () => {
-      return render(<LimitPriceInputPanel onCurrencySelect={onCurrencySelect} />)
+      return renderWithUniswapContext(<LimitPriceInputPanel onCurrencySelect={onCurrencySelect} />)
     })
     expect(screen.getByText('Limit price')).toBeVisible()
     expect(screen.getByPlaceholderText('0')).toBeVisible()
@@ -64,7 +64,7 @@ describe('LimitPriceInputPanel', () => {
 
   it('should render correct subheader with inputCurrency defined, but no price', () => {
     const onCurrencySelect = vi.fn()
-    render(
+    renderWithUniswapContext(
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <LimitPriceInputPanel onCurrencySelect={onCurrencySelect} />
@@ -79,7 +79,7 @@ describe('LimitPriceInputPanel', () => {
 
   it('should render correct subheader with input currency and limit price defined', () => {
     const onCurrencySelect = vi.fn()
-    render(
+    renderWithUniswapContext(
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
           <LimitContext.Provider value={mockLimitContextValue}>
@@ -94,7 +94,7 @@ describe('LimitPriceInputPanel', () => {
 
   it('should render the output currency when defined', () => {
     const onCurrencySelect = vi.fn()
-    const { container } = render(
+    const { container } = renderWithUniswapContext(
       <MultichainContext.Provider value={mockMultichainContextValue}>
         <SwapAndLimitContext.Provider
           value={{

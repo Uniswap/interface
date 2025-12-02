@@ -4,27 +4,16 @@ exports[`SwapSkeleton.tsx > renders a skeleton 1`] = `
 <DocumentFragment>
   .c2 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
   gap: 4px;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
   padding: 8px;
-  border: 1px solid rgba(19,19,19,0.08);
+  border: 1px solid rgba(19, 19, 19, 0.08);
   border-radius: 16px;
   background-color: #FFFFFF;
 }
@@ -51,7 +40,7 @@ exports[`SwapSkeleton.tsx > renders a skeleton 1`] = `
 }
 
 .c6 {
-  background-color: rgba(19,19,19,0.08);
+  background-color: rgba(19, 19, 19, 0.08);
   height: 36px;
 }
 
@@ -60,33 +49,16 @@ exports[`SwapSkeleton.tsx > renders a skeleton 1`] = `
 }
 
 .c4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
 }
 
 .c3 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-flow: column;
-  -ms-flex-flow: column;
   flex-flow: column;
   background-color: #F9F9F9;
   border-radius: 16px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   gap: 30px;
   padding: 48px 12px;

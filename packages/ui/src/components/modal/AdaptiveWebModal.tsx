@@ -1,4 +1,5 @@
 import { RemoveScroll } from '@tamagui/remove-scroll'
+import { ZIndexHardcodedContext } from '@tamagui/z-index-stack'
 import { PropsWithChildren, ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import { DimensionValue } from 'react-native'
 import { Adapt, Dialog, GetProps, Sheet, styled, useIsTouchDevice, useMedia, View, VisuallyHidden } from 'tamagui'
@@ -94,55 +95,55 @@ export function WebBottomSheet({
 
   return (
     <RemoveScroll enabled={isOpen}>
-      <Sheet
-        key={touchDeviceSheetKey}
-        dismissOnOverlayPress
-        dismissOnSnapToBottom
-        modal
-        animation="200ms"
-        disableDrag={isTouchDevice && !isHandlePressed}
-        open={isOpen}
-        snapPointsMode="fit"
-        zIndex={zIndexes.modal}
-        onOpenChange={handleClose}
-      >
-        <Sheet.Frame
-          borderBottomWidth="$none"
-          borderColor="$surface3"
-          borderTopLeftRadius="$rounded16"
-          borderTopRightRadius="$rounded16"
-          borderWidth="$spacing1"
-          px="$spacing8"
-          zIndex={zIndexes.modal}
-          {...sheetOverrideStyles}
-          {...sheetHeightStyles}
+      {/* Reset ZIndexHardcodedContext to prevent parent Dialog's zIndex from affecting Sheet stacking */}
+      <ZIndexHardcodedContext.Provider value={undefined}>
+        <Sheet
+          key={touchDeviceSheetKey}
+          dismissOnOverlayPress
+          dismissOnSnapToBottom
+          modal
+          animation="200ms"
+          disableDrag={isTouchDevice && !isHandlePressed}
+          open={isOpen}
+          snapPointsMode="fit"
+          onOpenChange={handleClose}
         >
-          {!hideHandlebar && (
-            <Sheet.Handle
-              justifyContent="center"
-              m={0}
-              pb="$spacing16"
-              pt="$spacing8"
-              width="100%"
-              backgroundColor="$transparent"
-              onMouseDown={() => setHandlePressed(true)}
-              onMouseUp={() => setHandlePressed(false)}
-            >
-              <Flex backgroundColor="$neutral3" height="$spacing4" width="$spacing32" borderRadius="$roundedFull" />
-            </Sheet.Handle>
-          )}
-          <Flex gap={gap} $platform-web={{ overflow: 'auto' }} {...sheetHeightStyles}>
-            {children}
-          </Flex>
-        </Sheet.Frame>
-        <Sheet.Overlay
-          animation="lazy"
-          backgroundColor="$scrim"
-          enterStyle={{ opacity: 0 }}
-          exitStyle={{ opacity: 0 }}
-          zIndex={zIndexes.modalBackdrop}
-        />
-      </Sheet>
+          <Sheet.Frame
+            borderBottomWidth="$none"
+            borderColor="$surface3"
+            borderTopLeftRadius="$rounded16"
+            borderTopRightRadius="$rounded16"
+            borderWidth="$spacing1"
+            px="$spacing8"
+            {...sheetOverrideStyles}
+            {...sheetHeightStyles}
+          >
+            {!hideHandlebar && (
+              <Sheet.Handle
+                justifyContent="center"
+                m={0}
+                pb="$spacing16"
+                pt="$spacing8"
+                width="100%"
+                backgroundColor="$transparent"
+                onMouseDown={() => setHandlePressed(true)}
+                onMouseUp={() => setHandlePressed(false)}
+              >
+                <Flex backgroundColor="$neutral3" height="$spacing4" width="$spacing32" borderRadius="$roundedFull" />
+              </Sheet.Handle>
+            )}
+            <Flex gap={gap} $platform-web={{ overflow: 'auto' }} {...sheetHeightStyles}>
+              {children}
+            </Flex>
+          </Sheet.Frame>
+          <Sheet.Overlay
+            animation="lazy"
+            backgroundColor="$scrim"
+            enterStyle={{ opacity: 0 }}
+            exitStyle={{ opacity: 0 }}
+          />
+        </Sheet>
+      </ZIndexHardcodedContext.Provider>
     </RemoveScroll>
   )
 }
@@ -184,6 +185,7 @@ export function AdaptiveWebModal({
   p,
   zIndex,
   hideHandlebar,
+  borderWidth,
   ...rest
 }: ModalProps): JSX.Element {
   const filteredRest = Object.fromEntries(Object.entries(rest).filter(([_, v]) => v !== undefined)) // Filter out undefined properties from rest
@@ -230,9 +232,6 @@ export function AdaptiveWebModal({
           </Adapt>
         )}
 
-      {/* TODO(WEB-7196): on latest Tamagui upgrade to 1.125.17, stacking sheets/dialogs on mweb is broken because Adapt isn't playing nice with Dialog.Portal zIndexes.
-       * Dialog.Portal also does not like zIndex={undefined}, so temp giving it a dummy value of zIndexes.background
-       */}
       <Dialog.Portal zIndex={zIndex ?? zIndexes.modal}>
         <Overlay key="overlay" zIndex={zIndexes.modalBackdrop} />
         <Flex
@@ -245,11 +244,12 @@ export function AdaptiveWebModal({
         >
           <Dialog.Content
             key="content"
-            bordered
             elevate
+            bordered={borderWidth !== 0}
             animateOnly={['transform', 'opacity']}
             animation={isOpen ? 'fast' : 'fastExit'}
             borderColor="$surface3"
+            borderWidth={borderWidth}
             borderRadius="$rounded16"
             enterStyle={{ x: 0, y: isTopAligned ? -12 : 12, opacity: 0 }}
             exitStyle={{ x: 0, y: isTopAligned ? -12 : 10, opacity: 0 }}
@@ -289,6 +289,7 @@ export function WebModalWithBottomAttachment({
   gap,
   zIndex,
   hideHandlebar,
+  borderWidth,
   ...rest
 }: ModalProps & { bottomAttachment?: ReactNode }): JSX.Element {
   const shadowProps = useShadowPropsShort()
@@ -351,7 +352,7 @@ export function WebModalWithBottomAttachment({
               backgroundColor={backgroundColor}
               borderColor="$surface3"
               borderRadius="$rounded16"
-              borderWidth="$spacing1"
+              borderWidth={borderWidth ?? '$spacing1'}
               px="$spacing24"
               py="$spacing16"
               gap={gap ?? '$gap4'}

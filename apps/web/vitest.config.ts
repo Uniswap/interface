@@ -78,6 +78,7 @@ export default defineConfig({
       'test-utils': path.resolve(__dirname, 'src/test-utils'),
       connection: path.resolve(__dirname, 'src/connection'),
       nft: path.resolve(__dirname, 'src/nft'),
+      'notification-service': path.resolve(__dirname, 'src/notification-service'),
       tracing: path.resolve(__dirname, 'src/tracing'),
       rpc: path.resolve(__dirname, 'src/rpc'),
       assets: path.resolve(__dirname, 'src/assets'),

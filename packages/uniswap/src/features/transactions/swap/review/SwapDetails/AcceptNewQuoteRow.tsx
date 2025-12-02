@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -75,31 +75,27 @@ export function AcceptNewQuoteRow({
     >
       <Flex fill>
         <Text color="$neutral2" variant="body3">
-          {derivedSwapInfo.exactCurrencyField === CurrencyField.INPUT
-            ? t('swap.details.newQuote.output')
-            : t('swap.details.newQuote.input')}
+          {t('swap.details.updatedPrice')}
         </Text>
         <Flex row alignItems="center">
-          <Text adjustsFontSizeToFit color="$neutral1" numberOfLines={1} textAlign="center" variant="body3">
+          <Text color="$neutral1" numberOfLines={1} variant="body3">
             {formattedDerivedAmount} {derivedSymbol} <Text color="$neutral2">({percentageDifference}%)</Text>
           </Text>
         </Flex>
       </Flex>
-      <Flex>
-        <Trace logPress element={ElementName.AcceptNewRate}>
-          <TouchableArea
-            backgroundColor="$accent2"
-            borderRadius="$rounded12"
-            px="$spacing8"
-            py="$spacing4"
-            onPress={onAcceptTrade}
-          >
-            <Text color="$accent1" variant="buttonLabel2">
-              {t('common.button.accept')}
-            </Text>
-          </TouchableArea>
-        </Trace>
-      </Flex>
+      <Trace logPress element={ElementName.AcceptNewRate}>
+        <Button
+          px="$spacing8"
+          width="auto"
+          variant="branded"
+          emphasis="secondary"
+          size="small"
+          flex={0}
+          onPress={onAcceptTrade}
+        >
+          {t('common.button.accept')}
+        </Button>
+      </Trace>
     </Flex>
   )
 }

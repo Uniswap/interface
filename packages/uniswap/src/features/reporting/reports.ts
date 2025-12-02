@@ -21,6 +21,14 @@ export enum TokenDataReportOption {
   Other = 'other',
 }
 
+export enum PoolDataReportOption {
+  Price = 'price',
+  Volume = 'volume',
+  PriceChart = 'price_chart',
+  Liquidity = 'liquidity',
+  Other = 'other',
+}
+
 export function submitTokenIssueReport({
   source,
   chainId,
@@ -151,5 +159,38 @@ export function submitPoolSpamReport({
     version,
     token0: token0.isNative ? NATIVE_ANALYTICS_ADDRESS_VALUE : token0.address,
     token1: token1.isNative ? NATIVE_ANALYTICS_ADDRESS_VALUE : token1.address,
+  })
+}
+
+export function submitPoolDataReport({
+  poolId,
+  chainId,
+  version,
+  token0,
+  token1,
+  reportOptions,
+  reportText,
+}: {
+  poolId: string
+  chainId: UniverseChainId
+  version: ProtocolVersion
+  token0: Currency
+  token1: Currency
+  reportOptions: PoolDataReportOption[]
+  reportText: string
+}): void {
+  sendAnalyticsEvent(UniswapEventName.DataReportSubmitted, {
+    type: 'pool',
+    pool_id: poolId,
+    chain_id: chainId,
+    version,
+    token0: token0.isNative ? NATIVE_ANALYTICS_ADDRESS_VALUE : token0.address,
+    token1: token1.isNative ? NATIVE_ANALYTICS_ADDRESS_VALUE : token1.address,
+    price: reportOptions.includes(PoolDataReportOption.Price),
+    price_chart: reportOptions.includes(PoolDataReportOption.PriceChart),
+    volume: reportOptions.includes(PoolDataReportOption.Volume),
+    liquidity: reportOptions.includes(PoolDataReportOption.Liquidity),
+    something_else: reportOptions.includes(PoolDataReportOption.Other),
+    text: reportOptions.includes(PoolDataReportOption.Other) ? reportText : undefined,
   })
 }

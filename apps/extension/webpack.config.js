@@ -29,6 +29,7 @@ const compileNodeModules = [
   'expo-linear-gradient',
   'react-native-image-picker',
   'expo-modules-core',
+  'react-native-reanimated',
 ]
 
 // This is needed for webpack to compile JavaScript.
@@ -48,8 +49,8 @@ const babelLoaderConfiguration = {
     loader: 'babel-loader',
     options: {
       cacheDirectory: true,
-      // The 'metro-react-native-babel-preset' preset is recommended to match React Native's packager
-      presets: ['module:@react-native/babel-preset'],
+      // The 'babel-preset-expo' preset is recommended to match React Native's packager
+      presets: ['babel-preset-expo'],
       // Re-write paths to import only the modules needed by the app
       plugins: ['react-native-web'],
     },

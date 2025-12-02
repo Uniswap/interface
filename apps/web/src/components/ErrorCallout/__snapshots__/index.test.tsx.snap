@@ -94,9 +94,9 @@ exports[`ErrorCallout > should render defaults 1`] = `
           Error: test
         </span>
         <div
-          class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--6 _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer _mt-t-space-spa94665587 t_group_true"
+          class="is_TouchableArea  t_group_true"
           role="button"
-          style="transition: 100ms;"
+          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; outline-color: rgba(0, 0, 0, 0); opacity: 1; cursor: pointer; text-decoration: none; transition-duration: 0.2s; text-decoration-line: none; margin-top: 2px; transform: [object Object]; transition: 100ms;"
           tabindex="0"
         >
           <div

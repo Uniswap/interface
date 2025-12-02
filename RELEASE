@@ -1,1 +1,23 @@
-Various bug fixes and performance improvements
+IPFS hash of the deployment:
+- CIDv0: `QmfA2iP7C6Y29rS3smDUN7zKWJpgiKSxyj5CiqjWNNCBhS`
+- CIDv1: `bafybeihz3yvxcie35vzydrbldncmhetttsgca52rjmhomobb6k4tbrly7e`
+
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
+
+IPFS gateways:
+- https://bafybeihz3yvxcie35vzydrbldncmhetttsgca52rjmhomobb6k4tbrly7e.ipfs.dweb.link/
+- [ipfs://QmfA2iP7C6Y29rS3smDUN7zKWJpgiKSxyj5CiqjWNNCBhS/](ipfs://QmfA2iP7C6Y29rS3smDUN7zKWJpgiKSxyj5CiqjWNNCBhS/)
+
+### 5.120.3 (2025-12-02)
+
+
+### Bug Fixes
+
+* **web:** tamagui z-index fix (#25978) 7d1297b
+
+

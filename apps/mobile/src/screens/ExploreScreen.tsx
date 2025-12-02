@@ -1,4 +1,5 @@
-import { useIsFocused, useNavigation, useScrollToTop } from '@react-navigation/native'
+import type { RouteProp } from '@react-navigation/native'
+import { useIsFocused, useNavigation, useRoute, useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect, useRef, useState } from 'react'
@@ -8,6 +9,7 @@ import type { FlatList } from 'react-native-gesture-handler'
 import { useAnimatedRef } from 'react-native-reanimated'
 import type { Edge } from 'react-native-safe-area-context'
 import { useDispatch } from 'react-redux'
+import type { ExploreStackParamList } from 'src/app/navigation/types'
 import { ExploreSections } from 'src/components/explore/ExploreSections/ExploreSections'
 import { ExploreScreenSearchResultsList } from 'src/components/explore/search/ExploreScreenSearchResultsList'
 import { Screen } from 'src/components/layout/Screen'
@@ -38,6 +40,9 @@ export function ExploreScreen(): JSX.Element {
   const { chains } = useEnabledChains()
   const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
   const navigation = useNavigation()
+  const route = useRoute<RouteProp<ExploreStackParamList, MobileScreens.Explore>>()
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- route.params can be null
+  const { chainId, orderByMetric, showFavorites } = route.params ?? {}
 
   const { isSheetReady } = useBottomSheetContext({ forceSafeReturn: isBottomTabsEnabled })
 
@@ -53,6 +58,8 @@ export function ExploreScreen(): JSX.Element {
   // Use refs to avoid stale closures in the event listener
   const isAtTopRef = useRef(isAtTop)
   const isFocusedRef = useRef(isFocused)
+  // Track the previous route name to detect true double-tap behavior
+  const prevRouteNameRef = useRef<string | null>(null)
 
   isAtTopRef.current = isAtTop
   isFocusedRef.current = isFocused
@@ -76,18 +83,25 @@ export function ExploreScreen(): JSX.Element {
 
     const unsubscribe = navigation.addListener('state', (e) => {
       const currentRouteName = e.data.state.routeNames[e.data.state.index] as unknown as string | undefined
-
-      // Check if we're navigating to the Explore screen
       const isOnExploreScreen = currentRouteName === MobileScreens.Explore
 
-      // Only handle this if:
-      // 1. We were already focused before the state change (i.e., tab was pressed while already on this screen)
-      // 2. The current route is the Explore screen
-      // 3. The screen is currently focused
-      if (!isOnExploreScreen || !isFocusedRef.current) {
+      // Double-tap detection: Only trigger focus when user taps Explore tab while already on Explore
+      // This distinguishes between:
+      // - Initial navigation to Explore (prevRoute !== Explore) → No auto-focus
+      // - Tab double-tap (prevRoute === Explore && currentRoute === Explore) → Focus search
+      const isDoubleTap = prevRouteNameRef.current === MobileScreens.Explore && isOnExploreScreen
+
+      // Update the previous route for next navigation event
+      prevRouteNameRef.current = currentRouteName ?? null
+
+      // Only handle double-tap behavior when:
+      // 1. This is a true double-tap (was on Explore, tapped Explore again)
+      // 2. The screen is currently focused
+      if (!isDoubleTap || !isFocusedRef.current) {
         return
       }
 
+      // Double-tap behavior: Focus search if at top, scroll to top otherwise
       if (isAtTopRef.current) {
         textInputRef.current?.focus()
       } else {
@@ -103,7 +117,7 @@ export function ExploreScreen(): JSX.Element {
   const canRenderList = useRenderNextFrame(isSheetReady && !isSearchMode)
 
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
-    useFilterCallbacks(null, ModalName.Search)
+    useFilterCallbacks(chainId ?? null, ModalName.Search)
 
   const onSearchChangeText = useEvent((newSearchFilter: string): void => {
     onChangeText(newSearchFilter)
@@ -144,6 +158,7 @@ export function ExploreScreen(): JSX.Element {
       <Flex p="$spacing16">
         <SearchTextInput
           ref={textInputRef}
+          autoFocus={false}
           cancelBehaviorType={CancelBehaviorType.BackChevron}
           endAdornment={
             isSearchMode ? (
@@ -174,7 +189,13 @@ export function ExploreScreen(): JSX.Element {
           parsedChainFilter={parsedChainFilter}
         />
       ) : isSheetReady && canRenderList ? (
-        <ExploreSections listRef={listRef} setIsAtTopOnScroll={isBottomTabsEnabled ? setIsAtTop : undefined} />
+        <ExploreSections
+          listRef={listRef}
+          setIsAtTopOnScroll={isBottomTabsEnabled ? setIsAtTop : undefined}
+          chainId={chainId}
+          orderByMetric={orderByMetric}
+          showFavorites={showFavorites}
+        />
       ) : null}
     </Screen>
   )
@@ -187,7 +208,7 @@ export function ExploreScreen(): JSX.Element {
  */
 const useRenderNextFrame = (condition: boolean): boolean => {
   const [canRender, setCanRender] = useState<boolean>(false)
-  const rafRef = useRef<number>()
+  const rafRef = useRef<number>(undefined)
   const mountedRef = useRef<boolean>(true)
 
   const conditionRef = useRef<boolean>(condition)

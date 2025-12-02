@@ -1,7 +1,7 @@
 {
   "data": {
     "token": {
-      "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "id": "VG9rZW46RVRIRVJFVU1fMHgxZjk4NDBhODVkNWFGNWJmMUQxNzYyRjkyNUJEQURkQzQyMDFGOTg0",
       "decimals": 18,
       "name": "Uniswap",
       "chain": "ETHEREUM",
@@ -9,55 +9,108 @@
       "symbol": "UNI",
       "standard": "ERC20",
       "market": {
-        "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD",
-        "price": {
-          "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD-1234567890",
-          "value": 10.5,
-          "__typename": "Amount"
-        },
-        "pricePercentChange24h": {
-          "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD-24h",
-          "value": 5.2,
-          "__typename": "Amount"
-        },
-        "volume24h": {
-          "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD-volume-24h",
-          "value": 100000000,
-          "__typename": "Amount"
-        },
+        "id": "VG9rZW5NYXJrZXQ6RVRIRVJFVU1fMHgxZjk4NDBhODVkNWFGNWJmMUQxNzYyRjkyNUJEQURkQzQyMDFGOTg0X1VTRA==",
         "totalValueLocked": {
-          "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD-tvl",
-          "value": 500000000,
+          "id": "QW1vdW50OjI4MDQwOTk5LjA2NjE5ODAwNl9VU0Q=",
+          "value": 2.8040999066198006e7,
+          "currency": "USD",
+          "__typename": "Amount"
+        },
+        "price": {
+          "id": "QW1vdW50OjUuNDcyMTQzODU4Mzk5NjQ1X1VTRA==",
+          "value": 5.472143858399645,
+          "currency": "USD",
+          "__typename": "Amount"
+        },
+        "volume24H": {
+          "id": "QW1vdW50OjU3NzQ4MjguMzA0NzMzMjc2X1VTRA==",
+          "value": 5774828.304733276,
+          "currency": "USD",
+          "__typename": "Amount"
+        },
+        "priceHigh52W": {
+          "id": "QW1vdW50OjE5LjMzOTkwMzUyNTI5OTM3N19VU0Q=",
+          "value": 19.339903525299377,
+          "__typename": "Amount"
+        },
+        "priceLow52W": {
+          "id": "QW1vdW50OjMuODEwNjc1NjQwNTQxMTUxNV9VU0Q=",
+          "value": 3.8106756405411515,
           "__typename": "Amount"
         },
         "__typename": "TokenMarket"
       },
       "project": {
-        "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+        "id": "VG9rZW5Qcm9qZWN0OkVUSEVSRVVNXzB4MWY5ODQwYTg1ZDVhZjViZjFkMTc2MmY5MjViZGFkZGM0MjAxZjk4NF9Vbmlzd2Fw",
         "name": "Uniswap",
-        "description": "UNI is the governance token for Uniswap",
-        "homepageUrl": "https://uniswap.org",
+        "description": "UNI is the governance token for Uniswap, an Automated Market Marker DEX on the Ethereum blockchain. The UNI token allows token holders to participate in the governance of the protocol. Key decisions such as usage of the treasury or future upgrades can be decided through a governance vote.",
+        "homepageUrl": "https://uniswap.org/",
         "twitterName": "Uniswap",
-        "logoUrl": "https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png",
+        "logoUrl": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png",
+        "isSpam": false,
         "tokens": [
           {
-            "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+            "id": "VG9rZW46RVRIRVJFVU1fMHgxZjk4NDBhODVkNWFGNWJmMUQxNzYyRjkyNUJEQURkQzQyMDFGOTg0",
             "chain": "ETHEREUM",
             "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+            "__typename": "Token"
+          },
+          {
+            "id": "VG9rZW46UE9MWUdPTl8weGIzM0VhQWQ4ZDkyMkIxMDgzNDQ2REMyM2Y2MTBjMjU2N2ZCNTE4MGY=",
+            "chain": "POLYGON",
+            "address": "0xb33EaAd8d922B1083446DC23f610c2567fB5180f",
+            "__typename": "Token"
+          },
+          {
+            "id": "VG9rZW46QVJCSVRSVU1fMHhGYTdGODk4MGIwZjFFNjRBMjA2Mjc5MWNjM2IwODcxNTcyZjFGN2Yw",
+            "chain": "ARBITRUM",
+            "address": "0xFa7F8980b0f1E64A2062791cc3b0871572f1F7f0",
+            "__typename": "Token"
+          },
+          {
+            "id": "VG9rZW46T1BUSU1JU01fMHg2ZmQ5ZDdBRDE3MjQyYzQxZjcxMzFkMjU3MjEyYzU0QTBlODE2Njkx",
+            "chain": "OPTIMISM",
+            "address": "0x6fd9d7AD17242c41f7131d257212c54A0e816691",
+            "__typename": "Token"
+          },
+          {
+            "id": "VG9rZW46QkFTRV8weGMzRGU4MzBFQTA3NTI0YTA3NjE2NDZhNmE0ZTRiZTBlMTE0YTNDODM=",
+            "chain": "BASE",
+            "address": "0xc3De830EA07524a0761646a6a4e4be0e114a3C83",
+            "__typename": "Token"
+          },
+          {
+            "id": "VG9rZW46Qk5CXzB4QmY1MTQwQTIyNTc4MTY4RkQ1NjJEQ2NGMjM1RTVENDNBMDJjZTlCMQ==",
+            "chain": "BNB",
+            "address": "0xBf5140A22578168FD562DCcF235E5D43A02ce9B1",
+            "__typename": "Token"
+          },
+          {
+            "id": "VG9rZW46QVZBTEFOQ0hFXzB4OGVCQWYyMkI2RjA1M2RGRmVhZjQ2ZjREZDllRkE5NUQ4OWJhODU4MA==",
+            "chain": "AVALANCHE",
+            "address": "0x8eBAf22B6F053dFFeaf46f4Dd9eFA95D89ba8580",
+            "__typename": "Token"
+          },
+          {
+            "id": "VG9rZW46VU5JQ0hBSU5fMHg4ZjE4N2FBMDU2MTlhMDE3MDc3ZjUzMDg5MDQ3Mzk4NzdjZTllQTIx",
+            "chain": "UNICHAIN",
+            "address": "0x8f187aA05619a017077f5308904739877ce9eA21",
             "__typename": "Token"
           }
         ],
         "markets": [
           {
-            "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD",
+            "id": "VG9rZW5Qcm9qZWN0TWFya2V0OlZHOXJaVzVRY205cVpXTjBPa1ZVU0VWU1JWVk5YekI0TVdZNU9EUXdZVGcxWkRWaFpqVmlaakZrTVRjMk1tWTVNalZpWkdGa1pHTTBNakF4WmprNE5GOVZibWx6ZDJGd19VU0Q=",
             "fullyDilutedValuation": {
-              "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD-fdv",
-              "value": 10500000000,
+              "id": "QW1vdW50OjU0NzQxODQwMzRfVVNE",
+              "value": 5.474184034e9,
+              "currency": "USD",
               "__typename": "Amount"
             },
             "marketCap": {
-              "id": "1-0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984-USD-marketcap",
-              "value": 6300000000,
+              "id": "QW1vdW50OjM0NDgxNDg4MzdfVVNE",
+              "value": 3.448148837e9,
+              "currency": "USD",
               "__typename": "Amount"
             },
             "__typename": "TokenProjectMarket"

@@ -5,10 +5,38 @@ exports[`RemoveButton renders without error 1`] = `
   collapsable={false}
   focusVisibleStyle={{}}
   forwardedRef={[Function]}
+  jestAnimatedProps={
+    {
+      "value": {},
+    }
+  }
   jestAnimatedStyle={
     {
       "value": {},
     }
+  }
+  jestInlineStyle={
+    [
+      {
+        "alignItems": "center",
+        "backgroundColor": "rgba(19, 19, 19, 0.35)",
+        "borderBottomLeftRadius": 999999,
+        "borderBottomRightRadius": 999999,
+        "borderTopLeftRadius": 999999,
+        "borderTopRightRadius": 999999,
+        "flexDirection": "column",
+        "height": 24,
+        "justifyContent": "center",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+        "width": 24,
+        "zIndex": 1080,
+      },
+    ]
   }
   onBlur={[Function]}
   onClick={[Function]}
@@ -22,39 +50,35 @@ exports[`RemoveButton renders without error 1`] = `
   onStartShouldSetResponder={[Function]}
   role="button"
   style={
-    {
-      "alignItems": "center",
-      "backgroundColor": "rgba(19, 19, 19, 0.35)",
-      "borderBottomLeftRadius": 999999,
-      "borderBottomRightRadius": 999999,
-      "borderTopLeftRadius": 999999,
-      "borderTopRightRadius": 999999,
-      "flexDirection": "column",
-      "height": 24,
-      "justifyContent": "center",
-      "opacity": 1,
-      "transform": [
-        {
-          "scale": 1,
-        },
-      ],
-      "width": 24,
-      "zIndex": 1080,
-    }
+    [
+      {
+        "alignItems": "center",
+        "backgroundColor": "rgba(19, 19, 19, 0.35)",
+        "borderBottomLeftRadius": 999999,
+        "borderBottomRightRadius": 999999,
+        "borderTopLeftRadius": 999999,
+        "borderTopRightRadius": 999999,
+        "flexDirection": "column",
+        "height": 24,
+        "justifyContent": "center",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+        "width": 24,
+        "zIndex": 1080,
+      },
+      {},
+    ]
   }
   testID="explore/remove-button"
 >
   <View
-    onBlur={[Function]}
-    onFocus={[Function]}
     style={
       {
-        "backgroundColor": {
-          "dynamic": {
-            "dark": "#131313",
-            "light": "#FFFFFF",
-          },
-        },
+        "backgroundColor": "#FFFFFF",
         "borderBottomLeftRadius": 12,
         "borderBottomRightRadius": 12,
         "borderTopLeftRadius": 12,

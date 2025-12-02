@@ -2,8 +2,8 @@
 
 exports[`disable nft on searchbar > should render searchbar on larger screen 1`] = `
 .c1 {
-  background-color: rgba(19,19,19,0.08);
-  color: rgba(19,19,19,0.63);
+  background-color: rgba(19, 19, 19, 0.08);
+  color: rgba(19, 19, 19, 0.63);
   padding: 0px 8px;
   width: 20px;
   height: 20px;
@@ -11,20 +11,10 @@ exports[`disable nft on searchbar > should render searchbar on larger screen 1`]
   font-size: 12px;
   font-weight: 535;
   line-height: 16px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
   opacity: 0.6;
-  -webkit-backdrop-filter: blur(60px);
   backdrop-filter: blur(60px);
 }
 
@@ -44,14 +34,15 @@ exports[`disable nft on searchbar > should render searchbar on larger screen 1`]
       <h2
         class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
         data-disable-theme="true"
-        id="title-:r4:"
+        id="Dialog--:r5:-title"
         role="heading"
       />
     </span>
     <div
-      class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--75 _containerType-_platformweb_normal _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer _width-340px t_group_true"
+      class="is_TouchableArea  t_group_true"
       data-testid="nav-search-input"
       role="button"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; width: 340px; transform: [object Object];"
       tabindex="0"
     >
       <div

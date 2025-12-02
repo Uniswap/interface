@@ -272,4 +272,6 @@ export const prepareExecuteSwapSagaParams = createFixture<SwapParams>()(() => ({
   onFailure: jest.fn(),
   onPending: jest.fn(),
   preSignedTransaction: preparePreSignedSwapTransaction(),
+  setCurrentStep: jest.fn(),
+  setSteps: jest.fn(),
 }))

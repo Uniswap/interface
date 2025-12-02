@@ -2,11 +2,11 @@ import path from 'path'
 
 export const Mocks = {
   FiatOnRamp: {
-    get_country: '../mocks/fiatOnRamp/get-country.json',
-    supported_fiat_currencies: '../mocks/fiatOnRamp/supported-fiat-currencies.json',
-    supported_countries: '../mocks/fiatOnRamp/supported-countries.json',
-    supported_tokens: '../mocks/fiatOnRamp/supported-tokens.json',
-    quotes: '../mocks/fiatOnRamp/quotes.json',
+    get_country: path.resolve(__dirname, '../mocks/fiatOnRamp/get-country.json'),
+    supported_fiat_currencies: path.resolve(__dirname, '../mocks/fiatOnRamp/supported-fiat-currencies.json'),
+    supported_countries: path.resolve(__dirname, '../mocks/fiatOnRamp/supported-countries.json'),
+    supported_tokens: path.resolve(__dirname, '../mocks/fiatOnRamp/supported-tokens.json'),
+    quotes: path.resolve(__dirname, '../mocks/fiatOnRamp/quotes.json'),
   },
   UniswapX: {
     quote: path.resolve(__dirname, '../mocks/rest/uniswapX/quote.json'),
@@ -23,6 +23,7 @@ export const Mocks = {
     token_warning: path.resolve(__dirname, '../mocks/graphql/Token/token_warning.json'),
     search_token_tether: path.resolve(__dirname, '../mocks/graphql/Token/search_token_tether.json'),
     uni_token: path.resolve(__dirname, '../mocks/graphql/Token/uni_token.json'),
+    uni_token_price: path.resolve(__dirname, '../mocks/graphql/Token/uni_token_price.json'),
     sepolia_yay_token: path.resolve(__dirname, '../mocks/graphql/Token/sepolia_yay_token.json'),
   },
   TokenProjects: {
@@ -43,5 +44,11 @@ export const Mocks = {
     nfts: path.resolve(__dirname, '../mocks/graphql/Account/nfts.json'),
     full_activity_history: path.resolve(__dirname, '../mocks/graphql/Account/full_activity.json'),
     activity_history: path.resolve(__dirname, '../mocks/graphql/Account/activity_history.json'),
+  },
+  DataApiService: {
+    get_portfolio: path.resolve(__dirname, '../mocks/dataApiService/get_portfolio.json'),
+  },
+  TradingApi: {
+    swap: path.resolve(__dirname, '../mocks/tradingApi/swap.json'),
   },
 }

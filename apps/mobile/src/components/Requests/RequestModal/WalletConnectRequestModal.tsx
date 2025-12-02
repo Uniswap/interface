@@ -2,7 +2,7 @@ import { useNetInfo } from '@react-native-community/netinfo'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { getSdkError } from '@walletconnect/utils'
 import { providers } from 'ethers'
-import React, { useMemo, useRef } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
@@ -22,6 +22,7 @@ import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
   isBatchedTransactionRequest,
+  isPersonalSignRequest,
   isTransactionRequest,
   setDidOpenFromDeepLink,
   WalletConnectSigningRequest,
@@ -37,9 +38,13 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { DappRequestType, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
+import { shouldDisableConfirm } from 'wallet/src/features/dappRequests/utils/riskUtils'
 import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'
+import { useLiveAccountDelegationDetails } from 'wallet/src/features/smartWallet/hooks/useLiveAccountDelegationDetails'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
-import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useHasSmartWalletConsent, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 interface Props {
   onClose: () => void
@@ -61,8 +66,14 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const netInfo = useNetInfo()
   const didOpenFromDeepLink = useSelector(selectDidOpenFromDeepLink)
   const chainId = request.chainId
+  // Initialize with null to indicate scan hasn't completed yet
+  const [riskLevel, setRiskLevel] = useState<TransactionRiskLevel | null>(null)
+  const { value: confirmedRisk, setValue: setConfirmedRisk } = useBooleanState(false)
 
   const enablePermitMismatchUx = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
+  const enableEip5792Methods = useFeatureFlag(FeatureFlags.Eip5792Methods)
+  const hasSmartWalletConsent = useHasSmartWalletConsent()
+  const blockaidTransactionScanning = useFeatureFlag(FeatureFlags.BlockaidTransactionScanning)
 
   const tx: providers.TransactionRequest | undefined = useMemo(() => {
     if (isTransactionRequest(request)) {
@@ -82,7 +93,18 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       addressInput2: { address: request.account, platform: Platform.EVM },
     }),
   )
-  const gasFee = useTransactionGasFee({ tx })
+  const delegationData = useLiveAccountDelegationDetails({
+    address: request.account,
+    chainId,
+  })
+  const shouldDelegate = Boolean(delegationData?.needsDelegation && enableEip5792Methods && hasSmartWalletConsent)
+  const smartContractDelegationAddress = shouldDelegate
+    ? delegationData?.contractAddress // latest Uniswap delegation address
+    : delegationData?.currentDelegationAddress
+  const gasFee = useTransactionGasFee({
+    tx,
+    ...(smartContractDelegationAddress && { smartContractDelegationAddress }),
+  })
 
   const hasSufficientFunds = useHasSufficientFunds({
     account: request.account,
@@ -113,6 +135,17 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
 
     if (isBlocked || isBlockedLoading) {
       return false
+    }
+
+    // If Blockaid scanning is enabled and this is a scannable request type,
+    // disable confirm based on risk level and confirmation state
+    if (
+      blockaidTransactionScanning &&
+      (isTransactionRequest(request) || isBatchedTransactionRequest(request) || isPersonalSignRequest(request))
+    ) {
+      if (shouldDisableConfirm({ riskLevel, confirmedRisk })) {
+        return false
+      }
     }
 
     if (getDoesMethodCostGas(request)) {
@@ -289,7 +322,6 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       scrollDownButtonText={t('walletConnect.request.button.scrollDown')}
       contentContainerStyle={{
         paddingHorizontal: spacing.none,
-        paddingTop: spacing.spacing12,
       }}
       onClose={handleClose}
       onConfirm={onConfirmPress}
@@ -300,6 +332,10 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
         hasSufficientFunds={hasSufficientFunds}
         isBlocked={isBlocked}
         request={request}
+        showSmartWalletActivation={shouldDelegate}
+        confirmedRisk={confirmedRisk}
+        onConfirmRisk={setConfirmedRisk}
+        onRiskLevelChange={setRiskLevel}
       />
     </ModalWithOverlay>
   )

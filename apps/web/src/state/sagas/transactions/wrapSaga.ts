@@ -43,7 +43,7 @@ function* wrap(params: WrapParams) {
 
     const hash = yield* call(handleWrapStep, {
       step,
-      account,
+      address: account.address,
       setCurrentStep: noop,
       shouldWaitForConfirmation: false,
       allowDuplicativeTx: true, // Compared to UniswapX wraps, the user should not be stopped from wrapping in quick succession

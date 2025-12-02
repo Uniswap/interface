@@ -1,13 +1,16 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { filterTransactionDetailsFromActivityItems } from 'pages/Portfolio/Activity/Filters/utils'
+import { ViewAllButton } from 'pages/Portfolio/Overview/ViewAllButton'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { RightArrow } from 'ui/src/components/icons/RightArrow'
 import { iconSizes } from 'ui/src/theme'
 import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { filterDefinedWalletAddresses } from 'utils/filterDefinedWalletAddresses'
 
 const MAX_RECENT_ACTIVITY_ITEMS = 3
 
@@ -21,7 +24,7 @@ export default function MiniPortfolioV2({ evmAddress, svmAddress }: { evmAddress
     accountDrawer.close()
   }, [navigate, accountDrawer])
 
-  const handleViewMore = useCallback(() => {
+  const handleViewActivity = useCallback(() => {
     navigate('/portfolio/activity')
     accountDrawer.close()
   }, [navigate, accountDrawer])
@@ -29,12 +32,7 @@ export default function MiniPortfolioV2({ evmAddress, svmAddress }: { evmAddress
   const { renderActivityItem, sectionData } = useActivityData({
     evmOwner: evmAddress,
     svmOwner: svmAddress,
-    ownerAddresses: [evmAddress, svmAddress].filter(Boolean) as string[],
-    swapCallbacks: {
-      useLatestSwapTransaction: () => undefined,
-      useSwapFormTransactionState: () => undefined,
-      onRetryGenerator: () => () => {},
-    },
+    ownerAddresses: filterDefinedWalletAddresses([evmAddress, svmAddress]),
     fiatOnRampParams: undefined,
     skip: false,
   })
@@ -76,11 +74,11 @@ export default function MiniPortfolioV2({ evmAddress, svmAddress }: { evmAddress
         <Flex gap="$spacing0">{recentActivityItems}</Flex>
       </Flex>
 
-      <TouchableArea onPress={handleViewMore} alignSelf="flex-start">
-        <Text p="$spacing8" variant="buttonLabel3" color="$neutral3">
-          {t('common.button.viewMore')}
-        </Text>
-      </TouchableArea>
+      <ViewAllButton
+        label={t('portfolio.overview.activity.table.viewAllActivity')}
+        elementName={ElementName.PortfolioViewAllActivity}
+        onPress={handleViewActivity}
+      />
     </Flex>
   )
 }

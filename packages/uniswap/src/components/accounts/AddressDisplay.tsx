@@ -2,16 +2,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { PropsWithChildren, useMemo, useState } from 'react'
 import type { FlexAlignType, LayoutChangeEvent } from 'react-native'
 import { useDispatch } from 'react-redux'
-import {
-  AnimatableCopyIcon,
-  ColorTokens,
-  Flex,
-  HeightAnimator,
-  SpaceTokens,
-  Text,
-  TextProps,
-  TouchableArea,
-} from 'ui/src'
+import { AnimatableCopyIcon, ColorTokens, Flex, SpaceTokens, Text, TextProps, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -57,8 +48,6 @@ type AddressDisplayProps = {
   gapBetweenLines?: SpaceTokens
   showViewOnlyBadge?: boolean
   addressNumVisibleCharacters?: 4 | 6
-  accountIconTransition?: string
-  animateAddressSubtitleHeight?: boolean
 
   // TODO WALL-4545 Added flag to disable forced width causing trouble in other screens
   disableForcedWidth?: boolean
@@ -83,21 +72,6 @@ function CopyButtonWrapper({ children, onPress }: PropsWithChildren<CopyButtonWr
   return <>{children}</>
 }
 
-function ConditionalHeightAnimator({
-  animateHeight,
-  children,
-  open,
-}: {
-  animateHeight: boolean
-  children: JSX.Element
-  open: boolean
-}): JSX.Element | null {
-  if (animateHeight) {
-    return <HeightAnimator open={open}>{children}</HeightAnimator>
-  }
-  return open ? children : null
-}
-
 /** Helper component to display AccountIcon and formatted address */
 
 export function AddressDisplay({
@@ -112,7 +86,7 @@ export function AddressDisplay({
   captionTextColor = '$neutral2',
   captionVariant = 'subheading2',
   centered,
-  hideAddressInSubtitle,
+  hideAddressInSubtitle = false,
   direction = 'row',
   flexGrow = true,
   showCopy = false,
@@ -128,8 +102,6 @@ export function AddressDisplay({
   disableForcedWidth = false,
   displayNameTextAlign,
   addressNumVisibleCharacters = 6,
-  accountIconTransition,
-  animateAddressSubtitleHeight = false,
 }: AddressDisplayProps): JSX.Element {
   const dispatch = useDispatch()
   const { useWalletDisplayName } = useUniswapContext()
@@ -173,10 +145,9 @@ export function AddressDisplay({
         showBorder={showIconBorder}
         showViewOnlyBadge={showViewOnlyBadge}
         size={size}
-        transition={accountIconTransition}
       />
     )
-  }, [address, showIconBackground, showIconBorder, showViewOnlyBadge, size, accountIconTransition])
+  }, [address, showIconBackground, showIconBorder, showViewOnlyBadge, size])
 
   return (
     <Flex
@@ -220,7 +191,7 @@ export function AddressDisplay({
             )}
           </Flex>
         </CopyButtonWrapper>
-        <ConditionalHeightAnimator animateHeight={animateAddressSubtitleHeight} open={showAddressAsSubtitle}>
+        {showAddressAsSubtitle && (
           <AddressSubtitle
             address={address}
             captionSize={captionSize}
@@ -233,7 +204,7 @@ export function AddressDisplay({
             isCopied={isCopied}
             onPressCopyAddress={onPressCopyAddress}
           />
-        </ConditionalHeightAnimator>
+        )}
       </Flex>
     </Flex>
   )

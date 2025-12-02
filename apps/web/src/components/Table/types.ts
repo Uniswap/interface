@@ -7,4 +7,7 @@ export type TableBodyProps<T extends RowData = unknown> = {
   error?: ApolloError | boolean
   v2: boolean
   rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
+  loadingRowsCount?: number
+  rowHeight?: number
+  compactRowHeight?: number
 }

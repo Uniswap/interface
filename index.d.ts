@@ -23,9 +23,19 @@ declare type RequireNonNullable<T, K extends keyof T> = T & { [P in K]-?: NonNul
 
 declare type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>
 
+declare type AllKeysOf<T> = T extends object ? keyof T : never
+
+declare type ExtractPropertyType<T, K extends PropertyKey> = T extends Record<K, infer U> ? U : never
+
 // Utility type to create a range of numbers (inclusive of start but exclusive of end -- python style)
 declare type NumberRange<
   Start extends number,
   End extends number,
   Acc extends number[] = [],
 > = Acc['length'] extends End ? Acc[number] : NumberRange<Start, End, [...Acc, Acc['length'] & number]>
+
+declare type ReactElementWithAnyProps = React.ReactElement<any>
+
+declare namespace JSX {
+  interface Element extends React.ReactElement<any, any> {}
+}

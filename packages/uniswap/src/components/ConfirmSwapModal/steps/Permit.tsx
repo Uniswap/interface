@@ -14,7 +14,11 @@ const SignIcon = (): JSX.Element => (
   </Flex>
 )
 
-export function Permit2SignatureStepRow({ status }: StepRowProps<Permit2SignatureStep>): JSX.Element {
+export function Permit2SignatureStepRow({
+  status,
+  currentStepIndex,
+  totalStepsCount,
+}: StepRowProps<Permit2SignatureStep>): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
@@ -30,6 +34,8 @@ export function Permit2SignatureStepRow({ status }: StepRowProps<Permit2Signatur
       }}
       rippleColor={colors.accent1.val}
       status={status}
+      currentStepIndex={currentStepIndex}
+      totalStepsCount={totalStepsCount}
     />
   )
 }
@@ -42,13 +48,20 @@ const ContractIcon = (): JSX.Element => (
 const CONTRACT_ICON_COLOR = '#00C3A0'
 
 export function Permit2TransactionStepRow({
+  step,
   status,
-  index,
-  count,
-}: StepRowProps<Permit2TransactionStep> & { index: number; count?: number }): JSX.Element {
+  currentStepIndex,
+  totalStepsCount,
+  currentIndexOfStepType,
+  totalCountOfStepType,
+}: StepRowProps<Permit2TransactionStep> & {
+  currentIndexOfStepType: number
+  totalCountOfStepType?: number
+}): JSX.Element {
   const { t } = useTranslation()
 
-  const indexText = count && count > 1 ? ` (${index + 1}/${count})` : ''
+  const indexText =
+    totalCountOfStepType && totalCountOfStepType > 1 ? ` (${currentIndexOfStepType + 1}/${totalCountOfStepType})` : ''
 
   const title = {
     [StepStatus.Preview]: t('common.approvePermitTx', { indexText }),
@@ -67,6 +80,8 @@ export function Permit2TransactionStepRow({
         text: t('common.approvePermitTx.explainer'),
       }}
       status={status}
+      currentStepIndex={currentStepIndex}
+      totalStepsCount={totalStepsCount}
     />
   )
 }

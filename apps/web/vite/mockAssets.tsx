@@ -48,7 +48,7 @@ vi.mock('ui/src/assets', () => ({
   ARBITRUM_LOGO: 'arbitrum-logo.png',
   BASE_LOGO: 'base-logo.png',
   BNB_LOGO: 'bnb-logo.png',
-  MONAD_LOGO: 'monad-logo.png',
+  MONAD_LOGO_FILLED: 'monad-logo-filled.png',
   POLYGON_LOGO: 'polygon-logo.png',
   BLAST_LOGO: 'blast-logo.png',
   AVALANCHE_LOGO: 'avalanche-logo.png',

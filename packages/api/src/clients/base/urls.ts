@@ -57,3 +57,8 @@ export function createHelpArticleUrl(resourceId: string, path: string = 'article
   const product = isMobileApp ? 'mobileApp' : isExtensionApp ? 'extension' : 'web'
   return `${helpUrl}/${path}/${resourceId}?product_link=${product}`
 }
+
+// Entry Gateway API URLs
+export const DEV_ENTRY_GATEWAY_API_BASE_URL: string = 'https://entry-gateway.backend-dev.api.uniswap.org'
+export const STAGING_ENTRY_GATEWAY_API_BASE_URL: string = 'https://entry-gateway.backend-staging.api.uniswap.org'
+export const PROD_ENTRY_GATEWAY_API_BASE_URL: string = 'https://entry-gateway.backend-prod.api.uniswap.org'

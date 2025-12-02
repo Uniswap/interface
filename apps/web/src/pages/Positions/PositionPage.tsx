@@ -178,7 +178,6 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
       isFlaggedSpam: positionInfo.isHidden,
     })
 
-  const isDataReportingEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
   const reportPositionHandler = useReportPositionHandler({
     position: positionInfo,
     isVisible,
@@ -606,19 +605,17 @@ function PositionPage({ chainId }: { chainId: EVMUniverseChainId | undefined }) 
                   totalApr={positionInfo.totalApr}
                 />
               )}
-            {isDataReportingEnabled && (
-              <Flex row justifyContent="space-between">
-                <Text variant="body3" color="$neutral3">
-                  {t('reporting.pool.details.title')}
+            <Flex row justifyContent="space-between">
+              <Text variant="body3" color="$neutral3">
+                {t('reporting.pool.details.title')}
+              </Text>
+              <TouchableArea row gap="$gap4" alignItems="center" onPress={reportPositionHandler}>
+                <Flag size="$icon.16" color="$statusCritical" />
+                <Text variant="body3" color="$statusCritical">
+                  {t('nft.reportSpam')}
                 </Text>
-                <TouchableArea row gap="$gap4" alignItems="center" onPress={reportPositionHandler}>
-                  <Flag size="$icon.16" color="$statusCritical" />
-                  <Text variant="body3" color="$statusCritical">
-                    {t('nft.reportSpam')}
-                  </Text>
-                </TouchableArea>
-              </Flex>
-            )}
+              </TouchableArea>
+            </Flex>
           </Flex>
         </Flex>
       </BodyWrapper>
@@ -1031,6 +1028,7 @@ const PriceDisplay = ({
             {tokenASymbol} = 1 {tokenBSymbol}
           </Text>
           <TouchableArea
+            animation={null}
             $group-hover={{ opacity: 1 }}
             opacity={0}
             onPress={() => {

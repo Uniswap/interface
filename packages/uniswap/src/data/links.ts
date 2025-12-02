@@ -80,7 +80,7 @@ export function getErrorLink(
       graphQLErrors.forEach(({ message, locations, path }) => {
         sample(
           () =>
-            logger.error(`GraphQL ${operationName} error: ${message}`, {
+            logger.error(new Error(`GraphQL ${operationName} error: ${message}`), {
               tags: {
                 file: 'data/links',
                 function: 'getErrorLink',

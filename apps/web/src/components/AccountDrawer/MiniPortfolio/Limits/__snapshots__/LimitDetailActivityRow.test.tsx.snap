@@ -9,7 +9,8 @@ exports[`LimitDetailActivityRow > should render with valid details 1`] = `
     class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center"
   >
     <div
-      class="_whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _flexGrow-1 _pr-0px _pl-0px _cursor-pointer _alignItems-center _justifyContent-space-betwe3241 portfolio-row-wrapper undefined"
+      class=" portfolio-row-wrapper undefined"
+      style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; gap: 12px; flex-grow: 1; padding-right: 0px; padding-left: 0px; cursor: pointer; align-items: center; justify-content: space-between; white-space: nowrap; overflow-x: hidden; overflow-y: hidden; text-overflow: ellipsis;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-column _alignItems-flex-start _flexGrow-1 _overflowX-hidden _overflowY-hidden"
@@ -108,10 +109,11 @@ exports[`LimitDetailActivityRow > should render with valid details 1`] = `
     >
       <button
         aria-checked="false"
-        class="is_Checkbox _borderTopColor-0disabled-neutral3 _borderRightColor-0disabled-neutral3 _borderBottomColor-0disabled-neutral3 _borderLeftColor-0disabled-neutral3 _borderTopColor-0hover-neutral2 _borderRightColor-0hover-neutral2 _borderBottomColor-0hover-neutral2 _borderLeftColor-0hover-neutral2 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro840690006 _borderTopRightRadius-t-radius-ro840690006 _borderBottomRightRadius-t-radius-ro840690006 _borderBottomLeftRadius-t-radius-ro840690006 _opacity-0 _alignItems-center _backgroundColor-transparent _borderTopColor-neutral2 _borderRightColor-neutral2 _borderBottomColor-neutral2 _borderLeftColor-neutral2 _borderTopWidth-t-space-spa94665587 _borderRightWidth-t-space-spa94665587 _borderBottomWidth-t-space-spa94665587 _borderLeftWidth-t-space-spa94665587 _cursor-pointer _height-18px _justifyContent-center _pointerEvents-auto _width-18px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid"
+        class="is_Checkbox "
         data-disable-theme="true"
         data-state="unchecked"
         role="checkbox"
+        style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; border-top-color: rgba(19, 19, 19, 0.63); border-right-color: rgba(19, 19, 19, 0.63); border-bottom-color: rgba(19, 19, 19, 0.63); border-left-color: rgba(19, 19, 19, 0.63); opacity: 0; align-items: center; background-color: transparent; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; cursor: pointer; height: 18px; justify-content: center; pointer-events: auto; width: 18px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid;"
         type="button"
         value="on"
       />

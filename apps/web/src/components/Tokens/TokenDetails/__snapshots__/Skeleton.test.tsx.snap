@@ -10,44 +10,24 @@ exports[`TDP Skeleton > should render correctly 1`] = `
 
 .c5 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
 .c12 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c17 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
   gap: 4px;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
   padding: 8px;
-  border: 1px solid rgba(19,19,19,0.08);
+  border: 1px solid rgba(19, 19, 19, 0.08);
   border-radius: 16px;
   background-color: #FFFFFF;
 }
@@ -74,7 +54,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
 }
 
 .c22 {
-  background-color: rgba(19,19,19,0.08);
+  background-color: rgba(19, 19, 19, 0.08);
   height: 36px;
 }
 
@@ -83,33 +63,16 @@ exports[`TDP Skeleton > should render correctly 1`] = `
 }
 
 .c20 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
 }
 
 .c19 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-flow: column;
-  -ms-flex-flow: column;
   flex-flow: column;
   background-color: #F9F9F9;
   border-radius: 16px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   gap: 30px;
   padding: 48px 12px;
@@ -122,16 +85,15 @@ exports[`TDP Skeleton > should render correctly 1`] = `
 .c11 {
   gap: 16px;
   padding: 24px 0px;
-  -webkit-animation: iAjNNh 125ms ease-in;
   animation: iAjNNh 125ms ease-in;
 }
 
 .c13 {
-  font-size: 28px !important;
+  font-size: 28px!important;
 }
 
 .c10 {
-  background-color: rgba(19,19,19,0.08);
+  background-color: rgba(19, 19, 19, 0.08);
   border: none;
   height: 0.5px;
 }
@@ -207,8 +169,9 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             style="text-decoration: none;"
           >
             <span
-              class="font_body _textDecoration-_platformweb_none _color-0hover-neutral2Hov3121676 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _display-flex _alignItems-center"
+              class="font_body "
               data-disable-theme="true"
+              style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; color: rgba(19, 19, 19, 0.63); font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; word-wrap: break-word; font-size: 16px; line-height: 20.8px; font-weight: 485; display: flex; align-items: center; text-decoration: none;"
             >
               Explore 
               <svg
@@ -234,8 +197,9 @@ exports[`TDP Skeleton > should render correctly 1`] = `
             style="text-decoration: none;"
           >
             <span
-              class="font_body _textDecoration-_platformweb_none _color-0hover-neutral2Hov3121676 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _display-flex _alignItems-center"
+              class="font_body "
               data-disable-theme="true"
+              style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; color: rgba(19, 19, 19, 0.63); font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; word-wrap: break-word; font-size: 16px; line-height: 20.8px; font-weight: 485; display: flex; align-items: center; text-decoration: none;"
             >
               Tokens 
               <svg
@@ -277,7 +241,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           </div>
         </div>
         <div
-          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-space-betwe3241 _alignItems-center _gap-t-space-gap1598 _pt-t-space-pad95589114 _mb-t-space-spa1360334051 _zIndex-t-zIndex-de97204770"
+          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; justify-content: space-between; align-items: center; gap: 20px; padding-top: 8px; margin-bottom: 20px; z-index: 1;"
         >
           <div
             class="_flexDirection-_md_column _alignItems-_md_flex-start _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap1569 _alignItems-center _pt-t-space-spa94665589 _minWidth-32px"
@@ -504,7 +468,7 @@ exports[`TDP Skeleton > should render correctly 1`] = `
           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _height-4px"
         />
         <div
-          class="_opacity-0enter-0 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
         >
           <style>
             

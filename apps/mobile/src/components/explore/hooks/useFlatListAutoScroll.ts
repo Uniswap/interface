@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { FlatList } from 'react-native-gesture-handler'
 
 interface UseFlatListAutoScrollOptions<T> {
-  flatListRef: React.RefObject<FlatList<T>>
+  flatListRef: React.RefObject<FlatList<T> | null>
   selectedItem: T | null
   items: T[]
   scrollDelay?: number
@@ -20,7 +20,7 @@ export function useFlatListAutoScroll<T>(options: UseFlatListAutoScrollOptions<T
   const { flatListRef, selectedItem, items, scrollDelay = 100 } = options
 
   useEffect(() => {
-    let timeoutId: NodeJS.Timeout | undefined
+    let timeoutId: NodeJS.Timeout | number | undefined
 
     if (flatListRef.current) {
       // If selectedItem is null (All/First option), scroll to the beginning

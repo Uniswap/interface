@@ -12,7 +12,10 @@ export function isTestEnv(): boolean {
 }
 
 export function isPlaywrightEnv(): boolean {
-  return typeof window !== 'undefined' && typeof window.__playwright__binding__ !== 'undefined'
+  return (
+    (typeof window !== 'undefined' && typeof window.__playwright__binding__ !== 'undefined') ||
+    process.env.REACT_APP_IS_PLAYWRIGHT_ENV === 'true'
+  )
 }
 
 export function isDevEnv(): boolean {

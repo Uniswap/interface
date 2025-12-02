@@ -137,7 +137,15 @@ function* signWcRequest(params: SignMessageParams | SignTransactionParams) {
       }
 
       const { transactionHash } = yield* call(executeTransaction, txParams)
-      result = { id: params.request.id, capabilities: {} }
+      result = {
+        id: params.request.id,
+        capabilities: {
+          caip345: {
+            caip2: `eip155:${params.request.chainId}`,
+            transactionHashes: [transactionHash],
+          },
+        },
+      }
 
       // Store the batch transaction in Redux
       yield* put(

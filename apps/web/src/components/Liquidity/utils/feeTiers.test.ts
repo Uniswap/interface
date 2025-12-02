@@ -1,6 +1,6 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Percent } from '@uniswap/sdk-core'
-import { FeeAmount } from '@uniswap/v3-sdk'
+import { FeeAmount, TICK_SPACINGS } from '@uniswap/v3-sdk'
 import { DYNAMIC_FEE_DATA } from 'components/Liquidity/Create/types'
 import { FeeTierData } from 'components/Liquidity/types'
 import {
@@ -39,8 +39,8 @@ describe('calculateTickSpacingFromFeeAmount', () => {
 
 describe('getFeeTierKey', () => {
   it('returns correct key', () => {
-    expect(getFeeTierKey(100, false)).toBe('100')
-    expect(getFeeTierKey(100, true)).toBe('100-dynamic')
+    expect(getFeeTierKey({ feeTier: 100, tickSpacing: 60, isDynamicFee: false })).toBe('100-60')
+    expect(getFeeTierKey({ feeTier: 100, tickSpacing: 60, isDynamicFee: true })).toBe('100-60-dynamic')
   })
 })
 
@@ -50,7 +50,11 @@ describe('mergeFeeTiers', () => {
   const formattedDynamicFeeTier = 'dynamic'
   const staticFee = { feeAmount: 100, isDynamic: false, tickSpacing: 60 }
   const dynamicFee = { feeAmount: 100, isDynamic: true, tickSpacing: 60 }
-  const dynamicFeeKey = getFeeTierKey(dynamicFee.feeAmount, true)!
+  const dynamicFeeKey = getFeeTierKey({
+    feeTier: dynamicFee.feeAmount,
+    tickSpacing: dynamicFee.tickSpacing,
+    isDynamicFee: dynamicFee.isDynamic,
+  })!
 
   const staticFeeTierData: FeeTierData = {
     fee: staticFee,
@@ -89,7 +93,7 @@ describe('mergeFeeTiers', () => {
       formattedDynamicFeeTier,
     })
     expect(result).toEqual({
-      100: {
+      '100-60': {
         ...staticFeeTierData,
         totalLiquidityUsd: 0,
         tvl: '0',
@@ -100,11 +104,15 @@ describe('mergeFeeTiers', () => {
 
   it('formats static and dynamic fees correctly', () => {
     const defaultFeeData = [staticFee]
-    const dynamicKey = getFeeTierKey(DYNAMIC_FEE_DATA.feeAmount, true)!
+    const dynamicKey = getFeeTierKey({
+      feeTier: DYNAMIC_FEE_DATA.feeAmount,
+      tickSpacing: DYNAMIC_FEE_DATA.tickSpacing,
+      isDynamicFee: DYNAMIC_FEE_DATA.isDynamic,
+    })!
     let feeTiers = { [dynamicKey]: defaultDynamicFeeTierData }
     let result = mergeFeeTiers({ feeTiers, defaultFeeData, formatPercent, formattedDynamicFeeTier })
     expect(result).toEqual({
-      100: {
+      '100-60': {
         ...staticFeeTierData,
         totalLiquidityUsd: 0,
         tvl: '0',
@@ -116,7 +124,7 @@ describe('mergeFeeTiers', () => {
     feeTiers = { [dynamicFeeKey]: dynamicFeeTierData }
     result = mergeFeeTiers({ feeTiers, defaultFeeData, formatPercent, formattedDynamicFeeTier })
     expect(result).toEqual({
-      100: {
+      '100-60': {
         ...staticFeeTierData,
         totalLiquidityUsd: 0,
         tvl: '0',
@@ -128,11 +136,11 @@ describe('mergeFeeTiers', () => {
 
   it('merges feeTiers over defaultFeeData', () => {
     const defaultFeeData = [staticFee, dynamicFee]
-    const feeTiers = { '100': { ...staticFeeTierData, totalLiquidityUsd: 999 } }
+    const feeTiers = { '100-60': { ...staticFeeTierData, totalLiquidityUsd: 999 } }
     const result = mergeFeeTiers({ feeTiers, defaultFeeData, formatPercent, formattedDynamicFeeTier })
 
     expect(result).toEqual({
-      100: {
+      '100-60': {
         ...staticFeeTierData,
         totalLiquidityUsd: 999,
       },
@@ -153,7 +161,7 @@ describe('mergeFeeTiers', () => {
 })
 
 const DEFAULT_FEE_TIERS = {
-  [FeeAmount.LOWEST]: {
+  [`${FeeAmount.LOWEST}-${TICK_SPACINGS[FeeAmount.LOWEST]}`]: {
     fee: { feeAmount: FeeAmount.LOWEST, isDynamic: false, tickSpacing: 1 },
     formattedFee: '0.01%',
     totalLiquidityUsd: 100,
@@ -161,7 +169,7 @@ const DEFAULT_FEE_TIERS = {
     created: true,
     tvl: '100',
   },
-  [FeeAmount.LOW_200]: {
+  [`${FeeAmount.LOW_200}-${TICK_SPACINGS[FeeAmount.LOW_200]}`]: {
     fee: { feeAmount: FeeAmount.LOW_200, isDynamic: false, tickSpacing: 2 },
     formattedFee: '0.02%',
     totalLiquidityUsd: 200,
@@ -169,7 +177,7 @@ const DEFAULT_FEE_TIERS = {
     created: true,
     tvl: '200',
   },
-  [FeeAmount.LOW_300]: {
+  [`${FeeAmount.LOW_300}-${TICK_SPACINGS[FeeAmount.LOW_300]}`]: {
     fee: { feeAmount: FeeAmount.LOW_300, isDynamic: false, tickSpacing: 3 },
     formattedFee: '0.03%',
     totalLiquidityUsd: 300,
@@ -177,7 +185,7 @@ const DEFAULT_FEE_TIERS = {
     created: true,
     tvl: '300',
   },
-  [FeeAmount.LOW_400]: {
+  [`${FeeAmount.LOW_400}-${TICK_SPACINGS[FeeAmount.LOW_400]}`]: {
     fee: { feeAmount: FeeAmount.LOW_400, isDynamic: false, tickSpacing: 4 },
     formattedFee: '0.04%',
     totalLiquidityUsd: 400,
@@ -185,7 +193,7 @@ const DEFAULT_FEE_TIERS = {
     created: true,
     tvl: '400',
   },
-  [FeeAmount.LOW]: {
+  [`${FeeAmount.LOW}-${TICK_SPACINGS[FeeAmount.LOW]}`]: {
     fee: { feeAmount: FeeAmount.LOW, isDynamic: false, tickSpacing: 5 },
     formattedFee: '0.05%',
     totalLiquidityUsd: 500,
@@ -193,7 +201,7 @@ const DEFAULT_FEE_TIERS = {
     created: true,
     tvl: '500',
   },
-  [FeeAmount.MEDIUM]: {
+  [`${FeeAmount.MEDIUM}-${TICK_SPACINGS[FeeAmount.MEDIUM]}`]: {
     fee: { feeAmount: FeeAmount.MEDIUM, isDynamic: false, tickSpacing: 6 },
     formattedFee: '0.3%',
     totalLiquidityUsd: 600,
@@ -201,7 +209,7 @@ const DEFAULT_FEE_TIERS = {
     created: true,
     tvl: '600',
   },
-  [FeeAmount.HIGH]: {
+  [`${FeeAmount.HIGH}-${TICK_SPACINGS[FeeAmount.HIGH]}`]: {
     fee: { feeAmount: FeeAmount.HIGH, isDynamic: false, tickSpacing: 7 },
     formattedFee: '1%',
     totalLiquidityUsd: 700,
@@ -221,10 +229,10 @@ describe('getDefaultFeeTiersForChainWithDynamicFeeTier', () => {
 
     // Mainnet should not include LOW_200, LOW_300, LOW_400
     expect(Object.keys(result)).toEqual([
-      FeeAmount.LOWEST.toString(),
-      FeeAmount.LOW.toString(),
-      FeeAmount.MEDIUM.toString(),
-      FeeAmount.HIGH.toString(),
+      `${FeeAmount.LOWEST}-${TICK_SPACINGS[FeeAmount.LOWEST]}`,
+      `${FeeAmount.LOW}-${TICK_SPACINGS[FeeAmount.LOW]}`,
+      `${FeeAmount.MEDIUM}-${TICK_SPACINGS[FeeAmount.MEDIUM]}`,
+      `${FeeAmount.HIGH}-${TICK_SPACINGS[FeeAmount.HIGH]}`,
     ])
   })
 
@@ -237,13 +245,13 @@ describe('getDefaultFeeTiersForChainWithDynamicFeeTier', () => {
 
     // Base should include all fee tiers
     expect(Object.keys(result)).toEqual([
-      FeeAmount.LOWEST.toString(),
-      FeeAmount.LOW_200.toString(),
-      FeeAmount.LOW_300.toString(),
-      FeeAmount.LOW_400.toString(),
-      FeeAmount.LOW.toString(),
-      FeeAmount.MEDIUM.toString(),
-      FeeAmount.HIGH.toString(),
+      `${FeeAmount.LOWEST}-${TICK_SPACINGS[FeeAmount.LOWEST]}`,
+      `${FeeAmount.LOW_200}-${TICK_SPACINGS[FeeAmount.LOW_200]}`,
+      `${FeeAmount.LOW_300}-${TICK_SPACINGS[FeeAmount.LOW_300]}`,
+      `${FeeAmount.LOW_400}-${TICK_SPACINGS[FeeAmount.LOW_400]}`,
+      `${FeeAmount.LOW}-${TICK_SPACINGS[FeeAmount.LOW]}`,
+      `${FeeAmount.MEDIUM}-${TICK_SPACINGS[FeeAmount.MEDIUM]}`,
+      `${FeeAmount.HIGH}-${TICK_SPACINGS[FeeAmount.HIGH]}`,
     ])
   })
 
@@ -254,11 +262,11 @@ describe('getDefaultFeeTiersForChainWithDynamicFeeTier', () => {
       protocolVersion: ProtocolVersion.V3,
     })
     expect(Object.keys(result)).toEqual([
-      FeeAmount.LOWEST.toString(),
-      FeeAmount.LOW.toString(),
-      FeeAmount.MEDIUM.toString(),
-      FeeAmount.HIGH.toString(),
-      DYNAMIC_FEE_DATA.feeAmount.toString(),
+      `${FeeAmount.LOWEST}-${TICK_SPACINGS[FeeAmount.LOWEST]}`,
+      `${FeeAmount.LOW}-${TICK_SPACINGS[FeeAmount.LOW]}`,
+      `${FeeAmount.MEDIUM}-${TICK_SPACINGS[FeeAmount.MEDIUM]}`,
+      `${FeeAmount.HIGH}-${TICK_SPACINGS[FeeAmount.HIGH]}`,
+      `${DYNAMIC_FEE_DATA.feeAmount}-${DYNAMIC_FEE_DATA.tickSpacing}-dynamic`,
     ])
   })
 })
@@ -294,15 +302,15 @@ describe('getDefaultFeeTiersWithData', () => {
 
   it('filters out fee tiers not in feeTierData (V3)', () => {
     const partialFeeTierData = {
-      [FeeAmount.LOWEST]: DEFAULT_FEE_TIERS[FeeAmount.LOWEST],
-      [FeeAmount.LOW]: DEFAULT_FEE_TIERS[FeeAmount.LOW],
+      [`${FeeAmount.LOWEST}-${TICK_SPACINGS[FeeAmount.LOWEST]}`]: DEFAULT_FEE_TIERS[FeeAmount.LOWEST],
+      [`${FeeAmount.LOW}-${TICK_SPACINGS[FeeAmount.LOW]}`]: DEFAULT_FEE_TIERS[FeeAmount.LOW],
     }
     const result = getDefaultFeeTiersWithData({
       chainId: UniverseChainId.Mainnet,
       feeTierData: partialFeeTierData,
       protocolVersion: ProtocolVersion.V3,
     })
-    expect(result.map((f) => f.tier)).toEqual([FeeAmount.LOW, FeeAmount.LOWEST])
+    expect(result.map((f) => f.tier)).toEqual([FeeAmount.LOWEST, FeeAmount.LOW])
   })
 
   it('returns empty array if no fee tiers match (V3)', () => {
@@ -350,10 +358,22 @@ describe('getDefaultFeeTiersWithData', () => {
   it('sorts V3 fee tiers by TVL descending', () => {
     // Use a subset of DEFAULT_FEE_TIERS with shuffled TVL
     const shuffledFeeTierData = {
-      [FeeAmount.LOWEST]: { ...DEFAULT_FEE_TIERS[FeeAmount.LOWEST], tvl: '300' },
-      [FeeAmount.LOW]: { ...DEFAULT_FEE_TIERS[FeeAmount.LOW], tvl: '100' },
-      [FeeAmount.MEDIUM]: { ...DEFAULT_FEE_TIERS[FeeAmount.MEDIUM], tvl: '400' },
-      [FeeAmount.HIGH]: { ...DEFAULT_FEE_TIERS[FeeAmount.HIGH], tvl: '200' },
+      [`${FeeAmount.LOWEST}-${TICK_SPACINGS[FeeAmount.LOWEST]}`]: {
+        ...DEFAULT_FEE_TIERS[FeeAmount.LOWEST],
+        tvl: '300',
+      },
+      [`${FeeAmount.LOW}-${TICK_SPACINGS[FeeAmount.LOW]}`]: {
+        ...DEFAULT_FEE_TIERS[FeeAmount.LOW],
+        tvl: '100',
+      },
+      [`${FeeAmount.MEDIUM}-${TICK_SPACINGS[FeeAmount.MEDIUM]}`]: {
+        ...DEFAULT_FEE_TIERS[FeeAmount.MEDIUM],
+        tvl: '400',
+      },
+      [`${FeeAmount.HIGH}-${TICK_SPACINGS[FeeAmount.HIGH]}`]: {
+        ...DEFAULT_FEE_TIERS[FeeAmount.HIGH],
+        tvl: '200',
+      },
     }
     const result = getDefaultFeeTiersWithData({
       chainId: UniverseChainId.Mainnet,

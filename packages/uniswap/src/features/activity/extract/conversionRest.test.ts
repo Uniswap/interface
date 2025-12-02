@@ -196,10 +196,7 @@ describe(parseRestNFTMintTransaction, () => {
       purchaseCurrencyAmountRaw: '1000000000000000000',
       transactedUSDValue: undefined,
       isSpam: false,
-      dappInfo: {
-        icon: undefined,
-        name: undefined,
-      },
+      dappInfo: undefined,
     })
   })
 })
@@ -556,6 +553,10 @@ describe(parseRestSwapTransaction, () => {
       transactedUSDValue: undefined,
       inputCurrencyAmountRaw: '1000000000000000000',
       outputCurrencyAmountRaw: '1000000000000000000',
+      dappInfo: {
+        name: 'Uniswap',
+        icon: 'https://protocol-icons.s3.amazonaws.com/icons/uniswap-v4.jpg',
+      },
     })
   })
   it('Swap: parse multi-transfer swap with same token', () => {

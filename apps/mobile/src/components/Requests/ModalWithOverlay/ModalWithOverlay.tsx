@@ -58,7 +58,7 @@ export function ModalWithOverlay({
 }: ModalWithOverlayProps): JSX.Element {
   const scrollViewRef = useRef<ScrollView>(null)
   const contentViewRef = useRef<View>(null)
-  const measureLayoutTimeoutRef = useRef<NodeJS.Timeout>()
+  const measureLayoutTimeoutRef = useRef<NodeJS.Timeout | number>(undefined)
 
   const startedScrollingRef = useRef(false)
   const [showOverlay, setShowOverlay] = useState(false)
@@ -126,7 +126,6 @@ export function ModalWithOverlay({
         contentContainerStyle={
           contentContainerStyle ?? {
             paddingHorizontal: spacing.spacing24,
-            paddingTop: spacing.spacing12,
           }
         }
         showsVerticalScrollIndicator={false}

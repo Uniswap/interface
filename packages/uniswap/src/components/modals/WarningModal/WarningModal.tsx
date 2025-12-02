@@ -8,11 +8,12 @@ import { ShieldMagnifyingGlass } from 'ui/src/components/icons/ShieldMagnifyingG
 import { X } from 'ui/src/components/icons/X'
 import { opacify, zIndexes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ReportInput } from 'uniswap/src/components/reporting/input'
 import type { ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import type { SwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/createSwapFormStore'
 import { SwapFormStoreContext } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/SwapFormStoreContext'
@@ -110,30 +111,34 @@ function ReportWarningModalContent({
   const { t } = useTranslation()
   const [reportText, setReportText] = useState('')
 
+  const { keyboardHeight } = useBottomSheetSafeKeyboard()
+
   return (
-    <Flex {...wrapperProps}>
-      <WarningModalIcon
-        icon={<ShieldMagnifyingGlass color="$neutral1" size="$icon.24" />}
-        backgroundIconColor={colors.surface3.val}
-        alertHeaderTextColor="$neutral1"
-      />
-      <Text textAlign="center" variant={isWebPlatform ? 'subheading2' : 'body1'}>
-        {t('reporting.token.warning.report.title')}
-      </Text>
-      <Text color="$neutral2" textAlign="center" variant="body3">
-        {t('reporting.token.warning.report.subtitle')}
-      </Text>
-      {children}
-      <ReportInput placeholder={t('reporting.token.warning.report.placeholder')} setReportText={setReportText} />
-      <Flex row alignSelf="stretch" gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'}>
-        <Button size="medium" emphasis="secondary" onPress={onBack}>
-          {t('common.button.back')}
-        </Button>
-        <Button size="medium" emphasis="primary" onPress={() => onSendReport(reportText)}>
-          {t('reporting.token.warning.report.submit')}
-        </Button>
+    <Trace logPress section={SectionName.DisputeTokenWarning}>
+      <Flex {...wrapperProps} pb={keyboardHeight}>
+        <WarningModalIcon
+          icon={<ShieldMagnifyingGlass color="$neutral1" size="$icon.24" />}
+          backgroundIconColor={colors.surface3.val}
+          alertHeaderTextColor="$neutral1"
+        />
+        <Text textAlign="center" variant={isWebPlatform ? 'subheading2' : 'body1'}>
+          {t('reporting.token.warning.report.title')}
+        </Text>
+        <Text color="$neutral2" textAlign="center" variant="body3">
+          {t('reporting.token.warning.report.subtitle')}
+        </Text>
+        {keyboardHeight === 0 && children}
+        <ReportInput placeholder={t('reporting.token.warning.report.placeholder')} setReportText={setReportText} />
+        <Flex row alignSelf="stretch" gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'}>
+          <Button size="medium" emphasis="secondary" onPress={onBack}>
+            {t('common.button.back')}
+          </Button>
+          <Button size="medium" emphasis="primary" onPress={() => onSendReport(reportText)}>
+            {t('reporting.token.warning.report.submit')}
+          </Button>
+        </Flex>
       </Flex>
-    </Flex>
+    </Trace>
   )
 }
 

@@ -79,8 +79,9 @@ exports[`PoolDetailsHeader > renders breadcrumb text correctly 1`] = `
         style="text-decoration: none;"
       >
         <span
-          class="font_body _textDecoration-_platformweb_none _color-0hover-neutral2Hov3121676 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _display-flex _alignItems-center"
+          class="font_body "
           data-disable-theme="true"
+          style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; color: rgba(19, 19, 19, 0.63); font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; word-wrap: break-word; font-size: 16px; line-height: 20.8px; font-weight: 485; display: flex; align-items: center; text-decoration: none;"
         >
           Explore 
           <svg
@@ -106,8 +107,9 @@ exports[`PoolDetailsHeader > renders breadcrumb text correctly 1`] = `
         style="text-decoration: none;"
       >
         <span
-          class="font_body _textDecoration-_platformweb_none _color-0hover-neutral2Hov3121676 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _display-flex _alignItems-center"
+          class="font_body "
           data-disable-theme="true"
+          style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; color: rgba(19, 19, 19, 0.63); font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; word-wrap: break-word; font-size: 16px; line-height: 20.8px; font-weight: 485; display: flex; align-items: center; text-decoration: none;"
         >
           Pools 
           <svg
@@ -165,72 +167,28 @@ exports[`PoolDetailsHeader > renders breadcrumb text correctly 1`] = `
 
 exports[`PoolDetailsHeader > renders header text correctly 1`] = `
 <DocumentFragment>
-  .c8 {
+  .c6 {
   display: inline-block;
   height: inherit;
 }
 
-.c0 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-}
-
-.c4 {
+.c2 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c1 {
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-.c5 {
+.c3 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
 }
 
-.c9 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+.c7 {
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   padding: 8px;
   border-radius: 8px;
@@ -242,46 +200,38 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
   cursor: pointer;
 }
 
-.c9:hover {
+.c7 :hover {
   background-color: #98A1C01a;
 }
 
-.c6 {
+.c4 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
-.c7 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+.c5 {
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
-.c2 {
-  -webkit-text-decoration: none;
+.c0 {
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #FF37C7;
   stroke: #FF37C7;
   font-weight: 500;
 }
 
-.c2:hover {
+.c0 :hover {
   opacity: 0.6;
 }
 
-.c2:active {
+.c0 :active {
   opacity: 0.4;
 }
 
-.c3:hover {
+.c1:hover {
   opacity: 1;
 }
 
@@ -399,10 +349,10 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                 </div>
               </div>
               <div
-                class="is_TouchableArea _transform-0active-scale11281 _opacity-0active-0--6 _transform-0focus-visible-scaleX0--98sc535634366 _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-1px _outlineStyle-0focus-visible-solid _outlineColor-0focus-visible-neutral3 _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _backgroundColor-transparent _cursor-pointer t_group_true"
+                class="is_TouchableArea  t_group_true"
                 data-testid="toggle-tokens-reverse-arrows"
                 role="button"
-                style="transition: 100ms;"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; outline-color: rgba(0, 0, 0, 0); opacity: 1; cursor: pointer; text-decoration: none; transition-duration: 0.2s; text-decoration-line: none; transform: [object Object]; transition: 100ms;"
                 tabindex="0"
               >
                 <svg
@@ -419,8 +369,7 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
               </div>
             </div>
             <div
-              class="c0 c1"
-              width="max-content"
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-max-content _alignItems-flex-end _gap-sm"
             >
               <span
                 class="font_unset _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _position-absolute _width-1px _height-1px _mt--1px _mr--1px _mb--1px _ml--1px _zIndex--10000 _overflowX-hidden _overflowY-hidden _opacity-1e-8 _pointerEvents-none"
@@ -429,11 +378,12 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
                   <span
-                    class="font_body _boxShadow-_platformweb_0px6px12px-660788648 _opacity-0enter-0 _transform-0enter-translateY-1192883451 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-16px _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _display-flex _flexDirection-column _backgroundColor-surface1 _borderTopWidth-0--5px _borderRightWidth-0--5px _borderBottomWidth-0--5px _borderLeftWidth-0--5px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _pt-t-space-spa94665593 _pr-t-space-spa94665593 _pb-t-space-spa94665593 _pl-t-space-spa94665593 _zIndex-970 _minWidth-235px _right-0px _top-calc10010px1180331985 _opacity-1"
+                    class="font_body "
                     data-disable-theme="true"
+                    style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; color: rgb(19, 19, 19); font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; word-wrap: break-word; font-size: 16px; line-height: 20.8px; font-weight: 485; display: flex; flex-direction: column; background-color: rgb(255, 255, 255); border-top-width: 0.5px; border-right-width: 0.5px; border-bottom-width: 0.5px; border-left-width: 0.5px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; padding: 8px 8px 8px 8px; z-index: 970; min-width: 235px; overflow-x: auto; overflow-y: auto; box-shadow: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; right: 0px; top: calc(100% + 10px); opacity: 1; transform: [object Object];"
                   >
                     <a
-                      class="c2 c3"
+                      class="c0 c1"
                       href="https://etherscan.io/address/0x88e6a0c2ddd26feeb64f039a2c41296fcb3f5640"
                       rel="noopener noreferrer"
                       target="_blank"
@@ -442,7 +392,8 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                         class="_textDecoration-_platformweb_none _background-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _cursor-pointer _gap-t-space-gap1569 _pr-t-space-pad95589112 _pl-t-space-pad95589112 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002"
                       >
                         <div
-                          class="c4 c5"
+                          class="c2 c3"
+                          gap="sm"
                         >
                           <div
                             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-24px _width-24px"
@@ -497,12 +448,12 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                             </div>
                           </div>
                           <div
-                            class="c6 css-1urox24"
+                            class="c4 css-1urox24"
                           >
                             Pool
                           </div>
                           <div
-                            class="c7 css-1urox24"
+                            class="c5 css-1urox24"
                           >
                             0x88e6...5640
                           </div>
@@ -534,7 +485,7 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                       </div>
                     </a>
                     <a
-                      class="c2 c3"
+                      class="c0 c1"
                       href="https://etherscan.io/token/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
                       rel="noopener noreferrer"
                       target="_blank"
@@ -543,7 +494,8 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                         class="_textDecoration-_platformweb_none _background-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _cursor-pointer _gap-t-space-gap1569 _pr-t-space-pad95589112 _pl-t-space-pad95589112 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002"
                       >
                         <div
-                          class="c4 c5"
+                          class="c2 c3"
+                          gap="sm"
                         >
                           <div
                             class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-24px _justifyContent-center _pointerEvents-auto _width-24px _position-relative"
@@ -565,12 +517,12 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                             </div>
                           </div>
                           <div
-                            class="c6 css-1urox24"
+                            class="c4 css-1urox24"
                           >
                             USDC
                           </div>
                           <div
-                            class="c7 css-1urox24"
+                            class="c5 css-1urox24"
                           >
                             0xA0b8...eB48
                           </div>
@@ -602,7 +554,7 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                       </div>
                     </a>
                     <a
-                      class="c2 c3"
+                      class="c0 c1"
                       href="https://etherscan.io/token/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"
                       rel="noopener noreferrer"
                       target="_blank"
@@ -611,7 +563,8 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                         class="_textDecoration-_platformweb_none _background-0hover-surface3 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _cursor-pointer _gap-t-space-gap1569 _pr-t-space-pad95589112 _pl-t-space-pad95589112 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002"
                       >
                         <div
-                          class="c4 c5"
+                          class="c2 c3"
+                          gap="sm"
                         >
                           <div
                             class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-24px _justifyContent-center _pointerEvents-auto _width-24px _position-relative"
@@ -633,12 +586,12 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                             </div>
                           </div>
                           <div
-                            class="c6 css-1urox24"
+                            class="c4 css-1urox24"
                           >
                             WETH
                           </div>
                           <div
-                            class="c7 css-1urox24"
+                            class="c5 css-1urox24"
                           >
                             0xC02a...6Cc2
                           </div>
@@ -680,14 +633,14 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                   data-disable-theme="true"
                 >
                   <div
-                    class="c8"
+                    class="c6"
                     style="width: 100%;"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                     >
                       <span
-                        class="font_body _cursor-0hover-pointer _backgroundColor-0hover-surface2Hov3121676 _backgroundColor-0focus-surface1Hov3121676 _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0active-0--6 _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-24px _fontWeight-f-weight-bo3548 _flexDirection-row _height-10037 _backgroundColor-surface1 _mt-0px _mr-0px _mb-0px _ml-0px _pt-t-space-spa94665593 _pr-t-space-spa1360334080 _pb-t-space-spa94665593 _pl-t-space-spa1360334080 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _whiteSpace-nowrap _display-flex _alignItems-center _justifyContent-flex-start _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _width-maxContent _cursor-pointer"
+                        class="font_body _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _cursor-0hover-pointer _backgroundColor-0hover-surface2Hov3121676 _opacity-0active-0--6 _backgroundColor-0focus-surface1Hov3121676 _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-24px _fontWeight-f-weight-bo3548 _flexDirection-row _height-10037 _backgroundColor-surface1 _mt-0px _mr-0px _mb-0px _ml-0px _pt-t-space-spa94665593 _pr-t-space-spa1360334080 _pb-t-space-spa94665593 _pl-t-space-spa1360334080 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _whiteSpace-nowrap _flexShrink-0 _display-flex _alignItems-center _justifyContent-flex-start _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _width-maxContent _cursor-pointer"
                         data-disable-theme="true"
                         style="transition: 100ms;"
                       >
@@ -724,11 +677,12 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                 >
                   <span
-                    class="font_body _boxShadow-_platformweb_0px6px12px-660788648 _opacity-0enter-0 _transform-0enter-translateY-1192883451 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-16px _lineHeight-f-lineHeigh507465454 _fontWeight-f-weight-bo3548 _display-flex _flexDirection-column _minWidth-150px _backgroundColor-surface1 _borderTopWidth-0--5px _borderRightWidth-0--5px _borderBottomWidth-0--5px _borderLeftWidth-0--5px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _borderTopLeftRadius-t-radius-ro291586453 _borderTopRightRadius-t-radius-ro291586453 _borderBottomRightRadius-t-radius-ro291586453 _borderBottomLeftRadius-t-radius-ro291586453 _pt-t-space-spa94665593 _pr-t-space-spa94665593 _pb-t-space-spa94665593 _pl-t-space-spa94665593 _zIndex-970 _width-200px _right-0px _top-calc10010px1180331985 _opacity-1"
+                    class="font_body "
                     data-disable-theme="true"
+                    style="box-sizing: border-box; white-space: pre-wrap; margin: 0px 0px 0px 0px; color: rgb(19, 19, 19); font-family: Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; word-wrap: break-word; font-size: 16px; line-height: 20.8px; font-weight: 485; display: flex; flex-direction: column; min-width: 150px; background-color: rgb(255, 255, 255); border-top-width: 0.5px; border-right-width: 0.5px; border-bottom-width: 0.5px; border-left-width: 0.5px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: rgba(19, 19, 19, 0.08); border-right-color: rgba(19, 19, 19, 0.08); border-bottom-color: rgba(19, 19, 19, 0.08); border-left-color: rgba(19, 19, 19, 0.08); border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; padding: 8px 8px 8px 8px; z-index: 970; width: 200px; overflow-x: auto; overflow-y: auto; box-shadow: 0px 6px 12px -3px #1313130a, 0px 2px 5px -2px #13131308; right: 0px; top: calc(100% + 10px); opacity: 1; transform: [object Object];"
                   >
                     <div
-                      class="c9"
+                      class="c7"
                     >
                       <svg
                         fill="none"
@@ -756,7 +710,7 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                       </span>
                     </div>
                     <div
-                      class="c9"
+                      class="c7"
                     >
                       <svg
                         fill="#131313"
@@ -789,14 +743,14 @@ exports[`PoolDetailsHeader > renders header text correctly 1`] = `
                   data-disable-theme="true"
                 >
                   <div
-                    class="c8"
+                    class="c6"
                     style="width: 100%;"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                     >
                       <span
-                        class="font_body _cursor-0hover-pointer _backgroundColor-0hover-surface2Hov3121676 _backgroundColor-0focus-surface1Hov3121676 _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0active-0--6 _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-24px _fontWeight-f-weight-bo3548 _flexDirection-row _height-10037 _backgroundColor-surface1 _mt-0px _mr-0px _mb-0px _ml-0px _pt-t-space-spa94665593 _pr-t-space-spa1360334080 _pb-t-space-spa94665593 _pl-t-space-spa1360334080 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _whiteSpace-nowrap _display-flex _alignItems-center _justifyContent-flex-start _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _width-maxContent _cursor-pointer"
+                        class="font_body _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _cursor-0hover-pointer _backgroundColor-0hover-surface2Hov3121676 _opacity-0active-0--6 _backgroundColor-0focus-surface1Hov3121676 _boxSizing-border-box _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-medi3736 _lineHeight-24px _fontWeight-f-weight-bo3548 _flexDirection-row _height-10037 _backgroundColor-surface1 _mt-0px _mr-0px _mb-0px _ml-0px _pt-t-space-spa94665593 _pr-t-space-spa1360334080 _pb-t-space-spa94665593 _pl-t-space-spa1360334080 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-surface3 _borderRightColor-surface3 _borderBottomColor-surface3 _borderLeftColor-surface3 _whiteSpace-nowrap _flexShrink-0 _display-flex _alignItems-center _justifyContent-flex-start _borderTopLeftRadius-20px _borderTopRightRadius-20px _borderBottomRightRadius-20px _borderBottomLeftRadius-20px _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _width-maxContent _cursor-pointer"
                         data-disable-theme="true"
                         style="transition: 100ms;"
                       >

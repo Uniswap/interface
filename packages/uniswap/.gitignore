@@ -8,3 +8,4 @@ src/abis/types
 
 # generated graphql files
 src/**/__generated__
+coverage/

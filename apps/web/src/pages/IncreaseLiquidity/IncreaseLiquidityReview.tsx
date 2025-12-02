@@ -9,6 +9,7 @@ import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { IncreaseLiquidityStep, useIncreaseLiquidityContext } from 'pages/IncreaseLiquidity/IncreaseLiquidityContext'
 import { useIncreaseLiquidityTxContext } from 'pages/IncreaseLiquidity/IncreaseLiquidityTxContext'
+import { useSetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -39,6 +40,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
   const account = useWallet().evmAccount
   const trace = useTrace()
   const { needsPasskeySignin } = useGetPasskeyAuthStatus(connectedAccount.connector?.id)
+  const disableOneClickSwap = useSetOverrideOneClickSwapFlag()
 
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
 
@@ -148,6 +150,7 @@ export function IncreaseLiquidityReview({ onClose }: { onClose: () => void }) {
         setSteps,
         onSuccess,
         onFailure,
+        disableOneClickSwap,
         analytics: {
           ...getLPBaseAnalyticsProperties({
             trace,

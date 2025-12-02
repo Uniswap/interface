@@ -1,5 +1,6 @@
 import { GraphQLApi } from '@universe/api'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
+import { EMPTY_NFT_ITEM, HIDDEN_NFTS_ROW } from 'uniswap/src/features/nfts/constants'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { NFTKeyToVisibility } from 'uniswap/src/features/visibility/slice'
 
@@ -59,4 +60,69 @@ export const getIsNftHidden = ({
   const nftKey = getNFTAssetKey(contractAddress, tokenId)
   const nftIsVisible = nftVisibility[nftKey]?.isVisible ?? isSpam === false
   return !nftIsVisible
+}
+
+/**
+ * Builds the nfts array structure from shown and hidden NFT arrays.
+ * This matches the pattern used in useGroupNftsByVisibility.
+ *
+ * @param shownNfts - Array of shown NFT items
+ * @param hiddenNfts - Array of hidden NFT items
+ * @param showHidden - Whether hidden NFTs should be included in the result
+ * @param allPagesFetched - Whether all pages have been fetched (affects special string insertion)
+ * @returns Array containing NFTItems and special strings (EMPTY_NFT_ITEM, HIDDEN_NFTS_ROW)
+ */
+export function buildNftsArray({
+  shownNfts,
+  hiddenNfts,
+  showHidden,
+  allPagesFetched,
+}: {
+  shownNfts: NFTItem[]
+  hiddenNfts: NFTItem[]
+  showHidden: boolean
+  allPagesFetched: boolean
+}): Array<NFTItem | string> {
+  return [
+    ...shownNfts,
+    ...(hiddenNfts.length && allPagesFetched
+      ? [
+          // to fill the gap for odd number of shown elements in 2 columns layout
+          ...(shownNfts.length % 2 ? [EMPTY_NFT_ITEM] : []),
+          HIDDEN_NFTS_ROW,
+        ]
+      : []),
+    ...(showHidden && allPagesFetched ? hiddenNfts : []),
+  ]
+}
+
+/**
+ * Filters an NFT item based on a search query.
+ * The search is case-insensitive and matches against:
+ * - NFT name
+ * - Collection name
+ * - Token ID
+ * - Contract address
+ *
+ * @param item - The NFT item to filter
+ * @param searchQuery - The search query (will be converted to lowercase)
+ * @returns true if the item matches the search query, false otherwise
+ */
+export function filterNft(item: NFTItem, searchQuery?: string): boolean {
+  if (!searchQuery?.trim()) {
+    return true
+  }
+
+  const lowercaseSearch = searchQuery.trim().toLowerCase()
+  const name = item.name?.toLowerCase() ?? ''
+  const collectionName = item.collectionName?.toLowerCase() ?? ''
+  const tokenId = item.tokenId?.toLowerCase() ?? ''
+  const contract = item.contractAddress?.toLowerCase() ?? ''
+
+  return (
+    name.includes(lowercaseSearch) ||
+    collectionName.includes(lowercaseSearch) ||
+    tokenId.includes(lowercaseSearch) ||
+    contract.includes(lowercaseSearch)
+  )
 }

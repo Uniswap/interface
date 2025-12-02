@@ -1,5 +1,5 @@
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
-import styled, { css, keyframes } from 'lib/styled-components'
+import { css, keyframes, styled } from 'lib/styled-components'
 import { useRef } from 'react'
 
 const fadeIn = keyframes`

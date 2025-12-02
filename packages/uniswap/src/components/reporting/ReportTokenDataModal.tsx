@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { ChartBarCrossed } from 'ui/src/components/icons/ChartBarCrossed'
 import { BaseModalProps } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
-import { ReportOption, ReportTokenModal } from 'uniswap/src/components/reporting/ReportModal'
+import { ReportModal, ReportOption } from 'uniswap/src/components/reporting/ReportModal'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
 import { submitTokenDataReport, TokenDataReportOption } from 'uniswap/src/features/reporting/reports'
@@ -87,9 +87,9 @@ export function ReportTokenDataModal({
   )
 
   return (
-    <ReportTokenModal
+    <ReportModal
       modalName={ModalName.ReportTokenData}
-      currency={currency}
+      modalTitle={t('reporting.token.data.title.withSymbol', { symbol: currency?.symbol ?? '' })}
       icon={ChartBarCrossed}
       reportOptions={reportOptions}
       textOptionValue={TokenDataReportOption.Other}

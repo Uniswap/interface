@@ -1,26 +1,16 @@
 import { CoinbaseWalletAdapter } from '@solana/wallet-adapter-coinbase'
 import { WalletProvider as SolanaWalletProvider } from '@solana/wallet-adapter-react'
 import { SolanaSignerUpdater } from 'components/Web3Provider/signSolanaTransaction'
-import React, { PropsWithChildren, ReactNode, useMemo } from 'react'
+import React, { type PropsWithChildren, type ReactNode, useMemo } from 'react'
 import { useWalletCapabilitiesStateEffect } from 'state/walletCapabilities/hooks/useWalletCapabilitiesStateEffect'
 import { type Register, WagmiProvider } from 'wagmi'
 
-export function createWeb3Provider(params: {
-  wagmiConfig: Register['config']
-  reconnectOnMount?: boolean
-  includeCapabilitiesEffects?: boolean
-}) {
-  const { wagmiConfig, reconnectOnMount = true, includeCapabilitiesEffects = true } = params
-
-  const WalletCapabilitiesEffects: React.FC = () => {
-    useWalletCapabilitiesStateEffect()
-    return null
-  }
+export function createWeb3Provider(params: { wagmiConfig: Register['config']; reconnectOnMount?: boolean }) {
+  const { wagmiConfig, reconnectOnMount = true } = params
 
   const Provider = ({ children }: { children: ReactNode }) => (
     <SolanaProvider>
       <WagmiProvider config={wagmiConfig} reconnectOnMount={reconnectOnMount}>
-        {includeCapabilitiesEffects && <WalletCapabilitiesEffects />}
         {children}
       </WagmiProvider>
     </SolanaProvider>
@@ -41,4 +31,9 @@ function SolanaProvider({ children }: PropsWithChildren) {
       {children}
     </SolanaWalletProvider>
   )
+}
+
+export function WalletCapabilitiesEffects() {
+  useWalletCapabilitiesStateEffect()
+  return null
 }

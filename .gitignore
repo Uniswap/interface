@@ -29,6 +29,7 @@ yarn-error.log*
 
 # local env files
 .env
+.env.local
 .env.defaults.local
 
 # turbo
@@ -50,6 +51,9 @@ packages/uniswap/src/i18n/locales/source/*_old.json
 # ci
 .ci-cache/
 
+# cli gh analysis artifacts
+.analysis/
+
 # JetBrains
 .idea/
 
@@ -59,8 +63,11 @@ packages/uniswap/src/i18n/locales/source/*_old.json
 # CodeTours Extension
 .tours/*
 
-# RNEF
-.rnef/
+# Expo
+.expo/
+
+# auto-generated test ids
+apps/mobile/.maestro/scripts/testIds.js
 
 # claude
 claude.local.md

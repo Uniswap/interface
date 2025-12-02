@@ -1,4 +1,4 @@
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { useEffect } from 'react'
 import { Z_INDEX } from 'theme/zIndex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'

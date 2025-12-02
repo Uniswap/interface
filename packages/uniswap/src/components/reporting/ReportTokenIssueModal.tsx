@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Flag } from 'ui/src/components/icons/Flag'
 import { BaseModalProps } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
-import { ReportOption, ReportTokenModal } from 'uniswap/src/components/reporting/ReportModal'
+import { ReportModal, ReportOption } from 'uniswap/src/components/reporting/ReportModal'
 import { DataServiceApiClient } from 'uniswap/src/data/apiClients/dataApi/DataApiClient'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
@@ -15,6 +15,7 @@ import { submitTokenIssueReport, TokenReportOption } from 'uniswap/src/features/
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { setTokenVisibility } from 'uniswap/src/features/visibility/slice'
 import { currencyId, NATIVE_ANALYTICS_ADDRESS_VALUE } from 'uniswap/src/utils/currencyId'
+import { isProdEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -62,21 +63,19 @@ export function ReportTokenIssueModal({
         reportText,
       })
 
-      try {
+      if (!currency.isNative && isProdEnv()) {
         // Submit report directly to the data API, ignoring native tokens
-        if (!currency.isNative) {
-          await DataServiceApiClient.submitTokenReport({
+        DataServiceApiClient.submitTokenReport({
+          chainId: currency.chainId,
+          address: currency.address,
+          event: TokenReportEventType.FalseNegative,
+        }).catch((error: unknown) => {
+          // Still show success since analytics and local hiding succeeded, but log the issue for monitoring
+          logger.warn('ReportTokenIssueModal', 'submitReport', 'Failed to submit token report to backend', {
+            error: error instanceof Error ? error.message : String(error),
             chainId: currency.chainId,
             address: currency.address,
-            event: TokenReportEventType.FalseNegative,
           })
-        }
-      } catch (error: unknown) {
-        // Still show success since analytics and local hiding succeeded, but log the issue for monitoring
-        logger.warn('ReportTokenIssueModal', 'submitReport', 'Failed to submit token report to backend', {
-          error: error instanceof Error ? error.message : error,
-          chainId: currency.chainId,
-          address: currency.isNative ? NATIVE_ANALYTICS_ADDRESS_VALUE : currency.address,
         })
       }
 
@@ -118,9 +117,9 @@ export function ReportTokenIssueModal({
   )
 
   return (
-    <ReportTokenModal
+    <ReportModal
       modalName={ModalName.ReportTokenIssue}
-      currency={currency}
+      modalTitle={t('reporting.token.report.title.withSymbol', { symbol: currency?.symbol ?? '' })}
       icon={Flag}
       reportOptions={reportOptions}
       textOptionValue={TokenReportOption.Other}

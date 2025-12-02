@@ -4,6 +4,11 @@ exports[`renders UnitagName with a name 1`] = `
 <View
   collapsable={false}
   forwardedRef={[Function]}
+  jestAnimatedProps={
+    {
+      "value": {},
+    }
+  }
   jestAnimatedStyle={
     {
       "value": {
@@ -11,13 +16,26 @@ exports[`renders UnitagName with a name 1`] = `
       },
     }
   }
+  jestInlineStyle={
+    [
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexDirection": "row",
+      },
+    ]
+  }
   style={
-    {
-      "alignItems": "center",
-      "alignSelf": "center",
-      "flexDirection": "row",
-      "opacity": 0,
-    }
+    [
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexDirection": "row",
+      },
+      {
+        "opacity": 0,
+      },
+    ]
   }
   testID="testing.uni.eth"
 >
@@ -40,6 +58,11 @@ exports[`renders UnitagName with a name 1`] = `
   <View
     collapsable={false}
     forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -57,23 +80,36 @@ exports[`renders UnitagName with a name 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "flexDirection": "row",
+          "marginLeft": 4,
+          "position": "absolute",
+        },
+      ]
+    }
     style={
-      {
-        "flexDirection": "row",
-        "marginLeft": 4,
-        "opacity": 0,
-        "position": "absolute",
-        "right": -24,
-        "top": -4,
-        "transform": [
-          {
-            "translateX": 20,
-          },
-          {
-            "scale": 0.8,
-          },
-        ],
-      }
+      [
+        {
+          "flexDirection": "row",
+          "marginLeft": 4,
+          "position": "absolute",
+        },
+        {
+          "opacity": 0,
+          "right": -24,
+          "top": -4,
+          "transform": [
+            {
+              "translateX": 20,
+            },
+            {
+              "scale": 0.8,
+            },
+          ],
+        },
+      ]
     }
   />
 </View>
@@ -83,6 +119,11 @@ exports[`renders UnitagName without a name 1`] = `
 <View
   collapsable={false}
   forwardedRef={[Function]}
+  jestAnimatedProps={
+    {
+      "value": {},
+    }
+  }
   jestAnimatedStyle={
     {
       "value": {
@@ -90,13 +131,26 @@ exports[`renders UnitagName without a name 1`] = `
       },
     }
   }
+  jestInlineStyle={
+    [
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexDirection": "row",
+      },
+    ]
+  }
   style={
-    {
-      "alignItems": "center",
-      "alignSelf": "center",
-      "flexDirection": "row",
-      "opacity": 0,
-    }
+    [
+      {
+        "alignItems": "center",
+        "alignSelf": "center",
+        "flexDirection": "row",
+      },
+      {
+        "opacity": 0,
+      },
+    ]
   }
   testID="undefined.uni.eth"
 >
@@ -117,6 +171,11 @@ exports[`renders UnitagName without a name 1`] = `
   <View
     collapsable={false}
     forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {
@@ -125,14 +184,27 @@ exports[`renders UnitagName without a name 1`] = `
         },
       }
     }
+    jestInlineStyle={
+      [
+        {
+          "flexDirection": "row",
+          "marginLeft": 4,
+          "position": "absolute",
+        },
+      ]
+    }
     style={
-      {
-        "flexDirection": "row",
-        "marginLeft": 4,
-        "position": "absolute",
-        "right": -24,
-        "top": -4,
-      }
+      [
+        {
+          "flexDirection": "row",
+          "marginLeft": 4,
+          "position": "absolute",
+        },
+        {
+          "right": -24,
+          "top": -4,
+        },
+      ]
     }
   />
 </View>

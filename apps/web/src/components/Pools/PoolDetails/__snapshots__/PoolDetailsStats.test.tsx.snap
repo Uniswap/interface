@@ -3,16 +3,8 @@
 exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
 <DocumentFragment>
   .c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
@@ -24,18 +16,9 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
 
 .c6 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
@@ -44,10 +27,7 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
 }
 
 .c4 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
@@ -69,16 +49,11 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
 
 .c3 {
   gap: 8px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
   flex: 1;
   min-width: 180px;
 }
 
 .c7 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
 }
 
@@ -86,42 +61,29 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
   font-weight: 485;
   font-size: 16px;
   line-height: 24px;
-  width: -webkit-max-content;
-  width: -moz-max-content;
   width: max-content;
 }
 
 .c9 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   color: #131313;
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c9:hover {
+.c9 :hover {
   opacity: 0.6;
 }
 
-.c9:active {
+.c9 :active {
   opacity: 0.4;
 }
 
 .c10 {
   gap: 4px;
   width: 100%;
-  -webkit-align-items: flex-end;
-  -webkit-box-align: flex-end;
-  -ms-flex-align: flex-end;
   align-items: flex-end;
 }
 
@@ -132,45 +94,36 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
   line-height: 44px;
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .c2 {
     width: 100%;
   }
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .c1 {
-    -webkit-flex-direction: row;
-    -ms-flex-direction: row;
     flex-direction: row;
     background: transparent;
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     padding: 20px 0px;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-    -ms-flex-pack: justify;
     justify-content: space-between;
     margin-top: 0px;
   }
 }
 
-@media (max-width:640px) {
+@media (max-width: 640px) {
   .c3 {
     min-width: 150px;
   }
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .c7 {
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
     flex-direction: column;
   }
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .c8 {
     font-size: 20px;
     line-height: 28px;
@@ -178,20 +131,15 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
   }
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .c10 {
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
     flex-direction: column;
     gap: 0px;
-    -webkit-align-items: flex-start;
-    -webkit-box-align: flex-start;
-    -ms-flex-align: flex-start;
     align-items: flex-start;
   }
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .c11 {
     font-size: 20px;
     line-height: 28px;
@@ -414,16 +362,8 @@ exports[`PoolDetailsStats > pool balance chart not visible on mobile 1`] = `
 exports[`PoolDetailsStats > renders stats text correctly 1`] = `
 <DocumentFragment>
   .c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
@@ -435,18 +375,9 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
 
 .c6 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
@@ -455,10 +386,7 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
 }
 
 .c4 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
@@ -480,16 +408,11 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
 
 .c3 {
   gap: 8px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
   flex: 1;
   min-width: 180px;
 }
 
 .c7 {
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
 }
 
@@ -497,33 +420,23 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
   font-weight: 485;
   font-size: 16px;
   line-height: 24px;
-  width: -webkit-max-content;
-  width: -moz-max-content;
   width: max-content;
 }
 
 .c9 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   color: #131313;
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c9:hover {
+.c9 :hover {
   opacity: 0.6;
 }
 
-.c9:active {
+.c9 :active {
   opacity: 0.4;
 }
 
@@ -548,9 +461,6 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
 .c12 {
   gap: 4px;
   width: 100%;
-  -webkit-align-items: flex-end;
-  -webkit-box-align: flex-end;
-  -ms-flex-align: flex-end;
   align-items: flex-end;
 }
 
@@ -561,45 +471,36 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
   line-height: 44px;
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .c2 {
     width: 100%;
   }
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .c1 {
-    -webkit-flex-direction: row;
-    -ms-flex-direction: row;
     flex-direction: row;
     background: transparent;
-    -webkit-flex-wrap: wrap;
-    -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     padding: 20px 0px;
-    -webkit-box-pack: justify;
-    -webkit-justify-content: space-between;
-    -ms-flex-pack: justify;
     justify-content: space-between;
     margin-top: 0px;
   }
 }
 
-@media (max-width:640px) {
+@media (max-width: 640px) {
   .c3 {
     min-width: 150px;
   }
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .c7 {
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
     flex-direction: column;
   }
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .c8 {
     font-size: 20px;
     line-height: 28px;
@@ -607,20 +508,15 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
   }
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .c12 {
-    -webkit-flex-direction: column;
-    -ms-flex-direction: column;
     flex-direction: column;
     gap: 0px;
-    -webkit-align-items: flex-start;
-    -webkit-box-align: flex-start;
-    -ms-flex-align: flex-start;
     align-items: flex-start;
   }
 }
 
-@media (max-width:1024px) {
+@media (max-width: 1024px) {
   .c13 {
     font-size: 20px;
     line-height: 28px;
@@ -699,9 +595,11 @@ exports[`PoolDetailsStats > renders stats text correctly 1`] = `
         >
           <div
             class="c10"
+            percent="0.9999999996483845"
           />
           <div
             class="c11"
+            percent="3.5161546763980577e-10"
           />
         </div>
       </div>

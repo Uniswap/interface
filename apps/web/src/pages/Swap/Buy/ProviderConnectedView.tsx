@@ -1,8 +1,8 @@
-import styled, { useTheme } from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
 import { Trans, useTranslation } from 'react-i18next'
 import { ExternalLink } from 'theme/components/Links'
-import { Flex, Text, useIsDarkMode } from 'ui/src'
+import { Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
@@ -19,7 +19,7 @@ interface ProviderConnectedViewProps {
 
 export function ProviderConnectedView({ closeModal, selectedServiceProvider }: ProviderConnectedViewProps) {
   const isDarkMode = useIsDarkMode()
-  const theme = useTheme()
+  const colors = useSporeColors()
   const { t } = useTranslation()
 
   return (
@@ -52,12 +52,12 @@ export function ProviderConnectedView({ closeModal, selectedServiceProvider }: P
             }}
             components={{
               tosLink: (
-                <StyledLink color={theme.neutral3} href="https://uniswap.org/terms-of-service/">
+                <StyledLink color={colors.neutral3.val} href="https://uniswap.org/terms-of-service/">
                   {t('common.termsOfService')}
                 </StyledLink>
               ),
               privacyLink: (
-                <StyledLink color={theme.neutral3} href="https://uniswap.org/privacy-policy">
+                <StyledLink color={colors.neutral3.val} href="https://uniswap.org/privacy-policy">
                   {t('common.privacyPolicy')}
                 </StyledLink>
               ),

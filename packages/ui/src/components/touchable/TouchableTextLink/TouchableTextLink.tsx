@@ -70,7 +70,7 @@ const TouchableTextLink_ = forwardRef<TamaguiElement, TouchableTextLinkProps>(fu
   },
   ref,
 ) {
-  const textRef = useRef<TamaguiElement>() as unknown as ForwardedRef<TamaguiElement>
+  const textRef = useRef<TamaguiElement>(undefined) as unknown as ForwardedRef<TamaguiElement>
 
   const hoveredColor = getMaybeHoverColor(color)
 

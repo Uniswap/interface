@@ -24,4 +24,5 @@ export const FLASHBLOCKS_UI_SKIP_ROUTES: TradingApi.Routing[] = [
   TradingApi.Routing.WRAP,
   TradingApi.Routing.UNWRAP,
   TradingApi.Routing.BRIDGE,
+  TradingApi.Routing.CHAINED,
 ]

@@ -1,6 +1,6 @@
 import Row from 'components/deprecated/Row'
 import { Input, InputProps } from 'components/NumericalInput'
-import styled, { css } from 'lib/styled-components'
+import { css, styled } from 'lib/styled-components'
 import { useLayoutEffect, useState } from 'react'
 
 export const NumericalInputFontStyle = css<{ $fontSize?: number }>`
@@ -30,7 +30,7 @@ export const StyledNumericalInput = styled(Input)<
   }
 `
 
-export const NumericalInputMimic = styled.span`
+export const NumericalInputMimic = styled.span<{ $fontSize?: number }>`
   position: absolute;
   visibility: hidden;
   bottom: 0px;

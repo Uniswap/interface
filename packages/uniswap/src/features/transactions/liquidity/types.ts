@@ -23,13 +23,13 @@ export type LiquidityTxAndGasInfo =
   | IncreasePositionTxAndGasInfo
   | DecreasePositionTxAndGasInfo
   | CreatePositionTxAndGasInfo
-  | MigrateV3PositionTxAndGasInfo
+  | MigratePositionTxAndGasInfo
   | CollectFeesTxAndGasInfo
 export type ValidatedLiquidityTxContext =
   | ValidatedIncreasePositionTxAndGasInfo
   | ValidatedDecreasePositionTxAndGasInfo
   | ValidatedCreatePositionTxAndGasInfo
-  | ValidatedMigrateV3PositionTxAndGasInfo
+  | ValidatedMigratePositionTxAndGasInfo
   | ValidatedCollectFeesTxAndGasInfo
 
 export function isValidLiquidityTxContext(
@@ -40,7 +40,7 @@ export function isValidLiquidityTxContext(
 }
 
 interface BaseLiquidityTxAndGasInfo {
-  protocolVersion: ProtocolVersion
+  canBatchTransactions: boolean
   action: LiquidityAction
   approveToken0Request: ValidatedTransactionRequest | undefined
   approveToken1Request: ValidatedTransactionRequest | undefined
@@ -73,7 +73,7 @@ export interface CreatePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   sqrtRatioX96: string | undefined
 }
 
-export interface MigrateV3PositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
+export interface MigratePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Migrate
   migratePositionRequestArgs: TradingApi.MigrateLPPositionRequest | undefined
 }
@@ -119,7 +119,7 @@ export type ValidatedCreatePositionTxAndGasInfo = Required<CreatePositionTxAndGa
       }
   )
 
-export type ValidatedMigrateV3PositionTxAndGasInfo = Required<MigrateV3PositionTxAndGasInfo> &
+export type ValidatedMigratePositionTxAndGasInfo = Required<MigratePositionTxAndGasInfo> &
   (
     | {
         unsigned: true
@@ -168,10 +168,5 @@ function validateLiquidityTxContext(
 }
 
 function isLiquidityTx(liquidityTxContext: unknown): liquidityTxContext is LiquidityTxAndGasInfo {
-  return (
-    typeof liquidityTxContext === 'object' &&
-    liquidityTxContext !== null &&
-    'action' in liquidityTxContext &&
-    'protocolVersion' in liquidityTxContext
-  )
+  return typeof liquidityTxContext === 'object' && liquidityTxContext !== null && 'action' in liquidityTxContext
 }

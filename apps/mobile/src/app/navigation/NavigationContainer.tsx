@@ -91,7 +91,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, on
 
 const useManageDeepLinks = (): void => {
   const dispatch = useDispatch()
-  const urlListener = useRef<EmitterSubscription | undefined>()
+  const urlListener = useRef<EmitterSubscription | undefined>(undefined)
 
   const deepLinkMutation = useMutation({
     mutationFn: async () => {

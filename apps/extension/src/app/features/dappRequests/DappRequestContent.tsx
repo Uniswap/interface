@@ -7,26 +7,8 @@ import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRe
 import { handleExternallySubmittedUniswapXOrder } from 'src/app/features/dappRequests/handleUniswapX'
 import { useIsDappRequestConfirming } from 'src/app/features/dappRequests/hooks'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/shared'
-import {
-  DappRequest,
-  isBatchedSwapRequest,
-  isConnectionRequest,
-} from 'src/app/features/dappRequests/types/DappRequestTypes'
-import {
-  Anchor,
-  AnimatePresence,
-  Button,
-  Flex,
-  GetThemeValueForKey,
-  styled,
-  Text,
-  UniversalImage,
-  UniversalImageResizeMode,
-} from 'ui/src'
-import { Verified } from 'ui/src/components/icons'
-import { borderRadii, iconSizes } from 'ui/src/theme'
-import { DappIconPlaceholder } from 'uniswap/src/components/dapps/DappIconPlaceholder'
-import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
+import { DappRequest, isBatchedSwapRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { AnimatePresence, Button, Flex, GetThemeValueForKey, styled, Text } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DappRequestType } from 'uniswap/src/features/dappRequests/types'
@@ -35,18 +17,20 @@ import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
-import { formatDappURL } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useThrottledCallback } from 'utilities/src/react/useThrottledCallback'
 import { MAX_HIDDEN_CALLS_BY_DEFAULT } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
+import { DappRequestHeader } from 'wallet/src/components/dappRequests/DappRequestHeader'
 import { WarningBox } from 'wallet/src/components/WarningBox/WarningBox'
+import { DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 import { NetworkFeeFooter } from 'wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface DappRequestHeaderProps {
   title: string
+  verificationStatus?: DappVerificationStatus
   headerIcon?: JSX.Element
 }
 
@@ -57,9 +41,9 @@ interface DappRequestFooterProps {
   maybeCloseOnConfirm?: boolean
   onCancel?: (requestToConfirm?: DappRequestStoreItem, transactionTypeInfo?: TransactionTypeInfo) => void
   onConfirm?: (requestToCancel?: DappRequestStoreItem) => void
-  showAllNetworks?: boolean
   showNetworkCost?: boolean
   showSmartWalletActivation?: boolean
+  showAddressFooter?: boolean
   transactionGasFeeResult?: GasFeeResult
   isUniswapX?: boolean
   disableConfirm?: boolean
@@ -96,26 +80,39 @@ export const AnimatedPane = styled(Flex, {
 export function DappRequestContent({
   chainId,
   title,
+  verificationStatus,
   headerIcon,
   confirmText,
   connectedAccountAddress,
   maybeCloseOnConfirm,
   onCancel,
   onConfirm,
-  showAllNetworks,
   showNetworkCost,
   showSmartWalletActivation,
   transactionGasFeeResult,
   children,
   isUniswapX,
   disableConfirm,
+  showAddressFooter = true,
   contentHorizontalPadding = '$spacing12',
 }: PropsWithChildren<DappRequestContentProps>): JSX.Element {
-  const { forwards, currentIndex } = useDappRequestQueueContext()
+  const { forwards, currentIndex, dappIconUrl, dappUrl } = useDappRequestQueueContext()
+  const hostname = extractNameFromUrl(dappUrl).toUpperCase()
 
   return (
     <>
-      <DappRequestHeader headerIcon={headerIcon} title={title} />
+      <Flex mb="$spacing4" ml="$spacing8" mt="$spacing8" mr="$spacing8" px="$spacing12">
+        <DappRequestHeader
+          dappInfo={{
+            name: hostname,
+            url: dappUrl,
+            icon: dappIconUrl,
+          }}
+          title={title}
+          verificationStatus={verificationStatus}
+          headerIcon={headerIcon}
+        />
+      </Flex>
       <AnimatePresence exitBeforeEnter custom={{ forwards }}>
         <AnimatedPane key={currentIndex} animation="200ms" px={contentHorizontalPadding}>
           {children}
@@ -127,57 +124,15 @@ export function DappRequestContent({
         connectedAccountAddress={connectedAccountAddress}
         isUniswapX={isUniswapX}
         maybeCloseOnConfirm={maybeCloseOnConfirm}
-        showAllNetworks={showAllNetworks}
         showNetworkCost={showNetworkCost}
         showSmartWalletActivation={showSmartWalletActivation}
+        showAddressFooter={showAddressFooter}
         transactionGasFeeResult={transactionGasFeeResult}
         disableConfirm={disableConfirm}
         onCancel={onCancel}
         onConfirm={onConfirm}
       />
     </>
-  )
-}
-
-function DappRequestHeader({ headerIcon, title }: DappRequestHeaderProps): JSX.Element {
-  const { dappIconUrl, dappUrl, request } = useDappRequestQueueContext()
-  const hostname = extractNameFromUrl(dappUrl).toUpperCase()
-  const fallbackIcon = <DappIconPlaceholder iconSize={iconSizes.icon40} name={hostname} />
-  const showVerified =
-    request && isConnectionRequest(request.dappRequest) && formatDappURL(dappUrl) === UNISWAP_WEB_HOSTNAME
-
-  return (
-    <Flex mb="$spacing4" ml="$spacing8" mt="$spacing8" px="$spacing12">
-      <Flex row>
-        <Flex borderRadius="$roundedFull" borderWidth="$spacing1" borderColor="$surface3">
-          {headerIcon || (
-            <UniversalImage
-              style={{
-                image: { borderRadius: borderRadii.roundedFull },
-              }}
-              fallback={fallbackIcon}
-              size={{
-                width: iconSizes.icon40,
-                height: iconSizes.icon40,
-                resizeMode: UniversalImageResizeMode.Contain,
-              }}
-              uri={dappIconUrl}
-            />
-          )}
-        </Flex>
-      </Flex>
-      <Text mt="$spacing8" variant="subheading1">
-        {title}
-      </Text>
-      <Anchor href={dappUrl} rel="noopener noreferrer" target="_blank" textDecorationLine="none">
-        <Flex row alignItems="center" mt="$spacing4" gap="$gap4">
-          <Text color="$accent1" textAlign="left" variant="body4">
-            {formatDappURL(dappUrl)}
-          </Text>
-          {showVerified && <Verified color="$accent1" size="$icon.12" />}
-        </Flex>
-      </Anchor>
-    </Flex>
   )
 }
 
@@ -192,6 +147,7 @@ function DappRequestFooter({
   onConfirm,
   showNetworkCost,
   showSmartWalletActivation,
+  showAddressFooter,
   transactionGasFeeResult,
   isUniswapX,
   disableConfirm,
@@ -275,7 +231,7 @@ function DappRequestFooter({
 
   return (
     <>
-      <Flex gap="$spacing8" mt="$spacing8" px="$spacing12">
+      <Flex gap="$spacing8" mt={showNetworkCost || showAddressFooter ? '$spacing8' : '$none'} px="$spacing12">
         {!hasSufficientGas && (
           <Flex pb="$spacing8">
             <Text color="$statusWarning" variant="body3">
@@ -295,13 +251,15 @@ function DappRequestFooter({
             showSmartWalletActivation={showSmartWalletActivation}
           />
         )}
-        <AddressFooter
-          activeAccountAddress={activeAccount.address}
-          connectedAccountAddress={connectedAccountAddress || currentAccount.address}
-          px="$spacing8"
-        />
+        {showAddressFooter && (
+          <AddressFooter
+            activeAccountAddress={activeAccount.address}
+            connectedAccountAddress={connectedAccountAddress || currentAccount.address}
+            px="$spacing8"
+          />
+        )}
         <WarningSection request={request.dappRequest} />
-        <Flex row gap="$spacing12" pt="$spacing8">
+        <Flex row gap="$spacing12">
           <Button flexBasis={1} size="medium" emphasis="secondary" onPress={handleOnCancel}>
             {t('common.button.cancel')}
           </Button>

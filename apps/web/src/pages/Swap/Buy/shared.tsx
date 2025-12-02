@@ -1,5 +1,4 @@
 import { Currency } from '@uniswap/sdk-core'
-import { useTheme } from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Flex, ModalCloseIcon, styled, useSporeColors } from 'ui/src'
@@ -45,14 +44,13 @@ export function ConnectingViewWrapper({
   onBack,
   showDottedBackground = true,
 }: PropsWithChildren<ConnectingViewWrapperProps>) {
-  const theme = useTheme()
   const colors = useSporeColors()
 
   return (
     <Flex gap="$spacing16" position="relative" $sm={{ px: '$spacing8', pb: '$spacing16' }}>
       {showDottedBackground && (
         <>
-          <ConnectingBackgroundImage color={theme.neutral2} />
+          <ConnectingBackgroundImage color={colors.neutral2.val} />
           <ConnectingBackgroundImageFadeLayer
             background={`radial-gradient(70% 50% at center, transparent 0%, ${colors.surface1.val} 100%)`}
           />
@@ -61,7 +59,12 @@ export function ConnectingViewWrapper({
       <Flex flexDirection="row-reverse" alignItems="center" justifyContent="space-between" zIndex={2}>
         {closeModal && <ModalCloseIcon testId="ConnectingViewWrapper-close" onClose={closeModal} />}
         {onBack && (
-          <ArrowLeft data-testid="ConnectingViewWrapper-back" fill={theme.neutral2} onClick={onBack} cursor="pointer" />
+          <ArrowLeft
+            data-testid="ConnectingViewWrapper-back"
+            fill={colors.neutral2.val}
+            onClick={onBack}
+            cursor="pointer"
+          />
         )}
       </Flex>
       <Flex mt="$spacing40" zIndex={2} width="100%" height="100%">

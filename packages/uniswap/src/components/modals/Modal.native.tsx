@@ -32,7 +32,7 @@ import { isIOS } from 'utilities/src/platform'
  * @param modalRef - ref to the modal
  * @param enabled - whether to enable the back handler
  */
-function useModalBackHandler(modalRef: React.RefObject<BaseModal>, enabled: boolean): void {
+function useModalBackHandler(modalRef: React.RefObject<BaseModal | null>, enabled: boolean): void {
   useEffect(() => {
     if (enabled) {
       const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
@@ -261,7 +261,9 @@ function BottomSheetModalContents({
   )
 
   const bottomSheetViewStyles: StyleProp<ViewStyle> = useMemo(() => {
-    const styles: StyleProp<ViewStyle> = [{ backgroundColor: backgroundColorValue }]
+    const styles: StyleProp<ViewStyle> = [
+      { backgroundColor: renderBehindTopInset ? 'transparent' : backgroundColorValue },
+    ]
 
     const hiddenHandlebarStyle = {
       borderTopLeftRadius: borderRadius,

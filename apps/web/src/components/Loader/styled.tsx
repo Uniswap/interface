@@ -1,4 +1,4 @@
-import styled, { css, keyframes } from 'lib/styled-components'
+import { css, keyframes, styled } from 'lib/styled-components'
 
 const loadingAnimation = keyframes`
   0% {

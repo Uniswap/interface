@@ -1,9 +1,16 @@
+/* eslint-disable max-lines */
+import { NftAmountDisplay } from 'pages/Portfolio/Activity/ActivityTable/NftAmountDisplay'
 import { buildActivityRowFragments } from 'pages/Portfolio/Activity/ActivityTable/registry'
 import { TokenAmountDisplay } from 'pages/Portfolio/Activity/ActivityTable/TokenAmountDisplay'
+import { getTransactionTypeFilterOptions } from 'pages/Portfolio/Activity/Filters/utils'
+import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { EM_DASH, Flex, Text } from 'ui/src'
 import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
+import { iconSizes } from 'ui/src/theme'
 import { useFormattedCurrencyAmountAndUSDValue } from 'uniswap/src/components/activity/hooks/useFormattedCurrencyAmountAndUSDValue'
+import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import {
@@ -15,18 +22,22 @@ import {
   INFINITE_APPROVAL_AMOUNT,
   REVOKE_APPROVAL_AMOUNT,
   TransactionDetails,
+  TransactionStatus,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 
+const COMPACT_TOKEN_LOGO_SIZE = iconSizes.icon24
+
 interface ActivityAmountCellProps {
   transaction: TransactionDetails
+  variant?: 'full' | 'compact'
 }
 
 function EmptyCell() {
   return (
-    <Text variant="body3" color="$neutral2">
-      —
+    <Text variant="body3" color="$neutral3">
+      {EM_DASH}
     </Text>
   )
 }
@@ -82,18 +93,126 @@ function DualTokenLayout({
 }
 
 function formatAmountWithSymbol(amount: string | undefined, symbol: string | undefined): string | null {
-  return amount ? `${amount}${getSymbolDisplayText(symbol)}` : null
+  return amount ? `${amount} ${getSymbolDisplayText(symbol)}` : null
 }
 
 function getUsdValue(value: string | undefined): string | null {
   return value !== '-' ? (value ?? null) : null
 }
 
-export function ActivityAmountCell({ transaction }: ActivityAmountCellProps) {
+// Helper to get transaction type display label
+function getTransactionTypeLabel(transaction: TransactionDetails, t: ReturnType<typeof useTranslation>['t']): string {
+  const fragments = buildActivityRowFragments(transaction)
+  const { typeLabel } = fragments
+
+  const transactionTypeOptions = getTransactionTypeFilterOptions(t)
+  const typeOption = typeLabel?.baseGroup ? transactionTypeOptions[typeLabel.baseGroup] : null
+
+  return typeLabel?.overrideLabelKey ? t(typeLabel.overrideLabelKey) : (typeOption?.label ?? 'Transaction')
+}
+
+// Compact layout components
+interface CompactLayoutProps {
+  typeLabel: string
+  logo: React.ReactNode
+  amountText: string | null
+}
+
+function CompactLayout({ typeLabel, logo, amountText }: CompactLayoutProps) {
+  return (
+    <Flex row alignItems="center" gap="$gap8">
+      {logo}
+      <Flex>
+        <Text variant="body4" color="$neutral2">
+          {typeLabel}
+        </Text>
+        {amountText && (
+          <Text variant="body3" color="$neutral1">
+            {amountText}
+          </Text>
+        )}
+      </Flex>
+    </Flex>
+  )
+}
+
+// Helper to create TokenLogo for compact variant
+function createTokenLogo(currencyInfo: CurrencyInfo | null | undefined): React.ReactNode {
+  if (!currencyInfo) {
+    return null
+  }
+
+  return (
+    <TokenLogo
+      chainId={currencyInfo.currency.chainId}
+      name={currencyInfo.currency.name}
+      symbol={currencyInfo.currency.symbol}
+      size={COMPACT_TOKEN_LOGO_SIZE}
+      url={currencyInfo.logoUrl}
+    />
+  )
+}
+
+// Helper to create SplitLogo for compact variant
+function createSplitLogo({
+  chainId,
+  inputCurrencyInfo,
+  outputCurrencyInfo,
+}: {
+  chainId: number
+  inputCurrencyInfo: CurrencyInfo | null | undefined
+  outputCurrencyInfo: CurrencyInfo | null | undefined
+}): React.ReactNode {
+  if (!inputCurrencyInfo || !outputCurrencyInfo) {
+    return null
+  }
+
+  return (
+    <SplitLogo
+      chainId={chainId}
+      inputCurrencyInfo={inputCurrencyInfo}
+      outputCurrencyInfo={outputCurrencyInfo}
+      size={COMPACT_TOKEN_LOGO_SIZE}
+    />
+  )
+}
+
+// Helper to format compact amount text with separator
+function formatCompactAmountText({
+  inputAmount,
+  inputSymbol,
+  outputAmount,
+  outputSymbol,
+  separator = '→',
+}: {
+  inputAmount: string | undefined
+  inputSymbol: string | undefined
+  outputAmount: string | undefined
+  outputSymbol: string | undefined
+  separator?: string
+}): string | null {
+  if (!inputAmount || !outputAmount || !inputSymbol || !outputSymbol) {
+    return null
+  }
+
+  return `${inputAmount} ${inputSymbol} ${separator} ${outputAmount} ${outputSymbol}`
+}
+
+// Helper to format single token compact amount text
+function formatSingleCompactAmountText(amount: string | undefined, symbol: string | undefined): string | null {
+  if (!amount || !symbol) {
+    return null
+  }
+
+  return `${amount} ${symbol}`
+}
+
+function _ActivityAmountCell({ transaction, variant = 'full' }: ActivityAmountCellProps) {
   const formatter = useLocalizationContext()
   const { t } = useTranslation()
   const { chainId } = transaction
-  const { amount } = buildActivityRowFragments(transaction)
+  const fragments = buildActivityRowFragments(transaction)
+  const { amount } = fragments
 
   // Hook up currency info based on amount model
   const inputCurrencyInfo = useCurrencyInfo(amount?.kind === 'pair' ? amount.inputCurrencyId : undefined)
@@ -103,6 +222,7 @@ export function ActivityAmountCell({ transaction }: ActivityAmountCellProps) {
   )
   const currency0Info = useCurrencyInfo(amount?.kind === 'liquidity-pair' ? amount.currency0Id : undefined)
   const currency1Info = useCurrencyInfo(amount?.kind === 'liquidity-pair' ? amount.currency1Id : undefined)
+  const nftPurchaseCurrencyInfo = useCurrencyInfo(amount?.kind === 'nft' ? amount.purchaseCurrencyId : undefined)
 
   const nativeCurrencyInfo = useNativeCurrencyInfo(chainId)
   const wrappedCurrencyInfo = useWrappedNativeCurrencyInfo(chainId)
@@ -161,6 +281,21 @@ export function ActivityAmountCell({ transaction }: ActivityAmountCellProps) {
     isApproximateAmount: false,
   })
 
+  const nftPurchaseFormattedData = useFormattedCurrencyAmountAndUSDValue({
+    currency: nftPurchaseCurrencyInfo?.currency,
+    currencyAmountRaw: amount?.kind === 'nft' ? (amount.purchaseAmountRaw ?? '') : '',
+    formatter,
+    isApproximateAmount: false,
+  })
+
+  if (transaction.status === TransactionStatus.Failed) {
+    return (
+      <Text variant="body3" color="$neutral2">
+        {t('notification.transaction.unknown.fail.short')}
+      </Text>
+    )
+  }
+
   if (!amount) {
     return <EmptyCell />
   }
@@ -174,9 +309,27 @@ export function ActivityAmountCell({ transaction }: ActivityAmountCellProps) {
     return <EmptyCell />
   }
 
+  // Get transaction type label for compact variant
+  const typeLabel = variant === 'compact' ? getTransactionTypeLabel(transaction, t) : ''
+
   switch (amount.kind) {
     case 'pair': {
-      // Dual token layout for swaps and bridges: Token1 → Token2
+      if (variant === 'compact') {
+        return (
+          <CompactLayout
+            typeLabel={typeLabel}
+            logo={createSplitLogo({ chainId, inputCurrencyInfo, outputCurrencyInfo })}
+            amountText={formatCompactAmountText({
+              inputAmount: inputFormattedData.amount,
+              inputSymbol: inputCurrencyInfo?.currency.symbol,
+              outputAmount: outputFormattedData.amount,
+              outputSymbol: outputCurrencyInfo?.currency.symbol,
+            })}
+          />
+        )
+      }
+
+      // Full variant: Dual token layout for swaps and bridges: Token1 → Token2
       return (
         <DualTokenLayout
           inputCurrency={inputCurrencyInfo}
@@ -193,8 +346,8 @@ export function ActivityAmountCell({ transaction }: ActivityAmountCellProps) {
     }
 
     case 'approve': {
-      // Single token layout for approvals
       let formattedAmount: string | null = null
+      let compactAmountText: string | null = null
 
       if (singleCurrencyInfo && amount.approvalAmount !== undefined) {
         const amountText =
@@ -205,13 +358,55 @@ export function ActivityAmountCell({ transaction }: ActivityAmountCellProps) {
               : ''
 
         formattedAmount = `${amountText ? amountText + ' ' : ''}${getSymbolDisplayText(singleCurrencyInfo.currency.symbol) ?? ''}`
+
+        // For compact variant, format as "amount symbol"
+        if (variant === 'compact') {
+          const symbol = getSymbolDisplayText(singleCurrencyInfo.currency.symbol) ?? ''
+          if (amount.approvalAmount === INFINITE_APPROVAL_AMOUNT) {
+            compactAmountText = `${t('transaction.amount.unlimited')} ${symbol}`
+          } else if (amount.approvalAmount && amount.approvalAmount !== REVOKE_APPROVAL_AMOUNT) {
+            compactAmountText = `${amountText} ${symbol}`
+          } else {
+            compactAmountText = symbol ? symbol : null
+          }
+        }
       }
 
+      if (variant === 'compact') {
+        return (
+          <CompactLayout
+            typeLabel={typeLabel}
+            logo={createTokenLogo(singleCurrencyInfo)}
+            amountText={compactAmountText}
+          />
+        )
+      }
+
+      // Full variant: Single token layout for approvals
       return <TokenAmountDisplay currencyInfo={singleCurrencyInfo} formattedAmount={formattedAmount} usdValue={null} />
     }
 
     case 'wrap': {
-      // Dual token layout for wraps: ETH ↔ WETH
+      if (variant === 'compact') {
+        return (
+          <CompactLayout
+            typeLabel={typeLabel}
+            logo={createSplitLogo({
+              chainId,
+              inputCurrencyInfo: wrapInputCurrency,
+              outputCurrencyInfo: wrapOutputCurrency,
+            })}
+            amountText={formatCompactAmountText({
+              inputAmount: wrapInputFormattedData.amount,
+              inputSymbol: wrapInputCurrency?.currency.symbol,
+              outputAmount: wrapOutputFormattedData.amount,
+              outputSymbol: wrapOutputCurrency?.currency.symbol,
+            })}
+          />
+        )
+      }
+
+      // Full variant: Dual token layout for wraps: ETH ↔ WETH
       return (
         <DualTokenLayout
           inputCurrency={wrapInputCurrency}
@@ -231,7 +426,17 @@ export function ActivityAmountCell({ transaction }: ActivityAmountCellProps) {
     }
 
     case 'single': {
-      // Single token layout for transfers
+      if (variant === 'compact') {
+        return (
+          <CompactLayout
+            typeLabel={typeLabel}
+            logo={createTokenLogo(singleCurrencyInfo)}
+            amountText={formatSingleCompactAmountText(singleFormattedData.amount, singleCurrencyInfo?.currency.symbol)}
+          />
+        )
+      }
+
+      // Full variant: Single token layout for transfers
       return (
         <TokenAmountDisplay
           currencyInfo={singleCurrencyInfo}
@@ -242,7 +447,23 @@ export function ActivityAmountCell({ transaction }: ActivityAmountCellProps) {
     }
 
     case 'liquidity-pair': {
-      // Dual token layout for liquidity: Token0 and Token1
+      if (variant === 'compact') {
+        return (
+          <CompactLayout
+            typeLabel={typeLabel}
+            logo={createSplitLogo({ chainId, inputCurrencyInfo: currency0Info, outputCurrencyInfo: currency1Info })}
+            amountText={formatCompactAmountText({
+              inputAmount: currency0FormattedData.amount,
+              inputSymbol: currency0Info?.currency.symbol,
+              outputAmount: currency1FormattedData.amount,
+              outputSymbol: currency1Info?.currency.symbol,
+              separator: '&',
+            })}
+          />
+        )
+      }
+
+      // Full variant: Dual token layout for liquidity: Token0 and Token1
       return (
         <DualTokenLayout
           inputCurrency={currency0Info}
@@ -255,5 +476,27 @@ export function ActivityAmountCell({ transaction }: ActivityAmountCellProps) {
         />
       )
     }
+
+    case 'nft': {
+      // NFT layout with image preview
+      const purchaseAmountText =
+        nftPurchaseFormattedData.amount && nftPurchaseCurrencyInfo
+          ? formatAmountWithSymbol(nftPurchaseFormattedData.amount, nftPurchaseCurrencyInfo.currency.symbol)
+          : null
+
+      return (
+        <NftAmountDisplay
+          nftImageUrl={amount.nftImageUrl}
+          nftName={amount.nftName}
+          nftCollectionName={amount.nftCollectionName}
+          purchaseAmountText={purchaseAmountText}
+        />
+      )
+    }
+
+    default:
+      return <EmptyCell />
   }
 }
+
+export const ActivityAmountCell = memo(_ActivityAmountCell)

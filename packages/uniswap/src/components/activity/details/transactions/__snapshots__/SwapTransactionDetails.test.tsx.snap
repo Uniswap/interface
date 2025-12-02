@@ -14,47 +14,69 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
   }
 >
   <View
-    cancelable={true}
     collapsable={false}
-    disabled={false}
     focusVisibleStyle={{}}
-    focusable={true}
     forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {},
       }
     }
-    minPressDuration={0}
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
+    }
     onBlur={[Function]}
+    onClick={[Function]}
     onFocus={[Function]}
     onLayout={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
-    onPress={[Function]}
-    onPressIn={[Function]}
-    onPressOut={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     role="button"
     style={
-      {
-        "backgroundColor": "transparent",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
-        "flexDirection": "column",
-        "opacity": 1,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      }
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+        {},
+      ]
     }
   >
     <View
-      onBlur={[Function]}
-      onFocus={[Function]}
       style={
         {
           "alignItems": "center",
@@ -64,8 +86,6 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
       }
     >
       <View
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "flexDirection": "column",
@@ -75,8 +95,6 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
         <Text
           allowFontScaling={true}
           maxFontSizeMultiplier={1.2}
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
               "color": "#FFFFFF",
@@ -208,47 +226,69 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
     </RNSVGSvgView>
   </View>
   <View
-    cancelable={true}
     collapsable={false}
-    disabled={false}
     focusVisibleStyle={{}}
-    focusable={true}
     forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {},
       }
     }
-    minPressDuration={0}
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
+    }
     onBlur={[Function]}
+    onClick={[Function]}
     onFocus={[Function]}
     onLayout={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
-    onPress={[Function]}
-    onPressIn={[Function]}
-    onPressOut={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     role="button"
     style={
-      {
-        "backgroundColor": "transparent",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
-        "flexDirection": "column",
-        "opacity": 1,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      }
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+        {},
+      ]
     }
   >
     <View
-      onBlur={[Function]}
-      onFocus={[Function]}
       style={
         {
           "alignItems": "center",
@@ -258,8 +298,6 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
       }
     >
       <View
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "flexDirection": "column",
@@ -269,8 +307,6 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
         <Text
           allowFontScaling={true}
           maxFontSizeMultiplier={1.2}
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
               "color": "#FFFFFF",

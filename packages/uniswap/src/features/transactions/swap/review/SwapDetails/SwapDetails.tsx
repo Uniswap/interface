@@ -5,7 +5,7 @@ import { Flex, HeightAnimator, Text } from 'ui/src'
 import type { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import type { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { EstimatedBridgeTime } from 'uniswap/src/features/transactions/swap/components/EstimatedBridgeTime'
+import { EstimatedSwapTime } from 'uniswap/src/features/transactions/swap/components/EstimatedBridgeTime'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/components/MaxSlippageRow/MaxSlippageRow'
 import { PriceImpactRow } from 'uniswap/src/features/transactions/swap/components/PriceImpactRow/PriceImpactRow'
 import { RoutingInfo } from 'uniswap/src/features/transactions/swap/components/RoutingInfo'
@@ -16,7 +16,7 @@ import { AcceptNewQuoteRow } from 'uniswap/src/features/transactions/swap/review
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import type { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
-import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isBridge, isChained } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import type {
   FeeOnTransferFeeGroupProps,
@@ -67,6 +67,7 @@ export function SwapDetails({
   const { t } = useTranslation()
 
   const isBridgeTrade = derivedSwapInfo.trade.trade && isBridge(derivedSwapInfo.trade.trade)
+  const routing = derivedSwapInfo.trade.trade?.routing
 
   const trade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
   const acceptedTrade = acceptedDerivedSwapInfo.trade.trade ?? acceptedDerivedSwapInfo.trade.indicativeTrade
@@ -83,20 +84,26 @@ export function SwapDetails({
     throw new Error('Invalid render of `SwapDetails` with no `acceptedTrade`')
   }
 
-  const estimatedBridgingTime = useMemo(() => {
+  const estimatedSwapTime: number | undefined = useMemo(() => {
     const tradeQuote = derivedSwapInfo.trade.trade?.quote
-
-    if (!tradeQuote || !isBridge(tradeQuote)) {
+    if (!tradeQuote) {
       return undefined
     }
 
-    return tradeQuote.quote.estimatedFillTimeMs
+    if (isChained(tradeQuote)) {
+      // TODO: SWAP-458 - Add proper typings when available.
+      return 'timeEstimateMs' in tradeQuote.quote ? (tradeQuote.quote.timeEstimateMs as number) : undefined
+    }
+    if (isBridge(tradeQuote)) {
+      return tradeQuote.quote.estimatedFillTimeMs
+    }
+
+    return undefined
   }, [derivedSwapInfo.trade.trade?.quote])
 
   return (
     <HeightAnimator animationDisabled={isMobileApp || isMobileWeb}>
       <TransactionDetails
-        isSwap
         banner={
           newTradeRequiresAcceptance && (
             <AcceptNewQuoteRow
@@ -122,8 +129,8 @@ export function SwapDetails({
         transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
         uniswapXGasBreakdown={uniswapXGasBreakdown}
         warning={warning}
-        estimatedBridgingTime={estimatedBridgingTime}
-        isBridgeTrade={isBridgeTrade ?? false}
+        estimatedSwapTime={estimatedSwapTime}
+        routingType={routing}
         txSimulationErrors={txSimulationErrors}
         amountUserWillReceive={derivedSwapInfo.outputAmountUserWillReceive ?? undefined}
         includesDelegation={includesDelegation}
@@ -135,7 +142,7 @@ export function SwapDetails({
           </Text>
           <SwapRateRatio trade={trade} derivedSwapInfo={acceptedDerivedSwapInfo} justifyContent="flex-end" />
         </Flex>
-        {isBridgeTrade && <EstimatedBridgeTime visibleIfLong={false} timeMs={estimatedBridgingTime} />}
+        <EstimatedSwapTime showIfLongerThanCutoff={false} timeMs={estimatedSwapTime} />
         {isBridgeTrade === false && (
           <MaxSlippageRow
             acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}

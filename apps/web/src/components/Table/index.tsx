@@ -1,179 +1,58 @@
 import { ApolloError } from '@apollo/client'
-import {
-  Cell,
-  CellContext,
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  Row,
-  RowData,
-  useReactTable,
-} from '@tanstack/react-table'
+import { ColumnDef, flexRender, getCoreRowModel, Row, RowData, useReactTable } from '@tanstack/react-table'
 import { useParentSize } from '@visx/responsive'
 import Loader from 'components/Icons/LoadingSpinner'
-import { ErrorModal } from 'components/Table/ErrorBox'
 import { ScrollButton, ScrollButtonProps } from 'components/Table/ScrollButton'
 import {
   CellContainer,
-  DataRow,
   HeaderRow,
   LOAD_MORE_BOTTOM_OFFSET,
   LoadingIndicator,
   LoadingIndicatorContainer,
-  NoDataFoundTableRow,
   SHOW_RETURN_TO_TOP_OFFSET,
   TableBodyContainer,
   TableContainer,
   TableHead,
-  TableRowLink,
   TableScrollMask,
 } from 'components/Table/styled'
-import { TableSizeProvider, useTableSize } from 'components/Table/TableSizeProvider'
-import { TableBodyProps } from 'components/Table/types'
+import { TableBody } from 'components/Table/TableBody'
+import { TableSizeProvider } from 'components/Table/TableSizeProvider'
 import { getCommonPinningStyles } from 'components/Table/utils'
 import useDebounce from 'hooks/useDebounce'
-import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { LinkProps } from 'react-router'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
-import { ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
-import { UseSporeColorsReturn, useSporeColors } from 'ui/src/hooks/useSporeColors'
-import { breakpoints, INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { useSporeColors } from 'ui/src/hooks/useSporeColors'
+import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
 
-const ROW_HEIGHT_DESKTOP = 56
-const ROW_HEIGHT_MOBILE_WEB = 48
+function calculateScrollButtonTop(params: {
+  maxHeight?: number
+  isSticky: boolean
+  centerArrows: boolean
+  height: number
+  headerHeight: number
+}): number {
+  const { maxHeight, isSticky, centerArrows, height, headerHeight } = params
 
-interface TableCellProps<T extends RowData> {
-  cell: Cell<T, unknown>
-  colors: UseSporeColorsReturn
-}
-
-function TableCellComponent<T extends RowData>({ cell, colors }: TableCellProps<T>): JSX.Element {
-  return (
-    <CellContainer style={getCommonPinningStyles(cell.column, colors)}>
-      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-    </CellContainer>
-  )
-}
-
-const TableCell = memo(TableCellComponent) as typeof TableCellComponent
-
-interface TableRowProps<T extends RowData> {
-  row: Row<T>
-  v2: boolean
-  rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
-}
-
-function TableRowComponent<T extends RowData>({ row, v2 = true, rowWrapper }: TableRowProps<T>): JSX.Element {
-  const analyticsContext = useTrace()
-  const rowOriginal = row.original as {
-    linkState: LinkProps['state']
-    testId: string
-    analytics?: {
-      elementName: ElementName
-      properties: Record<string, unknown>
-    }
-  }
-  const linkState = rowOriginal.linkState
-  const rowTestId = rowOriginal.testId
-  const colors = useSporeColors()
-  const { width: tableWidth } = useTableSize()
-  const rowHeight = useMemo(
-    () => (tableWidth <= breakpoints.lg ? ROW_HEIGHT_MOBILE_WEB : ROW_HEIGHT_DESKTOP),
-    [tableWidth],
-  )
-  const cells = row
-    .getVisibleCells()
-    .map((cell: Cell<T, unknown>) => <TableCell<T> key={cell.id} cell={cell} colors={colors} />)
-
-  const rowContent = (
-    <Trace
-      logPress
-      element={rowOriginal.analytics?.elementName}
-      properties={{
-        ...rowOriginal.analytics?.properties,
-        ...analyticsContext,
-      }}
-    >
-      <Flex group>
-        {'link' in rowOriginal && typeof rowOriginal.link === 'string' ? (
-          <TableRowLink to={rowOriginal.link} state={linkState} data-testid={rowTestId}>
-            <DataRow height={rowHeight} v2={v2}>
-              {cells}
-            </DataRow>
-          </TableRowLink>
-        ) : (
-          <DataRow height={rowHeight} data-testid={rowTestId} v2={v2}>
-            {cells}
-          </DataRow>
-        )}
-      </Flex>
-    </Trace>
-  )
-  return rowWrapper ? rowWrapper(row, rowContent) : rowContent
-}
-
-const TableRow = memo(TableRowComponent) as typeof TableRowComponent
-
-function TableBodyInner<T extends RowData>(
-  { table, loading, error, v2 = true, rowWrapper }: TableBodyProps<T>,
-  ref: React.Ref<HTMLDivElement>,
-) {
-  const rows = table.getRowModel().rows
-  const { width: tableWidth } = useTableSize()
-  const skeletonRowHeight = useMemo(
-    () => (tableWidth <= breakpoints.lg ? ROW_HEIGHT_MOBILE_WEB : ROW_HEIGHT_DESKTOP),
-    [tableWidth],
-  )
-
-  if (loading || error) {
-    return (
-      <>
-        {Array.from({ length: 20 }, (_, rowIndex) => (
-          <DataRow key={`skeleton-row-${rowIndex}`} height={skeletonRowHeight} v2={v2}>
-            {table.getAllColumns().map((column, columnIndex) => (
-              <CellContainer key={`skeleton-row-${rowIndex}-column-${columnIndex}`}>
-                {flexRender(column.columnDef.cell, {} as CellContext<T, any>)}
-              </CellContainer>
-            ))}
-          </DataRow>
-        ))}
-        {error && (
-          <ErrorModal
-            header={<Trans i18nKey="common.errorLoadingData.error" />}
-            subtitle={<Trans i18nKey="error.dataUnavailable" />}
-          />
-        )}
-      </>
-    )
+  // When centerArrows is true, center based on table height
+  if (centerArrows && height > 0) {
+    return height / 2
   }
 
-  if (!rows.length) {
-    return (
-      <NoDataFoundTableRow py="$spacing20">
-        <ThemedText.BodySecondary>
-          <Trans i18nKey="error.noData" />
-        </ThemedText.BodySecondary>
-      </NoDataFoundTableRow>
-    )
+  // When maxHeight is set but centerArrows is false, still use table height
+  // (container-based positioning)
+  if (maxHeight) {
+    return height / 2
   }
 
-  return (
-    <Flex ref={ref} position="relative">
-      {rows.map((row) => (
-        <TableRow<T> key={row.id} row={row} v2={v2} rowWrapper={rowWrapper} />
-      ))}
-    </Flex>
-  )
-}
+  // When sticky and centerArrows is false, use window-based calculation
+  if (isSticky) {
+    return (window.innerHeight - (headerHeight + 12)) / 2
+  }
 
-const TableBody = forwardRef(TableBodyInner) as unknown as <T extends RowData>(
-  p: TableBodyProps<T> & { ref?: React.Ref<HTMLDivElement> },
-) => JSX.Element
+  return 0
+}
 
 export function Table<T extends RowData>({
   columns,
@@ -191,6 +70,10 @@ export function Table<T extends RowData>({
   scrollGroup = 'table-sync',
   getRowId,
   rowWrapper,
+  loadingRowsCount = 20,
+  rowHeight,
+  compactRowHeight,
+  centerArrows = false,
 }: {
   columns: ColumnDef<T, any>[]
   data: T[]
@@ -207,10 +90,15 @@ export function Table<T extends RowData>({
   scrollGroup?: string
   getRowId?: (originalRow: T, index: number, parent?: Row<T>) => string
   rowWrapper?: (row: Row<T>, content: JSX.Element) => JSX.Element
+  loadingRowsCount?: number
+  rowHeight?: number
+  compactRowHeight?: number
+  centerArrows?: boolean
 }) {
   const [loadingMore, setLoadingMore] = useState(false)
   const [showScrollRightButton, setShowScrollRightButton] = useState(false)
   const [showScrollLeftButton, setShowScrollLeftButton] = useState(false)
+  const [showRightFadeOverlay, setShowRightFadeOverlay] = useState(false)
   const colors = useSporeColors()
   const [pinnedColumns, setPinnedColumns] = useState<string[]>([])
 
@@ -342,6 +230,13 @@ export function Table<T extends RowData>({
       if (showScrollLeftButton !== nextShowScrollLeftButton) {
         setShowScrollLeftButton(nextShowScrollLeftButton)
       }
+      // Hide overlay when table is full width or scrolled all the way to the right
+      const isFullWidth = maxScrollLeft <= 0
+      const isScrolledToRight = container.scrollLeft >= maxScrollLeft
+      const nextShowRightFadeOverlay = pinnedColumns.length > 0 && !isFullWidth && !isScrolledToRight
+      if (showRightFadeOverlay !== nextShowRightFadeOverlay) {
+        setShowRightFadeOverlay(nextShowRightFadeOverlay)
+      }
     }
 
     horizontalScrollHandler()
@@ -349,7 +244,7 @@ export function Table<T extends RowData>({
     return () => {
       container.removeEventListener('scroll', horizontalScrollHandler)
     }
-  }, [loading, showScrollLeftButton, showScrollRightButton])
+  }, [loading, showScrollLeftButton, showScrollRightButton, showRightFadeOverlay, pinnedColumns.length])
 
   const headerHeight = useMemo(() => {
     const header = document.getElementById('AppHeader')
@@ -357,14 +252,14 @@ export function Table<T extends RowData>({
   }, [])
 
   const scrollButtonTop = useMemo(() => {
-    if (maxHeight) {
-      return height / 2
-    } else if (isSticky) {
-      return (window.innerHeight - (headerHeight + 12)) / 2
-    }
-
-    return 0
-  }, [headerHeight, height, isSticky, maxHeight])
+    return calculateScrollButtonTop({
+      maxHeight,
+      isSticky,
+      centerArrows,
+      height,
+      headerHeight,
+    })
+  }, [headerHeight, height, isSticky, maxHeight, centerArrows])
 
   const onScrollButtonPress = useCallback(
     (direction: ScrollButtonProps['direction']) => () => {
@@ -409,65 +304,74 @@ export function Table<T extends RowData>({
 
   const content = (
     <TableContainer maxWidth={maxWidth} maxHeight={maxHeight} position="relative" ref={parentRef}>
-      {!hideHeader && (
-        <>
-          <TableHead $isSticky={isSticky} $top={headerHeight}>
-            {hasPinnedColumns && (
-              <>
-                <Flex
-                  position="absolute"
-                  top={scrollButtonTop}
-                  left={table.getLeftTotalSize()}
-                  pl="$spacing12"
-                  zIndex={zIndexes.default}
-                >
-                  <ScrollButton
-                    onPress={onScrollButtonPress('left')}
-                    opacity={showScrollLeftButton ? 1 : 0}
-                    direction="left"
-                  />
-                </Flex>
-                <Flex position="absolute" top={scrollButtonTop} right={0} pr="$spacing12" zIndex={zIndexes.default}>
-                  <ScrollButton
-                    onPress={onScrollButtonPress('right')}
-                    opacity={showScrollRightButton ? 1 : 0}
-                    direction="right"
-                  />
-                </Flex>
+      <>
+        <TableHead $isSticky={isSticky} $top={headerHeight}>
+          {hasPinnedColumns && (
+            <>
+              <Flex
+                position="absolute"
+                top={scrollButtonTop}
+                left={table.getLeftTotalSize()}
+                pl="$spacing12"
+                zIndex={zIndexes.mask}
+              >
+                <ScrollButton
+                  onPress={onScrollButtonPress('left')}
+                  opacity={showScrollLeftButton ? 1 : 0}
+                  direction="left"
+                />
+              </Flex>
+              <Flex position="absolute" top={scrollButtonTop} right={0} pr="$spacing12" zIndex={zIndexes.mask}>
+                <ScrollButton
+                  onPress={onScrollButtonPress('right')}
+                  opacity={showScrollRightButton ? 1 : 0}
+                  direction="right"
+                />
+              </Flex>
+              {(!v2 || showRightFadeOverlay) && (
                 <TableScrollMask
                   top={isSticky ? '$spacing12' : 0}
                   zIndex={zIndexes.dropdown - 1}
-                  borderTopRightRadius="$rounded20"
+                  right={v2 ? 0 : 1}
+                  borderTopRightRadius={v2 ? '$rounded12' : '$rounded20'}
                 />
-              </>
-            )}
+              )}
+            </>
+          )}
+
+          {!hideHeader && (
             <ScrollSyncPane group={scrollGroup}>
               <HeaderRow dimmed={!!error} v2={v2}>
                 {table.getFlatHeaders().map((header) => (
-                  <CellContainer key={header.id} style={getCommonPinningStyles(header.column, colors)}>
+                  <CellContainer
+                    key={header.id}
+                    style={getCommonPinningStyles({ column: header.column, colors, v2, isHeader: true })}
+                  >
                     {flexRender(header.column.columnDef.header, header.getContext())}
                   </CellContainer>
                 ))}
               </HeaderRow>
             </ScrollSyncPane>
-          </TableHead>
-          {hasPinnedColumns && <TableScrollMask zIndex={zIndexes.default} borderBottomRightRadius="$rounded20" />}
-        </>
-      )}
+          )}
+        </TableHead>
+        {hasPinnedColumns && (!v2 || showRightFadeOverlay) && (
+          <TableScrollMask
+            zIndex={zIndexes.default}
+            borderBottomRightRadius={v2 ? '$rounded12' : '$rounded20'}
+            right={v2 ? 0 : 1}
+          />
+        )}
+      </>
       <ScrollSyncPane group={scrollGroup}>
-        <TableBodyContainer
-          maxHeight={computedBodyMaxHeight}
-          v2={v2}
-          // Only enable vertical scrolling when maxHeight is set to prevent nested scrollbar issue
-          $platform-web={{
-            overflowY: computedBodyMaxHeight !== 'unset' ? 'auto' : 'visible',
-          }}
-        >
+        <TableBodyContainer maxHeight={computedBodyMaxHeight} v2={v2}>
           <TableBody
             loading={loading}
             error={error}
             v2={v2}
             rowWrapper={rowWrapper}
+            loadingRowsCount={loadingRowsCount}
+            rowHeight={rowHeight}
+            compactRowHeight={compactRowHeight}
             // @ts-ignore
             table={table}
             ref={tableBodyRef}

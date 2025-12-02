@@ -3,16 +3,8 @@
 exports[`SwapDetails.tsx > renders a preview trade while disabling submission 1`] = `
 <DocumentFragment>
   .c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
 }
@@ -25,28 +17,17 @@ exports[`SwapDetails.tsx > renders a preview trade while disabling submission 1`
 
 .c3 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
 .c4 {
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
 }
 
-.c4 > * {
+.c4>* {
   margin: !important;
 }
 
@@ -60,16 +41,19 @@ exports[`SwapDetails.tsx > renders a preview trade while disabling submission 1`
   >
     <div
       class="c0 c1"
+      gap="sm"
     />
     <div
       class="c2 c3 c4"
     >
       <button
         aria-disabled="true"
-        class="is_Button _containerType-_platformweb_normal _outlineWidth-0focus-visible-1px _outlineOffset-0focus-visible-2px _outlineStyle-0focus-visible-solid _transform-0focus-visible-scaleX0--98sc575196563 _pointerEvents-_platformweb_none _display-flex _flexBasis-0px _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _alignItems-center _justifyContent-center _backgroundColor-surface2 _borderTopColor-borderColor _borderRightColor-borderColor _borderBottomColor-borderColor _borderLeftColor-borderColor _cursor-default _height-auto _alignSelf-stretch _flexGrow-1 _pr-t-space-spa1360334076 _pl-t-space-spa1360334076 _pt-t-space-spa1360334080 _pb-t-space-spa1360334080 _borderTopLeftRadius-t-radius-ro291586449 _borderTopRightRadius-t-radius-ro291586449 _borderBottomRightRadius-t-radius-ro291586449 _borderBottomLeftRadius-t-radius-ro291586449 _gap-t-space-spa94665593 _pointerEvents-box-none _userSelect-none _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid t_group_item"
+        class="is_Button  t_group_item"
         data-testid="confirm-swap-button"
         dd-action-name="Finalizing quote..."
+        disabled=""
         id="confirm-swap-or-send"
+        style="display: flex; flex-basis: 0px; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 1; flex-direction: row; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; align-items: center; justify-content: center; background-color: rgb(249, 249, 249); border-top-color: transparent; border-right-color: transparent; border-bottom-color: transparent; border-left-color: transparent; cursor: default; height: auto; align-self: stretch; flex-grow: 1; padding: 12px 16px 12px 16px; border-top-left-radius: 16px; border-top-right-radius: 16px; border-bottom-right-radius: 16px; border-bottom-left-radius: 16px; gap: 8px; pointer-events: none; user-select: none; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid;"
         tabindex="-1"
       >
         <style>
@@ -131,21 +115,19 @@ exports[`SwapDetails.tsx > renders a preview trade while disabling submission 1`
 exports[`SwapDetails.tsx > renders slippage tooltip 1`] = `
 <DocumentFragment>
   .c0 {
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #FF37C7;
   stroke: #FF37C7;
   font-weight: 500;
 }
 
-.c0:hover {
+.c0 :hover {
   opacity: 0.6;
 }
 
-.c0:active {
+.c0 :active {
   opacity: 0.4;
 }
 

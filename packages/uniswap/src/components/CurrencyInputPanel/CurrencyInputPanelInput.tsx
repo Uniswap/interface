@@ -1,10 +1,11 @@
 import { forwardRef, memo, useCallback, useImperativeHandle, useRef } from 'react'
 import type { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
-import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import type { ShakeAnimation } from 'ui/src/animations/hooks/useShakeAnimation'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, spacing } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/AmountInput/AmountInput'
+import { AmountInputPresets } from 'uniswap/src/components/CurrencyInputPanel/AmountInputPresets/AmountInputPresets'
 import { DefaultTokenOptions } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/DefaultTokenOptions'
 import {
   MIN_INPUT_FONT_SIZE,
@@ -17,8 +18,10 @@ import { SelectTokenButton } from 'uniswap/src/components/CurrencyInputPanel/Sel
 import type { CurrencyInputPanelProps, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { NumberType } from 'utilities/src/format/types'
 import { isWebAppDesktop, isWebPlatform } from 'utilities/src/platform'
 
 type CurrencyInputPanelInputProps = {
@@ -48,6 +51,8 @@ type CurrencyInputPanelInputProps = {
   | 'disabled'
   | 'onPressDisabled'
   | 'tokenColor'
+  | 'maxValuationPresets'
+  | 'onSetMaxValuation'
 >
 
 export const CurrencyInputPanelInput = memo(
@@ -72,14 +77,17 @@ export const CurrencyInputPanelInput = memo(
         showInsufficientBalanceWarning,
         showDefaultTokenOptions,
         indicativeQuoteTextDisplay,
+        maxValuationPresets,
+        onSetMaxValuation,
       } = props
 
       const colors = useSporeColors()
       const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
+      const { formatNumberOrString } = useLocalizationContext()
 
       const { value, color } = indicativeQuoteTextDisplay
 
-      const inputRef = useRef<TextInput>(null)
+      const inputRef = useRef<TextInput | null>(null)
 
       const { shakeStyle, triggerShakeAnimation } = shakeAnimation
 
@@ -109,6 +117,22 @@ export const CurrencyInputPanelInput = memo(
         [selectionChange],
       )
 
+      const renderPreset = useCallback(
+        (preset: number) => (
+          <Button
+            fill={false}
+            emphasis="tertiary"
+            variant="default"
+            size="xxsmall"
+            py="$spacing6"
+            onPress={() => onSetMaxValuation?.(preset)}
+          >
+            {formatNumberOrString({ value: preset, type: NumberType.TokenNonTx })}
+          </Button>
+        ),
+        [onSetMaxValuation, formatNumberOrString],
+      )
+
       const refetchAnimationStyle = useRefetchAnimationStyle(props)
 
       return (
@@ -117,7 +141,7 @@ export const CurrencyInputPanelInput = memo(
           alignItems="center"
           justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}
           py="$spacing8"
-          minHeight={MIN_INPUT_FONT_SIZE * 1.2 + 2 * spacing.spacing8}
+          minHeight={MIN_INPUT_FONT_SIZE + spacing.spacing36}
           style={shakeStyle}
         >
           {isFiatMode && (
@@ -199,14 +223,18 @@ export const CurrencyInputPanelInput = memo(
               </TouchableArea>
             )}
           </AnimatedFlex>
-          <Flex row alignItems="center">
-            <SelectTokenButton
-              selectedCurrencyInfo={currencyInfo}
-              testID={currencyField === CurrencyField.INPUT ? TestID.ChooseInputToken : TestID.ChooseOutputToken}
-              tokenColor={tokenColor}
-              onPress={onShowTokenSelector}
-            />
-          </Flex>
+          {maxValuationPresets && onSetMaxValuation ? (
+            <AmountInputPresets presets={maxValuationPresets} renderPreset={renderPreset} />
+          ) : (
+            <Flex row alignItems="center">
+              <SelectTokenButton
+                selectedCurrencyInfo={currencyInfo}
+                testID={currencyField === CurrencyField.INPUT ? TestID.ChooseInputToken : TestID.ChooseOutputToken}
+                tokenColor={tokenColor}
+                onPress={onShowTokenSelector}
+              />
+            </Flex>
+          )}
         </AnimatedFlex>
       )
     },

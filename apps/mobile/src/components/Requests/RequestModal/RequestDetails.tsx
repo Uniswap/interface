@@ -6,6 +6,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { PermitInfo } from 'src/components/Requests/RequestModal/ClientDetails'
 import {
   isBatchedTransactionRequest,
+  isPersonalSignRequest,
   isTransactionRequest,
   SignRequest,
   WalletConnectSigningRequest,
@@ -44,7 +45,7 @@ const requestMessageStyle: StyleProp<ViewStyle> = {
 }
 
 const getStrMessage = (request: WalletConnectSigningRequest): string => {
-  if (request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign) {
+  if (isPersonalSignRequest(request)) {
     return request.message || request.rawMessage
   }
 

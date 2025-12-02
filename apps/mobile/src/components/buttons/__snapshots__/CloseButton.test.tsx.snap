@@ -5,10 +5,33 @@ exports[`CloseButton renders without error 1`] = `
   collapsable={false}
   focusVisibleStyle={{}}
   forwardedRef={[Function]}
+  jestAnimatedProps={
+    {
+      "value": {},
+    }
+  }
   jestAnimatedStyle={
     {
       "value": {},
     }
+  }
+  jestInlineStyle={
+    [
+      {
+        "backgroundColor": "transparent",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
   }
   onBlur={[Function]}
   onClick={[Function]}
@@ -22,20 +45,23 @@ exports[`CloseButton renders without error 1`] = `
   onStartShouldSetResponder={[Function]}
   role="button"
   style={
-    {
-      "backgroundColor": "transparent",
-      "borderBottomLeftRadius": 12,
-      "borderBottomRightRadius": 12,
-      "borderTopLeftRadius": 12,
-      "borderTopRightRadius": 12,
-      "flexDirection": "column",
-      "opacity": 1,
-      "transform": [
-        {
-          "scale": 1,
-        },
-      ],
-    }
+    [
+      {
+        "backgroundColor": "transparent",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+      {},
+    ]
   }
   testID="buttons/close-button"
 >

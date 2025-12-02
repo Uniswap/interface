@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -45,7 +44,6 @@ export function PortfolioBalanceModal({ isOpen, onClose }: PortfolioBalanceModal
     }, AVOID_RENDER_DURING_ANIMATION_MS)
   }, [dispatch, hideSpamTokens])
 
-  const isDataReportingAbilitiesEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
   const hideReportedActivity = useHideReportedActivitySetting()
   const onToggleHideReportedActivity = useCallback(() => {
     setTimeout(() => {
@@ -82,14 +80,12 @@ export function PortfolioBalanceModal({ isOpen, onClose }: PortfolioBalanceModal
             title={t('settings.setting.unknownTokens.title')}
             onCheckedChange={onToggleHideSpamTokens}
           />
-          {isDataReportingAbilitiesEnabled && (
-            <PortfolioBalanceOption
-              active={hideReportedActivity}
-              subtitle={t('settings.setting.reportedActivity.subtitle')}
-              title={t('settings.setting.reportedActivity.title')}
-              onCheckedChange={onToggleHideReportedActivity}
-            />
-          )}
+          <PortfolioBalanceOption
+            active={hideReportedActivity}
+            subtitle={t('settings.setting.reportedActivity.subtitle')}
+            title={t('settings.setting.reportedActivity.title')}
+            onCheckedChange={onToggleHideReportedActivity}
+          />
         </Flex>
       </Flex>
     </Modal>

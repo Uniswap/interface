@@ -80,7 +80,7 @@ export function getCapabilitiesForDelegationStatus(
  * Shared core logic for handling getCapabilities requests
  * Used by both the background script and saga implementations
  */
-export async function getCapabilitiesCore({
+export async function getCapabilitiesResponse({
   request,
   chainIds,
   hasSmartWalletConsent,
@@ -93,28 +93,45 @@ export async function getCapabilitiesCore({
   requestId: string
   response: Record<string, Capability>
 }> {
-  let delegationStatusResponse: TradingApi.WalletCheckDelegationResponseBody | undefined
-
-  try {
-    delegationStatusResponse = await checkWalletDelegation({
-      walletAddresses: [request.address],
-      chainIds,
-    })
-  } catch (error) {
-    logger.error(error, {
-      tags: { file: 'batchedTransactions/utils.ts', function: 'getCapabilitiesCore' },
-      extra: { request },
-    })
-  }
-
-  const capabilities = getCapabilitiesForDelegationStatus(
-    delegationStatusResponse?.delegationDetails[request.address],
-    hasSmartWalletConsent,
-  )
+  const capabilities = await getCapabilitiesCore({ address: request.address, chainIds, hasSmartWalletConsent })
 
   return {
     type: DappResponseType.GetCapabilitiesResponse,
     requestId: request.requestId,
     response: capabilities,
   }
+}
+/**
+ * Shared core logic for handling getCapabilities requests
+ * Used by both the background script and saga implementations
+ */
+export async function getCapabilitiesCore({
+  address,
+  chainIds,
+  hasSmartWalletConsent,
+}: {
+  address: string
+  chainIds: number[]
+  hasSmartWalletConsent: boolean
+}): Promise<Record<string, Capability>> {
+  let delegationStatusResponse: TradingApi.WalletCheckDelegationResponseBody | undefined
+
+  try {
+    delegationStatusResponse = await checkWalletDelegation({
+      walletAddresses: [address],
+      chainIds,
+    })
+  } catch (error) {
+    logger.error(error, {
+      tags: { file: 'batchedTransactions/utils.ts', function: 'getCapabilitiesCore' },
+      extra: { address, chainIds, hasSmartWalletConsent },
+    })
+  }
+
+  const capabilities = getCapabilitiesForDelegationStatus(
+    delegationStatusResponse?.delegationDetails[address],
+    hasSmartWalletConsent,
+  )
+
+  return capabilities
 }

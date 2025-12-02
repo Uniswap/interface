@@ -71,7 +71,7 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
 type EmptyStateProps = {
   additionalButtonLabel?: string
   buttonLabel?: string
-  description: string
+  description: string | null
   onPress?: () => void
   onPressAdditional?: () => void
   title?: string
@@ -97,9 +97,11 @@ function EmptyState({
               {title}
             </Text>
           )}
-          <Text color="$neutral2" textAlign="center" variant="body2">
-            {description}
-          </Text>
+          {description && (
+            <Text color="$neutral2" textAlign="center" variant="body2">
+              {description}
+            </Text>
+          )}
         </Flex>
       </Flex>
       <Flex row gap="$spacing16">

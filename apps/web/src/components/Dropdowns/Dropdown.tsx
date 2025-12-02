@@ -35,6 +35,7 @@ export type DropdownProps = SharedDropdownProps & {
   dataTestId?: string
   hideChevron?: boolean
   buttonStyle?: FlexProps
+  transition?: FlexProps['transition']
 }
 
 export function Dropdown({
@@ -44,6 +45,7 @@ export function Dropdown({
   buttonStyle,
   isOpen,
   toggleOpen,
+  transition,
   ...rest
 }: DropdownProps) {
   const Trigger = useMemo(
@@ -54,6 +56,7 @@ export function Dropdown({
         aria-label={dataTestId}
         data-testid={dataTestId}
         {...buttonStyle}
+        transition={transition}
       >
         <Flex row justifyContent="space-between" alignItems="center" gap="$gap8" width="100%">
           {typeof menuLabel === 'string' ? <Text>{menuLabel}</Text> : menuLabel}
@@ -64,13 +67,12 @@ export function Dropdown({
               direction={isOpen ? 'up' : 'down'}
               height={iconSizes.icon20}
               width={iconSizes.icon20}
-              $group-item-hover={{}}
             />
           )}
         </Flex>
       </FilterButton>
     ),
-    [toggleOpen, isOpen, dataTestId, buttonStyle, menuLabel, hideChevron],
+    [toggleOpen, isOpen, dataTestId, buttonStyle, menuLabel, hideChevron, transition],
   )
   return <AdaptiveDropdown isOpen={isOpen} toggleOpen={toggleOpen} trigger={Trigger} {...rest} />
 }

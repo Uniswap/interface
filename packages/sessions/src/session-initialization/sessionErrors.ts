@@ -26,7 +26,7 @@ export class MaxChallengeRetriesError extends SessionError {
  * This error should not trigger additional retries at higher levels.
  */
 export class NoSolverAvailableError extends SessionError {
-  constructor(botDetectionType: number) {
-    super(`No solver available for bot detection type: ${botDetectionType}`, 'NoSolverAvailableError')
+  constructor(challengeType: number) {
+    super(`No solver available for challenge type: ${challengeType}`, 'NoSolverAvailableError')
   }
 }

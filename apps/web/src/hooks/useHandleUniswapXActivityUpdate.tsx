@@ -7,7 +7,10 @@ import type { UniswapXOrderUpdate } from 'state/activity/types'
 import { useAppDispatch } from 'state/hooks'
 import { logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
 import { finalizeTransaction, updateTransaction } from 'uniswap/src/features/transactions/slice'
-import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  extractTransactionTypeInfoAttribute,
+  TransactionStatus,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
 
 interface HandleUniswapXActivityUpdateParams {
@@ -68,6 +71,8 @@ export function useHandleUniswapXActivityUpdate(): (params: HandleUniswapXActivi
           analyticsContext,
           routing: original.routing,
           status: update.status,
+          isFinalStep: extractTransactionTypeInfoAttribute(original.typeInfo, 'isFinalStep'),
+          swapStartTimestamp: extractTransactionTypeInfoAttribute(original.typeInfo, 'swapStartTimestamp'),
         })
       }
     },

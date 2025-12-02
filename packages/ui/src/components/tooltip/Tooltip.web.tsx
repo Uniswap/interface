@@ -8,7 +8,7 @@ const ANIMATION_OFFSET = 4
 const StyledContent = styled(TamaguiTooltip.Content)
 StyledContent.displayName = 'StyledContent'
 
-const HigherOrderStyledContent = StyledContent.styleable<TooltipContentProps>((props, ref) => {
+const HigherOrderStyledContent = StyledContent.styleable<TooltipContentProps>((props) => {
   const { animationDirection = 'top' } = props
 
   const animationStyles: {
@@ -34,7 +34,7 @@ const HigherOrderStyledContent = StyledContent.styleable<TooltipContentProps>((p
       break
   }
 
-  return <StyledContent ref={ref} enterStyle={animationStyles} exitStyle={animationStyles} {...props} />
+  return <StyledContent enterStyle={animationStyles} exitStyle={animationStyles} {...props} />
 })
 
 HigherOrderStyledContent.displayName = 'HigherOrderStyledContent'

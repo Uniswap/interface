@@ -28,16 +28,11 @@ module.exports = function (api) {
     '@babel/plugin-proposal-export-namespace-from',
     // 'react-native-reanimated/plugin' must be listed last
     // https://arc.net/l/quote/plrvpkad
-    [
-      'react-native-reanimated/plugin',
-      {
-        globals: ['__scanCodes', '__scanOCR'],
-      },
-    ],
+    'react-native-reanimated/plugin',
   ]
 
   return {
-    presets: ['module:@react-native/babel-preset'],
+    presets: ['babel-preset-expo'],
     plugins,
   }
 }

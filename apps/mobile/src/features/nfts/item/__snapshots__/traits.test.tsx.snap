@@ -23,12 +23,7 @@ exports[`renders trait card 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": {
-          "dynamic": {
-            "dark": "rgba(255, 255, 255, 0.65)",
-            "light": "rgba(19, 19, 19, 0.63)",
-          },
-        },
+        "color": "rgba(19, 19, 19, 0.63)",
         "fontFamily": "Basel Grotesk",
         "fontSize": 15,
         "fontWeight": "400",

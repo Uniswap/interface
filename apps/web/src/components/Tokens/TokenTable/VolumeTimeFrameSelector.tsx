@@ -2,12 +2,11 @@ import { TimePeriod } from 'appGraphql/data/util'
 import { Dropdown, InternalMenuItem } from 'components/Dropdowns/Dropdown'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { useAtom } from 'jotai'
-import { useTheme } from 'lib/styled-components'
 import { useExploreParams } from 'pages/Explore/redirects'
 import { useEffect, useState } from 'react'
 import { Check } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import { Flex, useMedia } from 'ui/src'
+import { Flex, useMedia, useSporeColors } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getChainIdFromChainUrlParam } from 'utils/chainParams'
@@ -57,7 +56,7 @@ export const ORDERED_TIMES: TimePeriod[] = [
 // TODO: change this to reflect data pipeline
 export default function VolumeTimeFrameSelector() {
   const { t } = useTranslation()
-  const theme = useTheme()
+  const colors = useSporeColors()
   const [isMenuOpen, toggleMenu] = useState(false)
   const [activeTime, setTime] = useAtom(filterTimeAtom)
 
@@ -100,7 +99,7 @@ export default function VolumeTimeFrameSelector() {
             <Flex>
               {DISPLAYS[time]} {t('common.volume').toLowerCase()}
             </Flex>
-            {time === activeTime && <Check color={theme.accent1} size={16} />}
+            {time === activeTime && <Check color={colors.accent1.val} size={16} />}
           </InternalMenuItem>
         ))}
       </Dropdown>

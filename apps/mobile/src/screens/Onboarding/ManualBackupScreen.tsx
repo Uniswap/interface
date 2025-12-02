@@ -1,7 +1,8 @@
+import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { addScreenshotListener } from 'expo-screen-capture'
-import React, { useEffect, useReducer, useState } from 'react'
+import React, { useCallback, useEffect, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -86,16 +87,18 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     navigate(MobileScreens.Home)
   }
 
-  useEffect(() => {
-    if (view !== View.SeedPhrase) {
-      return undefined
-    }
+  useFocusEffect(
+    useCallback(() => {
+      if (view !== View.SeedPhrase) {
+        return undefined
+      }
 
-    const listener = addScreenshotListener(() =>
-      navigate(ModalName.ScreenshotWarning, { acknowledgeText: t('common.button.ok') }),
-    )
-    return () => listener.remove()
-  }, [view, t])
+      const listener = addScreenshotListener(() => {
+        navigate(ModalName.ScreenshotWarning, { acknowledgeText: t('common.button.ok') })
+      })
+      return () => listener.remove()
+    }, [view, t]),
+  )
 
   useEffect(() => {
     if (confirmContinueButtonPressed && hasBackup(BackupType.Manual, account)) {

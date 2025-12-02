@@ -34,6 +34,7 @@ export function Modal({
   zIndex,
   isDismissible = true,
   hideHandlebar,
+  borderWidth,
 }: ModalProps): JSX.Element {
   const [fullyClosed, setFullyClosed] = useState(false)
 
@@ -65,7 +66,7 @@ export function Modal({
           position={position}
           bottomAttachment={bottomAttachment}
           shadowOpacity={isExtensionApp ? 0 : undefined}
-          borderWidth={isExtensionApp ? 0 : undefined}
+          borderWidth={borderWidth !== undefined ? borderWidth : isExtensionApp ? 0 : undefined}
           adaptToSheet={isWebApp}
           alignment={alignment}
           backgroundColor={backgroundColor}

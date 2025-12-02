@@ -41,7 +41,7 @@ const AMOUNT_INPUT_PRESET_BUTTON_PROPS: ButtonProps = {
 }
 
 type SwapFormDecimalPadProps = {
-  decimalPadRef: RefObject<DecimalPadInputRef>
+  decimalPadRef: RefObject<DecimalPadInputRef | null>
   onSetPresetValue: (value: string, percentage: PresetPercentage) => void
   resetSelection: ({
     start,

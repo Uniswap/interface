@@ -1,6 +1,7 @@
 import type { UseQueryResult } from '@tanstack/react-query'
 import { queryOptions, useQuery } from '@tanstack/react-query'
 import { GasStrategy, TradingApi } from '@universe/api'
+import { SharedQueryClient } from '@universe/api/src/clients/base/SharedQueryClient'
 import { DynamicConfigs, SwapConfigKey, useDynamicConfigValue } from '@universe/gating'
 import { useMemo } from 'react'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
@@ -222,7 +223,7 @@ function getCanUsePlaceholderData(params: SwapQueryParams, prevParams?: SwapQuer
 
 function createGetQueryOptions(ctx: {
   swapTxAndGasInfoService: SwapTxAndGasInfoService<Trade>
-  refetchInterval: number
+  refetchInterval?: number
 }) {
   return function getQueryOptions(
     params: SwapQueryParams,
@@ -243,7 +244,7 @@ function createGetQueryOptions(ctx: {
   }
 }
 
-function useSwapParams(): {
+export function useSwapParams(): {
   approvalTxInfo: ApprovalTxInfo
   derivedSwapInfo: DerivedSwapInfo
   trade: Trade | undefined
@@ -313,4 +314,21 @@ export function useSwapTxAndGasInfo(): SwapTxAndGasInfo {
   const placeholderData = canUsePlaceholderData ? prevData : undefined
 
   return data ?? placeholderData ?? EMPTY_SWAP_TX_AND_GAS_INFO
+}
+
+export async function ensureFreshSwapTxData(
+  params: { trade: Trade; approvalTxInfo: ApprovalTxInfo; derivedSwapInfo: DerivedSwapInfo },
+  swapTxAndGasInfoService: SwapTxAndGasInfoService,
+): Promise<SwapTxAndGasInfo> {
+  const getQueryOptions = createGetQueryOptions({ swapTxAndGasInfoService })
+
+  // If data is already cached and fresh, this returns immediately.
+  // If data is stale or being fetched, this waits for the fetch to complete.
+  const freshData = await SharedQueryClient.fetchQuery(getQueryOptions(params))
+
+  if (!freshData) {
+    throw new Error('Empty response returned when trying to ensure fresh SwapTxData')
+  }
+
+  return freshData
 }

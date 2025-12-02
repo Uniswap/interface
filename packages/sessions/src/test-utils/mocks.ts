@@ -1,6 +1,6 @@
 import type { ChallengeSolver, ChallengeSolverService } from '@universe/sessions/src/challenge-solvers/types'
 import type { SessionService } from '@universe/sessions/src/session-service/types'
-import { BotDetectionType } from '@universe/sessions/src/session-service/types'
+import { ChallengeType } from '@universe/sessions/src/session-service/types'
 import { vi } from 'vitest'
 
 /**
@@ -17,7 +17,7 @@ export function createMockSessionService(overrides: Partial<SessionService> = {}
     }),
     requestChallenge: vi.fn().mockResolvedValue({
       challengeId: 'mock-challenge-456',
-      botDetectionType: BotDetectionType.BOT_DETECTION_TURNSTILE,
+      challengeType: ChallengeType.TURNSTILE,
       extra: { sitekey: 'mock-sitekey' },
     }),
     upgradeSession: vi.fn().mockResolvedValue({
@@ -43,22 +43,22 @@ export function createMockChallengeSolver(
  * Creates a mock ChallengeSolverService
  */
 export function createMockChallengeSolverService(
-  solvers: Map<BotDetectionType, ChallengeSolver> = new Map(),
+  solvers: Map<ChallengeType, ChallengeSolver> = new Map(),
 ): ChallengeSolverService {
   // Default solvers if not provided
   if (solvers.size === 0) {
     solvers.set(
-      BotDetectionType.BOT_DETECTION_TURNSTILE,
+      ChallengeType.TURNSTILE,
       createMockChallengeSolver(async () => 'mock-turnstile-token'),
     )
     solvers.set(
-      BotDetectionType.BOT_DETECTION_HASHCASH,
+      ChallengeType.HASHCASH,
       createMockChallengeSolver(async () => 'mock-hashcash-proof'),
     )
   }
 
   return {
-    getSolver: vi.fn().mockImplementation((type: BotDetectionType) => solvers.get(type) || null),
+    getSolver: vi.fn().mockImplementation((type: ChallengeType) => solvers.get(type) || null),
   }
 }
 
@@ -88,7 +88,7 @@ export const TestScenarios = {
   /**
    * Setup for when initialization requires a challenge
    */
-  withChallengeRequired(service: SessionService, challengeType = BotDetectionType.BOT_DETECTION_TURNSTILE): void {
+  withChallengeRequired(service: SessionService, challengeType = ChallengeType.TURNSTILE): void {
     vi.mocked(service.getSessionState).mockResolvedValue(null)
     vi.mocked(service.initSession).mockResolvedValue({
       sessionId: 'new-session-222',
@@ -97,7 +97,7 @@ export const TestScenarios = {
     })
     vi.mocked(service.requestChallenge).mockResolvedValue({
       challengeId: 'challenge-333',
-      botDetectionType: challengeType,
+      challengeType,
       extra: { sitekey: 'test-sitekey' },
     })
     vi.mocked(service.upgradeSession).mockResolvedValue({

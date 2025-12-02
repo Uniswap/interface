@@ -9,9 +9,8 @@ import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/
 
 export function SwapFormScreenDetails(): JSX.Element {
   const isPriceUXEnabled = usePriceUXEnabled()
-  const { tokenColor, isBridge, showFooter } = useSwapFormScreenStore((state) => ({
+  const { tokenColor, showFooter } = useSwapFormScreenStore((state) => ({
     tokenColor: state.tokenColor,
-    isBridge: state.isBridge,
     showFooter: state.showFooter,
   }))
 
@@ -33,7 +32,7 @@ export function SwapFormScreenDetails(): JSX.Element {
           </Flex>
           <SwapFormScreenFooter />
         </Flex>
-        {showFooter && !isPriceUXEnabled ? <ExpandableRows isBridge={isBridge} /> : null}
+        {showFooter && !isPriceUXEnabled ? <ExpandableRows /> : null}
       </Accordion.Item>
     </Accordion>
   )

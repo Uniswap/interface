@@ -10,6 +10,7 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
 import { GetPortfolioInput, getPortfolioQuery, useGetPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import {
   buildPortfolioBalance,
   PortfolioCacheUpdater,
@@ -308,14 +309,17 @@ export function usePortfolioTotalValue({
   pollInterval,
   fetchPolicy,
   enabled = true,
+  chainIds,
 }: {
   evmAddress?: Address
   svmAddress?: Address
   pollInterval?: PollingInterval
   fetchPolicy?: WatchQueryFetchPolicy
   enabled?: boolean
+  chainIds?: UniverseChainId[]
 }): PortfolioTotalValueResult {
-  const { chains: chainIds } = useEnabledChains()
+  const { chains: defaultChainIds } = useEnabledChains()
+  const effectiveChainIds = chainIds || defaultChainIds
 
   const { pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
     fetchPolicy,
@@ -346,7 +350,7 @@ export function usePortfolioTotalValue({
     error: restError,
     status: restStatus,
   } = useGetPortfolioQuery({
-    input: { evmAddress, svmAddress, chainIds, modifier },
+    input: { evmAddress, svmAddress, chainIds: effectiveChainIds, modifier },
     enabled: !!(evmAddress ?? svmAddress) && enabled,
     refetchInterval: internalPollInterval,
     select: selectFormattedData,

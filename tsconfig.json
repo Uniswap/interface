@@ -42,6 +42,9 @@
     },
     {
       "path": "./packages/notifications"
+    },
+    {
+      "path": "./apps/cli"
     }
   ]
 }

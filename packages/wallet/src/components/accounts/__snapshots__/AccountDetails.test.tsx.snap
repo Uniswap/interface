@@ -1,577 +1,539 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`AccountDetails renders without error 1`] = `
-[
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "flexShrink": 1,
+      "gap": 16,
+      "justifyContent": "space-between",
+    }
+  }
+>
   <View
     style={
       {
-        "alignItems": "center",
+        "flex": 1,
         "flexDirection": "row",
         "flexShrink": 1,
-        "gap": 16,
-        "justifyContent": "space-between",
       }
     }
   >
     <View
+      onLayout={[Function]}
       style={
         {
-          "flex": 1,
+          "alignItems": "center",
           "flexDirection": "row",
           "flexShrink": 1,
+          "gap": 8,
         }
       }
     >
       <View
-        onLayout={[Function]}
         style={
           {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "flexShrink": 1,
-            "gap": 8,
+            "backgroundColor": "transparent",
+            "borderBottomColor": "transparent",
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderBottomWidth": 0,
+            "borderLeftColor": "transparent",
+            "borderLeftWidth": 0,
+            "borderRightColor": "transparent",
+            "borderRightWidth": 0,
+            "borderStyle": "solid",
+            "borderTopColor": "transparent",
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "borderTopWidth": 0,
+            "flexDirection": "column",
+            "height": 50,
+            "position": "relative",
+            "width": 50,
+          }
+        }
+        testID="account-icon"
+      >
+        <View
+          collapsable={false}
+          forwardedRef={[Function]}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {
+                "opacity": 0,
+              },
+            }
+          }
+          jestInlineStyle={
+            [
+              {
+                "flexDirection": "column",
+              },
+            ]
+          }
+          style={
+            [
+              {
+                "flexDirection": "column",
+              },
+              {
+                "opacity": 0,
+              },
+            ]
+          }
+        >
+          <svg
+            height={50}
+            viewBox="0 0 50 50"
+            width={50}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g
+              style={
+                {
+                  "transformOrigin": "center center",
+                }
+              }
+            >
+              <circle
+                cx={25}
+                cy={25}
+                fill="#00C3A01F"
+                r={25}
+              />
+              <g
+                transform="translate(8.333333333333332, 8.333333333333332) scale(0.6944444444444445)"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
+                  fill="#00C3A0"
+                  fillRule="evenodd"
+                />
+                <path
+                  clipRule="evenodd"
+                  d="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
+                  fill="#00C3A0"
+                  fillRule="evenodd"
+                />
+              </g>
+            </g>
+          </svg>
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+            "flexGrow": 1,
+            "gap": 0,
           }
         }
       >
         <View
           style={
             {
-              "backgroundColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
-              "borderBottomColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
-              "borderBottomLeftRadius": 999999,
-              "borderBottomRightRadius": 999999,
-              "borderBottomWidth": 0,
-              "borderLeftColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
-              "borderLeftWidth": 0,
-              "borderRightColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
-              "borderRightWidth": 0,
-              "borderStyle": "solid",
-              "borderTopColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
-              "borderTopLeftRadius": 999999,
-              "borderTopRightRadius": 999999,
-              "borderTopWidth": 0,
-              "flexDirection": "column",
-              "height": 50,
-              "position": "relative",
-              "width": 50,
-            }
-          }
-          testID="account-icon"
-        >
-          <View
-            collapsable={false}
-            forwardedRef={[Function]}
-            jestAnimatedStyle={
-              {
-                "value": {
-                  "opacity": 0,
-                },
-              }
-            }
-            style={
-              {
-                "flexDirection": "column",
-                "opacity": 0,
-              }
-            }
-          >
-            <svg
-              height={50}
-              viewBox="0 0 50 50"
-              width={50}
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g
-                style={
-                  {
-                    "transformOrigin": "center center",
-                  }
-                }
-              >
-                <circle
-                  cx={25}
-                  cy={25}
-                  fill="#00C3A01F"
-                  r={25}
-                />
-                <g
-                  transform="translate(8.333333333333332, 8.333333333333332) scale(0.6944444444444445)"
-                >
-                  <path
-                    clipRule="evenodd"
-                    d="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
-                    fill="#00C3A0"
-                    fillRule="evenodd"
-                  />
-                  <path
-                    clipRule="evenodd"
-                    d="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
-                    fill="#00C3A0"
-                    fillRule="evenodd"
-                  />
-                </g>
-              </g>
-            </svg>
-          </View>
-        </View>
-        <View
-          style={
-            {
-              "flexDirection": "column",
-              "flexGrow": 1,
-              "gap": 0,
+              "flexDirection": "row",
+              "gap": 12,
             }
           }
         >
           <View
             style={
               {
+                "alignItems": "center",
                 "flexDirection": "row",
-                "gap": 12,
+                "flexShrink": 1,
+                "gap": 4,
               }
             }
           >
-            <View
+            <Text
+              adjustsFontSizeToFit={true}
+              allowFontScaling={false}
+              ellipsizeMode="tail"
+              maxFontSizeMultiplier={1.4}
+              numberOfLines={1}
               style={
                 {
-                  "alignItems": "center",
-                  "flexDirection": "row",
+                  "color": "#131313",
                   "flexShrink": 1,
-                  "gap": 4,
+                  "fontFamily": "Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif",
+                  "fontSize": 14,
+                  "fontWeight": "400",
+                  "lineHeight": 18.2,
                 }
               }
-            >
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                ellipsizeMode="tail"
-                maxFontSizeMultiplier={1.4}
-                numberOfLines={1}
-                style={
-                  {
-                    "color": {
-                      "dynamic": {
-                        "dark": "#FFFFFF",
-                        "light": "#131313",
-                      },
-                    },
-                    "flexShrink": 1,
-                    "fontFamily": "Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif",
-                    "fontSize": 14,
-                    "fontWeight": "400",
-                    "lineHeight": 18.2,
-                  }
-                }
-                suppressHighlighting={true}
-                testID="address-display/name/undefined"
-              />
-            </View>
+              suppressHighlighting={true}
+              testID="address-display/name/undefined"
+            />
           </View>
         </View>
       </View>
     </View>
-    <View
-      style={
-        {
-          "alignItems": "center",
-          "flex": 1,
-          "flexDirection": "row",
-          "flexShrink": 1,
-          "gap": 4,
-          "justifyContent": "flex-end",
-        }
-      }
-    >
-      <Text
-        allowFontScaling={false}
-        maxFontSizeMultiplier={1.4}
-        style={
-          {
-            "color": {
-              "dynamic": {
-                "dark": "rgba(255, 255, 255, 0.65)",
-                "light": "rgba(19, 19, 19, 0.63)",
-              },
-            },
-            "fontFamily": "Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif",
-            "fontSize": 14,
-            "fontWeight": "400",
-            "lineHeight": 18.2,
-          }
-        }
-        suppressHighlighting={true}
-      >
-        0x82D5...3Fa6
-      </Text>
-    </View>
-  </View>,
-  <div
+  </View>
+  <View
     style={
       {
-        "display": "contents",
+        "alignItems": "center",
+        "flex": 1,
+        "flexDirection": "row",
+        "flexShrink": 1,
+        "gap": 4,
+        "justifyContent": "flex-end",
       }
     }
-  />,
-]
+  >
+    <Text
+      allowFontScaling={false}
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
+          "color": "rgba(19, 19, 19, 0.63)",
+          "fontFamily": "Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "400",
+          "lineHeight": 18.2,
+        }
+      }
+      suppressHighlighting={true}
+    >
+      0x82D5...3Fa6
+    </Text>
+  </View>
+</View>
 `;
 
 exports[`AccountDetails renders without error with chevron 1`] = `
-[
+<View
+  style={
+    {
+      "alignItems": "center",
+      "flexDirection": "row",
+      "flexShrink": 1,
+      "gap": 16,
+      "justifyContent": "space-between",
+    }
+  }
+>
   <View
     style={
       {
-        "alignItems": "center",
+        "flex": 1,
         "flexDirection": "row",
         "flexShrink": 1,
-        "gap": 16,
-        "justifyContent": "space-between",
       }
     }
   >
     <View
+      onLayout={[Function]}
       style={
         {
-          "flex": 1,
+          "alignItems": "center",
           "flexDirection": "row",
           "flexShrink": 1,
+          "gap": 8,
         }
       }
     >
       <View
-        onLayout={[Function]}
         style={
           {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "flexShrink": 1,
-            "gap": 8,
+            "backgroundColor": "transparent",
+            "borderBottomColor": "transparent",
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderBottomWidth": 0,
+            "borderLeftColor": "transparent",
+            "borderLeftWidth": 0,
+            "borderRightColor": "transparent",
+            "borderRightWidth": 0,
+            "borderStyle": "solid",
+            "borderTopColor": "transparent",
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "borderTopWidth": 0,
+            "flexDirection": "column",
+            "height": 50,
+            "position": "relative",
+            "width": 50,
+          }
+        }
+        testID="account-icon"
+      >
+        <View
+          collapsable={false}
+          forwardedRef={[Function]}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {
+                "opacity": 0,
+              },
+            }
+          }
+          jestInlineStyle={
+            [
+              {
+                "flexDirection": "column",
+              },
+            ]
+          }
+          style={
+            [
+              {
+                "flexDirection": "column",
+              },
+              {
+                "opacity": 0,
+              },
+            ]
+          }
+        >
+          <svg
+            height={50}
+            viewBox="0 0 50 50"
+            width={50}
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g
+              style={
+                {
+                  "transformOrigin": "center center",
+                }
+              }
+            >
+              <circle
+                cx={25}
+                cy={25}
+                fill="#00C3A01F"
+                r={25}
+              />
+              <g
+                transform="translate(8.333333333333332, 8.333333333333332) scale(0.6944444444444445)"
+              >
+                <path
+                  clipRule="evenodd"
+                  d="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
+                  fill="#00C3A0"
+                  fillRule="evenodd"
+                />
+                <path
+                  clipRule="evenodd"
+                  d="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
+                  fill="#00C3A0"
+                  fillRule="evenodd"
+                />
+              </g>
+            </g>
+          </svg>
+        </View>
+      </View>
+      <View
+        style={
+          {
+            "flexDirection": "column",
+            "flexGrow": 1,
+            "gap": 0,
           }
         }
       >
         <View
           style={
             {
-              "backgroundColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
-              "borderBottomColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
-              "borderBottomLeftRadius": 999999,
-              "borderBottomRightRadius": 999999,
-              "borderBottomWidth": 0,
-              "borderLeftColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
-              "borderLeftWidth": 0,
-              "borderRightColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
-              "borderRightWidth": 0,
-              "borderStyle": "solid",
-              "borderTopColor": {
-                "dynamic": {
-                  "dark": "transparent",
-                  "light": "transparent",
-                },
-              },
-              "borderTopLeftRadius": 999999,
-              "borderTopRightRadius": 999999,
-              "borderTopWidth": 0,
-              "flexDirection": "column",
-              "height": 50,
-              "position": "relative",
-              "width": 50,
-            }
-          }
-          testID="account-icon"
-        >
-          <View
-            collapsable={false}
-            forwardedRef={[Function]}
-            jestAnimatedStyle={
-              {
-                "value": {
-                  "opacity": 0,
-                },
-              }
-            }
-            style={
-              {
-                "flexDirection": "column",
-                "opacity": 0,
-              }
-            }
-          >
-            <svg
-              height={50}
-              viewBox="0 0 50 50"
-              width={50}
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <g
-                style={
-                  {
-                    "transformOrigin": "center center",
-                  }
-                }
-              >
-                <circle
-                  cx={25}
-                  cy={25}
-                  fill="#00C3A01F"
-                  r={25}
-                />
-                <g
-                  transform="translate(8.333333333333332, 8.333333333333332) scale(0.6944444444444445)"
-                >
-                  <path
-                    clipRule="evenodd"
-                    d="M20.9454 0.0175773C22.4936 -0.167833 23.763 1.13917 23.763 2.72944V21.3625C23.763 22.9527 22.4993 24.2419 20.9405 24.2419L2.67549 24.2419C1.11665 24.2419 -0.16452 22.9469 0.0172307 21.3675C1.30306 10.1936 9.99222 1.32931 20.9454 0.0175773Z"
-                    fill="#00C3A0"
-                    fillRule="evenodd"
-                  />
-                  <path
-                    clipRule="evenodd"
-                    d="M27.0546 47.9824C25.5064 48.1678 24.237 46.8608 24.237 45.2706V26.6375C24.237 25.0473 25.5007 23.7581 27.0595 23.7581L45.3245 23.7581C46.8833 23.7581 48.1645 25.0531 47.9828 26.6325C46.6969 37.8064 38.0078 46.6707 27.0546 47.9824Z"
-                    fill="#00C3A0"
-                    fillRule="evenodd"
-                  />
-                </g>
-              </g>
-            </svg>
-          </View>
-        </View>
-        <View
-          style={
-            {
-              "flexDirection": "column",
-              "flexGrow": 1,
-              "gap": 0,
+              "flexDirection": "row",
+              "gap": 12,
             }
           }
         >
           <View
             style={
               {
+                "alignItems": "center",
                 "flexDirection": "row",
-                "gap": 12,
+                "flexShrink": 1,
+                "gap": 4,
               }
             }
           >
-            <View
+            <Text
+              adjustsFontSizeToFit={true}
+              allowFontScaling={false}
+              ellipsizeMode="tail"
+              maxFontSizeMultiplier={1.4}
+              numberOfLines={1}
               style={
                 {
-                  "alignItems": "center",
-                  "flexDirection": "row",
+                  "color": "#131313",
                   "flexShrink": 1,
-                  "gap": 4,
+                  "fontFamily": "Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif",
+                  "fontSize": 14,
+                  "fontWeight": "400",
+                  "lineHeight": 18.2,
                 }
               }
-            >
-              <Text
-                adjustsFontSizeToFit={true}
-                allowFontScaling={false}
-                ellipsizeMode="tail"
-                maxFontSizeMultiplier={1.4}
-                numberOfLines={1}
-                style={
-                  {
-                    "color": {
-                      "dynamic": {
-                        "dark": "#FFFFFF",
-                        "light": "#131313",
-                      },
-                    },
-                    "flexShrink": 1,
-                    "fontFamily": "Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif",
-                    "fontSize": 14,
-                    "fontWeight": "400",
-                    "lineHeight": 18.2,
-                  }
-                }
-                suppressHighlighting={true}
-                testID="address-display/name/undefined"
-              />
-            </View>
+              suppressHighlighting={true}
+              testID="address-display/name/undefined"
+            />
           </View>
         </View>
       </View>
     </View>
-    <View
+  </View>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flex": 1,
+        "flexDirection": "row",
+        "flexShrink": 1,
+        "gap": 4,
+        "justifyContent": "flex-end",
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      maxFontSizeMultiplier={1.4}
       style={
         {
-          "alignItems": "center",
-          "flex": 1,
-          "flexDirection": "row",
-          "flexShrink": 1,
-          "gap": 4,
-          "justifyContent": "flex-end",
+          "color": "rgba(19, 19, 19, 0.63)",
+          "fontFamily": "Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "400",
+          "lineHeight": 18.2,
         }
       }
+      suppressHighlighting={true}
     >
-      <Text
-        allowFontScaling={false}
-        maxFontSizeMultiplier={1.4}
-        style={
-          {
-            "color": {
-              "dynamic": {
-                "dark": "rgba(255, 255, 255, 0.65)",
-                "light": "rgba(19, 19, 19, 0.63)",
-              },
-            },
-            "fontFamily": "Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif",
-            "fontSize": 14,
-            "fontWeight": "400",
-            "lineHeight": 18.2,
-          }
+      0x82D5...3Fa6
+    </Text>
+    <View
+      collapsable={false}
+      forwardedRef={[Function]}
+      jestAnimatedProps={
+        {
+          "value": {},
         }
-        suppressHighlighting={true}
-      >
-        0x82D5...3Fa6
-      </Text>
-      <View
-        collapsable={false}
-        forwardedRef={[Function]}
-        jestAnimatedStyle={
-          {
-            "value": {
-              "borderBottomLeftRadius": 999999,
-              "borderBottomRightRadius": 999999,
-              "borderTopLeftRadius": 999999,
-              "borderTopRightRadius": 999999,
-              "transform": [
-                {
-                  "rotate": "180deg",
-                },
-              ],
-            },
-          }
-        }
-        style={
-          {
-            "alignItems": "center",
+      }
+      jestAnimatedStyle={
+        {
+          "value": {
             "borderBottomLeftRadius": 999999,
             "borderBottomRightRadius": 999999,
             "borderTopLeftRadius": 999999,
             "borderTopRightRadius": 999999,
-            "flexDirection": "column",
-            "justifyContent": "center",
             "transform": [
               {
                 "rotate": "180deg",
               },
             ],
-          }
+          },
         }
+      }
+      jestInlineStyle={
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "justifyContent": "center",
+          },
+        ]
+      }
+      style={
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "justifyContent": "center",
+          },
+          {
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "transform": [
+              {
+                "rotate": "180deg",
+              },
+            ],
+          },
+        ]
+      }
+    >
+      <RNSVGSvgView
+        align="xMidYMid"
+        bbHeight={50}
+        bbWidth={50}
+        fill="none"
+        focusable={false}
+        meetOrSlice={0}
+        minX={0}
+        minY={0}
+        strokeWidth={8}
+        style={
+          [
+            {
+              "backgroundColor": "transparent",
+              "borderWidth": 0,
+            },
+            {
+              "color": "rgba(19, 19, 19, 0.63)",
+              "height": 50,
+              "width": 50,
+            },
+            {
+              "flex": 0,
+              "height": 50,
+              "width": 50,
+            },
+          ]
+        }
+        vbHeight={24}
+        vbWidth={24}
       >
-        <RNSVGSvgView
-          align="xMidYMid"
-          bbHeight={50}
-          bbWidth={50}
-          fill="none"
-          focusable={false}
-          meetOrSlice={0}
-          minX={0}
-          minY={0}
-          strokeWidth={8}
-          style={
+        <RNSVGGroup
+          color="rgba(19, 19, 19, 0.63)"
+          fill={null}
+          propList={
             [
-              {
-                "backgroundColor": "transparent",
-                "borderWidth": 0,
-              },
-              {
-                "color": "rgba(19, 19, 19, 0.63)",
-                "height": 50,
-                "width": 50,
-              },
-              {
-                "flex": 0,
-                "height": 50,
-                "width": 50,
-              },
+              "fill",
+              "strokeWidth",
             ]
           }
-          vbHeight={24}
-          vbWidth={24}
+          strokeWidth={8}
         >
-          <RNSVGGroup
-            color="rgba(19, 19, 19, 0.63)"
-            fill={null}
+          <RNSVGPath
+            clipRule={0}
+            d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+            fill={
+              {
+                "type": 2,
+              }
+            }
+            fillRule={0}
             propList={
               [
                 "fill",
-                "strokeWidth",
+                "fillRule",
               ]
             }
-            strokeWidth={8}
-          >
-            <RNSVGPath
-              clipRule={0}
-              d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
-              fill={
-                {
-                  "type": 2,
-                }
-              }
-              fillRule={0}
-              propList={
-                [
-                  "fill",
-                  "fillRule",
-                ]
-              }
-            />
-          </RNSVGGroup>
-        </RNSVGSvgView>
-      </View>
+          />
+        </RNSVGGroup>
+      </RNSVGSvgView>
     </View>
-  </View>,
-  <div
-    style={
-      {
-        "display": "contents",
-      }
-    }
-  />,
-]
+  </View>
+</View>
 `;

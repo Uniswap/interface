@@ -53,7 +53,7 @@ interface BasePositionInfo {
   isHidden?: boolean
 }
 
-type V2PairInfo = BasePositionInfo & {
+export type V2PairInfo = BasePositionInfo & {
   version: ProtocolVersion.V2
   poolOrPair?: Pair
   liquidityToken: Token

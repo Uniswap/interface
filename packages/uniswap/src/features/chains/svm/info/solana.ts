@@ -34,6 +34,7 @@ export const SOLANA_CHAIN_INFO = {
   docs: 'https://docs.solana.com',
   elementName: ElementName.ChainSolana,
   supportsV4: false,
+  supportsNFTs: false,
   explorer: {
     name: 'Solana Explorer',
     url: 'https://solscan.io/',

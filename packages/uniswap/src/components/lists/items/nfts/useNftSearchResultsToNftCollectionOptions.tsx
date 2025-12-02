@@ -28,28 +28,16 @@ function gqlNFTToNFTCollectionOption(
 export function useNftSearchResultsToNftCollectionOptions(
   nftSearchResultsData: GraphQLApi.CollectionSearchQuery | undefined,
   chainFilter: UniverseChainId | null,
-): NFTCollectionOption[]
-export function useNftSearchResultsToNftCollectionOptions(
-  nftSearchResultsData: GraphQLApi.SearchPopularNftCollectionsQuery | undefined,
-  chainFilter: UniverseChainId | null,
 ): NFTCollectionOption[] {
   return useMemo(() => {
-    const collections = nftSearchResultsData
-      ? 'nftCollections' in nftSearchResultsData
-        ? (nftSearchResultsData.nftCollections as NonNullable<GraphQLApi.CollectionSearchQuery>['nftCollections'])
-        : (nftSearchResultsData.topCollections as NonNullable<GraphQLApi.SearchPopularNftCollectionsQuery>['topCollections'])
-      : undefined
-    if (!collections) {
-      return []
-    }
-
-    return collections.edges.reduce<NFTCollectionOption[]>((acc, { node }) => {
+    const edges = nftSearchResultsData?.nftCollections?.edges ?? []
+    return edges.reduce<NFTCollectionOption[]>((acc, { node }) => {
       const option: NFTCollectionOption | null = gqlNFTToNFTCollectionOption(node)
 
       if (option && (chainFilter === null || option.chainId === chainFilter)) {
         acc.push(option)
       }
       return acc
-    }, [] as NFTCollectionOption[]) as NFTCollectionOption[]
+    }, [])
   }, [nftSearchResultsData, chainFilter])
 }

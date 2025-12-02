@@ -27,6 +27,7 @@ describe('useDefaultInitialPrice', () => {
       isIndicativeLoading: false,
       indicativeTrade: undefined,
       gasEstimate: undefined,
+      quoteHash: '',
     })
 
     const currencies = {
@@ -56,6 +57,7 @@ describe('useDefaultInitialPrice', () => {
       indicativeTrade: undefined,
       isIndicativeLoading: false,
       gasEstimate: undefined,
+      quoteHash: '',
     })
 
     const currencies = {
@@ -76,6 +78,7 @@ describe('useDefaultInitialPrice', () => {
       indicativeTrade: undefined,
       isIndicativeLoading: false,
       gasEstimate: undefined,
+      quoteHash: '',
     })
 
     const currencies = {
@@ -99,6 +102,7 @@ describe('useDefaultInitialPrice', () => {
       indicativeTrade: undefined,
       isIndicativeLoading: false,
       gasEstimate: undefined,
+      quoteHash: '',
     })
 
     const currencies = {

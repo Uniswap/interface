@@ -1,14 +1,10 @@
 {
   "name": "Uniswap",
-  "displayName": "Uniswap",
-  "appStoreUrl": "https://apps.apple.com/app/apple-store/id6443944476",
-  "playStoreUrl": "https://play.google.com/store/apps/details?id=com.uniswap.mobile",
-  "expo": {
-    "ios": {
-      "infoPlist": {
-        "CFBundleAllowMixedLocalizations": true
-      }
-    },
-    "plugins": ["expo-localization", "expo-camera", "expo-local-authentication", "expo-secure-store"]
-  }
+  "extra": {
+    "eas": {
+      "projectId": "f1be3813-43d7-49ac-a792-7f42cf8500f5"
+    }
+  },
+  "owner": "uniswap",
+  "slug": "uniswapmobile"
 }

@@ -40,11 +40,10 @@ async function sendCalls(params: {
 export function* handleAtomicSendCalls(
   params: Omit<HandleOnChainStepParams, 'step'> & {
     step: OnChainTransactionStepBatched
-    disableOneClickSwap: () => void
+    disableOneClickSwap?: () => void
   },
 ) {
-  const { step, info, account, ignoreInterrupt, disableOneClickSwap } = params
-  const from = account.address
+  const { step, info, address, ignoreInterrupt, disableOneClickSwap } = params
   const { batchedTxRequests } = step
   const chainId = batchedTxRequests[0].chainId
 
@@ -52,8 +51,8 @@ export function* handleAtomicSendCalls(
     // Add a watcher to check if the transaction flow during user input
     const { throwIfInterrupted } = yield* watchForInterruption(ignoreInterrupt)
 
-    const signer = yield* call(getSigner, account.address)
-    const batchId = yield* call(() => sendCalls({ signer, batchedTxRequests, from, chainId }))
+    const signer = yield* call(getSigner, address)
+    const batchId = yield* call(() => sendCalls({ signer, batchedTxRequests, from: address, chainId }))
 
     const connectorId = getAccount(wagmiConfig).connector?.id
     const batchInfo = { connectorId, batchId, chainId }
@@ -63,7 +62,7 @@ export function* handleAtomicSendCalls(
       addTransaction({
         id: batchId,
         hash: batchId,
-        from: account.address,
+        from: address,
         typeInfo: info,
         chainId,
         batchInfo,
@@ -74,7 +73,7 @@ export function* handleAtomicSendCalls(
         options: {
           request: {
             to: batchedTxRequests[0].to,
-            from: account.address,
+            from: address,
             data: batchedTxRequests[0].data,
             value: batchedTxRequests[0].value,
             gasLimit: batchedTxRequests[0].gasLimit,
@@ -101,7 +100,7 @@ export function* handleAtomicSendCalls(
         yield* put(setCapabilitiesByChain(updatedCapabilities))
       }
       // If the user tries again,
-      disableOneClickSwap()
+      disableOneClickSwap?.()
     }
     throw error
   }

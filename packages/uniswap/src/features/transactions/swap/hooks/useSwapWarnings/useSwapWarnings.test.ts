@@ -11,6 +11,7 @@ import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import i18n from 'uniswap/src/i18n'
 import { daiCurrencyInfo, ethCurrencyInfo } from 'uniswap/src/test/fixtures'
 import { createGasEstimate } from 'uniswap/src/test/fixtures/tradingApi'
+import { createEmptyTradeWithStatus } from 'uniswap/src/test/fixtures/transactions/swap'
 import { mockLocalizedFormatter } from 'uniswap/src/test/mocks'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
@@ -47,14 +48,7 @@ const swapState: DerivedSwapInfo = {
   },
   outputAmountUserWillReceive: undefined,
   exactCurrencyField: CurrencyField.INPUT,
-  trade: {
-    isLoading: false,
-    error: null,
-    trade: null,
-    indicativeTrade: undefined,
-    isIndicativeLoading: false,
-    gasEstimate: createGasEstimate(),
-  },
+  trade: createEmptyTradeWithStatus({ gasEstimate: createGasEstimate() }),
 }
 
 const insufficientBalanceState: DerivedSwapInfo = {
@@ -77,14 +71,7 @@ const insufficientBalanceState: DerivedSwapInfo = {
   },
   outputAmountUserWillReceive: CurrencyAmount.fromRawAmount(DAI, '200000'),
   exactCurrencyField: CurrencyField.INPUT,
-  trade: {
-    isLoading: false,
-    error: null,
-    trade: null,
-    indicativeTrade: undefined,
-    isIndicativeLoading: false,
-    gasEstimate: createGasEstimate(),
-  },
+  trade: createEmptyTradeWithStatus({ gasEstimate: createGasEstimate() }),
 }
 
 const blockedTokenState: DerivedSwapInfo = {
@@ -118,14 +105,7 @@ const tradeErrorState: DerivedSwapInfo = {
   },
   outputAmountUserWillReceive: null,
   exactCurrencyField: CurrencyField.INPUT,
-  trade: {
-    isLoading: false,
-    error: new Error('Generic error'),
-    trade: null,
-    indicativeTrade: undefined,
-    isIndicativeLoading: false,
-    gasEstimate: createGasEstimate(),
-  },
+  trade: createEmptyTradeWithStatus({ error: new Error('Generic error'), gasEstimate: createGasEstimate() }),
 }
 const { formatPercent } = mockLocalizedFormatter(Locale.EnglishUnitedStates)
 

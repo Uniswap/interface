@@ -17,8 +17,8 @@ export function useDebouncedCallback<T extends (...args: unknown[]) => unknown>(
   debounceTimeMs = ONE_SECOND_MS,
 ): [(...args: Parameters<T>) => void, boolean] {
   const [isPending, setIsPending] = useState(false)
-  const timeoutRef = useRef<NodeJS.Timeout>()
-  const argsRef = useRef<Parameters<T>>()
+  const timeoutRef = useRef<NodeJS.Timeout | number>(undefined)
+  const argsRef = useRef<Parameters<T>>(undefined)
 
   useEffect(() => {
     return () => {

@@ -191,6 +191,11 @@ export type SwapTradeBaseProperties = {
   included_permit_transaction_step?: boolean
   includes_delegation?: boolean
   is_smart_wallet_transaction?: boolean
+  // Chained actions context
+  plan_id?: string
+  step_index?: number
+  is_final_step?: boolean
+  swap_start_timestamp?: number
 } & ITraceContext
 
 type BaseSwapTransactionResultProperties = {
@@ -223,6 +228,8 @@ type BaseSwapTransactionResultProperties = {
   simulation_failure_reasons?: TradingApi.TransactionFailureReason[]
   includes_delegation?: SwapTradeBaseProperties['includes_delegation']
   is_smart_wallet_transaction?: SwapTradeBaseProperties['is_smart_wallet_transaction']
+  is_final_step?: boolean
+  swap_start_timestamp?: number
 }
 
 type ClassicSwapTransactionResultProperties = BaseSwapTransactionResultProperties
@@ -378,6 +385,7 @@ export enum OnboardingCardLoggingName {
   ClaimUnitag = 'claim_unitag',
   EnablePushNotifications = 'enable_push_notifications',
   BridgedAsset = 'bridged_asset',
+  MonadAnnouncement = 'monad_announcement',
 }
 
 export enum DappRequestCardLoggingName {
@@ -499,6 +507,14 @@ type TokenReportProperties = {
   text?: string
 }
 
+type PoolReportProperties = {
+  pool_id: string
+  version: ProtocolVersion
+  chain_id: UniverseChainId
+  token0: string
+  token1: string
+}
+
 // Please sort new values by EventName type!
 export type UniverseEventProperties = {
   [ExtensionEventName.BackgroundAttemptedToOpenSidebar]: { hasError: boolean }
@@ -558,6 +574,26 @@ export type UniverseEventProperties = {
     label: string
   }
   [InterfaceEventName.NavbarResultSelected]: InterfaceSearchResultSelectionProperties
+  [InterfaceEventName.NotificationDismissed]: {
+    notification_id: string
+    notification_type: string
+  }
+  [InterfaceEventName.NotificationInteracted]: {
+    notification_id: string
+    notification_type: string
+    action: string
+  }
+  [InterfaceEventName.NotificationReceived]: {
+    notification_id: string
+    notification_type: string
+    source: string
+    timestamp: number
+  }
+  [InterfaceEventName.NotificationShown]: {
+    notification_id: string
+    notification_type: string
+    timestamp: number
+  }
   [InterfaceEventName.AccountDropdownButtonClicked]: undefined
   [InterfaceEventName.WalletProviderUsed]: {
     source: string
@@ -719,8 +755,10 @@ export type UniverseEventProperties = {
     actual: string
   } & LiquidityAnalyticsProperties
   [LiquidityEventName.PriceDiscrepancyChecked]: {
+    event_name: LiquidityEventName
     status: OnChainStatus
     price_discrepancy: string
+    absolute_price_discrepancy: number
     sqrt_ratio_x96_before: string
     sqrt_ratio_x96_after: string
   } & LiquidityAnalyticsProperties
@@ -822,6 +860,7 @@ export type UniverseEventProperties = {
     collection_name?: string
     collection_address?: string
     token_id?: string
+    link_type?: string
   }
   [SharedEventName.PAGE_VIEWED]: ITraceContext
   [SharedEventName.ANALYTICS_SWITCH_TOGGLED]: {
@@ -899,7 +938,11 @@ export type UniverseEventProperties = {
     time_to_first_quote_request?: number
     time_to_first_quote_request_since_first_input?: number
   }
-  [SwapEventName.SwapSigned]: Record<string, unknown> // TODO
+  [SwapEventName.SwapSigned]: SwapTradeBaseProperties & {
+    transaction_hash?: string
+    time_to_sign_since_request_ms?: number
+    time_signed?: number
+  }
   [SwapEventName.SwapModifiedInWallet]: {
     expected: string
     actual: string
@@ -951,6 +994,15 @@ export type UniverseEventProperties = {
     | (TokenReportProperties & {
         type: 'token_warning'
       })
+    | (PoolReportProperties & {
+        type: 'pool'
+        price: boolean
+        price_chart: boolean
+        volume: boolean
+        liquidity: boolean
+        something_else: boolean
+        text?: string
+      })
   [UniswapEventName.TokenSelected]:
     | (ITraceContext &
         AssetDetailsBaseProperties &
@@ -971,6 +1023,12 @@ export type UniverseEventProperties = {
     attackType?: string
     protectionResult?: string
   }
+  [UniswapEventName.ContextMenuClosed]: ITraceContext
+  [UniswapEventName.ContextMenuItemClicked]: ITraceContext & {
+    menu_item: string
+    menu_item_index: number
+  }
+  [UniswapEventName.ContextMenuOpened]: ITraceContext
   [UniswapEventName.LowNetworkTokenInfoModalOpened]: {
     location: 'send' | 'swap'
   }
@@ -979,6 +1037,9 @@ export type UniverseEventProperties = {
   [UniswapEventName.LpIncentiveCollectRewardsRetry]: undefined
   [UniswapEventName.LpIncentiveCollectRewardsSuccess]: { token_rewards: string }
   [UniswapEventName.LpIncentiveLearnMoreCtaClicked]: undefined
+  [UniswapEventName.NetworkFilterSelected]: ITraceContext & {
+    chain: UniverseChainId | 'All'
+  }
   [UniswapEventName.SmartWalletMismatchDetected]: {
     chainId: string
     delegatedAddress: string
@@ -1006,14 +1067,9 @@ export type UniverseEventProperties = {
         hash?: string
         transaction_type: TransactionType
       }
-    | {
+    | (PoolReportProperties & {
         type: 'pool'
-        pool_id: string
-        version: ProtocolVersion
-        chain_id: UniverseChainId
-        token0: string
-        token1: string
-      }
+      })
   [UnitagEventName.UnitagBannerActionTaken]: {
     action: 'claim' | 'dismiss'
     entryPoint: 'home' | 'settings'
@@ -1064,9 +1120,6 @@ export type UniverseEventProperties = {
     query: string
   }
   [WalletEventName.ModalClosed]: ITraceContext & Record<string, unknown>
-  [WalletEventName.NetworkFilterSelected]: ITraceContext & {
-    chain: UniverseChainId | 'All'
-  }
   [WalletEventName.NFTVisibilityChanged]: {
     tokenId?: string
     chainId?: UniverseChainId

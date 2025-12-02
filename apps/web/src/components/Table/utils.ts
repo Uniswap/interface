@@ -2,7 +2,7 @@ import { Column, RowData } from '@tanstack/react-table'
 import { CSSProperties } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
-import { padding, zIndexes } from 'ui/src/theme'
+import { opacify, padding, zIndexes } from 'ui/src/theme'
 
 /**
  * Displays the time as a human-readable string.
@@ -34,19 +34,44 @@ export function useAbbreviatedTimeString(timestamp: number) {
   }
 }
 
-export function getCommonPinningStyles<Data extends RowData>(
-  column: Column<Data, unknown>,
-  colors: ReturnType<typeof useSporeColors>,
-): CSSProperties {
+/**
+ * Returns sizing styles for table columns (width and flexGrow).
+ */
+export function getColumnSizingStyles<Data extends RowData>(column: Column<Data, unknown>): CSSProperties {
+  const metaFlexGrow = (column.columnDef.meta as { flexGrow?: number } | undefined)?.flexGrow
+
+  const styles: CSSProperties = {
+    width: column.getSize(),
+  }
+
+  // Only override flexGrow if explicitly set in meta
+  if (metaFlexGrow !== undefined) {
+    styles.flexGrow = metaFlexGrow
+  }
+
+  return styles
+}
+
+export function getCommonPinningStyles<Data extends RowData>({
+  column,
+  colors,
+  v2 = true,
+  isHeader = false,
+}: {
+  column: Column<Data, unknown>
+  colors: ReturnType<typeof useSporeColors>
+  v2?: boolean
+  isHeader?: boolean
+}): CSSProperties {
   const isPinned = column.getIsPinned()
   const isLastPinnedColumn = column.getIsLastColumn('left')
 
   return {
+    ...getColumnSizingStyles(column),
     left: isPinned === 'left' ? `${column.getStart('left')}px` : 0,
     position: isPinned ? 'sticky' : 'relative',
     zIndex: isPinned ? zIndexes.default : zIndexes.background,
-    background: isPinned ? `${colors.surface2.val}F2` : 'transparent', // F2 = 95% opacity
-    width: column.getSize(),
+    background: isPinned ? opacify(95, !isHeader && v2 ? colors.surface1.val : colors.surface2.val) : 'transparent', // F2 = 95% opacity
     borderRight: isLastPinnedColumn ? `1px solid ${colors.surface3.val}` : undefined,
     paddingLeft: column.getIsFirstColumn() ? `${padding.padding8}px` : 0,
     paddingRight: column.getIsLastColumn() || isLastPinnedColumn ? `${padding.padding8}px` : 0,

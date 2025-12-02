@@ -3,15 +3,7 @@
 exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
 <View
   accessible={false}
-  animatedPosition={
-    {
-      "_isReanimatedSharedValue": true,
-      "addListener": [Function],
-      "modify": [Function],
-      "removeListener": [Function],
-      "value": 0,
-    }
-  }
+  animatedPosition={"0"}
   animationConfigs={
     {
       "damping": 500,
@@ -81,6 +73,11 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
             }
           }
           forwardedRef={[Function]}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
           jestAnimatedStyle={
             {
               "value": {
@@ -91,6 +88,35 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
                 ],
               },
             }
+          }
+          jestInlineStyle={
+            [
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(19, 19, 19, 0.08)",
+                "borderBottomColor": "transparent",
+                "borderBottomLeftRadius": 16,
+                "borderBottomRightRadius": 16,
+                "borderBottomWidth": 1,
+                "borderLeftColor": "transparent",
+                "borderLeftWidth": 1,
+                "borderRightColor": "transparent",
+                "borderRightWidth": 1,
+                "borderStyle": "solid",
+                "borderTopColor": "transparent",
+                "borderTopLeftRadius": 16,
+                "borderTopRightRadius": 16,
+                "borderTopWidth": 1,
+                "flexDirection": "row",
+                "gap": 8,
+                "height": "auto",
+                "justifyContent": "center",
+                "paddingBottom": 12,
+                "paddingLeft": 12,
+                "paddingRight": 12,
+                "paddingTop": 12,
+              },
+            ]
           }
           onBlur={[Function]}
           onClick={[Function]}
@@ -103,36 +129,40 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
           style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(19, 19, 19, 0.08)",
-              "borderBottomColor": "transparent",
-              "borderBottomLeftRadius": 16,
-              "borderBottomRightRadius": 16,
-              "borderBottomWidth": 1,
-              "borderLeftColor": "transparent",
-              "borderLeftWidth": 1,
-              "borderRightColor": "transparent",
-              "borderRightWidth": 1,
-              "borderStyle": "solid",
-              "borderTopColor": "transparent",
-              "borderTopLeftRadius": 16,
-              "borderTopRightRadius": 16,
-              "borderTopWidth": 1,
-              "flexDirection": "row",
-              "gap": 8,
-              "height": "auto",
-              "justifyContent": "center",
-              "paddingBottom": 12,
-              "paddingLeft": 12,
-              "paddingRight": 12,
-              "paddingTop": 12,
-              "transform": [
-                {
-                  "scale": 1,
-                },
-              ],
-            }
+            [
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(19, 19, 19, 0.08)",
+                "borderBottomColor": "transparent",
+                "borderBottomLeftRadius": 16,
+                "borderBottomRightRadius": 16,
+                "borderBottomWidth": 1,
+                "borderLeftColor": "transparent",
+                "borderLeftWidth": 1,
+                "borderRightColor": "transparent",
+                "borderRightWidth": 1,
+                "borderStyle": "solid",
+                "borderTopColor": "transparent",
+                "borderTopLeftRadius": 16,
+                "borderTopRightRadius": 16,
+                "borderTopWidth": 1,
+                "flexDirection": "row",
+                "gap": 8,
+                "height": "auto",
+                "justifyContent": "center",
+                "paddingBottom": 12,
+                "paddingLeft": 12,
+                "paddingRight": 12,
+                "paddingTop": 12,
+              },
+              {
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              },
+            ]
           }
         >
           <RNSVGSvgView
@@ -152,12 +182,7 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
                   "borderWidth": 0,
                 },
                 {
-                  "color": {
-                    "dynamic": {
-                      "dark": "#FFFFFF",
-                      "light": "#131313",
-                    },
-                  },
+                  "color": "#131313",
                   "height": 24,
                   "width": 24,
                 },
@@ -172,14 +197,7 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
             vbWidth={24}
           >
             <RNSVGGroup
-              color={
-                {
-                  "dynamic": {
-                    "dark": "#FFFFFF",
-                    "light": "#131313",
-                  },
-                }
-              }
+              color="#131313"
               fill={null}
               propList={
                 [
@@ -211,12 +229,7 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
         maxFontSizeMultiplier={1.4}
         style={
           {
-            "color": {
-              "dynamic": {
-                "dark": "#FFFFFF",
-                "light": "#131313",
-              },
-            },
+            "color": "#131313",
             "fontFamily": "Basel Grotesk",
             "fontSize": 19,
             "fontWeight": "400",
@@ -234,12 +247,7 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
         maxFontSizeMultiplier={1.4}
         style={
           {
-            "color": {
-              "dynamic": {
-                "dark": "rgba(255, 255, 255, 0.65)",
-                "light": "rgba(19, 19, 19, 0.63)",
-              },
-            },
+            "color": "rgba(19, 19, 19, 0.63)",
             "fontFamily": "Basel Grotesk",
             "fontSize": 15,
             "fontWeight": "400",
@@ -265,12 +273,7 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
           onStartShouldSetResponder={[Function]}
           style={
             {
-              "color": {
-                "dynamic": {
-                  "dark": "#FFFFFF",
-                  "light": "#131313",
-                },
-              },
+              "color": "#131313",
               "fontFamily": "Basel Grotesk",
               "fontSize": 15,
               "fontWeight": "500",
@@ -294,12 +297,7 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
         <View
           style={
             {
-              "backgroundColor": {
-                "dynamic": {
-                  "dark": "#1F1F1F",
-                  "light": "#F9F9F9",
-                },
-              },
+              "backgroundColor": "#F9F9F9",
               "borderBottomLeftRadius": 16,
               "borderBottomRightRadius": 16,
               "borderTopLeftRadius": 16,
@@ -409,12 +407,7 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
                 maxFontSizeMultiplier={1.4}
                 style={
                   {
-                    "color": {
-                      "dynamic": {
-                        "dark": "rgba(255, 255, 255, 0.65)",
-                        "light": "rgba(19, 19, 19, 0.63)",
-                      },
-                    },
+                    "color": "rgba(19, 19, 19, 0.63)",
                     "fontFamily": "Basel Grotesk",
                     "fontSize": 13,
                     "fontWeight": "400",
@@ -441,12 +434,18 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
         <View
           collapsable={false}
           dd-action-name="Continue"
+          disabled={false}
           focusVisibleStyle={
             {
               "backgroundColor": "#E500A5",
             }
           }
           forwardedRef={[Function]}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
           jestAnimatedStyle={
             {
               "value": {
@@ -457,6 +456,38 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
                 ],
               },
             }
+          }
+          jestInlineStyle={
+            [
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "backgroundColor": "#FF37C7",
+                "borderBottomColor": "transparent",
+                "borderBottomLeftRadius": 16,
+                "borderBottomRightRadius": 16,
+                "borderBottomWidth": 1,
+                "borderLeftColor": "transparent",
+                "borderLeftWidth": 1,
+                "borderRightColor": "transparent",
+                "borderRightWidth": 1,
+                "borderStyle": "solid",
+                "borderTopColor": "transparent",
+                "borderTopLeftRadius": 16,
+                "borderTopRightRadius": 16,
+                "borderTopWidth": 1,
+                "flex": 1,
+                "flexBasis": 0,
+                "flexDirection": "row",
+                "gap": 8,
+                "height": "auto",
+                "justifyContent": "center",
+                "paddingBottom": 12,
+                "paddingLeft": 16,
+                "paddingRight": 16,
+                "paddingTop": 12,
+              },
+            ]
           }
           onBlur={[Function]}
           onClick={[Function]}
@@ -469,39 +500,43 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
           onResponderTerminationRequest={[Function]}
           onStartShouldSetResponder={[Function]}
           style={
-            {
-              "alignItems": "center",
-              "alignSelf": "stretch",
-              "backgroundColor": "#FF37C7",
-              "borderBottomColor": "transparent",
-              "borderBottomLeftRadius": 16,
-              "borderBottomRightRadius": 16,
-              "borderBottomWidth": 1,
-              "borderLeftColor": "transparent",
-              "borderLeftWidth": 1,
-              "borderRightColor": "transparent",
-              "borderRightWidth": 1,
-              "borderStyle": "solid",
-              "borderTopColor": "transparent",
-              "borderTopLeftRadius": 16,
-              "borderTopRightRadius": 16,
-              "borderTopWidth": 1,
-              "flex": 1,
-              "flexBasis": 0,
-              "flexDirection": "row",
-              "gap": 8,
-              "height": "auto",
-              "justifyContent": "center",
-              "paddingBottom": 12,
-              "paddingLeft": 16,
-              "paddingRight": 16,
-              "paddingTop": 12,
-              "transform": [
-                {
-                  "scale": 1,
-                },
-              ],
-            }
+            [
+              {
+                "alignItems": "center",
+                "alignSelf": "stretch",
+                "backgroundColor": "#FF37C7",
+                "borderBottomColor": "transparent",
+                "borderBottomLeftRadius": 16,
+                "borderBottomRightRadius": 16,
+                "borderBottomWidth": 1,
+                "borderLeftColor": "transparent",
+                "borderLeftWidth": 1,
+                "borderRightColor": "transparent",
+                "borderRightWidth": 1,
+                "borderStyle": "solid",
+                "borderTopColor": "transparent",
+                "borderTopLeftRadius": 16,
+                "borderTopRightRadius": 16,
+                "borderTopWidth": 1,
+                "flex": 1,
+                "flexBasis": 0,
+                "flexDirection": "row",
+                "gap": 8,
+                "height": "auto",
+                "justifyContent": "center",
+                "paddingBottom": 12,
+                "paddingLeft": 16,
+                "paddingRight": 16,
+                "paddingTop": 12,
+              },
+              {
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              },
+            ]
           }
           testID="continue"
         >
@@ -509,16 +544,9 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
             line-height-disabled="false"
             maxFontSizeMultiplier={1.2}
             numberOfLines={1}
-            onBlur={[Function]}
-            onFocus={[Function]}
             style={
               {
-                "color": {
-                  "dynamic": {
-                    "dark": "#FFFFFF",
-                    "light": "#FFFFFF",
-                  },
-                },
+                "color": "#FFFFFF",
                 "fontFamily": "Basel Grotesk",
                 "fontSize": 17,
                 "fontWeight": "500",

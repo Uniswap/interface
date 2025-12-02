@@ -11,8 +11,8 @@ const PendingWalletConnectionModal = createLazy(
   () => import('components/WalletModal/PendingWalletConnectionModal/PendingWalletConnectionModal'),
 )
 const UniwalletModal = createLazy(() => import('components/AccountDrawer/UniwalletModal'))
-const Banners = createLazy(() =>
-  import('components/Banner/shared/Banners').then((module) => ({ default: module.Banners })),
+const OutageBanners = createLazy(() =>
+  import('components/Banner/shared/OutageBanners').then((module) => ({ default: module.OutageBanners })),
 )
 const OffchainActivityModal = createLazy(() =>
   import('components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal').then((module) => ({
@@ -35,7 +35,6 @@ const PrivacyChoicesModal = createLazy(() =>
   import('components/PrivacyChoices').then((module) => ({ default: module.PrivacyChoicesModal })),
 )
 const FeatureFlagModal = createLazy(() => import('components/FeatureFlagModal/FeatureFlagModal'))
-const SolanaPromoModal = createLazy(() => import('components/Banner/SolanaPromo/SolanaPromoModal'))
 const DevFlagsBox = createLazy(() => import('dev/DevFlagsBox'))
 const TokenNotFoundModal = createLazy(() => import('components/NotFoundModal/TokenNotFoundModal'))
 const PoolNotFoundModal = createLazy(() => import('components/NotFoundModal/PoolNotFoundModal'))
@@ -113,7 +112,7 @@ export const modalRegistry: ModalRegistry = {
     shouldMount: () => true,
   },
   [ModalName.Banners]: {
-    component: Banners,
+    component: OutageBanners,
     shouldMount: () => true,
   },
   [ModalName.OffchainActivity]: {
@@ -147,10 +146,6 @@ export const modalRegistry: ModalRegistry = {
   [ModalName.FeatureFlags]: {
     component: FeatureFlagModal,
     shouldMount: (state) => state.application.openModal?.name === ModalName.FeatureFlags,
-  },
-  [ModalName.SolanaPromo]: {
-    component: SolanaPromoModal,
-    shouldMount: (state) => state.application.openModal?.name === ModalName.SolanaPromo,
   },
   [ModalName.AddLiquidity]: {
     component: IncreaseLiquidityModal,

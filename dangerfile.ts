@@ -143,7 +143,7 @@ async function processAddChanges() {
 
   // Check for non-UI package lines for tamagui imports
   const allNonUILinesAddedByFile = await getLinesAddedByFile(updatedNonUITsFiles, {
-    exclude: ['env.d.ts', 'tamaguiProvider.tsx'],
+    exclude: ['env.d.ts', 'tamaguiProvider.tsx', 'setupTests.ts'],
   })
   const allNonUILinesAdded = allNonUILinesAddedByFile.flatMap((x) => x)
   allNonUILinesAdded.forEach((change) => {

@@ -1,0 +1,3621 @@
+{
+  "data": {
+    "token": {
+      "id": "VG9rZW46RVRIRVJFVU1fMHgxZjk4NDBhODVkNWFGNWJmMUQxNzYyRjkyNUJEQURkQzQyMDFGOTg0",
+      "address": "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984",
+      "chain": "ETHEREUM",
+      "market": {
+        "id": "VG9rZW5NYXJrZXQ6RVRIRVJFVU1fMHgxZjk4NDBhODVkNWFGNWJmMUQxNzYyRjkyNUJEQURkQzQyMDFGOTg0X1VTRA==",
+        "price": {
+          "id": "QW1vdW50OjUuNDcyMTQzODU4Mzk5NjQ1X1VTRA==",
+          "value": 5.472143858399645,
+          "__typename": "Amount"
+        },
+        "ohlc": [
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyODc3MjBfNC43ODgxMDUyOTU2NzQ1OF80Ljg2NTA1NDUxMTkxNjE2MV80Ljc4ODEwNTI5NTY3NDU4XzQuODU3MDE3OTYxOTQ5NDIwNQ==",
+            "timestamp": 1762287720,
+            "open": {
+              "id": "QW1vdW50OjQuNzg4MTA1Mjk1Njc0NThfVVNE",
+              "value": 4.78810529567458,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjQuODY1MDU0NTExOTE2MTYxX1VTRA==",
+              "value": 4.865054511916161,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuNzg4MTA1Mjk1Njc0NThfVVNE",
+              "value": 4.78810529567458,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuODU3MDE3OTYxOTQ5NDIwNV9VU0Q=",
+              "value": 4.8570179619494205,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyODgzMjBfNC44NDE1NDAxMDA5MDAzODFfNC45MTk3NTgwMjk1Mzc1MThfNC44MzIyNjE0NDc3NzEzMDVfNC45MTk3NTgwMjk1Mzc1MTg=",
+            "timestamp": 1762288320,
+            "open": {
+              "id": "QW1vdW50OjQuODQxNTQwMTAwOTAwMzgxX1VTRA==",
+              "value": 4.841540100900381,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjQuOTE5NzU4MDI5NTM3NTE4X1VTRA==",
+              "value": 4.919758029537518,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuODMyMjYxNDQ3NzcxMzA1X1VTRA==",
+              "value": 4.832261447771305,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuOTE5NzU4MDI5NTM3NTE4X1VTRA==",
+              "value": 4.919758029537518,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyODg5MjBfNC45MTk3NTgwMjk1Mzc1MThfNC45NDI3MzgwMTgzMjEzN180LjkxOTc1ODAyOTUzNzUxOF80LjkyMDE1MTY0NDM4NTA5NA==",
+            "timestamp": 1762288920,
+            "open": {
+              "id": "QW1vdW50OjQuOTE5NzU4MDI5NTM3NTE4X1VTRA==",
+              "value": 4.919758029537518,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjQuOTQyNzM4MDE4MzIxMzdfVVNE",
+              "value": 4.94273801832137,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuOTE5NzU4MDI5NTM3NTE4X1VTRA==",
+              "value": 4.919758029537518,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuOTIwMTUxNjQ0Mzg1MDk0X1VTRA==",
+              "value": 4.920151644385094,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyODk1MjBfNC45MjAxNTE2NDQzODUwOTRfNC45MjM4NDAyMzM3NDY0MDlfNC44OTc0OTkzNDIzNjE1MzRfNC45MTkwNjkwNDAwNDgxNDc=",
+            "timestamp": 1762289520,
+            "open": {
+              "id": "QW1vdW50OjQuOTIwMTUxNjQ0Mzg1MDk0X1VTRA==",
+              "value": 4.920151644385094,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjQuOTIzODQwMjMzNzQ2NDA5X1VTRA==",
+              "value": 4.923840233746409,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuODk3NDk5MzQyMzYxNTM0X1VTRA==",
+              "value": 4.897499342361534,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuOTE5MDY5MDQwMDQ4MTQ3X1VTRA==",
+              "value": 4.919069040048147,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTAxMjBfNC45MTkwNjkwNDAwNDgxNDdfNC45ODY2MTIxOTI3ODA0NTFfNC45MTc0NzMyNjkyNDY5ODRfNC45MTkxNTgzNTQ2MDA2NjI=",
+            "timestamp": 1762290120,
+            "open": {
+              "id": "QW1vdW50OjQuOTE5MDY5MDQwMDQ4MTQ3X1VTRA==",
+              "value": 4.919069040048147,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjQuOTg2NjEyMTkyNzgwNDUxX1VTRA==",
+              "value": 4.986612192780451,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuOTE3NDczMjY5MjQ2OTg0X1VTRA==",
+              "value": 4.917473269246984,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuOTE5MTU4MzU0NjAwNjYyX1VTRA==",
+              "value": 4.919158354600662,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTA3MjBfNC45MTkxNTgzNTQ2MDA2NjJfNC45MTkxNTgzNTQ2MDA2NjJfNC44OTI0NDAxMDYyNjMyNjZfNC44OTI0NDAxMDYyNjMyNjY=",
+            "timestamp": 1762290720,
+            "open": {
+              "id": "QW1vdW50OjQuOTE5MTU4MzU0NjAwNjYyX1VTRA==",
+              "value": 4.919158354600662,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjQuOTE5MTU4MzU0NjAwNjYyX1VTRA==",
+              "value": 4.919158354600662,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuODkyNDQwMTA2MjYzMjY2X1VTRA==",
+              "value": 4.892440106263266,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuODkyNDQwMTA2MjYzMjY2X1VTRA==",
+              "value": 4.892440106263266,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTEzMjBfNC44OTI0NDAxMDYyNjMyNjZfNC44OTI0NDAxMDYyNjMyNjZfNC44MzQzMzc1MzM1MDg2MTJfNC44MzQzMzc1MzM1MDg2MTI=",
+            "timestamp": 1762291320,
+            "open": {
+              "id": "QW1vdW50OjQuODkyNDQwMTA2MjYzMjY2X1VTRA==",
+              "value": 4.892440106263266,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjQuODkyNDQwMTA2MjYzMjY2X1VTRA==",
+              "value": 4.892440106263266,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuODM0MzM3NTMzNTA4NjEyX1VTRA==",
+              "value": 4.834337533508612,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuODM0MzM3NTMzNTA4NjEyX1VTRA==",
+              "value": 4.834337533508612,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTE5MjBfNC44MjcwNTU3MTU3MjE4MzNfNC44MjcwNTU3MTU3MjE4MzNfNC43MjI0MTczNDg0Mjg1NThfNC44MDQwMTA0MjM3Mjc5Nzk=",
+            "timestamp": 1762291920,
+            "open": {
+              "id": "QW1vdW50OjQuODI3MDU1NzE1NzIxODMzX1VTRA==",
+              "value": 4.827055715721833,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjQuODI3MDU1NzE1NzIxODMzX1VTRA==",
+              "value": 4.827055715721833,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuNzIyNDE3MzQ4NDI4NTU4X1VTRA==",
+              "value": 4.722417348428558,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuODA0MDEwNDIzNzI3OTc5X1VTRA==",
+              "value": 4.804010423727979,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTI1MjBfNC43OTgzNjMwMjE2OTgyMTNfNC44NjM0MDA2MTM0Njc0NTJfNC43ODUwMzcyMTc5MDcyNDJfNC44NTAyMjIwMDE3OTI5OQ==",
+            "timestamp": 1762292520,
+            "open": {
+              "id": "QW1vdW50OjQuNzk4MzYzMDIxNjk4MjEzX1VTRA==",
+              "value": 4.798363021698213,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjQuODYzNDAwNjEzNDY3NDUyX1VTRA==",
+              "value": 4.863400613467452,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuNzg1MDM3MjE3OTA3MjQyX1VTRA==",
+              "value": 4.785037217907242,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuODUwMjIyMDAxNzkyOTlfVVNE",
+              "value": 4.85022200179299,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTMxMjBfNC44NTAyMjIwMDE3OTI5OV80Ljk3MDAxOTc3ODAzNDMzXzQuODUwMjIyMDAxNzkyOTlfNC45NzAwMTk3NzgwMzQzMw==",
+            "timestamp": 1762293120,
+            "open": {
+              "id": "QW1vdW50OjQuODUwMjIyMDAxNzkyOTlfVVNE",
+              "value": 4.85022200179299,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjQuOTcwMDE5Nzc4MDM0MzNfVVNE",
+              "value": 4.97001977803433,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuODUwMjIyMDAxNzkyOTlfVVNE",
+              "value": 4.85022200179299,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuOTcwMDE5Nzc4MDM0MzNfVVNE",
+              "value": 4.97001977803433,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTM3MjBfNC45NzAwMTk3NzgwMzQzM181LjA1NDcwNDI4OTQwNDg1NF80Ljk3MDAxOTc3ODAzNDMzXzUuMDQ4OTMyMDczMzQzNDM=",
+            "timestamp": 1762293720,
+            "open": {
+              "id": "QW1vdW50OjQuOTcwMDE5Nzc4MDM0MzNfVVNE",
+              "value": 4.97001977803433,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDU0NzA0Mjg5NDA0ODU0X1VTRA==",
+              "value": 5.054704289404854,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuOTcwMDE5Nzc4MDM0MzNfVVNE",
+              "value": 4.97001977803433,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDQ4OTMyMDczMzQzNDNfVVNE",
+              "value": 5.04893207334343,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTQzMjBfNS4wNDg5MzIwNzMzNDM0M181LjA1NzIyNjkyOTk5NzU3MV81LjA0NjQ3MDkyOTIyNjc0XzUuMDU3MjI2OTI5OTk3NTcx",
+            "timestamp": 1762294320,
+            "open": {
+              "id": "QW1vdW50OjUuMDQ4OTMyMDczMzQzNDNfVVNE",
+              "value": 5.04893207334343,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDU3MjI2OTI5OTk3NTcxX1VTRA==",
+              "value": 5.057226929997571,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDQ2NDcwOTI5MjI2NzRfVVNE",
+              "value": 5.04647092922674,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDU3MjI2OTI5OTk3NTcxX1VTRA==",
+              "value": 5.057226929997571,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTQ5MjBfNS4wNTcyMjY5Mjk5OTc1NzFfNS4wNzI4MzM0MDA2NTgwMTZfNS4wNTcyMjY5Mjk5OTc1NzFfNS4wNzI3NjI4ODg4NDc1NTE=",
+            "timestamp": 1762294920,
+            "open": {
+              "id": "QW1vdW50OjUuMDU3MjI2OTI5OTk3NTcxX1VTRA==",
+              "value": 5.057226929997571,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDcyODMzNDAwNjU4MDE2X1VTRA==",
+              "value": 5.072833400658016,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDU3MjI2OTI5OTk3NTcxX1VTRA==",
+              "value": 5.057226929997571,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDcyNzYyODg4ODQ3NTUxX1VTRA==",
+              "value": 5.072762888847551,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTU1MjBfNS4wNzI3NjI4ODg4NDc1NTFfNS4wODk5ODM5NDM4ODQ4MjRfNS4wNzI3NjI4ODg4NDc1NTFfNS4wODMxMTE2NjA2MzQ3MTc=",
+            "timestamp": 1762295520,
+            "open": {
+              "id": "QW1vdW50OjUuMDcyNzYyODg4ODQ3NTUxX1VTRA==",
+              "value": 5.072762888847551,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDg5OTgzOTQzODg0ODI0X1VTRA==",
+              "value": 5.089983943884824,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDcyNzYyODg4ODQ3NTUxX1VTRA==",
+              "value": 5.072762888847551,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDgzMTExNjYwNjM0NzE3X1VTRA==",
+              "value": 5.083111660634717,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTYxMjBfNS4wODMxMTE2NjA2MzQ3MTdfNS4wODMxMTE2NjA2MzQ3MTdfNS4wNzM2Mzc1ODU4NTkwNTM0XzUuMDczNjM3NTg1ODU5MDUzNA==",
+            "timestamp": 1762296120,
+            "open": {
+              "id": "QW1vdW50OjUuMDgzMTExNjYwNjM0NzE3X1VTRA==",
+              "value": 5.083111660634717,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDgzMTExNjYwNjM0NzE3X1VTRA==",
+              "value": 5.083111660634717,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDczNjM3NTg1ODU5MDUzNF9VU0Q=",
+              "value": 5.0736375858590534,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDczNjM3NTg1ODU5MDUzNF9VU0Q=",
+              "value": 5.0736375858590534,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTY3MjBfNS4wNzA5NTgzMDQ4OTQ2NTJfNS4xMDUwMTE0MTg5OTg4NzJfNS4wNjgzMTc4Njg3Nzk5ODM1XzUuMTA1MDExNDE4OTk4ODcy",
+            "timestamp": 1762296720,
+            "open": {
+              "id": "QW1vdW50OjUuMDcwOTU4MzA0ODk0NjUyX1VTRA==",
+              "value": 5.070958304894652,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTA1MDExNDE4OTk4ODcyX1VTRA==",
+              "value": 5.105011418998872,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDY4MzE3ODY4Nzc5OTgzNV9VU0Q=",
+              "value": 5.0683178687799835,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTA1MDExNDE4OTk4ODcyX1VTRA==",
+              "value": 5.105011418998872,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTczMjBfNS4xMDUwMTE0MTg5OTg4NzJfNS4xMTQwMzE5Mjg3Njc3NDZfNS4xMDUwMTE0MTg5OTg4NzJfNS4xMDU5MTE3NzQzMjc5MDY=",
+            "timestamp": 1762297320,
+            "open": {
+              "id": "QW1vdW50OjUuMTA1MDExNDE4OTk4ODcyX1VTRA==",
+              "value": 5.105011418998872,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTE0MDMxOTI4NzY3NzQ2X1VTRA==",
+              "value": 5.114031928767746,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTA1MDExNDE4OTk4ODcyX1VTRA==",
+              "value": 5.105011418998872,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTA1OTExNzc0MzI3OTA2X1VTRA==",
+              "value": 5.105911774327906,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTc5MjBfNS4xMDU5MTE3NzQzMjc5MDZfNS4xMDU5MTE3NzQzMjc5MDZfNS4wOTA0MTI5ODAzNjMxODRfNS4wOTA0MTI5ODAzNjMxODQ=",
+            "timestamp": 1762297920,
+            "open": {
+              "id": "QW1vdW50OjUuMTA1OTExNzc0MzI3OTA2X1VTRA==",
+              "value": 5.105911774327906,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTA1OTExNzc0MzI3OTA2X1VTRA==",
+              "value": 5.105911774327906,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDkwNDEyOTgwMzYzMTg0X1VTRA==",
+              "value": 5.090412980363184,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDkwNDEyOTgwMzYzMTg0X1VTRA==",
+              "value": 5.090412980363184,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTg1MjBfNS4wOTA0MTI5ODAzNjMxODRfNS4wOTA0MTI5ODAzNjMxODRfNS4wODY5MDE3MzE3Njc2NzZfNS4wODY5MDE3MzE3Njc2NzY=",
+            "timestamp": 1762298520,
+            "open": {
+              "id": "QW1vdW50OjUuMDkwNDEyOTgwMzYzMTg0X1VTRA==",
+              "value": 5.090412980363184,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDkwNDEyOTgwMzYzMTg0X1VTRA==",
+              "value": 5.090412980363184,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDg2OTAxNzMxNzY3Njc2X1VTRA==",
+              "value": 5.086901731767676,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDg2OTAxNzMxNzY3Njc2X1VTRA==",
+              "value": 5.086901731767676,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTkxMjBfNS4wODY5MDE3MzE3Njc2NzZfNS4wODY5MDE3MzE3Njc2NzZfNS4wNzYyOTIwMTEyMDYyMzNfNS4wNzYyOTIwMTEyMDYyMzM=",
+            "timestamp": 1762299120,
+            "open": {
+              "id": "QW1vdW50OjUuMDg2OTAxNzMxNzY3Njc2X1VTRA==",
+              "value": 5.086901731767676,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDg2OTAxNzMxNzY3Njc2X1VTRA==",
+              "value": 5.086901731767676,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDc2MjkyMDExMjA2MjMzX1VTRA==",
+              "value": 5.076292011206233,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDc2MjkyMDExMjA2MjMzX1VTRA==",
+              "value": 5.076292011206233,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIyOTk3MjBfNS4wNzYyOTIwMTEyMDYyMzNfNS4wNzYyOTIwMTEyMDYyMzNfNS4wNzYyOTIwMTEyMDYyMzNfNS4wNzYyOTIwMTEyMDYyMzM=",
+            "timestamp": 1762299720,
+            "open": {
+              "id": "QW1vdW50OjUuMDc2MjkyMDExMjA2MjMzX1VTRA==",
+              "value": 5.076292011206233,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDc2MjkyMDExMjA2MjMzX1VTRA==",
+              "value": 5.076292011206233,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDc2MjkyMDExMjA2MjMzX1VTRA==",
+              "value": 5.076292011206233,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDc2MjkyMDExMjA2MjMzX1VTRA==",
+              "value": 5.076292011206233,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDAzMjBfNS4wNzYyOTIwMTEyMDYyMzNfNS4wNzgxNjYxMDE1MTcyNTNfNS4wNzYyOTIwMTEyMDYyMzNfNS4wNzgxNjYxMDE1MTcyNTM=",
+            "timestamp": 1762300320,
+            "open": {
+              "id": "QW1vdW50OjUuMDc2MjkyMDExMjA2MjMzX1VTRA==",
+              "value": 5.076292011206233,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDc4MTY2MTAxNTE3MjUzX1VTRA==",
+              "value": 5.078166101517253,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDc2MjkyMDExMjA2MjMzX1VTRA==",
+              "value": 5.076292011206233,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDc4MTY2MTAxNTE3MjUzX1VTRA==",
+              "value": 5.078166101517253,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDA5MjBfNS4wNzgxNjYxMDE1MTcyNTNfNS4wNzgxNjYxMDE1MTcyNTNfNS4wNzIwMzM4MDc2MzUxNzlfNS4wNzIwMzM4MDc2MzUxNzk=",
+            "timestamp": 1762300920,
+            "open": {
+              "id": "QW1vdW50OjUuMDc4MTY2MTAxNTE3MjUzX1VTRA==",
+              "value": 5.078166101517253,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDc4MTY2MTAxNTE3MjUzX1VTRA==",
+              "value": 5.078166101517253,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDcyMDMzODA3NjM1MTc5X1VTRA==",
+              "value": 5.072033807635179,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDcyMDMzODA3NjM1MTc5X1VTRA==",
+              "value": 5.072033807635179,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDE1MjBfNS4wNzIwMzM4MDc2MzUxNzlfNS4wNzUzNTM0MDExMjg5OTFfNS4wNzIwMzM4MDc2MzUxNzlfNS4wNzUzNTM0MDExMjg5OTE=",
+            "timestamp": 1762301520,
+            "open": {
+              "id": "QW1vdW50OjUuMDcyMDMzODA3NjM1MTc5X1VTRA==",
+              "value": 5.072033807635179,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDc1MzUzNDAxMTI4OTkxX1VTRA==",
+              "value": 5.075353401128991,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDcyMDMzODA3NjM1MTc5X1VTRA==",
+              "value": 5.072033807635179,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDc1MzUzNDAxMTI4OTkxX1VTRA==",
+              "value": 5.075353401128991,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDIxMjBfNS4wNzUzNTM0MDExMjg5OTFfNS4wNzUzNTM0MDExMjg5OTFfNS4wNDczNzUxNjMzODE0MDlfNS4wNDczNzUxNjMzODE0MDk=",
+            "timestamp": 1762302120,
+            "open": {
+              "id": "QW1vdW50OjUuMDc1MzUzNDAxMTI4OTkxX1VTRA==",
+              "value": 5.075353401128991,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDc1MzUzNDAxMTI4OTkxX1VTRA==",
+              "value": 5.075353401128991,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDQ3Mzc1MTYzMzgxNDA5X1VTRA==",
+              "value": 5.047375163381409,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDQ3Mzc1MTYzMzgxNDA5X1VTRA==",
+              "value": 5.047375163381409,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDI3MjBfNS4wNDQxMzM2OTY2NjgxNDNfNS4wNDQxMzM2OTY2NjgxNDNfNS4wMjM1OTIwOTE4ODQ4MDNfNS4wMjM1OTIwOTE4ODQ4MDM=",
+            "timestamp": 1762302720,
+            "open": {
+              "id": "QW1vdW50OjUuMDQ0MTMzNjk2NjY4MTQzX1VTRA==",
+              "value": 5.044133696668143,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDQ0MTMzNjk2NjY4MTQzX1VTRA==",
+              "value": 5.044133696668143,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDIzNTkyMDkxODg0ODAzX1VTRA==",
+              "value": 5.023592091884803,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDIzNTkyMDkxODg0ODAzX1VTRA==",
+              "value": 5.023592091884803,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDMzMjBfNS4wMjA2OTAxMDA3OTgyNDVfNS4wMjA2OTAxMDA3OTgyNDVfNS4wMDk5NzA3MDA5NDI5XzUuMDA5OTcwNzAwOTQyOQ==",
+            "timestamp": 1762303320,
+            "open": {
+              "id": "QW1vdW50OjUuMDIwNjkwMTAwNzk4MjQ1X1VTRA==",
+              "value": 5.020690100798245,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDIwNjkwMTAwNzk4MjQ1X1VTRA==",
+              "value": 5.020690100798245,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDA5OTcwNzAwOTQyOV9VU0Q=",
+              "value": 5.0099707009429,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDA5OTcwNzAwOTQyOV9VU0Q=",
+              "value": 5.0099707009429,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDM5MjBfNS4wMDk5NzA3MDA5NDI5XzUuMDE2ODAxMDI0MjU5NzU2XzUuMDA2ODQxMjQ4MTczNzExNV81LjAxMzI4MDQ5ODE4ODgwOQ==",
+            "timestamp": 1762303920,
+            "open": {
+              "id": "QW1vdW50OjUuMDA5OTcwNzAwOTQyOV9VU0Q=",
+              "value": 5.0099707009429,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDE2ODAxMDI0MjU5NzU2X1VTRA==",
+              "value": 5.016801024259756,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDA2ODQxMjQ4MTczNzExNV9VU0Q=",
+              "value": 5.0068412481737115,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDEzMjgwNDk4MTg4ODA5X1VTRA==",
+              "value": 5.013280498188809,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDQ1MjBfNS4wMTMyODA0OTgxODg4MDlfNS4wMTMyODA0OTgxODg4MDlfNC45ODAzNjgyOTEzODM3ODRfNC45ODAzNjg0MTAyNDcyODQ=",
+            "timestamp": 1762304520,
+            "open": {
+              "id": "QW1vdW50OjUuMDEzMjgwNDk4MTg4ODA5X1VTRA==",
+              "value": 5.013280498188809,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDEzMjgwNDk4MTg4ODA5X1VTRA==",
+              "value": 5.013280498188809,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuOTgwMzY4MjkxMzgzNzg0X1VTRA==",
+              "value": 4.980368291383784,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuOTgwMzY4NDEwMjQ3Mjg0X1VTRA==",
+              "value": 4.980368410247284,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDUxMjBfNC45ODAzNjg0MTAyNDcyODRfNC45OTEwMTE3NjIwNzk2NDNfNC45NDY1Mzc5MDU0NDY1MjZfNC45NDY1Mzc5MDU0NDY1MjY=",
+            "timestamp": 1762305120,
+            "open": {
+              "id": "QW1vdW50OjQuOTgwMzY4NDEwMjQ3Mjg0X1VTRA==",
+              "value": 4.980368410247284,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjQuOTkxMDExNzYyMDc5NjQzX1VTRA==",
+              "value": 4.991011762079643,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuOTQ2NTM3OTA1NDQ2NTI2X1VTRA==",
+              "value": 4.946537905446526,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuOTQ2NTM3OTA1NDQ2NTI2X1VTRA==",
+              "value": 4.946537905446526,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDU3MjBfNC45NDY1Mzc5MDU0NDY1MjZfNC45NDY1Mzc5MDU0NDY1MjZfNC45MTMzNzIyNzkzMTA0OF80LjkzOTE2MjkxNzk0OTg4",
+            "timestamp": 1762305720,
+            "open": {
+              "id": "QW1vdW50OjQuOTQ2NTM3OTA1NDQ2NTI2X1VTRA==",
+              "value": 4.946537905446526,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjQuOTQ2NTM3OTA1NDQ2NTI2X1VTRA==",
+              "value": 4.946537905446526,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuOTEzMzcyMjc5MzEwNDhfVVNE",
+              "value": 4.91337227931048,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuOTM5MTYyOTE3OTQ5ODhfVVNE",
+              "value": 4.93916291794988,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDYzMjBfNC45MzkxNjI5MTc5NDk4OF80LjkzOTE2MjkxNzk0OTg4XzQuOTAxOTEzODY2MzI4MjE4NV80LjkwNDMxNzUwMjY3ODgwNQ==",
+            "timestamp": 1762306320,
+            "open": {
+              "id": "QW1vdW50OjQuOTM5MTYyOTE3OTQ5ODhfVVNE",
+              "value": 4.93916291794988,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjQuOTM5MTYyOTE3OTQ5ODhfVVNE",
+              "value": 4.93916291794988,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuOTAxOTEzODY2MzI4MjE4NV9VU0Q=",
+              "value": 4.9019138663282185,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuOTA0MzE3NTAyNjc4ODA1X1VTRA==",
+              "value": 4.904317502678805,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDY5MjBfNC45MDQzMTc1MDI2Nzg4MDVfNC45NTQ5NzIzNDIyMDY3NDZfNC45MDQzMTc1MDI2Nzg4MDVfNC45NTQ5NzIzNDIyMDY3NDY=",
+            "timestamp": 1762306920,
+            "open": {
+              "id": "QW1vdW50OjQuOTA0MzE3NTAyNjc4ODA1X1VTRA==",
+              "value": 4.904317502678805,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjQuOTU0OTcyMzQyMjA2NzQ2X1VTRA==",
+              "value": 4.954972342206746,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuOTA0MzE3NTAyNjc4ODA1X1VTRA==",
+              "value": 4.904317502678805,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjQuOTU0OTcyMzQyMjA2NzQ2X1VTRA==",
+              "value": 4.954972342206746,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDc1MjBfNC45NTQ5NzIzNDIyMDY3NDZfNS4wMjEyMTI0ODY3MzE2Mzc0XzQuOTU0OTcyMzQyMjA2NzQ2XzUuMDIxMjEyNDg2NzMxNjM3NA==",
+            "timestamp": 1762307520,
+            "open": {
+              "id": "QW1vdW50OjQuOTU0OTcyMzQyMjA2NzQ2X1VTRA==",
+              "value": 4.954972342206746,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDIxMjEyNDg2NzMxNjM3NF9VU0Q=",
+              "value": 5.0212124867316374,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjQuOTU0OTcyMzQyMjA2NzQ2X1VTRA==",
+              "value": 4.954972342206746,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDIxMjEyNDg2NzMxNjM3NF9VU0Q=",
+              "value": 5.0212124867316374,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDgxMjBfNS4wMzUzNzI1MjQ4MzY2NjFfNS4wNjc3NzA3MzI5MTA1MDk1XzUuMDM1MzcyNTI0ODM2NjYxXzUuMDY3NzcwNzMyOTEwNTA5NQ==",
+            "timestamp": 1762308120,
+            "open": {
+              "id": "QW1vdW50OjUuMDM1MzcyNTI0ODM2NjYxX1VTRA==",
+              "value": 5.035372524836661,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDY3NzcwNzMyOTEwNTA5NV9VU0Q=",
+              "value": 5.0677707329105095,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDM1MzcyNTI0ODM2NjYxX1VTRA==",
+              "value": 5.035372524836661,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDY3NzcwNzMyOTEwNTA5NV9VU0Q=",
+              "value": 5.0677707329105095,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDg3MjBfNS4wNjc3NzA3MzI5MTA1MDk1XzUuMDc0NzU0NTE4MTQ1NTY5NV81LjA2MDU5OTM5MzcyNTcwNV81LjA3NDc1NDQwMzQ0MTAyOQ==",
+            "timestamp": 1762308720,
+            "open": {
+              "id": "QW1vdW50OjUuMDY3NzcwNzMyOTEwNTA5NV9VU0Q=",
+              "value": 5.0677707329105095,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDc0NzU0NTE4MTQ1NTY5NV9VU0Q=",
+              "value": 5.0747545181455695,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDYwNTk5MzkzNzI1NzA1X1VTRA==",
+              "value": 5.060599393725705,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDc0NzU0NDAzNDQxMDI5X1VTRA==",
+              "value": 5.074754403441029,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDkzMjBfNS4wNzQ3NTQ0MDM0NDEwMjlfNS4wNzQ3NTQ0MDM0NDEwMjlfNS4wNjY0MDM2NjE3Nzc0MV81LjA2NjQwMzY2MTc3NzQx",
+            "timestamp": 1762309320,
+            "open": {
+              "id": "QW1vdW50OjUuMDc0NzU0NDAzNDQxMDI5X1VTRA==",
+              "value": 5.074754403441029,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDc0NzU0NDAzNDQxMDI5X1VTRA==",
+              "value": 5.074754403441029,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDY2NDAzNjYxNzc3NDFfVVNE",
+              "value": 5.06640366177741,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDY2NDAzNjYxNzc3NDFfVVNE",
+              "value": 5.06640366177741,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMDk5MjBfNS4wNjY0MDM2NjE3Nzc0MV81LjA4NjUzNTUzMzM0ODU4Ml81LjA2NjQwMzY2MTc3NzQxXzUuMDg1NDMyODA1NjQwMDgz",
+            "timestamp": 1762309920,
+            "open": {
+              "id": "QW1vdW50OjUuMDY2NDAzNjYxNzc3NDFfVVNE",
+              "value": 5.06640366177741,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMDg2NTM1NTMzMzQ4NTgyX1VTRA==",
+              "value": 5.086535533348582,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDY2NDAzNjYxNzc3NDFfVVNE",
+              "value": 5.06640366177741,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMDg1NDMyODA1NjQwMDgzX1VTRA==",
+              "value": 5.085432805640083,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTA1MjBfNS4wODU0MzI4MDU2NDAwODNfNS4xMDc4OTg2NTAyMzYzNDNfNS4wODU0MzI4MDU2NDAwODNfNS4xMDc4OTg2NTAyMzYzNDM=",
+            "timestamp": 1762310520,
+            "open": {
+              "id": "QW1vdW50OjUuMDg1NDMyODA1NjQwMDgzX1VTRA==",
+              "value": 5.085432805640083,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTA3ODk4NjUwMjM2MzQzX1VTRA==",
+              "value": 5.107898650236343,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMDg1NDMyODA1NjQwMDgzX1VTRA==",
+              "value": 5.085432805640083,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTA3ODk4NjUwMjM2MzQzX1VTRA==",
+              "value": 5.107898650236343,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTExMjBfNS4xMDc4OTg2NTAyMzYzNDNfNS4xMzcwNTM4MjQ5OTQxODVfNS4xMDMzMDgxNjI1NzIxODJfNS4xMzcwNTM4MjQ5OTQxODU=",
+            "timestamp": 1762311120,
+            "open": {
+              "id": "QW1vdW50OjUuMTA3ODk4NjUwMjM2MzQzX1VTRA==",
+              "value": 5.107898650236343,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTM3MDUzODI0OTk0MTg1X1VTRA==",
+              "value": 5.137053824994185,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTAzMzA4MTYyNTcyMTgyX1VTRA==",
+              "value": 5.103308162572182,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTM3MDUzODI0OTk0MTg1X1VTRA==",
+              "value": 5.137053824994185,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTE3MjBfNS4xMzcwNTM4MjQ5OTQxODVfNS4xNDkxODYxMTA4NzUxMTdfNS4xMzcwNTM4MjQ5OTQxODVfNS4xNDkxODYxMTA4NzUxMTc=",
+            "timestamp": 1762311720,
+            "open": {
+              "id": "QW1vdW50OjUuMTM3MDUzODI0OTk0MTg1X1VTRA==",
+              "value": 5.137053824994185,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTQ5MTg2MTEwODc1MTE3X1VTRA==",
+              "value": 5.149186110875117,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTM3MDUzODI0OTk0MTg1X1VTRA==",
+              "value": 5.137053824994185,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTQ5MTg2MTEwODc1MTE3X1VTRA==",
+              "value": 5.149186110875117,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTIzMjBfNS4xNDkxODYxMTA4NzUxMTdfNS4xNDkxODYxMTA4NzUxMTdfNS4xMzY5MDU1MDg2MTk1MTk0XzUuMTM2OTA1NTA4NjE5NTE5NA==",
+            "timestamp": 1762312320,
+            "open": {
+              "id": "QW1vdW50OjUuMTQ5MTg2MTEwODc1MTE3X1VTRA==",
+              "value": 5.149186110875117,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTQ5MTg2MTEwODc1MTE3X1VTRA==",
+              "value": 5.149186110875117,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTM2OTA1NTA4NjE5NTE5NF9VU0Q=",
+              "value": 5.1369055086195194,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTM2OTA1NTA4NjE5NTE5NF9VU0Q=",
+              "value": 5.1369055086195194,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTI5MjBfNS4xMzY5MDU1MDg2MTk1MTk0XzUuMTM2OTA1NTA4NjE5NTE5NF81LjEzNjkwNTUwODYxOTUxOTRfNS4xMzY5MDU1MDg2MTk1MTk0",
+            "timestamp": 1762312920,
+            "open": {
+              "id": "QW1vdW50OjUuMTM2OTA1NTA4NjE5NTE5NF9VU0Q=",
+              "value": 5.1369055086195194,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTM2OTA1NTA4NjE5NTE5NF9VU0Q=",
+              "value": 5.1369055086195194,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTM2OTA1NTA4NjE5NTE5NF9VU0Q=",
+              "value": 5.1369055086195194,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTM2OTA1NTA4NjE5NTE5NF9VU0Q=",
+              "value": 5.1369055086195194,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTM1MjBfNS4xMzY5MDU1MDg2MTk1MTk0XzUuMTY1NTE0NDU1Nzc0NTNfNS4xMzY5MDU1MDg2MTk1MTk0XzUuMTY1NTE0NDU1Nzc0NTM=",
+            "timestamp": 1762313520,
+            "open": {
+              "id": "QW1vdW50OjUuMTM2OTA1NTA4NjE5NTE5NF9VU0Q=",
+              "value": 5.1369055086195194,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTY1NTE0NDU1Nzc0NTNfVVNE",
+              "value": 5.16551445577453,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTM2OTA1NTA4NjE5NTE5NF9VU0Q=",
+              "value": 5.1369055086195194,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTY1NTE0NDU1Nzc0NTNfVVNE",
+              "value": 5.16551445577453,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTQxMjBfNS4xNjU1MTQ0NTU3NzQ1M181LjE2NTUxNDQ1NTc3NDUzXzUuMTY1NTE0NDU1Nzc0NTNfNS4xNjU1MTQ0NTU3NzQ1Mw==",
+            "timestamp": 1762314120,
+            "open": {
+              "id": "QW1vdW50OjUuMTY1NTE0NDU1Nzc0NTNfVVNE",
+              "value": 5.16551445577453,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTY1NTE0NDU1Nzc0NTNfVVNE",
+              "value": 5.16551445577453,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTY1NTE0NDU1Nzc0NTNfVVNE",
+              "value": 5.16551445577453,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTY1NTE0NDU1Nzc0NTNfVVNE",
+              "value": 5.16551445577453,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTQ3MjBfNS4xNjU1MTQ0NTU3NzQ1M181LjE3NjcyMDk1NDY2ODQyMl81LjE2NTUxNDQ1NTc3NDUzXzUuMTc2NzIwOTU0NjY4NDIy",
+            "timestamp": 1762314720,
+            "open": {
+              "id": "QW1vdW50OjUuMTY1NTE0NDU1Nzc0NTNfVVNE",
+              "value": 5.16551445577453,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTc2NzIwOTU0NjY4NDIyX1VTRA==",
+              "value": 5.176720954668422,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTY1NTE0NDU1Nzc0NTNfVVNE",
+              "value": 5.16551445577453,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTc2NzIwOTU0NjY4NDIyX1VTRA==",
+              "value": 5.176720954668422,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTUzMjBfNS4xNzY3MjA5NTQ2Njg0MjJfNS4xODgyMDYwNDMzNTg0NzhfNS4xNzY3MjA5NTQ2Njg0MjJfNS4xODgyMDYwNDMzNTg0Nzg=",
+            "timestamp": 1762315320,
+            "open": {
+              "id": "QW1vdW50OjUuMTc2NzIwOTU0NjY4NDIyX1VTRA==",
+              "value": 5.176720954668422,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTg4MjA2MDQzMzU4NDc4X1VTRA==",
+              "value": 5.188206043358478,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTc2NzIwOTU0NjY4NDIyX1VTRA==",
+              "value": 5.176720954668422,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTg4MjA2MDQzMzU4NDc4X1VTRA==",
+              "value": 5.188206043358478,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTU5MjBfNS4xOTIyNDU1MDg3OTQzMTJfNS4xOTYxNjQ4MTc2MDE1NjlfNS4xODkwMTY1MDE3OTQ0MDJfNS4xODkwMTY1MDE3OTQ0MDI=",
+            "timestamp": 1762315920,
+            "open": {
+              "id": "QW1vdW50OjUuMTkyMjQ1NTA4Nzk0MzEyX1VTRA==",
+              "value": 5.192245508794312,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTk2MTY0ODE3NjAxNTY5X1VTRA==",
+              "value": 5.196164817601569,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTg5MDE2NTAxNzk0NDAyX1VTRA==",
+              "value": 5.189016501794402,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTg5MDE2NTAxNzk0NDAyX1VTRA==",
+              "value": 5.189016501794402,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTY1MjBfNS4xODkwMTY1MDE3OTQ0MDJfNS4xODkwMTY1MDE3OTQ0MDJfNS4xNzI4NjM1OTk5NjIzMTFfNS4xNzI4NjM1OTk5NjIzMTE=",
+            "timestamp": 1762316520,
+            "open": {
+              "id": "QW1vdW50OjUuMTg5MDE2NTAxNzk0NDAyX1VTRA==",
+              "value": 5.189016501794402,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTg5MDE2NTAxNzk0NDAyX1VTRA==",
+              "value": 5.189016501794402,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTcyODYzNTk5OTYyMzExX1VTRA==",
+              "value": 5.172863599962311,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTcyODYzNTk5OTYyMzExX1VTRA==",
+              "value": 5.172863599962311,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTcxMjBfNS4xNzI4NjM1OTk5NjIzMTFfNS4xNzI4NjM2OTI2MDE4NV81LjE3Mjg2MzU5OTk2MjMxMV81LjE3Mjg2MzY5MjYwMTg1",
+            "timestamp": 1762317120,
+            "open": {
+              "id": "QW1vdW50OjUuMTcyODYzNTk5OTYyMzExX1VTRA==",
+              "value": 5.172863599962311,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTcyODYzNjkyNjAxODVfVVNE",
+              "value": 5.17286369260185,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTcyODYzNTk5OTYyMzExX1VTRA==",
+              "value": 5.172863599962311,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTcyODYzNjkyNjAxODVfVVNE",
+              "value": 5.17286369260185,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTc3MjBfNS4xNzI4NjM2OTI2MDE4NV81LjE4NjYzOTM5OTQwNTQzNV81LjE3Mjg2MzY5MjYwMTg1XzUuMTgyNTA4MzM4MjM2NjAz",
+            "timestamp": 1762317720,
+            "open": {
+              "id": "QW1vdW50OjUuMTcyODYzNjkyNjAxODVfVVNE",
+              "value": 5.17286369260185,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTg2NjM5Mzk5NDA1NDM1X1VTRA==",
+              "value": 5.186639399405435,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTcyODYzNjkyNjAxODVfVVNE",
+              "value": 5.17286369260185,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTgyNTA4MzM4MjM2NjAzX1VTRA==",
+              "value": 5.182508338236603,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTgzMjBfNS4xODI1MDgzMzgyMzY2MDNfNS4xODI1MDgzMzgyMzY2MDNfNS4xNzkwNzEwMjU1NTYxMzdfNS4xNzkwNzEwMjU1NTYxMzc=",
+            "timestamp": 1762318320,
+            "open": {
+              "id": "QW1vdW50OjUuMTgyNTA4MzM4MjM2NjAzX1VTRA==",
+              "value": 5.182508338236603,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTgyNTA4MzM4MjM2NjAzX1VTRA==",
+              "value": 5.182508338236603,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTc5MDcxMDI1NTU2MTM3X1VTRA==",
+              "value": 5.179071025556137,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTc5MDcxMDI1NTU2MTM3X1VTRA==",
+              "value": 5.179071025556137,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTg5MjBfNS4xNzkwNzEwMjU1NTYxMzdfNS4xODUzODQwNjI3OTk2MTJfNS4xNzkwNzEwMjU1NTYxMzdfNS4xODUzODQwNjI3OTk2MTI=",
+            "timestamp": 1762318920,
+            "open": {
+              "id": "QW1vdW50OjUuMTc5MDcxMDI1NTU2MTM3X1VTRA==",
+              "value": 5.179071025556137,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTg1Mzg0MDYyNzk5NjEyX1VTRA==",
+              "value": 5.185384062799612,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTc5MDcxMDI1NTU2MTM3X1VTRA==",
+              "value": 5.179071025556137,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTg1Mzg0MDYyNzk5NjEyX1VTRA==",
+              "value": 5.185384062799612,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMTk1MjBfNS4xODUzODQwNjI3OTk2MTJfNS4xOTI4NTQxNDM4MjIyMV81LjE4NTM4NDA2Mjc5OTYxMl81LjE5Mjg1NDE0MzgyMjIx",
+            "timestamp": 1762319520,
+            "open": {
+              "id": "QW1vdW50OjUuMTg1Mzg0MDYyNzk5NjEyX1VTRA==",
+              "value": 5.185384062799612,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTkyODU0MTQzODIyMjFfVVNE",
+              "value": 5.19285414382221,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTg1Mzg0MDYyNzk5NjEyX1VTRA==",
+              "value": 5.185384062799612,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTkyODU0MTQzODIyMjFfVVNE",
+              "value": 5.19285414382221,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjAxMjBfNS4xOTc0Mzc4OTYxMjg2NzVfNS4xOTc0Mzc4OTYxMjg2NzVfNS4xOTY5MzY3NTg3MzY5NTFfNS4xOTY5MzY3NTg3MzY5NTE=",
+            "timestamp": 1762320120,
+            "open": {
+              "id": "QW1vdW50OjUuMTk3NDM3ODk2MTI4Njc1X1VTRA==",
+              "value": 5.197437896128675,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTk3NDM3ODk2MTI4Njc1X1VTRA==",
+              "value": 5.197437896128675,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTk2OTM2NzU4NzM2OTUxX1VTRA==",
+              "value": 5.196936758736951,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTk2OTM2NzU4NzM2OTUxX1VTRA==",
+              "value": 5.196936758736951,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjA3MjBfNS4xOTY5MzY3NTg3MzY5NTFfNS4xOTkyMDczNzA1NjYyMzA1XzUuMTk2OTM2NzU4NzM2OTUxXzUuMTk5MjA3MzcwNTY2MjMwNQ==",
+            "timestamp": 1762320720,
+            "open": {
+              "id": "QW1vdW50OjUuMTk2OTM2NzU4NzM2OTUxX1VTRA==",
+              "value": 5.196936758736951,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTk5MjA3MzcwNTY2MjMwNV9VU0Q=",
+              "value": 5.1992073705662305,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTk2OTM2NzU4NzM2OTUxX1VTRA==",
+              "value": 5.196936758736951,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTk5MjA3MzcwNTY2MjMwNV9VU0Q=",
+              "value": 5.1992073705662305,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjEzMjBfNS4xOTkyMDczNzA1NjYyMzA1XzUuMTk5MjA3MzcwNTY2MjMwNV81LjE5MzI1MDgxMzQ2OTE5Ml81LjE5MzI1MDgxMzQ2OTE5Mg==",
+            "timestamp": 1762321320,
+            "open": {
+              "id": "QW1vdW50OjUuMTk5MjA3MzcwNTY2MjMwNV9VU0Q=",
+              "value": 5.1992073705662305,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTk5MjA3MzcwNTY2MjMwNV9VU0Q=",
+              "value": 5.1992073705662305,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTkzMjUwODEzNDY5MTkyX1VTRA==",
+              "value": 5.193250813469192,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTkzMjUwODEzNDY5MTkyX1VTRA==",
+              "value": 5.193250813469192,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjE5MjBfNS4xOTMyNTA4MTM0NjkxOTJfNS4xOTc0NDA1MzQ4NzQ2Mjc1XzUuMTkzMjUwODEzNDY5MTkyXzUuMTk3NDQwNTM0ODc0NjI3NQ==",
+            "timestamp": 1762321920,
+            "open": {
+              "id": "QW1vdW50OjUuMTkzMjUwODEzNDY5MTkyX1VTRA==",
+              "value": 5.193250813469192,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTk3NDQwNTM0ODc0NjI3NV9VU0Q=",
+              "value": 5.1974405348746275,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTkzMjUwODEzNDY5MTkyX1VTRA==",
+              "value": 5.193250813469192,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTk3NDQwNTM0ODc0NjI3NV9VU0Q=",
+              "value": 5.1974405348746275,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjI1MjBfNS4xOTc0NDA1MzQ4NzQ2Mjc1XzUuMTk3NDQwNTM0ODc0NjI3NV81LjE4Mzc5MDk2MDI0MzU0NV81LjE4Mzc5MDk2MDI0MzU0NQ==",
+            "timestamp": 1762322520,
+            "open": {
+              "id": "QW1vdW50OjUuMTk3NDQwNTM0ODc0NjI3NV9VU0Q=",
+              "value": 5.1974405348746275,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTk3NDQwNTM0ODc0NjI3NV9VU0Q=",
+              "value": 5.1974405348746275,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTgzNzkwOTYwMjQzNTQ1X1VTRA==",
+              "value": 5.183790960243545,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTgzNzkwOTYwMjQzNTQ1X1VTRA==",
+              "value": 5.183790960243545,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjMxMjBfNS4xODM3OTA5NjAyNDM1NDVfNS4xODM3OTA5NjAyNDM1NDVfNS4xNTIxNTMwNzkxMTY0MTdfNS4xNjYzMDAwOTA0OTA0ODY=",
+            "timestamp": 1762323120,
+            "open": {
+              "id": "QW1vdW50OjUuMTgzNzkwOTYwMjQzNTQ1X1VTRA==",
+              "value": 5.183790960243545,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTgzNzkwOTYwMjQzNTQ1X1VTRA==",
+              "value": 5.183790960243545,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTUyMTUzMDc5MTE2NDE3X1VTRA==",
+              "value": 5.152153079116417,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTY2MzAwMDkwNDkwNDg2X1VTRA==",
+              "value": 5.166300090490486,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjM3MjBfNS4xNjYzMDAwOTA0OTA0ODZfNS4xNjYzMDAwOTA0OTA0ODZfNS4xNjYzMDAwOTA0OTA0ODZfNS4xNjYzMDAwOTA0OTA0ODY=",
+            "timestamp": 1762323720,
+            "open": {
+              "id": "QW1vdW50OjUuMTY2MzAwMDkwNDkwNDg2X1VTRA==",
+              "value": 5.166300090490486,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTY2MzAwMDkwNDkwNDg2X1VTRA==",
+              "value": 5.166300090490486,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTY2MzAwMDkwNDkwNDg2X1VTRA==",
+              "value": 5.166300090490486,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTY2MzAwMDkwNDkwNDg2X1VTRA==",
+              "value": 5.166300090490486,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjQzMjBfNS4xNjYzMDAwOTA0OTA0ODZfNS4xOTc4ODk2OTM3ODUxOTVfNS4xNjYzMDAwOTA0OTA0ODZfNS4xOTc4ODk2OTM3ODUxOTU=",
+            "timestamp": 1762324320,
+            "open": {
+              "id": "QW1vdW50OjUuMTY2MzAwMDkwNDkwNDg2X1VTRA==",
+              "value": 5.166300090490486,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTk3ODg5NjkzNzg1MTk1X1VTRA==",
+              "value": 5.197889693785195,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTY2MzAwMDkwNDkwNDg2X1VTRA==",
+              "value": 5.166300090490486,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTk3ODg5NjkzNzg1MTk1X1VTRA==",
+              "value": 5.197889693785195,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjQ5MjBfNS4xOTc4ODk2OTM3ODUxOTVfNS4xOTc4ODk3NDA4NTkxMzVfNS4xOTc4ODk2OTM3ODUxOTVfNS4xOTc4ODk3NDA4NTkxMzU=",
+            "timestamp": 1762324920,
+            "open": {
+              "id": "QW1vdW50OjUuMTk3ODg5NjkzNzg1MTk1X1VTRA==",
+              "value": 5.197889693785195,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTk3ODg5NzQwODU5MTM1X1VTRA==",
+              "value": 5.197889740859135,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTk3ODg5NjkzNzg1MTk1X1VTRA==",
+              "value": 5.197889693785195,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTk3ODg5NzQwODU5MTM1X1VTRA==",
+              "value": 5.197889740859135,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjU1MjBfNS4xOTc4ODk3NDA4NTkxMzVfNS4xOTc4OTAwNDE3NzYwNDJfNS4xOTczMzE0MDc3NjA2MzlfNS4xOTczMzE0MDc3NjA2Mzk=",
+            "timestamp": 1762325520,
+            "open": {
+              "id": "QW1vdW50OjUuMTk3ODg5NzQwODU5MTM1X1VTRA==",
+              "value": 5.197889740859135,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTk3ODkwMDQxNzc2MDQyX1VTRA==",
+              "value": 5.197890041776042,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTk3MzMxNDA3NzYwNjM5X1VTRA==",
+              "value": 5.197331407760639,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTk3MzMxNDA3NzYwNjM5X1VTRA==",
+              "value": 5.197331407760639,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjYxMjBfNS4xOTczMzE0MDc3NjA2MzlfNS4xOTczMzE0MDc3NjA2MzlfNS4xOTczMzE0MDc3NjA2MzlfNS4xOTczMzE0MDc3NjA2Mzk=",
+            "timestamp": 1762326120,
+            "open": {
+              "id": "QW1vdW50OjUuMTk3MzMxNDA3NzYwNjM5X1VTRA==",
+              "value": 5.197331407760639,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTk3MzMxNDA3NzYwNjM5X1VTRA==",
+              "value": 5.197331407760639,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTk3MzMxNDA3NzYwNjM5X1VTRA==",
+              "value": 5.197331407760639,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTk3MzMxNDA3NzYwNjM5X1VTRA==",
+              "value": 5.197331407760639,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjY3MjBfNS4xOTczMzE0MDc3NjA2MzlfNS4xOTczMzE0MDc3NjA2MzlfNS4xOTEzMDc0MjI4NzIzOF81LjE5MTMwNzQyMjg3MjM4",
+            "timestamp": 1762326720,
+            "open": {
+              "id": "QW1vdW50OjUuMTk3MzMxNDA3NzYwNjM5X1VTRA==",
+              "value": 5.197331407760639,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTk3MzMxNDA3NzYwNjM5X1VTRA==",
+              "value": 5.197331407760639,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTkxMzA3NDIyODcyMzhfVVNE",
+              "value": 5.19130742287238,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTkxMzA3NDIyODcyMzhfVVNE",
+              "value": 5.19130742287238,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjczMjBfNS4xODE3OTc4MDI2NDk5MTg1XzUuMjA4NTc5NjE3NjI1NjM3XzUuMTY2MjkzOTY3NTgwMDc2XzUuMTcxNDIyMTg1MjkzNDY0",
+            "timestamp": 1762327320,
+            "open": {
+              "id": "QW1vdW50OjUuMTgxNzk3ODAyNjQ5OTE4NV9VU0Q=",
+              "value": 5.1817978026499185,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjA4NTc5NjE3NjI1NjM3X1VTRA==",
+              "value": 5.208579617625637,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTY2MjkzOTY3NTgwMDc2X1VTRA==",
+              "value": 5.166293967580076,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTcxNDIyMTg1MjkzNDY0X1VTRA==",
+              "value": 5.171422185293464,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjc5MjBfNS4xNzE0MjIxODUyOTM0NjRfNS4xODU1Mzg1NjI0NDU0NzFfNS4xNzAwMzQ4Mzc3MjAwMDVfNS4xODU1Mzg1NjI0NDU0NzE=",
+            "timestamp": 1762327920,
+            "open": {
+              "id": "QW1vdW50OjUuMTcxNDIyMTg1MjkzNDY0X1VTRA==",
+              "value": 5.171422185293464,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTg1NTM4NTYyNDQ1NDcxX1VTRA==",
+              "value": 5.185538562445471,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTcwMDM0ODM3NzIwMDA1X1VTRA==",
+              "value": 5.170034837720005,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTg1NTM4NTYyNDQ1NDcxX1VTRA==",
+              "value": 5.185538562445471,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjg1MjBfNS4xODU1Mzg1NjI0NDU0NzFfNS4xODg1ODAxMjAwMzA1MTRfNS4xODU1Mzg1NjI0NDU0NzFfNS4xODg1ODAxMjAwMzA1MTQ=",
+            "timestamp": 1762328520,
+            "open": {
+              "id": "QW1vdW50OjUuMTg1NTM4NTYyNDQ1NDcxX1VTRA==",
+              "value": 5.185538562445471,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTg4NTgwMTIwMDMwNTE0X1VTRA==",
+              "value": 5.188580120030514,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTg1NTM4NTYyNDQ1NDcxX1VTRA==",
+              "value": 5.185538562445471,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTg4NTgwMTIwMDMwNTE0X1VTRA==",
+              "value": 5.188580120030514,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjkxMjBfNS4xODg1ODAxMjAwMzA1MTRfNS4yMDQwNTEzNzU5NjYyMTZfNS4xODg1ODAxMjAwMzA1MTRfNS4yMDQwNTEzNzU5NjYyMTY=",
+            "timestamp": 1762329120,
+            "open": {
+              "id": "QW1vdW50OjUuMTg4NTgwMTIwMDMwNTE0X1VTRA==",
+              "value": 5.188580120030514,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjA0MDUxMzc1OTY2MjE2X1VTRA==",
+              "value": 5.204051375966216,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTg4NTgwMTIwMDMwNTE0X1VTRA==",
+              "value": 5.188580120030514,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjA0MDUxMzc1OTY2MjE2X1VTRA==",
+              "value": 5.204051375966216,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMjk3MjBfNS4yMDQwNTEzNzU5NjYyMTZfNS4yMjI3NDIzNzkwMjU5MzdfNS4xOTYyMjQ4NjA5MzY2MzFfNS4yMjIzNTExMzgyNDUwMDY=",
+            "timestamp": 1762329720,
+            "open": {
+              "id": "QW1vdW50OjUuMjA0MDUxMzc1OTY2MjE2X1VTRA==",
+              "value": 5.204051375966216,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjIyNzQyMzc5MDI1OTM3X1VTRA==",
+              "value": 5.222742379025937,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTk2MjI0ODYwOTM2NjMxX1VTRA==",
+              "value": 5.196224860936631,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjIyMzUxMTM4MjQ1MDA2X1VTRA==",
+              "value": 5.222351138245006,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzAzMjBfNS4yMjIzNTExMzgyNDUwMDZfNS4yMjIzNTExMzgyNDUwMDZfNS4xOTI5Mjg2NzAwMDc1N181LjE5MjkyODY3MDAwNzU3",
+            "timestamp": 1762330320,
+            "open": {
+              "id": "QW1vdW50OjUuMjIyMzUxMTM4MjQ1MDA2X1VTRA==",
+              "value": 5.222351138245006,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjIyMzUxMTM4MjQ1MDA2X1VTRA==",
+              "value": 5.222351138245006,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTkyOTI4NjcwMDA3NTdfVVNE",
+              "value": 5.19292867000757,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTkyOTI4NjcwMDA3NTdfVVNE",
+              "value": 5.19292867000757,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzA5MjBfNS4xODg1MDA1MjQ2MzY0NzhfNS4yMTYzNTQwMTE3MTc5MDFfNS4xNjcwNDE4MjQ4NzE4MzNfNS4xNzI1OTU5NzU5NzMwMDQ=",
+            "timestamp": 1762330920,
+            "open": {
+              "id": "QW1vdW50OjUuMTg4NTAwNTI0NjM2NDc4X1VTRA==",
+              "value": 5.188500524636478,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjE2MzU0MDExNzE3OTAxX1VTRA==",
+              "value": 5.216354011717901,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTY3MDQxODI0ODcxODMzX1VTRA==",
+              "value": 5.167041824871833,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTcyNTk1OTc1OTczMDA0X1VTRA==",
+              "value": 5.172595975973004,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzE1MjBfNS4xNzI1OTU5NzU5NzMwMDRfNS4xNzkyNjY5NjcxNDEyMzVfNS4xNzI1OTU5NzU5NzMwMDRfNS4xNzM5NDM4MzYwMzc2OTQ=",
+            "timestamp": 1762331520,
+            "open": {
+              "id": "QW1vdW50OjUuMTcyNTk1OTc1OTczMDA0X1VTRA==",
+              "value": 5.172595975973004,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTc5MjY2OTY3MTQxMjM1X1VTRA==",
+              "value": 5.179266967141235,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTcyNTk1OTc1OTczMDA0X1VTRA==",
+              "value": 5.172595975973004,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTczOTQzODM2MDM3Njk0X1VTRA==",
+              "value": 5.173943836037694,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzIxMjBfNS4xNzM5NDM4MzYwMzc2OTRfNS4xNzM5NDM4MzYwMzc2OTRfNS4xNDc2ODY1NDA4ODY2MTNfNS4xNTQ2NzExNjI2NDM0NDk=",
+            "timestamp": 1762332120,
+            "open": {
+              "id": "QW1vdW50OjUuMTczOTQzODM2MDM3Njk0X1VTRA==",
+              "value": 5.173943836037694,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTczOTQzODM2MDM3Njk0X1VTRA==",
+              "value": 5.173943836037694,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTQ3Njg2NTQwODg2NjEzX1VTRA==",
+              "value": 5.147686540886613,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTU0NjcxMTYyNjQzNDQ5X1VTRA==",
+              "value": 5.154671162643449,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzI3MjBfNS4xNTQ2NzExNjI2NDM0NDlfNS4xNTUxNzkxOTMyMDcyNDlfNS4xNTQ2NzExNjI2NDM0NDlfNS4xNTQ3ODQ3MTE4MjM1MTk=",
+            "timestamp": 1762332720,
+            "open": {
+              "id": "QW1vdW50OjUuMTU0NjcxMTYyNjQzNDQ5X1VTRA==",
+              "value": 5.154671162643449,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTU1MTc5MTkzMjA3MjQ5X1VTRA==",
+              "value": 5.155179193207249,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTU0NjcxMTYyNjQzNDQ5X1VTRA==",
+              "value": 5.154671162643449,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTU0Nzg0NzExODIzNTE5X1VTRA==",
+              "value": 5.154784711823519,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzMzMjBfNS4xNTQ3ODQ3MTE4MjM1MTlfNS4xNzUxODE1MjcxODM1NTFfNS4xNTQ3ODQ3MTE4MjM1MTlfNS4xNzUxODE1MjcxODM1NTE=",
+            "timestamp": 1762333320,
+            "open": {
+              "id": "QW1vdW50OjUuMTU0Nzg0NzExODIzNTE5X1VTRA==",
+              "value": 5.154784711823519,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTc1MTgxNTI3MTgzNTUxX1VTRA==",
+              "value": 5.175181527183551,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTU0Nzg0NzExODIzNTE5X1VTRA==",
+              "value": 5.154784711823519,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTc1MTgxNTI3MTgzNTUxX1VTRA==",
+              "value": 5.175181527183551,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzM5MjBfNS4xNzUxODE1MjcxODM1NTFfNS4xODE0NTU3NzU1ODE1MzFfNS4xNzI4NzI5Mzk5MjY5MzJfNS4xNzI4NzI5Mzk5MjY5MzI=",
+            "timestamp": 1762333920,
+            "open": {
+              "id": "QW1vdW50OjUuMTc1MTgxNTI3MTgzNTUxX1VTRA==",
+              "value": 5.175181527183551,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTgxNDU1Nzc1NTgxNTMxX1VTRA==",
+              "value": 5.181455775581531,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTcyODcyOTM5OTI2OTMyX1VTRA==",
+              "value": 5.172872939926932,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTcyODcyOTM5OTI2OTMyX1VTRA==",
+              "value": 5.172872939926932,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzQ1MjBfNS4xNzI4NzI5Mzk5MjY5MzJfNS4xODM2MDgxMzQ4MDQ3OTNfNS4xNzI4NzI5Mzk5MjY5MzJfNS4xODM2MDgxMzQ4MDQ3OTM=",
+            "timestamp": 1762334520,
+            "open": {
+              "id": "QW1vdW50OjUuMTcyODcyOTM5OTI2OTMyX1VTRA==",
+              "value": 5.172872939926932,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTgzNjA4MTM0ODA0NzkzX1VTRA==",
+              "value": 5.183608134804793,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTcyODcyOTM5OTI2OTMyX1VTRA==",
+              "value": 5.172872939926932,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTgzNjA4MTM0ODA0NzkzX1VTRA==",
+              "value": 5.183608134804793,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzUxMjBfNS4xODM2MDgxMzQ4MDQ3OTNfNS4xODM2MDgxMzQ4MDQ3OTNfNS4xODM2MDgxMzQ4MDQ3OTNfNS4xODM2MDgxMzQ4MDQ3OTM=",
+            "timestamp": 1762335120,
+            "open": {
+              "id": "QW1vdW50OjUuMTgzNjA4MTM0ODA0NzkzX1VTRA==",
+              "value": 5.183608134804793,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTgzNjA4MTM0ODA0NzkzX1VTRA==",
+              "value": 5.183608134804793,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTgzNjA4MTM0ODA0NzkzX1VTRA==",
+              "value": 5.183608134804793,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTgzNjA4MTM0ODA0NzkzX1VTRA==",
+              "value": 5.183608134804793,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzU3MjBfNS4xODM2MDgxMzQ4MDQ3OTNfNS4xODc4OTU5NDIzNjkwOTNfNS4xODM2MDgxMzQ4MDQ3OTNfNS4xODc4OTU5NDIzNjkwOTM=",
+            "timestamp": 1762335720,
+            "open": {
+              "id": "QW1vdW50OjUuMTgzNjA4MTM0ODA0NzkzX1VTRA==",
+              "value": 5.183608134804793,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTg3ODk1OTQyMzY5MDkzX1VTRA==",
+              "value": 5.187895942369093,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTgzNjA4MTM0ODA0NzkzX1VTRA==",
+              "value": 5.183608134804793,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTg3ODk1OTQyMzY5MDkzX1VTRA==",
+              "value": 5.187895942369093,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzYzMjBfNS4xODc4OTU5NDIzNjkwOTNfNS4xOTQ1Mjc3NTQ2ODQ0NF81LjE4Nzg5NTk0MjM2OTA5M181LjE5NDUyNzc1NDY4NDQ0",
+            "timestamp": 1762336320,
+            "open": {
+              "id": "QW1vdW50OjUuMTg3ODk1OTQyMzY5MDkzX1VTRA==",
+              "value": 5.187895942369093,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTk0NTI3NzU0Njg0NDRfVVNE",
+              "value": 5.19452775468444,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTg3ODk1OTQyMzY5MDkzX1VTRA==",
+              "value": 5.187895942369093,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTk0NTI3NzU0Njg0NDRfVVNE",
+              "value": 5.19452775468444,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzY5MjBfNS4yMDA1MTc5NzA4MDAyMjlfNS4yMjQ5MzU5MTU4Nzc2NjdfNS4xODcyNzk0MTU1MTMxNjNfNS4xODcyNzk0MTU1MTMxNjM=",
+            "timestamp": 1762336920,
+            "open": {
+              "id": "QW1vdW50OjUuMjAwNTE3OTcwODAwMjI5X1VTRA==",
+              "value": 5.200517970800229,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjI0OTM1OTE1ODc3NjY3X1VTRA==",
+              "value": 5.224935915877667,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTg3Mjc5NDE1NTEzMTYzX1VTRA==",
+              "value": 5.187279415513163,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTg3Mjc5NDE1NTEzMTYzX1VTRA==",
+              "value": 5.187279415513163,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzc1MjBfNS4xODcyNzk0MTU1MTMxNjNfNS4xODcyNzk0MTU1MTMxNjNfNS4xODcyNzk0MTU1MTMxNjNfNS4xODcyNzk0MTU1MTMxNjM=",
+            "timestamp": 1762337520,
+            "open": {
+              "id": "QW1vdW50OjUuMTg3Mjc5NDE1NTEzMTYzX1VTRA==",
+              "value": 5.187279415513163,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTg3Mjc5NDE1NTEzMTYzX1VTRA==",
+              "value": 5.187279415513163,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTg3Mjc5NDE1NTEzMTYzX1VTRA==",
+              "value": 5.187279415513163,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTg3Mjc5NDE1NTEzMTYzX1VTRA==",
+              "value": 5.187279415513163,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzgxMjBfNS4xODcyNzk0MTU1MTMxNjNfNS4xODcyNzk0MTU1MTMxNjNfNS4xNzc3NTYyMTI5OTA1NDFfNS4xNzc3NTYyMTI5OTA1NDE=",
+            "timestamp": 1762338120,
+            "open": {
+              "id": "QW1vdW50OjUuMTg3Mjc5NDE1NTEzMTYzX1VTRA==",
+              "value": 5.187279415513163,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTg3Mjc5NDE1NTEzMTYzX1VTRA==",
+              "value": 5.187279415513163,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTc3NzU2MjEyOTkwNTQxX1VTRA==",
+              "value": 5.177756212990541,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTc3NzU2MjEyOTkwNTQxX1VTRA==",
+              "value": 5.177756212990541,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzg3MjBfNS4xNzc3NTYyMTI5OTA1NDFfNS4xNzc3NTYyODI0OTcwNTRfNS4xNzc3NTYyMTI5OTA1NDFfNS4xNzc3NTYyODI0OTcwNTQ=",
+            "timestamp": 1762338720,
+            "open": {
+              "id": "QW1vdW50OjUuMTc3NzU2MjEyOTkwNTQxX1VTRA==",
+              "value": 5.177756212990541,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTc3NzU2MjgyNDk3MDU0X1VTRA==",
+              "value": 5.177756282497054,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTc3NzU2MjEyOTkwNTQxX1VTRA==",
+              "value": 5.177756212990541,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTc3NzU2MjgyNDk3MDU0X1VTRA==",
+              "value": 5.177756282497054,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzkzMjBfNS4xNzc3NTYyODI0OTcwNTRfNS4xNzc3NTYyODI0OTcwNTRfNS4xNzQxOTUyMDMwNDM0MzhfNS4xNzQxOTUyMDMwNDM0Mzg=",
+            "timestamp": 1762339320,
+            "open": {
+              "id": "QW1vdW50OjUuMTc3NzU2MjgyNDk3MDU0X1VTRA==",
+              "value": 5.177756282497054,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTc3NzU2MjgyNDk3MDU0X1VTRA==",
+              "value": 5.177756282497054,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTc0MTk1MjAzMDQzNDM4X1VTRA==",
+              "value": 5.174195203043438,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTc0MTk1MjAzMDQzNDM4X1VTRA==",
+              "value": 5.174195203043438,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzMzk5MjBfNS4xNzQxOTUyMDMwNDM0MzhfNS4xNzQxOTUyMDMwNDM0MzhfNS4xNjI2MjY3NDQxMDc2XzUuMTcwODM2NDk0NDYyMjA1",
+            "timestamp": 1762339920,
+            "open": {
+              "id": "QW1vdW50OjUuMTc0MTk1MjAzMDQzNDM4X1VTRA==",
+              "value": 5.174195203043438,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTc0MTk1MjAzMDQzNDM4X1VTRA==",
+              "value": 5.174195203043438,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTYyNjI2NzQ0MTA3Nl9VU0Q=",
+              "value": 5.1626267441076,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTcwODM2NDk0NDYyMjA1X1VTRA==",
+              "value": 5.170836494462205,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDA1MjBfNS4xNzA4MzY0OTQ0NjIyMDVfNS4xNzY0NDU1NDU0ODM2MDZfNS4xNzA4MzY0OTQ0NjIyMDVfNS4xNzY0NDU1NDU0ODM2MDY=",
+            "timestamp": 1762340520,
+            "open": {
+              "id": "QW1vdW50OjUuMTcwODM2NDk0NDYyMjA1X1VTRA==",
+              "value": 5.170836494462205,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTc2NDQ1NTQ1NDgzNjA2X1VTRA==",
+              "value": 5.176445545483606,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTcwODM2NDk0NDYyMjA1X1VTRA==",
+              "value": 5.170836494462205,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTc2NDQ1NTQ1NDgzNjA2X1VTRA==",
+              "value": 5.176445545483606,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDExMjBfNS4xNzY0NDU1NDU0ODM2MDZfNS4xOTc5NTAyNjE1OTQ3MzNfNS4xNzY0NDU1NDU0ODM2MDZfNS4xOTc5NTAyNjE1OTQ3MzM=",
+            "timestamp": 1762341120,
+            "open": {
+              "id": "QW1vdW50OjUuMTc2NDQ1NTQ1NDgzNjA2X1VTRA==",
+              "value": 5.176445545483606,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMTk3OTUwMjYxNTk0NzMzX1VTRA==",
+              "value": 5.197950261594733,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTc2NDQ1NTQ1NDgzNjA2X1VTRA==",
+              "value": 5.176445545483606,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMTk3OTUwMjYxNTk0NzMzX1VTRA==",
+              "value": 5.197950261594733,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDE3MjBfNS4xOTc5NTAyNjE1OTQ3MzNfNS4yMDYwOTM3MzY2MzIyOTRfNS4xOTc5NTAyNjE1OTQ3MzNfNS4yMDYwOTM3MzY2MzIyOTQ=",
+            "timestamp": 1762341720,
+            "open": {
+              "id": "QW1vdW50OjUuMTk3OTUwMjYxNTk0NzMzX1VTRA==",
+              "value": 5.197950261594733,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjA2MDkzNzM2NjMyMjk0X1VTRA==",
+              "value": 5.206093736632294,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMTk3OTUwMjYxNTk0NzMzX1VTRA==",
+              "value": 5.197950261594733,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjA2MDkzNzM2NjMyMjk0X1VTRA==",
+              "value": 5.206093736632294,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDIzMjBfNS4yMDYwOTM3MzY2MzIyOTRfNS4yMTY2Mjg4MjYyNzYxNTlfNS4yMDYwOTM3MzY2MzIyOTRfNS4yMTY2Mjg4MjYyNzYxNTk=",
+            "timestamp": 1762342320,
+            "open": {
+              "id": "QW1vdW50OjUuMjA2MDkzNzM2NjMyMjk0X1VTRA==",
+              "value": 5.206093736632294,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjE2NjI4ODI2Mjc2MTU5X1VTRA==",
+              "value": 5.216628826276159,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjA2MDkzNzM2NjMyMjk0X1VTRA==",
+              "value": 5.206093736632294,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjE2NjI4ODI2Mjc2MTU5X1VTRA==",
+              "value": 5.216628826276159,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDI5MjBfNS4yMTY2Mjg4MjYyNzYxNTlfNS4yNDMwNDczOTc5OTU5OTZfNS4yMTY2Mjg4MjYyNzYxNTlfNS4yNDMwNDczOTc5OTU5OTY=",
+            "timestamp": 1762342920,
+            "open": {
+              "id": "QW1vdW50OjUuMjE2NjI4ODI2Mjc2MTU5X1VTRA==",
+              "value": 5.216628826276159,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjQzMDQ3Mzk3OTk1OTk2X1VTRA==",
+              "value": 5.243047397995996,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjE2NjI4ODI2Mjc2MTU5X1VTRA==",
+              "value": 5.216628826276159,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjQzMDQ3Mzk3OTk1OTk2X1VTRA==",
+              "value": 5.243047397995996,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDM1MjBfNS4yNDM2MTM3MzY0NDI0ODZfNS4yNTQ1ODY1NDcwMjU4Nzk1XzUuMjQwMTQ5NzE2NTQ0NTQ3XzUuMjQzNzQyNDQzNjM3NzI1",
+            "timestamp": 1762343520,
+            "open": {
+              "id": "QW1vdW50OjUuMjQzNjEzNzM2NDQyNDg2X1VTRA==",
+              "value": 5.243613736442486,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjU0NTg2NTQ3MDI1ODc5NV9VU0Q=",
+              "value": 5.2545865470258795,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjQwMTQ5NzE2NTQ0NTQ3X1VTRA==",
+              "value": 5.240149716544547,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjQzNzQyNDQzNjM3NzI1X1VTRA==",
+              "value": 5.243742443637725,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDQxMjBfNS4yNDc3MjM1MTIzODcyMzRfNS4yNTI4NTg3MjE3OTI0NTZfNS4yNDc3MjM1MTIzODcyMzRfNS4yNTI4NTg3MjE3OTI0NTY=",
+            "timestamp": 1762344120,
+            "open": {
+              "id": "QW1vdW50OjUuMjQ3NzIzNTEyMzg3MjM0X1VTRA==",
+              "value": 5.247723512387234,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjUyODU4NzIxNzkyNDU2X1VTRA==",
+              "value": 5.252858721792456,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjQ3NzIzNTEyMzg3MjM0X1VTRA==",
+              "value": 5.247723512387234,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjUyODU4NzIxNzkyNDU2X1VTRA==",
+              "value": 5.252858721792456,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDQ3MjBfNS4yNTI4NTg3MjE3OTI0NTZfNS4yNjE1MTQwMjAyNjgxMTlfNS4yNTI4NTg3MjE3OTI0NTZfNS4yNjE1MTQwMjAyNjgxMTk=",
+            "timestamp": 1762344720,
+            "open": {
+              "id": "QW1vdW50OjUuMjUyODU4NzIxNzkyNDU2X1VTRA==",
+              "value": 5.252858721792456,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjYxNTE0MDIwMjY4MTE5X1VTRA==",
+              "value": 5.261514020268119,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjUyODU4NzIxNzkyNDU2X1VTRA==",
+              "value": 5.252858721792456,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjYxNTE0MDIwMjY4MTE5X1VTRA==",
+              "value": 5.261514020268119,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDUzMjBfNS4yNjE1MTQwMjAyNjgxMTlfNS4yODUyOTYyODY0Nzk5MzVfNS4yNjE1MTQwMjAyNjgxMTlfNS4yNzk2OTA0MjEwNzE1MjY1",
+            "timestamp": 1762345320,
+            "open": {
+              "id": "QW1vdW50OjUuMjYxNTE0MDIwMjY4MTE5X1VTRA==",
+              "value": 5.261514020268119,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjg1Mjk2Mjg2NDc5OTM1X1VTRA==",
+              "value": 5.285296286479935,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjYxNTE0MDIwMjY4MTE5X1VTRA==",
+              "value": 5.261514020268119,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjc5NjkwNDIxMDcxNTI2NV9VU0Q=",
+              "value": 5.2796904210715265,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDU5MjBfNS4yNzk2OTA0MjEwNzE1MjY1XzUuMjc5NjkwNDIxMDcxNTI2NV81LjI3ODkxMTE0MjQyOTA2N181LjI3ODkxMTE0MjQyOTA2Nw==",
+            "timestamp": 1762345920,
+            "open": {
+              "id": "QW1vdW50OjUuMjc5NjkwNDIxMDcxNTI2NV9VU0Q=",
+              "value": 5.2796904210715265,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjc5NjkwNDIxMDcxNTI2NV9VU0Q=",
+              "value": 5.2796904210715265,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjc4OTExMTQyNDI5MDY3X1VTRA==",
+              "value": 5.278911142429067,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjc4OTExMTQyNDI5MDY3X1VTRA==",
+              "value": 5.278911142429067,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDY1MjBfNS4yNzg5MTExNDI0MjkwNjdfNS4yNzg5MTE1MDM1NDAzOTk1XzUuMjczMzUwOTQwMTYzODZfNS4yNzMzNTA5NDAxNjM4Ng==",
+            "timestamp": 1762346520,
+            "open": {
+              "id": "QW1vdW50OjUuMjc4OTExMTQyNDI5MDY3X1VTRA==",
+              "value": 5.278911142429067,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjc4OTExNTAzNTQwMzk5NV9VU0Q=",
+              "value": 5.2789115035403995,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjczMzUwOTQwMTYzODZfVVNE",
+              "value": 5.27335094016386,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjczMzUwOTQwMTYzODZfVVNE",
+              "value": 5.27335094016386,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDcxMjBfNS4yNzMzNTA5NDAxNjM4Nl81LjI3MzM1MDk0MDE2Mzg2XzUuMjcwMTIyMTA1NzA5OTY5XzUuMjcwNjY4NzM0NTkxMTU2",
+            "timestamp": 1762347120,
+            "open": {
+              "id": "QW1vdW50OjUuMjczMzUwOTQwMTYzODZfVVNE",
+              "value": 5.27335094016386,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjczMzUwOTQwMTYzODZfVVNE",
+              "value": 5.27335094016386,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjcwMTIyMTA1NzA5OTY5X1VTRA==",
+              "value": 5.270122105709969,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjcwNjY4NzM0NTkxMTU2X1VTRA==",
+              "value": 5.270668734591156,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDc3MjBfNS4yNzA2Njg3MzQ1OTExNTZfNS4yNzA2Njg3MzQ1OTExNTZfNS4yNzA2Njg3MzQ1OTExNTZfNS4yNzA2Njg3MzQ1OTExNTY=",
+            "timestamp": 1762347720,
+            "open": {
+              "id": "QW1vdW50OjUuMjcwNjY4NzM0NTkxMTU2X1VTRA==",
+              "value": 5.270668734591156,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjcwNjY4NzM0NTkxMTU2X1VTRA==",
+              "value": 5.270668734591156,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjcwNjY4NzM0NTkxMTU2X1VTRA==",
+              "value": 5.270668734591156,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjcwNjY4NzM0NTkxMTU2X1VTRA==",
+              "value": 5.270668734591156,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDgzMjBfNS4yNzA2Njg3MzQ1OTExNTZfNS4yNzA2Njg3MzQ1OTExNTZfNS4yNjA3MTczNjI0MTQyMDhfNS4yNjA3MTczNjI0MTQyMDg=",
+            "timestamp": 1762348320,
+            "open": {
+              "id": "QW1vdW50OjUuMjcwNjY4NzM0NTkxMTU2X1VTRA==",
+              "value": 5.270668734591156,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjcwNjY4NzM0NTkxMTU2X1VTRA==",
+              "value": 5.270668734591156,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjYwNzE3MzYyNDE0MjA4X1VTRA==",
+              "value": 5.260717362414208,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjYwNzE3MzYyNDE0MjA4X1VTRA==",
+              "value": 5.260717362414208,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDg5MjBfNS4yNjA3MTczNjI0MTQyMDhfNS4yNjUwNzUxMjU1ODIyNjA1XzUuMjU5NzQzMTk2MDgwODk0XzUuMjY1MDc1MTI1NTgyMjYwNQ==",
+            "timestamp": 1762348920,
+            "open": {
+              "id": "QW1vdW50OjUuMjYwNzE3MzYyNDE0MjA4X1VTRA==",
+              "value": 5.260717362414208,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjY1MDc1MTI1NTgyMjYwNV9VU0Q=",
+              "value": 5.2650751255822605,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjU5NzQzMTk2MDgwODk0X1VTRA==",
+              "value": 5.259743196080894,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjY1MDc1MTI1NTgyMjYwNV9VU0Q=",
+              "value": 5.2650751255822605,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNDk1MjBfNS4yNjUwNzUxMjU1ODIyNjA1XzUuMjY1MDc1MTI1NTgyMjYwNV81LjI2NTA3NTEyNTU4MjI2MDVfNS4yNjUwNzUxMjU1ODIyNjA1",
+            "timestamp": 1762349520,
+            "open": {
+              "id": "QW1vdW50OjUuMjY1MDc1MTI1NTgyMjYwNV9VU0Q=",
+              "value": 5.2650751255822605,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjY1MDc1MTI1NTgyMjYwNV9VU0Q=",
+              "value": 5.2650751255822605,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjY1MDc1MTI1NTgyMjYwNV9VU0Q=",
+              "value": 5.2650751255822605,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjY1MDc1MTI1NTgyMjYwNV9VU0Q=",
+              "value": 5.2650751255822605,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTAxMjBfNS4yNjUwNzUxMjU1ODIyNjA1XzUuMjk4NzYyODg0MTgwNjEwNV81LjI2NTA3NTEyNTU4MjI2MDVfNS4yOTg3NjI4ODQxODA2MTA1",
+            "timestamp": 1762350120,
+            "open": {
+              "id": "QW1vdW50OjUuMjY1MDc1MTI1NTgyMjYwNV9VU0Q=",
+              "value": 5.2650751255822605,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjk4NzYyODg0MTgwNjEwNV9VU0Q=",
+              "value": 5.2987628841806105,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjY1MDc1MTI1NTgyMjYwNV9VU0Q=",
+              "value": 5.2650751255822605,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjk4NzYyODg0MTgwNjEwNV9VU0Q=",
+              "value": 5.2987628841806105,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTA3MjBfNS4yOTg3NjI4ODQxODA2MTA1XzUuMzEwNDE3NjMwNzY1Ml81LjI5ODc2Mjg4NDE4MDYxMDVfNS4zMDc2MTEzNDQ0NjgwOTU=",
+            "timestamp": 1762350720,
+            "open": {
+              "id": "QW1vdW50OjUuMjk4NzYyODg0MTgwNjEwNV9VU0Q=",
+              "value": 5.2987628841806105,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzEwNDE3NjMwNzY1Ml9VU0Q=",
+              "value": 5.3104176307652,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjk4NzYyODg0MTgwNjEwNV9VU0Q=",
+              "value": 5.2987628841806105,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzA3NjExMzQ0NDY4MDk1X1VTRA==",
+              "value": 5.307611344468095,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTEzMjBfNS4zMDc2MTEzNDQ0NjgwOTVfNS4zMDc2MTEzNDQ0NjgwOTVfNS4zMDc2MTEzNDQ0NjgwOTVfNS4zMDc2MTEzNDQ0NjgwOTU=",
+            "timestamp": 1762351320,
+            "open": {
+              "id": "QW1vdW50OjUuMzA3NjExMzQ0NDY4MDk1X1VTRA==",
+              "value": 5.307611344468095,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzA3NjExMzQ0NDY4MDk1X1VTRA==",
+              "value": 5.307611344468095,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzA3NjExMzQ0NDY4MDk1X1VTRA==",
+              "value": 5.307611344468095,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzA3NjExMzQ0NDY4MDk1X1VTRA==",
+              "value": 5.307611344468095,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTE5MjBfNS4zMDc2MTEzNDQ0NjgwOTVfNS4zMDc2MTEzNDQ0NjgwOTVfNS4yODkwNDcxMTE0OTA2ODRfNS4yODkwNDcxMTE0OTA2ODQ=",
+            "timestamp": 1762351920,
+            "open": {
+              "id": "QW1vdW50OjUuMzA3NjExMzQ0NDY4MDk1X1VTRA==",
+              "value": 5.307611344468095,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzA3NjExMzQ0NDY4MDk1X1VTRA==",
+              "value": 5.307611344468095,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjg5MDQ3MTExNDkwNjg0X1VTRA==",
+              "value": 5.289047111490684,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjg5MDQ3MTExNDkwNjg0X1VTRA==",
+              "value": 5.289047111490684,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTI1MjBfNS4yODkwNDcxMTE0OTA2ODRfNS4yODkwNDcxMTE0OTA2ODRfNS4yNzQzMzU0Njk5MTI2MDZfNS4yNzQzMzU0Njk5MTI2MDY=",
+            "timestamp": 1762352520,
+            "open": {
+              "id": "QW1vdW50OjUuMjg5MDQ3MTExNDkwNjg0X1VTRA==",
+              "value": 5.289047111490684,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjg5MDQ3MTExNDkwNjg0X1VTRA==",
+              "value": 5.289047111490684,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjc0MzM1NDY5OTEyNjA2X1VTRA==",
+              "value": 5.274335469912606,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjc0MzM1NDY5OTEyNjA2X1VTRA==",
+              "value": 5.274335469912606,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTMxMjBfNS4yNzQ0MDc1MzEzODQ0MjVfNS4yNzQ0MDc1MzEzODQ0MjVfNS4yNTg1ODE1NjkxOTM3NDJfNS4yNTg1ODE1NjkxOTM3NDI=",
+            "timestamp": 1762353120,
+            "open": {
+              "id": "QW1vdW50OjUuMjc0NDA3NTMxMzg0NDI1X1VTRA==",
+              "value": 5.274407531384425,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjc0NDA3NTMxMzg0NDI1X1VTRA==",
+              "value": 5.274407531384425,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjU4NTgxNTY5MTkzNzQyX1VTRA==",
+              "value": 5.258581569193742,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjU4NTgxNTY5MTkzNzQyX1VTRA==",
+              "value": 5.258581569193742,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTM3MjBfNS4yNTg1ODE1NjkxOTM3NDJfNS4yNzQxNTI1NjE4NDAwMzFfNS4yNTg1ODE1NjkxOTM3NDJfNS4yNzQxNTI1NjE4NDAwMzE=",
+            "timestamp": 1762353720,
+            "open": {
+              "id": "QW1vdW50OjUuMjU4NTgxNTY5MTkzNzQyX1VTRA==",
+              "value": 5.258581569193742,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjc0MTUyNTYxODQwMDMxX1VTRA==",
+              "value": 5.274152561840031,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjU4NTgxNTY5MTkzNzQyX1VTRA==",
+              "value": 5.258581569193742,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjc0MTUyNTYxODQwMDMxX1VTRA==",
+              "value": 5.274152561840031,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTQzMjBfNS4yNzQxNTI1NjE4NDAwMzFfNS4yOTQ3MDQ3OTE5ODEyNl81LjI3NDE1MjU2MTg0MDAzMV81LjI5NDcwNDc5MTk4MTI2",
+            "timestamp": 1762354320,
+            "open": {
+              "id": "QW1vdW50OjUuMjc0MTUyNTYxODQwMDMxX1VTRA==",
+              "value": 5.274152561840031,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjk0NzA0NzkxOTgxMjZfVVNE",
+              "value": 5.29470479198126,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjc0MTUyNTYxODQwMDMxX1VTRA==",
+              "value": 5.274152561840031,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjk0NzA0NzkxOTgxMjZfVVNE",
+              "value": 5.29470479198126,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTQ5MjBfNS4yOTQ3MDQ3OTE5ODEyNl81LjI5NTAwNjM4MjYwMDU2NF81LjI4NjM2OTA1MDYxNDMzNTVfNS4yOTUwMDYzODI2MDA1NjQ=",
+            "timestamp": 1762354920,
+            "open": {
+              "id": "QW1vdW50OjUuMjk0NzA0NzkxOTgxMjZfVVNE",
+              "value": 5.29470479198126,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMjk1MDA2MzgyNjAwNTY0X1VTRA==",
+              "value": 5.295006382600564,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjg2MzY5MDUwNjE0MzM1NV9VU0Q=",
+              "value": 5.2863690506143355,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMjk1MDA2MzgyNjAwNTY0X1VTRA==",
+              "value": 5.295006382600564,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTU1MjBfNS4yOTUwMDYzODI2MDA1NjRfNS4zMjM4NTU4NTY2MzkxMjJfNS4yOTUwMDYzODI2MDA1NjRfNS4zMjM4NTU4NTY2MzkxMjI=",
+            "timestamp": 1762355520,
+            "open": {
+              "id": "QW1vdW50OjUuMjk1MDA2MzgyNjAwNTY0X1VTRA==",
+              "value": 5.295006382600564,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzIzODU1ODU2NjM5MTIyX1VTRA==",
+              "value": 5.323855856639122,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMjk1MDA2MzgyNjAwNTY0X1VTRA==",
+              "value": 5.295006382600564,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzIzODU1ODU2NjM5MTIyX1VTRA==",
+              "value": 5.323855856639122,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTYxMjBfNS4zMjM4NTU4NTY2MzkxMjJfNS4zMjM4NTU4NTY2MzkxMjJfNS4zMjM4NTU4NTY2MzkxMjJfNS4zMjM4NTU4NTY2MzkxMjI=",
+            "timestamp": 1762356120,
+            "open": {
+              "id": "QW1vdW50OjUuMzIzODU1ODU2NjM5MTIyX1VTRA==",
+              "value": 5.323855856639122,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzIzODU1ODU2NjM5MTIyX1VTRA==",
+              "value": 5.323855856639122,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzIzODU1ODU2NjM5MTIyX1VTRA==",
+              "value": 5.323855856639122,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzIzODU1ODU2NjM5MTIyX1VTRA==",
+              "value": 5.323855856639122,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTY3MjBfNS4zMjM4NTU4NTY2MzkxMjJfNS4zMjQwMjgwODEzNjk1NTc1XzUuMzIzODU1ODU2NjM5MTIyXzUuMzI0MDI4MDgxMzY5NTU3NQ==",
+            "timestamp": 1762356720,
+            "open": {
+              "id": "QW1vdW50OjUuMzIzODU1ODU2NjM5MTIyX1VTRA==",
+              "value": 5.323855856639122,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzI0MDI4MDgxMzY5NTU3NV9VU0Q=",
+              "value": 5.3240280813695575,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzIzODU1ODU2NjM5MTIyX1VTRA==",
+              "value": 5.323855856639122,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzI0MDI4MDgxMzY5NTU3NV9VU0Q=",
+              "value": 5.3240280813695575,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTczMjBfNS4zMjQwMjgwODEzNjk1NTc1XzUuMzY4MTk3MjExMTU5OTUxXzUuMzI0MDI4MDgxMzY5NTU3NV81LjM1OTI5MjYwNjEwOTU5NA==",
+            "timestamp": 1762357320,
+            "open": {
+              "id": "QW1vdW50OjUuMzI0MDI4MDgxMzY5NTU3NV9VU0Q=",
+              "value": 5.3240280813695575,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzY4MTk3MjExMTU5OTUxX1VTRA==",
+              "value": 5.368197211159951,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzI0MDI4MDgxMzY5NTU3NV9VU0Q=",
+              "value": 5.3240280813695575,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzU5MjkyNjA2MTA5NTk0X1VTRA==",
+              "value": 5.359292606109594,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTc5MjBfNS4zNTkyOTI2MDYxMDk1OTRfNS4zNjI4NDA2ODQ2NzI5NDFfNS4zNTkyOTI2MDYxMDk1OTRfNS4zNjI4NDA2ODQ2NzI5NDE=",
+            "timestamp": 1762357920,
+            "open": {
+              "id": "QW1vdW50OjUuMzU5MjkyNjA2MTA5NTk0X1VTRA==",
+              "value": 5.359292606109594,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzYyODQwNjg0NjcyOTQxX1VTRA==",
+              "value": 5.362840684672941,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzU5MjkyNjA2MTA5NTk0X1VTRA==",
+              "value": 5.359292606109594,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzYyODQwNjg0NjcyOTQxX1VTRA==",
+              "value": 5.362840684672941,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTg1MjBfNS4zNjI4NDA2ODQ2NzI5NDFfNS4zODM4Njk2NDM4MjAxMjE1XzUuMzYyODQwNjg0NjcyOTQxXzUuMzc0OTk1MTk2NjA1OTY2",
+            "timestamp": 1762358520,
+            "open": {
+              "id": "QW1vdW50OjUuMzYyODQwNjg0NjcyOTQxX1VTRA==",
+              "value": 5.362840684672941,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzgzODY5NjQzODIwMTIxNV9VU0Q=",
+              "value": 5.3838696438201215,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzYyODQwNjg0NjcyOTQxX1VTRA==",
+              "value": 5.362840684672941,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzc0OTk1MTk2NjA1OTY2X1VTRA==",
+              "value": 5.374995196605966,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTkxMjBfNS4zNzI0NzAxNjc2OTk1MzZfNS4zNzI0NzAxNjc2OTk1MzZfNS4zNDkwODE2NDk2Mjg2MDE2XzUuMzQ5MDgxNjQ5NjI4NjAxNg==",
+            "timestamp": 1762359120,
+            "open": {
+              "id": "QW1vdW50OjUuMzcyNDcwMTY3Njk5NTM2X1VTRA==",
+              "value": 5.372470167699536,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzcyNDcwMTY3Njk5NTM2X1VTRA==",
+              "value": 5.372470167699536,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzQ5MDgxNjQ5NjI4NjAxNl9VU0Q=",
+              "value": 5.3490816496286016,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzQ5MDgxNjQ5NjI4NjAxNl9VU0Q=",
+              "value": 5.3490816496286016,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNTk3MjBfNS4zNDkwODE2NDk2Mjg2MDE2XzUuMzQ5MDgxNjQ5NjI4NjAxNl81LjMzNzg2MzE0ODAzNzIzOF81LjMzNzg2NDAzMDE5NjU4MQ==",
+            "timestamp": 1762359720,
+            "open": {
+              "id": "QW1vdW50OjUuMzQ5MDgxNjQ5NjI4NjAxNl9VU0Q=",
+              "value": 5.3490816496286016,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzQ5MDgxNjQ5NjI4NjAxNl9VU0Q=",
+              "value": 5.3490816496286016,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzM3ODYzMTQ4MDM3MjM4X1VTRA==",
+              "value": 5.337863148037238,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzM3ODY0MDMwMTk2NTgxX1VTRA==",
+              "value": 5.337864030196581,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjAzMjBfNS4zMzc4NjQwMzAxOTY1ODFfNS4zNzEwMzIxOTgyODA5N181LjMzNzg2NDAzMDE5NjU4MV81LjM3MTAzMjE5ODI4MDk3",
+            "timestamp": 1762360320,
+            "open": {
+              "id": "QW1vdW50OjUuMzM3ODY0MDMwMTk2NTgxX1VTRA==",
+              "value": 5.337864030196581,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzcxMDMyMTk4MjgwOTdfVVNE",
+              "value": 5.37103219828097,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzM3ODY0MDMwMTk2NTgxX1VTRA==",
+              "value": 5.337864030196581,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzcxMDMyMTk4MjgwOTdfVVNE",
+              "value": 5.37103219828097,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjA5MjBfNS4zNzEwMzIxOTgyODA5N181LjM4NjQ1Njc1MzM5MTU0MV81LjM3MTAzMjE5ODI4MDk3XzUuMzg2NDU2NzUzMzkxNTQx",
+            "timestamp": 1762360920,
+            "open": {
+              "id": "QW1vdW50OjUuMzcxMDMyMTk4MjgwOTdfVVNE",
+              "value": 5.37103219828097,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzg2NDU2NzUzMzkxNTQxX1VTRA==",
+              "value": 5.386456753391541,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzcxMDMyMTk4MjgwOTdfVVNE",
+              "value": 5.37103219828097,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzg2NDU2NzUzMzkxNTQxX1VTRA==",
+              "value": 5.386456753391541,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjE1MjBfNS4zODY0NTY3NTMzOTE1NDFfNS40MDA1OTU1MDIwOTI3MjhfNS4zODY0NTY3NTMzOTE1NDFfNS4zOTExOTU5NzU5MTA3NjM1",
+            "timestamp": 1762361520,
+            "open": {
+              "id": "QW1vdW50OjUuMzg2NDU2NzUzMzkxNTQxX1VTRA==",
+              "value": 5.386456753391541,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDAwNTk1NTAyMDkyNzI4X1VTRA==",
+              "value": 5.400595502092728,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzg2NDU2NzUzMzkxNTQxX1VTRA==",
+              "value": 5.386456753391541,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzkxMTk1OTc1OTEwNzYzNV9VU0Q=",
+              "value": 5.3911959759107635,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjIxMjBfNS4zOTExOTU5NzU5MTA3NjM1XzUuMzkxMTk4Njk0OTczNjk2NV81LjM5MTE5NTk3NTkxMDc2MzVfNS4zOTExOTg2OTQ5NzM2OTY1",
+            "timestamp": 1762362120,
+            "open": {
+              "id": "QW1vdW50OjUuMzkxMTk1OTc1OTEwNzYzNV9VU0Q=",
+              "value": 5.3911959759107635,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzkxMTk4Njk0OTczNjk2NV9VU0Q=",
+              "value": 5.3911986949736965,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzkxMTk1OTc1OTEwNzYzNV9VU0Q=",
+              "value": 5.3911959759107635,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzkxMTk4Njk0OTczNjk2NV9VU0Q=",
+              "value": 5.3911986949736965,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjI3MjBfNS4zOTExOTg2OTQ5NzM2OTY1XzUuMzk1NTMxODA1MDg2NzYxXzUuMzkxMTk4Njk0OTczNjk2NV81LjM5NTUzMTgwNTA4Njc2MQ==",
+            "timestamp": 1762362720,
+            "open": {
+              "id": "QW1vdW50OjUuMzkxMTk4Njk0OTczNjk2NV9VU0Q=",
+              "value": 5.3911986949736965,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzk1NTMxODA1MDg2NzYxX1VTRA==",
+              "value": 5.395531805086761,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzkxMTk4Njk0OTczNjk2NV9VU0Q=",
+              "value": 5.3911986949736965,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzk1NTMxODA1MDg2NzYxX1VTRA==",
+              "value": 5.395531805086761,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjMzMjBfNS4zOTU1MzE4MDUwODY3NjFfNS4zOTcxNjgwNzY2NzkxMjFfNS4zOTU1MzE4MDUwODY3NjFfNS4zOTcxNjgwNzY2NzkxMjE=",
+            "timestamp": 1762363320,
+            "open": {
+              "id": "QW1vdW50OjUuMzk1NTMxODA1MDg2NzYxX1VTRA==",
+              "value": 5.395531805086761,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuMzk3MTY4MDc2Njc5MTIxX1VTRA==",
+              "value": 5.397168076679121,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzk1NTMxODA1MDg2NzYxX1VTRA==",
+              "value": 5.395531805086761,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuMzk3MTY4MDc2Njc5MTIxX1VTRA==",
+              "value": 5.397168076679121,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjM5MjBfNS4zOTcxNjgwNzY2NzkxMjFfNS40MDY4NzQzNjA2MDY0M181LjM5NzE2ODA3NjY3OTEyMV81LjQwNjg3NDIzOTA4NjgzOQ==",
+            "timestamp": 1762363920,
+            "open": {
+              "id": "QW1vdW50OjUuMzk3MTY4MDc2Njc5MTIxX1VTRA==",
+              "value": 5.397168076679121,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDA2ODc0MzYwNjA2NDNfVVNE",
+              "value": 5.40687436060643,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuMzk3MTY4MDc2Njc5MTIxX1VTRA==",
+              "value": 5.397168076679121,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDA2ODc0MjM5MDg2ODM5X1VTRA==",
+              "value": 5.406874239086839,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjQ1MjBfNS40MDY4NzQyMzkwODY4MzlfNS40MDY4NzQ4Mjc5NTIxNDhfNS40MDY4NzQyMzkwODY4MzlfNS40MDY4NzQ4Mjc5NTIxNDg=",
+            "timestamp": 1762364520,
+            "open": {
+              "id": "QW1vdW50OjUuNDA2ODc0MjM5MDg2ODM5X1VTRA==",
+              "value": 5.406874239086839,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDA2ODc0ODI3OTUyMTQ4X1VTRA==",
+              "value": 5.406874827952148,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDA2ODc0MjM5MDg2ODM5X1VTRA==",
+              "value": 5.406874239086839,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDA2ODc0ODI3OTUyMTQ4X1VTRA==",
+              "value": 5.406874827952148,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjUxMjBfNS40MDY4NzQ4Mjc5NTIxNDhfNS40MDY4NzQ4Mjc5NTIxNDhfNS40MDM4NjIxMTAwNTcwMjZfNS40MDM4NjIzNDA3MDEwMTI1",
+            "timestamp": 1762365120,
+            "open": {
+              "id": "QW1vdW50OjUuNDA2ODc0ODI3OTUyMTQ4X1VTRA==",
+              "value": 5.406874827952148,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDA2ODc0ODI3OTUyMTQ4X1VTRA==",
+              "value": 5.406874827952148,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDAzODYyMTEwMDU3MDI2X1VTRA==",
+              "value": 5.403862110057026,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDAzODYyMzQwNzAxMDEyNV9VU0Q=",
+              "value": 5.4038623407010125,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjU3MjBfNS40MDM4NjIzNDA3MDEwMTI1XzUuNDAzODczOTUyMjM1NDk3XzUuNDAzODYyMzQwNzAxMDEyNV81LjQwMzg3Mzk1MjIzNTQ5Nw==",
+            "timestamp": 1762365720,
+            "open": {
+              "id": "QW1vdW50OjUuNDAzODYyMzQwNzAxMDEyNV9VU0Q=",
+              "value": 5.4038623407010125,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDAzODczOTUyMjM1NDk3X1VTRA==",
+              "value": 5.403873952235497,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDAzODYyMzQwNzAxMDEyNV9VU0Q=",
+              "value": 5.4038623407010125,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDAzODczOTUyMjM1NDk3X1VTRA==",
+              "value": 5.403873952235497,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjYzMjBfNS40MDM4NzM5NTIyMzU0OTdfNS40MDkyMTg5NTUxNTQyMzg1XzUuNDAzODczOTUyMjM1NDk3XzUuNDA5MjE4OTU1MTU0MjM4NQ==",
+            "timestamp": 1762366320,
+            "open": {
+              "id": "QW1vdW50OjUuNDAzODczOTUyMjM1NDk3X1VTRA==",
+              "value": 5.403873952235497,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDA5MjE4OTU1MTU0MjM4NV9VU0Q=",
+              "value": 5.4092189551542385,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDAzODczOTUyMjM1NDk3X1VTRA==",
+              "value": 5.403873952235497,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDA5MjE4OTU1MTU0MjM4NV9VU0Q=",
+              "value": 5.4092189551542385,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjY5MjBfNS40MDkyMTg5NTUxNTQyMzg1XzUuNDMxMDkzMzkyMTA3Ml81LjQwOTIxODk1NTE1NDIzODVfNS40MzEwOTMzOTIxMDcy",
+            "timestamp": 1762366920,
+            "open": {
+              "id": "QW1vdW50OjUuNDA5MjE4OTU1MTU0MjM4NV9VU0Q=",
+              "value": 5.4092189551542385,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDMxMDkzMzkyMTA3Ml9VU0Q=",
+              "value": 5.4310933921072,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDA5MjE4OTU1MTU0MjM4NV9VU0Q=",
+              "value": 5.4092189551542385,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDMxMDkzMzkyMTA3Ml9VU0Q=",
+              "value": 5.4310933921072,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjc1MjBfNS40MzEwOTMzOTIxMDcyXzUuNDU0ODA2MzI2MzU0NTY5XzUuNDMxMDkzMzkyMTA3Ml81LjQ1NDgwNjMyNjM1NDU2OQ==",
+            "timestamp": 1762367520,
+            "open": {
+              "id": "QW1vdW50OjUuNDMxMDkzMzkyMTA3Ml9VU0Q=",
+              "value": 5.4310933921072,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDU0ODA2MzI2MzU0NTY5X1VTRA==",
+              "value": 5.454806326354569,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDMxMDkzMzkyMTA3Ml9VU0Q=",
+              "value": 5.4310933921072,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDU0ODA2MzI2MzU0NTY5X1VTRA==",
+              "value": 5.454806326354569,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjgxMjBfNS40NTQ4MDYzMjYzNTQ1NjlfNS40NjM1OTk3ODMwMjQwMTdfNS40NTQ4MDYzMjYzNTQ1NjlfNS40NjM1OTk3ODMwMjQwMTc=",
+            "timestamp": 1762368120,
+            "open": {
+              "id": "QW1vdW50OjUuNDU0ODA2MzI2MzU0NTY5X1VTRA==",
+              "value": 5.454806326354569,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDYzNTk5NzgzMDI0MDE3X1VTRA==",
+              "value": 5.463599783024017,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDU0ODA2MzI2MzU0NTY5X1VTRA==",
+              "value": 5.454806326354569,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDYzNTk5NzgzMDI0MDE3X1VTRA==",
+              "value": 5.463599783024017,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjg3MjBfNS40NjM1OTk3ODMwMjQwMTdfNS40NzYwMTEwMTg4MzQ0MjNfNS40NjM1OTk3ODMwMjQwMTdfNS40Njc5NTM2NjczMTA1OTE=",
+            "timestamp": 1762368720,
+            "open": {
+              "id": "QW1vdW50OjUuNDYzNTk5NzgzMDI0MDE3X1VTRA==",
+              "value": 5.463599783024017,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDc2MDExMDE4ODM0NDIzX1VTRA==",
+              "value": 5.476011018834423,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDYzNTk5NzgzMDI0MDE3X1VTRA==",
+              "value": 5.463599783024017,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDY3OTUzNjY3MzEwNTkxX1VTRA==",
+              "value": 5.467953667310591,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjkzMjBfNS40Njc5NTM2NjczMTA1OTFfNS40NjkyMTE0Njg3NDg2ODZfNS40NDQ0NTE5NDc3NDI4MTRfNS40NDQ0NTE5NDc3NDI4MTQ=",
+            "timestamp": 1762369320,
+            "open": {
+              "id": "QW1vdW50OjUuNDY3OTUzNjY3MzEwNTkxX1VTRA==",
+              "value": 5.467953667310591,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDY5MjExNDY4NzQ4Njg2X1VTRA==",
+              "value": 5.469211468748686,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDQ0NDUxOTQ3NzQyODE0X1VTRA==",
+              "value": 5.444451947742814,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDQ0NDUxOTQ3NzQyODE0X1VTRA==",
+              "value": 5.444451947742814,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNjk5MjBfNS40NDQ0NTE5NDc3NDI4MTRfNS40NTg5MTEyNjUwNzYzMjZfNS40NDQ0NDk5MjYyMzMyODhfNS40NTg5MTEyNjUwNzYzMjY=",
+            "timestamp": 1762369920,
+            "open": {
+              "id": "QW1vdW50OjUuNDQ0NDUxOTQ3NzQyODE0X1VTRA==",
+              "value": 5.444451947742814,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDU4OTExMjY1MDc2MzI2X1VTRA==",
+              "value": 5.458911265076326,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDQ0NDQ5OTI2MjMzMjg4X1VTRA==",
+              "value": 5.444449926233288,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDU4OTExMjY1MDc2MzI2X1VTRA==",
+              "value": 5.458911265076326,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNzA1MjBfNS40NTg5MTEyNjUwNzYzMjZfNS40NTkwMDk3OTA0NTEyNjlfNS40NTg5MTEyNjUwNzYzMjZfNS40NTg5OTg5NzU0NjM5MTY=",
+            "timestamp": 1762370520,
+            "open": {
+              "id": "QW1vdW50OjUuNDU4OTExMjY1MDc2MzI2X1VTRA==",
+              "value": 5.458911265076326,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDU5MDA5NzkwNDUxMjY5X1VTRA==",
+              "value": 5.459009790451269,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDU4OTExMjY1MDc2MzI2X1VTRA==",
+              "value": 5.458911265076326,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDU4OTk4OTc1NDYzOTE2X1VTRA==",
+              "value": 5.458998975463916,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNzExMjBfNS40NTg5OTg5NzU0NjM5MTZfNS40NzAxODgxNzg1MjMxMDhfNS40NTg5OTg5NzU0NjM5MTZfNS40NzAxODgxNzg1MjMxMDg=",
+            "timestamp": 1762371120,
+            "open": {
+              "id": "QW1vdW50OjUuNDU4OTk4OTc1NDYzOTE2X1VTRA==",
+              "value": 5.458998975463916,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDcwMTg4MTc4NTIzMTA4X1VTRA==",
+              "value": 5.470188178523108,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDU4OTk4OTc1NDYzOTE2X1VTRA==",
+              "value": 5.458998975463916,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDcwMTg4MTc4NTIzMTA4X1VTRA==",
+              "value": 5.470188178523108,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNzE3MjBfNS40NzAxODgxNzg1MjMxMDhfNS40NzAxODgxNzg1MjMxMDhfNS40NTQ0MTg2MzY4NjM4NjFfNS40NTQ0MTg2MzY4NjM4NjE=",
+            "timestamp": 1762371720,
+            "open": {
+              "id": "QW1vdW50OjUuNDcwMTg4MTc4NTIzMTA4X1VTRA==",
+              "value": 5.470188178523108,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDcwMTg4MTc4NTIzMTA4X1VTRA==",
+              "value": 5.470188178523108,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDU0NDE4NjM2ODYzODYxX1VTRA==",
+              "value": 5.454418636863861,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDU0NDE4NjM2ODYzODYxX1VTRA==",
+              "value": 5.454418636863861,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNzIzMjBfNS40NTQ0MTg2MzY4NjM4NjFfNS40NTQ0MTg2MzY4NjM4NjFfNS40NTQ0MTg2MzY4NjM4NjFfNS40NTQ0MTg2MzY4NjM4NjE=",
+            "timestamp": 1762372320,
+            "open": {
+              "id": "QW1vdW50OjUuNDU0NDE4NjM2ODYzODYxX1VTRA==",
+              "value": 5.454418636863861,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDU0NDE4NjM2ODYzODYxX1VTRA==",
+              "value": 5.454418636863861,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDU0NDE4NjM2ODYzODYxX1VTRA==",
+              "value": 5.454418636863861,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDU0NDE4NjM2ODYzODYxX1VTRA==",
+              "value": 5.454418636863861,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNzI5MjBfNS40NTQ0MTg2MzY4NjM4NjFfNS40NTg1MDM3ODY5ODM2NV81LjQ1NDA0NzI5MDI1OTQ5OV81LjQ1ODUwMzc4Njk4MzY1",
+            "timestamp": 1762372920,
+            "open": {
+              "id": "QW1vdW50OjUuNDU0NDE4NjM2ODYzODYxX1VTRA==",
+              "value": 5.454418636863861,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDU4NTAzNzg2OTgzNjVfVVNE",
+              "value": 5.45850378698365,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDU0MDQ3MjkwMjU5NDk5X1VTRA==",
+              "value": 5.454047290259499,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDU4NTAzNzg2OTgzNjVfVVNE",
+              "value": 5.45850378698365,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          },
+          {
+            "id": "VGltZXN0YW1wZWRPaGxjOjE3NjIzNzM1MjBfNS40NTg1MDM3ODY5ODM2NV81LjQ3MjE0Mzg1ODM5OTY0NV81LjQ1ODUwMzc4Njk4MzY1XzUuNDcyMTQzODU4Mzk5NjQ1",
+            "timestamp": 1762373520,
+            "open": {
+              "id": "QW1vdW50OjUuNDU4NTAzNzg2OTgzNjVfVVNE",
+              "value": 5.45850378698365,
+              "__typename": "Amount"
+            },
+            "high": {
+              "id": "QW1vdW50OjUuNDcyMTQzODU4Mzk5NjQ1X1VTRA==",
+              "value": 5.472143858399645,
+              "__typename": "Amount"
+            },
+            "low": {
+              "id": "QW1vdW50OjUuNDU4NTAzNzg2OTgzNjVfVVNE",
+              "value": 5.45850378698365,
+              "__typename": "Amount"
+            },
+            "close": {
+              "id": "QW1vdW50OjUuNDcyMTQzODU4Mzk5NjQ1X1VTRA==",
+              "value": 5.472143858399645,
+              "__typename": "Amount"
+            },
+            "__typename": "TimestampedOhlc"
+          }
+        ],
+        "__typename": "TokenMarket"
+      },
+      "__typename": "Token"
+    }
+  }
+}

@@ -1,5 +1,7 @@
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
 
+export type BidDistributionData = Map<string, string>
+
 // potentially missing clearing price
 export interface AuctionDetails {
   auctionId: string
@@ -15,6 +17,8 @@ export interface AuctionDetails {
   tickSize: string
   graduationThreshold: number
   bidTokenAddress: string
+  // TODO | Toucan: remove once token details are fetched using address
+  tokenDecimals: number // Token decimals for totalSupply conversion
 }
 
 export interface CheckpointData {
@@ -44,6 +48,25 @@ export interface AuctionProgressData {
   isGraduated: boolean
 }
 
+// TODO | Toucan - determine if this can be replaced with SDK Token type
+/**
+ * Bid token metadata used for chart calculations
+ * Note: priceFiat is fetched in USD from on-chain stablecoin data.
+ * Multi-currency display is handled at the component layer via useFiatConverter.
+ */
+export interface BidTokenInfo {
+  symbol: string
+  decimals: number
+  /** Token price in USD - converted to user's selected fiat currency at display time */
+  priceFiat: number
+}
+
+// Chart zoom state for tracking visible range and zoom status
+interface ChartZoomState {
+  visibleRange: { from: number; to: number } | null
+  isZoomed: boolean
+}
+
 interface AuctionState {
   auctionDetails: AuctionDetails | null
   checkpointData: CheckpointData | null
@@ -51,12 +74,15 @@ interface AuctionState {
   displayMode: DisplayMode
   currentBlockNumber: bigint | undefined
   progress: AuctionProgressData
+  chartZoomState: ChartZoomState
 }
 
 interface AuctionActions {
   setTokenColor: (color?: string) => void
   setDisplayMode: (mode: DisplayMode) => void
   setCurrentBlockNumberAndUpdateProgress: (blockNumber: bigint | undefined) => void
+  setChartZoomState: (state: ChartZoomState) => void
+  resetChartZoom: () => void
 }
 
 export type AuctionStoreState = AuctionState & {

@@ -12,7 +12,7 @@ ignores: [
     "babel-plugin-transform-remove-console",
     "cross-fetch",
     "@datadog/datadog-ci",
-    "@rnef/cli",
+    "dotenv",
     "expo-localization",
     "expo-linking",
     "expo-modules-core",
@@ -43,4 +43,7 @@ ignores: [
     "metro-config",
     ## used in sessions/api packages
     "expo-secure-store",
+    ## used for expo remote build caching
+    "eas-build-cache-provider",
+    "expo-dev-client",
   ]

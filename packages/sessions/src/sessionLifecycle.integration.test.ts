@@ -1,9 +1,11 @@
 import {
-  BotDetectionType,
   ChallengeResponse,
+  ChallengeType,
   DeleteSessionResponse,
+  GetChallengeTypesResponse,
   InitSessionResponse,
   IntrospectSessionResponse,
+  SignoutResponse,
   UpdateSessionResponse,
   VerifyResponse,
 } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
@@ -14,6 +16,7 @@ import {
   createMockSessionClient,
   InMemoryDeviceIdService,
   InMemorySessionStorage,
+  InMemoryUniswapIdentifierService,
   type MockEndpoints,
 } from '@universe/sessions/src/test-utils'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
@@ -21,6 +24,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 describe('Session Lifecycle Integration Tests', () => {
   let sessionStorage: InMemorySessionStorage
   let deviceIdService: InMemoryDeviceIdService
+  let uniswapIdentifierService: InMemoryUniswapIdentifierService
   let sessionService: SessionService
   let mockEndpoints: MockEndpoints
 
@@ -28,6 +32,7 @@ describe('Session Lifecycle Integration Tests', () => {
     // Initialize in-memory storage
     sessionStorage = new InMemorySessionStorage()
     deviceIdService = new InMemoryDeviceIdService()
+    uniswapIdentifierService = new InMemoryUniswapIdentifierService()
 
     // Set up mock endpoints with default responses
     mockEndpoints = {
@@ -41,7 +46,7 @@ describe('Session Lifecycle Integration Tests', () => {
       '/uniswap.platformservice.v1.SessionService/Challenge': async (): Promise<ChallengeResponse> => {
         return new ChallengeResponse({
           challengeId: 'challenge-123',
-          botDetectionType: BotDetectionType.BOT_DETECTION_TURNSTILE,
+          challengeType: ChallengeType.TURNSTILE,
           extra: { sitekey: 'test-key' },
         })
       },
@@ -59,6 +64,12 @@ describe('Session Lifecycle Integration Tests', () => {
       '/uniswap.platformservice.v1.SessionService/UpdateSession': async (): Promise<UpdateSessionResponse> => {
         return new UpdateSessionResponse({})
       },
+      '/uniswap.platformservice.v1.SessionService/GetChallengeTypes': async (): Promise<GetChallengeTypesResponse> => {
+        return new GetChallengeTypesResponse({ challengeTypes: [] })
+      },
+      '/uniswap.platformservice.v1.SessionService/Signout': async (): Promise<SignoutResponse> => {
+        return new SignoutResponse({})
+      },
     }
 
     // Create session client with test transport
@@ -73,6 +84,7 @@ describe('Session Lifecycle Integration Tests', () => {
     sessionService = createSessionService({
       sessionStorage,
       deviceIdService,
+      uniswapIdentifierService,
       sessionRepository,
     })
   })

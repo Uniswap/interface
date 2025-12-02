@@ -7,10 +7,14 @@ import {
   type ChallengeResponse,
   type DeleteSessionRequest,
   type DeleteSessionResponse,
+  type GetChallengeTypesRequest,
+  type GetChallengeTypesResponse,
   type InitSessionRequest,
   type InitSessionResponse,
   type IntrospectSessionRequest,
   type IntrospectSessionResponse,
+  type SignoutRequest,
+  type SignoutResponse,
   type UpdateSessionRequest,
   type UpdateSessionResponse,
   type VerifyRequest,
@@ -19,6 +23,7 @@ import {
 import type { DeviceIdService } from '@universe/sessions/src/device-id/types'
 import type { SessionServiceClient } from '@universe/sessions/src/session-repository/createSessionClient'
 import type { SessionState, SessionStorage } from '@universe/sessions/src/session-storage/types'
+import type { UniswapIdentifierService } from '@universe/sessions/src/uniswap-identifier/types'
 // Types for our test transport
 export interface MockEndpointHandler {
   (request: any, headers: Record<string, string>): Promise<any>
@@ -31,6 +36,8 @@ export interface MockEndpoints {
   '/uniswap.platformservice.v1.SessionService/DeleteSession': MockEndpointHandler
   '/uniswap.platformservice.v1.SessionService/IntrospectSession': MockEndpointHandler
   '/uniswap.platformservice.v1.SessionService/UpdateSession': MockEndpointHandler
+  '/uniswap.platformservice.v1.SessionService/GetChallengeTypes': MockEndpointHandler
+  '/uniswap.platformservice.v1.SessionService/Signout': MockEndpointHandler
 }
 
 // Test transport that intercepts requests and returns mock responses
@@ -105,6 +112,22 @@ export class InMemoryDeviceIdService implements DeviceIdService {
   }
 }
 
+export class InMemoryUniswapIdentifierService implements UniswapIdentifierService {
+  private identifier: string | null = null
+
+  async getUniswapIdentifier(): Promise<string | null> {
+    return this.identifier
+  }
+
+  async setUniswapIdentifier(id: string): Promise<void> {
+    this.identifier = id
+  }
+
+  async removeUniswapIdentifier(): Promise<void> {
+    this.identifier = null
+  }
+}
+
 // Create a mock session client for testing
 // eslint-disable-next-line max-params
 export function createMockSessionClient(
@@ -171,6 +194,17 @@ export function createMockSessionClient(
     ): Promise<UpdateSessionResponse> => {
       const response = await mockEndpoints['/uniswap.platformservice.v1.SessionService/UpdateSession'](request, {})
       return response as UpdateSessionResponse
+    },
+    getChallengeTypes: async (
+      request: PartialMessage<GetChallengeTypesRequest>,
+      _options?: CallOptions,
+    ): Promise<GetChallengeTypesResponse> => {
+      const response = await mockEndpoints['/uniswap.platformservice.v1.SessionService/GetChallengeTypes'](request, {})
+      return response as GetChallengeTypesResponse
+    },
+    signout: async (request: PartialMessage<SignoutRequest>, _options?: CallOptions): Promise<SignoutResponse> => {
+      const response = await mockEndpoints['/uniswap.platformservice.v1.SessionService/Signout'](request, {})
+      return response as SignoutResponse
     },
   }
 }

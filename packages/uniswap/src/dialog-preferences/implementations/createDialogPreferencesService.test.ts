@@ -1,5 +1,6 @@
 import type { StorageDriver } from 'uniswap/src/dialog-preferences'
 import { createDialogPreferencesService } from 'uniswap/src/dialog-preferences'
+import { DialogVisibilityId } from 'uniswap/src/dialog-preferences/types'
 import { logger } from 'utilities/src/logger/logger'
 
 jest.mock('utilities/src/logger/logger', () => ({
@@ -28,20 +29,20 @@ describe('createDialogPreferencesService', () => {
       mockStorage.get.mockResolvedValue(null)
       const service = createDialogPreferencesService({ storage: mockStorage })
 
-      const result = await service.shouldShowDialog('test-dialog')
+      const result = await service.shouldShowDialog(DialogVisibilityId.StorybookExample)
 
       expect(result).toBe(true)
-      expect(mockStorage.get).toHaveBeenCalledWith('uniswap-dialog_hidden_test-dialog')
+      expect(mockStorage.get).toHaveBeenCalledWith('uniswap-dialog_hidden_storybook-example')
     })
 
     it('returns false when dialog has been hidden', async () => {
       mockStorage.get.mockResolvedValue(JSON.stringify({ hidden: true }))
       const service = createDialogPreferencesService({ storage: mockStorage })
 
-      const result = await service.shouldShowDialog('test-dialog')
+      const result = await service.shouldShowDialog(DialogVisibilityId.StorybookExample)
 
       expect(result).toBe(false)
-      expect(mockStorage.get).toHaveBeenCalledWith('uniswap-dialog_hidden_test-dialog')
+      expect(mockStorage.get).toHaveBeenCalledWith('uniswap-dialog_hidden_storybook-example')
     })
 
     it('returns true when storage get fails (graceful degradation)', async () => {
@@ -49,26 +50,26 @@ describe('createDialogPreferencesService', () => {
       mockStorage.get.mockRejectedValue(error)
       const service = createDialogPreferencesService({ storage: mockStorage })
 
-      const result = await service.shouldShowDialog('test-dialog')
+      const result = await service.shouldShowDialog(DialogVisibilityId.StorybookExample)
 
       expect(result).toBe(true)
       expect(logger.error).toHaveBeenCalledWith(error, {
         tags: { file: 'createDialogPreferencesService', function: 'shouldShowDialog' },
-        extra: { dialogId: 'test-dialog' },
+        extra: { dialogId: 'storybook-example' },
       })
     })
 
     it('handles different dialog IDs independently', async () => {
       mockStorage.get.mockImplementation(async (key) => {
-        if (key === 'uniswap-dialog_hidden_dialog-a') {
+        if (key === 'uniswap-dialog_hidden_test-dialog-a') {
           return JSON.stringify({ hidden: true })
         }
         return null
       })
       const service = createDialogPreferencesService({ storage: mockStorage })
 
-      const resultA = await service.shouldShowDialog('dialog-a')
-      const resultB = await service.shouldShowDialog('dialog-b')
+      const resultA = await service.shouldShowDialog(DialogVisibilityId.TestDialogA)
+      const resultB = await service.shouldShowDialog(DialogVisibilityId.TestDialogB)
 
       expect(resultA).toBe(false)
       expect(resultB).toBe(true)
@@ -80,12 +81,20 @@ describe('createDialogPreferencesService', () => {
       mockStorage.set.mockResolvedValue(undefined)
       const service = createDialogPreferencesService({ storage: mockStorage })
 
-      await service.markDialogHidden('test-dialog')
+      await service.markDialogHidden(DialogVisibilityId.StorybookExample)
 
       expect(mockStorage.set).toHaveBeenCalledWith(
-        'uniswap-dialog_hidden_test-dialog',
+        'uniswap-dialog_hidden_storybook-example',
         JSON.stringify({ hidden: true }),
       )
+    })
+
+    it('calls onChange callback after marking dialog hidden', async () => {
+      mockStorage.set.mockResolvedValue(undefined)
+      const mockOnChange = jest.fn().mockResolvedValue(undefined)
+      const service = createDialogPreferencesService({ storage: mockStorage, onChange: mockOnChange })
+      await service.markDialogHidden(DialogVisibilityId.StorybookExample)
+      expect(mockOnChange).toHaveBeenCalledWith('storybook-example')
     })
 
     it('handles storage failures gracefully', async () => {
@@ -93,11 +102,11 @@ describe('createDialogPreferencesService', () => {
       mockStorage.set.mockRejectedValue(error)
       const service = createDialogPreferencesService({ storage: mockStorage })
 
-      await expect(service.markDialogHidden('test-dialog')).resolves.toBeUndefined()
+      await expect(service.markDialogHidden(DialogVisibilityId.StorybookExample)).resolves.toBeUndefined()
 
       expect(logger.error).toHaveBeenCalledWith(error, {
         tags: { file: 'createDialogPreferencesService', function: 'markDialogHidden' },
-        extra: { dialogId: 'test-dialog' },
+        extra: { dialogId: 'storybook-example' },
       })
     })
   })
@@ -107,9 +116,17 @@ describe('createDialogPreferencesService', () => {
       mockStorage.remove.mockResolvedValue(undefined)
       const service = createDialogPreferencesService({ storage: mockStorage })
 
-      await service.resetDialog('test-dialog')
+      await service.resetDialog(DialogVisibilityId.StorybookExample)
 
-      expect(mockStorage.remove).toHaveBeenCalledWith('uniswap-dialog_hidden_test-dialog')
+      expect(mockStorage.remove).toHaveBeenCalledWith('uniswap-dialog_hidden_storybook-example')
+    })
+
+    it('calls onChange callback after resetting dialog', async () => {
+      mockStorage.remove.mockResolvedValue(undefined)
+      const mockOnChange = jest.fn().mockResolvedValue(undefined)
+      const service = createDialogPreferencesService({ storage: mockStorage, onChange: mockOnChange })
+      await service.resetDialog(DialogVisibilityId.StorybookExample)
+      expect(mockOnChange).toHaveBeenCalledWith('storybook-example')
     })
 
     it('handles storage failures gracefully', async () => {
@@ -117,11 +134,11 @@ describe('createDialogPreferencesService', () => {
       mockStorage.remove.mockRejectedValue(error)
       const service = createDialogPreferencesService({ storage: mockStorage })
 
-      await expect(service.resetDialog('test-dialog')).resolves.toBeUndefined()
+      await expect(service.resetDialog(DialogVisibilityId.StorybookExample)).resolves.toBeUndefined()
 
       expect(logger.error).toHaveBeenCalledWith(error, {
         tags: { file: 'createDialogPreferencesService', function: 'resetDialog' },
-        extra: { dialogId: 'test-dialog' },
+        extra: { dialogId: 'storybook-example' },
       })
     })
   })
@@ -142,15 +159,15 @@ describe('createDialogPreferencesService', () => {
       const service = createDialogPreferencesService({ storage: workingStorage })
 
       // Initially should show
-      expect(await service.shouldShowDialog('workflow-test')).toBe(true)
+      expect(await service.shouldShowDialog(DialogVisibilityId.StorybookExample)).toBe(true)
 
       // Hide the dialog
-      await service.markDialogHidden('workflow-test')
-      expect(await service.shouldShowDialog('workflow-test')).toBe(false)
+      await service.markDialogHidden(DialogVisibilityId.StorybookExample)
+      expect(await service.shouldShowDialog(DialogVisibilityId.StorybookExample)).toBe(false)
 
       // Reset the dialog
-      await service.resetDialog('workflow-test')
-      expect(await service.shouldShowDialog('workflow-test')).toBe(true)
+      await service.resetDialog(DialogVisibilityId.StorybookExample)
+      expect(await service.shouldShowDialog(DialogVisibilityId.StorybookExample)).toBe(true)
     })
   })
 })

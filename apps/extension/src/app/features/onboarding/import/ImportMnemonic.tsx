@@ -234,7 +234,9 @@ export function ImportMnemonic(): JSX.Element {
                     <Flex key={index} style={styles.recoveryPhraseWord}>
                       <RecoveryPhraseWord
                         key={index + 'input'}
-                        ref={(ref) => (inputRefs[index] = ref)}
+                        ref={(ref) => {
+                          inputRefs[index] = ref
+                        }}
                         handleBlur={handleBlur}
                         handleChange={handleChange}
                         handleKeyPress={handleKeyPress}

@@ -5,7 +5,6 @@ import { wcWeb3Wallet } from 'src/features/walletConnect/walletConnectClient'
 import {
   SignRequest,
   TransactionRequest,
-  WalletConnectVerifyStatus,
   WalletGetCallsStatusRequest,
   WalletGetCapabilitiesRequest,
   WalletSendCallsRequest,
@@ -15,8 +14,15 @@ import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { EthMethod, EthSignMethod, WalletConnectEthMethod } from 'uniswap/src/features/dappRequests/types'
 import { DappRequestInfo, DappRequestType } from 'uniswap/src/types/walletConnect'
 import { hexToNumber } from 'utilities/src/addresses/hex'
+import { logger } from 'utilities/src/logger/logger'
 import { generateBatchId } from 'wallet/src/features/batchedTransactions/utils'
-import { GetCallsStatusParams, SendCallsParams } from 'wallet/src/features/dappRequests/types'
+import {
+  Capability,
+  DappVerificationStatus,
+  GetCallsStatusParams,
+  SendCallsParams,
+} from 'wallet/src/features/dappRequests/types'
+
 /**
  * Construct WalletConnect 2.0 session namespaces to complete a new pairing. Used when approving a new pairing request.
  * Assumes each namespace has been validated and is supported by the app with `validateProposalNamespaces()`.
@@ -352,23 +358,65 @@ export async function pairWithWalletConnectURI(uri: string): Promise<void | Pair
  *
  * See https://docs.reown.com/walletkit/ios/verify
  */
-export function parseVerifyStatus(verifyContext?: Verify.Context): WalletConnectVerifyStatus {
+export function parseVerifyStatus(verifyContext?: Verify.Context): DappVerificationStatus {
   if (!verifyContext) {
-    return WalletConnectVerifyStatus.Unverified
+    return DappVerificationStatus.Unverified
   }
 
   const { verified } = verifyContext
 
   // Must check for isScam first, since valid URLs can still be scams
   if (verified.validation === 'INVALID' || verified.isScam) {
-    return WalletConnectVerifyStatus.Threat
+    return DappVerificationStatus.Threat
   }
 
   if (verified.validation === 'VALID') {
-    return WalletConnectVerifyStatus.Verified
+    return DappVerificationStatus.Verified
   }
 
   // Default to unverified status to enforce stricter warning if verification information is empty
   // Also covers 'UNKNOWN' case
-  return WalletConnectVerifyStatus.Unverified
+  return DappVerificationStatus.Unverified
+}
+
+/**
+ * Converts capability objects from hex chainId format to WalletConnect-compatible scopedProperties format (CAIP-2).
+ * Used when advertising EIP-5792 capabilities during session approval.
+ *
+ * @param capabilities - Record with hex chainId keys (e.g., "0xa") and Capability values
+ * @returns scopedProperties with CAIP-2 keys (e.g., "eip155:10") or empty object if no capabilities
+ *
+ * @example
+ * convertCapabilitiesToScopedProperties({
+ *   "0xa": { atomic: { status: "supported" } },
+ *   "0x89": { atomic: { status: "unsupported" } }
+ * })
+ * // Returns:
+ * // {
+ * //   "eip155:10": { atomic: { status: "supported" } },
+ * //   "eip155:137": { atomic: { status: "unsupported" } }
+ * // }
+ */
+export function convertCapabilitiesToScopedProperties(
+  capabilities: Record<string, Capability>,
+): Record<string, Record<string, unknown>> {
+  const scopedProperties: Record<string, Record<string, unknown>> = {}
+
+  for (const [hexChainId, capability] of Object.entries(capabilities)) {
+    try {
+      const chainId = hexToNumber(hexChainId)
+      if (isNaN(chainId)) {
+        continue
+      }
+      const caip2Key = `eip155:${chainId}`
+      scopedProperties[caip2Key] = capability
+    } catch (error) {
+      logger.error(error, {
+        tags: { function: 'convertCapabilitiesToScopedProperties', file: 'walletConnect/utils.ts' },
+      })
+      continue
+    }
+  }
+
+  return scopedProperties
 }

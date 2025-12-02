@@ -393,17 +393,17 @@ window.$RefreshSig$ = () => (type) => type;</script>
         }
       }
     </style>
-  <meta property="og:title" content="USDC/WLD on Uniswap" data-rh="true">
+  <meta property="og:title" content="USDC.e/WLD on Uniswap" data-rh="true">
 <meta property="og:image" content="http://localhost:3000/api/image/pools/optimism/0xD1F1baD4c9E6c44DeC1e9bF3B94902205c5Cd6C3" data-rh="true">
 <meta property="og:image:width" content="1200" data-rh="true">
 <meta property="og:image:height" content="630" data-rh="true">
-<meta property="og:image:alt" content="USDC/WLD on Uniswap" data-rh="true">
+<meta property="og:image:alt" content="USDC.e/WLD on Uniswap" data-rh="true">
 <meta property="og:type" content="website" data-rh="true">
 <meta property="og:url" content="http://localhost:3000/explore/pools/optimism/0xD1F1baD4c9E6c44DeC1e9bF3B94902205c5Cd6C3" data-rh="true">
 <meta property="twitter:card" content="summary_large_image" data-rh="true">
-<meta property="twitter:title" content="USDC/WLD on Uniswap" data-rh="true">
+<meta property="twitter:title" content="USDC.e/WLD on Uniswap" data-rh="true">
 <meta property="twitter:image" content="http://localhost:3000/api/image/pools/optimism/0xD1F1baD4c9E6c44DeC1e9bF3B94902205c5Cd6C3" data-rh="true">
-<meta property="twitter:image:alt" content="USDC/WLD on Uniswap" data-rh="true">
+<meta property="twitter:image:alt" content="USDC.e/WLD on Uniswap" data-rh="true">
 </head>
 
   <body>

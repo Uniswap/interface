@@ -33,7 +33,7 @@ export function SwapFormCurrencyOutputPanel(): JSX.Element {
     formattedDerivedValue,
     tokenColor,
     walletNeedsRestore,
-    isBridge,
+    isCrossChain,
     trade,
     onSetPresetValue,
     onToggleIsFiatMode,
@@ -58,7 +58,7 @@ export function SwapFormCurrencyOutputPanel(): JSX.Element {
     formattedDerivedValue: s.formattedDerivedValue,
     tokenColor: s.tokenColor,
     walletNeedsRestore: s.walletNeedsRestore,
-    isBridge: s.isBridge,
+    isCrossChain: s.isCrossChain,
     trade: s.trade,
     onSetPresetValue: s.onSetPresetValue,
     onToggleIsFiatMode: s.onToggleIsFiatMode,
@@ -93,7 +93,7 @@ export function SwapFormCurrencyOutputPanel(): JSX.Element {
           value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
           valueIsIndicative={!exactFieldIsOutput && trade.indicativeTrade && !trade.trade}
           tokenColor={tokenColor}
-          onPressDisabled={isBridge ? undefined : showTemporaryExactOutputUnavailableWarning}
+          onPressDisabled={isCrossChain ? undefined : showTemporaryExactOutputUnavailableWarning}
           onPressIn={onFocusOutput}
           onSelectionChange={onOutputSelectionChange}
           onSetExactAmount={onSetExactAmountOutput}

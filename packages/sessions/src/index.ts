@@ -11,6 +11,9 @@
 // Device ID
 export { createDeviceIdService } from '@universe/sessions/src/device-id/createDeviceIdService'
 export type { DeviceIdService } from '@universe/sessions/src/device-id/types'
+// Uniswap Identifier
+export { createUniswapIdentifierService } from '@universe/sessions/src/uniswap-identifier/createUniswapIdentifierService'
+export type { UniswapIdentifierService } from '@universe/sessions/src/uniswap-identifier/types'
 // Session Repository
 export { createSessionRepository } from '@universe/sessions/src/session-repository/createSessionRepository'
 export type { SessionRepository } from '@universe/sessions/src/session-repository/types'
@@ -52,10 +55,11 @@ export { createTurnstileMockSolver } from '@universe/sessions/src/challenge-solv
 export { createHashcashMockSolver } from '@universe/sessions/src/challenge-solvers/createHashcashMockSolver'
 export { createNoneMockSolver } from '@universe/sessions/src/challenge-solvers/createNoneMockSolver'
 export { createTurnstileSolver } from '@universe/sessions/src/challenge-solvers/createTurnstileSolver'
+export { createHashcashSolver } from '@universe/sessions/src/challenge-solvers/createHashcashSolver'
 export type {
   ChallengeSolver,
   ChallengeSolverService,
   ChallengeData,
 } from '@universe/sessions/src/challenge-solvers/types'
 
-export { BotDetectionType } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
+export { ChallengeType } from '@universe/sessions/src/session-service/types'

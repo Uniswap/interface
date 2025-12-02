@@ -1,0 +1,152 @@
+diff --git a/dist/extractor/concatClassName.js b/dist/extractor/concatClassName.js
+index 707d78c8a4f9d10836087392660b01a78e33b05e..1c1fdb51faa119c354d985131498e669112a9c7b 100644
+--- a/dist/extractor/concatClassName.js
++++ b/dist/extractor/concatClassName.js
+@@ -18,7 +18,7 @@ __export(concatClassName_exports, {
+ });
+ module.exports = __toCommonJS(concatClassName_exports);
+ function concatClassName(_cn) {
+-  const args = arguments, usedPrefixes = /* @__PURE__ */ new Set();
++  const args = arguments, usedPrefixes = [];
+   let final = "";
+   const len = args.length;
+   let propObjects = null;
+@@ -42,10 +42,10 @@ function concatClassName(_cn) {
+         final = name + " " + final;
+         continue;
+       }
+-      const isMediaQuery = name[splitIndex + 1] === "_", styleKey = name.slice(1, name.indexOf("-")), mediaKey = isMediaQuery ? name.slice(splitIndex + 2, splitIndex + 7) : null, uid = mediaKey ? styleKey + mediaKey : styleKey;
+-      if (usedPrefixes.has(uid))
++      const isMediaQuery = name[splitIndex + 1] === "_", styleKey = name.slice(1, name.lastIndexOf("-")), mediaKey = isMediaQuery ? name.slice(splitIndex + 2, splitIndex + 7) : null, uid = mediaKey ? styleKey + mediaKey : styleKey;
++      if (usedPrefixes.indexOf(uid) > -1)
+         continue;
+-      usedPrefixes.add(uid);
++      usedPrefixes.push(uid);
+       const propName = styleKey;
+       propName && propObjects && propObjects.some((po) => {
+         if (mediaKey) {
+@@ -56,7 +56,7 @@ function concatClassName(_cn) {
+       }) || (final = name + " " + final);
+     }
+   }
+-  return final.trim();
++  return final;
+ }
+ const pseudoInvert = {
+   hover: "hoverStyle",
+diff --git a/dist/extractor/concatClassName.mjs b/dist/extractor/concatClassName.mjs
+index c07180192a4b573accba9454bd839bae0d0ba28f..df0127e10c88fb938fd476e04f680aede7cb0f4b 100644
+--- a/dist/extractor/concatClassName.mjs
++++ b/dist/extractor/concatClassName.mjs
+@@ -25,7 +25,7 @@ __export(concatClassName_exports, {
+ module.exports = __toCommonJS(concatClassName_exports);
+ function concatClassName(_cn) {
+   const args = arguments,
+-    usedPrefixes = /* @__PURE__ */new Set();
++    usedPrefixes = [];
+   let final = "";
+   const len = args.length;
+   let propObjects = null;
+@@ -51,11 +51,11 @@ function concatClassName(_cn) {
+         continue;
+       }
+       const isMediaQuery = name[splitIndex + 1] === "_",
+-        styleKey = name.slice(1, name.indexOf("-")),
++        styleKey = name.slice(1, name.lastIndexOf("-")),
+         mediaKey = isMediaQuery ? name.slice(splitIndex + 2, splitIndex + 7) : null,
+         uid = mediaKey ? styleKey + mediaKey : styleKey;
+-      if (usedPrefixes.has(uid)) continue;
+-      usedPrefixes.add(uid);
++      if (usedPrefixes.indexOf(uid) > -1) continue;
++      usedPrefixes.push(uid);
+       const propName = styleKey;
+       propName && propObjects && propObjects.some(po => {
+         if (mediaKey) {
+@@ -66,7 +66,7 @@ function concatClassName(_cn) {
+       }) || (final = name + " " + final);
+     }
+   }
+-  return final.trim();
++  return final;
+ }
+ const pseudoInvert = {
+   hover: "hoverStyle",
+diff --git a/dist/extractor/extractToClassNames.js b/dist/extractor/extractToClassNames.js
+index 5c4b6f5d7223e48d962c7304b57edbd4a5f6d5a0..3808fe7659cf4d5b26482debebec28b8a3886150 100644
+--- a/dist/extractor/extractToClassNames.js
++++ b/dist/extractor/extractToClassNames.js
+@@ -38,7 +38,7 @@ async function extractToClassNames({
+   const tm = (0, import_timer.timer)(), { getCSSStylesAtomic, createMediaStyle } = (0, import_requireTamaguiCore.requireTamaguiCore)("web");
+   if (sourcePath.includes("node_modules"))
+     return null;
+-  if (shouldPrintDebug && console.warn(`--- ${sourcePath} --- 
++  if (shouldPrintDebug && console.warn(`--- ${sourcePath} ---
+ 
+ `), typeof source != "string")
+     throw new Error("`source` must be a string of javascript");
+@@ -243,7 +243,9 @@ async function extractToClassNames({
+           if (!ternary.consequent) continue;
+           const classNames = addStyles(ternary.consequent);
+           ternary.fontFamily && classNames.unshift(`font_${ternary.fontFamily}`);
+-          const baseString = t.isStringLiteral(baseClassNameExpression) ? baseClassNameExpression.value : "", fullClassNameWithDups = (baseString ? `${baseString} ` : "") + classNames.join(" "), fullClassName = (0, import_concatClassName.concatClassName)(fullClassNameWithDups), classNameLiteral = t.stringLiteral(fullClassName);
++          const baseString = t.isStringLiteral(baseClassNameExpression) ? baseClassNameExpression.value : "", fullClassName = (0, import_concatClassName.concatClassName)(
++            (baseString ? `${baseString} ` : "") + classNames.join(" ")
++          ), classNameLiteral = t.stringLiteral(fullClassName);
+           ternaryClassNameExpr ? ternaryClassNameExpr = t.conditionalExpression(
+             ternary.test,
+             classNameLiteral,
+@@ -283,14 +285,14 @@ async function extractToClassNames({
+   );
+   return shouldPrintDebug && (console.info(
+     `
+- -------- output code ------- 
++ -------- output code -------
+ 
+ `,
+     result.code.split(`
+ `).filter((x) => !x.startsWith("//")).join(`
+ `)
+   ), console.info(`
+- -------- output style -------- 
++ -------- output style --------
+ 
+ `, styles)), printLog(res), {
+     ast,
+diff --git a/dist/extractor/extractToClassNames.mjs b/dist/extractor/extractToClassNames.mjs
+index e07ac40389c6cea5eadcc68bcac2f2ebb3ffdb2f..ef04a032c10efe9b59bc365d46ddcc8b39c0f019 100644
+--- a/dist/extractor/extractToClassNames.mjs
++++ b/dist/extractor/extractToClassNames.mjs
+@@ -63,7 +63,7 @@ async function extractToClassNames({
+       createMediaStyle
+     } = (0, import_requireTamaguiCore.requireTamaguiCore)("web");
+   if (sourcePath.includes("node_modules")) return null;
+-  if (shouldPrintDebug && console.warn(`--- ${sourcePath} --- 
++  if (shouldPrintDebug && console.warn(`--- ${sourcePath} ---
+ 
+ `), typeof source != "string") throw new Error("`source` must be a string of javascript");
+   if (!path.isAbsolute(sourcePath)) throw new Error("`sourcePath` must be an absolute path to a .js file, got: " + sourcePath);
+@@ -232,8 +232,7 @@ async function extractToClassNames({
+           const classNames = addStyles(ternary.consequent);
+           ternary.fontFamily && classNames.unshift(`font_${ternary.fontFamily}`);
+           const baseString = t.isStringLiteral(baseClassNameExpression) ? baseClassNameExpression.value : "",
+-            fullClassNameWithDups = (baseString ? `${baseString} ` : "") + classNames.join(" "),
+-            fullClassName = (0, import_concatClassName.concatClassName)(fullClassNameWithDups),
++            fullClassName = (0, import_concatClassName.concatClassName)((baseString ? `${baseString} ` : "") + classNames.join(" ")),
+             classNameLiteral = t.stringLiteral(fullClassName);
+           ternaryClassNameExpr ? ternaryClassNameExpr = t.conditionalExpression(ternary.test, classNameLiteral, ternaryClassNameExpr) : ternaryClassNameExpr = t.conditionalExpression(ternary.test, classNameLiteral, baseClassNameExpression);
+         }
+@@ -261,12 +260,12 @@ async function extractToClassNames({
+       sourceMaps: !0
+     }, source);
+   return shouldPrintDebug && (console.info(`
+- -------- output code ------- 
++ -------- output code -------
+ 
+ `, result.code.split(`
+ `).filter(x => !x.startsWith("//")).join(`
+ `)), console.info(`
+- -------- output style -------- 
++ -------- output style --------
+ 
+ `, styles)), printLog(res), {
+     ast,
