@@ -74,12 +74,6 @@ interface AllowedSignatureData extends BaseSignatureData {
 
 type SignatureData = StandardSignatureData | AllowedSignatureData
 
-export type ERC20PermitReturnType = {
-  signatureData: SignatureData | null
-  state: UseERC20PermitState
-  gatherPermitSignature: null | (() => Promise<void>)
-}
-
 const EIP712_DOMAIN_TYPE = [
   { name: 'name', type: 'string' },
   { name: 'version', type: 'string' },
@@ -119,7 +113,11 @@ export function useERC20Permit({
   spender?: string | null
   transactionDeadline?: BigNumber
   overridePermitInfo?: PermitInfo | null
-}): ERC20PermitReturnType {
+}): {
+  signatureData: SignatureData | null
+  state: UseERC20PermitState
+  gatherPermitSignature: null | (() => Promise<void>)
+} {
   const account = useAccount()
   const provider = useEthersWeb3Provider()
   const tokenAddress = currencyAmount?.currency.isToken ? currencyAmount.currency.address : undefined

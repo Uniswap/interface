@@ -5,7 +5,6 @@ import {
 import { getLiquidityEventName } from 'components/Liquidity/analytics'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
-import { handleAtomicSendCalls } from 'state/sagas/transactions/5792'
 import {
   getDisplayableError,
   handleApprovalTransactionStep,
@@ -27,7 +26,6 @@ import { generateLPTransactionSteps } from 'uniswap/src/features/transactions/li
 import type {
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
-  IncreasePositionTransactionStepBatched,
 } from 'uniswap/src/features/transactions/liquidity/steps/increasePosition'
 import type {
   MigratePositionTransactionStep,
@@ -65,7 +63,6 @@ type LiquidityParams = {
   setSteps: (steps: TransactionStep[]) => void
   onSuccess: () => void
   onFailure: (e?: unknown) => void
-  disableOneClickSwap?: () => void
 }
 
 function* getLiquidityTxRequest(
@@ -181,13 +178,11 @@ function* handlePositionTransactionStep(params: HandlePositionStepParams) {
 
           sendAnalyticsEvent(LiquidityEventName.PriceDiscrepancyChecked, {
             ...analytics,
-            event_name: getLiquidityEventName(onChainStep.type),
             transaction_hash: hash,
             status: priceDiscrepancyResponse.status,
             sqrt_ratio_x96_before: priceDiscrepancyResponse.sqrtRatioX96Before,
             sqrt_ratio_x96_after: priceDiscrepancyResponse.sqrtRatioX96After,
             price_discrepancy: priceDiscrepancyResponse.percentPriceDifference,
-            absolute_price_discrepancy: Math.abs(Number(priceDiscrepancyResponse.percentPriceDifference)),
           })
         } catch (error) {
           // Don't break the main flow if price discrepancy call fails
@@ -202,44 +197,6 @@ function* handlePositionTransactionStep(params: HandlePositionStepParams) {
   popupRegistry.addPopup({ type: PopupType.Transaction, hash }, hash)
 }
 
-interface HandlePositionBatchedStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
-  step: IncreasePositionTransactionStepBatched
-  disableOneClickSwap?: () => void
-  action: LiquidityAction
-  analytics?:
-    | Omit<UniverseEventProperties[LiquidityEventName.AddLiquiditySubmitted], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.RemoveLiquiditySubmitted], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.MigrateLiquiditySubmitted], 'transaction_hash'>
-    | Omit<UniverseEventProperties[LiquidityEventName.CollectLiquiditySubmitted], 'transaction_hash'>
-}
-function* handlePositionTransactionBatchedStep(params: HandlePositionBatchedStepParams) {
-  const { action, step, analytics, disableOneClickSwap } = params
-
-  const info = getLiquidityTransactionInfo(action)
-
-  const batchId = yield* handleAtomicSendCalls({
-    ...params,
-    info,
-    step,
-    ignoreInterrupt: true,
-    shouldWaitForConfirmation: false,
-    disableOneClickSwap,
-  })
-
-  if (analytics) {
-    sendAnalyticsEvent(getLiquidityEventName(TransactionStepType.IncreasePositionTransaction), {
-      ...analytics,
-      transaction_hash: batchId,
-    } satisfies
-      | UniverseEventProperties[LiquidityEventName.AddLiquiditySubmitted]
-      | UniverseEventProperties[LiquidityEventName.RemoveLiquiditySubmitted]
-      | UniverseEventProperties[LiquidityEventName.MigrateLiquiditySubmitted]
-      | UniverseEventProperties[LiquidityEventName.CollectLiquiditySubmitted])
-  }
-
-  popupRegistry.addPopup({ type: PopupType.Transaction, hash: batchId }, batchId)
-}
-
 function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }) {
   const {
     account,
@@ -249,7 +206,6 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
     onSuccess,
     onFailure,
     analytics,
-    disableOneClickSwap,
   } = params
 
   let signature: string | undefined
@@ -259,15 +215,15 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
       switch (step.type) {
         case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {
-          yield* call(handleApprovalTransactionStep, { address: account.address, step, setCurrentStep })
+          yield* call(handleApprovalTransactionStep, { account, step, setCurrentStep })
           break
         }
         case TransactionStepType.Permit2Signature: {
-          signature = yield* call(handleSignatureStep, { address: account.address, step, setCurrentStep })
+          signature = yield* call(handleSignatureStep, { account, step, setCurrentStep })
           break
         }
         case TransactionStepType.Permit2Transaction: {
-          yield* call(handlePermitTransactionStep, { address: account.address, step, setCurrentStep })
+          yield* call(handlePermitTransactionStep, { account, step, setCurrentStep })
           break
         }
         case TransactionStepType.IncreasePositionTransaction:
@@ -276,24 +232,7 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
         case TransactionStepType.MigratePositionTransaction:
         case TransactionStepType.MigratePositionTransactionAsync:
         case TransactionStepType.CollectFeesTransactionStep:
-          yield* call(handlePositionTransactionStep, {
-            address: account.address,
-            step,
-            setCurrentStep,
-            action,
-            signature,
-            analytics,
-          })
-          break
-        case TransactionStepType.IncreasePositionTransactionBatched:
-          yield* call(handlePositionTransactionBatchedStep, {
-            address: account.address,
-            step,
-            setCurrentStep,
-            action,
-            analytics,
-            disableOneClickSwap,
-          })
+          yield* call(handlePositionTransactionStep, { account, step, setCurrentStep, action, signature, analytics })
           break
         default: {
           throw new Error('Unexpected step type')

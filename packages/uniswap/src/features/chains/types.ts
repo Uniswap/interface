@@ -18,7 +18,6 @@ export enum UniverseChainId {
   Blast = UniswapSDKChainId.BLAST,
   Bnb = UniswapSDKChainId.BNB,
   Celo = UniswapSDKChainId.CELO,
-  Monad = UniswapSDKChainId.MONAD,
   MonadTestnet = UniswapSDKChainId.MONAD_TESTNET,
   Optimism = UniswapSDKChainId.OPTIMISM,
   Polygon = UniswapSDKChainId.POLYGON,
@@ -130,7 +129,6 @@ export interface UniverseChainInfo extends WagmiChain {
   readonly statusPage?: string
   readonly subblockTimeMs?: number // in milliseconds, used for subblock balance checks
   readonly supportsV4: boolean
-  readonly supportsNFTs: boolean
   readonly urlParam: string
   readonly wrappedNativeCurrency: {
     name: string // 'Wrapped Ether',

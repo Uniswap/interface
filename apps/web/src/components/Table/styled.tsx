@@ -7,7 +7,7 @@ import { useAbbreviatedTimeString } from 'components/Table/utils'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
-import { styled as deprecatedStyled } from 'lib/styled-components'
+import deprecatedStyled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -52,7 +52,7 @@ export const TableBodyContainer = styled(Flex, {
   '$platform-web': {
     overscrollBehaviorX: 'none',
     overflowX: 'auto',
-    overflowY: 'auto',
+    overflowY: 'scroll',
   },
   variants: {
     v2: {
@@ -116,10 +116,7 @@ export const DataRow = styled(TableRow, {
   variants: {
     v2: {
       true: {
-        hoverStyle: {
-          backgroundColor: '$surface1Hovered',
-          transition: 'background-color 0ms',
-        },
+        hoverStyle: { backgroundColor: '$surface2Hovered' },
       },
       false: {
         hoverStyle: { backgroundColor: '$surface1Hovered' },
@@ -249,7 +246,8 @@ export const FilterHeaderRow = styled(Flex, {
   alignItems: 'center',
   userSelect: 'none',
   gap: '$gap4',
-  transition: 'all 0.1s ease-in-out',
+  animation: 'fast',
+
   ...ClickableTamaguiStyle,
 
   variants: {

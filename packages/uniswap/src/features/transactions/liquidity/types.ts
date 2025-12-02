@@ -23,13 +23,13 @@ export type LiquidityTxAndGasInfo =
   | IncreasePositionTxAndGasInfo
   | DecreasePositionTxAndGasInfo
   | CreatePositionTxAndGasInfo
-  | MigratePositionTxAndGasInfo
+  | MigrateV3PositionTxAndGasInfo
   | CollectFeesTxAndGasInfo
 export type ValidatedLiquidityTxContext =
   | ValidatedIncreasePositionTxAndGasInfo
   | ValidatedDecreasePositionTxAndGasInfo
   | ValidatedCreatePositionTxAndGasInfo
-  | ValidatedMigratePositionTxAndGasInfo
+  | ValidatedMigrateV3PositionTxAndGasInfo
   | ValidatedCollectFeesTxAndGasInfo
 
 export function isValidLiquidityTxContext(
@@ -40,7 +40,7 @@ export function isValidLiquidityTxContext(
 }
 
 interface BaseLiquidityTxAndGasInfo {
-  canBatchTransactions: boolean
+  protocolVersion: ProtocolVersion
   action: LiquidityAction
   approveToken0Request: ValidatedTransactionRequest | undefined
   approveToken1Request: ValidatedTransactionRequest | undefined
@@ -73,7 +73,7 @@ export interface CreatePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   sqrtRatioX96: string | undefined
 }
 
-export interface MigratePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
+export interface MigrateV3PositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: LiquidityTransactionType.Migrate
   migratePositionRequestArgs: TradingApi.MigrateLPPositionRequest | undefined
 }
@@ -119,7 +119,7 @@ export type ValidatedCreatePositionTxAndGasInfo = Required<CreatePositionTxAndGa
       }
   )
 
-export type ValidatedMigratePositionTxAndGasInfo = Required<MigratePositionTxAndGasInfo> &
+export type ValidatedMigrateV3PositionTxAndGasInfo = Required<MigrateV3PositionTxAndGasInfo> &
   (
     | {
         unsigned: true
@@ -168,5 +168,10 @@ function validateLiquidityTxContext(
 }
 
 function isLiquidityTx(liquidityTxContext: unknown): liquidityTxContext is LiquidityTxAndGasInfo {
-  return typeof liquidityTxContext === 'object' && liquidityTxContext !== null && 'action' in liquidityTxContext
+  return (
+    typeof liquidityTxContext === 'object' &&
+    liquidityTxContext !== null &&
+    'action' in liquidityTxContext &&
+    'protocolVersion' in liquidityTxContext
+  )
 }

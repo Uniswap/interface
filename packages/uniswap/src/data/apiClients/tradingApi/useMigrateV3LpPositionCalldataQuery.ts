@@ -19,7 +19,7 @@ export function useMigrateV3LpPositionCalldataQuery({
       if (!params) {
         throw { name: 'Params are required' }
       }
-      return await TradingApiClient.migrateV3ToV4LpPosition(params)
+      return await TradingApiClient.migrateLpPosition(params)
     },
     ...rest,
   })

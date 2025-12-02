@@ -49,15 +49,10 @@ import { SMART_WALLET_UPGRADE_FALLBACK, SMART_WALLET_UPGRADE_VIDEO } from 'ui/sr
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
-import { buildWrappedUrl } from 'uniswap/src/components/banners/shared/utils'
-import { UniswapWrapped2025Banner } from 'uniswap/src/components/banners/UniswapWrapped2025Banner/UniswapWrapped2025Banner'
 import { NFTS_TAB_DATA_DEPENDENCIES } from 'uniswap/src/components/nfts/constants'
-import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { getPortfolioQuery } from 'uniswap/src/data/rest/getPortfolio'
 import { getListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { selectHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/selectors'
-import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
@@ -65,7 +60,6 @@ import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
 import { SmartWalletCreatedModal } from 'wallet/src/components/smartWallet/modals/SmartWalletCreatedModal'
@@ -117,10 +111,6 @@ function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element
   const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
 
   const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
-  const isWrappedBannerEnabled = useFeatureFlag(FeatureFlags.UniswapWrapped2025)
-
-  const hasDismissedWrappedBanner = useSelector(selectHasDismissedUniswapWrapped2025Banner)
-  const shouldShowWrappedBanner = isWrappedBannerEnabled && !hasDismissedWrappedBanner
 
   const { showEmptyWalletState, isTabsDataLoaded } = useHomeScreenState()
 
@@ -294,20 +284,6 @@ function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element
 
   const viewOnlyLabel = t('home.warning.viewOnly')
 
-  const handleDismissWrappedBanner = useCallback(() => {
-    dispatch(setHasDismissedUniswapWrapped2025Banner(true))
-  }, [dispatch])
-
-  const handlePressWrappedBanner = useCallback(async () => {
-    try {
-      const url = buildWrappedUrl(UNISWAP_WEB_URL, activeAccount.address)
-      await openUri({ uri: url, openExternalBrowser: true })
-      dispatch(setHasDismissedUniswapWrapped2025Banner(true))
-    } catch (error) {
-      logger.error(error, { tags: { file: 'HomeScreen', function: 'handlePressWrappedBanner' } })
-    }
-  }, [activeAccount.address, dispatch])
-
   const promoBanner = useMemo(
     () => <OnboardingIntroCardStack isLoading={!isTabsDataLoaded} showEmptyWalletState={showEmptyWalletState} />,
     [showEmptyWalletState, isTabsDataLoaded],
@@ -320,26 +296,9 @@ function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element
         pb={showEmptyWalletState ? '$spacing8' : '$spacing16'}
         px={isBottomTabsEnabled ? '$none' : '$spacing12'}
       >
-        {shouldShowWrappedBanner && (
-          <Flex>
-            <UniswapWrapped2025Banner
-              handleDismiss={handleDismissWrappedBanner}
-              handlePress={handlePressWrappedBanner}
-              bannerHeight={116}
-            />
-            <Flex
-              height="$spacing24"
-              width="100%"
-              mt={-24}
-              backgroundColor="$surface1"
-              borderTopLeftRadius={24}
-              borderTopRightRadius={24}
-            />
-          </Flex>
-        )}
         <AccountHeader />
         <Flex py="$spacing20" px={isBottomTabsEnabled ? '$spacing24' : '$spacing12'}>
-          <PortfolioBalance evmOwner={activeAccount.address} />
+          <PortfolioBalance owner={activeAccount.address} />
         </Flex>
         {isSignerAccount ? (
           <HomeScreenQuickActions />
@@ -358,9 +317,6 @@ function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element
   }, [
     showEmptyWalletState,
     isBottomTabsEnabled,
-    shouldShowWrappedBanner,
-    handleDismissWrappedBanner,
-    handlePressWrappedBanner,
     activeAccount.address,
     isSignerAccount,
     onPressViewOnlyLabel,

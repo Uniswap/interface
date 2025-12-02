@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
-import { keyframes, styled } from 'lib/styled-components'
+import styled, { keyframes, useTheme } from 'lib/styled-components'
 import { parseToRgb } from 'polished'
-import { Flex, Text, useSporeColors } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 
@@ -140,12 +140,12 @@ const suffixes = [' ', 'K', 'M', 'B', 'T']
 const delineators = [',', '.']
 
 export function StatCard(props: StatCardProps) {
-  const colors = useSporeColors()
+  const theme = useTheme()
 
   return (
     <Container live={props.live}>
       <Flex row alignItems="center" gap="$gap4">
-        <Title color={props.live ? colors.statusSuccess.val : colors.neutral2.val}>{props.title}</Title>
+        <Title color={props.live ? theme.success : theme.neutral2}>{props.title}</Title>
       </Flex>
       <StringInterpolationWithMotion
         prefix={props.prefix}
@@ -161,14 +161,14 @@ export function StatCard(props: StatCardProps) {
 
 function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<StatCardProps, 'title'>) {
   const chars = value.split('')
-  const colors = useSporeColors()
+  const theme = useTheme()
   const locale = useCurrentLocale()
 
   // For Arabic locales, use simple Text component instead of animated sprites
   const isArabic = locale.startsWith('ar')
   if (isArabic) {
     return (
-      <Text variant="heading2" color={live ? colors.statusSuccess.val : colors.neutral1.val} allowFontScaling={false}>
+      <Text variant="heading2" color={live ? theme.success : theme.neutral1} allowFontScaling={false}>
         {value}
       </Text>
     )
@@ -190,14 +190,7 @@ function StringInterpolationWithMotion({ value, delay, inView, live }: Omit<Stat
               ? currency
               : suffixes
 
-        return (
-          <NumberSprite
-            char={char}
-            key={index}
-            charset={charset}
-            color={live ? colors.statusSuccess.val : colors.neutral1.val}
-          />
-        )
+        return <NumberSprite char={char} key={index} charset={charset} color={live ? theme.success : theme.neutral1} />
       })}
     </Mask>
   )

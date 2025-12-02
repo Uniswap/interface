@@ -58,7 +58,6 @@ export const CELO_CHAIN_INFO = {
   tokens,
   statusPage: undefined,
   supportsV4: true,
-  supportsNFTs: false,
   urlParam: 'celo',
   rpcUrls: {
     [RPCType.Public]: { http: [getQuicknodeEndpointUrl(UniverseChainId.Celo)] },

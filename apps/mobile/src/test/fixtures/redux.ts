@@ -14,14 +14,7 @@ type PreloadedMobileStateOptions = {
   account: Account | undefined
 }
 
-type PreloadedMobileStateFactory = (
-  overrides?: Partial<PreloadedState<MobileState> & PreloadedMobileStateOptions>,
-) => PreloadedState<MobileState>
-
-export const preloadedMobileState: PreloadedMobileStateFactory = createFixture<
-  PreloadedState<MobileState>,
-  PreloadedMobileStateOptions
->({
+export const preloadedMobileState = createFixture<PreloadedState<MobileState>, PreloadedMobileStateOptions>({
   account: undefined,
 })(({ account }) => ({
   ...preloadedWalletPackageState({ account }),

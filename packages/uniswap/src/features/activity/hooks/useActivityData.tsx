@@ -14,7 +14,6 @@ import { SwapSummaryCallbacks } from 'uniswap/src/components/activity/types'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useFormattedTransactionDataForActivity } from 'uniswap/src/features/activity/hooks/useFormattedTransactionDataForActivity'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { PaginationControls } from 'uniswap/src/features/dataApi/types'
 import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { isWebPlatform } from 'utilities/src/platform'
@@ -23,7 +22,7 @@ export type UseActivityDataProps = {
   evmOwner?: Address
   svmOwner?: Address
   ownerAddresses: Address[]
-  swapCallbacks?: SwapSummaryCallbacks
+  swapCallbacks: SwapSummaryCallbacks
   fiatOnRampParams: PartialMessage<FiatOnRampParams> | undefined
   authTrigger?: AuthTrigger
   isExternalProfile?: boolean
@@ -31,8 +30,6 @@ export type UseActivityDataProps = {
   skip?: boolean
   extraTransactions?: ActivityItem[]
   onPressEmptyState?: () => void
-  chainIds?: UniverseChainId[]
-  showLoadingOnRefetch?: boolean
 }
 
 export type ActivityRenderData = PaginationControls & {
@@ -55,8 +52,6 @@ export function useActivityData({
   fiatOnRampParams,
   skip,
   extraTransactions,
-  chainIds,
-  showLoadingOnRefetch = false,
 }: UseActivityDataProps): ActivityRenderData {
   const { t } = useTranslation()
 
@@ -80,8 +75,6 @@ export function useActivityData({
       fiatOnRampParams,
       hideSpamTokens,
       skip,
-      chainIds,
-      showLoadingOnRefetch,
     })
 
   const sectionDataWithExtra: ActivityItem[] | undefined = useMemo(() => {

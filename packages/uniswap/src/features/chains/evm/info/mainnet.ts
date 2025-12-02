@@ -93,7 +93,6 @@ export const MAINNET_CHAIN_INFO = {
   spotPriceStablecoinAmountOverride: CurrencyAmount.fromRawAmount(tokens.USDC, 100_000e6),
   tokens,
   supportsV4: true,
-  supportsNFTs: true,
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',
     symbol: 'WETH',
@@ -175,7 +174,6 @@ export const SEPOLIA_CHAIN_INFO = {
   tokens: testnetTokens,
   statusPage: undefined,
   supportsV4: true,
-  supportsNFTs: false,
   urlParam: 'ethereum_sepolia',
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',

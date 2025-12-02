@@ -5,12 +5,11 @@ import { TransactionDetails } from 'uniswap/src/features/transactions/Transactio
 import { logger } from 'utilities/src/logger/logger'
 
 export const SwapReviewWrapTransactionDetails = memo(function SwapReviewWrapTransactionDetails(): JSX.Element | null {
-  const { chainId, gasFee, reviewScreenWarning, txSimulationErrors, routing } = useSwapReviewTransactionStore((s) => ({
+  const { chainId, gasFee, reviewScreenWarning, txSimulationErrors } = useSwapReviewTransactionStore((s) => ({
     chainId: s.chainId,
     gasFee: s.gasFee,
     reviewScreenWarning: s.reviewScreenWarning,
     txSimulationErrors: s.txSimulationErrors,
-    routing: s.trade?.routing,
   }))
 
   const onShowWarning = useSwapReviewCallbacksStore((s) => s.onShowWarning)
@@ -32,7 +31,6 @@ export const SwapReviewWrapTransactionDetails = memo(function SwapReviewWrapTran
       gasFee={gasFee}
       warning={reviewScreenWarning?.warning}
       txSimulationErrors={txSimulationErrors}
-      routingType={routing}
       onShowWarning={onShowWarning}
     />
   )

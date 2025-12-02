@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { Currency } from '@uniswap/sdk-core'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Checkbox, Flex, GeneratedIcon, Text, TouchableArea } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
@@ -7,7 +8,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { ReportInput } from 'uniswap/src/components/reporting/input'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { isMobileApp, isMobileWeb, isWebPlatform } from 'utilities/src/platform'
+import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type ReportOption<T extends string> = {
@@ -18,16 +19,16 @@ export type ReportOption<T extends string> = {
 
 export type ReportModalProps<T extends string> = {
   modalName: ModalNameType
-  modalTitle: string
   icon: GeneratedIcon
   reportOptions: ReportOption<T>[]
   textOptionValue: T
+  currency?: Currency
   submitReport: ({ checkedItems, reportText }: { checkedItems: Set<T>; reportText: string }) => void
 }
 
-export function ReportModal<T extends string>({
+export function ReportTokenModal<T extends string>({
   modalName,
-  modalTitle,
+  currency,
   icon: Icon,
   reportOptions,
   textOptionValue,
@@ -40,13 +41,6 @@ export function ReportModal<T extends string>({
   const [reportText, setReportText] = useState('')
 
   const { keyboardHeight } = useBottomSheetSafeKeyboard()
-
-  // Clear form whenever a new currency is selected
-  // biome-ignore lint/correctness/useExhaustiveDependencies: we intentionally retrigger on open/close
-  useEffect(() => {
-    setCheckedItems(new Set())
-    setReportText('')
-  }, [isOpen])
 
   const handleItemPress = useEvent((option: T) => {
     setCheckedItems((prev) => {
@@ -63,7 +57,7 @@ export function ReportModal<T extends string>({
   return (
     <Modal name={modalName} isModalOpen={isOpen} onClose={onClose}>
       <Flex p={isMobileApp ? '$spacing12' : undefined} pb={keyboardHeight}>
-        {isWebPlatform && !isMobileWeb && (
+        {isWebPlatform && (
           <TouchableArea alignItems="flex-end" role="none" onPress={onClose}>
             <X size="$icon.20" color="$neutral3" />
           </TouchableArea>
@@ -73,7 +67,9 @@ export function ReportModal<T extends string>({
             <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
               <Icon size="$icon.24" color="$neutral2" />
             </Flex>
-            <Text variant="subheading1">{modalTitle}</Text>
+            <Text variant="subheading1">
+              {t('reporting.token.report.title.withSymbol', { symbol: currency?.symbol ?? '' })}
+            </Text>
           </Flex>
           <Flex gap="$spacing16">
             {reportOptions.map((option: ReportOption<T>) => {

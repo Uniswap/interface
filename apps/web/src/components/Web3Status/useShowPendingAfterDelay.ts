@@ -1,41 +1,30 @@
-import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
-import { useCallback, useMemo } from 'react'
+import { L2_TXN_DISMISS_MS } from 'constants/misc'
+import { useCallback } from 'react'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useTimeout } from 'utilities/src/time/timing'
 
-interface UseShowPendingAfterDelayParams {
-  hasPendingActivity: boolean
-  hasL1PendingActivity: boolean
-}
-
-export function useShowPendingAfterDelay({
-  hasPendingActivity,
-  hasL1PendingActivity,
-}: UseShowPendingAfterDelayParams): boolean {
+export function useShowPendingAfterDelay(hasPendingActivity: boolean, isOnlyUnichainPendingActivity: boolean): boolean {
   const {
-    value: showPendingTxAnyways,
-    setTrue: setShowPendingTxAnyways,
-    setFalse: resetShowPendingTxAnyways,
+    value: showUnichainTxAnyways,
+    setTrue: setShowUnichainTxAnyways,
+    setFalse: resetShowUnichainTxAnyways,
   } = useBooleanState(false)
 
-  // use longer delay for L1 transactions
-  const dismissDelay = useMemo(
-    () => (hasL1PendingActivity ? DEFAULT_TXN_DISMISS_MS : L2_TXN_DISMISS_MS),
-    [hasL1PendingActivity],
-  )
-
-  const showPendingTxAfterDelay = useCallback(() => {
-    if (hasPendingActivity) {
-      setShowPendingTxAnyways()
+  // needs to rerender once `isOnlyUnichainPendingActivity` is true so useTimeout starts
+  const showUnichainTxAfterDelay = useCallback(() => {
+    if (isOnlyUnichainPendingActivity && hasPendingActivity) {
+      setShowUnichainTxAnyways()
       return
     }
 
-    resetShowPendingTxAnyways()
-  }, [setShowPendingTxAnyways, resetShowPendingTxAnyways, hasPendingActivity])
+    resetShowUnichainTxAnyways()
+  }, [isOnlyUnichainPendingActivity, setShowUnichainTxAnyways, resetShowUnichainTxAnyways, hasPendingActivity])
 
-  useTimeout(showPendingTxAfterDelay, dismissDelay)
+  useTimeout(showUnichainTxAfterDelay, L2_TXN_DISMISS_MS)
 
-  const showLoadingState = hasPendingActivity && showPendingTxAnyways
+  const showLoadingState = isOnlyUnichainPendingActivity
+    ? hasPendingActivity && showUnichainTxAnyways
+    : hasPendingActivity
 
   return showLoadingState
 }

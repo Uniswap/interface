@@ -4,14 +4,20 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { EthMethod, EthSignMethod } from 'uniswap/src/features/dappRequests/types'
 import { DappRequestInfo, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
-import { Call, Capability, DappVerificationStatus } from 'wallet/src/features/dappRequests/types'
+import { Call, Capability } from 'wallet/src/features/dappRequests/types'
+
+export enum WalletConnectVerifyStatus {
+  Verified = 'VERIFIED',
+  Unverified = 'UNVERIFIED',
+  Threat = 'THREAT',
+}
 
 export type WalletConnectPendingSession = {
   id: string
   chains: UniverseChainId[]
   dappRequestInfo: DappRequestInfo
   proposalNamespaces: ProposalTypes.OptionalNamespaces
-  verifyStatus: DappVerificationStatus
+  verifyStatus: WalletConnectVerifyStatus
 }
 
 export type WalletConnectSession = {
@@ -25,13 +31,6 @@ export type WalletConnectSession = {
    * is tracking as the active account based on session events (approve session, change account, etc).
    */
   activeAccount: string
-
-  /**
-   * EIP-5792 capabilities for this session, stored in hex chainId format.
-   * Contains atomic batch support status per chain.
-   * Only populated if EIP-5792 feature flag was enabled during session approval.
-   */
-  capabilities?: Record<string, Capability>
 }
 
 interface BaseRequest {
@@ -102,9 +101,6 @@ export type WalletConnectSigningRequest =
 
 export const isTransactionRequest = (request: WalletConnectSigningRequest): request is TransactionRequest =>
   request.type === EthMethod.EthSendTransaction || request.type === UwULinkMethod.Erc20Send
-
-export const isPersonalSignRequest = (request: WalletConnectSigningRequest): request is SignRequest =>
-  request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign
 
 export const isBatchedTransactionRequest = (
   request: WalletConnectSigningRequest,

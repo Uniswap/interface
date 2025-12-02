@@ -1,6 +1,7 @@
 import { type Currency, CurrencyAmount, type Token, TradeType } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Route } from '@uniswap/v3-sdk'
 import { type ClassicQuoteResponse, TradingApi } from '@universe/api'
+
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { type DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import {
@@ -23,43 +24,41 @@ export const createMockCurrencyAmount = (token: Token, amount: string): Currency
 export const createMockTradeWithStatus = (
   inputAmount: CurrencyAmount<Token>,
   outputAmount: CurrencyAmount<Token>,
-): TradeWithStatus =>
-  createEmptyTradeWithStatus({
-    trade: new ClassicTrade({
-      quote: { quote: {} } as ClassicQuoteResponse,
-      tradeType: TradeType.EXACT_INPUT,
-      deadline: TWENTY_MINUTES_FROM_NOW,
-      v2Routes: [],
-      v3Routes: [
-        {
-          routev3: new Route<Currency, Currency>(
-            [
-              new Pool(
-                inputAmount.currency,
-                outputAmount.currency,
-                FeeAmount.HIGH,
-                '2437312313659959819381354528',
-                '10272714736694327408',
-                -69633,
-              ),
-            ],
-            inputAmount.currency,
-            outputAmount.currency,
-          ),
-          inputAmount,
-          outputAmount,
-        },
-      ],
-      v4Routes: [],
-      mixedRoutes: [],
-    }),
-    indicativeTrade: undefined,
-    isIndicativeLoading: false,
-    isLoading: false,
-    error: null,
-    gasEstimate: createGasEstimate(),
-    quoteHash: '',
-  })
+): TradeWithStatus => ({
+  trade: new ClassicTrade({
+    quote: { quote: {} } as ClassicQuoteResponse,
+    tradeType: TradeType.EXACT_INPUT,
+    deadline: TWENTY_MINUTES_FROM_NOW,
+    v2Routes: [],
+    v3Routes: [
+      {
+        routev3: new Route<Currency, Currency>(
+          [
+            new Pool(
+              inputAmount.currency,
+              outputAmount.currency,
+              FeeAmount.HIGH,
+              '2437312313659959819381354528',
+              '10272714736694327408',
+              -69633,
+            ),
+          ],
+          inputAmount.currency,
+          outputAmount.currency,
+        ),
+        inputAmount,
+        outputAmount,
+      },
+    ],
+    v4Routes: [],
+    mixedRoutes: [],
+  }),
+  indicativeTrade: undefined,
+  isIndicativeLoading: false,
+  isLoading: false,
+  error: null,
+  gasEstimate: createGasEstimate(),
+})
 
 export function createMockDerivedSwapInfo({
   inputCurrency,
@@ -253,16 +252,5 @@ export const createMockTokenApprovalInfo = (overrides = {}): TokenApprovalInfo =
   action: ApprovalAction.None,
   txRequest: null,
   cancelTxRequest: null,
-  ...overrides,
-})
-
-export const createEmptyTradeWithStatus = (overrides = {}): TradeWithStatus => ({
-  trade: null,
-  indicativeTrade: undefined,
-  isIndicativeLoading: false,
-  isLoading: false,
-  error: null,
-  gasEstimate: undefined,
-  quoteHash: '',
   ...overrides,
 })

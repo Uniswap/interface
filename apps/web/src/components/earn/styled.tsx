@@ -2,7 +2,7 @@ import uImage from 'assets/images/big_unicorn.png'
 import noise from 'assets/images/noise.png'
 import xlUnicorn from 'assets/images/xl_uni.png'
 import { AutoColumn } from 'components/deprecated/Column'
-import { styled } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 
 export const CardBGImage = styled.span<{ desaturate?: boolean }>`
   background: url(${uImage});

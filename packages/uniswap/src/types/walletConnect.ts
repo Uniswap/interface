@@ -100,7 +100,7 @@ export interface UwULinkRequestInfo {
   requestType: DappRequestType.UwULink
   name: string
   url: string
-  icon: string | null
+  icon?: string
   chain_id: number
   webhook?: string
 }

@@ -10,7 +10,7 @@ import { StatPair, StatsWrapper, StatWrapper } from 'components/Tokens/TokenDeta
 import { Hr } from 'components/Tokens/TokenDetails/shared'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
-import { styled as deprecatedStyled } from 'lib/styled-components'
+import deprecatedStyled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Trans } from 'react-i18next'

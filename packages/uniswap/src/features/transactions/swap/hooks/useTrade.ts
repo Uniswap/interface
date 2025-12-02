@@ -52,7 +52,6 @@ function parseTradeResult(input: {
       isIndicativeLoading: indicative.isLoading,
       error,
       gasEstimate: data?.gasEstimate,
-      quoteHash: data?.quoteHash,
     }
   }
 
@@ -67,7 +66,6 @@ function parseTradeResult(input: {
       isIndicativeLoading: false,
       error: new Error('Unable to validate trade'),
       gasEstimate: data.gasEstimate,
-      quoteHash: data.quoteHash,
     }
   }
 
@@ -79,6 +77,5 @@ function parseTradeResult(input: {
     isIndicativeLoading: indicative.isLoading,
     error,
     gasEstimate: data.gasEstimate,
-    quoteHash: data.quoteHash,
   }
 }

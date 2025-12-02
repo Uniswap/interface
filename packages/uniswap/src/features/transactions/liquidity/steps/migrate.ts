@@ -42,7 +42,7 @@ export function createMigratePositionAsyncStep(
       }
 
       try {
-        const { migrate } = await TradingApiClient.migrateV3ToV4LpPosition({
+        const { migrate } = await TradingApiClient.migrateLpPosition({
           ...migratePositionRequestArgs,
           signature,
           signatureDeadline,

@@ -1,4 +1,4 @@
-import { styled } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import { Gap } from 'theme'
 
 /** @deprecated Please use `Flex` from `ui/src` going forward */

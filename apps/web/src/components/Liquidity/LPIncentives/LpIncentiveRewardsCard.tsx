@@ -261,7 +261,6 @@ function LpIncentiveRewardsCard({
           <Trace logPress eventOnTrigger={UniswapEventName.LpIncentiveLearnMoreCtaClicked}>
             <TouchableArea
               group="item"
-              animation={null}
               row
               gap="$spacing6"
               alignItems="center"
@@ -272,7 +271,7 @@ function LpIncentiveRewardsCard({
               <Text variant={isSmallScreen ? 'body4' : 'body3'} color="$neutral1">
                 {t('pool.incentives.uni.findMore')}
               </Text>
-              <Flex transition="all 0.1s ease-in-out" enterStyle={{ x: 0 }} x={0} $group-item-hover={{ x: 4 }}>
+              <Flex animation="simple" enterStyle={{ x: 0 }} x={0} $group-item-hover={{ x: 4 }}>
                 <ArrowRight color="$neutral1" size={isSmallScreen ? iconSizes.icon12 : iconSizes.icon16} />
               </Flex>
             </TouchableArea>

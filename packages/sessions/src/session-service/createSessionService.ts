@@ -8,7 +8,6 @@ import type {
   UpgradeSessionResponse,
 } from '@universe/sessions/src/session-service/types'
 import type { SessionStorage } from '@universe/sessions/src/session-storage/types'
-import type { UniswapIdentifierService } from '@universe/sessions/src/uniswap-identifier/types'
 
 /**
  * Creates a Session Service instance.
@@ -17,7 +16,6 @@ import type { UniswapIdentifierService } from '@universe/sessions/src/uniswap-id
 export function createSessionService(ctx: {
   sessionStorage: SessionStorage
   deviceIdService: DeviceIdService
-  uniswapIdentifierService: UniswapIdentifierService
   sessionRepository: SessionRepository
 }): SessionService {
   async function initSession(): Promise<InitSessionResponse> {
@@ -27,9 +25,6 @@ export function createSessionService(ctx: {
     }
     if (result.extra.device_id) {
       await ctx.deviceIdService.setDeviceId(result.extra.device_id)
-    }
-    if (result.extra.uniswapIdentifier) {
-      await ctx.uniswapIdentifierService.setUniswapIdentifier(result.extra.uniswapIdentifier)
     }
     return result
   }

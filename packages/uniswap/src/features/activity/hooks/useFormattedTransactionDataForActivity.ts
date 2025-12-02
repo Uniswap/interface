@@ -10,7 +10,6 @@ import { ActivityItem } from 'uniswap/src/components/activity/generateActivityIt
 import { isLoadingItem, isSectionHeader, LoadingItem } from 'uniswap/src/components/activity/utils'
 import { formatTransactionsByDate } from 'uniswap/src/features/activity/formatTransactionsByDate'
 import { useMergeLocalAndRemoteTransactions } from 'uniswap/src/features/activity/hooks/useMergeLocalAndRemoteTransactions'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useListTransactions } from 'uniswap/src/features/dataApi/listTransactions/listTransactions'
 import { PaginationControls } from 'uniswap/src/features/dataApi/types'
 import { useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
@@ -44,13 +43,9 @@ interface UseFormattedTransactionDataOptions {
   hideSpamTokens: boolean
   pageSize?: number
   skip?: boolean
-  chainIds?: UniverseChainId[]
 }
 
-type FormattedTransactionInputs = UseFormattedTransactionDataOptions &
-  TransactionListQueryArgs & {
-    showLoadingOnRefetch?: boolean
-  }
+type FormattedTransactionInputs = UseFormattedTransactionDataOptions & TransactionListQueryArgs
 
 export interface FormattedTransactionDataResult extends PaginationControls {
   hasData: boolean
@@ -72,8 +67,6 @@ export function useFormattedTransactionDataForActivity({
   hideSpamTokens,
   pageSize,
   skip,
-  chainIds,
-  showLoadingOnRefetch = false,
   ...queryOptions
 }: FormattedTransactionInputs): FormattedTransactionDataResult {
   const { t } = useTranslation()
@@ -84,7 +77,6 @@ export function useFormattedTransactionDataForActivity({
   const {
     data: formattedTransactions,
     loading,
-    isFetching,
     error,
     refetch,
     networkStatus,
@@ -99,7 +91,6 @@ export function useFormattedTransactionDataForActivity({
     tokenVisibilityOverrides,
     nftVisibility,
     skip,
-    chainIds,
     ...queryOptions,
   })
 
@@ -115,17 +106,7 @@ export function useFormattedTransactionDataForActivity({
   })
 
   // TODO(PORT-429): update to only TradingApi.Routing.DUTCH_V2 once limit orders can be excluded from REST query
-  const transactionsWithOutLimitOrders = useMemo(() => {
-    // Filter out limit orders
-    const withoutLimitOrders = transactions?.filter((tx) => !isLimitOrder(tx))
-
-    // Filter by chainIds if provided
-    const filteredByChain = chainIds?.length
-      ? withoutLimitOrders?.filter((tx) => chainIds.includes(tx.chainId))
-      : withoutLimitOrders
-
-    return filteredByChain
-  }, [transactions, chainIds])
+  const transactionsWithOutLimitOrders = useMemo(() => transactions?.filter((tx) => !isLimitOrder(tx)), [transactions])
 
   // Format transactions for section list
   const localizedDayjs = useLocalizedDayjs()
@@ -138,10 +119,7 @@ export function useFormattedTransactionDataForActivity({
   const hasData = Boolean(formattedTransactions?.length)
 
   // show loading if no data and fetching, or refetching when there is error (for UX when "retry" is clicked).
-  const showLoading =
-    (!hasData && loading) ||
-    (Boolean(error) && networkStatus === NetworkStatus.loading) ||
-    (showLoadingOnRefetch && isFetching && !isFetchingNextPage)
+  const showLoading = (!hasData && loading) || (Boolean(error) && networkStatus === NetworkStatus.loading)
 
   const sectionData = useMemo(
     () =>
@@ -177,7 +155,7 @@ export function useFormattedTransactionDataForActivity({
     sectionData: memoizedSectionData,
     hasData,
     isError: error ?? undefined,
-    isLoading: showLoading,
+    isLoading: loading,
     keyExtractor,
     fetchNextPage,
     hasNextPage: hasNextPage && !hasReachedLimit(transactions),

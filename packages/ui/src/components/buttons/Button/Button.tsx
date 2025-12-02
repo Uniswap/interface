@@ -51,7 +51,8 @@ const ButtonComponent = forwardRef<TamaguiElement, ButtonProps>(function Button(
       size={size}
       iconPosition={iconPosition}
       isDisabled={isDisabled}
-      disabled={props.onDisabledPress ? false : isDisabled}
+      // TODO(WEB-6347): Re-enable disabled prop once tamagui Adapt issue is fixed
+      // disabled={props.onDisabledPress ? false : isDisabled}
       custom-background-color={customBackgroundColor}
       dd-action-name={props['dd-action-name'] ?? (typeof children === 'string' ? children : undefined)}
       {...props}

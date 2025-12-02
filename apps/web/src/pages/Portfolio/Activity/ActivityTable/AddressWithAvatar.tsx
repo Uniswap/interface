@@ -1,8 +1,5 @@
-import { useActivityAddressLookupValue } from 'pages/Portfolio/Activity/ActivityTable/ActivityAddressLookupStore'
-import { memo } from 'react'
 import { Flex, Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
-import { iconSizes } from 'ui/src/theme'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useENSName } from 'uniswap/src/features/ens/api'
@@ -10,31 +7,32 @@ import { shortenAddress } from 'utilities/src/addresses'
 
 interface AddressWithAvatarProps {
   address: Address
+  size?: number
   showAvatar?: boolean
 }
 
-function _AddressWithAvatar({ address, showAvatar = true }: AddressWithAvatarProps) {
-  // Try to get Unitag from store first (batch fetched)
-  const { unitagsMap } = useActivityAddressLookupValue()
-  const contextUnitag = unitagsMap.get(address)
-
-  // Fallback to individual query if not in context (for addresses outside the table)
-  const { data: unitag } = useUnitagsAddressQuery({
-    params: address && !contextUnitag ? { address } : undefined,
-  })
-
-  // ENS lookups are handled individually - React Query will deduplicate
+export function AddressWithAvatar({ address, size = 20, showAvatar = true }: AddressWithAvatarProps) {
   const { data: ENSName } = useENSName(address)
-
-  // Use context Unitag if available, otherwise fallback to individual query result
-  const uniswapUsername = contextUnitag ?? unitag?.username
+  const { data: unitag } = useUnitagsAddressQuery({
+    params: address ? { address } : undefined,
+  })
+  const uniswapUsername = unitag?.username
 
   const displayName = uniswapUsername ?? ENSName ?? shortenAddress({ address })
   const hasUnitag = Boolean(uniswapUsername)
 
   return (
     <Flex row alignItems="center" gap="$gap8">
-      {showAvatar && <AccountIcon address={address} size={iconSizes.icon16} />}
+      {showAvatar && (
+        <AccountIcon
+          address={address}
+          size={size}
+          showBackground={true}
+          showBorder={true}
+          borderColor="$surface3"
+          borderWidth="$spacing1"
+        />
+      )}
       <Text variant="body3" color="$neutral1">
         {displayName}
       </Text>
@@ -42,5 +40,3 @@ function _AddressWithAvatar({ address, showAvatar = true }: AddressWithAvatarPro
     </Flex>
   )
 }
-
-export const AddressWithAvatar = memo(_AddressWithAvatar)

@@ -88,10 +88,12 @@ export function SmartWalletNudge({
       }
       title={dappInfo ? t('smartWallets.postSwapNudge.title.dapp') : t('smartWallets.postSwapNudge.title')}
       subtext={t('smartWallets.educationalModal.description')}
-      secondaryButton={{ text: t('common.button.notNow'), onClick: handleSecondaryButtonOnClick }}
+      secondaryButtonText={t('common.button.notNow')}
+      secondaryButtonOnClick={handleSecondaryButtonOnClick}
       learnMoreUrl={uniswapUrls.helpArticleUrls.smartWalletDelegation}
       modalName={ModalName.SmartWalletNudge}
-      primaryButton={{ text: t('smartWallets.postSwapNudge.enable'), onClick: handlePrimaryButtonOnClick }}
+      primaryButtonText={t('smartWallets.postSwapNudge.enable')}
+      primaryButtonOnClick={handlePrimaryButtonOnClick}
       onClose={onClose}
     />
   )

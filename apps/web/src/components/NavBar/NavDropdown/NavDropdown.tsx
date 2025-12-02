@@ -37,7 +37,7 @@ interface NavDropdownProps {
   isOpen: boolean
   width?: number
   minWidth?: number
-  dropdownRef?: RefObject<HTMLDivElement | null>
+  dropdownRef?: RefObject<HTMLDivElement>
   dataTestId?: string
   padded?: boolean
   mr?: number

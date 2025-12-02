@@ -106,6 +106,7 @@ function InsufficientNativeTokenWarningContent({
       <TouchableArea onPress={(): void => setShowModal(true)}>
         <InsufficientNativeTokenBaseComponent
           parsedInsufficientNativeTokenWarning={parsedInsufficientNativeTokenWarning}
+          gasFee={gasFee}
         />
       </TouchableArea>
 

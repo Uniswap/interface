@@ -1,5 +1,3 @@
-import { DialogVisibilityId } from 'uniswap/src/dialog-preferences/types'
-
 /**
  * Service for managing dialog visibility preferences (e.g., "don't show again" functionality)
  */
@@ -9,19 +7,19 @@ export interface DialogPreferencesService {
    * @param dialogId Unique identifier for the dialog
    * @returns true if dialog should be shown, false if user has hidden it
    */
-  shouldShowDialog(dialogId: DialogVisibilityId): Promise<boolean>
+  shouldShowDialog(dialogId: string): Promise<boolean>
 
   /**
    * Mark a dialog as hidden (user selected "don't show again")
    * @param dialogId Unique identifier for the dialog
    */
-  markDialogHidden(dialogId: DialogVisibilityId): Promise<void>
+  markDialogHidden(dialogId: string): Promise<void>
 
   /**
    * Reset a dialog's visibility preference (show it again)
    * @param dialogId Unique identifier for the dialog
    */
-  resetDialog(dialogId: DialogVisibilityId): Promise<void>
+  resetDialog(dialogId: string): Promise<void>
 }
 
 /**
@@ -39,9 +37,4 @@ export interface StorageDriver {
  */
 export interface DialogPreferencesServiceContext {
   storage: StorageDriver
-  /**
-   * Optional callback invoked after dialog preferences are changed
-   * @param dialogId The ID of the dialog that was modified
-   */
-  onChange?: (dialogId: DialogVisibilityId) => void | Promise<void>
 }

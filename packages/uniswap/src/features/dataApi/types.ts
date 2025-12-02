@@ -1,9 +1,10 @@
-import { type NetworkStatus } from '@apollo/client'
-import { type Contract } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { type Currency } from '@uniswap/sdk-core'
-import { type GraphQLApi, type SpamCode } from '@universe/api'
-import { type FoTPercent } from 'uniswap/src/features/tokens/TokenWarningModal'
-import { type CurrencyId } from 'uniswap/src/types/currency'
+import { NetworkStatus } from '@apollo/client'
+import { Contract } from '@uniswap/client-data-api/dist/data/v1/types_pb'
+import { Currency } from '@uniswap/sdk-core'
+import { GraphQLApi, SpamCode } from '@universe/api'
+import { BridgedWithdrawalInfo } from '@universe/api/src/clients/graphql/__generated__/types-and-hooks'
+import { FoTPercent } from 'uniswap/src/features/tokens/TokenWarningModal'
+import { CurrencyId } from 'uniswap/src/types/currency'
 
 export type RestContract = Pick<Contract, 'chainId' | 'address'>
 
@@ -54,7 +55,7 @@ export type CurrencyInfo = {
   // Indicates if this token is a bridged asset
   isBridged?: Maybe<boolean>
   // Information about how to withdraw a bridged asset to its native chain
-  bridgedWithdrawalInfo?: Maybe<GraphQLApi.BridgedWithdrawalInfo>
+  bridgedWithdrawalInfo?: Maybe<BridgedWithdrawalInfo>
 }
 
 // Portfolio balance as exposed to the app

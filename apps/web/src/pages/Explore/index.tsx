@@ -1,7 +1,6 @@
 import { getTokenExploreURL } from 'appGraphql/data/util'
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { SharedEventName } from '@uniswap/analytics-events'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import PoolNotFoundModal from 'components/NotFoundModal/PoolNotFoundModal'
 import TokenNotFoundModal from 'components/NotFoundModal/TokenNotFoundModal'
 import { ExploreTopPoolTable } from 'components/Pools/PoolTable/PoolTable'
@@ -10,7 +9,6 @@ import { TopTokensTable } from 'components/Tokens/TokenTable'
 import TableNetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import VolumeTimeFrameSelector from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
-import { ToucanTable } from 'components/Toucan/TopAuctionsTable'
 import { useResetAtom } from 'jotai/utils'
 import { ExploreTab } from 'pages/Explore/constants'
 import ExploreStatsSection from 'pages/Explore/ExploreStatsSection'
@@ -41,27 +39,13 @@ interface Page {
 
 function usePages(): Array<Page> {
   const { t } = useTranslation()
-  const isToucanEnabled = useFeatureFlag(FeatureFlags.Toucan)
-
-  const pages: Array<Page> = [
+  return [
     {
       title: t('common.tokens'),
       key: ExploreTab.Tokens,
       component: TopTokensTable,
       loggingElementName: ElementName.ExploreTokensTab,
     },
-  ]
-
-  if (isToucanEnabled) {
-    pages.push({
-      title: t('toucan.auctions'),
-      key: ExploreTab.Toucan,
-      component: ToucanTable,
-      loggingElementName: ElementName.ExploreAuctionsTab,
-    })
-  }
-
-  pages.push(
     {
       title: t('common.pools'),
       key: ExploreTab.Pools,
@@ -74,9 +58,7 @@ function usePages(): Array<Page> {
       component: RecentTransactions,
       loggingElementName: ElementName.ExploreTransactionsTab,
     },
-  )
-
-  return pages
+  ]
 }
 
 const HeaderTab = tamaguiStyled(Text, {

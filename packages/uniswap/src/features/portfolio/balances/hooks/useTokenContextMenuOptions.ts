@@ -1,5 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { isNativeCurrency } from '@uniswap/universal-router-sdk'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -55,7 +56,6 @@ interface TokenMenuParams {
   openReportDataIssueModal?: () => void
   copyAddressToClipboard?: (address: string) => Promise<void>
   closeMenu: () => void
-  disableNotifications?: boolean
 }
 
 const CLOSE_MENU_DELAY = ONE_SECOND_MS / 4
@@ -71,10 +71,11 @@ export function useTokenContextMenuOptions({
   openReportDataIssueModal,
   copyAddressToClipboard,
   closeMenu,
-  disableNotifications,
 }: TokenMenuParams): MenuOptionItemWithId[] {
   const { t } = useTranslation()
   const dispatch = useDispatch()
+
+  const isDataReportingEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
 
   const { defaultChainId } = useEnabledChains()
   const activeAddresses = useActiveAddresses()
@@ -157,7 +158,7 @@ export function useTokenContextMenuOptions({
     })
     dispatch(setTokenVisibility({ currencyId: normalizeCurrencyIdForMapLookup(currencyId), isVisible: !isVisible }))
 
-    if (tokenSymbolForNotification && !disableNotifications) {
+    if (tokenSymbolForNotification) {
       dispatch(
         pushNotification({
           type: AppNotificationType.AssetVisibility,
@@ -167,16 +168,7 @@ export function useTokenContextMenuOptions({
         }),
       )
     }
-  }, [
-    updateCache,
-    isVisible,
-    portfolioBalance,
-    currencyId,
-    dispatch,
-    tokenSymbolForNotification,
-    t,
-    disableNotifications,
-  ])
+  }, [updateCache, isVisible, portfolioBalance, currencyId, dispatch, tokenSymbolForNotification, t])
 
   const menuActions: MenuOptionItemWithId[] = useMemo(() => {
     const actions: MenuOptionItemWithId[] = [
@@ -244,7 +236,7 @@ export function useTokenContextMenuOptions({
       })
     }
 
-    if (openReportDataIssueModal) {
+    if (isDataReportingEnabled && openReportDataIssueModal) {
       actions.push({
         id: TokenMenuActionType.DataIssue,
         label: t('reporting.token.data.title'),
@@ -253,7 +245,7 @@ export function useTokenContextMenuOptions({
       })
     }
 
-    if (!isNative) {
+    if (isDataReportingEnabled && !isNative) {
       actions.push({
         id: TokenMenuActionType.ReportToken,
         label: t('reporting.token.report.title'),
@@ -291,6 +283,7 @@ export function useTokenContextMenuOptions({
     copyAddressToClipboard,
     openReportTokenModal,
     openReportDataIssueModal,
+    isDataReportingEnabled,
   ])
 
   return menuActions

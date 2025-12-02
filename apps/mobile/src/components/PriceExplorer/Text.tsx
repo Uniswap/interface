@@ -120,17 +120,17 @@ export function RelativeChangeText({
       mt={isAndroid ? '$none' : '$spacing2'}
       testID={TestID.RelativePriceChange}
     >
-      {loading && (
+      {loading ? (
         // We use `no-shimmer` here to speed up the first render and so that this skeleton renders
         // at the exact same time as the animated number skeleton.
         // TODO(WALL-5215): we can remove `no-shimmer` once we have a better Skeleton component.
         <Text loading="no-shimmer" loadingPlaceholderText="00.00%" variant="body1" />
+      ) : (
+        <>
+          <AnimatedCaretChange size="$icon.16" strokeWidth={2} style={caretStyle} />
+          <AnimatedText style={styles} testID="relative-change-text" text={combinedText} variant="body1" />
+        </>
       )}
-      {/* Must always mount this component to avoid stale values on initial render */}
-      <Flex row alignItems="center" gap="$spacing2" style={{ opacity: loading ? 0 : 1 }}>
-        <AnimatedCaretChange size="$icon.16" strokeWidth={2} style={caretStyle} />
-        <AnimatedText style={styles} testID="relative-change-text" text={combinedText} variant="body1" />
-      </Flex>
     </Flex>
   )
 }

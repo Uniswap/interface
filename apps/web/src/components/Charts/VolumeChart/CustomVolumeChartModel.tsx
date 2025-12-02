@@ -6,7 +6,7 @@ import { BarPrice, DeepPartial, ISeriesApi } from 'lightweight-charts'
 import { NumberType } from 'utilities/src/format/types'
 
 export type CustomVolumeChartModelParams = {
-  chartColors: string[] // renamed from 'colors' to avoid conflict with ChartModelParams.colors
+  colors: string[]
   headerHeight: number
   useThinCrosshair?: boolean
   background?: string
@@ -24,7 +24,7 @@ export class CustomVolumeChartModel<TDataType extends CustomHistogramData> exten
 
     this.series = this.api.addCustomSeries(
       new CustomHistogramSeries({
-        colors: params.chartColors, // use chartColors instead of colors
+        colors: params.colors,
         background: params.background,
       }),
     )
@@ -33,7 +33,7 @@ export class CustomVolumeChartModel<TDataType extends CustomHistogramData> exten
 
     // Add crosshair highlight bar
     this.highlightBarPrimitive = new CrosshairHighlightPrimitive({
-      color: params.colors.surface3.val, // use colors from ChartModelParams (UseSporeColorsReturn)
+      color: params.theme.surface3,
       crosshairYPosition: params.headerHeight,
       useThinCrosshair: params.useThinCrosshair,
     })

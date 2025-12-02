@@ -77,12 +77,9 @@ export function useTDPPriceChartData({
     const { ohlc, priceHistory: subgraphPriceHistory, price: subgraphPrice } = subgraphMarket ?? {}
 
     // Data source strategy: prefer CoinGecko for line charts, use subgraph for candlesticks
-    // Prefer per-chain CoinGecko history when available so multi-chain tokens render correctly
-    const coinGeckoProject = coinGeckoData?.tokenProjects?.[0]
-    const coinGeckoMarket = coinGeckoProject?.markets?.[0]
-    const coinGeckoTokenMarket = coinGeckoProject?.tokens.find((token) => token.chain === variables.chain)?.market
-    const coinGeckoPriceHistory = coinGeckoTokenMarket?.priceHistory ?? coinGeckoMarket?.priceHistory
-    const coinGeckoAggregatedPrice = coinGeckoTokenMarket?.price?.value ?? coinGeckoMarket?.price?.value
+    const coinGeckoMarket = coinGeckoData?.tokenProjects?.[0]?.markets?.[0]
+    const coinGeckoPriceHistory = coinGeckoMarket?.priceHistory
+    const coinGeckoAggregatedPrice = coinGeckoMarket?.price?.value
 
     // For line charts, prefer CoinGecko priceHistory but use PER-CHAIN current price
     // For candlestick charts, always use subgraph OHLC (only source)
@@ -192,12 +189,11 @@ export function useTDPPriceChartData({
     return { chartType: ChartType.PRICE, entries, loading, dataQuality, disableCandlestickUI: fallback }
   }, [
     subgraphData?.token?.market,
-    coinGeckoData?.tokenProjects?.[0],
+    coinGeckoData?.tokenProjects?.[0]?.markets?.[0],
     fallback,
     loading,
     priceChartType,
     variables.duration,
-    variables.chain,
   ])
 }
 

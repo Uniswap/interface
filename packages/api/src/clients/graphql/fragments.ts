@@ -1,19 +1,19 @@
 import { type UseFragmentResult, useFragment } from '@apollo/client'
 import type {
+  Token,
   TokenBasicInfoPartsFragment,
   TokenBasicProjectPartsFragment,
   TokenMarketPartsFragment,
   TokenProjectMarketsPartsFragment,
   TokenProjectUrlsPartsFragment,
-} from '@universe/api/src/clients/graphql/__generated__/operations'
+} from '@universe/api/src/clients/graphql/__generated__/types-and-hooks'
 import {
   TokenBasicInfoPartsFragmentDoc,
   TokenBasicProjectPartsFragmentDoc,
   TokenMarketPartsFragmentDoc,
   TokenProjectMarketsPartsFragmentDoc,
   TokenProjectUrlsPartsFragmentDoc,
-} from '@universe/api/src/clients/graphql/__generated__/react-hooks'
-import type { Token } from '@universe/api/src/clients/graphql/__generated__/schema-types'
+} from '@universe/api/src/clients/graphql/__generated__/types-and-hooks'
 
 export interface UseTokenFragmentParams {
   address: string | null

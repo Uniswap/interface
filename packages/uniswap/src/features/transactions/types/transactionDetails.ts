@@ -352,17 +352,11 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   gasUseEstimate?: string
   protocol?: Protocol
   simulationFailureReasons?: TradingApi.TransactionFailureReason[]
-  dappInfo?: DappInfoTransactionDetails
 
   /**
    * @deprecated This is used on interface only and will be deleted soon as part of WALL-7143
    * */
   isUniswapXOrder?: boolean
-
-  // True if this is the final step in a multi-step flow (e.g., chained actions)
-  isFinalStep?: boolean
-  // Timestamp when the swap flow started (from Redux timing.swap.startTimestamp)
-  swapStartTimestamp?: number
 }
 
 export interface BridgeTransactionInfo extends BaseTransactionInfo {
@@ -375,10 +369,6 @@ export interface BridgeTransactionInfo extends BaseTransactionInfo {
   gasUseEstimate?: string
   routingDappInfo?: DappInfoTransactionDetails
   depositConfirmed?: boolean // interface only
-  // True if this is the final step in a multi-step flow (e.g., chained actions)
-  isFinalStep?: boolean
-  // Timestamp when the swap flow started (from Redux timing.swap.startTimestamp)
-  swapStartTimestamp?: number
 }
 
 export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {
@@ -405,7 +395,6 @@ export interface WrapTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Wrap
   unwrapped: boolean
   currencyAmountRaw: string
-  dappInfo?: DappInfoTransactionDetails
   // The id of the swap TransactionDetails object submitted after this wrap on the current client, if applicable.
   // Currently, this will only be set for wraps that are part of a UniswapX native-input swap.
   swapTxId?: string
@@ -420,7 +409,6 @@ export interface SendTokenTransactionInfo extends BaseTransactionInfo {
   tokenId?: string // optional. NFT token id
   nftSummaryInfo?: NFTSummaryInfo // optional. NFT metadata
   currencyAmountUSD?: Maybe<CurrencyAmount<Currency>> // optional, for analytics
-  dappInfo?: DappInfoTransactionDetails
 }
 
 export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
@@ -431,7 +419,6 @@ export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
   tokenAddress: string
   tokenId?: string // optional. NFT token id
   nftSummaryInfo?: NFTSummaryInfo
-  dappInfo?: DappInfoTransactionDetails
 }
 
 // Type stored locally for on-ramp transactions that were not found in the backend yet
@@ -606,32 +593,6 @@ export type TransactionTypeInfo =
   | MigrateV2LiquidityToV3TransactionInfo
   | MigrateV3LiquidityToV4TransactionInfo
   | LpIncentivesClaimTransactionInfo
-
-/**
- * Typeguard to check if a `TransactionTypeInfo` has a specific attribute.
- * Useful when you need to access an attribute that is only in a subset of `TransactionTypeInfo`s.
- */
-export function transactionTypeInfoHasAttribute<K extends AllKeysOf<TransactionTypeInfo>>(
-  typeInfo: TransactionTypeInfo,
-  attribute: K,
-): typeInfo is TransactionTypeInfo & Record<K, ExtractPropertyType<TransactionTypeInfo, K>> {
-  return attribute in typeInfo
-}
-
-/**
- * Extracts an attribute from a `TransactionTypeInfo` if it exists, otherwise returns undefined.
- * Useful when you need to safely access an attribute that is only in a subset of `TransactionTypeInfo`s.
- */
-export function extractTransactionTypeInfoAttribute<K extends AllKeysOf<TransactionTypeInfo>>(
-  typeInfo: TransactionTypeInfo,
-  attribute: K,
-): ExtractPropertyType<TransactionTypeInfo, K> | undefined {
-  if (transactionTypeInfoHasAttribute(typeInfo, attribute)) {
-    // Type assertion is safe here because the type guard verifies the attribute exists
-    return (typeInfo as Record<K, unknown>)[attribute] as ExtractPropertyType<TransactionTypeInfo, K>
-  }
-  return undefined
-}
 
 export enum TransactionDetailsType {
   Transaction = 'TransactionDetails',

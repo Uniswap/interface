@@ -30,7 +30,7 @@ const mockRevokeRequest = {
 describe('Liquidity', () => {
   const baseLiquidityTxContext: LiquidityTxAndGasInfo = {
     type: LiquidityTransactionType.Increase,
-    canBatchTransactions: false,
+    protocolVersion: 2,
     action: {
       type: LiquidityTransactionType.Increase,
       currency0Amount: createMockCurrencyAmount(USDC, '1000000'),
@@ -112,7 +112,6 @@ describe('Liquidity', () => {
     it('should return steps for increase liquidity with approval and revoke required', () => {
       const liquidityTxContext: IncreasePositionTxAndGasInfo = {
         ...baseLiquidityTxContext,
-        canBatchTransactions: false,
         type: LiquidityTransactionType.Increase,
         approveToken0Request: mockApproveRequest,
         revokeToken0Request: mockRevokeRequest,
@@ -190,111 +189,6 @@ describe('Liquidity', () => {
           type: TransactionStepType.IncreasePositionTransaction,
         },
       ])
-    })
-
-    describe('canBatchTransactions', () => {
-      it('should return batched step for increase liquidity when canBatchTransactions is true', () => {
-        const liquidityTxContext: IncreasePositionTxAndGasInfo = {
-          ...baseLiquidityTxContext,
-          type: LiquidityTransactionType.Increase,
-          canBatchTransactions: true,
-        }
-
-        expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
-          {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [liquidityTxContext.txRequest],
-            sqrtRatioX96: '1000000000000000000',
-          },
-        ])
-      })
-
-      it('should return batched step with approval when canBatchTransactions is true', () => {
-        const liquidityTxContext: IncreasePositionTxAndGasInfo = {
-          ...baseLiquidityTxContext,
-          type: LiquidityTransactionType.Increase,
-          canBatchTransactions: true,
-          approveToken0Request: mockApproveRequest,
-        }
-
-        expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
-          {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [liquidityTxContext.approveToken0Request, liquidityTxContext.txRequest],
-            sqrtRatioX96: '1000000000000000000',
-          },
-        ])
-      })
-
-      it('should return batched step with multiple approvals when canBatchTransactions is true', () => {
-        const liquidityTxContext: IncreasePositionTxAndGasInfo = {
-          ...baseLiquidityTxContext,
-          type: LiquidityTransactionType.Increase,
-          canBatchTransactions: true,
-          approveToken0Request: mockApproveRequest,
-          approveToken1Request: mockApproveRequest,
-        }
-
-        expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
-          {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [
-              liquidityTxContext.approveToken0Request,
-              liquidityTxContext.approveToken1Request,
-              liquidityTxContext.txRequest,
-            ],
-            sqrtRatioX96: '1000000000000000000',
-          },
-        ])
-      })
-
-      it('should return batched step with revocations and approvals when canBatchTransactions is true', () => {
-        const liquidityTxContext: IncreasePositionTxAndGasInfo = {
-          ...baseLiquidityTxContext,
-          type: LiquidityTransactionType.Increase,
-          canBatchTransactions: true,
-          revokeToken0Request: mockRevokeRequest,
-          revokeToken1Request: mockRevokeRequest,
-          approveToken0Request: mockApproveRequest,
-          approveToken1Request: mockApproveRequest,
-        }
-
-        expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
-          {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [
-              liquidityTxContext.revokeToken0Request,
-              liquidityTxContext.revokeToken1Request,
-              liquidityTxContext.approveToken0Request,
-              liquidityTxContext.approveToken1Request,
-              liquidityTxContext.txRequest,
-            ],
-            sqrtRatioX96: '1000000000000000000',
-          },
-        ])
-      })
-
-      it('should return batched step with permit2 transactions when canBatchTransactions is true', () => {
-        const liquidityTxContext: IncreasePositionTxAndGasInfo = {
-          ...baseLiquidityTxContext,
-          type: LiquidityTransactionType.Increase,
-          canBatchTransactions: true,
-          token0PermitTransaction: mockApproveRequest,
-          token1PermitTransaction: mockApproveRequest,
-        }
-
-        expect(generateLPTransactionSteps(liquidityTxContext)).toEqual([
-          {
-            type: TransactionStepType.IncreasePositionTransactionBatched,
-            batchedTxRequests: [
-              liquidityTxContext.token0PermitTransaction,
-              liquidityTxContext.token1PermitTransaction,
-              liquidityTxContext.txRequest,
-            ],
-            sqrtRatioX96: '1000000000000000000',
-          },
-        ])
-      })
     })
   })
 

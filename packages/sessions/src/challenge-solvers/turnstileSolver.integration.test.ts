@@ -1,5 +1,4 @@
-/// @vitest-environment happy-dom
-import { ChallengeType } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
+import { BotDetectionType } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
 import { createTurnstileSolver } from '@universe/sessions/src/challenge-solvers/createTurnstileSolver'
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -94,7 +93,7 @@ describe('Turnstile Solver Integration Tests', () => {
     // Create challenge data with proper structure
     const challengeData = {
       challengeId: 'dom-test-challenge-123',
-      challengeType: ChallengeType.TURNSTILE,
+      botDetectionType: BotDetectionType.BOT_DETECTION_TURNSTILE,
       extra: {
         challengeData: JSON.stringify({
           siteKey: '0x4AAAAAABiAHneWOWZHzZtO',
@@ -134,7 +133,7 @@ describe('Turnstile Solver Integration Tests', () => {
     const turnstileSolver = createTurnstileSolver()
     const challengeData = {
       challengeId: 'error-test-123',
-      challengeType: ChallengeType.TURNSTILE,
+      botDetectionType: BotDetectionType.BOT_DETECTION_TURNSTILE,
       extra: {
         challengeData: JSON.stringify({
           siteKey: 'test-site-key',
@@ -162,7 +161,7 @@ describe('Turnstile Solver Integration Tests', () => {
     const turnstileSolver = createTurnstileSolver()
     const challengeData = {
       challengeId: 'expired-test-123',
-      challengeType: ChallengeType.TURNSTILE,
+      botDetectionType: BotDetectionType.BOT_DETECTION_TURNSTILE,
       extra: {
         challengeData: JSON.stringify({
           siteKey: 'test-site-key',
@@ -185,7 +184,7 @@ describe('Turnstile Solver Integration Tests', () => {
     const turnstileSolver = createTurnstileSolver()
     const challengeData = {
       challengeId: 'timeout-test-123',
-      challengeType: ChallengeType.TURNSTILE,
+      botDetectionType: BotDetectionType.BOT_DETECTION_TURNSTILE,
       extra: {
         challengeData: JSON.stringify({
           siteKey: 'test-site-key',
@@ -202,7 +201,7 @@ describe('Turnstile Solver Integration Tests', () => {
     const turnstileSolver = createTurnstileSolver()
     const challengeData = {
       challengeId: 'missing-data-123',
-      challengeType: ChallengeType.TURNSTILE,
+      botDetectionType: BotDetectionType.BOT_DETECTION_TURNSTILE,
       extra: {}, // Missing challengeData
     }
 
@@ -214,7 +213,7 @@ describe('Turnstile Solver Integration Tests', () => {
     const turnstileSolver = createTurnstileSolver()
     const challengeData = {
       challengeId: 'invalid-json-123',
-      challengeType: ChallengeType.TURNSTILE,
+      botDetectionType: BotDetectionType.BOT_DETECTION_TURNSTILE,
       extra: {
         challengeData: 'invalid-json-{',
       },
@@ -228,7 +227,7 @@ describe('Turnstile Solver Integration Tests', () => {
     const turnstileSolver = createTurnstileSolver()
     const challengeData = {
       challengeId: 'missing-sitekey-123',
-      challengeType: ChallengeType.TURNSTILE,
+      botDetectionType: BotDetectionType.BOT_DETECTION_TURNSTILE,
       extra: {
         challengeData: JSON.stringify({
           action: 'test-action',
@@ -257,7 +256,7 @@ describe('Turnstile Solver Integration Tests', () => {
     const turnstileSolver = createTurnstileSolver()
     const challengeData = {
       challengeId: 'script-fail-123',
-      challengeType: ChallengeType.TURNSTILE,
+      botDetectionType: BotDetectionType.BOT_DETECTION_TURNSTILE,
       extra: {
         challengeData: JSON.stringify({
           siteKey: 'test-site-key',
@@ -276,7 +275,7 @@ describe('Turnstile Solver Integration Tests', () => {
     // Create multiple challenge data objects
     const challenges = Array.from({ length: 3 }, (_, i) => ({
       challengeId: `concurrent-test-${i}`,
-      challengeType: ChallengeType.TURNSTILE,
+      botDetectionType: BotDetectionType.BOT_DETECTION_TURNSTILE,
       extra: {
         challengeData: JSON.stringify({
           siteKey: `test-site-key-${i}`,

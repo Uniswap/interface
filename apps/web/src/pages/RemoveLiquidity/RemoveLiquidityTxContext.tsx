@@ -59,7 +59,7 @@ export function RemoveLiquidityTxContextProvider({ children }: PropsWithChildren
 
     return {
       type: LiquidityTransactionType.Decrease,
-      canBatchTransactions: false, // when batching is supported check canBatchTransactions
+      protocolVersion: positionInfo.version,
       action: {
         type: LiquidityTransactionType.Decrease,
         currency0Amount: currency0AmountToRemove,

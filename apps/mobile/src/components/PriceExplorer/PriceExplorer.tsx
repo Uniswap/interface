@@ -14,7 +14,6 @@ import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from 'src/co
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
 import { Flex, SegmentedControl, Text } from 'ui/src'
-import { useLayoutAnimationOnChange } from 'ui/src/animations'
 import GraphCurve from 'ui/src/assets/backgrounds/graph-curve.svg'
 import { spacing } from 'ui/src/theme'
 import { isLowVarianceRange } from 'uniswap/src/components/charts/utils'
@@ -146,8 +145,6 @@ const PriceExplorerInner = memo(function _PriceExplorerInner(): JSX.Element {
 
     return { lastPricePoint: priceHistory.length - 1, convertedPriceHistory: priceHistory }
   }, [data, conversionRate])
-
-  useLayoutAnimationOnChange(convertedPriceHistory.length)
 
   const convertedSpotValue = useDerivedValue(() => conversionRate * (data?.spot?.value.value ?? 0))
   const convertedSpot = useMemo((): TokenSpotData | undefined => {

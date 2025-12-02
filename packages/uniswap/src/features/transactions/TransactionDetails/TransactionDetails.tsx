@@ -11,12 +11,11 @@ import type { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { SwapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionSettingsModal } from 'uniswap/src/features/transactions/components/settings/TransactionSettingsModal/TransactionSettingsModal'
-import { EstimatedSwapTime } from 'uniswap/src/features/transactions/swap/components/EstimatedBridgeTime'
+import { EstimatedBridgeTime } from 'uniswap/src/features/transactions/swap/components/EstimatedBridgeTime'
 import { SlippageUpdate } from 'uniswap/src/features/transactions/swap/components/SwapFormSettings/settingsConfigurations/slippageUpdate/SlippageUpdate'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import type { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import type { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isBridge, isChained } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { ExpectedFailureBanner } from 'uniswap/src/features/transactions/TransactionDetails/ExpectedFailureBanner'
 import { ExpectedSpeed } from 'uniswap/src/features/transactions/TransactionDetails/ExpectedSpeed'
 import { FeeOnTransferFeeGroup } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
@@ -52,8 +51,8 @@ interface TransactionDetailsProps {
   onShowWarning?: () => void
   indicative?: boolean
   isSwap?: boolean
-  routingType?: TradingApi.Routing
-  estimatedSwapTime?: number | undefined
+  isBridgeTrade?: boolean
+  estimatedBridgingTime?: number
   AccountDetails?: JSX.Element
   RoutingInfo?: JSX.Element
   RateInfo?: JSX.Element
@@ -85,11 +84,12 @@ export function TransactionDetails({
   setTokenWarningChecked,
   onShowWarning,
   indicative = false,
+  isSwap,
   transactionUSDValue,
   txSimulationErrors,
-  routingType,
+  isBridgeTrade,
   AccountDetails,
-  estimatedSwapTime,
+  estimatedBridgingTime,
   RoutingInfo,
   RateInfo,
   amountUserWillReceive,
@@ -105,10 +105,6 @@ export function TransactionDetails({
     }
     setShowChildren(!showChildren)
   }
-
-  const isChainedTrade = routingType && isChained({ routing: routingType })
-  const isBridgeTrade = routingType && isBridge({ routing: routingType })
-  const isSwap = !isBridgeTrade && !isChainedTrade
 
   // Used to show slippage settings on mobile, where the modal needs to be added outside of the conditional expected failure banner
   const [showSlippageSettings, setShowSlippageSettings] = useState(false)
@@ -146,7 +142,7 @@ export function TransactionDetails({
           ) : null}
           {RateInfo}
           {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
-          <EstimatedSwapTime showIfLongerThanCutoff={true} timeMs={estimatedSwapTime} />
+          {isSwap && isBridgeTrade && <EstimatedBridgeTime visibleIfLong={true} timeMs={estimatedBridgingTime} />}
           {isSwap && outputCurrency && (
             <SwapFee currency={outputCurrency} loading={indicative} swapFee={swapFee} swapFeeUsd={swapFeeUsd} />
           )}
@@ -159,9 +155,9 @@ export function TransactionDetails({
             includesDelegation={includesDelegation}
             showNetworkLogo={showNetworkLogo}
           />
-          {(isSwap || isChainedTrade) && RoutingInfo}
+          {isSwap && RoutingInfo}
           {AccountDetails}
-          {!isChainedTrade && <ExpectedSpeed chainId={chainId} />}
+          <ExpectedSpeed chainId={chainId} />
           {showChildren && !priceUXEnabled ? (
             <AnimatePresence>
               <Flex animation="fast" exitStyle={{ opacity: 0 }} enterStyle={{ opacity: 0 }} gap="$spacing8">
@@ -183,9 +179,7 @@ export function TransactionDetails({
         )}
       </Flex>
       {showWarning && warning && onShowWarning && (
-        <Flex mt="$spacing16">
-          <TransactionWarning warning={warning} onShowWarning={onShowWarning} />
-        </Flex>
+        <TransactionWarning warning={warning} onShowWarning={onShowWarning} />
       )}
       {!isWebApp && isSwap && (
         <TransactionSettingsModal

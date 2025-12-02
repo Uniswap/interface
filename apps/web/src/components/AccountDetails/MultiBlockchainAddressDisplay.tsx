@@ -49,13 +49,11 @@ function PrimaryAddressDisplay({
   ensName,
   primaryAddress,
   isMultipleAddresses,
-  hideAddressInSubtitle,
 }: {
   unitag?: string
   ensName?: string
   primaryAddress: string
   isMultipleAddresses: boolean
-  hideAddressInSubtitle?: boolean
 }) {
   const { t } = useTranslation()
   const shortenedPrimaryAddress = shortenAddress({ address: primaryAddress })
@@ -64,18 +62,17 @@ function PrimaryAddressDisplay({
     return (
       <Flex>
         <AddressDisplay unitag={unitag} ensName={ensName ?? undefined} shortenedAddress={shortenedPrimaryAddress} />
-        {!hideAddressInSubtitle &&
-          (isMultipleAddresses ? (
+        {isMultipleAddresses ? (
+          <Text variant="body3" color="$neutral3">
+            {shortenedPrimaryAddress} {t('common.plusMore', { number: 1 })}
+          </Text>
+        ) : (
+          <CopyHelper iconSize={iconSizes.icon12} iconPosition="right" toCopy={primaryAddress}>
             <Text variant="body3" color="$neutral3">
-              {shortenedPrimaryAddress} {t('common.plusMore', { number: 1 })}
+              {shortenedPrimaryAddress}
             </Text>
-          ) : (
-            <CopyHelper iconSize={iconSizes.icon12} iconPosition="right" toCopy={primaryAddress}>
-              <Text variant="body3" color="$neutral3">
-                {shortenedPrimaryAddress}
-              </Text>
-            </CopyHelper>
-          ))}
+          </CopyHelper>
+        )}
       </Flex>
     )
   }
@@ -141,7 +138,7 @@ function TooltipAccountRow({ account }: { account: AccountItem }) {
   )
 }
 
-export function MultiBlockchainAddressDisplay({ hideAddressInSubtitle }: { hideAddressInSubtitle?: boolean }) {
+export function MultiBlockchainAddressDisplay() {
   const activeAddresses = useActiveAddresses()
   const evmAddress = activeAddresses.evmAddress
   const { data: ensName } = useENSName(evmAddress)
@@ -196,7 +193,6 @@ export function MultiBlockchainAddressDisplay({ hideAddressInSubtitle }: { hideA
           ensName={ensName ?? undefined}
           primaryAddress={primaryAddress}
           isMultipleAddresses={isMultipleAddresses}
-          hideAddressInSubtitle={hideAddressInSubtitle}
         />
       }
     />

@@ -75,10 +75,7 @@ export function getSortedCurrenciesForProtocol({
 }
 
 function filterPoolByFeeTier(pool: Pool, feeTier: FeeData): Pool | undefined {
-  if (
-    getFeeTierKey({ feeTier: feeTier.feeAmount, tickSpacing: feeTier.tickSpacing, isDynamicFee: feeTier.isDynamic }) ===
-    getFeeTierKey({ feeTier: pool.fee, tickSpacing: pool.tickSpacing, isDynamicFee: pool.isDynamicFee })
-  ) {
+  if (getFeeTierKey(feeTier.feeAmount, feeTier.isDynamic) === getFeeTierKey(pool.fee, pool.isDynamicFee)) {
     return pool
   }
   return undefined
@@ -105,7 +102,7 @@ function useGetLegacyPoolOrPair({
   const token1 = getCurrencyWithWrap(sortedCurrencies.TOKEN1, protocolVersion)
 
   const poolsQueryEnabled =
-    fee !== undefined && !isPoolInfoEndpointEnabled && poolEnabledProtocolVersion(protocolVersion) && validCurrencyInput
+    fee && !isPoolInfoEndpointEnabled && poolEnabledProtocolVersion(protocolVersion) && validCurrencyInput
   const {
     data: poolData,
     isLoading: poolIsLoading,
@@ -151,16 +148,16 @@ function useGetLegacyPoolOrPair({
   }, [pool, protocolVersion, sortedCurrencies])
 
   const creatingPoolOrPair = useMemo(() => {
+    if (!fee) {
+      return false
+    }
+
     if (protocolVersion === ProtocolVersion.UNSPECIFIED) {
       return false
     }
 
     if (protocolVersion === ProtocolVersion.V2) {
       return pairResult[0] === PairState.NOT_EXISTS
-    }
-
-    if (!fee) {
-      return false
     }
 
     if (protocolVersion === ProtocolVersion.V3) {
@@ -272,8 +269,6 @@ export function useDerivedPositionInfo(
   const token1 = getCurrencyWithWrap(sortedCurrencies.TOKEN1, protocolVersion)
   const protocol = getProtocols(protocolVersion)
 
-  const isFeeValid = protocolVersion === ProtocolVersion.V2 ? true : state.fee !== undefined
-
   const {
     data: poolData,
     isLoading: poolIsLoading,
@@ -292,7 +287,7 @@ export function useDerivedPositionInfo(
         tickSpacing: state.fee?.tickSpacing,
       }),
     }),
-    enabled: isPoolInfoEndpointEnabled && validCurrencyInput && protocol !== undefined && isFeeValid,
+    enabled: isPoolInfoEndpointEnabled && validCurrencyInput && protocol !== undefined && state.fee !== undefined,
   })
 
   const poolOrPair = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined

@@ -189,7 +189,7 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
                 borderColor="$surface2"
                 borderRadius="$rounded20"
                 borderWidth="$spacing1"
-                enableRemoveScroll={true}
+                disableRemoveScroll={false}
                 zIndex="$default"
                 {...animationPresets.fadeInDownOutUp}
                 shadowColor="$shadowColor"

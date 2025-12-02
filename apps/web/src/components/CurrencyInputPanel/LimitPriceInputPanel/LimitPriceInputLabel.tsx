@@ -2,7 +2,7 @@ import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBal
 import { Currency } from '@uniswap/sdk-core'
 import Row from 'components/deprecated/Row'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { styled } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { ClickableStyle } from 'theme/components/styles'

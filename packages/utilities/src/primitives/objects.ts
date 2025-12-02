@@ -5,15 +5,10 @@ export function getKeys<T extends object>(obj: T): (keyof T)[] {
   return Object.keys(obj) as Array<keyof T>
 }
 
-export function flattenObjectOfObjects<T>(
-  obj:
-    | Record<string, Record<string, T> | undefined>
-    | Partial<Record<string, Record<string, T> | Partial<Record<string, T>>>>,
-): T[] {
+export function flattenObjectOfObjects<T>(obj: Record<string, Record<string, T>>): T[] {
   return Object.values(obj)
-    .filter((o): o is Record<string, T> | Partial<Record<string, T>> => o !== undefined)
-    .flatMap((o) => Object.values(o))
-    .filter((v): v is T => v !== undefined)
+    .map((o) => Object.values(o))
+    .flat()
 }
 
 // yolo copied from https://stackoverflow.com/questions/44134212/best-way-to-flatten-js-object-keys-and-values-to-a-single-depth-array

@@ -3,11 +3,6 @@
 exports[`DappLogoWithTxStatus renders without error with dapp name 1`] = `
 <View
   collapsable={false}
-  jestAnimatedProps={
-    {
-      "value": {},
-    }
-  }
   jestAnimatedStyle={
     {
       "value": {
@@ -15,24 +10,12 @@ exports[`DappLogoWithTxStatus renders without error with dapp name 1`] = `
       },
     }
   }
-  jestInlineStyle={
-    [
-      {
-        "height": undefined,
-        "width": "100%",
-      },
-    ]
-  }
   style={
-    [
-      {
-        "height": undefined,
-        "width": "100%",
-      },
-      {
-        "opacity": 0,
-      },
-    ]
+    {
+      "height": undefined,
+      "opacity": 0,
+      "width": "100%",
+    }
   }
 >
   <View

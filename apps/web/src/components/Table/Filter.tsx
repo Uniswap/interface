@@ -1,7 +1,7 @@
 import { Portal } from 'components/Popups/Portal'
 import { DropdownIcon } from 'components/Table/icons'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { styled as deprecatedStyled } from 'lib/styled-components'
+import deprecatedStyled from 'lib/styled-components'
 import { RefObject, useCallback, useRef } from 'react'
 import { Checkbox, Flex, styled, Text, useMedia } from 'ui/src'
 
@@ -50,7 +50,7 @@ interface FilterProps<T extends string> {
   setFilters: (filter: T[]) => void
   isOpen: boolean
   toggleFilterModal: () => void
-  anchorRef: RefObject<HTMLElement | null>
+  anchorRef: RefObject<HTMLElement>
 }
 
 export function Filter<T extends string>({

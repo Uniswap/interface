@@ -3,7 +3,7 @@ import { useFormattedTokenRewards } from 'components/Liquidity/LPIncentives/hook
 import { useLpIncentiveClaimButtonConfig } from 'components/Liquidity/LPIncentives/hooks/useLpIncentiveClaimButtonConfig'
 import { useLpIncentiveClaimMutation } from 'components/Liquidity/LPIncentives/hooks/useLpIncentiveClaimMutation'
 import { LP_INCENTIVES_REWARD_TOKEN } from 'components/LpIncentives/constants'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Image, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -81,11 +81,6 @@ export function LpIncentiveClaimModal({
     onClaim: () => handleClaim(), // Don't skip analytics for manual claim
   })
 
-  const primaryButton = useMemo(
-    () => ({ text: buttonConfig.title, onPress: buttonConfig.onClick }),
-    [buttonConfig.title, buttonConfig.onClick],
-  )
-
   return (
     <Dialog
       isOpen={isOpen}
@@ -113,9 +108,10 @@ export function LpIncentiveClaimModal({
       }
       displayHelpCTA
       onClose={onClose}
-      primaryButton={primaryButton}
+      primaryButtonOnPress={buttonConfig.onClick}
       isPrimaryButtonLoading={buttonConfig.isLoading}
       modalName={ModalName.LpIncentiveClaimModal}
+      primaryButtonText={buttonConfig.title}
     />
   )
 }

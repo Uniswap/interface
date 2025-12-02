@@ -39,7 +39,10 @@ export function SmartWalletUnavailableModal({
       subtext={t('smartWallets.unavailableModal.description', { displayName })}
       modalName={ModalName.SmartWalletUnavailableModal}
       learnMoreUrl={uniswapUrls.helpArticleUrls.mismatchedImports}
-      primaryButton={{ text: t('common.close'), onClick: onClose, variant: 'default', emphasis: 'secondary' }}
+      primaryButtonText={t('common.close')}
+      primaryButtonVariant="default"
+      primaryButtonEmphasis="secondary"
+      primaryButtonOnClick={onClose}
       onClose={onClose}
     />
   )

@@ -2,7 +2,7 @@ import { TimePeriod, toHistoryDuration } from 'appGraphql/data/util'
 import { GraphQLApi } from '@universe/api'
 import { ChartHeader } from 'components/Charts/ChartHeader'
 import { Chart, ChartModelParams } from 'components/Charts/ChartModel'
-import { useHeaderDateFormatter } from 'components/Charts/hooks/useHeaderDateFormatter'
+import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import {
   CustomVolumeChartModel,
   CustomVolumeChartModelParams,
@@ -10,10 +10,10 @@ import {
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { getCumulativeVolume } from 'components/Charts/VolumeChart/utils'
 import { TFunction } from 'i18next'
+import { useTheme } from 'lib/styled-components'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { useSporeColors } from 'ui/src'
 import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
@@ -131,15 +131,14 @@ interface VolumeChartProps {
   timePeriod: TimePeriod
   TooltipBody?: React.FunctionComponent<{ data: SingleHistogramData }>
   stale: boolean
-  overrideColor?: string
 }
 
-export function VolumeChart({ height, data, feeTier, timePeriod, stale, overrideColor }: VolumeChartProps) {
-  const colors = useSporeColors()
+export function VolumeChart({ height, data, feeTier, timePeriod, stale }: VolumeChartProps) {
+  const theme = useTheme()
 
   const params = useMemo(
-    () => ({ data, chartColors: [colors.accent1.val], headerHeight: 75, stale }),
-    [data, stale, colors],
+    () => ({ data, colors: [theme.accent1], headerHeight: 75, stale }),
+    [data, stale, theme.accent1],
   )
 
   return (
@@ -147,8 +146,6 @@ export function VolumeChart({ height, data, feeTier, timePeriod, stale, override
       Model={VolumeChartModel}
       params={params}
       height={height}
-      showDottedBackground={true}
-      overrideColor={overrideColor}
       TooltipBody={
         feeTier === undefined // i.e. if is token volume chart
           ? undefined

@@ -35,7 +35,7 @@ export function* biometricsSaga(): SagaIterator {
   // --------------------------------------------------------------------------------------------
   const authTask: Task = yield* fork(function* watchAuthenticationTriggers(): SagaIterator {
     while (true) {
-      const action = yield* take(triggerAuthentication)
+      const action = yield* take(triggerAuthentication.type)
       yield* call(handleAuthentication, action)
     }
   })

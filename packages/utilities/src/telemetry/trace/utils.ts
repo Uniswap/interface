@@ -1,3 +1,4 @@
+import React from 'react'
 import { logger } from 'utilities/src/logger/logger'
 import { isWebApp } from 'utilities/src/platform'
 // biome-ignore lint/style/noRestrictedImports: Platform-specific implementation needs internal types
@@ -16,7 +17,7 @@ export function getEventHandlers({
   element,
   properties,
 }: {
-  child: ReactElementWithAnyProps
+  child: React.ReactElement
   consumedProps: ITraceContext
   triggers: string[]
   eventName: string

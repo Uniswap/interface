@@ -63,21 +63,13 @@ export function SmartWalletConfirmModal({
       title={t('smartWallets.disable.modal.title')}
       subtext={t('smartWallets.disable.modal.description')}
       modalName={ModalName.SmartWalletConfirmModal}
-      primaryButton={{
-        text: !inProgress ? t('common.button.confirm') : t('common.button.disabling'),
-        onClick: onConfirm,
-        variant: 'default',
-        disabled: isGasFeesLoading,
-        loading: inProgress,
-      }}
-      secondaryButton={
-        !inProgress && onCancel
-          ? {
-              text: t('common.button.cancel'),
-              onClick: onCancel,
-            }
-          : undefined
-      }
+      primaryButtonText={!inProgress ? t('common.button.confirm') : t('common.button.disabling')}
+      primaryButtonOnClick={onConfirm}
+      primaryButtonVariant="default"
+      primaryButtonDisabled={isGasFeesLoading}
+      primaryButtonLoading={inProgress}
+      secondaryButtonText={!inProgress ? t('common.button.cancel') : undefined}
+      secondaryButtonOnClick={onCancel}
       alignment="top"
       isDismissible={isDismissible}
       onClose={onClose}

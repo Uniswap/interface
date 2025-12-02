@@ -94,11 +94,11 @@ export function SmartWalletUpgradeModals({
           video={video}
           title={t('delegation.upgradeModal.title')}
           subtext={t('delegation.upgradeModal.description')}
-          primaryButton={{
-            text: t('delegation.upgradeModal.enableSmartWallet'),
-            onClick: handleEnableSmartWalletClick,
-          }}
-          secondaryButton={{ text: t('common.button.later'), onClick: handleSmartWalletDismiss, emphasis: 'text-only' }}
+          primaryButtonText={t('delegation.upgradeModal.enableSmartWallet')}
+          primaryButtonOnClick={handleEnableSmartWalletClick}
+          secondaryButtonText={t('common.button.later')}
+          secondaryButtonEmphasis="text-only"
+          secondaryButtonOnClick={handleSmartWalletDismiss}
           learnMoreUrl={uniswapUrls.helpArticleUrls.smartWalletDelegation}
           modalName={ModalName.SmartWalletUpgradeModal}
           isDismissible={false}

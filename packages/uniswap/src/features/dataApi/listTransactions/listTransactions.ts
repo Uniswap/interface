@@ -1,5 +1,6 @@
 import { PartialMessage } from '@bufbuild/protobuf'
 import { FiatOnRampParams, ListTransactionsResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { useListTransactionsQuery } from 'uniswap/src/data/rest/listTransactions'
@@ -15,10 +16,7 @@ import { CurrencyIdToVisibility, NFTKeyToVisibility } from 'uniswap/src/features
 
 const DEFAULT_PAGE_SIZE = 100
 
-export type TransactionListDataResult = BaseResult<TransactionDetails[]> &
-  PaginationControls & {
-    isFetching: boolean
-  }
+export type TransactionListDataResult = BaseResult<TransactionDetails[]> & PaginationControls
 type ListTransactionsQueryArgs = {
   evmAddress?: Address
   svmAddress?: Address
@@ -53,7 +51,6 @@ export function useListTransactions({
   const {
     data: infiniteData,
     isLoading,
-    isFetching,
     error,
     refetch,
     status: restStatus,
@@ -108,7 +105,6 @@ export function useListTransactions({
   return {
     data: filteredTransactions,
     loading: isLoading,
-    isFetching,
     networkStatus: mapRestStatusToNetworkStatus(restStatus),
     refetch,
     error: error ?? undefined,
@@ -143,11 +139,12 @@ function dedupeTransactions(
 function useFilteredTransactionsByVisibility(
   transactions: TransactionDetails[] | undefined,
 ): TransactionDetails[] | undefined {
+  const isDataReportingAbilitiesEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
   const activityIdToVisibility = useSelector(selectActivityVisibility)
   const hideReportedActivity = useHideReportedActivitySetting()
 
-  // Skip filtering if hide reported activity is disabled from the user's settings
-  if (!hideReportedActivity) {
+  // Skip filtering if data reporting abilities are not enabled or there are no transactions
+  if (!hideReportedActivity || !isDataReportingAbilitiesEnabled) {
     return transactions
   }
 

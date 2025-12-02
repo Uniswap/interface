@@ -49,34 +49,10 @@ exports[`AccountHeader renders correctly 1`] = `
           focusVisibleStyle={{}}
           forwardedRef={[Function]}
           hitSlop={20}
-          jestAnimatedProps={
-            {
-              "value": {},
-            }
-          }
           jestAnimatedStyle={
             {
               "value": {},
             }
-          }
-          jestInlineStyle={
-            [
-              {
-                "alignItems": "center",
-                "backgroundColor": "transparent",
-                "borderBottomLeftRadius": 12,
-                "borderBottomRightRadius": 12,
-                "borderTopLeftRadius": 12,
-                "borderTopRightRadius": 12,
-                "flexDirection": "row",
-                "opacity": 1,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
           }
           onBlur={[Function]}
           onClick={[Function]}
@@ -90,41 +66,65 @@ exports[`AccountHeader renders correctly 1`] = `
           onStartShouldSetResponder={[Function]}
           role="button"
           style={
-            [
-              {
-                "alignItems": "center",
-                "backgroundColor": "transparent",
-                "borderBottomLeftRadius": 12,
-                "borderBottomRightRadius": 12,
-                "borderTopLeftRadius": 12,
-                "borderTopRightRadius": 12,
-                "flexDirection": "row",
-                "opacity": 1,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-              {},
-            ]
+            {
+              "alignItems": "center",
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 12,
+              "borderBottomRightRadius": 12,
+              "borderTopLeftRadius": 12,
+              "borderTopRightRadius": 12,
+              "flexDirection": "row",
+              "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
           testID="account-header-avatar"
         >
           <View
+            onBlur={[Function]}
+            onFocus={[Function]}
             style={
               {
-                "backgroundColor": "#FFFFFF",
-                "borderBottomColor": "rgba(19, 19, 19, 0.08)",
+                "backgroundColor": {
+                  "dynamic": {
+                    "dark": "#131313",
+                    "light": "#FFFFFF",
+                  },
+                },
+                "borderBottomColor": {
+                  "dynamic": {
+                    "dark": "rgba(255,255,255,0.12)",
+                    "light": "rgba(19, 19, 19, 0.08)",
+                  },
+                },
                 "borderBottomLeftRadius": 999999,
                 "borderBottomRightRadius": 999999,
                 "borderBottomWidth": 1,
-                "borderLeftColor": "rgba(19, 19, 19, 0.08)",
+                "borderLeftColor": {
+                  "dynamic": {
+                    "dark": "rgba(255,255,255,0.12)",
+                    "light": "rgba(19, 19, 19, 0.08)",
+                  },
+                },
                 "borderLeftWidth": 1,
-                "borderRightColor": "rgba(19, 19, 19, 0.08)",
+                "borderRightColor": {
+                  "dynamic": {
+                    "dark": "rgba(255,255,255,0.12)",
+                    "light": "rgba(19, 19, 19, 0.08)",
+                  },
+                },
                 "borderRightWidth": 1,
                 "borderStyle": "solid",
-                "borderTopColor": "rgba(19, 19, 19, 0.08)",
+                "borderTopColor": {
+                  "dynamic": {
+                    "dark": "rgba(255,255,255,0.12)",
+                    "light": "rgba(19, 19, 19, 0.08)",
+                  },
+                },
                 "borderTopLeftRadius": 999999,
                 "borderTopRightRadius": 999999,
                 "borderTopWidth": 1,
@@ -139,11 +139,6 @@ exports[`AccountHeader renders correctly 1`] = `
             <View
               collapsable={false}
               forwardedRef={[Function]}
-              jestAnimatedProps={
-                {
-                  "value": {},
-                }
-              }
               jestAnimatedStyle={
                 {
                   "value": {
@@ -151,25 +146,18 @@ exports[`AccountHeader renders correctly 1`] = `
                   },
                 }
               }
-              jestInlineStyle={
-                [
-                  {
-                    "flexDirection": "column",
-                  },
-                ]
-              }
+              onBlur={[Function]}
+              onFocus={[Function]}
               style={
-                [
-                  {
-                    "flexDirection": "column",
-                  },
-                  {
-                    "opacity": 0,
-                  },
-                ]
+                {
+                  "flexDirection": "column",
+                  "opacity": 0,
+                }
               }
             >
               <View
+                onBlur={[Function]}
+                onFocus={[Function]}
                 style={
                   {
                     "flexDirection": "column",
@@ -255,34 +243,10 @@ exports[`AccountHeader renders correctly 1`] = `
             focusVisibleStyle={{}}
             forwardedRef={[Function]}
             hitSlop={20}
-            jestAnimatedProps={
-              {
-                "value": {},
-              }
-            }
             jestAnimatedStyle={
               {
                 "value": {},
               }
-            }
-            jestInlineStyle={
-              [
-                {
-                  "backgroundColor": "transparent",
-                  "borderBottomLeftRadius": 12,
-                  "borderBottomRightRadius": 12,
-                  "borderTopLeftRadius": 12,
-                  "borderTopRightRadius": 12,
-                  "flexDirection": "column",
-                  "flexGrow": 1,
-                  "opacity": 1,
-                  "transform": [
-                    {
-                      "scale": 1,
-                    },
-                  ],
-                },
-              ]
             }
             onBlur={[Function]}
             onClick={[Function]}
@@ -296,27 +260,26 @@ exports[`AccountHeader renders correctly 1`] = `
             onStartShouldSetResponder={[Function]}
             role="button"
             style={
-              [
-                {
-                  "backgroundColor": "transparent",
-                  "borderBottomLeftRadius": 12,
-                  "borderBottomRightRadius": 12,
-                  "borderTopLeftRadius": 12,
-                  "borderTopRightRadius": 12,
-                  "flexDirection": "column",
-                  "flexGrow": 1,
-                  "opacity": 1,
-                  "transform": [
-                    {
-                      "scale": 1,
-                    },
-                  ],
-                },
-                {},
-              ]
+              {
+                "backgroundColor": "transparent",
+                "borderBottomLeftRadius": 12,
+                "borderBottomRightRadius": 12,
+                "borderTopLeftRadius": 12,
+                "borderTopRightRadius": 12,
+                "flexDirection": "column",
+                "flexGrow": 1,
+                "opacity": 1,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              }
             }
           >
             <View
+              onBlur={[Function]}
+              onFocus={[Function]}
               onLayout={[Function]}
               style={
                 {
@@ -326,6 +289,8 @@ exports[`AccountHeader renders correctly 1`] = `
               }
             >
               <View
+                onBlur={[Function]}
+                onFocus={[Function]}
                 style={
                   {
                     "flexDirection": "row",
@@ -338,11 +303,23 @@ exports[`AccountHeader renders correctly 1`] = `
                   allowFontScaling={true}
                   maxFontSizeMultiplier={1.4}
                   numberOfLines={1}
+                  onBlur={[Function]}
+                  onFocus={[Function]}
                   onLayout={[Function]}
                   style={
                     {
-                      "backgroundColor": "#FFFFFF",
-                      "color": "#131313",
+                      "backgroundColor": {
+                        "dynamic": {
+                          "dark": "#131313",
+                          "light": "#FFFFFF",
+                        },
+                      },
+                      "color": {
+                        "dynamic": {
+                          "dark": "#FFFFFF",
+                          "light": "#131313",
+                        },
+                      },
                       "flexShrink": 1,
                       "fontFamily": "Basel Grotesk",
                       "fontSize": 19,
@@ -360,33 +337,10 @@ exports[`AccountHeader renders correctly 1`] = `
                 collapsable={false}
                 focusVisibleStyle={{}}
                 forwardedRef={[Function]}
-                jestAnimatedProps={
-                  {
-                    "value": {},
-                  }
-                }
                 jestAnimatedStyle={
                   {
                     "value": {},
                   }
-                }
-                jestInlineStyle={
-                  [
-                    {
-                      "backgroundColor": "transparent",
-                      "borderBottomLeftRadius": 12,
-                      "borderBottomRightRadius": 12,
-                      "borderTopLeftRadius": 12,
-                      "borderTopRightRadius": 12,
-                      "flexDirection": "column",
-                      "opacity": 1,
-                      "transform": [
-                        {
-                          "scale": 1,
-                        },
-                      ],
-                    },
-                  ]
                 }
                 onBlur={[Function]}
                 onClick={[Function]}
@@ -400,27 +354,26 @@ exports[`AccountHeader renders correctly 1`] = `
                 onStartShouldSetResponder={[Function]}
                 role="button"
                 style={
-                  [
-                    {
-                      "backgroundColor": "transparent",
-                      "borderBottomLeftRadius": 12,
-                      "borderBottomRightRadius": 12,
-                      "borderTopLeftRadius": 12,
-                      "borderTopRightRadius": 12,
-                      "flexDirection": "column",
-                      "opacity": 1,
-                      "transform": [
-                        {
-                          "scale": 1,
-                        },
-                      ],
-                    },
-                    {},
-                  ]
+                  {
+                    "backgroundColor": "transparent",
+                    "borderBottomLeftRadius": 12,
+                    "borderBottomRightRadius": 12,
+                    "borderTopLeftRadius": 12,
+                    "borderTopRightRadius": 12,
+                    "flexDirection": "column",
+                    "opacity": 1,
+                    "transform": [
+                      {
+                        "scale": 1,
+                      },
+                    ],
+                  }
                 }
                 testID="account-header-copy-address"
               >
                 <View
+                  onBlur={[Function]}
+                  onFocus={[Function]}
                   style={
                     {
                       "alignItems": "center",
@@ -433,9 +386,16 @@ exports[`AccountHeader renders correctly 1`] = `
                     allowFontScaling={true}
                     maxFontSizeMultiplier={1.4}
                     numberOfLines={1}
+                    onBlur={[Function]}
+                    onFocus={[Function]}
                     style={
                       {
-                        "color": "rgba(19, 19, 19, 0.63)",
+                        "color": {
+                          "dynamic": {
+                            "dark": "rgba(255, 255, 255, 0.65)",
+                            "light": "rgba(19, 19, 19, 0.63)",
+                          },
+                        },
                         "fontFamily": "Basel Grotesk",
                         "fontSize": 17,
                         "fontWeight": "400",
@@ -531,33 +491,10 @@ exports[`AccountHeader renders correctly 1`] = `
           dd-action-name="Scan"
           focusVisibleStyle={{}}
           forwardedRef={[Function]}
-          jestAnimatedProps={
-            {
-              "value": {},
-            }
-          }
           jestAnimatedStyle={
             {
               "value": {},
             }
-          }
-          jestInlineStyle={
-            [
-              {
-                "backgroundColor": "transparent",
-                "borderBottomLeftRadius": 12,
-                "borderBottomRightRadius": 12,
-                "borderTopLeftRadius": 12,
-                "borderTopRightRadius": 12,
-                "flexDirection": "column",
-                "opacity": 1,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
           }
           onBlur={[Function]}
           onClick={[Function]}
@@ -571,23 +508,20 @@ exports[`AccountHeader renders correctly 1`] = `
           onStartShouldSetResponder={[Function]}
           role="button"
           style={
-            [
-              {
-                "backgroundColor": "transparent",
-                "borderBottomLeftRadius": 12,
-                "borderBottomRightRadius": 12,
-                "borderTopLeftRadius": 12,
-                "borderTopRightRadius": 12,
-                "flexDirection": "column",
-                "opacity": 1,
-                "transform": [
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-              {},
-            ]
+            {
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 12,
+              "borderBottomRightRadius": 12,
+              "borderTopLeftRadius": 12,
+              "borderTopRightRadius": 12,
+              "flexDirection": "column",
+              "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
         >
           <RNSVGSvgView
@@ -653,11 +587,6 @@ exports[`AccountHeader renders correctly 1`] = `
         </View>
         <View
           collapsable={false}
-          jestAnimatedProps={
-            {
-              "value": {},
-            }
-          }
           jestAnimatedStyle={
             {
               "value": {
@@ -674,22 +603,19 @@ exports[`AccountHeader renders correctly 1`] = `
               },
             }
           }
-          jestInlineStyle={{}}
           style={
-            [
-              {
-                "justifyContent": "center",
-                "opacity": 1,
-                "transform": [
-                  {
-                    "rotate": "0deg",
-                  },
-                  {
-                    "scale": 1,
-                  },
-                ],
-              },
-            ]
+            {
+              "justifyContent": "center",
+              "opacity": 1,
+              "transform": [
+                {
+                  "rotate": "0deg",
+                },
+                {
+                  "scale": 1,
+                },
+              ],
+            }
           }
           testID="account-header-settings-icon"
         >

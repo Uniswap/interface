@@ -1,11 +1,5 @@
-import {
-  type StatsigOptions,
-  StatsigProvider,
-  type StatsigUser,
-  type StorageProvider,
-  useClientAsyncInit,
-} from '@universe/gating'
-import { type ReactNode, useEffect, useMemo } from 'react'
+import { StatsigOptions, StatsigProvider, StatsigUser, StorageProvider, useClientAsyncInit } from '@universe/gating'
+import { ReactNode, useEffect } from 'react'
 import { config } from 'uniswap/src/config'
 import { statsigBaseConfig } from 'uniswap/src/features/gating/statsigBaseConfig'
 import { logger } from 'utilities/src/logger/logger'
@@ -29,14 +23,11 @@ export function StatsigProviderWrapper({
     throw new Error('statsigApiKey is not set')
   }
 
-  const statsigOptions = useMemo<StatsigOptions>(
-    () => ({
-      ...statsigBaseConfig,
-      storageProvider,
-      ...options,
-    }),
-    [storageProvider, options],
-  )
+  const statsigOptions: StatsigOptions = {
+    ...statsigBaseConfig,
+    storageProvider,
+    ...options,
+  }
 
   const { client, isLoading: isStatsigLoading } = useClientAsyncInit(config.statsigApiKey, user, statsigOptions)
 

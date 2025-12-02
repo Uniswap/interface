@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { ExplorerIcon } from 'components/Icons/ExplorerIcon'
@@ -16,7 +17,7 @@ import { useModalState } from 'hooks/useModalState'
 import { useAtom } from 'jotai'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo, useState } from 'react'
-import { Link } from 'react-feather'
+import { Link, MoreHorizontal } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router'
 import { EllipsisTamaguiStyle } from 'theme/components/styles'
@@ -24,7 +25,6 @@ import { Flex, Text, TextProps, TouchableArea, useMedia, useSporeColors, WebBott
 import { ChartBarCrossed } from 'ui/src/components/icons/ChartBarCrossed'
 import { Check } from 'ui/src/components/icons/Check'
 import { Flag } from 'ui/src/components/icons/Flag'
-import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { ReportTokenDataModal } from 'uniswap/src/components/reporting/ReportTokenDataModal'
 import { ReportTokenIssueModalPropsAtom } from 'uniswap/src/components/reporting/ReportTokenIssueModal'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -41,11 +41,6 @@ type HeaderAction = {
   show: boolean
 }
 
-type HeaderActionSection = {
-  title: string
-  actions: HeaderAction[]
-}
-
 export const TokenDetailsHeader = () => {
   const { address, currency, tokenQuery } = useTDPContext()
 
@@ -54,6 +49,7 @@ export const TokenDetailsHeader = () => {
   const media = useMedia()
   const isMobileScreen = media.sm
 
+  const isDataReportingEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
   const { openModal } = useModalState(ModalName.ReportTokenIssue)
   const [, setModalProps] = useAtom(ReportTokenIssueModalPropsAtom)
   const openReportTokenModal = useEvent(() => {
@@ -97,7 +93,7 @@ export const TokenDetailsHeader = () => {
 
   const [isCopied, setCopied] = useCopyClipboard()
 
-  const desktopHeaderActions: HeaderAction[] = useMemo(() => {
+  const HeaderActions: HeaderAction[] = useMemo(() => {
     return [
       {
         title: t('common.explorer'),
@@ -122,67 +118,53 @@ export const TokenDetailsHeader = () => {
         onPress: () => window.open(twitterUrl, '_blank'),
         show: !!twitterUrl,
       },
-    ]
-  }, [t, explorerUrl, colors.neutral1.val, currency.chainId, homepageUrl, twitterUrl])
-
-  const mobileHeaderActionSections: HeaderActionSection[] = useMemo(() => {
-    return [
       {
-        title: t('common.details'),
-        actions: desktopHeaderActions,
+        title: isCopied ? t('common.copied') : t('common.copyLink.button'),
+        icon: isCopied ? (
+          <Check size={16} p={1} color={colors.statusSuccess.val} />
+        ) : (
+          <Link size={18} color={colors.neutral1.val} />
+        ),
+        onPress: () => setCopied(currentLocation),
+        show: isMobileScreen,
       },
       {
-        title: t('common.share'),
-        actions: [
-          {
-            title: isCopied ? t('common.copied') : t('common.copyLink.button'),
-            icon: isCopied ? (
-              <Check size={16} p={1} color={colors.statusSuccess.val} />
-            ) : (
-              <Link size={18} color={colors.neutral1.val} />
-            ),
-            onPress: () => setCopied(currentLocation),
-            show: true,
-          },
-          {
-            title: t('common.share.shareToTwitter'),
-            icon: <ShareIcon fill={colors.neutral1.val} width={18} height={18} />,
-            onPress: () => openShareTweetWindow(twitterShareName),
-            show: true,
-          },
-        ],
+        title: t('common.share.shareToTwitter'),
+        icon: <ShareIcon fill={colors.neutral1.val} width={18} height={18} />,
+        onPress: () => openShareTweetWindow(twitterShareName),
+        show: isMobileScreen,
       },
       {
-        title: t('common.report'),
-        actions: [
-          {
-            title: t('reporting.token.data.title'),
-            icon: <ChartBarCrossed size="$icon.18" color="$neutral1" />,
-            onPress: openReportDataIssueModal,
-            show: true,
-          },
-          {
-            title: t('reporting.token.report.title'),
-            textColor: '$statusCritical',
-            icon: <Flag size="$icon.18" color="$statusCritical" />,
-            onPress: openReportTokenModal,
-            show: !currency.isNative,
-          },
-        ],
+        title: t('reporting.token.data.title'),
+        icon: <ChartBarCrossed size="$icon.18" color="$neutral1" />,
+        onPress: openReportDataIssueModal,
+        show: isDataReportingEnabled && isMobileScreen,
+      },
+      {
+        title: t('reporting.token.report.title'),
+        textColor: '$statusCritical',
+        icon: <Flag size="$icon.18" color="$statusCritical" />,
+        onPress: openReportTokenModal,
+        show: isDataReportingEnabled && isMobileScreen && !currency.isNative,
       },
     ]
   }, [
     t,
-    colors.neutral1.val,
-    colors.statusSuccess.val,
-    currentLocation,
-    isCopied,
-    setCopied,
+    currency.chainId,
     openReportTokenModal,
     openReportDataIssueModal,
-    desktopHeaderActions,
-    currency.isNative,
+    colors.neutral1.val,
+    colors.statusSuccess.val,
+    explorerUrl,
+    homepageUrl,
+    twitterUrl,
+    isCopied,
+    isMobileScreen,
+    setCopied,
+    currentLocation,
     twitterShareName,
+    isDataReportingEnabled,
+    currency.isNative,
   ])
 
   return (
@@ -211,11 +193,11 @@ export const TokenDetailsHeader = () => {
         <MobileTokenActions
           mobileSheetOpen={mobileSheetOpen}
           toggleMobileSheet={toggleMobileSheet}
-          actionSections={mobileHeaderActionSections}
+          HeaderActions={HeaderActions}
         />
       ) : (
         <DesktopTokenActions
-          HeaderActions={desktopHeaderActions}
+          HeaderActions={HeaderActions}
           twitterShareName={twitterShareName}
           openReportTokenModal={openReportTokenModal}
           openReportDataIssueModal={openReportDataIssueModal}
@@ -235,52 +217,45 @@ export const TokenDetailsHeader = () => {
 interface MobileTokenActionsProps {
   mobileSheetOpen: boolean
   toggleMobileSheet: (open: boolean) => void
-  actionSections: HeaderActionSection[]
+  HeaderActions: HeaderAction[]
 }
 
-function MobileTokenActions({ mobileSheetOpen, toggleMobileSheet, actionSections }: MobileTokenActionsProps) {
+function MobileTokenActions({ mobileSheetOpen, toggleMobileSheet, HeaderActions }: MobileTokenActionsProps) {
+  const colors = useSporeColors()
+
   return (
     <Flex>
-      <TouchableArea height={40} onPress={() => toggleMobileSheet(true)}>
-        <MoreHorizontal size="$icon.20" color="$neutral2" />
+      <TouchableArea height={32} onPress={() => toggleMobileSheet(true)} {...ActionButtonStyle}>
+        <MoreHorizontal size={20} fill={colors.neutral2.val} />
       </TouchableArea>
       <WebBottomSheet isOpen={mobileSheetOpen} onClose={() => toggleMobileSheet(false)}>
-        <Flex gap="$spacing24" mx="$spacing24" mb="$spacing24">
-          {actionSections.map((section) => {
-            const items = section.actions.map(
-              (action) =>
-                action.show && (
-                  <Flex
-                    row
-                    key={action.title}
-                    width="100%"
-                    gap="$spacing12"
-                    alignItems="center"
-                    hoverStyle={{ backgroundColor: '$surface3' }}
-                    cursor="pointer"
-                    borderRadius="$rounded8"
-                    onPress={() => {
-                      toggleMobileSheet(false)
-                      action.onPress()
-                    }}
-                  >
-                    {action.icon}
-                    <Text variant="body2" color={action.textColor || '$neutral1'}>
-                      {action.title}
-                    </Text>
-                  </Flex>
-                ),
-            )
-
-            return (
-              <Flex key={section.title} gap="$spacing12">
-                <Text variant="body3" color="$neutral2">
-                  {section.title}
-                </Text>
-                <Flex gap="$spacing12">{items}</Flex>
-              </Flex>
-            )
-          })}
+        <Flex gap="$spacing8" mb="$spacing16">
+          {HeaderActions.map(
+            (action) =>
+              action.show && (
+                <Flex
+                  row
+                  key={action.title}
+                  width="100%"
+                  gap="$spacing12"
+                  px="$spacing8"
+                  py={10}
+                  alignItems="center"
+                  hoverStyle={{ backgroundColor: '$surface3' }}
+                  cursor="pointer"
+                  borderRadius="$rounded8"
+                  onPress={() => {
+                    toggleMobileSheet(false)
+                    action.onPress()
+                  }}
+                >
+                  {action.icon}
+                  <Text variant="body2" color={action.textColor || '$neutral1'}>
+                    {action.title}
+                  </Text>
+                </Flex>
+              ),
+          )}
         </Flex>
       </WebBottomSheet>
     </Flex>
@@ -300,6 +275,7 @@ function DesktopTokenActions({
   openReportTokenModal,
   openReportDataIssueModal,
 }: DesktopTokenActionsProps) {
+  const isDataReportingEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
   return (
     <Flex row gap="$gap8" alignItems="center">
       {HeaderActions.map(
@@ -313,7 +289,9 @@ function DesktopTokenActions({
           ),
       )}
       <ShareButton name={twitterShareName} utmSource="share-tdp" />
-      <MoreButton openReportTokenModal={openReportTokenModal} openReportDataIssueModal={openReportDataIssueModal} />
+      {isDataReportingEnabled && (
+        <MoreButton openReportTokenModal={openReportTokenModal} openReportDataIssueModal={openReportDataIssueModal} />
+      )}
     </Flex>
   )
 }

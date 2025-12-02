@@ -5,7 +5,7 @@
   "compilerOptions": {
     "noEmit": false,
     "emitDeclarationOnly": true,
-    "types": ["node", "vitest/globals"],
+    "types": ["node"],
     "baseUrl": ".",
     "paths": {
       "@universe/notifications/*": ["./*"]

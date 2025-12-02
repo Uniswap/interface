@@ -1,7 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { DropdownMenuSheetItemProps, GeneratedIcon, IconProps, TextProps } from 'ui/src'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
-import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 
 export type MenuOptionItemWithId = MenuOptionItem & {
@@ -34,9 +33,6 @@ export type MenuOptionItem = {
  * @property isOpen
  * @property closeMenu
  * @property openMenu - required if child component does not control menu state. leave undefined if the child component trigger opens the menu
- * @property elementName - element name for analytics tracking
- * @property sectionName - section name for analytics tracking
- * @property trackItemClicks - whether to track menu item clicks in analytics
  */
 export type ContextMenuProps = {
   menuItems: MenuOptionItem[]
@@ -50,9 +46,6 @@ export type ContextMenuProps = {
   isOpen: boolean
   closeMenu: () => void
   openMenu?: () => void
-  elementName?: ElementName
-  sectionName?: SectionName
-  trackItemClicks?: boolean
 }
 
 export function ContextMenu(_: PropsWithChildren<ContextMenuProps>): JSX.Element {

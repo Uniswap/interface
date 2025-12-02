@@ -37,7 +37,7 @@ function* lpIncentivesClaim(params: LpIncentivesClaimParams) {
     }
 
     const hash = yield* call(handleOnChainStep, {
-      address: account.address,
+      account,
       step,
       info,
       setCurrentStep,

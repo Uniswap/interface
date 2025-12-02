@@ -1,12 +1,13 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useCurrencyInfo } from 'hooks/Tokens'
+import { useTheme } from 'lib/styled-components'
 import { useMemo } from 'react'
-import { useExtractedTokenColor, useSporeColors } from 'ui/src'
+import { useExtractedTokenColor } from 'ui/src'
 
 type ContrastSettings = { backgroundColor: string; darkMode: boolean }
 
 export function useColor(currency?: Currency, contrastSettings?: ContrastSettings) {
-  const colors = useSporeColors()
+  const theme = useTheme()
   const currencyInfo = useCurrencyInfo(currency)
   const src = currencyInfo?.logoUrl ?? undefined
 
@@ -15,7 +16,7 @@ export function useColor(currency?: Currency, contrastSettings?: ContrastSetting
       src,
       currencyName: currency?.name,
       backgroundColor: contrastSettings?.backgroundColor,
-    }).tokenColor ?? colors.accent1.val
+    }).tokenColor ?? theme.accent1
   )
 }
 
@@ -28,7 +29,7 @@ export function useSrcColor({
   currencyName?: string
   backgroundColor?: string
 }) {
-  const colors = useSporeColors()
+  const theme = useTheme()
 
   const extractSrc = useMemo(
     () => (src?.includes('coingecko') ? 'https://corsproxy.io/?' + encodeURIComponent(src) : src),
@@ -38,7 +39,7 @@ export function useSrcColor({
   return useExtractedTokenColor({
     imageUrl: extractSrc,
     tokenName: currencyName,
-    backgroundColor: backgroundColor ?? colors.surface1.val,
-    defaultColor: colors.accent1.val,
+    backgroundColor: backgroundColor ?? theme.surface1,
+    defaultColor: theme.accent1,
   })
 }

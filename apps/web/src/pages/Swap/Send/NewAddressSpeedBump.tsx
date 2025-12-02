@@ -1,6 +1,5 @@
 import { UserIcon } from 'components/Icons/UserIcon'
 import { SendModalProps } from 'pages/Swap/Send/SendReviewModal'
-import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { RecipientData } from 'state/send/hooks'
 import { useSendContext } from 'state/send/SendContext'
@@ -46,26 +45,6 @@ export const NewAddressSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendM
     derivedSendInfo: { recipientData },
   } = useSendContext()
 
-  const primaryButton = useMemo(
-    () => ({
-      text: t('common.button.continue'),
-      onPress: onConfirm,
-      variant: 'default' as const,
-      emphasis: 'primary' as const,
-    }),
-    [t, onConfirm],
-  )
-
-  const secondaryButton = useMemo(
-    () => ({
-      text: t('common.button.close'),
-      onPress: onDismiss,
-      variant: 'default' as const,
-      emphasis: 'secondary' as const,
-    }),
-    [t, onDismiss],
-  )
-
   return (
     <Dialog
       isOpen={isOpen}
@@ -75,8 +54,13 @@ export const NewAddressSpeedBumpModal = ({ isOpen, onDismiss, onConfirm }: SendM
       title={t('speedBump.newAddress.warning.title')}
       subtext={t('speedBump.newAddress.warning.description')}
       modalName={ModalName.NewAddressSpeedBump}
-      primaryButton={primaryButton}
-      secondaryButton={secondaryButton}
+      primaryButtonText={t('common.button.close')}
+      primaryButtonOnPress={onDismiss}
+      primaryButtonVariant="default"
+      primaryButtonEmphasis="secondary"
+      secondaryButtonText={t('common.button.continue')}
+      secondaryButtonOnPress={onConfirm}
+      secondaryButtonVariant="branded"
       displayHelpCTA
     >
       <RecipientDisplay recipientData={recipientData} />

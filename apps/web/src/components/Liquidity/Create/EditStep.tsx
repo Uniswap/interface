@@ -12,7 +12,6 @@ import { PositionField } from 'types/position'
 import { Button, Flex, Text, useMedia } from 'ui/src'
 import { Edit } from 'ui/src/components/icons/Edit'
 import { iconSizes } from 'ui/src/theme'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export const EditSelectTokensStep = () => {
   const { t } = useTranslation()
@@ -52,7 +51,7 @@ export const EditSelectTokensStep = () => {
           size={media.md ? iconSizes.icon44 : iconSizes.icon32}
         />
         <Flex row grow gap="$gap12" $md={{ flexDirection: 'column', gap: '$gap4' }}>
-          <Flex row gap="$gap8" alignItems="center" testID={TestID.PoolPairLabel}>
+          <Flex row gap="$gap8" alignItems="center">
             <Text variant="subheading1">{TOKEN0?.symbol}</Text>
             <Text variant="subheading1">/</Text>
             <Text variant="subheading1">{TOKEN1?.symbol}</Text>

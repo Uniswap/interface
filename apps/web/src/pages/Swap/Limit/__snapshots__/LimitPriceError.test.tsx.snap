@@ -2,8 +2,16 @@
 
 exports[`LimitPriceError > renders the limit price error correctly when there is a calculation error 1`] = `
 .c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
@@ -15,38 +23,59 @@ exports[`LimitPriceError > renders the limit price error correctly when there is
 
 .c2 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
 }
 
 .c6 {
   color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c7 {
-  color: rgba(19, 19, 19, 0.63);
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  transition: display 125ms ease-in-out,transform 125ms ease-in-out;
+  -webkit-transition: display 125ms ease-in-out, -webkit-transform 125ms ease-in-out;
+  -webkit-transition: display 125ms ease-in-out, transform 125ms ease-in-out;
+  transition: display 125ms ease-in-out, transform 125ms ease-in-out;
+  -webkit-animation: gyvpAI 125ms ease-in-out forwards;
   animation: gyvpAI 125ms ease-in-out forwards;
+  -webkit-animation-delay: 125ms;
   animation-delay: 125ms;
   opacity: 0;
+  -webkit-translate: translateY(10px);
   translate: translateY(10px);
 }
 
 .c0.exiting {
+  -webkit-animation: dnSqss 125ms ease-in-out;
   animation: dnSqss 125ms ease-in-out;
 }
 
 .c3 {
   padding: 12px;
-  border: 1px solid rgba(19, 19, 19, 0.08);
+  border: 1px solid rgba(19,19,19,0.08);
   border-radius: 16px;
   margin-top: 4px;
 }
@@ -55,11 +84,22 @@ exports[`LimitPriceError > renders the limit price error correctly when there is
   height: 40px;
   width: 40px;
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   border-radius: 12px;
-  background-color: rgba(255, 0, 0, 0.05);
+  background-color: rgba(255,0,0,0.05);
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
   flex-shrink: 0;
 }
 
@@ -68,12 +108,10 @@ exports[`LimitPriceError > renders the limit price error correctly when there is
   style="display: contents;"
 >
   <div
-    animationtype="translate"
     class="c0"
   >
     <div
       class="c1 c2 c3"
-      gap="md"
     >
       <div
         class="c4"
@@ -130,8 +168,16 @@ exports[`LimitPriceError > renders the limit price error correctly when there is
 
 exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p false -10 1`] = `
 .c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
@@ -143,38 +189,59 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
 
 .c2 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
 }
 
 .c6 {
   color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c7 {
-  color: rgba(19, 19, 19, 0.63);
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  transition: display 125ms ease-in-out,transform 125ms ease-in-out;
+  -webkit-transition: display 125ms ease-in-out, -webkit-transform 125ms ease-in-out;
+  -webkit-transition: display 125ms ease-in-out, transform 125ms ease-in-out;
+  transition: display 125ms ease-in-out, transform 125ms ease-in-out;
+  -webkit-animation: gyvpAI 125ms ease-in-out forwards;
   animation: gyvpAI 125ms ease-in-out forwards;
+  -webkit-animation-delay: 125ms;
   animation-delay: 125ms;
   opacity: 0;
+  -webkit-translate: translateY(10px);
   translate: translateY(10px);
 }
 
 .c0.exiting {
+  -webkit-animation: dnSqss 125ms ease-in-out;
   animation: dnSqss 125ms ease-in-out;
 }
 
 .c3 {
   padding: 12px;
-  border: 1px solid rgba(19, 19, 19, 0.08);
+  border: 1px solid rgba(19,19,19,0.08);
   border-radius: 16px;
   margin-top: 4px;
 }
@@ -183,11 +250,22 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
   height: 40px;
   width: 40px;
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   border-radius: 12px;
-  background-color: rgba(255, 0, 0, 0.05);
+  background-color: rgba(255,0,0,0.05);
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
   flex-shrink: 0;
 }
 
@@ -196,12 +274,10 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
   style="display: contents;"
 >
   <div
-    animationtype="translate"
     class="c0"
   >
     <div
       class="c1 c2 c3"
-      gap="md"
     >
       <div
         class="c4"
@@ -258,8 +334,16 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
 
 exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p false 10 1`] = `
 .c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
@@ -271,38 +355,59 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
 
 .c2 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
 }
 
 .c6 {
   color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c7 {
-  color: rgba(19, 19, 19, 0.63);
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  transition: display 125ms ease-in-out,transform 125ms ease-in-out;
+  -webkit-transition: display 125ms ease-in-out, -webkit-transform 125ms ease-in-out;
+  -webkit-transition: display 125ms ease-in-out, transform 125ms ease-in-out;
+  transition: display 125ms ease-in-out, transform 125ms ease-in-out;
+  -webkit-animation: gyvpAI 125ms ease-in-out forwards;
   animation: gyvpAI 125ms ease-in-out forwards;
+  -webkit-animation-delay: 125ms;
   animation-delay: 125ms;
   opacity: 0;
+  -webkit-translate: translateY(10px);
   translate: translateY(10px);
 }
 
 .c0.exiting {
+  -webkit-animation: dnSqss 125ms ease-in-out;
   animation: dnSqss 125ms ease-in-out;
 }
 
 .c3 {
   padding: 12px;
-  border: 1px solid rgba(19, 19, 19, 0.08);
+  border: 1px solid rgba(19,19,19,0.08);
   border-radius: 16px;
   margin-top: 4px;
 }
@@ -311,11 +416,22 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
   height: 40px;
   width: 40px;
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   border-radius: 12px;
-  background-color: rgba(255, 0, 0, 0.05);
+  background-color: rgba(255,0,0,0.05);
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
   flex-shrink: 0;
 }
 
@@ -324,12 +440,10 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
   style="display: contents;"
 >
   <div
-    animationtype="translate"
     class="c0"
   >
     <div
       class="c1 c2 c3"
-      gap="md"
     >
       <div
         class="c4"
@@ -386,8 +500,16 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
 
 exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p true -10 1`] = `
 .c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
@@ -399,38 +521,59 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
 
 .c2 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
 }
 
 .c6 {
   color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c7 {
-  color: rgba(19, 19, 19, 0.63);
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  transition: display 125ms ease-in-out,transform 125ms ease-in-out;
+  -webkit-transition: display 125ms ease-in-out, -webkit-transform 125ms ease-in-out;
+  -webkit-transition: display 125ms ease-in-out, transform 125ms ease-in-out;
+  transition: display 125ms ease-in-out, transform 125ms ease-in-out;
+  -webkit-animation: gyvpAI 125ms ease-in-out forwards;
   animation: gyvpAI 125ms ease-in-out forwards;
+  -webkit-animation-delay: 125ms;
   animation-delay: 125ms;
   opacity: 0;
+  -webkit-translate: translateY(10px);
   translate: translateY(10px);
 }
 
 .c0.exiting {
+  -webkit-animation: dnSqss 125ms ease-in-out;
   animation: dnSqss 125ms ease-in-out;
 }
 
 .c3 {
   padding: 12px;
-  border: 1px solid rgba(19, 19, 19, 0.08);
+  border: 1px solid rgba(19,19,19,0.08);
   border-radius: 16px;
   margin-top: 4px;
 }
@@ -439,11 +582,22 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
   height: 40px;
   width: 40px;
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   border-radius: 12px;
-  background-color: rgba(255, 0, 0, 0.05);
+  background-color: rgba(255,0,0,0.05);
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
   flex-shrink: 0;
 }
 
@@ -452,12 +606,10 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
   style="display: contents;"
 >
   <div
-    animationtype="translate"
     class="c0"
   >
     <div
       class="c1 c2 c3"
-      gap="md"
     >
       <div
         class="c4"
@@ -514,8 +666,16 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
 
 exports[`LimitPriceError > renders the limit price error correctly, inverted %p change %p true 10 1`] = `
 .c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
@@ -527,38 +687,59 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
 
 .c2 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
 }
 
 .c6 {
   color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c7 {
-  color: rgba(19, 19, 19, 0.63);
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  transition: display 125ms ease-in-out,transform 125ms ease-in-out;
+  -webkit-transition: display 125ms ease-in-out, -webkit-transform 125ms ease-in-out;
+  -webkit-transition: display 125ms ease-in-out, transform 125ms ease-in-out;
+  transition: display 125ms ease-in-out, transform 125ms ease-in-out;
+  -webkit-animation: gyvpAI 125ms ease-in-out forwards;
   animation: gyvpAI 125ms ease-in-out forwards;
+  -webkit-animation-delay: 125ms;
   animation-delay: 125ms;
   opacity: 0;
+  -webkit-translate: translateY(10px);
   translate: translateY(10px);
 }
 
 .c0.exiting {
+  -webkit-animation: dnSqss 125ms ease-in-out;
   animation: dnSqss 125ms ease-in-out;
 }
 
 .c3 {
   padding: 12px;
-  border: 1px solid rgba(19, 19, 19, 0.08);
+  border: 1px solid rgba(19,19,19,0.08);
   border-radius: 16px;
   margin-top: 4px;
 }
@@ -567,11 +748,22 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
   height: 40px;
   width: 40px;
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
   border-radius: 12px;
-  background-color: rgba(255, 0, 0, 0.05);
+  background-color: rgba(255,0,0,0.05);
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
   flex-shrink: 0;
 }
 
@@ -580,12 +772,10 @@ exports[`LimitPriceError > renders the limit price error correctly, inverted %p 
   style="display: contents;"
 >
   <div
-    animationtype="translate"
     class="c0"
   >
     <div
       class="c1 c2 c3"
-      gap="md"
     >
       <div
         class="c4"

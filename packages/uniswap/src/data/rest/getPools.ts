@@ -7,8 +7,8 @@ import { listPools } from '@uniswap/client-data-api/dist/data/v1/api-DataApiServ
 import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
 
 export function useGetPoolsByTokens(
-  input: PartialMessage<ListPoolsRequest>,
-  enabled: boolean,
+  input?: PartialMessage<ListPoolsRequest>,
+  enabled = true,
 ): UseQueryResult<ListPoolsResponse, ConnectError> {
   return useQuery(listPools, input, { transport: uniswapGetTransport, enabled })
 }

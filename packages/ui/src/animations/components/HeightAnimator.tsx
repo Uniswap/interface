@@ -1,7 +1,6 @@
-import { useCallback, useState } from 'react'
-import { LayoutChangeEvent } from 'react-native'
-import { View, type ViewProps } from 'tamagui'
-import { type FlexProps } from 'ui/src/components/layout'
+import { useState } from 'react'
+import { useEvent, View } from 'tamagui'
+import { FlexProps } from 'ui/src/components/layout'
 import { isTestEnv } from 'utilities/src/environment/env'
 
 export interface HeightAnimatorProps {
@@ -12,24 +11,22 @@ export interface HeightAnimatorProps {
   animationDisabled?: boolean // we want to disable animation when inside of a bottom sheet
 }
 
-const enterStyle = { opacity: 0 } satisfies ViewProps['enterStyle']
-const exitStyle = { opacity: 0 } satisfies ViewProps['exitStyle']
-
 export const HeightAnimator = View.styleable<HeightAnimatorProps>(
-  ({ open = true, animationDisabled = false, children, useInitialHeight, animation = 'fast', styleProps }) => {
+  ({ open = true, animationDisabled = false, children, useInitialHeight, animation = 'fast', styleProps }, ref) => {
     const [visibleHeight, setVisibleHeight] = useState(useInitialHeight ? children.height : 0)
 
-    const onLayout = useCallback(({ nativeEvent }: LayoutChangeEvent) => {
+    const onLayout = useEvent(({ nativeEvent }) => {
       if (nativeEvent.layout.height) {
         setVisibleHeight(nativeEvent.layout.height)
       }
-    }, [])
+    })
 
     return (
       <View
+        ref={ref}
         animation={animationDisabled || isTestEnv() ? null : animation}
-        enterStyle={enterStyle}
-        exitStyle={exitStyle}
+        enterStyle={{ opacity: 0 }}
+        exitStyle={{ opacity: 0 }}
         height={open ? visibleHeight : 0}
         overflow="hidden"
         width="100%"

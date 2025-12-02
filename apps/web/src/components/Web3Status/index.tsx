@@ -10,7 +10,7 @@ import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier
 import { useShowPendingAfterDelay } from 'components/Web3Status/useShowPendingAfterDelay'
 import { useModalState } from 'hooks/useModalState'
 import { atom, useAtom } from 'jotai'
-import { styled } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import { forwardRef, RefObject, useCallback, useEffect, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { AnimatePresence, Button, ButtonProps, Flex, Popover, Text } from 'ui/src'
@@ -90,7 +90,7 @@ const ExistingUserCTAButton = forwardRef<HTMLDivElement, { onPress: () => void }
   )
 })
 
-export const Web3StatusRef = atom<RefObject<HTMLElement | null> | undefined>(undefined)
+export const Web3StatusRef = atom<RefObject<HTMLElement> | undefined>(undefined)
 
 function Web3StatusInner() {
   const activeAddresses = useActiveAddresses()
@@ -109,12 +109,9 @@ function Web3StatusInner() {
     accountDrawer.toggle()
   }, [accountDrawer])
 
-  const { hasPendingActivity, pendingActivityCount, hasL1PendingActivity } = usePendingActivity()
+  const { hasPendingActivity, pendingActivityCount, isOnlyUnichainPendingActivity } = usePendingActivity()
   const { accountIdentifier, hasUnitag } = useAccountIdentifier()
-  const showLoadingState = useShowPendingAfterDelay({
-    hasPendingActivity,
-    hasL1PendingActivity,
-  })
+  const showLoadingState = useShowPendingAfterDelay(hasPendingActivity, isOnlyUnichainPendingActivity)
 
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
   if (isConnecting && !isIFramed()) {

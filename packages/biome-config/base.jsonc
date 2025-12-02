@@ -588,7 +588,7 @@
                     "importNames": ["UNIVERSE_CHAIN_INFO"],
                     "message": "Use useChainInfo or helpers in packages/uniswap/src/features/chains/utils.ts when possible!"
                   },
-                  "uniswap/src/data/graphql/uniswap-data-api/__generated__/react-hooks": {
+                  "uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks": {
                     "importNames": ["useAccountListQuery"],
                     "message": "Use `useAccountListData` instead."
                   }
@@ -1001,17 +1001,6 @@
                 "patterns": ["__INCLUDE_GLOBAL_VALUES__"]
               }
             }
-          }
-        }
-      }
-    },
-    // apps/cli
-    {
-      "includes": ["apps/cli/**"],
-      "linter": {
-        "rules": {
-          "suspicious": {
-            "noConsole": "off"
           }
         }
       }

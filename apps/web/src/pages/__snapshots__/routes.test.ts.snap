@@ -76,7 +76,7 @@ exports[`Routes > router definition should match snapshot 1`] = `
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": [],
-    "path": "/explore/auctions/:chainName/:id",
+    "path": "/explore/toucan/:id",
   },
   {
     "enabled": [Function],
@@ -356,14 +356,6 @@ exports[`Routes > router definition should match snapshot 1`] = `
     "getTitle": [Function],
     "nestedPaths": [],
     "path": "/extension/uninstall",
-  },
-  {
-    "enabled": [Function],
-    "getDescription": [Function],
-    "getElement": [Function],
-    "getTitle": [Function],
-    "nestedPaths": [],
-    "path": "/wrapped",
   },
   {
     "enabled": [Function],

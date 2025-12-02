@@ -3,7 +3,7 @@
 exports[`Delta > should render correctly 1`] = `
 <DocumentFragment>
   .c0 {
-  color: rgba(19, 19, 19, 0.35);
+  color: rgba(19,19,19,0.35);
 }
 
 <span
@@ -96,7 +96,7 @@ exports[`Delta > should render correctly when delta is positive 1`] = `
 exports[`Delta > should render negative zero when delta is close to zero but negative 1`] = `
 <DocumentFragment>
   .c0 {
-  color: rgba(19, 19, 19, 0.35);
+  color: rgba(19,19,19,0.35);
 }
 
 <span
@@ -127,7 +127,7 @@ exports[`Delta > should render negative zero when delta is close to zero but neg
 exports[`Delta > should render positive zero when delta is 0 1`] = `
 <DocumentFragment>
   .c0 {
-  color: rgba(19, 19, 19, 0.35);
+  color: rgba(19,19,19,0.35);
 }
 
 <span
@@ -158,7 +158,7 @@ exports[`Delta > should render positive zero when delta is 0 1`] = `
 exports[`Delta > should render positive zero when delta is close to zero but positive 1`] = `
 <DocumentFragment>
   .c0 {
-  color: rgba(19, 19, 19, 0.35);
+  color: rgba(19,19,19,0.35);
 }
 
 <span
@@ -189,7 +189,7 @@ exports[`Delta > should render positive zero when delta is close to zero but pos
 exports[`Delta > should render positive zero when delta is parsed as positive zero 1`] = `
 <DocumentFragment>
   .c0 {
-  color: rgba(19, 19, 19, 0.35);
+  color: rgba(19,19,19,0.35);
 }
 
 <span

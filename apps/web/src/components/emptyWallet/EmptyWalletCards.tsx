@@ -14,7 +14,6 @@ import type { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { getServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { isExtensionApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 const ICON_SIZE = 28
@@ -60,19 +59,16 @@ function CEXTransferLogo({ providers }: { providers: FORServiceProvider[] }) {
 export const EmptyWalletCards = (
   {
     horizontalLayout,
-    growFullWidth,
     buyElementName,
     receiveElementName,
     cexTransferElementName,
   }: {
     horizontalLayout?: boolean
-    growFullWidth?: boolean
     buyElementName: ElementName
     receiveElementName: ElementName
     cexTransferElementName: ElementName
   } = {
     horizontalLayout: false,
-    growFullWidth: false,
     buyElementName: ElementName.EmptyStateBuy,
     receiveElementName: ElementName.EmptyStateReceive,
     cexTransferElementName: ElementName.EmptyStateCEXTransfer,
@@ -87,7 +83,7 @@ export const EmptyWalletCards = (
 
   const handleBuyCryptoClick = useEvent(() => {
     accountDrawer.close()
-    navigate(`/buy`, isExtensionApp ? { replace: true } : undefined)
+    navigate(`/buy`, { replace: true })
   })
 
   const handleReceiveCryptoClick = useOpenReceiveCryptoModal({
@@ -137,34 +133,22 @@ export const EmptyWalletCards = (
     ],
   )
 
-  // Determine layout mode
-  const isScrollableLayout = horizontalLayout && !growFullWidth
-  const isFullWidthLayout = horizontalLayout && growFullWidth
-  const needsLeftOffset = isScrollableLayout && fullWidth < EMPTY_WALLET_CARD_WIDTH - APP_PADDING
-
-  // Calculate outer container width
-  const outerContainerWidth = isFullWidthLayout ? '100%' : horizontalLayout ? fullWidth : '100%'
-
-  // Calculate inner grid width
-  const innerGridWidth = isFullWidthLayout ? '100%' : horizontalLayout ? EMPTY_WALLET_CARD_WIDTH : '100%'
-
-  // Scroll styles for scrollable layout
-  const scrollStyles = isScrollableLayout
-    ? {
-        overflowX: 'scroll' as const,
-        scrollbarWidth: 'none' as const,
-        paddingBottom: 6,
-      }
-    : undefined
-
   return (
     <Flex position="relative" width="100%" animation="fast" animateEnterExit="fadeInDownOutDown">
       <Flex
         row
-        left={needsLeftOffset ? -APP_PADDING : undefined}
-        width={outerContainerWidth}
-        position={isScrollableLayout ? 'absolute' : undefined}
-        style={scrollStyles}
+        left={horizontalLayout && fullWidth < EMPTY_WALLET_CARD_WIDTH - APP_PADDING ? -APP_PADDING : undefined}
+        width={horizontalLayout ? fullWidth : '100%'}
+        position={horizontalLayout ? 'absolute' : undefined}
+        style={
+          horizontalLayout
+            ? {
+                overflowX: 'scroll',
+                scrollbarWidth: 'none',
+                paddingBottom: 6,
+              }
+            : undefined
+        }
       >
         <Flex
           $platform-web={
@@ -176,7 +160,7 @@ export const EmptyWalletCards = (
               : undefined
           }
           gap="$spacing12"
-          width={innerGridWidth}
+          width={horizontalLayout ? EMPTY_WALLET_CARD_WIDTH : '100%'}
         >
           {options.map((option) => (
             <ActionCard
@@ -193,7 +177,7 @@ export const EmptyWalletCards = (
             />
           ))}
         </Flex>
-        {isScrollableLayout && <Flex width={40} />}
+        {horizontalLayout && <Flex width={40} />}
       </Flex>
     </Flex>
   )

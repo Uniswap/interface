@@ -4,15 +4,11 @@ import { createCollectFeesStep } from 'uniswap/src/features/transactions/liquidi
 import { orderCollectFeesSteps } from 'uniswap/src/features/transactions/liquidity/steps/collectFeesSteps'
 import { orderDecreaseLiquiditySteps } from 'uniswap/src/features/transactions/liquidity/steps/decreaseLiquiditySteps'
 import { createDecreasePositionStep } from 'uniswap/src/features/transactions/liquidity/steps/decreasePosition'
-import {
-  IncreaseLiquiditySteps,
-  orderIncreaseLiquiditySteps,
-} from 'uniswap/src/features/transactions/liquidity/steps/increaseLiquiditySteps'
+import { orderIncreaseLiquiditySteps } from 'uniswap/src/features/transactions/liquidity/steps/increaseLiquiditySteps'
 import {
   createCreatePositionAsyncStep,
   createIncreasePositionAsyncStep,
   createIncreasePositionStep,
-  createIncreasePositionStepBatched,
 } from 'uniswap/src/features/transactions/liquidity/steps/increasePosition'
 import {
   createMigratePositionAsyncStep,
@@ -28,7 +24,7 @@ import { createApprovalTransactionStep } from 'uniswap/src/features/transactions
 import { createPermit2SignatureStep } from 'uniswap/src/features/transactions/steps/permit2Signature'
 import { createPermit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
 import { createRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
-import { OnChainTransactionFields, TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 
 export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): TransactionStep[] {
   const isValidLP = isValidLiquidityTxContext(txContext)
@@ -108,13 +104,11 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
               txContext.permit.typedData.values.deadline as number,
             ),
             positionTokenPermitTransaction: undefined,
-            approvalPositionToken: undefined,
           })
         } else {
           return orderMigrateLiquiditySteps({
             permit: undefined,
             positionTokenPermitTransaction: positionTokenPermitTransactionStep,
-            approvalPositionToken,
             migrate: createMigratePositionStep(txContext.txRequest),
           })
         }
@@ -136,7 +130,7 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
                 : createCreatePositionAsyncStep(txContext.createPositionRequestArgs),
           })
         } else {
-          const steps = orderIncreaseLiquiditySteps({
+          return orderIncreaseLiquiditySteps({
             revokeToken0,
             revokeToken1,
             approvalToken0,
@@ -147,16 +141,6 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
             token1PermitTransaction: token1PermitTransactionStep,
             increasePosition: createIncreasePositionStep(txContext.txRequest, txContext.sqrtRatioX96),
           })
-
-          if (txContext.canBatchTransactions) {
-            // Use batched step - all transactions (approvals, permits, revokes, main) are in the array
-            const txRequests = steps
-              .filter((step): step is IncreaseLiquiditySteps & OnChainTransactionFields => 'txRequest' in step)
-              .map((step) => step.txRequest)
-            return [createIncreasePositionStepBatched(txRequests, txContext.sqrtRatioX96)]
-          }
-
-          return steps
         }
     }
   }

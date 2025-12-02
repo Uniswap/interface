@@ -15,7 +15,6 @@ export interface Config {
   apiBaseUrlV2Override: string
   appsflyerApiKey: string
   appsflyerAppId: string
-  blockaidProxyUrl: string
   datadogClientToken: string
   datadogProjectId: string
   isE2ETest: boolean
@@ -23,7 +22,6 @@ export interface Config {
   graphqlUrlOverride: string
   includePrototypeFeatures: string
   infuraKey: string
-  isVercelEnvironment: boolean
   jupiterProxyUrl: string
   onesignalAppId: string
   quicknodeEndpointName: string
@@ -34,15 +32,9 @@ export interface Config {
   tradingApiKey: string
   tradingApiUrlOverride: string
   tradingApiWebTestEnv: string
-  liquidityServiceUrlOverride: string
   uniswapApiKey: string
   unitagsApiUrlOverride: string
-  uniswapNotifApiBaseUrlOverride: string
-  entryGatewayApiUrlOverride: string
   walletConnectProjectId: string
   walletConnectProjectIdBeta: string
   walletConnectProjectIdDev: string
-  enableSessionService: boolean
-  enableSessionUpgradeAuto: boolean
-  enableEntryGatewayProxy: boolean
 }

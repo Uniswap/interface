@@ -1,13 +1,13 @@
 // biome-ignore-all lint/correctness/noRestrictedElements: ignoring for the whole file
 
-import { ProtocolVersion } from '@universe/api/src/clients/graphql/__generated__/schema-types'
+import * as GraphQLApi from '@universe/api/src/clients/graphql/__generated__/types-and-hooks'
 import { ImageResponse } from '@vercel/og'
 import { WATERMARK_URL } from 'functions/constants'
 import getFont from 'functions/utils/getFont'
 import getNetworkLogoUrl from 'functions/utils/getNetworkLogoURL'
 import getPool from 'functions/utils/getPool'
 import { getRequest } from 'functions/utils/getRequest'
-import { type Context } from 'hono'
+import { Context } from 'hono'
 
 function UnknownTokenImage({ symbol }: { symbol?: string }) {
   const ticker = symbol?.slice(0, 3)
@@ -174,7 +174,7 @@ export async function poolImageHandler(c: Context) {
                 >
                   {data.name}
                 </div>
-                {data.poolData?.protocolVersion === ProtocolVersion.V2 && (
+                {data.poolData?.protocolVersion === GraphQLApi.ProtocolVersion.V2 && (
                   <div
                     style={{
                       fontFamily: 'Inter',

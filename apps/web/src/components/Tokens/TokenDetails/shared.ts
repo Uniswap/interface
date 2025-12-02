@@ -1,10 +1,11 @@
-import { styled as deprecatedStyled } from 'lib/styled-components'
+import deprecatedStyled from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import { colors } from 'theme/colors'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { TextProps } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 
-export const DropdownAction = deprecatedStyled.div`
+export const DropdownAction = styled.div`
   display: flex;
   align-items: center;
   padding: 8px;

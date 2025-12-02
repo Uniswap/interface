@@ -55,7 +55,6 @@ export const BLAST_CHAIN_INFO = {
   tokens,
   statusPage: undefined,
   supportsV4: true,
-  supportsNFTs: true,
   urlParam: 'blast',
   nativeCurrency: {
     name: 'Blast ETH',

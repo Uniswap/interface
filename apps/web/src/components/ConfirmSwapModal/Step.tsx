@@ -1,6 +1,6 @@
 import { CheckMark } from 'components/Icons/CheckMark'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import styled, { keyframes } from 'lib/styled-components'
+import styled, { Keyframes, keyframes } from 'lib/styled-components'
 import { ReactElement, useEffect, useState } from 'react'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
@@ -40,7 +40,7 @@ const ringAnimation = keyframes`
     opacity: 0;
   }
 `
-const Ring = styled.div<{ $borderColor: string; $animation: ReturnType<typeof keyframes> }>`
+const Ring = styled.div<{ $borderColor: string; $animation: Keyframes }>`
   position: absolute;
   width: ${ICON_SIZE}px;
   height: ${ICON_SIZE}px;

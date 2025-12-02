@@ -135,12 +135,6 @@ export function ClaimUnitagContent({
 
   const onChangeTextInput = useCallback(
     (text: string): void => {
-      if (text.length === 0) {
-        onSetFontSize(inputPlaceholder + UNITAG_SUFFIX_CHARS_ONLY)
-      } else {
-        onSetFontSize(text + UNITAG_SUFFIX_CHARS_ONLY)
-      }
-
       setIsUnitagAvailable(false)
       setShowVerificationLoading(false)
       setUnitagAvailableError(undefined)
@@ -148,6 +142,12 @@ export function ClaimUnitagContent({
       if (text.length > MAX_UNITAG_CHAR_LENGTH) {
         setUnitagAvailableError(getUnitagFormatError(text, t))
         return
+      }
+
+      if (text.length === 0) {
+        onSetFontSize(inputPlaceholder + UNITAG_SUFFIX_CHARS_ONLY)
+      } else {
+        onSetFontSize(text + UNITAG_SUFFIX_CHARS_ONLY)
       }
 
       setUnitagInputValue(text.trim())
@@ -261,6 +261,7 @@ export function ClaimUnitagContent({
         mt="$spacing24"
         onLayout={(event): void => {
           onLayout(event)
+          onSetFontSize(inputPlaceholder + UNITAG_SUFFIX_CHARS_ONLY)
         }}
       >
         {/* Fixed text that animates in when TextInput is animated out */}

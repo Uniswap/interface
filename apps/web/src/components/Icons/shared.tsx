@@ -1,4 +1,4 @@
-import { css, keyframes, styled } from 'lib/styled-components'
+import styled, { css, keyframes } from 'lib/styled-components'
 
 const rotateAnimation = keyframes`
   from {

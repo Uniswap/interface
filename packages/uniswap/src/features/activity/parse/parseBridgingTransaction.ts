@@ -1,7 +1,6 @@
 import type { OnChainTransaction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { Direction } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { GraphQLApi } from '@universe/api'
-import { extractDappInfo } from 'uniswap/src/features/activity/utils/extractDappInfo'
 import { deriveCurrencyAmountFromAssetResponse } from 'uniswap/src/features/activity/utils/remote'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { ACROSS_DAPP_INFO } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -102,9 +101,6 @@ export function parseRestBridgeTransaction(transaction: OnChainTransaction): Bri
   if (!outTokenAsset || !inTokenAsset) {
     return undefined
   }
-
-  // Use protocol info from API if available, otherwise fall back to ACROSS_DAPP_INFO
-  const routingDappInfo = extractDappInfo(transaction) ?? ACROSS_DAPP_INFO
   return {
     type: TransactionType.Bridge,
     inputCurrencyId: buildCurrencyId(outTokenAsset.chainId, outTokenAsset.address),
@@ -112,6 +108,6 @@ export function parseRestBridgeTransaction(transaction: OnChainTransaction): Bri
     inputCurrencyAmountRaw: outTokenTransfer.amount?.raw ?? '',
     outputCurrencyAmountRaw: inTokenTransfer.amount?.raw ?? '',
     transactedUSDValue: undefined,
-    routingDappInfo,
+    routingDappInfo: ACROSS_DAPP_INFO,
   }
 }

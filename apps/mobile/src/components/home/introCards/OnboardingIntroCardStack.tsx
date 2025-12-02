@@ -1,10 +1,9 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { useAppStackNavigation } from 'src/app/navigation/types'
 import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
@@ -17,7 +16,6 @@ import {
   PUSH_NOTIFICATIONS_CARD_BANNER,
 } from 'ui/src/assets'
 import { Buy } from 'ui/src/components/icons'
-import { MonadAnnouncementModal } from 'uniswap/src/components/notifications/MonadAnnouncementModal'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
@@ -61,7 +59,6 @@ export function OnboardingIntroCardStack({
   const activeAccount = useActiveAccountWithThrow()
   const address = activeAccount.address
   const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
-  const [isMonadModalOpen, setIsMonadModalOpen] = useState(false)
 
   const { notificationPermissionsEnabled } = useNotificationOSPermissionsEnabled()
   const notificationOnboardingCardEnabled = useFeatureFlag(FeatureFlags.NotificationOnboardingCard)
@@ -79,7 +76,6 @@ export function OnboardingIntroCardStack({
     useFeatureFlag(FeatureFlags.BridgedAssetsBannerV2) && !hasViewedBridgedAssetsV2Card
 
   const { navigateToSwapFlow } = useWalletNavigation()
-  const navigation = useAppStackNavigation()
 
   const navigateToUnitagClaim = useCallback(() => {
     navigate(MobileScreens.UnitagStack, {
@@ -112,21 +108,10 @@ export function OnboardingIntroCardStack({
     navigateToSwapFlow({ openTokenSelector: CurrencyField.OUTPUT, inputChainId: UniverseChainId.Unichain })
   }, [navigateToSwapFlow])
 
-  const handleMonadExplorePress = useCallback(() => {
-    navigation.navigate(ModalName.Explore, {
-      screen: MobileScreens.Explore,
-      params: {
-        chainId: UniverseChainId.Monad,
-      },
-    })
-    setIsMonadModalOpen(false)
-  }, [navigation])
-
   const { cards: sharedCards } = useSharedIntroCards({
     navigateToUnitagClaim,
     navigateToUnitagIntro,
     navigateToBackupFlow,
-    onMonadAnnouncementPress: () => setIsMonadModalOpen(true),
   })
 
   const cards = useMemo((): IntroCardProps[] => {
@@ -247,24 +232,13 @@ export function OnboardingIntroCardStack({
     [cards],
   )
 
-  return (
-    <>
-      {!!cards.length && (
-        <Flex pt="$spacing12" px="$spacing12">
-          {isLoading ? (
-            <Flex height={INTRO_CARD_MIN_HEIGHT} />
-          ) : (
-            <IntroCardStack cards={cards} onSwiped={handleSwiped} />
-          )}
-        </Flex>
-      )}
-      {isMonadModalOpen && (
-        <MonadAnnouncementModal
-          isOpen={isMonadModalOpen}
-          onClose={() => setIsMonadModalOpen(false)}
-          onExplorePress={handleMonadExplorePress}
-        />
-      )}
-    </>
-  )
+  if (cards.length) {
+    return (
+      <Flex pt="$spacing12" px="$spacing12">
+        {isLoading ? <Flex height={INTRO_CARD_MIN_HEIGHT} /> : <IntroCardStack cards={cards} onSwiped={handleSwiped} />}
+      </Flex>
+    )
+  }
+
+  return null
 }

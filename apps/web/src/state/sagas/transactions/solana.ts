@@ -75,18 +75,8 @@ function* refetchBalancesWithDelay({
   })
 }
 
-function* updateAppState({
-  hash,
-  trade,
-  from,
-  swapStartTimestamp,
-}: {
-  hash: string
-  trade: SolanaTrade
-  from: string
-  swapStartTimestamp?: number
-}) {
-  const typeInfo = getSwapTransactionInfo({ trade, swapStartTimestamp })
+function* updateAppState({ hash, trade, from }: { hash: string; trade: SolanaTrade; from: string }) {
+  const typeInfo = getSwapTransactionInfo(trade)
 
   const transaction: SolanaTransactionDetails<InterfaceBaseTransactionDetails> = {
     from,
@@ -116,7 +106,7 @@ function* updateAppState({
 
 function createJupiterSwap(signSolanaTransaction: (tx: VersionedTransaction) => Promise<VersionedTransaction>) {
   return function* jupiterSwap(params: JupiterSwapParams) {
-    const { swapTxContext, account, onSwapSigned, analytics } = params
+    const { swapTxContext, account, onSwapSigned } = params
     const { trade, transactionBase64 } = swapTxContext
     const { requestId } = trade.quote.quote
 
@@ -134,12 +124,7 @@ function createJupiterSwap(signSolanaTransaction: (tx: VersionedTransaction) => 
       throw new JupiterExecuteError(errorMessage ?? 'Unknown Jupiter Execution Error', code)
     }
 
-    yield* call(updateAppState, {
-      hash,
-      trade,
-      from: account.address,
-      swapStartTimestamp: analytics.swap_start_timestamp,
-    })
+    yield* call(updateAppState, { hash, trade, from: account.address })
 
     return hash
   }

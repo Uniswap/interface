@@ -430,7 +430,6 @@ export type TradeWithSlippage = Exclude<Trade, BridgeTrade>
 
 // TODO(WALL-4573) - Cleanup usage of optionality/null/undefined
 export interface TradeWithStatus<T extends Trade = Trade> {
-  quoteHash?: string
   isLoading: boolean
   isFetching?: boolean
   error: Error | null

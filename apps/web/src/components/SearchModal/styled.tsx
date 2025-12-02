@@ -1,5 +1,5 @@
 import { RowBetween } from 'components/deprecated/Row'
-import { styled } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 
 export const MenuItem = styled(RowBetween)<{ dim?: boolean }>`
   padding: 4px 20px;
@@ -9,7 +9,7 @@ export const MenuItem = styled(RowBetween)<{ dim?: boolean }>`
   grid-gap: 16px;
   cursor: ${({ disabled }) => !disabled && 'pointer'};
   pointer-events: ${({ disabled }) => disabled && 'none'};
-  &:hover {
+  :hover {
     background-color: ${({ theme }) => theme.deprecated_hoverDefault};
   }
   opacity: ${({ disabled, selected, dim }) => (dim || disabled || selected ? 0.4 : 1)};

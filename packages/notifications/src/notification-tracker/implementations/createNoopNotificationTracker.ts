@@ -7,6 +7,10 @@ import {
 /**
  * Creates a no-op notification tracker that doesn't persist any state.
  *
+ * Since the backend will only send each notification to a user once in Phase 1,
+ * client-side tracking is not needed. This implementation satisfies the
+ * NotificationTracker interface without performing any actual tracking.
+ *
  * Example usage:
  * ```typescript
  * import { createNoopNotificationTracker } from '@universe/notifications'

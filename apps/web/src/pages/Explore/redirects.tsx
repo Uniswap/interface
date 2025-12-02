@@ -5,6 +5,7 @@ import { Navigate, useLocation, useParams } from 'react-router'
 import { Loader } from 'ui/src/loading/Loader'
 
 const Explore = lazy(() => import('pages/Explore'))
+const Toucan = lazy(() => import('pages/Explore/Toucan'))
 
 // This function is needed to disambiguate URL params because useParams struggles to distinguish between /explore/:chainName and /explore/:tab
 export function useExploreParams(): {
@@ -48,9 +49,16 @@ export default function RedirectExplore() {
     }
   }
 
-  // Redirect to main explore page if toucan tab is accessed but feature flag is disabled
-  if (tab === ExploreTab.Toucan && !isToucanEnabled) {
-    return <Navigate to="/explore" replace />
+  if (tab === ExploreTab.Toucan) {
+    if (!isToucanEnabled) {
+      return <Navigate to="/explore" replace />
+    }
+
+    return (
+      <Suspense fallback={<Loader.Box />}>
+        <Toucan />
+      </Suspense>
+    )
   }
 
   return (

@@ -11,7 +11,7 @@ export const paths = [
   '/tokens/:chainName',
   '/tokens/:chainName/:tokenAddress',
   '/explore/pools/:chainName/:poolAddress',
-  '/explore/auctions/:chainName/:id',
+  '/explore/toucan/:id',
   '/vote/*',
   '/create-proposal',
   '/sell',
@@ -64,5 +64,4 @@ export const paths = [
   '/auth/passkey/extension',
   '/manage/passkey/:walletAddress',
   '/extension/uninstall',
-  '/wrapped',
 ]

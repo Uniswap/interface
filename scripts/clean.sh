@@ -49,21 +49,14 @@ prompt_yes_no() {
 
 # Only prompt if no CLI args were provided
 if [ "$HAS_CLI_ARGS" = false ]; then
-  prompt_yes_no "⚠️  UNTRACKED FILES: Do you want to remove all files untracked by git (except .env files)?" "GIT_CLEAN"
-  prompt_yes_no "📦 NODE MODULES: Local packages will be cleaned. Should ALL other node_modules be removed (slower but more thorough)?" "NODE_MODULES"
-  prompt_yes_no "🗑️  BUN CACHE: Do you want to clear the global bun cache (force re-download of dependencies)?" "BUN_CACHE"
+  prompt_yes_no "⚠️  UNTRACKED FILES: Do you want to remove all files untracked by git..." "GIT_CLEAN"
+  prompt_yes_no "📦 NODE MODULES: Local packages will be cleaned. Do you also want to remove ALL other node_modules (slower but more thorough)?" "NODE_MODULES"
 fi
 
 # Execute git clean if confirmed
 if [ "$GIT_CLEAN" = true ]; then
   echo "Removing all untracked files except for .env files..."
   git clean -fdx -e "**/.env*" -e "**/node_modules" -e "**/.claude"
-fi
-
-# Clear global bun cache
-if [ "$BUN_CACHE" = true ]; then
-  echo "Clearing global bun cache..."
-  bun pm cache rm
 fi
 
 # Execute node_modules cleanup
@@ -73,6 +66,12 @@ if [ "$NODE_MODULES" = true ]; then
 else
   echo "Removing local packages..."
   bun run g:rm:local-packages
+fi
+
+# Clear global bun cache
+if [ "$BUN_CACHE" = true ]; then
+  echo "Clearing global bun cache..."
+  bun pm cache rm
 fi
 
 # Install dependencies

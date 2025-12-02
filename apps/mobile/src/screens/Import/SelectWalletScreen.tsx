@@ -108,8 +108,9 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
                   return null
                 }
                 return (
-                  <Flex key={i} px="$spacing16">
+                  <Flex key={address} px="$spacing16">
                     <WalletPreviewCard
+                      key={address}
                       address={address}
                       balance={balance}
                       hideSelectionCircle={isOnlyOneAccount}
@@ -144,7 +145,6 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
             >
               <Text color="$neutral2" variant="body4" textAlign="center" flexGrow={1}>
                 <Trans
-                  key="smartWalletDisclaimer"
                   components={{ highlight: highlightComponent }}
                   i18nKey="account.wallet.select.smartWalletDisclaimer"
                 />

@@ -17,7 +17,7 @@ import { TokenDetailsHeader } from 'components/Tokens/TokenDetails/TokenDetailsH
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
-import { styled as deprecatedStyled } from 'lib/styled-components'
+import deprecatedStyled from 'lib/styled-components'
 import { Swap } from 'pages/Swap'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { PropsWithChildren, useCallback, useMemo, useState } from 'react'

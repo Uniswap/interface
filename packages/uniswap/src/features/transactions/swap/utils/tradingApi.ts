@@ -461,31 +461,37 @@ export function useQuoteRoutingParams({
   isUSDQuote,
   isV4HookPoolsEnabled = true,
 }: UseQuoteRoutingParamsArgs): QuoteRoutingParamsResult {
-  const inputChainProtocols = useProtocolsForChain(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, tokenInChainId)
-  const outputChainProtocols = useProtocolsForChain(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, tokenOutChainId)
+  const protocols = useProtocolsForChain(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, tokenInChainId)
 
   const getQuoteRoutingParams = createGetQuoteRoutingParams({
-    getProtocols: () => Array.from(new Set([...inputChainProtocols, ...outputChainProtocols])),
+    getProtocols: () => protocols,
     getIsV4HookPoolsEnabled: () => isV4HookPoolsEnabled,
   })
 
-  return getQuoteRoutingParams({ isUSDQuote })
+  return getQuoteRoutingParams({ isUSDQuote, tokenInChainId, tokenOutChainId })
 }
 
-export type GetQuoteRoutingParams = (input: Pick<UseQuoteRoutingParamsArgs, 'isUSDQuote'>) => QuoteRoutingParamsResult
+export type GetQuoteRoutingParams = (
+  input: Omit<UseQuoteRoutingParamsArgs, 'selectedProtocols' | 'isV4HookPoolsEnabled'>,
+) => QuoteRoutingParamsResult
 
 export function createGetQuoteRoutingParams(ctx: {
   getProtocols: () => ReturnType<typeof useProtocolsForChain>
   getIsV4HookPoolsEnabled: () => boolean
 }): GetQuoteRoutingParams {
   return (input) => {
-    const { isUSDQuote } = input
+    const { isUSDQuote, tokenInChainId, tokenOutChainId } = input
     // for USD quotes, we avoid routing through UniswapX
     // hooksOptions should not be sent for USD quotes
     if (isUSDQuote) {
       return {
         protocols: [TradingApi.ProtocolItems.V2, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V4],
       }
+    }
+
+    // for bridging, we want to only return BEST_PRICE
+    if (tokenInChainId !== tokenOutChainId) {
+      return { routingPreference: TradingApi.RoutingPreference.BEST_PRICE }
     }
 
     const protocols = ctx.getProtocols()

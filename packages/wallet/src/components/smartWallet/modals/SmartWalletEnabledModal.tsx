@@ -41,7 +41,10 @@ export function SmartWalletEnabledModal({
         </Flex>
       }
       modalName={ModalName.SmartWalletEnabledModal}
-      primaryButton={{ text: t('common.done'), onClick: onClose, variant: 'default', emphasis: 'secondary' }}
+      primaryButtonText={t('common.done')}
+      primaryButtonVariant="default"
+      primaryButtonEmphasis="secondary"
+      primaryButtonOnClick={onClose}
       zIndex={zIndexes.popover}
       onClose={onClose}
     />

@@ -1,7 +1,8 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
+import { EMPTY_NFT_ITEM, HIDDEN_NFTS_ROW } from 'uniswap/src/features/nfts/constants'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
-import { buildNftsArray, getIsNftHidden } from 'uniswap/src/features/nfts/utils'
+import { getIsNftHidden } from 'uniswap/src/features/nfts/utils'
 import { selectNftsVisibility } from 'uniswap/src/features/visibility/selectors'
 
 // Apply to NFTs fetched from API hidden filter, which is stored in Redux
@@ -17,8 +18,6 @@ export function useGroupNftsByVisibility({
   nfts: Array<NFTItem | string>
   numHidden: number
   numShown: number
-  hiddenNfts: NFTItem[]
-  shownNfts: NFTItem[]
 } {
   const nftVisibility = useSelector(selectNftsVisibility)
   return useMemo(() => {
@@ -43,16 +42,19 @@ export function useGroupNftsByVisibility({
       { shown: [], hidden: [] },
     )
     return {
-      nfts: buildNftsArray({
-        shownNfts: shown,
-        hiddenNfts: hidden,
-        showHidden,
-        allPagesFetched,
-      }),
+      nfts: [
+        ...shown,
+        ...(hidden.length && allPagesFetched
+          ? [
+              // to fill the gap for odd number of shown elements in 2 columns layout
+              ...(shown.length % 2 ? [EMPTY_NFT_ITEM] : []),
+              HIDDEN_NFTS_ROW,
+            ]
+          : []),
+        ...(showHidden && allPagesFetched ? hidden : []),
+      ],
       numHidden: hidden.length,
       numShown: shown.length,
-      hiddenNfts: hidden,
-      shownNfts: shown,
     }
   }, [nftDataItems, nftVisibility, showHidden, allPagesFetched])
 }

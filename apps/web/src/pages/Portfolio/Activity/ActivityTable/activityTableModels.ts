@@ -39,14 +39,6 @@ type ActivityAmountModel =
       currency0AmountRaw: string
       currency1AmountRaw?: string
     }
-  | {
-      kind: 'nft'
-      nftImageUrl?: string
-      nftName: string
-      nftCollectionName?: string
-      purchaseCurrencyId?: string
-      purchaseAmountRaw?: string
-    }
 
 /**
  * Represents the type label and grouping for a transaction
@@ -59,14 +51,6 @@ interface ActivityTypeLabel {
 }
 
 /**
- * Protocol/Dapp information for display
- */
-export interface ActivityProtocolInfo {
-  name: string
-  logoUrl?: string
-}
-
-/**
  * Complete row data fragments for a single transaction in the activity table
  */
 export interface ActivityRowFragments {
@@ -76,6 +60,4 @@ export interface ActivityRowFragments {
   counterparty?: Address | null
   /** Type label and grouping information */
   typeLabel?: ActivityTypeLabel | null
-  /** Protocol/Dapp information */
-  protocolInfo?: ActivityProtocolInfo | null
 }

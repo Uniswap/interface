@@ -16,48 +16,26 @@ exports[`DatetimeText renders without error 1`] = `
     allowFontScaling={true}
     collapsable={false}
     editable={false}
-    jestAnimatedProps={
-      {
-        "value": {
-          "text": "Thursday, November 1st, 2023",
-        },
-      }
-    }
     jestAnimatedStyle={
       {
         "value": {},
       }
     }
-    jestInlineStyle={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "color": "rgba(19, 19, 19, 0.63)",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 15,
-          "fontWeight": "400",
-          "lineHeight": 19.5,
-        },
-        undefined,
-      ]
-    }
     maxFontSizeMultiplier={1.4}
     style={
-      [
-        {
-          "padding": 0,
+      {
+        "color": {
+          "dynamic": {
+            "dark": "rgba(255, 255, 255, 0.65)",
+            "light": "rgba(19, 19, 19, 0.63)",
+          },
         },
-        {
-          "color": "rgba(19, 19, 19, 0.63)",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 15,
-          "fontWeight": "400",
-          "lineHeight": 19.5,
-        },
-        undefined,
-      ]
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 15,
+        "fontWeight": "400",
+        "lineHeight": 19.5,
+        "padding": 0,
+      }
     }
     text="Thursday, November 1st, 2023"
     underlineColorAndroid="transparent"
@@ -79,13 +57,6 @@ exports[`PriceText renders loading state 1`] = `
     allowFontScaling={true}
     collapsable={false}
     editable={false}
-    jestAnimatedProps={
-      {
-        "value": {
-          "text": "-",
-        },
-      }
-    }
     jestAnimatedStyle={
       {
         "value": {
@@ -93,43 +64,16 @@ exports[`PriceText renders loading state 1`] = `
         },
       }
     }
-    jestInlineStyle={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        [
-          {
-            "color": "#131313",
-          },
-        ],
-      ]
-    }
     maxFontSizeMultiplier={1.2}
     style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        {
-          "color": "#131313",
-        },
-        {
-          "fontSize": 106,
-        },
-      ]
+      {
+        "color": "#131313",
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 106,
+        "fontWeight": "400",
+        "lineHeight": 50.879999999999995,
+        "padding": 0,
+      }
     }
     testID="wholePart"
     text="-"
@@ -152,13 +96,6 @@ exports[`PriceText renders without error 1`] = `
     allowFontScaling={true}
     collapsable={false}
     editable={false}
-    jestAnimatedProps={
-      {
-        "value": {
-          "text": "$55",
-        },
-      }
-    }
     jestAnimatedStyle={
       {
         "value": {
@@ -166,43 +103,16 @@ exports[`PriceText renders without error 1`] = `
         },
       }
     }
-    jestInlineStyle={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        [
-          {
-            "color": "#131313",
-          },
-        ],
-      ]
-    }
     maxFontSizeMultiplier={1.2}
     style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        {
-          "color": "#131313",
-        },
-        {
-          "fontSize": 106,
-        },
-      ]
+      {
+        "color": "#131313",
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 106,
+        "fontWeight": "400",
+        "lineHeight": 50.879999999999995,
+        "padding": 0,
+      }
     }
     testID="wholePart"
     text="$55"
@@ -213,13 +123,6 @@ exports[`PriceText renders without error 1`] = `
     allowFontScaling={true}
     collapsable={false}
     editable={false}
-    jestAnimatedProps={
-      {
-        "value": {
-          "text": ".00",
-        },
-      }
-    }
     jestAnimatedStyle={
       {
         "value": {
@@ -228,39 +131,16 @@ exports[`PriceText renders without error 1`] = `
         },
       }
     }
-    jestInlineStyle={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        [],
-      ]
-    }
     maxFontSizeMultiplier={1.2}
     style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        {
-          "color": "rgba(19, 19, 19, 0.35)",
-        },
-        {
-          "fontSize": 106,
-        },
-      ]
+      {
+        "color": "rgba(19, 19, 19, 0.35)",
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 106,
+        "fontWeight": "400",
+        "lineHeight": 50.879999999999995,
+        "padding": 0,
+      }
     }
     testID="decimalPart"
     text=".00"
@@ -283,13 +163,6 @@ exports[`PriceText renders without error less than a dollar 1`] = `
     allowFontScaling={true}
     collapsable={false}
     editable={false}
-    jestAnimatedProps={
-      {
-        "value": {
-          "text": "$0",
-        },
-      }
-    }
     jestAnimatedStyle={
       {
         "value": {
@@ -297,43 +170,16 @@ exports[`PriceText renders without error less than a dollar 1`] = `
         },
       }
     }
-    jestInlineStyle={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        [
-          {
-            "color": "#131313",
-          },
-        ],
-      ]
-    }
     maxFontSizeMultiplier={1.2}
     style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        {
-          "color": "#131313",
-        },
-        {
-          "fontSize": 106,
-        },
-      ]
+      {
+        "color": "#131313",
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 106,
+        "fontWeight": "400",
+        "lineHeight": 50.879999999999995,
+        "padding": 0,
+      }
     }
     testID="wholePart"
     text="$0"
@@ -344,13 +190,6 @@ exports[`PriceText renders without error less than a dollar 1`] = `
     allowFontScaling={true}
     collapsable={false}
     editable={false}
-    jestAnimatedProps={
-      {
-        "value": {
-          "text": ".0500",
-        },
-      }
-    }
     jestAnimatedStyle={
       {
         "value": {
@@ -359,39 +198,16 @@ exports[`PriceText renders without error less than a dollar 1`] = `
         },
       }
     }
-    jestInlineStyle={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        [],
-      ]
-    }
     maxFontSizeMultiplier={1.2}
     style={
-      [
-        {
-          "padding": 0,
-        },
-        {
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 53,
-          "fontWeight": "400",
-          "lineHeight": 50.879999999999995,
-        },
-        {
-          "color": "#131313",
-        },
-        {
-          "fontSize": 106,
-        },
-      ]
+      {
+        "color": "#131313",
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 106,
+        "fontWeight": "400",
+        "lineHeight": 50.879999999999995,
+        "padding": 0,
+      }
     }
     testID="decimalPart"
     text=".0500"
@@ -440,7 +256,12 @@ exports[`RelativeChangeText renders loading state 1`] = `
           maxFontSizeMultiplier={1.4}
           style={
             {
-              "color": "transparent",
+              "color": {
+                "dynamic": {
+                  "dark": "transparent",
+                  "light": "transparent",
+                },
+              },
               "fontFamily": "Basel Grotesk",
               "fontSize": 19,
               "fontWeight": "400",
@@ -456,7 +277,12 @@ exports[`RelativeChangeText renders loading state 1`] = `
       <View
         style={
           {
-            "backgroundColor": "#F9F9F9",
+            "backgroundColor": {
+              "dynamic": {
+                "dark": "#1F1F1F",
+                "light": "#F9F9F9",
+              },
+            },
             "borderBottomLeftRadius": 999999,
             "borderBottomRightRadius": 999999,
             "borderTopLeftRadius": 999999,
@@ -471,132 +297,6 @@ exports[`RelativeChangeText renders loading state 1`] = `
         }
       />
     </View>
-  </View>
-  <View
-    style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "gap": 2,
-        "opacity": 0,
-      }
-    }
-  >
-    <RNSVGSvgView
-      align="xMidYMid"
-      bbHeight={16}
-      bbWidth={16}
-      collapsable={false}
-      fill="none"
-      focusable={false}
-      jestAnimatedProps={
-        {
-          "value": {},
-        }
-      }
-      jestInlineStyle={{}}
-      meetOrSlice={0}
-      minX={0}
-      minY={0}
-      strokeWidth={2}
-      style={
-        [
-          {
-            "backgroundColor": "transparent",
-            "borderWidth": 0,
-          },
-          {
-            "height": 16,
-            "width": 16,
-          },
-          {
-            "flex": 0,
-            "height": 16,
-            "width": 16,
-          },
-        ]
-      }
-      vbHeight={24}
-      vbWidth={24}
-    >
-      <RNSVGGroup
-        fill={null}
-        propList={
-          [
-            "fill",
-            "strokeWidth",
-          ]
-        }
-        strokeWidth={2}
-      >
-        <RNSVGPath
-          d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
-          fill={
-            {
-              "type": 2,
-            }
-          }
-          propList={
-            [
-              "fill",
-            ]
-          }
-        />
-      </RNSVGGroup>
-    </RNSVGSvgView>
-    <TextInput
-      allowFontScaling={true}
-      collapsable={false}
-      editable={false}
-      jestAnimatedProps={
-        {
-          "value": {
-            "text": "10.00%",
-          },
-        }
-      }
-      jestAnimatedStyle={
-        {
-          "value": {
-            "color": "#E10F0F",
-          },
-        }
-      }
-      jestInlineStyle={
-        [
-          {
-            "padding": 0,
-          },
-          {
-            "fontFamily": "Basel Grotesk",
-            "fontSize": 19,
-            "fontWeight": "400",
-            "lineHeight": 24.7,
-          },
-        ]
-      }
-      maxFontSizeMultiplier={1.4}
-      style={
-        [
-          {
-            "padding": 0,
-          },
-          {
-            "fontFamily": "Basel Grotesk",
-            "fontSize": 19,
-            "fontWeight": "400",
-            "lineHeight": 24.7,
-          },
-          {
-            "color": "#E10F0F",
-          },
-        ]
-      }
-      testID="relative-change-text"
-      text="10.00%"
-      underlineColorAndroid="transparent"
-      value="10.00%"
-    />
   </View>
 </View>
 `;
@@ -613,131 +313,88 @@ exports[`RelativeChangeText renders without error 1`] = `
   }
   testID="relative-price-change"
 >
-  <View
+  <RNSVGSvgView
+    align="xMidYMid"
+    bbHeight={16}
+    bbWidth={16}
+    collapsable={false}
+    fill="none"
+    focusable={false}
+    meetOrSlice={0}
+    minX={0}
+    minY={0}
+    strokeWidth={2}
     style={
-      {
-        "alignItems": "center",
-        "flexDirection": "row",
-        "gap": 2,
-        "opacity": 1,
-      }
-    }
-  >
-    <RNSVGSvgView
-      align="xMidYMid"
-      bbHeight={16}
-      bbWidth={16}
-      collapsable={false}
-      fill="none"
-      focusable={false}
-      jestAnimatedProps={
+      [
         {
-          "value": {},
-        }
-      }
-      jestInlineStyle={{}}
-      meetOrSlice={0}
-      minX={0}
-      minY={0}
-      strokeWidth={2}
-      style={
+          "backgroundColor": "transparent",
+          "borderWidth": 0,
+        },
+        {
+          "height": 16,
+          "width": 16,
+        },
+        {
+          "flex": 0,
+          "height": 16,
+          "width": 16,
+        },
+      ]
+    }
+    vbHeight={24}
+    vbWidth={24}
+  >
+    <RNSVGGroup
+      fill={null}
+      propList={
         [
-          {
-            "backgroundColor": "transparent",
-            "borderWidth": 0,
-          },
-          {
-            "height": 16,
-            "width": 16,
-          },
-          {
-            "flex": 0,
-            "height": 16,
-            "width": 16,
-          },
+          "fill",
+          "strokeWidth",
         ]
       }
-      vbHeight={24}
-      vbWidth={24}
+      strokeWidth={2}
     >
-      <RNSVGGroup
-        fill={null}
+      <RNSVGPath
+        d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+        fill={
+          {
+            "type": 2,
+          }
+        }
         propList={
           [
             "fill",
-            "strokeWidth",
           ]
         }
-        strokeWidth={2}
-      >
-        <RNSVGPath
-          d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
-          fill={
-            {
-              "type": 2,
-            }
-          }
-          propList={
-            [
-              "fill",
-            ]
-          }
-        />
-      </RNSVGGroup>
-    </RNSVGSvgView>
-    <TextInput
-      allowFontScaling={true}
-      collapsable={false}
-      editable={false}
-      jestAnimatedProps={
-        {
-          "value": {
-            "text": "10.00%",
-          },
-        }
+      />
+    </RNSVGGroup>
+  </RNSVGSvgView>
+  <TextInput
+    allowFontScaling={true}
+    collapsable={false}
+    editable={false}
+    jestAnimatedStyle={
+      {
+        "value": {
+          "color": "#E10F0F",
+        },
       }
-      jestAnimatedStyle={
-        {
-          "value": {
-            "color": "#E10F0F",
-          },
-        }
+    }
+    maxFontSizeMultiplier={1.4}
+    style={
+      {
+        "color": "#E10F0F",
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 19,
+        "fontWeight": "400",
+        "lineHeight": 24.7,
+        "padding": 0,
       }
-      jestInlineStyle={
-        [
-          {
-            "padding": 0,
-          },
-          {
-            "fontFamily": "Basel Grotesk",
-            "fontSize": 19,
-            "fontWeight": "400",
-            "lineHeight": 24.7,
-          },
-        ]
-      }
-      maxFontSizeMultiplier={1.4}
-      style={
-        [
-          {
-            "padding": 0,
-          },
-          {
-            "fontFamily": "Basel Grotesk",
-            "fontSize": 19,
-            "fontWeight": "400",
-            "lineHeight": 24.7,
-          },
-          {
-            "color": "#E10F0F",
-          },
-        ]
-      }
-      testID="relative-change-text"
-      text="10.00%"
-      underlineColorAndroid="transparent"
-      value="10.00%"
-    />
-  </View>
+    }
+    testID="relative-change-text"
+    text="10.00%"
+    underlineColorAndroid="transparent"
+    value="10.00%"
+  />
 </View>
 `;

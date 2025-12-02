@@ -61,7 +61,6 @@ export const ZORA_CHAIN_INFO = {
   tokens,
   statusPage: undefined,
   supportsV4: true,
-  supportsNFTs: true,
   urlParam: 'zora',
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',

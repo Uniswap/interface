@@ -7,7 +7,7 @@ import {
   type ProtectionInfo,
   ProtectionResult,
   SafetyLevel,
-} from '@universe/api/src/clients/graphql/__generated__/schema-types'
+} from '@universe/api/src/clients/graphql/__generated__/types-and-hooks'
 import { logger } from 'utilities/src/logger/logger'
 
 /**

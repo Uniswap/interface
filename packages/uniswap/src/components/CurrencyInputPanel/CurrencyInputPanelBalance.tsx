@@ -12,21 +12,19 @@ interface CurrencyInputBalanceProps {
   currencyInfo: Maybe<CurrencyInfo>
   showInsufficientBalanceWarning: boolean
   currencyField: CurrencyField
-  hideBalance: boolean
 }
 export function CurrencyInputPanelBalance({
   currencyBalance,
   currencyInfo,
   currencyField,
   showInsufficientBalanceWarning,
-  hideBalance,
 }: CurrencyInputBalanceProps): JSX.Element | null {
   const { formatCurrencyAmount } = useLocalizationContext()
   const { isDisconnected } = useConnectionStatus()
   const isOutput = currencyField === CurrencyField.OUTPUT
 
-  // Hide balance if panel is output, and no balance, or disconnected or the token selector is hidden
-  const hideCurrencyBalance = (isOutput && currencyBalance?.equalTo(0)) || isDisconnected || hideBalance
+  // Hide balance if panel is output, and no balance
+  const hideCurrencyBalance = (isOutput && currencyBalance?.equalTo(0)) || isDisconnected
 
   if (!currencyInfo || hideCurrencyBalance) {
     return null
