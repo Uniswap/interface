@@ -1,38 +1,29 @@
 import { DynamicConfigs, getDynamicConfigValue, SyncTransactionSubmissionChainIdsConfigKey } from '@universe/gating'
-import { call, put, SagaGenerator } from 'typed-redux-saga'
+import { call, put } from 'typed-redux-saga'
 import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
 import { AppNotificationType } from 'uniswap/src/features/notifications/slice/types'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
-import { HandleUniswapXPlanSignatureStepParams } from 'uniswap/src/features/transactions/steps/types'
 import { FLASHBLOCKS_UI_SKIP_ROUTES } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
 import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
-import { plan } from 'uniswap/src/features/transactions/swap/plan/planSaga'
-import { SwapExecutionCallbacks } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import type {
   SwapGasFeeEstimation,
   ValidatedSwapTxContext,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { isChained, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isFinalizedTx } from 'uniswap/src/features/transactions/types/utils'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import type { Logger } from 'utilities/src/logger/logger'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { createTransactionServices } from 'wallet/src/features/transactions/factories/createTransactionServices'
-import { prepareTransactionServices } from 'wallet/src/features/transactions/shared/baseTransactionPreparationSaga'
 import {
   getShouldWaitBetweenTransactions,
   getSwapTransactionCount,
 } from 'wallet/src/features/transactions/swap/confirmation'
-import {
-  type createPrepareAndSignSwapSaga,
-  shouldSubmitViaPrivateRpc,
-} from 'wallet/src/features/transactions/swap/prepareAndSignSwapSaga'
+import type { createPrepareAndSignSwapSaga } from 'wallet/src/features/transactions/swap/prepareAndSignSwapSaga'
 import type { TransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
 import type {
   ApprovalTransactionData,
@@ -64,9 +55,11 @@ export type SwapParams = {
   account: SignerMnemonicAccountMeta
   analytics: SwapTradeBaseProperties
   swapTxContext: ValidatedSwapTxContext
+  onSuccess: () => void
+  onFailure: () => void
+  onPending: () => void
   preSignedTransaction?: PreSignedSwapTransaction
-  getOnPressRetry?: (error: Error | undefined) => (() => void) | undefined
-} & SwapExecutionCallbacks
+}
 
 /**
  * Helper function to handle approval transaction execution
@@ -179,101 +172,6 @@ function* executeTransactionStep(params: {
   return undefined // Async execution doesn't return a sync result
 }
 
-function* executeChainedSwap(params: SwapParams, dependencies: TransactionSagaDependencies) {
-  const { account, swapTxContext } = params
-
-  const delegationType = swapTxContext.includesDelegation ? DelegationType.Delegate : DelegationType.Auto
-
-  /**
-   * Reusable helper to prepare transaction services with common parameters
-   */
-  function* prepareServicesForChain(
-    chainId: UniverseChainId,
-    // TODO: SWAP-458 - update with proper typings once available
-    stepType?: string,
-  ) {
-    // TODO: SWAP-458 - update with proper typings once available
-    const submitViaPrivateRpc = stepType === 'CLASSIC' && (yield* call(shouldSubmitViaPrivateRpc, chainId))
-
-    return yield* prepareTransactionServices(dependencies, {
-      account,
-      chainId,
-      submitViaPrivateRpc,
-      delegationType,
-    })
-  }
-
-  yield* plan({
-    ...params,
-    address: account.address,
-    selectChain: (chainId: number) => Promise.resolve(true),
-    *handleApprovalTransactionStep(handleApprovalStepParams): SagaGenerator<string> {
-      const { payload, stepSwapType, stepType, tokenInChainId } = handleApprovalStepParams.step
-      const { transactionSigner } = yield* prepareServicesForChain(
-        tokenInChainId as unknown as UniverseChainId,
-        stepSwapType ?? stepType,
-      )
-      const preparedTransaction = yield* call([transactionSigner, transactionSigner.prepareTransaction], {
-        request: payload,
-      })
-
-      const signedTx = yield* call([transactionSigner, transactionSigner.signTransaction], preparedTransaction)
-      const result = yield* call([transactionSigner, transactionSigner.sendTransaction], { signedTx })
-      return result
-    },
-    *handleSwapTransactionStep(handleSwapStepParams): SagaGenerator<string> {
-      const { payload, stepSwapType, stepType, tokenInChainId } = handleSwapStepParams.step
-      const { transactionSigner } = yield* prepareServicesForChain(
-        tokenInChainId as unknown as UniverseChainId,
-        stepSwapType ?? stepType,
-      )
-      const preparedTransaction = yield* call([transactionSigner, transactionSigner.prepareTransaction], {
-        request: payload,
-      })
-      const signedTx = yield* call([transactionSigner, transactionSigner.signTransaction], preparedTransaction)
-      const hash = yield* call([transactionSigner, transactionSigner.sendTransaction], { signedTx })
-
-      yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
-        transaction_hash: hash,
-        ...handleSwapStepParams.analytics,
-      })
-
-      return hash
-    },
-    *handleSignatureStep(handleSignatureStepParams): SagaGenerator<string> {
-      const { domain, types, values, stepSwapType, stepType, tokenInChainId } = handleSignatureStepParams.step
-      const { transactionSigner } = yield* prepareServicesForChain(
-        tokenInChainId as unknown as UniverseChainId,
-        stepSwapType ?? stepType,
-      )
-      const result = yield* call([transactionSigner, transactionSigner.signTypedData], {
-        domain,
-        types,
-        value: values,
-      })
-      return result
-    },
-    *handleUniswapXPlanSignatureStep(
-      handleUniswapXPlanSignatureStepParams: HandleUniswapXPlanSignatureStepParams,
-    ): SagaGenerator<string> {
-      const payload = handleUniswapXPlanSignatureStepParams.step
-      const { transactionSigner } = yield* prepareServicesForChain(payload.domain.chainId as UniverseChainId)
-      const result = yield* call([transactionSigner, transactionSigner.signTypedData], {
-        domain: payload.domain,
-        types: payload.types,
-        value: payload.values,
-      })
-      return result
-    },
-    getDisplayableError: ({ error }: { error: Error }) => {
-      dependencies.logger.error(error, {
-        tags: { file: 'executeSwapSaga', function: 'getDisplayableError' },
-        extra: { error },
-      })
-      return new Error(error.message)
-    },
-  })
-}
 /**
  * Factory function that creates an execute swap saga with injected dependencies
  */
@@ -285,12 +183,6 @@ export function createExecuteSwapSaga(
     const userSubmissionTimestampMs = Date.now()
     try {
       const { account, txId, analytics, onSuccess, onFailure, onPending, swapTxContext } = params
-
-      if (isChained(swapTxContext)) {
-        yield* call(onPending)
-        yield* executeChainedSwap(params, dependencies)
-        return
-      }
 
       const preSignedTransaction =
         params.preSignedTransaction ||

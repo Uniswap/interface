@@ -220,7 +220,6 @@ function getStepSpecificErrorContent(
         supportArticleURL: uniswapUrls.helpArticleUrls.transactionFailure,
       }
     case TransactionStepType.UniswapXSignature:
-    case TransactionStepType.UniswapXPlanSignature:
       if (error.isBackendRejection) {
         return {
           title: t('common.swap.failed'),

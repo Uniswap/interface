@@ -9,15 +9,15 @@ import { useBlockConfirmationTime } from 'hooks/useBlockConfirmationTime'
 import { useColor } from 'hooks/useColor'
 import { SwapResult, useSwapTransactionStatus } from 'hooks/useSwapCallback'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { styled } from 'lib/styled-components'
+import styled, { useTheme } from 'lib/styled-components'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InterfaceTrade } from 'state/routing/types'
 import { isLimitTrade, isUniswapXSwapTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { useIsTransactionConfirmed, useUniswapXOrderByOrderHash } from 'state/transactions/hooks'
+import { colors } from 'theme/colors'
 import { Divider } from 'theme/components/Dividers'
-import { Flex, useSporeColors } from 'ui/src'
-import { DEP_accentColors } from 'ui/src/theme'
+import { Flex } from 'ui/src'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -62,7 +62,7 @@ export default function ProgressIndicator({
   const { chainId } = useAccount()
   const nativeCurrency = useNativeCurrency(chainId)
   const inputTokenColor = useColor(trade?.inputAmount.currency.wrapped)
-  const colors = useSporeColors()
+  const theme = useTheme()
 
   // Dynamic estimation of transaction wait time based on confirmation of previous block
   const { blockConfirmationTime } = useBlockConfirmationTime()
@@ -138,7 +138,7 @@ export default function ProgressIndicator({
       },
       [ConfirmModalState.PERMITTING]: {
         icon: <Sign />,
-        rippleColor: colors.accent1.val,
+        rippleColor: theme.accent1,
         previewTitle: t('common.signMessage'),
         actionRequiredTitle: t('common.signMessageWallet'),
         learnMoreLinkText: t('common.whySign'),
@@ -146,7 +146,7 @@ export default function ProgressIndicator({
       },
       [ConfirmModalState.PENDING_CONFIRMATION]: {
         icon: <Swap />,
-        rippleColor: DEP_accentColors.blue400,
+        rippleColor: colors.blue400,
         previewTitle: isLimitTrade(trade) ? t('common.confirm') : t('swap.confirmSwap'),
         actionRequiredTitle: isLimitTrade(trade) ? t('common.confirmWallet') : t('common.confirmSwap'),
         inProgressTitle: isLimitTrade(trade) ? t('common.pendingEllipsis') : t('common.swapPending'),
@@ -160,7 +160,7 @@ export default function ProgressIndicator({
           : uniswapUrls.helpArticleUrls.howToSwapTokens,
       },
     }),
-    [trade, inputTokenColor, t, nativeCurrency.symbol, colors],
+    [trade, inputTokenColor, t, nativeCurrency.symbol, theme.accent1],
   )
 
   if (steps.length === 0) {

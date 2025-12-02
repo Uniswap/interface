@@ -106,8 +106,8 @@ export const SwapFormScreenStoreContextProvider = ({
   const outputRef = useRef<CurrencyInputPanelRef>(null)
   const decimalPadRef = useRef<DecimalPadInputRef>(null)
 
-  const inputSelectionRef = useRef<TextInputProps['selection']>(undefined)
-  const outputSelectionRef = useRef<TextInputProps['selection']>(undefined)
+  const inputSelectionRef = useRef<TextInputProps['selection']>()
+  const outputSelectionRef = useRef<TextInputProps['selection']>()
 
   // Non-localized formatted derived value (swap amounts must be plain numbers)
   const formattedDerivedValue = formatCurrencyAmount({
@@ -120,14 +120,14 @@ export const SwapFormScreenStoreContextProvider = ({
   const formattedDerivedValueRef = useRef(formattedDerivedValue)
   formattedDerivedValueRef.current = formattedDerivedValue
 
-  // Chained Actions and Across only supports exact-in
-  const isCrossChain = Boolean(input && output && input.chainId !== output.chainId)
-  const exactOutputDisabled = isCrossChain || exactOutputWillFail
+  // Bridging means different chains → Across only supports exact-in
+  const isBridge = Boolean(input && output && input.chainId !== output.chainId)
+  const exactOutputDisabled = isBridge || exactOutputWillFail
 
   const callbacks = useSwapFormScreenCallbacks({
     exactOutputWouldFailIfCurrenciesSwitched,
     exactFieldIsInput,
-    isCrossChain,
+    isBridge,
     formattedDerivedValueRef,
     inputRef,
     outputRef,
@@ -193,7 +193,7 @@ export const SwapFormScreenStoreContextProvider = ({
       showExactOutputUnavailableWarning,
       outputTokenHasBuyTax,
       exactAmountToken,
-      isCrossChain,
+      isBridge,
 
       // Trade
       trade,
@@ -247,7 +247,7 @@ export const SwapFormScreenStoreContextProvider = ({
       showTemporaryExactOutputUnavailableWarning,
       outputTokenHasBuyTax,
       exactAmountToken,
-      isCrossChain,
+      isBridge,
       trade,
     ],
   )

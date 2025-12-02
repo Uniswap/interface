@@ -1,2 +1,0 @@
-# @universe/cli
-

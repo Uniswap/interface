@@ -28,11 +28,7 @@ type LPSteps =
   | MigratePositionTransactionStep
   | MigratePositionTransactionStepAsync
   | CollectFeesSteps
-export function LPTransactionStepRow({
-  status,
-  currentStepIndex,
-  totalStepsCount,
-}: StepRowProps<LPSteps>): JSX.Element {
+export function LPTransactionStepRow({ status }: StepRowProps<LPSteps>): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
@@ -53,8 +49,6 @@ export function LPTransactionStepRow({
       }}
       rippleColor={colors.DEP_blue400.val}
       status={status}
-      currentStepIndex={currentStepIndex}
-      totalStepsCount={totalStepsCount}
     />
   )
 }

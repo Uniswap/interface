@@ -75,7 +75,7 @@ interface FiatOnRampAmountSectionProps {
 }
 
 export type FiatOnRampAmountSectionRef = {
-  textInputRef: RefObject<RNTextInput | null>
+  textInputRef: RefObject<RNTextInput>
   triggerShakeAnimation: () => void
 }
 

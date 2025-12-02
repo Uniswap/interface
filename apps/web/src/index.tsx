@@ -7,22 +7,21 @@ import { TokenBalancesProvider } from 'appGraphql/data/apollo/TokenBalancesProvi
 import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
 import { datadogRum } from '@datadog/browser-rum'
-import { ApiInit, getEntryGatewayUrl, provideSessionService } from '@universe/api'
+import { ApiInit, getSessionService } from '@universe/api'
 import type { StatsigUser } from '@universe/gating'
-import { getIsSessionServiceEnabled, getIsSessionUpgradeAutoEnabled } from '@universe/gating'
 import { createChallengeSolverService, createSessionInitializationService } from '@universe/sessions'
 import { QueryClientPersistProvider } from 'components/PersistQueryClient'
-import { createWeb3Provider, WalletCapabilitiesEffects } from 'components/Web3Provider/createWeb3Provider'
+import { createWeb3Provider } from 'components/Web3Provider/createWeb3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { AccountsStoreDevTool } from 'features/accounts/store/devtools'
 import { WebAccountsStoreProvider } from 'features/accounts/store/provider'
 import { ConnectWalletMutationProvider } from 'features/wallet/connection/hooks/useConnectWalletMutation'
 import { ExternalWalletProvider } from 'features/wallet/providers/ExternalWalletProvider'
+import { useAccount } from 'hooks/useAccount'
 import { useDeferredComponent } from 'hooks/useDeferredComponent'
 import { LanguageProvider } from 'i18n/LanguageProvider'
 import { BlockNumberProvider } from 'lib/hooks/useBlockNumber'
-import { WebNotificationServiceManager } from 'notification-service/WebNotificationService'
 import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
 import App from 'pages/App'
 import type { PropsWithChildren } from 'react'
@@ -45,12 +44,9 @@ import i18n from 'uniswap/src/i18n'
 import { initializeDatadog } from 'uniswap/src/utils/datadog'
 import { localDevDatadogEnabled } from 'utilities/src/environment/constants'
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
-import { getLogger } from 'utilities/src/logger/logger'
 import { isBrowserRouterEnabled } from 'utils/env'
 import { unregister as unregisterServiceWorker } from 'utils/serviceWorker'
 import { getCanonicalUrl } from 'utils/urlRoutes'
-// biome-ignore lint/style/noRestrictedImports: custom useAccount hook requires statsig
-import { useAccount } from 'wagmi'
 
 if (window.ethereum) {
   window.ethereum.autoRefreshOnNetworkChange = false
@@ -77,18 +73,13 @@ const loadFiatOnRampTransactionsUpdater = () => import('state/fiatOnRampTransact
 const loadWebAccountsStoreUpdater = () =>
   import('features/accounts/store/updater').then((m) => ({ default: m.WebAccountsStoreUpdater }))
 
-const provideSessionInitService = () =>
-  createSessionInitializationService({
-    getSessionService: () =>
-      provideSessionService({
-        getBaseUrl: getEntryGatewayUrl,
-        getIsSessionServiceEnabled,
-        getLogger,
-      }),
-    challengeSolverService: createChallengeSolverService(),
-    getIsSessionUpgradeAutoEnabled,
-    getLogger,
-  })
+const sessionInitService = createSessionInitializationService({
+  sessionService: getSessionService({
+    // TODO: Use real base url
+    getBaseUrl: () => 'https://entry-gateway.backend-dev.api.uniswap.org',
+  }),
+  challengeSolverService: createChallengeSolverService(),
+})
 
 function Updaters() {
   const location = useLocation()
@@ -116,10 +107,7 @@ function Updaters() {
       {FiatOnRampTransactionsUpdater && <FiatOnRampTransactionsUpdater />}
       {WebAccountsStoreUpdater && <WebAccountsStoreUpdater />}
       <AccountsStoreDevTool />
-      <ApiInit
-        getSessionInitService={provideSessionInitService}
-        getIsSessionServiceEnabled={getIsSessionServiceEnabled}
-      />
+      <ApiInit sessionInitService={sessionInitService} />
     </>
   )
 }
@@ -138,7 +126,6 @@ function GraphqlProviders({ children }: { children: React.ReactNode }) {
 }
 function StatsigProvider({ children }: PropsWithChildren) {
   const account = useAccount()
-
   const statsigUser: StatsigUser = useMemo(
     () => ({
       userID: getDeviceId(),
@@ -175,59 +162,53 @@ const container = document.getElementById('root') as HTMLElement
 
 const Router = isBrowserRouterEnabled() ? BrowserRouter : HashRouter
 
-const RootApp = (): JSX.Element => {
-  return (
-    <StrictMode>
-      <HelmetProvider>
-        <ReactRouterUrlProvider>
-          <Provider store={store}>
-            <QueryClientPersistProvider>
-              <NuqsAdapter>
-                <Router>
-                  <I18nextProvider i18n={i18n}>
-                    <LanguageProvider>
-                      <Web3Provider>
-                        <StatsigProvider>
-                          <WalletCapabilitiesEffects />
-                          <ExternalWalletProvider>
-                            <ConnectWalletMutationProvider>
-                              <WebAccountsStoreProvider>
-                                <WebUniswapProvider>
-                                  <GraphqlProviders>
-                                    <LocalizationContextProvider>
-                                      <BlockNumberProvider>
-                                        <Updaters />
-                                        <ThemeProvider>
-                                          <TamaguiProvider>
-                                            <PortalProvider>
-                                              <WebNotificationServiceManager />
-                                              <ThemedGlobalStyle />
-                                              <App />
-                                            </PortalProvider>
-                                          </TamaguiProvider>
-                                        </ThemeProvider>
-                                      </BlockNumberProvider>
-                                    </LocalizationContextProvider>
-                                  </GraphqlProviders>
-                                </WebUniswapProvider>
-                              </WebAccountsStoreProvider>
-                            </ConnectWalletMutationProvider>
-                          </ExternalWalletProvider>
-                        </StatsigProvider>
-                      </Web3Provider>
-                    </LanguageProvider>
-                  </I18nextProvider>
-                </Router>
-              </NuqsAdapter>
-            </QueryClientPersistProvider>
-          </Provider>
-        </ReactRouterUrlProvider>
-      </HelmetProvider>
-    </StrictMode>
-  )
-}
-
-createRoot(container).render(<RootApp />)
+createRoot(container).render(
+  <StrictMode>
+    <HelmetProvider>
+      <ReactRouterUrlProvider>
+        <Provider store={store}>
+          <QueryClientPersistProvider>
+            <NuqsAdapter>
+              <Router>
+                <I18nextProvider i18n={i18n}>
+                  <LanguageProvider>
+                    <Web3Provider>
+                      <StatsigProvider>
+                        <ExternalWalletProvider>
+                          <ConnectWalletMutationProvider>
+                            <WebAccountsStoreProvider>
+                              <WebUniswapProvider>
+                                <GraphqlProviders>
+                                  <LocalizationContextProvider>
+                                    <BlockNumberProvider>
+                                      <Updaters />
+                                      <ThemeProvider>
+                                        <TamaguiProvider>
+                                          <PortalProvider>
+                                            <ThemedGlobalStyle />
+                                            <App />
+                                          </PortalProvider>
+                                        </TamaguiProvider>
+                                      </ThemeProvider>
+                                    </BlockNumberProvider>
+                                  </LocalizationContextProvider>
+                                </GraphqlProviders>
+                              </WebUniswapProvider>
+                            </WebAccountsStoreProvider>
+                          </ConnectWalletMutationProvider>
+                        </ExternalWalletProvider>
+                      </StatsigProvider>
+                    </Web3Provider>
+                  </LanguageProvider>
+                </I18nextProvider>
+              </Router>
+            </NuqsAdapter>
+          </QueryClientPersistProvider>
+        </Provider>
+      </ReactRouterUrlProvider>
+    </HelmetProvider>
+  </StrictMode>,
+)
 
 // We once had a ServiceWorker, and users who have not visited since then may still have it registered.
 // This ensures it is truly gone.

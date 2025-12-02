@@ -12,7 +12,6 @@ import {
 } from 'wallet/src/features/transactions/executeTransaction/eip7702Utils'
 import type { Provider } from 'wallet/src/features/transactions/executeTransaction/services/providerService'
 import type { TransactionSigner } from 'wallet/src/features/transactions/executeTransaction/services/TransactionSignerService/transactionSignerService'
-import { cleanTransactionGasFields } from 'wallet/src/features/transactions/utils/cleanTransactionGasFields'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
 import type { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
@@ -31,9 +30,7 @@ export function createTransactionSignerService(ctx: {
   // public methods
   const prepareTransaction: TransactionSigner['prepareTransaction'] = async (input) => {
     const signer = await getSigner()
-    // Clean up malformed transactions from dapps before populating
-    const cleanedRequest = cleanTransactionGasFields(input.request)
-    const populatedRequest = await signer.populateTransaction(cleanedRequest)
+    const populatedRequest = await signer.populateTransaction(input.request)
     return populatedRequest
   }
 

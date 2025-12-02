@@ -4,7 +4,6 @@ import {
   NoSolverAvailableError,
 } from '@universe/sessions/src/session-initialization/sessionErrors'
 import type { SessionService } from '@universe/sessions/src/session-service/types'
-import type { Logger } from 'utilities/src/logger/logger'
 
 interface SessionInitResult {
   sessionId: string
@@ -24,167 +23,70 @@ interface SessionInitializationService {
 }
 
 function createSessionInitializationService(ctx: {
-  getSessionService: () => SessionService
+  sessionService: SessionService
   challengeSolverService: ChallengeSolverService
-  getIsSessionUpgradeAutoEnabled?: () => boolean
   maxChallengeRetries?: number
-  getLogger?: () => Logger
 }): SessionInitializationService {
   async function handleChallengeFlow(attemptCount = 0): Promise<void> {
     const maxRetries = ctx.maxChallengeRetries ?? 3
 
-    const challenge = await ctx.getSessionService().requestChallenge()
+    const challenge = await ctx.sessionService.requestChallenge()
 
     // get our solver for the challenge type
-    const solver = ctx.challengeSolverService.getSolver(challenge.challengeType)
+    const solver = ctx.challengeSolverService.getSolver(challenge.botDetectionType)
     if (!solver) {
-      const error = new NoSolverAvailableError(challenge.challengeType)
-      ctx.getLogger?.().error(error, {
-        tags: {
-          file: 'createSessionInitializationService',
-          function: 'createSessionInitializationService',
-        },
-        extra: {
-          challengeType: challenge.challengeType,
-        },
-      })
-      throw error
+      throw new NoSolverAvailableError(challenge.botDetectionType)
     }
 
     // Solve the challenge
     const solution = await solver.solve({
       challengeId: challenge.challengeId,
-      challengeType: challenge.challengeType,
+      botDetectionType: challenge.botDetectionType,
       extra: challenge.extra,
     })
 
     // Upgrade session with the solution
-    const result = await ctx.getSessionService().upgradeSession({
+    const result = await ctx.sessionService.upgradeSession({
       solution,
       challengeId: challenge.challengeId,
     })
 
     if (!result.retry) {
       // Upgrade was successful, stop here
-      if (attemptCount > 0) {
-        ctx
-          .getLogger?.()
-          .info(
-            'createSessionInitializationService',
-            'createSessionInitializationService',
-            'Challenge upgrade succeeded after retry',
-            {
-              attemptCount: attemptCount + 1,
-            },
-          )
-      }
       return
     }
 
     // Handle server retry request
     if (attemptCount >= maxRetries) {
-      const error = new MaxChallengeRetriesError(maxRetries, attemptCount + 1)
-      ctx.getLogger?.().error(error, {
-        tags: {
-          file: 'createSessionInitializationService',
-          function: 'createSessionInitializationService',
-        },
-        extra: {
-          maxRetries,
-          actualAttempts: attemptCount + 1,
-        },
-      })
-      throw error
+      throw new MaxChallengeRetriesError(maxRetries, attemptCount + 1)
     }
-
-    ctx
-      .getLogger?.()
-      .info(
-        'createSessionInitializationService',
-        'createSessionInitializationService',
-        'Challenge retry requested by server',
-        {
-          attemptCount: attemptCount + 1,
-          maxRetries,
-        },
-      )
 
     await handleChallengeFlow(attemptCount + 1) // Recursive call with incremented count
   }
 
   async function initialize(): Promise<SessionInitResult> {
-    try {
-      ctx
-        .getLogger?.()
-        .info('createSessionInitializationService', 'createSessionInitializationService', 'Initializing session')
-      // Step 1: Check for existing session
-      const existingSession = await ctx.getSessionService().getSessionState()
+    // Step 1: Check for existing session
+    const existingSession = await ctx.sessionService.getSessionState()
 
-      if (existingSession?.sessionId) {
-        ctx
-          .getLogger?.()
-          .info('createSessionInitializationService', 'createSessionInitializationService', 'Existing session found', {
-            sessionId: existingSession.sessionId,
-          })
-        return {
-          sessionId: existingSession.sessionId,
-          isNewSession: false,
-        }
-      }
-
-      // Step 2: Initialize new session
-      const initResponse = await ctx.getSessionService().initSession()
-      ctx
-        .getLogger?.()
-        .info('createSessionInitializationService', 'createSessionInitializationService', 'New session initialized', {
-          sessionId: initResponse.sessionId,
-        })
-
-      // Step 3: Handle challenge if required and enabled
-      // Default behavior: disabled (opt-in) if callback is not provided
-      const challengeRequiredButDisabled = initResponse.needChallenge && !ctx.getIsSessionUpgradeAutoEnabled?.()
-
-      if (challengeRequiredButDisabled) {
-        ctx
-          .getLogger?.()
-          .info(
-            'createSessionInitializationService',
-            'createSessionInitializationService',
-            'Challenge required but disabled',
-            {
-              sessionId: initResponse.sessionId,
-            },
-          )
-      }
-
-      if (initResponse.needChallenge && ctx.getIsSessionUpgradeAutoEnabled?.()) {
-        ctx
-          .getLogger?.()
-          .info('createSessionInitializationService', 'createSessionInitializationService', 'Handling challenge')
-        await handleChallengeFlow()
-      }
-
-      const finalSessionId = initResponse.sessionId || ''
-      ctx
-        .getLogger?.()
-        .info('createSessionInitializationService', 'createSessionInitializationService', 'Session initialized', {
-          sessionId: finalSessionId,
-          isNewSession: true,
-          challengeCompleted: !challengeRequiredButDisabled,
-        })
-
+    if (existingSession?.sessionId) {
       return {
-        sessionId: finalSessionId,
-        isNewSession: true,
+        sessionId: existingSession.sessionId,
+        isNewSession: false,
       }
-    } catch (error) {
-      ctx.getLogger?.().error(error, {
-        tags: {
-          file: 'createSessionInitializationService',
-          function: 'createSessionInitializationService',
-        },
-      })
-      throw error
+    }
+
+    // Step 2: Initialize new session
+    const initResponse = await ctx.sessionService.initSession()
+
+    // Step 3: Handle challenge if required
+    if (initResponse.needChallenge) {
+      await handleChallengeFlow()
+    }
+
+    // Return the result
+    return {
+      sessionId: initResponse.sessionId || '',
+      isNewSession: true,
     }
   }
 

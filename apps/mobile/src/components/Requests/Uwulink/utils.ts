@@ -147,7 +147,6 @@ export async function getFormattedUwuLinkTxnRequest({
     dappRequestInfo: {
       name: '',
       url: '',
-      icon: null,
       ...request.dapp,
       requestType: DappRequestType.UwULink,
       chain_id: request.chainId,

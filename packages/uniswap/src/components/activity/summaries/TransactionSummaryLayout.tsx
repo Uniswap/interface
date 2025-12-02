@@ -13,11 +13,15 @@ import { useFormattedTimeForActivity } from 'uniswap/src/components/activity/hoo
 import type { TransactionSummaryLayoutProps } from 'uniswap/src/components/activity/types'
 import { TXN_HISTORY_ICON_SIZE, TXN_STATUS_ICON_SIZE } from 'uniswap/src/components/activity/utils'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useTransactionActions } from 'uniswap/src/features/activity/hooks/useTransactionActions'
 import { getTransactionSummaryTitle } from 'uniswap/src/features/activity/utils/getTransactionSummaryTitle'
 import { useIsQueuedTransaction } from 'uniswap/src/features/transactions/hooks/useIsQueuedTransaction'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
+import { openTransactionLink } from 'uniswap/src/utils/linking'
 import { isWebPlatform } from 'utilities/src/platform'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 const LOADING_SPINNER_SIZE = 20
@@ -72,6 +76,8 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const { evmAccount } = useWallet()
+  const readonly = !evmAccount || evmAccount.accountType === AccountType.Readonly
 
   const {
     value: showDetailsModal,
@@ -79,7 +85,7 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
     setFalse: handleHideDetailsModal,
   } = useBooleanState(false)
 
-  const { status } = transaction
+  const { status, hash, chainId } = transaction
 
   const { useWalletDisplayName } = useUniswapContext()
   const walletDisplayName = useWalletDisplayName(transaction.ownerAddress)
@@ -92,6 +98,14 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
   const { renderModals } = useTransactionActions({
     authTrigger,
     transaction,
+  })
+
+  const onPress = useEvent(async (): Promise<void> => {
+    if (readonly) {
+      await openTransactionLink(hash, chainId)
+    } else {
+      handleShowDetailsModal()
+    }
   })
 
   const formattedAddedTime = useFormattedTimeForActivity(transaction.addedTime)
@@ -116,12 +130,7 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
 
   return (
     <>
-      <TouchableArea
-        mb="$spacing4"
-        overflow="hidden"
-        testID={`activity-list-item-${index ?? 0}`}
-        onPress={handleShowDetailsModal}
-      >
+      <TouchableArea mb="$spacing4" overflow="hidden" testID={`activity-list-item-${index ?? 0}`} onPress={onPress}>
         <Flex
           grow
           row

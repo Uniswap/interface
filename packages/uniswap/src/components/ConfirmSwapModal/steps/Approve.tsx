@@ -8,8 +8,6 @@ import { TokenRevocationTransactionStep } from 'uniswap/src/features/transaction
 export function TokenApprovalTransactionStepRow({
   step,
   status,
-  currentStepIndex,
-  totalStepsCount,
 }: StepRowProps<TokenApprovalTransactionStep>): JSX.Element {
   const { t } = useTranslation()
   const { token, pair } = step
@@ -19,7 +17,7 @@ export function TokenApprovalTransactionStepRow({
     [StepStatus.Preview]: t('common.approveSpend', { symbol }),
     [StepStatus.Active]: t('common.wallet.approve'),
     [StepStatus.InProgress]: t('common.approvePending'),
-    [StepStatus.Complete]: t('common.approvedSpend', { symbol }),
+    [StepStatus.Complete]: t('common.approveSpend', { symbol }),
   }[status]
 
   return (
@@ -32,14 +30,12 @@ export function TokenApprovalTransactionStepRow({
         text: t('common.whyApprove'),
       }}
       status={status}
-      currentStepIndex={currentStepIndex}
-      totalStepsCount={totalStepsCount}
     />
   )
 }
 
 export function TokenRevocationTransactionStepRow(props: StepRowProps<TokenRevocationTransactionStep>): JSX.Element {
-  const { step, status, currentStepIndex, totalStepsCount } = props
+  const { step, status } = props
 
   const { t } = useTranslation()
   const { token } = step
@@ -52,13 +48,5 @@ export function TokenRevocationTransactionStepRow(props: StepRowProps<TokenRevoc
     [StepStatus.Complete]: t('common.resetLimit', { symbol }),
   }[status]
 
-  return (
-    <StepRowSkeleton
-      title={title}
-      currency={token}
-      status={status}
-      currentStepIndex={currentStepIndex}
-      totalStepsCount={totalStepsCount}
-    />
-  )
+  return <StepRowSkeleton title={title} currency={token} status={status} />
 }

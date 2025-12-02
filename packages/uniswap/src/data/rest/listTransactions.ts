@@ -98,8 +98,7 @@ export const getListTransactionsInfiniteQuery = ({
     },
     initialPageParam: undefined,
     getNextPageParam: (lastPage) => {
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      return lastPage?.nextPageToken || undefined
+      return lastPage.nextPageToken || undefined
     },
     placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when refetching
     refetchInterval,

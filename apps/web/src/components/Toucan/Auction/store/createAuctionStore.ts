@@ -23,10 +23,6 @@ export const createAuctionStore = (_auctionId?: string): AuctionStore => {
           progressPercentage: undefined,
           isGraduated: false,
         },
-        chartZoomState: {
-          visibleRange: null,
-          isZoomed: false,
-        },
 
         // Actions
         actions: {
@@ -49,17 +45,6 @@ export const createAuctionStore = (_auctionId?: string): AuctionStore => {
                 auctionDetails: state.auctionDetails,
               }),
             }))
-          },
-          setChartZoomState: (state) => {
-            set({ chartZoomState: state })
-          },
-          resetChartZoom: () => {
-            set({
-              chartZoomState: {
-                visibleRange: null,
-                isZoomed: false,
-              },
-            })
           },
         },
       }),

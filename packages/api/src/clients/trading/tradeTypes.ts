@@ -22,10 +22,10 @@ export enum Method {
   SEND_CALLS = 'SEND_CALLS',
 }
 
-export enum PayloadType {
-  TX = 'TX',
-  EIP_712 = 'EIP_712',
-  EIP_5792 = 'EIP_5792',
+enum PayloadType {
+  TX = 'tx',
+  EIP_712 = '712',
+  EIP_5792 = '5792',
 }
 
 export enum PlanStepStatus {
@@ -43,49 +43,29 @@ interface StepProof {
 }
 
 export interface PlanStep {
-  stepIndex: number
+  stepId: string
   method: Method
   payloadType: PayloadType
   payload: Record<string, unknown>
   status: PlanStepStatus
   proof?: StepProof
-  tokenIn?: string
-  tokenOut?: string
-  tokenInChainId?: ChainId
-  tokenOutChainId?: ChainId
+  tokenIn: string
+  tokenOut: string
+  tokenInChainId: ChainId
+  tokenOutChainId: ChainId
   input?: string
   output?: string
-  swapper?: string
-  recipient?: string
-  /**@deprecated use TODO: SWAP-458 - update with proper typings once available stepType instead */
-  stepSwapType?: string
-  stepType?: string
-  gasUseEstimate?: string
-  gasFeeUSD?: string
-  gasFeeQuote?: string
-  gasPrice?: string
-  maxFeePerGas?: string
-  maxPriorityFeePerGas?: string
-  gasFee?: string
-  routingStepKey?: string
-  timeEstimateMs?: number
+  swapper: string
+  recipient: string
+  timeEstimateMs: number
 }
 
 export interface PlanResponse {
-  requestId: string
   planId: string
-  swapper: string
-  recipient: string
-  quoteId: string
-  status: string
   steps: PlanStep[]
-  currentStepIndex: number
-  expectedOutput: string
-  gasFee?: string
-  gasFeeQuote?: string
-  gasFeeUSD?: string
-  gasUseEstimate?: string
-  timeEstimateMs?: number
+  expectedOutput: number
+  timeEstimateMs: number //ms
+  gasFee: string
 }
 
 export interface NewPlanRequest {
@@ -99,7 +79,7 @@ export interface ExistingPlanRequest {
 
 export interface UpdateExistingPlanRequest extends ExistingPlanRequest {
   steps: {
-    stepIndex: number
+    stepId: string
     proof: StepProof
   }[]
 }

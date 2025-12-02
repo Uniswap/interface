@@ -19,7 +19,7 @@ const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
 export function useSwapFormScreenCallbacks({
   exactOutputWouldFailIfCurrenciesSwitched,
   exactFieldIsInput,
-  isCrossChain,
+  isBridge,
   formattedDerivedValueRef,
   inputRef,
   outputRef,
@@ -29,11 +29,11 @@ export function useSwapFormScreenCallbacks({
 }: {
   exactOutputWouldFailIfCurrenciesSwitched: boolean
   exactFieldIsInput: boolean
-  isCrossChain: boolean
+  isBridge: boolean
   formattedDerivedValueRef: MutableRefObject<string>
-  inputRef: RefObject<CurrencyInputPanelRef | null>
-  outputRef: RefObject<CurrencyInputPanelRef | null>
-  decimalPadRef: RefObject<DecimalPadInputRef | null>
+  inputRef: RefObject<CurrencyInputPanelRef>
+  outputRef: RefObject<CurrencyInputPanelRef>
+  decimalPadRef: RefObject<DecimalPadInputRef>
   inputSelectionRef: MutableRefObject<TextInputProps['selection']>
   outputSelectionRef: MutableRefObject<TextInputProps['selection']>
 }): {
@@ -207,24 +207,22 @@ export function useSwapFormScreenCallbacks({
   })
 
   const onSwitchCurrencies = useEvent(() => {
-    const { newExactCurrencyField, newFilteredChainIds } = isCrossChain
+    // If exact output would fail if currencies switch, we never want to have OUTPUT as exact field / focused field
+    const newExactCurrencyField = isBridge
+      ? CurrencyField.INPUT
+      : exactOutputWouldFailIfCurrenciesSwitched
+        ? CurrencyField.INPUT
+        : exactFieldIsInput
+          ? CurrencyField.OUTPUT
+          : CurrencyField.INPUT
+
+    // If for a bridge, when currencies are switched, update the new output to the old output chainId and change input to all networks
+    const newFilteredChainIds = isBridge
       ? {
-          newExactCurrencyField: CurrencyField.INPUT,
-          // If for a cross-chain swap, when currencies are switched, update the new output to the old output chainId and change input to all networks
-          newFilteredChainIds: {
-            input: undefined,
-            output: output?.chainId,
-          },
+          input: undefined,
+          output: output?.chainId,
         }
-      : {
-          // If exact output would fail if currencies switch, we never want to have OUTPUT as exact field / focused field
-          newExactCurrencyField: exactOutputWouldFailIfCurrenciesSwitched
-            ? CurrencyField.INPUT
-            : exactFieldIsInput
-              ? CurrencyField.OUTPUT
-              : CurrencyField.INPUT,
-          newFilteredChainIds: undefined,
-        }
+      : undefined
 
     updateSwapForm({
       exactCurrencyField: newExactCurrencyField,
@@ -235,7 +233,7 @@ export function useSwapFormScreenCallbacks({
       ...(exactOutputWouldFailIfCurrenciesSwitched && exactFieldIsInput && !isFiatMode
         ? { exactAmountToken: formattedDerivedValueRef.current }
         : undefined),
-      ...(isCrossChain ? { filteredChainIds: newFilteredChainIds } : undefined),
+      ...(isBridge ? { filteredChainIds: newFilteredChainIds } : undefined),
     })
 
     // When we have FOT disable exact output logic, the cursor gets out of sync when switching currencies

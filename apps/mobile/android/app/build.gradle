@@ -1,14 +1,16 @@
-apply plugin: "com.android.application"
-apply plugin: "org.jetbrains.kotlin.android"
-apply plugin: "com.google.gms.google-services"
-apply plugin: "maven-publish"
-apply plugin: "kotlin-android"
-apply plugin: "org.jetbrains.kotlin.plugin.compose"
-apply plugin: "com.facebook.react"
+import com.android.build.OutputFile
 
-def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
+plugins {
+  id 'com.android.application'
+  id 'com.facebook.react'
+  id 'com.google.gms.google-services'
+  id 'maven-publish'
+  id 'kotlin-android'
+  id 'org.jetbrains.kotlin.plugin.compose'
+}
 
 def nodeModulesPath = "../../../../node_modules"
+def rnRoot = "../.."
 
 def keystorePropertiesFile = rootProject.file("keystore.properties");
 def keystoreProperties = new Properties()
@@ -17,25 +19,22 @@ if (keystorePropertiesFile.exists()) {
 }
 
 react {
-    // From expo docs: https://docs.expo.dev/brownfield/get-started
-    entryFile = file(["node", "-e", "require('expo/scripts/resolveAppEntry')", rootDir.getAbsoluteFile().getParentFile().getAbsolutePath(), "android", "absolute"].execute(null, rootDir).text.trim())
-
+    root = file("$rnRoot/")
     reactNativeDir = file("$nodeModulesPath/react-native")
-
-    hermesCommand = new File(["node", "--print", "require.resolve('react-native/package.json')"].execute(null, rootDir).text.trim()).getParentFile().getAbsolutePath() + "/sdks/hermesc/%OS-BIN%/hermesc"
-
-    codegenDir = new File(["node", "--print", "require.resolve('@react-native/codegen/package.json', { paths: [require.resolve('react-native/package.json')] })"].execute(null, rootDir).text.trim()).getParentFile().getAbsoluteFile()
-
-    enableBundleCompression = (findProperty('android.enableBundleCompression') ?: false).toBoolean()
-
-    cliFile = new File(["node", "--print", "require.resolve('@expo/cli')"].execute(null, rootDir).text.trim())
-    bundleCommand = "export:embed"
-
+    codegenDir = file("$nodeModulesPath/react-native-codegen")
+    cliFile = file("$nodeModulesPath/@rnef/cli/dist/src/bin.js")
     debuggableVariants = ["devDebug", "betaDebug", "prodDebug"]
-
+    hermesCommand = "../../node_modules/react-native/sdks/hermesc/%OS-BIN%/hermesc" // This is relative to the project root.
     /* Autolinking */
     autolinkLibrariesWithApp()
 }
+/**
+ * Set this to true to create four separate APKs instead of one,
+ * one for each native architecture. This is useful if you don't
+ * use App Bundles (https://developer.android.com/guide/app-bundle/)
+ * and want to have separate APKs to upload to the Play Store.
+ */
+def enableSeparateBuildPerCPUArchitecture = false
 
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
@@ -46,14 +45,14 @@ def enableProguardInReleaseBuilds = false
  * The preferred build flavor of JavaScriptCore (JSC)
  *
  * For example, to use the international variant, you can use:
- * `def jscFlavor = io.github.react-native-community:jsc-android-intl:2026004.+`
+ * `def jscFlavor = 'org.webkit:android-jsc-intl:+'`
  *
  * The international variant includes ICU i18n library and necessary data
  * allowing to use e.g. `Date.toLocaleString` and `String.localeCompare` that
  * give correct results when using with locales other than en-US. Note that
  * this variant is about 6MiB larger per architecture than default.
  */
-def jscFlavor = 'io.github.react-native-community:jsc-android:2026004.+'
+def jscFlavor = 'org.webkit:android-jsc-intl:+'
 
 /**
  * Private function to get the list of Native Architectures you want to build.
@@ -73,9 +72,9 @@ if (isCI && datadogPropertiesAvailable) {
   apply from: "../../../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
 }
 
-def devVersionName = "1.63.1"
-def betaVersionName = "1.63.1"
-def prodVersionName = "1.63.1"
+def devVersionName = "1.61"
+def betaVersionName = "1.61"
+def prodVersionName = "1.61"
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -92,7 +91,7 @@ android {
     splits {
         abi {
             reset()
-            enable false
+            enable enableSeparateBuildPerCPUArchitecture
             universalApk false  // If true, also generate a universal APK
             include (*reactNativeArchitectures())
         }
@@ -120,12 +119,12 @@ android {
     productFlavors {
       dev {
         isDefault(true)
-        applicationId "com.uniswap.mobile.dev"
+        applicationIdSuffix ".dev"
         versionName devVersionName
         dimension "variant"
       }
       beta {
-        applicationId "com.uniswap.mobile.beta"
+        applicationIdSuffix ".beta"
         versionName betaVersionName
         dimension "variant"
       }
@@ -153,7 +152,7 @@ android {
             // https://developer.android.com/studio/build/configure-apk-splits.html
             // Example: versionCode 1 will generate 1001 for armeabi-v7a, 1002 for x86, etc.
             def versionCodes = ["armeabi-v7a": 1, "x86": 2, "arm64-v8a": 3, "x86_64": 4]
-            def abi = output.getFilter(com.android.build.VariantOutput.FilterType.ABI)
+            def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
                         defaultConfig.versionCode * 1000 + versionCodes.get(abi)
@@ -194,7 +193,6 @@ android {
 dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation "com.facebook.react:react-android"
-    implementation("com.facebook.react:hermes-android")
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
@@ -249,4 +247,10 @@ dependencies {
     implementation 'androidx.compose.ui:ui-tooling-preview-android:1.8.1'
 
     implementation project(':react-native-video')
+
+    if (hermesEnabled.toBoolean()) {
+        implementation("com.facebook.react:hermes-android")
+    } else {
+        implementation jscFlavor
+    }
 }

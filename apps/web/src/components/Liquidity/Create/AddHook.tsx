@@ -1,7 +1,9 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { AdvancedButton } from 'components/Liquidity/Create/AdvancedButton'
 import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
+import { DEFAULT_POSITION_STATE } from 'components/Liquidity/Create/types'
 import { HookModal } from 'components/Liquidity/HookModal'
+import { isDynamicFeeTier } from 'components/Liquidity/utils/feeTiers'
 import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -92,7 +94,7 @@ export function AddHook() {
 
   const { hook: initialHook } = useLiquidityUrlState()
   const {
-    positionState: { hook, protocolVersion },
+    positionState: { hook, fee, protocolVersion },
     setPositionState,
   } = useCreateLiquidityContext()
   const [hookInputEnabled, setHookInputEnabled] = useState(!!hook)
@@ -104,7 +106,6 @@ export function AddHook() {
         ...state,
         hook: value,
         userApprovedHook: value,
-        fee: undefined,
       }))
     },
     [setPositionState],
@@ -121,11 +122,18 @@ export function AddHook() {
   }, [initialHook, protocolVersion, setPositionState])
 
   const onClearHook = useCallback(() => {
+    if (isDynamicFeeTier(fee)) {
+      setPositionState((state) => ({
+        ...state,
+        fee: DEFAULT_POSITION_STATE.fee,
+      }))
+    }
+
     setHookInputEnabled(false)
     setHookValue('')
     onSelectHook(undefined)
     setPositionState((state) => ({ ...state, fee: undefined }))
-  }, [onSelectHook, setPositionState])
+  }, [fee, onSelectHook, setPositionState])
 
   // In the case that the user clears a hook that was filled in from a url
   // this ensures the input is cleared again

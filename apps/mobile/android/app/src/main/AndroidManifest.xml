@@ -7,7 +7,7 @@
   <uses-permission android:name="android.permission.USE_BIOMETRIC" />
   <uses-permission android:name="android.permission.USE_FINGERPRINT" />
   <uses-permission android:name="android.permission.VIBRATE" />
-  <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+  <uses-permission android:name="com.google.android.gms.permission.AD_ID"/>
 
   <application
     android:name=".MainApplication"
@@ -67,12 +67,53 @@
         <data android:scheme="uniswap" />
       </intent-filter>
       <intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+
+				<category android:name="android.intent.category.DEFAULT" />
+				<category android:name="android.intent.category.BROWSABLE" />
+
+				<data android:scheme="wc" />
+			</intent-filter>
+      <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
 
         <category android:name="android.intent.category.DEFAULT" />
         <category android:name="android.intent.category.BROWSABLE" />
 
-        <data android:scheme="wc" />
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/nfts/asset/" />
+
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/nfts/collection/" />
+
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/tokens" />
+
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/address/" />
+
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/explore/" />
+
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/swap" />
+
+        <data
+            android:scheme="https"
+            android:host="app.uniswap.org"
+            android:pathPrefix="/buy" />
       </intent-filter>
       <intent-filter android:autoVerify="true">
         <action android:name="android.intent.action.VIEW" />
@@ -81,69 +122,15 @@
         <category android:name="android.intent.category.BROWSABLE" />
 
         <data
-          android:scheme="https"
-          android:host="app.uniswap.org"
-          android:pathPrefix="/nfts/asset/" />
+            android:scheme="https"
+            android:host="uniswap.org"
+            android:pathPrefix="/app" />
 
         <data
-          android:scheme="https"
-          android:host="app.uniswap.org"
-          android:pathPrefix="/nfts/collection/" />
-
-        <data
-          android:scheme="https"
-          android:host="app.uniswap.org"
-          android:pathPrefix="/tokens" />
-
-        <data
-          android:scheme="https"
-          android:host="app.uniswap.org"
-          android:pathPrefix="/address/" />
-
-        <data
-          android:scheme="https"
-          android:host="app.uniswap.org"
-          android:pathPrefix="/explore/" />
-
-        <data
-          android:scheme="https"
-          android:host="app.uniswap.org"
-          android:pathPrefix="/swap" />
-
-        <data
-          android:scheme="https"
-          android:host="app.uniswap.org"
-          android:pathPrefix="/buy" />
-      </intent-filter>
-      <intent-filter android:autoVerify="true">
-        <action android:name="android.intent.action.VIEW" />
-
-        <category android:name="android.intent.category.DEFAULT" />
-        <category android:name="android.intent.category.BROWSABLE" />
-
-        <data
-          android:scheme="https"
-          android:host="uniswap.org"
-          android:pathPrefix="/app" />
-
-        <data
-          android:scheme="https"
-          android:host="uniswap.org"
-          android:pathPrefix="/app/wc" />
+            android:scheme="https"
+            android:host="uniswap.org"
+            android:pathPrefix="/app/wc" />
       </intent-filter>
     </activity>
-    <!--
-      nosemgrep: java.android.security.exported_activity.exported_activity
-      Justification: This activity-alias must be exported for the Android launcher to start the app.
-      It only responds to MAIN/LAUNCHER intents (required for app launching) and targets the
-      properly secured MainActivity. No privileged functionality is exposed through this alias.
-    -->
-    <activity-alias android:name="com.uniswap.mobile.MainActivity" android:exported="true"
-      android:targetActivity="com.uniswap.MainActivity">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity-alias>
   </application>
 </manifest>

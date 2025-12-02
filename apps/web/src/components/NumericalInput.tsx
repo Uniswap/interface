@@ -1,5 +1,5 @@
 import { loadingOpacityMixin } from 'components/Loader/styled'
-import { styled } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import React, { forwardRef } from 'react'
 import { Locale } from 'uniswap/src/features/language/constants'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'

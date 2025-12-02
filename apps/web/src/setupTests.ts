@@ -1,9 +1,7 @@
-/* eslint-disable max-lines */
+// biome-ignore-all lint/suspicious/noConsole: test file
 import '@testing-library/jest-dom' // jest custom assertions
 import 'jest-styled-components' // adds style diffs to snapshot tests
 import 'polyfills' // add polyfills
-// eslint-disable-next-line
-import './test-utils/mockTamagui' // mock problematic Tamagui components
 
 import { createPopper } from '@popperjs/core'
 import {
@@ -381,33 +379,6 @@ failOnConsole({
       if (message.startsWith('[moti]: Invalid transform value.')) {
         return true
       }
-      // Allow React key warnings from Trans component (react-i18next v14 issue)
-      if (
-        message.includes('Each child in a list should have a unique') &&
-        (message.includes('Trans') ||
-          message.includes('UniswapXDescription') ||
-          message.includes('SwapPreview') ||
-          message.includes('LimitPriceInputLabel'))
-      ) {
-        return true
-      }
-      // Nuances from tamagui causing issues with React 19
-      if (message.includes('React does not recognize the') && message.includes('prop on a DOM element')) {
-        // This is coming from tamagui passing through props to the DOM element
-        return true
-      }
-
-      if (message.includes('Received') && message.includes('for a non-boolean attribute')) {
-        return true
-      }
-
-      if (message.includes('Invalid attribute name')) {
-        return true
-      }
-
-      if (message.includes('Unknown event handler property')) {
-        return true
-      }
     }
     if (type === 'warn') {
       // Allow UniversalImage warnings about not being able to retrieve remote images in test environment
@@ -451,7 +422,6 @@ vi.mock('uniswap/src/features/chains/hooks/useOrderedChainIds', () => {
 })
 
 function muteStatsigWarnings() {
-  // biome-ignore lint/suspicious/noConsole: strictly for testing
   const originalWarn = console.warn
   vi.spyOn(console, 'warn').mockImplementation((message, ...args) => {
     const isStatsigWarning = args.some((arg) => {
@@ -467,7 +437,6 @@ function muteStatsigWarnings() {
   })
 }
 
-// biome-ignore lint/suspicious/noConsole: strictly for testing
 const originalConsoleDebug = console.debug
 // Mocks are configured to reset between tests (by CRA), so they must be set in a beforeEach.
 beforeEach(() => {

@@ -1,20 +1,17 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { SearchInput } from 'pages/Portfolio/components/SearchInput'
 import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
-import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
+import { usePortfolioAddress } from 'pages/Portfolio/hooks/usePortfolioAddress'
 import { useTransformTokenTableData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { TokensAllocationChart } from 'pages/Portfolio/Tokens/Table/TokensAllocationChart'
 import { TokensTable } from 'pages/Portfolio/Tokens/Table/TokensTable'
 import { filterTokensBySearch } from 'pages/Portfolio/Tokens/utils/filterTokensBySearch'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from 'react-router'
-import { Flex, RemoveScroll, Text, useMedia } from 'ui/src'
-import { TokensListEmptyState } from 'uniswap/src/components/tokens/TokensListEmptyState'
+import { Flex, RemoveScroll, Text } from 'ui/src'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
-import { ElementName, InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { parseChainFromTokenSearchQuery } from 'uniswap/src/utils/search/parseChainFromTokenSearchQuery'
 
@@ -31,7 +28,7 @@ const TokenCountIndicator = memo(({ count }: { count: number }) => {
         mx="$spacing8"
       />
       <Text variant="body3" color="$neutral2">
-        {t('portfolio.tokens.balance.totalTokens', { numTokens: count, count })}
+        {t('portfolio.tokens.balance.totalTokens', { numTokens: count })}
       </Text>
     </Flex>
   )
@@ -39,10 +36,8 @@ const TokenCountIndicator = memo(({ count }: { count: number }) => {
 
 TokenCountIndicator.displayName = 'TokenCountIndicator'
 
-export const PortfolioTokens = memo(function PortfolioTokens() {
-  const portfolioAddresses = usePortfolioAddresses()
-  const media = useMedia()
-  const navigate = useNavigate()
+export function PortfolioTokens() {
+  const portfolioAddress = usePortfolioAddress()
   const { t } = useTranslation()
   const [search, setSearch] = useState('')
   const { chains: enabledChains } = useEnabledChains()
@@ -79,74 +74,34 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
     return filterTokensBySearch({ tokens: hiddenTokenData || [], searchTerm }) || []
   }, [hiddenTokenData, searchTerm])
 
-  // Handler to clear chain filter and show all networks
-  const handleShowAllNetworks = useCallback(() => {
-    navigate('/portfolio/tokens')
-  }, [navigate])
-
-  // Custom empty state for chain filtering
-  const chainFilterEmptyState = useMemo(() => {
-    if (!urlChainId) {
-      return undefined
-    }
-    const chainName = getChainLabel(urlChainId)
-    return (
-      <TokensListEmptyState
-        description={null}
-        buttonLabel={t('portfolio.networkFilter.seeAllNetworks')}
-        onPress={handleShowAllNetworks}
-        title={t('tokens.list.noneOnChain.title', { chainName })}
-      />
-    )
-  }, [handleShowAllNetworks, urlChainId, t])
-
   return (
     <RemoveScroll enabled={loading}>
       <Trace logImpression page={InterfacePageName.PortfolioTokensPage}>
         <Flex flexDirection="column" gap="$spacing16">
-          <Flex
-            row
-            alignItems="baseline"
-            justifyContent="space-between"
-            gap="$spacing8"
-            $md={{ flexDirection: 'column', alignItems: 'flex-start', gap: '$spacing24' }}
-          >
-            <Trace section={SectionName.PortfolioTokensTab} element={ElementName.PortfolioBalance}>
-              <PortfolioBalance
-                evmOwner={portfolioAddresses.evmAddress}
-                svmOwner={portfolioAddresses.svmAddress}
-                endText={tokenData ? <TokenCountIndicator count={tokenData.length} /> : undefined}
-                chainIds={effectiveChainId ? [effectiveChainId] : undefined}
-              />
-            </Trace>
-            <Trace logFocus section={SectionName.PortfolioTokensTab} element={ElementName.PortfolioTokensSearch}>
-              <SearchInput
-                value={search}
-                onChangeText={setSearch}
-                placeholder={t('tokens.table.search.placeholder.tokens')}
-                width={media.md ? '100%' : undefined}
-              />
-            </Trace>
+          <Flex row alignItems="baseline" justifyContent="space-between">
+            <PortfolioBalance
+              owner={portfolioAddress}
+              endText={tokenData ? <TokenCountIndicator count={tokenData.length} /> : undefined}
+            />
+            <SearchInput
+              value={search}
+              onChangeText={setSearch}
+              placeholder={t('tokens.table.search.placeholder.tokens')}
+            />
           </Flex>
 
           {(tokenData && tokenData.length > 0) || loading ? (
             <>
-              {isPortfolioTokensAllocationChartEnabled && (
-                <Trace section={SectionName.PortfolioTokensTab} element={ElementName.TokensAllocationChart}>
-                  <TokensAllocationChart tokenData={tokenData || []} />
-                </Trace>
-              )}
+              {isPortfolioTokensAllocationChartEnabled && <TokensAllocationChart tokenData={tokenData || []} />}
               {(filteredTokenData?.length ?? 0) > 0 || loading ? (
-                <Trace section={SectionName.PortfolioTokensTab} element={ElementName.PortfolioTokensTable}>
-                  <TokensTable
-                    visible={filteredTokenData || []}
-                    hidden={filteredHiddenTokenData}
-                    loading={loading && !refetching}
-                    refetching={refetching}
-                    networkStatus={networkStatus}
-                    error={error}
-                  />
-                </Trace>
+                <TokensTable
+                  visible={filteredTokenData || []}
+                  hidden={filteredHiddenTokenData}
+                  loading={loading && !refetching}
+                  refetching={refetching}
+                  networkStatus={networkStatus}
+                  error={error}
+                />
               ) : (
                 <Flex flexDirection="column" alignItems="center" justifyContent="center" py="$spacing48">
                   <Text variant="body1" color="$neutral2">
@@ -155,15 +110,15 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
                 </Flex>
               )}
             </>
-          ) : urlChainId ? (
-            chainFilterEmptyState
           ) : (
-            <TokensListEmptyState />
+            <Flex flexDirection="column" alignItems="center" justifyContent="center" py="$spacing48">
+              <Text variant="body1" color="$neutral2">
+                {t('portfolio.tokens.emptyState')}
+              </Text>
+            </Flex>
           )}
         </Flex>
       </Trace>
     </RemoveScroll>
   )
-})
-
-PortfolioTokens.displayName = 'PortfolioTokens'
+}

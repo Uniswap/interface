@@ -3,18 +3,21 @@
 exports[`TokenLinkCell > renders known token on a different chain 1`] = `
 <DocumentFragment>
   .c0 {
+  -webkit-text-decoration: none;
   text-decoration: none;
+  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
+  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #131313;
 }
 
-.c0 :hover {
+.c0:hover {
   opacity: 0.6;
 }
 
-.c0 :active {
+.c0:active {
   opacity: 0.4;
 }
 
@@ -100,18 +103,21 @@ exports[`TokenLinkCell > renders known token on a different chain 1`] = `
 exports[`TokenLinkCell > renders known token on mainnet 1`] = `
 <DocumentFragment>
   .c0 {
+  -webkit-text-decoration: none;
   text-decoration: none;
+  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
+  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #131313;
 }
 
-.c0 :hover {
+.c0:hover {
   opacity: 0.6;
 }
 
-.c0 :active {
+.c0:active {
   opacity: 0.4;
 }
 
@@ -172,18 +178,21 @@ exports[`TokenLinkCell > renders known token on mainnet 1`] = `
 exports[`TokenLinkCell > renders unknown token 1`] = `
 <DocumentFragment>
   .c0 {
+  -webkit-text-decoration: none;
   text-decoration: none;
+  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
+  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #131313;
 }
 
-.c0 :hover {
+.c0:hover {
   opacity: 0.6;
 }
 
-.c0 :active {
+.c0:active {
   opacity: 0.4;
 }
 

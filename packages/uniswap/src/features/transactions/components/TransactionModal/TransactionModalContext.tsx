@@ -1,6 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
-import type { StyleProp, ViewStyle } from 'react-native'
+import type { StyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet'
+import type { ViewStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'

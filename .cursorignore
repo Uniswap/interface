@@ -1,7 +1,0 @@
-**/.env
-**/.aws/**
-**/.ssh/**
-**/.gnupg/**
-**/.git-credentials
-**/Library/Keychains/**
-**/private/etc/**

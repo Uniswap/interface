@@ -14,9 +14,8 @@
     "typecheck": {},
     "prepare": {
       "executor": "nx:noop",
-      "dependsOn": ["graphql:generate", "tradingapi:generate"],
-      "parallel": false,
-      "cache": false
+      "dependsOn": ["tradingapi:generate", "graphql:generate"],
+      "cache": true
     },
     "check:deps:usage": {
       "command": "depcheck",
@@ -60,7 +59,7 @@
       },
       "cache": true,
       "inputs": [
-        "{projectRoot}/src/clients/trading/__generated__",
+        "{projectRoot}/src/clients/trading/__generated__/models",
         "{projectRoot}/scripts/modifyTradingApiTypes.mts",
         "{projectRoot}/src/clients/trading/types.ts",
         {
@@ -77,7 +76,7 @@
       }
     },
     "graphql:generate": {
-      "command": "graphql-codegen --config ./src/clients/graphql/codegen.config.ts && node --no-warnings=ExperimentalWarning --loader ts-node/esm ./scripts/fixGraphQLApiTypes.mts",
+      "command": "graphql-codegen --config ./src/clients/graphql/codegen.config.ts",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -85,8 +84,7 @@
       "inputs": [
         "{projectRoot}/src/clients/graphql/codegen.config.ts",
         "{projectRoot}/src/**/*.graphql",
-        "{projectRoot}/src/**/*.gql",
-        "{projectRoot}/scripts/fixGraphQLApiTypes.mts"
+        "{projectRoot}/src/**/*.gql"
       ],
       "outputs": ["{projectRoot}/src/clients/graphql/__generated__"]
     }

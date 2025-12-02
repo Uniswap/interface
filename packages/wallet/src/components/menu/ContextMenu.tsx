@@ -1,9 +1,9 @@
-import { PropsWithChildren, SyntheticEvent, useEffect, useMemo, useRef, useState } from 'react'
-import { GetProps, Popover, PopperProps, Portal } from 'ui/src'
+import { PropsWithChildren, SyntheticEvent, useEffect, useRef, useState } from 'react'
+import { Popover, PopperProps, Portal } from 'ui/src'
 import { Flex, FlexProps } from 'ui/src/components/layout'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
 import { zIndexes } from 'ui/src/theme'
-import { useEvent, usePrevious } from 'utilities/src/react/hooks'
+import { usePrevious } from 'utilities/src/react/hooks'
 import { MenuContent } from 'wallet/src/components/menu/MenuContent'
 import { MenuContentItem } from 'wallet/src/components/menu/types'
 
@@ -18,24 +18,6 @@ type ContextMenuProps = {
   closeOnClick?: boolean
   hoverable?: boolean
 } & PopperProps
-
-const popoverContentAnimation: GetProps<typeof Popover.Content>['animation'] = [
-  'quick',
-  {
-    opacity: {
-      overshootClamping: true,
-    },
-  },
-]
-
-const popoverEnterAndExitStyle: GetProps<typeof Popover.Content>['enterStyle'] = {
-  y: -10,
-  opacity: 0,
-}
-
-const portalFlexChildStyle: FlexProps['style'] = {
-  position: 'fixed',
-}
 
 /**
  * Base component for a context menu shown on right click.
@@ -81,18 +63,11 @@ export function ContextMenu({
   const fallbackOffset = -triggerOffsetHeight + (triggerOffsetHeight || DEFAULT_OFFSET_TOKEN_BALANCE_HEIGHT)
   const offset = isOffsetProvided ? customOffset : isTriggerBelowViewport ? fallbackOffset : -triggerOffsetHeight
 
-  const contentShadowProps = useMemo(
-    () => ({
-      shadowColor: colors.shadowColor.val,
-      shadowRadius: 12,
-      shadowOpacity: 0.1,
-    }),
-    [colors.shadowColor.val],
-  )
-
-  const handleHideMenu = useEvent(() => {
-    setShowMenu(false)
-  })
+  const contentShadowProps = {
+    shadowColor: colors.shadowColor.val,
+    shadowRadius: 12,
+    shadowOpacity: 0.1,
+  }
 
   // Note: Overlay needs to be rendered in portal since parent transforms don't let fixed elements target the viewport
   // see: https://stackoverflow.com/a/15256339
@@ -101,17 +76,17 @@ export function ContextMenu({
       {/* OVERLAY */}
       {/* Conditional rendering needs to be used here instead of CSS so that portals aren't duplicated */}
       {showMenu && (
-        <Portal>
+        <Portal contain="none" position="unset" onPress={(e) => e.stopPropagation()}>
           <Flex
             height="100vh"
             left={0}
             opacity={1}
             pointerEvents="auto"
-            style={portalFlexChildStyle}
+            style={{ position: 'fixed' }}
             top={0}
             width="100vh"
             zIndex={zIndexes.modalBackdrop}
-            onPress={handleHideMenu}
+            onPress={() => setShowMenu(false)}
           />
         </Portal>
       )}
@@ -128,20 +103,31 @@ export function ContextMenu({
       </Popover.Trigger>
       {/* CONTENT */}
       <Popover.Content
-        animation={popoverContentAnimation}
+        animation={[
+          'quick',
+          {
+            opacity: {
+              overshootClamping: true,
+            },
+          },
+        ]}
         borderColor="$surface3"
         borderRadius="$rounded16"
         borderWidth="$spacing1"
-        enableRemoveScroll={true}
-        enterStyle={popoverEnterAndExitStyle}
-        exitStyle={popoverEnterAndExitStyle}
+        disableRemoveScroll={false}
+        enterStyle={{ y: -10, opacity: 0 }}
+        exitStyle={{ y: -10, opacity: 0 }}
         p="$none"
         {...contentShadowProps}
         {...menuContainerStyleProps}
       >
         {/* biome-ignore lint/correctness/noRestrictedElements: probably we can replace it here */}
         <div>
-          <MenuContent items={menuOptions} onClose={closeOnClick ? handleHideMenu : undefined} {...menuStyleProps} />
+          <MenuContent
+            items={menuOptions}
+            onClose={closeOnClick ? (): void => setShowMenu(false) : undefined}
+            {...menuStyleProps}
+          />
         </div>
         <Popover.Arrow backgroundColor="transparent" />
       </Popover.Content>

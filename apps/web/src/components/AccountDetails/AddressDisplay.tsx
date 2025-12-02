@@ -1,4 +1,4 @@
-import { styled } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import { EllipsisStyle } from 'theme/components/styles'
 import { Flex } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'

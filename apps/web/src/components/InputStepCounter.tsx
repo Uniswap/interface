@@ -1,7 +1,7 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { OutlineCard } from 'components/Card/cards'
 import { Input as NumericalInput } from 'components/NumericalInput'
-import { styled } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import { Trans } from 'react-i18next'

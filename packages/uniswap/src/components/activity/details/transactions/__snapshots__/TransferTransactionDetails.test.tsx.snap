@@ -2,69 +2,47 @@
 
 exports[`TransferTransactionDetails Component renders TransferTransactionDetails without error 1`] = `
 <View
+  cancelable={true}
   collapsable={false}
+  disabled={false}
   focusVisibleStyle={{}}
+  focusable={true}
   forwardedRef={[Function]}
-  jestAnimatedProps={
-    {
-      "value": {},
-    }
-  }
   jestAnimatedStyle={
     {
       "value": {},
     }
   }
-  jestInlineStyle={
-    [
-      {
-        "backgroundColor": "transparent",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
-        "flexDirection": "column",
-        "opacity": 1,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      },
-    ]
-  }
+  minPressDuration={0}
   onBlur={[Function]}
-  onClick={[Function]}
   onFocus={[Function]}
   onLayout={[Function]}
-  onResponderGrant={[Function]}
-  onResponderMove={[Function]}
-  onResponderRelease={[Function]}
-  onResponderTerminate={[Function]}
-  onResponderTerminationRequest={[Function]}
-  onStartShouldSetResponder={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onPress={[Function]}
+  onPressIn={[Function]}
+  onPressOut={[Function]}
   role="button"
   style={
-    [
-      {
-        "backgroundColor": "transparent",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
-        "flexDirection": "column",
-        "opacity": 1,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      },
-      {},
-    ]
+    {
+      "backgroundColor": "transparent",
+      "borderBottomLeftRadius": 12,
+      "borderBottomRightRadius": 12,
+      "borderTopLeftRadius": 12,
+      "borderTopRightRadius": 12,
+      "flexDirection": "column",
+      "opacity": 1,
+      "transform": [
+        {
+          "scale": 1,
+        },
+      ],
+    }
   }
 >
   <View
+    onBlur={[Function]}
+    onFocus={[Function]}
     style={
       {
         "alignItems": "center",
@@ -79,6 +57,8 @@ exports[`TransferTransactionDetails Component renders TransferTransactionDetails
     }
   >
     <View
+      onBlur={[Function]}
+      onFocus={[Function]}
       style={
         {
           "alignItems": "center",

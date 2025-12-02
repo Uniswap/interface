@@ -1,5 +1,5 @@
 import { createSessionInitializationService } from '@universe/sessions/src/session-initialization/createSessionInitializationService'
-import { ChallengeType } from '@universe/sessions/src/session-service/types'
+import { BotDetectionType } from '@universe/sessions/src/session-service/types'
 import {
   createMockChallengeSolverService,
   createMockSessionService,
@@ -23,7 +23,7 @@ describe('createSessionInitializationService', () => {
         TestScenarios.withExistingSession(sessionService, 'existing-123')
 
         const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
+          sessionService,
           challengeSolverService,
         })
 
@@ -49,7 +49,7 @@ describe('createSessionInitializationService', () => {
         TestScenarios.withNoChallenge(sessionService)
 
         const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
+          sessionService,
           challengeSolverService,
         })
 
@@ -69,12 +69,11 @@ describe('createSessionInitializationService', () => {
 
       it('completes full challenge flow when required', async () => {
         // Setup
-        TestScenarios.withChallengeRequired(sessionService, ChallengeType.TURNSTILE)
+        TestScenarios.withChallengeRequired(sessionService, BotDetectionType.BOT_DETECTION_TURNSTILE)
 
         const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
+          sessionService,
           challengeSolverService,
-          getIsSessionUpgradeAutoEnabled: () => true,
         })
 
         // Execute
@@ -92,24 +91,23 @@ describe('createSessionInitializationService', () => {
         expect(sessionService.upgradeSession).toHaveBeenCalled()
 
         // Verify solver was used
-        expect(challengeSolverService.getSolver).toHaveBeenCalledWith(ChallengeType.TURNSTILE)
+        expect(challengeSolverService.getSolver).toHaveBeenCalledWith(BotDetectionType.BOT_DETECTION_TURNSTILE)
       })
 
       it('uses correct solver for challenge type', async () => {
         // Setup with Hashcash challenge
-        TestScenarios.withChallengeRequired(sessionService, ChallengeType.HASHCASH)
+        TestScenarios.withChallengeRequired(sessionService, BotDetectionType.BOT_DETECTION_HASHCASH)
 
         const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
+          sessionService,
           challengeSolverService,
-          getIsSessionUpgradeAutoEnabled: () => true,
         })
 
         // Execute
         await service.initialize()
 
         // Verify correct solver was requested
-        expect(challengeSolverService.getSolver).toHaveBeenCalledWith(ChallengeType.HASHCASH)
+        expect(challengeSolverService.getSolver).toHaveBeenCalledWith(BotDetectionType.BOT_DETECTION_HASHCASH)
       })
 
       it('passes solution to upgrade session', async () => {
@@ -122,9 +120,8 @@ describe('createSessionInitializationService', () => {
         challengeSolverService.getSolver = vi.fn().mockReturnValue(mockSolver)
 
         const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
+          sessionService,
           challengeSolverService,
-          getIsSessionUpgradeAutoEnabled: () => true,
         })
 
         // Execute
@@ -145,9 +142,8 @@ describe('createSessionInitializationService', () => {
         TestScenarios.withServerRetry(sessionService, 1) // Retry once then succeed
 
         const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
+          sessionService,
           challengeSolverService,
-          getIsSessionUpgradeAutoEnabled: () => true,
         })
 
         // Execute
@@ -167,9 +163,8 @@ describe('createSessionInitializationService', () => {
         vi.mocked(sessionService.upgradeSession).mockResolvedValue({ retry: true })
 
         const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
+          sessionService,
           challengeSolverService,
-          getIsSessionUpgradeAutoEnabled: () => true,
           maxChallengeRetries: 2,
         })
 
@@ -188,9 +183,8 @@ describe('createSessionInitializationService', () => {
         TestScenarios.withServerRetry(sessionService, 2)
 
         const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
+          sessionService,
           challengeSolverService,
-          getIsSessionUpgradeAutoEnabled: () => true,
           maxChallengeRetries: 3,
         })
 
@@ -210,13 +204,12 @@ describe('createSessionInitializationService', () => {
         challengeSolverService.getSolver = vi.fn().mockReturnValue(null)
 
         const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
+          sessionService,
           challengeSolverService,
-          getIsSessionUpgradeAutoEnabled: () => true,
         })
 
         // Execute and verify
-        await expect(service.initialize()).rejects.toThrow('No solver available for challenge type: 1')
+        await expect(service.initialize()).rejects.toThrow('No solver available for bot detection type: 1')
       })
 
       it('propagates sessionService errors', async () => {
@@ -225,7 +218,7 @@ describe('createSessionInitializationService', () => {
         sessionService.getSessionState = vi.fn().mockRejectedValue(error)
 
         const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
+          sessionService,
           challengeSolverService,
         })
 
@@ -243,9 +236,8 @@ describe('createSessionInitializationService', () => {
         challengeSolverService.getSolver = vi.fn().mockReturnValue(failingSolver)
 
         const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
+          sessionService,
           challengeSolverService,
-          getIsSessionUpgradeAutoEnabled: () => true,
         })
 
         // Execute and verify
@@ -264,7 +256,7 @@ describe('createSessionInitializationService', () => {
         })
 
         const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
+          sessionService,
           challengeSolverService,
         })
 
@@ -278,76 +270,26 @@ describe('createSessionInitializationService', () => {
 
       it('handles None bot detection type', async () => {
         // Setup
-        TestScenarios.withChallengeRequired(sessionService, ChallengeType.UNSPECIFIED)
+        TestScenarios.withChallengeRequired(sessionService, BotDetectionType.BOT_DETECTION_NONE)
         const noneSolver = {
           solve: vi.fn().mockResolvedValue(''),
         }
         challengeSolverService.getSolver = vi
           .fn()
-          .mockImplementation((type) => (type === ChallengeType.UNSPECIFIED ? noneSolver : null))
+          // eslint-disable-next-line max-nested-callbacks
+          .mockImplementation((type) => (type === BotDetectionType.BOT_DETECTION_NONE ? noneSolver : null))
 
         const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
+          sessionService,
           challengeSolverService,
-          getIsSessionUpgradeAutoEnabled: () => true,
         })
 
         // Execute
         await service.initialize()
 
         // Verify None type was handled
-        expect(challengeSolverService.getSolver).toHaveBeenCalledWith(ChallengeType.UNSPECIFIED)
+        expect(challengeSolverService.getSolver).toHaveBeenCalledWith(BotDetectionType.BOT_DETECTION_NONE)
         expect(noneSolver.solve).toHaveBeenCalled()
-      })
-
-      it('does not complete challenge flow when auto-upgrade is disabled', async () => {
-        // Setup
-        TestScenarios.withChallengeRequired(sessionService)
-
-        const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
-          challengeSolverService,
-          getIsSessionUpgradeAutoEnabled: () => false,
-        })
-
-        // Execute
-        const result = await service.initialize()
-
-        // Verify behavior - session initialized but challenge not handled
-        expect(result).toEqual({
-          sessionId: 'new-session-222',
-          isNewSession: true,
-        })
-
-        // Verify challenge flow was NOT executed
-        expect(sessionService.initSession).toHaveBeenCalled()
-        expect(sessionService.requestChallenge).not.toHaveBeenCalled()
-        expect(sessionService.upgradeSession).not.toHaveBeenCalled()
-      })
-
-      it('defaults to disabled when callback is not provided', async () => {
-        // Setup
-        TestScenarios.withChallengeRequired(sessionService)
-
-        const service = createSessionInitializationService({
-          getSessionService: () => sessionService,
-          challengeSolverService,
-          // No getIsSessionUpgradeAutoEnabled callback provided
-        })
-
-        // Execute
-        const result = await service.initialize()
-
-        // Verify behavior - defaults to disabled (opt-in)
-        expect(result).toEqual({
-          sessionId: 'new-session-222',
-          isNewSession: true,
-        })
-
-        // Verify challenge flow was NOT executed (default disabled)
-        expect(sessionService.initSession).toHaveBeenCalled()
-        expect(sessionService.requestChallenge).not.toHaveBeenCalled()
-        expect(sessionService.upgradeSession).not.toHaveBeenCalled()
       })
     })
   })

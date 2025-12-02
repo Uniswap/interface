@@ -213,7 +213,7 @@ export function LiquidityRangeInput({
     }
   }, [dataMax, dataMin, midPrice, currentPrice, priceData.entries, zoomFactor])
 
-  const chartModelRef = useRef<LPPriceChartModel>(undefined)
+  const chartModelRef = useRef<LPPriceChartModel>()
 
   const containerRef = useRef<HTMLDivElement>(null)
   const sizes = useRangeInputSizes(containerRef.current?.clientWidth)

@@ -28,9 +28,6 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useEvent } from 'utilities/src/react/hooks'
 import { getDurationRemainingString } from 'utilities/src/time/duration'
 
-// TODO(LP-335): replace these with actual ticks relative to the clearing price
-const MAX_VALUATION_PRESETS = [1000000, 2000000, 3000000]
-
 function useDurationRemaining(chainId: EVMUniverseChainId, endBlock: number | undefined) {
   const endBlockTimestamp = useBlockTimestamp({
     chainId,
@@ -70,36 +67,21 @@ function BidForm({ tokenColor, onBack }: { tokenColor?: ColorTokens; onBack: () 
 
   const durationRemaining = useDurationRemaining(chainId as EVMUniverseChainId, endBlock)
   const bidCurrencyInfo = useCurrencyInfo(buildCurrencyId(chainId ?? UniverseChainId.Mainnet, bidTokenAddress ?? ''))
+  const [exactAmount, setExactAmount] = useState('')
+  const [isFiatMode, setIsFiatMode] = useState(false)
+
   const currencyBalance = useCurrencyBalance(accountAddress, bidCurrencyInfo?.currency)
+  const currencyAmount = tryParseCurrencyAmount(exactAmount, bidCurrencyInfo?.currency)
+  const usdValue = useUSDCValue(currencyAmount)
 
-  // Budget input (top one)
-  const [exactBudgetAmount, setExactBudgetAmount] = useState('')
-  const [isBudgetFiatMode, setIsBudgetFiatMode] = useState(false)
-  const budgetCurrencyAmount = tryParseCurrencyAmount(exactBudgetAmount, bidCurrencyInfo?.currency)
-  const budgetUsdValue = useUSDCValue(budgetCurrencyAmount)
-
-  const onToggleBudgetFiatMode = useEvent(() => {
-    setIsBudgetFiatMode((prev) => !prev)
+  const onToggleIsFiatMode = useEvent(() => {
+    setIsFiatMode((prev) => !prev)
   })
 
-  const onSetBudgetPresetValue = useEvent((amount: string) => {
+  const onSetPresetValue = useEvent((amount: string) => {
     // When preset is selected, switch to token mode and set the amount
-    setIsBudgetFiatMode(false)
-    setExactBudgetAmount(amount)
-  })
-
-  // Max valuation input (bottom one)
-  const [exactMaxValuationAmount, setExactMaxValuationAmount] = useState('')
-  const [isMaxValuationFiatMode, setIsMaxValuationFiatMode] = useState(false)
-  const maxValuationCurrencyAmount = tryParseCurrencyAmount(exactMaxValuationAmount, bidCurrencyInfo?.currency)
-  const maxValuationUsdValue = useUSDCValue(maxValuationCurrencyAmount)
-
-  const onToggleValuationFiatMode = useEvent(() => {
-    setIsMaxValuationFiatMode((prev) => !prev)
-  })
-
-  const onSetPresetValuation = useEvent((value: number) => {
-    setExactMaxValuationAmount(value.toString())
+    setIsFiatMode(false)
+    setExactAmount(amount)
   })
 
   return (
@@ -128,36 +110,17 @@ function BidForm({ tokenColor, onBack }: { tokenColor?: ColorTokens; onBack: () 
       <Flex gap="$spacing12">
         <CurrencyInputPanel
           autoFocus={true}
-          currencyAmount={budgetCurrencyAmount}
+          currencyAmount={currencyAmount}
           currencyBalance={currencyBalance}
           currencyInfo={bidCurrencyInfo}
           currencyField={CurrencyField.INPUT}
           headerLabel={t('toucan.bidForm.maxBudget')}
-          value={exactBudgetAmount}
-          usdValue={budgetUsdValue}
-          onSetExactAmount={setExactBudgetAmount}
-          onSetPresetValue={onSetBudgetPresetValue}
-          onToggleIsFiatMode={onToggleBudgetFiatMode}
-          isFiatMode={isBudgetFiatMode}
-          customPanelStyle={{
-            backgroundColor: '$surface2',
-            borderRadius: '$rounded20',
-          }}
-        />
-        <CurrencyInputPanel
-          currencyAmount={maxValuationCurrencyAmount}
-          // No value is going to be shown for the balance
-          currencyBalance={null}
-          currencyInfo={bidCurrencyInfo}
-          currencyField={CurrencyField.INPUT}
-          headerLabel={t('toucan.bidForm.maxValuation')}
-          value={exactMaxValuationAmount}
-          usdValue={maxValuationUsdValue}
-          onSetExactAmount={setExactMaxValuationAmount}
-          onToggleIsFiatMode={onToggleValuationFiatMode}
-          isFiatMode={isMaxValuationFiatMode}
-          maxValuationPresets={MAX_VALUATION_PRESETS}
-          onSetMaxValuation={onSetPresetValuation}
+          value={exactAmount}
+          usdValue={usdValue}
+          onSetExactAmount={setExactAmount}
+          onSetPresetValue={onSetPresetValue}
+          onToggleIsFiatMode={onToggleIsFiatMode}
+          isFiatMode={isFiatMode}
           customPanelStyle={{
             backgroundColor: '$surface2',
             borderRadius: '$rounded20',

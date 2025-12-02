@@ -4,7 +4,6 @@ import {
   OnChainTransactionLabel,
   Transfer,
 } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { extractDappInfo } from 'uniswap/src/features/activity/utils/extractDappInfo'
 import { AssetCase } from 'uniswap/src/features/activity/utils/remote'
 import {
   CollectFeesTransactionInfo,
@@ -68,7 +67,12 @@ export function parseRestLiquidityTransaction(
     currency1AmountRaw = currency1.amountRaw
   }
 
-  const dappInfo = extractDappInfo(transaction)
+  const dappInfo = transaction.protocol?.name
+    ? {
+        name: transaction.protocol.name,
+        icon: transaction.protocol.logoUrl,
+      }
+    : undefined
 
   if (label === OnChainTransactionLabel.CLAIM && currency0Id && currency0AmountRaw) {
     // handle claim liquidity transaction

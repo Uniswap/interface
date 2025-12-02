@@ -126,4 +126,16 @@
     <changefreq>weekly</changefreq>
     <priority>0.5</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/positions/create</loc>
+    <lastmod>2024-09-17T19:57:27.976Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/positions</loc>
+    <lastmod>2024-09-17T19:57:27.976Z</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

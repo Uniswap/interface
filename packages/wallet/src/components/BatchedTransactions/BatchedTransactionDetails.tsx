@@ -232,10 +232,11 @@ export function BatchedTransactionDetails({
       {isExtensionApp && hasMultipleCalls && currentIndex > 0 && (
         <ScrollArrow side="left" onPress={() => scrollToIndex(currentIndex - 1)} />
       )}
+
       {/* Scrollable Content Area for extension */}
       {isExtensionApp ? (
         <Flex
-          ref={scrollRef as React.RefObject<HTMLDivElement | null>}
+          ref={scrollRef as React.RefObject<HTMLDivElement>}
           {...{
             overflowX: 'hidden',
             overflowY: 'hidden',
@@ -281,10 +282,12 @@ export function BatchedTransactionDetails({
           onScroll={handleScroll as (event: NativeSyntheticEvent<NativeScrollEvent>) => void}
         />
       )}
+
       {/* Right arrow button - visible only on extension with multiple calls */}
       {isExtensionApp && hasMultipleCalls && currentIndex < calls.length - 1 && (
         <ScrollArrow side="right" onPress={() => scrollToIndex(currentIndex + 1)} />
       )}
+
       {/* Left gradient overlay */}
       {hasMultipleCalls && (
         <GradientOverlay
@@ -294,6 +297,7 @@ export function BatchedTransactionDetails({
           colors={colors}
         />
       )}
+
       {/* Right gradient overlay */}
       {hasMultipleCalls && (
         <GradientOverlay

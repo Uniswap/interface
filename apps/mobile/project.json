@@ -4,37 +4,37 @@
       "executor": "nx:noop"
     },
     "android": {
-      "command": "bunx expo run:android --variant=devDebug --app-id=com.uniswap.mobile.dev",
+      "command": "rnef run:android --variant=devDebug --app-id-suffix=dev && bun run start",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "android:release": {
-      "command": "bunx expo run:android --variant=devRelease --app-id=com.uniswap.mobile.dev",
+      "command": "rnef run:android --variant=devRelease --app-id-suffix=dev",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "android:beta": {
-      "command": "bunx expo run:android --variant=betaDebug --app-id=com.uniswap.mobile.beta",
+      "command": "rnef run:android --variant=betaDebug --app-id-suffix=beta",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "android:beta:release": {
-      "command": "bunx expo run:android --variant=betaRelease --app-id=com.uniswap.mobile.beta",
+      "command": "rnef run:android --variant=betaRelease --app-id-suffix=beta",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "android:prod": {
-      "command": "bunx expo run:android --variant=prodDebug",
+      "command": "rnef run:android --variant=prodDebug",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "android:prod:release": {
-      "command": "bunx expo run:android --variant=prodRelease",
+      "command": "rnef run:android --variant=prodRelease",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -196,7 +196,7 @@
       }
     },
     "ios": {
-      "command": "bunx expo run:ios --scheme Uniswap --configuration Debug",
+      "command": "rnef run:ios --scheme Uniswap --configuration Debug && bun run start",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -208,31 +208,31 @@
       }
     },
     "ios:smol": {
-      "command": "bunx expo run:ios --device=\"iPhone SE (3rd generation)\"",
+      "command": "rnef run:ios --device=\"iPhone SE (3rd generation)\"",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "ios:dev:release": {
-      "command": "bunx expo run:ios --configuration Dev",
+      "command": "rnef run:ios --configuration Dev",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "ios:beta": {
-      "command": "bunx expo run:ios --configuration Beta",
+      "command": "rnef run:ios --configuration Beta",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "ios:bundle": {
-      "command": "bunx react-native bundle --entry-file apps/mobile/index.js --platform ios --dev false --bundle-output ./ios/main.jsbundle --assets-dest ./ios --sourcemap-output ./ios/main.jsbundle.map",
+      "command": "rnef bundle --entry-file='index.js' --dev false --bundle-output='./ios/main.jsbundle' --sourcemap-output ./ios/main.jsbundle.map --dev=false --platform='ios' --assets-dest='./ios'",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "ios:release": {
-      "command": "bunx expo run:ios --configuration Release",
+      "command": "rnef run:ios --configuration Release",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -244,19 +244,19 @@
     "lint:eslint": {},
     "lint:eslint:fix": {},
     "start": {
-      "command": "EXPO_BUILD_CONFIGURATION=Debug NODE_ENV=development bunx expo start --scheme uniswap",
+      "command": "NODE_ENV=development rnef start --client-logs",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "start:e2e": {
-      "command": "NODE_ENV=development IS_E2E_TEST=true bunx expo start",
+      "command": "NODE_ENV=development IS_E2E_TEST=true rnef start --client-logs",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "start:production": {
-      "command": "NODE_ENV=production bunx expo start --reset-cache",
+      "command": "NODE_ENV=production rnef start --reset-cache",
       "options": {
         "cwd": "{projectRoot}"
       }

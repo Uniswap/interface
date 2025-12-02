@@ -1,6 +1,6 @@
 import Row from 'components/deprecated/Row'
 import { TFunction } from 'i18next'
-import { styled } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import { Trans, useTranslation } from 'react-i18next'
 import { useLimitContext } from 'state/limit/LimitContext'
 import { ThemedText } from 'theme/components'

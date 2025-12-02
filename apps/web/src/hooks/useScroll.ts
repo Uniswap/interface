@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export enum ScrollDirection {
   UP = 'up',
@@ -8,57 +8,32 @@ export function useScroll({ enabled = true }: { enabled?: boolean } = {}) {
   const [direction, setDirection] = useState<ScrollDirection | undefined>()
   const [isScrolledDown, setIsScrolledDown] = useState(false)
   const [height, setHeight] = useState(window.scrollY)
-  const rafIdRef = useRef<number | null>(null)
-  const scrollDataRef = useRef({ previousScrollPosition: window.scrollY, currentScrollPosition: window.scrollY })
 
   useEffect(() => {
-    if (!enabled) {
-      if (rafIdRef.current !== null) {
-        cancelAnimationFrame(rafIdRef.current)
-        rafIdRef.current = null
+    let previousScrollPosition = 0
+    let currentScrollPosition = 0
+
+    const scrollListener = () => {
+      if (!enabled) {
+        return
       }
-      return undefined
-    }
-
-    const updateScrollState = () => {
-      const scrollY = window.scrollY
-      const { previousScrollPosition } = scrollDataRef.current
-
-      setIsScrolledDown(scrollY > 0)
-      if (scrollY >= 0) {
-        setHeight(scrollY)
-        scrollDataRef.current.currentScrollPosition = scrollY
+      setIsScrolledDown(window.scrollY > 0)
+      if (window.scrollY >= 0) {
+        setHeight(window.scrollY)
+        currentScrollPosition = window.scrollY
       }
 
-      if (previousScrollPosition < scrollDataRef.current.currentScrollPosition) {
+      if (previousScrollPosition < currentScrollPosition) {
         setDirection(ScrollDirection.DOWN)
-      } else if (previousScrollPosition > scrollDataRef.current.currentScrollPosition) {
+      } else if (previousScrollPosition > currentScrollPosition) {
         setDirection(ScrollDirection.UP)
       }
 
-      scrollDataRef.current.previousScrollPosition = scrollDataRef.current.currentScrollPosition
-      rafIdRef.current = null
+      // Update the previous value
+      previousScrollPosition = currentScrollPosition
     }
-
-    const scrollListener = () => {
-      if (rafIdRef.current !== null) {
-        return
-      }
-
-      rafIdRef.current = requestAnimationFrame(updateScrollState)
-    }
-
-    window.addEventListener('scroll', scrollListener, { passive: true })
-    // Check initial scroll position
-    updateScrollState()
-
-    return () => {
-      window.removeEventListener('scroll', scrollListener)
-      if (rafIdRef.current !== null) {
-        cancelAnimationFrame(rafIdRef.current)
-        rafIdRef.current = null
-      }
-    }
+    window.addEventListener('scroll', scrollListener)
+    return () => window.removeEventListener('scroll', scrollListener)
   }, [enabled])
   return { direction, isScrolledDown, height }
 }

@@ -17,7 +17,6 @@ export enum InterfacePageName {
   NotFound = 'not-found',
   PoolDetailsPage = 'pool-details-page',
   PoolPage = 'pool-page',
-  PortfolioDisconnectedPage = 'portfolio-disconnected-page',
   PortfolioOverviewPage = 'portfolio-overview-page',
   PortfolioTokensPage = 'portfolio-tokens-page',
   PortfolioDefiPage = 'portfolio-defi-page',

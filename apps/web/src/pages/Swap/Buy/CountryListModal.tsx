@@ -52,7 +52,7 @@ export function CountryListModal({
     }
   }, [countryList, searchQuery, selectedCountry?.countryCode])
 
-  const fixedList = useRef<FixedSizeList>(undefined)
+  const fixedList = useRef<FixedSizeList>()
   const handleInput = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const input = event.target.value
     setSearchQuery(input)

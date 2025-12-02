@@ -1,4 +1,4 @@
-import { styled } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import { Box } from 'rebass/styled-components'
 import { Gap } from 'theme'
 

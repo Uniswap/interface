@@ -27,7 +27,6 @@ describe('useListTransactions', () => {
     mockUseListTransactionsQuery.mockReturnValue({
       data: undefined,
       isLoading: false,
-      isFetching: false,
       error: undefined,
       refetch: jest.fn(),
       status: 'success',
@@ -47,7 +46,6 @@ describe('useListTransactions', () => {
 
     expect(result.current).toHaveProperty('data')
     expect(result.current).toHaveProperty('loading')
-    expect(result.current).toHaveProperty('isFetching')
     expect(result.current).toHaveProperty('networkStatus')
     expect(result.current).toHaveProperty('refetch')
     expect(result.current).toHaveProperty('error')
@@ -100,7 +98,6 @@ describe('useListTransactions', () => {
     mockUseListTransactionsQuery.mockReturnValue({
       data: undefined,
       isLoading: false,
-      isFetching: false,
       error: undefined,
       refetch: mockRefetch,
       status: 'success',

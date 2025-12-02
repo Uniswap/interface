@@ -18,7 +18,6 @@ const FilterButton = styled(Text, {
   borderStyle: 'solid',
   borderColor: '$surface3',
   whiteSpace: 'nowrap',
-  flexShrink: 0,
   hoverStyle: {
     cursor: 'pointer',
     backgroundColor: '$surface2',

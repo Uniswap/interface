@@ -16,7 +16,6 @@ import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityContextProvider'
-import { useSetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
 import { useCallback, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -89,7 +88,6 @@ export function CreatePositionModal({
   const chainId = token0?.chainId
 
   const { formatNumberOrString, formatCurrencyAmount } = useLocalizationContext()
-  const disableOneClickSwap = useSetOverrideOneClickSwapFlag()
 
   const baseCurrency = price?.baseCurrency
   const quoteCurrency = price?.quoteCurrency
@@ -176,7 +174,6 @@ export function CreatePositionModal({
           }
           setCurrentTransactionStep(undefined)
         },
-        disableOneClickSwap,
         analytics: {
           ...getLPBaseAnalyticsProperties({
             trace,
@@ -226,7 +223,6 @@ export function CreatePositionModal({
     protocolVersion,
     creatingPoolOrPair,
     poolOrPair,
-    disableOneClickSwap,
   ])
 
   return (

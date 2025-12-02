@@ -1,6 +1,4 @@
 import { AuctionHeader } from 'components/Toucan/Auction/AuctionHeader'
-import { AuctionStats } from 'components/Toucan/Auction/AuctionStats/AuctionStats'
-import { BidActivities } from 'components/Toucan/Auction/BidActivities/BidActivities'
 import { BidDistributionChart } from 'components/Toucan/Auction/BidDistributionChart/BidDistributionChart'
 import { BidFormSection } from 'components/Toucan/Auction/BidForm'
 import { AuctionStoreProvider } from 'components/Toucan/Auction/store/AuctionStoreContextProvider'
@@ -43,17 +41,6 @@ export default function ToucanToken() {
         >
           <BidDistributionChart />
           <BidFormSection />
-        </Flex>
-        <Flex
-          row
-          width="100%"
-          gap="$spacing48"
-          my="$spacing48"
-          mx="$spacing4"
-          $lg={{ flexDirection: 'column', gap: '$spacing32', mx: 0 }}
-        >
-          <BidActivities />
-          <AuctionStats />
         </Flex>
       </ToucanContainer>
     </AuctionStoreProvider>

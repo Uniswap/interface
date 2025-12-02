@@ -78,9 +78,9 @@ export function SwapFormScreen({
 }
 
 function SwapFormContent(): JSX.Element {
-  const { trade, isCrossChain } = useSwapFormScreenStore((state) => ({
+  const { trade, isBridge } = useSwapFormScreenStore((state) => ({
     trade: state.trade,
-    isCrossChain: state.isCrossChain,
+    isBridge: state.isBridge,
   }))
 
   const priceUXEnabled = usePriceUXEnabled()
@@ -100,7 +100,7 @@ function SwapFormContent(): JSX.Element {
               isIndicative={Boolean(trade.indicativeTrade && !trade.trade)}
               isLoadingIndicative={trade.isIndicativeLoading}
               isLoading={Boolean(trade.isFetching)}
-              isBridge={isCrossChain}
+              isBridge={isBridge}
             />
           )}
           <SwapFormScreenDetails />

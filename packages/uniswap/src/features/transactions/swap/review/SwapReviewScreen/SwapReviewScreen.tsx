@@ -34,7 +34,6 @@ import { SwapReviewWarningStoreContextProvider } from 'uniswap/src/features/tran
 import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
-import { isChained } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { logger } from 'utilities/src/logger/logger'
 import { isWebPlatform } from 'utilities/src/platform'
 
@@ -107,9 +106,6 @@ function SwapReviewContent(): JSX.Element | null {
     hideContent: s.hideContent,
   }))
 
-  const { trade } = acceptedDerivedSwapInfo?.trade ?? {}
-  const isChainedAction = Boolean(trade && isChained({ routing: trade.routing }))
-
   const showInterfaceReviewSteps = useShowInterfaceReviewSteps()
 
   const { onPrev } = useSwapOnPrevious()
@@ -166,7 +162,7 @@ function SwapReviewContent(): JSX.Element | null {
             />
           )}
           {showInterfaceReviewSteps ? (
-            <ProgressIndicator currentStep={currentStep} steps={steps} isChainedAction={isChainedAction} />
+            <ProgressIndicator currentStep={currentStep} steps={steps} />
           ) : isWrap ? (
             <SwapReviewWrapTransactionDetails />
           ) : (

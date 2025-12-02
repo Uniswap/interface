@@ -66,7 +66,6 @@ export const BASE_CHAIN_INFO = {
   pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
   statusPage: 'https://status.base.org/',
   supportsV4: true,
-  supportsNFTs: true,
   urlParam: 'base',
   rpcUrls: isPlaywrightEnv()
     ? getPlaywrightRpcUrls(LOCAL_BASE_PLAYWRIGHT_RPC_URL)

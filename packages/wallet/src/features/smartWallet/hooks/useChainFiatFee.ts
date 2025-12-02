@@ -13,7 +13,7 @@ export function useChainFiatFee(params: {
 }): void {
   const { chainId, gasFeeDisplayValue, onFetched, onError } = params
   const { convertFiatAmount } = useLocalizationContext()
-  const [fiatAmount, setFiatAmount] = useState<number | undefined>(undefined)
+  const [fiatAmount, setFiatAmount] = useState<number>(0)
 
   const currencyAmount = getCurrencyAmount({
     value: gasFeeDisplayValue,
@@ -21,7 +21,7 @@ export function useChainFiatFee(params: {
     currency: nativeOnChain(chainId),
   })
 
-  const { price: usdPrice, isLoading: usdPriceLoading } = useUSDCPrice(currencyAmount?.currency)
+  const { price: usdPrice } = useUSDCPrice(currencyAmount?.currency)
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: -chainId
   useEffect(() => {
@@ -29,11 +29,7 @@ export function useChainFiatFee(params: {
       onError?.(true)
       return
     }
-    if (usdPrice === undefined) {
-      if (!usdPriceLoading) {
-        // can not fetch USD price
-        onError?.(true)
-      }
+    if (!usdPrice) {
       return
     }
     try {
@@ -42,10 +38,10 @@ export function useChainFiatFee(params: {
     } catch (_error) {
       onError?.(true)
     }
-  }, [currencyAmount, usdPrice, usdPriceLoading, convertFiatAmount, onError, chainId])
+  }, [currencyAmount, usdPrice, convertFiatAmount, onError, chainId])
 
   useEffect(() => {
-    if (fiatAmount !== undefined) {
+    if (fiatAmount) {
       onFetched?.(chainId, fiatAmount)
     }
   }, [chainId, fiatAmount, onFetched])

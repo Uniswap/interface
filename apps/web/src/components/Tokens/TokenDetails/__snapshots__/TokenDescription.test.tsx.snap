@@ -3,24 +3,26 @@
 exports[`TokenDescription > no description or social buttons shown when not available 1`] = `
 <DocumentFragment>
   .c0 {
+  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
+  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #FF37C7;
   stroke: #FF37C7;
   font-weight: 500;
 }
 
-.c0 :hover {
+.c0:hover {
   opacity: 0.6;
 }
 
-.c0 :active {
+.c0:active {
   opacity: 0.4;
 }
 
 .c1 {
-  color: rgba(19, 19, 19, 0.35);
+  color: rgba(19,19,19,0.35);
   font-weight: 485;
   font-size: 16px;
 }
@@ -126,19 +128,21 @@ exports[`TokenDescription > no description or social buttons shown when not avai
 exports[`TokenDescription > renders token information correctly with defaults 1`] = `
 <DocumentFragment>
   .c0 {
+  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
+  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #FF37C7;
   stroke: #FF37C7;
   font-weight: 500;
 }
 
-.c0 :hover {
+.c0:hover {
   opacity: 0.6;
 }
 
-.c0 :active {
+.c0:active {
   opacity: 0.4;
 }
 
@@ -312,19 +316,21 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
 exports[`TokenDescription > truncates description and shows more 1`] = `
 <DocumentFragment>
   .c0 {
+  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
+  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #FF37C7;
   stroke: #FF37C7;
   font-weight: 500;
 }
 
-.c0 :hover {
+.c0:hover {
   opacity: 0.6;
 }
 
-.c0 :active {
+.c0:active {
   opacity: 0.4;
 }
 

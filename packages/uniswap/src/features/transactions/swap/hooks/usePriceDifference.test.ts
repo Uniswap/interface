@@ -5,7 +5,6 @@ import type { SwapFormStoreState } from 'uniswap/src/features/transactions/swap/
 import * as useSwapFormStoreModule from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { createGasEstimate } from 'uniswap/src/test/fixtures/tradingApi'
-import { createEmptyTradeWithStatus } from 'uniswap/src/test/fixtures/transactions/swap'
 import { renderHookWithProviders } from 'uniswap/src/test/render'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
@@ -112,7 +111,14 @@ function mockSwapFormStore(inputAmount: string, outputAmount: string): void {
         exactAmountToken: USDC.address,
         exactCurrencyField: CurrencyField.INPUT,
         outputAmountUserWillReceive: CurrencyAmount.fromRawAmount(USDC, outputAmount),
-        trade: createEmptyTradeWithStatus({ gasEstimate: createGasEstimate() }),
+        trade: {
+          isLoading: false,
+          error: null,
+          trade: null,
+          indicativeTrade: undefined,
+          isIndicativeLoading: false,
+          gasEstimate: createGasEstimate(),
+        },
         chainId: 1,
         focusOnCurrencyField: CurrencyField.INPUT,
         wrapType: WrapType.NotApplicable,

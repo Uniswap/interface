@@ -3,11 +3,15 @@
 exports[`Pending - classic trade titles > renders classic trade correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p false false undefined 1`] = `
 <DocumentFragment>
   .c4 {
-  transition: display 250ms ease-in-out,transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  -webkit-animation: dDLNFg 250ms ease-in-out forwards;
   animation: dDLNFg 250ms ease-in-out forwards;
 }
 
 .c4.exiting {
+  -webkit-animation: hNFZXE 250ms ease-in-out;
   animation: hNFZXE 250ms ease-in-out;
 }
 
@@ -15,7 +19,13 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   height: 64px;
   width: 64px;
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
   border-radius: 50%;
   overflow: visible;
@@ -27,21 +37,40 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
 }
 
 .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 24px;
 }
 
 .c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
 }
 
 .c1 {
   width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 
@@ -61,45 +90,71 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
 
 .c13 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
   gap: 8px;
 }
 
 .c15 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
 }
 
 .c10 {
   color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c11 {
-  color: rgba(19, 19, 19, 0.63);
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c16 {
+  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
+  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #FF37C7;
   stroke: #FF37C7;
   font-weight: 500;
 }
 
-.c16 :hover {
+.c16:hover {
   opacity: 0.6;
 }
 
-.c16 :active {
+.c16:active {
   opacity: 0.4;
 }
 
@@ -117,7 +172,13 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   position: relative;
   width: 100%;
   min-height: 72px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
 }
 
@@ -125,13 +186,23 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   position: absolute;
   width: 100%;
   height: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-transition: display 250ms ease-in-out;
   transition: display 250ms ease-in-out;
 }
 
 .c9.exiting {
+  -webkit-animation: ifZjLM 250ms ease-in-out;
   animation: ifZjLM 250ms ease-in-out;
 }
 
@@ -141,13 +212,11 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   >
     <div
       class="c0 c1 c2"
-      gap="lg"
     >
       <div
         class="c3"
       >
         <div
-          animationtype="scale"
           class="c4"
         >
           <svg
@@ -168,14 +237,12 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
       </div>
       <div
         class="c6 c1 c7"
-        gap="md"
       >
         <div
           class="c8"
         >
           <div
             class="c6 c9"
-            gap="md"
           >
             <div
               class="c10 css-16qljo6"
@@ -187,10 +254,7 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
               class="c11 css-wjxizv"
             >
               <div
-                align="center"
                 class="c12 c13"
-                gap="sm"
-                justify="center"
               >
                 <div
                   class="c10 css-142zc9n"
@@ -229,9 +293,6 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
         </div>
         <div
           class="c14 c15"
-          justify="center"
-          margintop="32px"
-          minheight="24px"
         >
           <div
             class="c11 css-142zc9n"
@@ -259,11 +320,15 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
 exports[`Pending - classic trade titles > renders classic trade correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p false false undefined 2`] = `
 <DocumentFragment>
   .c4 {
-  transition: display 250ms ease-in-out,transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  -webkit-animation: dDLNFg 250ms ease-in-out forwards;
   animation: dDLNFg 250ms ease-in-out forwards;
 }
 
 .c4.exiting {
+  -webkit-animation: hNFZXE 250ms ease-in-out;
   animation: hNFZXE 250ms ease-in-out;
 }
 
@@ -271,7 +336,13 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   height: 64px;
   width: 64px;
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
   border-radius: 50%;
   overflow: visible;
@@ -283,21 +354,40 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
 }
 
 .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 24px;
 }
 
 .c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
 }
 
 .c1 {
   width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 
@@ -317,45 +407,71 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
 
 .c13 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
   gap: 8px;
 }
 
 .c15 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
 }
 
 .c10 {
   color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c11 {
-  color: rgba(19, 19, 19, 0.63);
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c16 {
+  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
+  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #FF37C7;
   stroke: #FF37C7;
   font-weight: 500;
 }
 
-.c16 :hover {
+.c16:hover {
   opacity: 0.6;
 }
 
-.c16 :active {
+.c16:active {
   opacity: 0.4;
 }
 
@@ -372,7 +488,13 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   position: relative;
   width: 100%;
   min-height: 72px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
 }
 
@@ -380,13 +502,23 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   position: absolute;
   width: 100%;
   height: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-transition: display 250ms ease-in-out;
   transition: display 250ms ease-in-out;
 }
 
 .c9.exiting {
+  -webkit-animation: ifZjLM 250ms ease-in-out;
   animation: ifZjLM 250ms ease-in-out;
 }
 
@@ -396,13 +528,11 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   >
     <div
       class="c0 c1 c2"
-      gap="lg"
     >
       <div
         class="c3"
       >
         <div
-          animationtype="scale"
           class="c4"
         >
           <svg
@@ -423,14 +553,12 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
       </div>
       <div
         class="c6 c1 c7"
-        gap="md"
       >
         <div
           class="c8"
         >
           <div
             class="c6 c9"
-            gap="md"
           >
             <div
               class="c10 css-16qljo6"
@@ -442,10 +570,7 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
               class="c11 css-wjxizv"
             >
               <div
-                align="center"
                 class="c12 c13"
-                gap="sm"
-                justify="center"
               >
                 <div
                   class="c10 css-142zc9n"
@@ -484,9 +609,6 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
         </div>
         <div
           class="c14 c15"
-          justify="center"
-          margintop="32px"
-          minheight="24px"
         >
           <div
             class="c11 css-142zc9n"
@@ -519,21 +641,26 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
 }
 
 .c5 path {
-  stroke: rgba(19, 19, 19, 0.35);
-  background: rgba(19, 19, 19, 0.63);
-  fill: rgba(19, 19, 19, 0.35);
+  stroke: rgba(19,19,19,0.35);
+  background: rgba(19,19,19,0.63);
+  fill: rgba(19,19,19,0.35);
 }
 
 .c6 {
+  -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
 }
 
 .c4 {
-  transition: display 250ms ease-in-out,transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  -webkit-animation: iCPeaJ 250ms ease-in-out forwards;
   animation: iCPeaJ 250ms ease-in-out forwards;
 }
 
 .c4.exiting {
+  -webkit-animation: bbnGid 250ms ease-in-out;
   animation: bbnGid 250ms ease-in-out;
 }
 
@@ -541,15 +668,21 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   height: 64px;
   width: 64px;
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
   border-radius: 50%;
   overflow: visible;
 }
 
 .c7 {
-  stroke: rgba(19, 19, 19, 0.35);
-  fill: rgba(19, 19, 19, 0.35);
+  stroke: rgba(19,19,19,0.35);
+  fill: rgba(19,19,19,0.35);
   width: calc(100% + 8px);
   height: calc(100% + 8px);
   top: -4px;
@@ -558,21 +691,40 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
 }
 
 .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 24px;
 }
 
 .c8 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
 }
 
 .c1 {
   width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 
@@ -592,28 +744,52 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
 
 .c15 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
   gap: 8px;
 }
 
 .c17 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
 }
 
 .c12 {
   color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c13 {
-  color: rgba(19, 19, 19, 0.63);
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
@@ -630,7 +806,13 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   position: relative;
   width: 100%;
   min-height: 72px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
 }
 
@@ -638,13 +820,23 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   position: absolute;
   width: 100%;
   height: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-transition: display 250ms ease-in-out;
   transition: display 250ms ease-in-out;
 }
 
 .c11.exiting {
+  -webkit-animation: ifZjLM 250ms ease-in-out;
   animation: ifZjLM 250ms ease-in-out;
 }
 
@@ -654,13 +846,11 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
   >
     <div
       class="c0 c1 c2"
-      gap="lg"
     >
       <div
         class="c3"
       >
         <div
-          animationtype="fade"
           class="c4"
         >
           <svg
@@ -684,14 +874,12 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
       </div>
       <div
         class="c8 c1 c9"
-        gap="md"
       >
         <div
           class="c10"
         >
           <div
             class="c8 c11"
-            gap="md"
           >
             <div
               class="c12 css-16qljo6"
@@ -703,10 +891,7 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
               class="c13 css-wjxizv"
             >
               <div
-                align="center"
                 class="c14 c15"
-                gap="sm"
-                justify="center"
               >
                 <div
                   class="c12 css-142zc9n"
@@ -745,9 +930,6 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
         </div>
         <div
           class="c16 c17"
-          justify="center"
-          margintop="32px"
-          minheight="24px"
         >
           <div
             class="c13 css-142zc9n"
@@ -767,11 +949,15 @@ exports[`Pending - classic trade titles > renders classic trade correctly, with 
 exports[`Pending - uniswapX trade titles > renders limit order correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p false false undefined 1`] = `
 <DocumentFragment>
   .c4 {
-  transition: display 250ms ease-in-out,transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  -webkit-animation: dDLNFg 250ms ease-in-out forwards;
   animation: dDLNFg 250ms ease-in-out forwards;
 }
 
 .c4.exiting {
+  -webkit-animation: hNFZXE 250ms ease-in-out;
   animation: hNFZXE 250ms ease-in-out;
 }
 
@@ -779,7 +965,13 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   height: 64px;
   width: 64px;
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
   border-radius: 50%;
   overflow: visible;
@@ -791,21 +983,40 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
 }
 
 .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 24px;
 }
 
 .c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
 }
 
 .c1 {
   width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 
@@ -817,20 +1028,35 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
 
 .c13 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
   gap: 8px;
 }
 
 .c10 {
   color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c11 {
-  color: rgba(19, 19, 19, 0.63);
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
@@ -848,7 +1074,13 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   position: relative;
   width: 100%;
   min-height: 72px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
 }
 
@@ -856,13 +1088,23 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   position: absolute;
   width: 100%;
   height: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-transition: display 250ms ease-in-out;
   transition: display 250ms ease-in-out;
 }
 
 .c9.exiting {
+  -webkit-animation: ifZjLM 250ms ease-in-out;
   animation: ifZjLM 250ms ease-in-out;
 }
 
@@ -872,13 +1114,11 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   >
     <div
       class="c0 c1 c2"
-      gap="lg"
     >
       <div
         class="c3"
       >
         <div
-          animationtype="scale"
           class="c4"
         >
           <svg
@@ -899,14 +1139,12 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
       </div>
       <div
         class="c6 c1 c7"
-        gap="md"
       >
         <div
           class="c8"
         >
           <div
             class="c6 c9"
-            gap="md"
           >
             <div
               class="c10 css-16qljo6"
@@ -918,10 +1156,7 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
               class="c11 css-wjxizv"
             >
               <div
-                align="center"
                 class="c12 c13"
-                gap="sm"
-                justify="center"
               >
                 <div
                   class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
@@ -1008,11 +1243,15 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
 exports[`Pending - uniswapX trade titles > renders limit order correctly, with approvalPending= %p , revocationPending= %p, wrapTxHash= %p false false undefined 2`] = `
 <DocumentFragment>
   .c4 {
-  transition: display 250ms ease-in-out,transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  -webkit-animation: dDLNFg 250ms ease-in-out forwards;
   animation: dDLNFg 250ms ease-in-out forwards;
 }
 
 .c4.exiting {
+  -webkit-animation: hNFZXE 250ms ease-in-out;
   animation: hNFZXE 250ms ease-in-out;
 }
 
@@ -1020,7 +1259,13 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   height: 64px;
   width: 64px;
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
   border-radius: 50%;
   overflow: visible;
@@ -1032,21 +1277,40 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
 }
 
 .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 24px;
 }
 
 .c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
 }
 
 .c1 {
   width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 
@@ -1066,45 +1330,71 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
 
 .c13 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
   gap: 8px;
 }
 
 .c15 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
 }
 
 .c10 {
   color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c11 {
-  color: rgba(19, 19, 19, 0.63);
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c16 {
+  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
+  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #FF37C7;
   stroke: #FF37C7;
   font-weight: 500;
 }
 
-.c16 :hover {
+.c16:hover {
   opacity: 0.6;
 }
 
-.c16 :active {
+.c16:active {
   opacity: 0.4;
 }
 
@@ -1121,7 +1411,13 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   position: relative;
   width: 100%;
   min-height: 72px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
 }
 
@@ -1129,13 +1425,23 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   position: absolute;
   width: 100%;
   height: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-transition: display 250ms ease-in-out;
   transition: display 250ms ease-in-out;
 }
 
 .c9.exiting {
+  -webkit-animation: ifZjLM 250ms ease-in-out;
   animation: ifZjLM 250ms ease-in-out;
 }
 
@@ -1145,13 +1451,11 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   >
     <div
       class="c0 c1 c2"
-      gap="lg"
     >
       <div
         class="c3"
       >
         <div
-          animationtype="scale"
           class="c4"
         >
           <svg
@@ -1172,14 +1476,12 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
       </div>
       <div
         class="c6 c1 c7"
-        gap="md"
       >
         <div
           class="c8"
         >
           <div
             class="c6 c9"
-            gap="md"
           >
             <div
               class="c10 css-16qljo6"
@@ -1191,10 +1493,7 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
               class="c11 css-wjxizv"
             >
               <div
-                align="center"
                 class="c12 c13"
-                gap="sm"
-                justify="center"
               >
                 <div
                   class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
@@ -1271,9 +1570,6 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
         </div>
         <div
           class="c14 c15"
-          justify="center"
-          margintop="32px"
-          minheight="24px"
         >
           <div
             class="c11 css-142zc9n"
@@ -1306,21 +1602,26 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
 }
 
 .c5 path {
-  stroke: rgba(19, 19, 19, 0.35);
-  background: rgba(19, 19, 19, 0.63);
-  fill: rgba(19, 19, 19, 0.35);
+  stroke: rgba(19,19,19,0.35);
+  background: rgba(19,19,19,0.63);
+  fill: rgba(19,19,19,0.35);
 }
 
 .c6 {
+  -webkit-animation: 2s fvtopB linear infinite;
   animation: 2s fvtopB linear infinite;
 }
 
 .c4 {
-  transition: display 250ms ease-in-out,transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, -webkit-transform 250ms ease-in-out;
+  -webkit-transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  transition: display 250ms ease-in-out, transform 250ms ease-in-out;
+  -webkit-animation: iCPeaJ 250ms ease-in-out forwards;
   animation: iCPeaJ 250ms ease-in-out forwards;
 }
 
 .c4.exiting {
+  -webkit-animation: bbnGid 250ms ease-in-out;
   animation: bbnGid 250ms ease-in-out;
 }
 
@@ -1328,15 +1629,21 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   height: 64px;
   width: 64px;
   position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
   border-radius: 50%;
   overflow: visible;
 }
 
 .c7 {
-  stroke: rgba(19, 19, 19, 0.35);
-  fill: rgba(19, 19, 19, 0.35);
+  stroke: rgba(19,19,19,0.35);
+  fill: rgba(19,19,19,0.35);
   width: calc(100% + 8px);
   height: calc(100% + 8px);
   top: -4px;
@@ -1345,21 +1652,40 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
 }
 
 .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 24px;
 }
 
 .c8 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
 }
 
 .c1 {
   width: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 
@@ -1379,28 +1705,52 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
 
 .c15 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
   gap: 8px;
 }
 
 .c17 {
   width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
   justify-content: center;
 }
 
 .c12 {
   color: #131313;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c13 {
-  color: rgba(19, 19, 19, 0.63);
+  color: rgba(19,19,19,0.63);
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
@@ -1417,7 +1767,13 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   position: relative;
   width: 100%;
   min-height: 72px;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
   flex-grow: 1;
 }
 
@@ -1425,13 +1781,23 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   position: absolute;
   width: 100%;
   height: 100%;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
+  -webkit-transition: display 250ms ease-in-out;
   transition: display 250ms ease-in-out;
 }
 
 .c11.exiting {
+  -webkit-animation: ifZjLM 250ms ease-in-out;
   animation: ifZjLM 250ms ease-in-out;
 }
 
@@ -1441,13 +1807,11 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
   >
     <div
       class="c0 c1 c2"
-      gap="lg"
     >
       <div
         class="c3"
       >
         <div
-          animationtype="fade"
           class="c4"
         >
           <svg
@@ -1471,14 +1835,12 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
       </div>
       <div
         class="c8 c1 c9"
-        gap="md"
       >
         <div
           class="c10"
         >
           <div
             class="c8 c11"
-            gap="md"
           >
             <div
               class="c12 css-16qljo6"
@@ -1490,10 +1852,7 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
               class="c13 css-wjxizv"
             >
               <div
-                align="center"
                 class="c14 c15"
-                gap="sm"
-                justify="center"
               >
                 <div
                   class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-16px _justifyContent-center _pointerEvents-auto _width-16px _position-relative"
@@ -1570,9 +1929,6 @@ exports[`Pending - uniswapX trade titles > renders limit order correctly, with a
         </div>
         <div
           class="c16 c17"
-          justify="center"
-          margintop="32px"
-          minheight="24px"
         >
           <div
             class="c13 css-142zc9n"

@@ -1,5 +1,5 @@
 import { useActiveAddresses } from 'features/accounts/store/hooks'
-import styled from 'lib/styled-components'
+import styled, { useTheme } from 'lib/styled-components'
 import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
 import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
 import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
@@ -8,7 +8,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { addFiatOnRampTransaction } from 'state/fiatOnRampTransactions/reducer'
 import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from 'state/fiatOnRampTransactions/types'
 import { ExternalLink } from 'theme/components/Links'
-import { Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
@@ -156,8 +156,8 @@ export function ChooseMultiPlatformProvider({
   setErrorProvider,
 }: ChooseMultiPlatformProviderProps) {
   const isDarkMode = useIsDarkMode()
+  const theme = useTheme()
   const { t } = useTranslation()
-  const colors = useSporeColors()
 
   const activeAddresses = useActiveAddresses()
 
@@ -212,12 +212,12 @@ export function ChooseMultiPlatformProvider({
             }}
             components={{
               tosLink: (
-                <StyledLink color={colors.neutral3.val} href="https://uniswap.org/terms-of-service/">
+                <StyledLink color={theme.neutral3} href="https://uniswap.org/terms-of-service/">
                   {t('common.termsOfService')}
                 </StyledLink>
               ),
               privacyLink: (
-                <StyledLink color={colors.neutral3.val} href="https://uniswap.org/privacy-policy">
+                <StyledLink color={theme.neutral3} href="https://uniswap.org/privacy-policy">
                   {t('common.privacyPolicy')}
                 </StyledLink>
               ),

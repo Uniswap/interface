@@ -32,7 +32,6 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useTransactionActions } from 'uniswap/src/features/activity/hooks/useTransactionActions'
 import { getTransactionSummaryTitle } from 'uniswap/src/features/activity/utils/getTransactionSummaryTitle'
-import { useIsActiveSignerAddress } from 'uniswap/src/features/address/useIsActiveSignerAddress'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { FORMAT_DATE_TIME_MEDIUM, useFormattedDateTime } from 'uniswap/src/features/language/localizedDayjs'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -50,7 +49,7 @@ type TransactionDetailsModalProps = {
   transactionDetails: TransactionDetails
   authTrigger?: AuthTrigger
   onClose: () => void
-  onReportSuccess?: () => void
+  onReportTransaction?: () => void
   onUnhideTransaction?: () => void
 }
 
@@ -63,9 +62,6 @@ export function TransactionDetailsHeader({
 }): JSX.Element {
   const { t } = useTranslation()
   const { value: isContextMenuOpen, setTrue: openContextMenu, setFalse: closeContextMenu } = useBooleanState(false)
-
-  const isActiveSignerAddress = useIsActiveSignerAddress(transactionDetails.from)
-  const showTransactionActions = transactionActions.length > 0 && isActiveSignerAddress
 
   const dateString = useFormattedDateTime(dayjs(transactionDetails.addedTime), FORMAT_DATE_TIME_MEDIUM)
   const title = getTransactionSummaryTitle(transactionDetails, t)
@@ -87,7 +83,7 @@ export function TransactionDetailsHeader({
           </Text>
         </Flex>
       </Flex>
-      {showTransactionActions && (
+      {transactionActions.length > 0 && (
         <ContextMenu
           menuItems={transactionActions}
           triggerMode={ContextMenuTriggerMode.Primary}
@@ -179,7 +175,7 @@ export function TransactionDetailsModal({
   transactionDetails,
   authTrigger,
   onClose,
-  onReportSuccess,
+  onReportTransaction,
   onUnhideTransaction,
 }: TransactionDetailsModalProps): JSX.Element {
   const { t } = useTranslation()
@@ -200,7 +196,7 @@ export function TransactionDetailsModal({
     transaction: transactionDetails,
     authTrigger,
     onClose,
-    onReportSuccess,
+    onReportTransaction,
     onUnhideTransaction,
   })
 

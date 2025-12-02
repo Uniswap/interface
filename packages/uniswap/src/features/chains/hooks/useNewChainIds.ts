@@ -11,8 +11,5 @@ export function useNewChainIds(): UniverseChainId[] {
     defaultValue: [],
     customTypeGuard: isUniverseChainIdArrayType,
   })
-
-  // For some reason, in the test suite, `newChainIds` is undefined
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-  return useMemo(() => (newChainIds || []).filter(isUniverseChainId), [newChainIds])
+  return useMemo(() => newChainIds.filter(isUniverseChainId), [newChainIds])
 }

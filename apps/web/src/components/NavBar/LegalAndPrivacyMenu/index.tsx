@@ -14,7 +14,7 @@ const MenuLink = ({ children, ...rest }: AnchorProps) => (
     <Text
       color="$neutral2"
       $group-hover={{ color: '$accent1' }}
-      transition="all 0.1s ease-in-out"
+      animation="fastHeavy"
       variant="body4"
       display="flex"
       alignItems="center"

@@ -1,5 +1,4 @@
 import { useIsFocused } from '@react-navigation/core'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,13 +12,9 @@ import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
-import { buildWrappedUrl } from 'uniswap/src/components/banners/shared/utils'
-import { UniswapWrapped2025Card } from 'uniswap/src/components/banners/UniswapWrapped2025Card/UniswapWrapped2025Card'
 import { ActionSheetModal, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
-import { AccountType } from 'uniswap/src/features/accounts/types'
-import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
+import { AccountType, DisplayNameType } from 'uniswap/src/features/accounts/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -28,15 +23,13 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { openUri } from 'uniswap/src/utils/linking'
-import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { hasBackup } from 'wallet/src/features/wallet/accounts/utils'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
-import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountAddress, useDisplayName, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAllAccountsSorted, selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 
@@ -66,8 +59,9 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const hasImportedSeedPhrase = useNativeAccountExists()
   const isModalOpen = useIsFocused()
   const { openWalletRestoreModal, walletRestoreType } = useWalletRestore()
+  const displayName = useDisplayName(activeAccountAddress)
 
-  const isWrappedBannerEnabled = useFeatureFlag(FeatureFlags.UniswapWrapped2025)
+  const activeAccountHasENS = displayName?.type === DisplayNameType.ENS
 
   const sortedMnemonicAccounts = useSelector(selectSortedSignerMnemonicAccounts)
 
@@ -104,21 +98,6 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
       address: activeAccountAddress,
     })
   }
-
-  const onPressWrappedCard = useCallback(async () => {
-    if (!activeAccountAddress) {
-      return
-    }
-
-    try {
-      const url = buildWrappedUrl(UNISWAP_WEB_URL, activeAccountAddress)
-      await openUri({ uri: url, openExternalBrowser: true })
-      onClose()
-      dispatch(setHasDismissedUniswapWrapped2025Banner(true))
-    } catch (error) {
-      logger.error(error, { tags: { file: 'AccountSwitcherModal', function: 'onPressWrappedCard' } })
-    }
-  }, [activeAccountAddress, onClose, dispatch])
 
   const addWalletOptions = useMemo<MenuItemProp[]>(() => {
     const createAdditionalAccount = async (): Promise<void> => {
@@ -291,22 +270,19 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           size={spacing.spacing60 - spacing.spacing4}
           variant="subheading1"
         />
-        {isWrappedBannerEnabled && (
+        {!activeAccountHasENS && (
           <Flex row px="$spacing12">
-            <UniswapWrapped2025Card onPress={onPressWrappedCard} />
+            <Button
+              lineHeightDisabled
+              size="medium"
+              testID={TestID.WalletSettings}
+              emphasis="secondary"
+              onPress={onManageWallet}
+            >
+              {t('account.wallet.button.manage')}
+            </Button>
           </Flex>
         )}
-        <Flex row px="$spacing12">
-          <Button
-            lineHeightDisabled
-            size="medium"
-            testID={TestID.WalletSettings}
-            emphasis="secondary"
-            onPress={onManageWallet}
-          >
-            {t('account.wallet.button.manage')}
-          </Button>
-        </Flex>
       </Flex>
       <Flex maxHeight={fullScreenContentHeight / 2}>
         <AccountList

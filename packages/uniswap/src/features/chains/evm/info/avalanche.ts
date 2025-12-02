@@ -68,7 +68,6 @@ export const AVALANCHE_CHAIN_INFO = {
   tokens,
   statusPage: undefined,
   supportsV4: true,
-  supportsNFTs: true,
   urlParam: 'avalanche',
   wrappedNativeCurrency: {
     name: 'Wrapped AVAX',

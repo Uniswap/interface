@@ -72,7 +72,6 @@ export const WORLD_CHAIN_INFO = {
   statusPage: undefined,
   tokens,
   supportsV4: true,
-  supportsNFTs: true,
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',
     symbol: 'WETH',

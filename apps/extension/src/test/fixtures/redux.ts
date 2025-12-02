@@ -5,13 +5,8 @@ import { preloadedWalletPackageState } from 'wallet/src/test/fixtures'
 
 type PreloadedExtensionStateOptions = Record<string, never>
 
-type PreloadedExtensionStateFactory = (
-  overrides?: Partial<PreloadedState<ExtensionState> & PreloadedExtensionStateOptions>,
-) => PreloadedState<ExtensionState>
-
-export const preloadedExtensionState: PreloadedExtensionStateFactory = createFixture<
-  PreloadedState<ExtensionState>,
-  PreloadedExtensionStateOptions
->({})(() => ({
+export const preloadedExtensionState = createFixture<PreloadedState<ExtensionState>, PreloadedExtensionStateOptions>(
+  {},
+)(() => ({
   ...preloadedWalletPackageState(),
 }))

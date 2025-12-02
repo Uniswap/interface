@@ -1,21 +1,13 @@
+import { TableText } from 'components/Table/styled'
 import { ValueWithFadedDecimals } from 'pages/Portfolio/components/ValueWithFadedDecimals/ValueWithFadedDecimals'
-import { EmptyTableCell } from 'pages/Portfolio/EmptyTableCell'
-import { TokenData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
-import { memo, useMemo } from 'react'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { NumberType } from 'utilities/src/format/types'
+import { memo } from 'react'
+import { EM_DASH } from 'ui/src'
 
-export const Value = memo(function Value({ value }: { value: TokenData['value'] }) {
-  const { convertFiatAmountFormatted } = useLocalizationContext()
-
-  const formattedValue = useMemo(() => {
-    return convertFiatAmountFormatted(value, NumberType.PortfolioBalance)
-  }, [value, convertFiatAmountFormatted])
-
-  if (!value && value !== 0) {
-    return <EmptyTableCell />
+export const Value = memo(function Value({ value }: { value: string }) {
+  if (!value && value !== '0') {
+    return <TableText>{EM_DASH}</TableText>
   }
 
-  return <ValueWithFadedDecimals value={formattedValue} />
+  return <ValueWithFadedDecimals value={value} />
 })
 Value.displayName = 'Value'

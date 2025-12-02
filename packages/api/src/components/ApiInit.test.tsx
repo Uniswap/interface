@@ -2,19 +2,16 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { render, waitFor } from '@testing-library/react'
 import { ApiInit } from '@universe/api/src/components/ApiInit'
 import {
-  ChallengeType,
   createChallengeSolverService,
   createDeviceIdService,
   createSessionInitializationService,
   createSessionRepository,
   createSessionService,
   createSessionStorage,
-  createUniswapIdentifierService,
   type DeviceIdService,
   type SessionInitializationService,
   type SessionService,
   type SessionStorage,
-  type UniswapIdentifierService,
 } from '@universe/sessions'
 import React from 'react'
 import { sleep } from 'utilities/src/time/timing'
@@ -27,7 +24,10 @@ vi.mock('utilities/src/platform', () => ({
   isInterface: false,
 }))
 
-const getIsSessionServiceEnabled = vi.fn(() => true)
+// Mock the session service enabled flag
+vi.mock('@universe/api/src/getIsSessionServiceEnabled', () => ({
+  getIsSessionServiceEnabled: vi.fn(() => true),
+}))
 
 describe('ApiInit Integration', () => {
   // Services and mocked boundaries
@@ -41,14 +41,11 @@ describe('ApiInit Integration', () => {
   }
   let sessionStorage: SessionStorage
   let deviceIdService: DeviceIdService
-  let uniswapIdentifierService: UniswapIdentifierService
   let sessionService: SessionService
   let initService: SessionInitializationService
 
   beforeEach(() => {
     vi.clearAllMocks()
-    // Reset the feature flag mock to return true by default
-    getIsSessionServiceEnabled.mockReturnValue(true)
 
     // Mock only the boundaries (storage and network)
     mockStorage = new Map()
@@ -60,7 +57,7 @@ describe('ApiInit Integration', () => {
       }),
       challenge: vi.fn().mockResolvedValue({
         challengeId: 'challenge-456',
-        challengeType: ChallengeType.TURNSTILE,
+        botDetectionType: 'Turnstile',
         extra: { sitekey: 'mock-sitekey' },
       }),
       verify: vi.fn().mockResolvedValue({
@@ -92,16 +89,6 @@ describe('ApiInit Integration', () => {
       },
     })
 
-    uniswapIdentifierService = createUniswapIdentifierService({
-      getUniswapIdentifier: async () => mockStorage.get('uniswapIdentifier') || null,
-      setUniswapIdentifier: async (identifier) => {
-        mockStorage.set('uniswapIdentifier', identifier)
-      },
-      removeUniswapIdentifier: async () => {
-        mockStorage.delete('uniswapIdentifier')
-      },
-    })
-
     const sessionRepository = createSessionRepository({
       client: mockApiClient as any,
     })
@@ -109,7 +96,6 @@ describe('ApiInit Integration', () => {
     sessionService = createSessionService({
       sessionStorage,
       deviceIdService,
-      uniswapIdentifierService,
       sessionRepository,
     })
 
@@ -120,9 +106,8 @@ describe('ApiInit Integration', () => {
     })
 
     initService = createSessionInitializationService({
-      getSessionService: () => sessionService,
+      sessionService,
       challengeSolverService,
-      getIsSessionUpgradeAutoEnabled: () => true,
     })
 
     // Fresh query client for each test
@@ -144,7 +129,7 @@ describe('ApiInit Integration', () => {
     // Act: Render the component
     render(
       <QueryClientProvider client={queryClient}>
-        <ApiInit getSessionInitService={() => initService} getIsSessionServiceEnabled={getIsSessionServiceEnabled} />
+        <ApiInit sessionInitService={initService} />
       </QueryClientProvider>,
     )
 
@@ -175,7 +160,7 @@ describe('ApiInit Integration', () => {
     // Act
     render(
       <QueryClientProvider client={queryClient}>
-        <ApiInit getSessionInitService={() => initService} getIsSessionServiceEnabled={getIsSessionServiceEnabled} />
+        <ApiInit sessionInitService={initService} />
       </QueryClientProvider>,
     )
 
@@ -203,7 +188,7 @@ describe('ApiInit Integration', () => {
     // Act
     render(
       <QueryClientProvider client={queryClient}>
-        <ApiInit getSessionInitService={() => initService} getIsSessionServiceEnabled={getIsSessionServiceEnabled} />
+        <ApiInit sessionInitService={initService} />
       </QueryClientProvider>,
     )
 
@@ -246,7 +231,7 @@ describe('ApiInit Integration', () => {
     // Act
     render(
       <QueryClientProvider client={retryClient}>
-        <ApiInit getSessionInitService={() => initService} getIsSessionServiceEnabled={getIsSessionServiceEnabled} />
+        <ApiInit sessionInitService={initService} />
       </QueryClientProvider>,
     )
 
@@ -271,7 +256,7 @@ describe('ApiInit Integration', () => {
   it('prevents duplicate initialization on re-renders', async () => {
     const { rerender } = render(
       <QueryClientProvider client={queryClient}>
-        <ApiInit getSessionInitService={() => initService} getIsSessionServiceEnabled={getIsSessionServiceEnabled} />
+        <ApiInit sessionInitService={initService} />
       </QueryClientProvider>,
     )
 
@@ -282,13 +267,13 @@ describe('ApiInit Integration', () => {
     // Re-render multiple times
     rerender(
       <QueryClientProvider client={queryClient}>
-        <ApiInit getSessionInitService={() => initService} getIsSessionServiceEnabled={getIsSessionServiceEnabled} />
+        <ApiInit sessionInitService={initService} />
       </QueryClientProvider>,
     )
 
     rerender(
       <QueryClientProvider client={queryClient}>
-        <ApiInit getSessionInitService={() => initService} getIsSessionServiceEnabled={getIsSessionServiceEnabled} />
+        <ApiInit sessionInitService={initService} />
       </QueryClientProvider>,
     )
 
@@ -301,11 +286,12 @@ describe('ApiInit Integration', () => {
 
   it('should not initialize session when feature flag is disabled', async () => {
     // Mock the feature flag as disabled
+    const { getIsSessionServiceEnabled } = await import('@universe/api/src/getIsSessionServiceEnabled')
     vi.mocked(getIsSessionServiceEnabled).mockReturnValue(false)
 
     render(
       <QueryClientProvider client={queryClient}>
-        <ApiInit getSessionInitService={() => initService} getIsSessionServiceEnabled={getIsSessionServiceEnabled} />
+        <ApiInit sessionInitService={initService} />
       </QueryClientProvider>,
     )
 

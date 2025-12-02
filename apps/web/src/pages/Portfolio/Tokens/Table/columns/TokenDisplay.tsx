@@ -1,4 +1,4 @@
-import { EmptyTableCell } from 'pages/Portfolio/EmptyTableCell'
+import { TableText } from 'components/Table/styled'
 import { memo } from 'react'
 import { EM_DASH, Flex, Text } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
@@ -7,7 +7,7 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 export const TokenDisplay = memo(function TokenDisplay({ currencyInfo }: { currencyInfo: CurrencyInfo | null }) {
   if (!currencyInfo) {
-    return <EmptyTableCell />
+    return <TableText>{EM_DASH}</TableText>
   }
 
   const { currency } = currencyInfo

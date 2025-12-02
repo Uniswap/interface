@@ -1,20 +1,11 @@
 import React from 'react'
 import { Trans } from 'react-i18next'
-import { Button, Flex, GetThemeValueForKey, Text } from 'ui/src'
-import { ButtonConfig as DialogButtonConfig } from 'uniswap/src/components/dialog/DialogButtons'
+import { Button, ButtonEmphasis, ButtonVariant, Flex, GetThemeValueForKey, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isExtensionApp } from 'utilities/src/platform'
-
-type ButtonConfig =
-  | (Pick<DialogButtonConfig, 'text' | 'variant' | 'emphasis'> & {
-      onClick: () => void
-      disabled?: boolean
-      loading?: boolean
-    })
-  | { text?: never; onClick?: never; variant?: never; emphasis?: never; disabled?: never; loading?: never }
 
 export interface SmartWalletModalProps {
   isOpen: boolean
@@ -27,8 +18,16 @@ export interface SmartWalletModalProps {
   subtext: string | React.ReactNode
   learnMoreUrl?: string
   modalName: ModalNameType
-  primaryButton: ButtonConfig
-  secondaryButton?: ButtonConfig
+  primaryButtonText: string
+  primaryButtonOnClick: () => void
+  primaryButtonVariant?: ButtonVariant
+  primaryButtonEmphasis?: ButtonEmphasis
+  primaryButtonDisabled?: boolean
+  primaryButtonLoading?: boolean
+  secondaryButtonText?: string
+  secondaryButtonOnClick?: () => void
+  secondaryButtonVariant?: ButtonVariant
+  secondaryButtonEmphasis?: ButtonEmphasis
   children?: React.ReactNode
   alignment?: 'top' | 'center'
   zIndex?: number
@@ -39,7 +38,6 @@ export interface SmartWalletModalProps {
   horizontalButtons?: boolean
 }
 
-// eslint-disable-next-line complexity
 export function SmartWalletModal({
   isOpen,
   onClose,
@@ -52,8 +50,16 @@ export function SmartWalletModal({
   subtext,
   learnMoreUrl,
   modalName,
-  primaryButton,
-  secondaryButton,
+  primaryButtonText,
+  primaryButtonOnClick,
+  primaryButtonVariant = 'branded',
+  primaryButtonEmphasis,
+  primaryButtonDisabled,
+  primaryButtonLoading,
+  secondaryButtonText,
+  secondaryButtonOnClick,
+  secondaryButtonVariant = 'default',
+  secondaryButtonEmphasis = 'secondary',
   alignment = isExtensionApp ? 'top' : undefined,
   hideHandlebar = false,
   isDismissible = true,
@@ -133,32 +139,30 @@ export function SmartWalletModal({
           alignSelf="stretch"
           mt="$spacing8"
         >
-          {primaryButton.text && (
-            <Flex row flexGrow={1}>
-              <Button
-                variant={primaryButton.variant ?? 'branded'}
-                emphasis={primaryButton.emphasis}
-                testID={TestID.SmartWalletUpgradeModalEnable}
-                isDisabled={primaryButton.disabled}
-                loading={primaryButton.loading}
-                flexGrow={1}
-                shouldAnimateBetweenLoadingStates={false}
-                onPress={primaryButton.onClick}
-              >
-                {primaryButton.text}
-              </Button>
-            </Flex>
-          )}
-          {secondaryButton?.text && (!horizontalButtons || !primaryButton.loading) && (
+          <Flex row flexGrow={1}>
+            <Button
+              variant={primaryButtonVariant}
+              emphasis={primaryButtonEmphasis}
+              testID={TestID.SmartWalletUpgradeModalEnable}
+              isDisabled={primaryButtonDisabled}
+              loading={primaryButtonLoading}
+              flexGrow={1}
+              shouldAnimateBetweenLoadingStates={false}
+              onPress={primaryButtonOnClick}
+            >
+              {primaryButtonText}
+            </Button>
+          </Flex>
+          {secondaryButtonText && secondaryButtonOnClick && (!horizontalButtons || !primaryButtonLoading) && (
             <Flex key="secondary-button" row flexGrow={1}>
               <Button
-                variant={secondaryButton.variant ?? 'default'}
-                emphasis={secondaryButton.emphasis ?? 'secondary'}
+                variant={secondaryButtonVariant}
+                emphasis={secondaryButtonEmphasis}
                 testID={TestID.SmartWalletUpgradeModalMaybeLater}
                 flexGrow={1}
-                onPress={secondaryButton.onClick}
+                onPress={secondaryButtonOnClick}
               >
-                {secondaryButton.text}
+                {secondaryButtonText}
               </Button>
             </Flex>
           )}

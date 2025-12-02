@@ -2,9 +2,7 @@ import type { PromiseClient } from '@connectrpc/connect'
 import type { SessionService } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_connect'
 import {
   ChallengeResponse,
-  GetChallengeTypesResponse,
   InitSessionResponse,
-  SignoutResponse,
 } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
 import { createSessionRepository } from '@universe/sessions/src/session-repository/createSessionRepository'
 import { describe, expect, it, type MockedFunction, vi } from 'vitest'
@@ -22,7 +20,7 @@ describe('createSessionRepository', () => {
     }),
     challenge: vi.fn().mockResolvedValue({
       challengeId: 'challenge-123',
-      challengeType: 1,
+      botDetectionType: 1,
       extra: { sitekey: 'test-key' },
     }),
     verify: vi.fn().mockResolvedValue({
@@ -31,8 +29,6 @@ describe('createSessionRepository', () => {
     updateSession: vi.fn().mockResolvedValue({}),
     deleteSession: vi.fn().mockResolvedValue({}),
     introspectSession: vi.fn().mockResolvedValue({}), // Required by proto but not used
-    getChallengeTypes: vi.fn().mockResolvedValue(new GetChallengeTypesResponse({ challengeTypes: [] })),
-    signout: vi.fn().mockResolvedValue(new SignoutResponse({})),
   })
 
   describe('session initialization behaviors', () => {
@@ -87,7 +83,7 @@ describe('createSessionRepository', () => {
 
       expect(result).toEqual({
         challengeId: 'challenge-123',
-        challengeType: 1,
+        botDetectionType: 1,
         extra: { sitekey: 'test-key' },
       })
     })
@@ -102,7 +98,7 @@ describe('createSessionRepository', () => {
       // Should return defaults when no challenge data
       expect(result).toEqual({
         challengeId: '',
-        challengeType: 0,
+        botDetectionType: 0,
         extra: {},
       })
     })

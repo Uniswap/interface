@@ -25,6 +25,7 @@ import { useAtomValue } from 'jotai/utils'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
+import { ThemeProvider } from 'theme'
 import { Flex, SegmentedControl, SegmentedControlOption, styled, useMedia } from 'ui/src'
 import { useTokenPriceChange } from 'uniswap/src/features/dataApi/tokenDetails/useTokenDetailsData'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -144,34 +145,27 @@ export default function ChartSection() {
             stale={stale}
             timePeriod={toHistoryDuration(timePeriod)}
             pricePercentChange24h={priceChange24h}
-            overrideColor={tokenColor}
           />
         )
       case ChartType.VOLUME:
         return (
-          <VolumeChart
-            data={activeQuery.entries}
-            height={TDP_CHART_HEIGHT_PX}
-            timePeriod={timePeriod}
-            stale={stale}
-            overrideColor={tokenColor}
-          />
+          <VolumeChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} timePeriod={timePeriod} stale={stale} />
         )
       case ChartType.TVL:
-        return (
-          <LineChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} stale={stale} overrideColor={tokenColor} />
-        )
+        return <LineChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} stale={stale} />
     }
   }
 
   return (
-    <Flex
-      data-cy={`tdp-${activeQuery.chartType}-chart-container`}
-      testID={`tdp-${activeQuery.chartType}-chart-container`}
-    >
-      {getSection()}
-      <ChartControls />
-    </Flex>
+    <ThemeProvider accent1={tokenColor}>
+      <Flex
+        data-cy={`tdp-${activeQuery.chartType}-chart-container`}
+        testID={`tdp-${activeQuery.chartType}-chart-container`}
+      >
+        {getSection()}
+        <ChartControls />
+      </Flex>
+    </ThemeProvider>
   )
 }
 

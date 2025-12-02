@@ -125,7 +125,7 @@ export function SendTokenForm(): JSX.Element {
   // Decimal pad logic
   const decimalPadRef = useRef<DecimalPadInputRef>(null)
   const maxDecimals = isFiatInput ? MAX_FIAT_INPUT_DECIMALS : (currencyIn?.decimals ?? 0)
-  const selectionRef = useRef<TextInputProps['selection']>(undefined)
+  const selectionRef = useRef<TextInputProps['selection']>()
 
   const onInputSelectionChange = useCallback(
     (start: number, end: number) => {

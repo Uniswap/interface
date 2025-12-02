@@ -8,7 +8,7 @@ import { TransactionType } from 'uniswap/src/features/transactions/types/transac
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 export type CurrencyInputPanelRef = {
-  textInputRef: RefObject<TextInput | null>
+  textInputRef: RefObject<TextInput>
   triggerShakeAnimation: () => void
 }
 
@@ -43,6 +43,4 @@ export type CurrencyInputPanelProps = {
   tokenColor?: string
   priceDifferencePercentage?: number
   customPanelStyle?: FlexProps
-  maxValuationPresets?: number[]
-  onSetMaxValuation?: (value: number) => void
 }

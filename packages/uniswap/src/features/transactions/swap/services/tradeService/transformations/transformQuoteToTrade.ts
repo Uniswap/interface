@@ -1,4 +1,4 @@
-import { type Currency, type CurrencyAmount, TradeType as SdkTradeType } from '@uniswap/sdk-core'
+import { type Currency, type CurrencyAmount } from '@uniswap/sdk-core'
 import { type DiscriminatedQuoteResponse, type GasEstimate, TradingApi } from '@universe/api'
 import { type QuoteCurrencyData } from 'uniswap/src/features/transactions/swap/hooks/useTrade/parseQuoteCurrencies'
 import { getGasEstimate } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/estimateGas'
@@ -31,8 +31,6 @@ export function transformQuoteToTrade(input: {
   const { currencyIn, currencyOut, requestTradeType } = quoteCurrencyData
   const exactCurrencyField =
     requestTradeType === TradingApi.TradeType.EXACT_INPUT ? CurrencyField.INPUT : CurrencyField.OUTPUT
-  const tradeType =
-    requestTradeType === TradingApi.TradeType.EXACT_INPUT ? SdkTradeType.EXACT_INPUT : SdkTradeType.EXACT_OUTPUT
   const gasEstimate = getGasEstimate(input.quote)
 
   const formattedTrade =
@@ -40,7 +38,7 @@ export function transformQuoteToTrade(input: {
       ? transformTradingApiResponseToTrade({
           currencyIn,
           currencyOut,
-          tradeType,
+          tradeType: requestTradeType,
           deadline: inXMinutesUnix(DEFAULT_SWAP_VALIDITY_TIME_MINS), // TODO(MOB-3050): set deadline as `quoteRequestArgs.deadline`
           data: input.quote,
         })

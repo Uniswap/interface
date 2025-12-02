@@ -1,16 +1,3 @@
-import type { PlainMessage } from '@bufbuild/protobuf'
-import {
-  BackgroundType,
-  Button,
-  Content,
-  ContentStyle,
-  Notification,
-  OnClickAction,
-  AckNotificationRequest as ProtoAckNotificationRequest,
-  AckNotificationResponse as ProtoAckNotificationResponse,
-  GetNotificationsRequest as ProtoGetNotificationsRequest,
-  GetNotificationsResponse as ProtoGetNotificationsResponse,
-} from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
 import { FetchClient } from '@universe/api/src/clients/base/types'
 
 export interface NotificationsClientContext {
@@ -20,83 +7,63 @@ export interface NotificationsClientContext {
 
 /**
  * Content style types for notifications
+ * These determine how the notification is displayed and deduplication rules
+ * TODO: This will be replaced with OpenAPI-generated types once the spec is integrated
  */
-export { ContentStyle, BackgroundType, OnClickAction }
-
-/**
- * Content style type for convenience (union of ContentStyle enum values)
- */
-export type NotificationContentStyle = ContentStyle
+export type NotificationContentStyle = 'CONTENT_STYLE_LOWER_LEFT_BANNER' | 'CONTENT_STYLE_MODAL' | string // Allow other styles that may be added
 
 /**
  * Button configuration for notification content
- * Re-exported from @uniswap/client-notification-service
- * Note: This is the Message class instance, not a plain object.
- * Used within Content which comes from deserialized notifications.
+ * TODO: This will be replaced with OpenAPI-generated types once the spec is integrated
  */
-export type NotificationButton = Button
+export interface NotificationButton {
+  text: string
+  onClickType: string
+  onClickLink?: string
+  isPrimary?: boolean
+}
 
 /**
- * Notification content
- * Re-exported from @uniswap/client-notification-service
- *
- * Notification API Type Mapping:
- * - content.title → Modal title
- * - content.subtitle → Modal subtitle
- * - content.background.link → Background image URL (when backgroundType is IMAGE)
- * - content.body.items[] → Feature list with icons and text
- * - content.buttons[] → Action buttons
- *
- * Note: This is the Message class instance, not a plain object.
- * Enum values are numbers at runtime, but toJSON() serializes them as strings.
+ * TODO: This will be replaced with OpenAPI-generated types once the spec is integrated
  */
-export type NotificationContent = Content
+export interface NotificationContent {
+  title: string
+  subtitle?: string
+  style: NotificationContentStyle
+  buttons?: NotificationButton[]
+  backgroundOnClickType?: string
+  backgroundType?: string
+  onDismissClick?: string
+}
 
 /**
  * In-app notification returned by the notifications API
- * Re-exported from @uniswap/client-notification-service
- * Note: This is a plain object (not a Message class instance) to prevent
- * React Query's structural cloning from triggering toJSON() which would
- * convert numeric enum values to strings.
+ * TODO: This will be replaced with OpenAPI-generated types once the spec is integrated
  */
-export type InAppNotification = PlainMessage<Notification>
+export interface InAppNotification {
+  id: string
+  notificationName: string
+  metaData: Record<string, unknown>
+  content: NotificationContent
+  timestamp?: number
+}
 
 /**
  * Request parameters for fetching notifications
- * Re-exported from @uniswap/client-notification-service
  */
-export type GetNotificationsRequest = PlainMessage<ProtoGetNotificationsRequest>
+export type GetNotificationsRequest = Record<string, unknown>
 
 /**
  * Response from the GetNotifications API endpoint
- * Re-exported from @uniswap/client-notification-service
- * Note: This is the Message class instance from protobuf deserialization.
  */
-export type GetNotificationsResponse = ProtoGetNotificationsResponse
-
-/**
- * Request parameters for acknowledging notifications
- * Re-exported from @uniswap/client-notification-service
- */
-export type AckNotificationRequest = PlainMessage<ProtoAckNotificationRequest>
-
-/**
- * Response from the AckNotifications API endpoint
- * Re-exported from @uniswap/client-notification-service
- */
-export type AckNotificationResponse = PlainMessage<ProtoAckNotificationResponse>
+export interface GetNotificationsResponse {
+  notifications: InAppNotification[]
+}
 
 export interface NotificationsApiClient {
   /**
    * Fetch notifications for the current user
    * Uses session-based authentication (x-session-id header) via FetchClient
-   * Returns the raw GetNotificationsResponse message from protobuf deserialization
    */
-  getNotifications: (params?: GetNotificationsRequest) => Promise<GetNotificationsResponse>
-
-  /**
-   * Acknowledge that a notification has been tracked/processed
-   * Uses session-based authentication (x-session-id header) via FetchClient
-   */
-  ackNotification: (request: AckNotificationRequest) => Promise<AckNotificationResponse>
+  getNotifications: (params?: GetNotificationsRequest) => Promise<InAppNotification[]>
 }

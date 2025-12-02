@@ -34,8 +34,10 @@ export function groupGasFeesBySymbol(gasFees: GasFeeData[]): Record<string, Grou
         }
       } else if (symbol in acc) {
         const existing = acc[symbol]
-        existing.totalFeeAmountInWei = BigNumber.from(existing.totalFeeAmountInWei).add(gasFeeDisplayValue).toString()
-        existing.chainIds.push(chainId)
+        if (existing) {
+          existing.totalFeeAmountInWei = BigNumber.from(existing.totalFeeAmountInWei).add(gasFeeDisplayValue).toString()
+          existing.chainIds.push(chainId)
+        }
       }
 
       return acc
