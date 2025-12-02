@@ -2,9 +2,9 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Limit } from 'components/Icons/Limit'
 import { SwapV2 } from 'components/Icons/SwapV2'
 import { MenuItem } from 'components/NavBar/CompanyMenu/Content'
-import { useTheme } from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
+import { useSporeColors } from 'ui/src'
 import { CoinConvert } from 'ui/src/components/icons/CoinConvert'
 import { Compass } from 'ui/src/components/icons/Compass'
 import { CreditCard } from 'ui/src/components/icons/CreditCard'
@@ -28,7 +28,7 @@ export type TabsItem = MenuItem & {
 export const useTabsContent = (): TabsSection[] => {
   const { t } = useTranslation()
   const { pathname } = useLocation()
-  const theme = useTheme()
+  const colors = useSporeColors()
   const isFiatOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
   const isPortfolioPageEnabled = useFeatureFlag(FeatureFlags.PortfolioPage)
   const isToucanEnabled = useFeatureFlag(FeatureFlags.Toucan)
@@ -43,13 +43,13 @@ export const useTabsContent = (): TabsSection[] => {
       items: [
         {
           label: t('common.swap'),
-          icon: <SwapV2 fill={theme.neutral2} />,
+          icon: <SwapV2 fill={colors.neutral2.val} />,
           href: '/swap',
           internal: true,
         },
         {
           label: t('swap.limit'),
-          icon: <Limit fill={theme.neutral2} />,
+          icon: <Limit fill={colors.neutral2.val} />,
           href: '/limit',
           internal: true,
         },
@@ -63,7 +63,7 @@ export const useTabsContent = (): TabsSection[] => {
           ? [
               {
                 label: t('common.sell.label'),
-                icon: <ReceiveAlt fill={theme.neutral2} size={24} transform="rotate(180deg)" />,
+                icon: <ReceiveAlt fill={colors.neutral2.val} size={24} transform="rotate(180deg)" />,
                 href: '/sell',
                 internal: true,
               },

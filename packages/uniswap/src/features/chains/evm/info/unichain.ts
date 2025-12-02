@@ -63,6 +63,7 @@ export const UNICHAIN_CHAIN_INFO = {
   statusPage: undefined,
   subblockTimeMs: 200,
   supportsV4: true,
+  supportsNFTs: true,
   urlParam: 'unichain',
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',
@@ -129,6 +130,7 @@ export const UNICHAIN_SEPOLIA_CHAIN_INFO = {
   statusPage: undefined,
   subblockTimeMs: 200,
   supportsV4: true,
+  supportsNFTs: false,
   urlParam: 'unichain_sepolia',
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',

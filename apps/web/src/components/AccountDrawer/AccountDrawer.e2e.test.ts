@@ -51,7 +51,10 @@ test.describe('Mini Portfolio settings', () => {
   test('toggles testnet', async ({ page }) => {
     await page.getByTestId(TestID.TestnetsToggle).click()
     await expect(page.getByTestId(TestID.TestnetsToggle)).toHaveAttribute('aria-checked', 'true')
-    await expect(page.getByText('Swapping on Sepolia')).toBeVisible()
+    // Confirm the info modal appears and then close it
+    const modalButton = page.getByRole('button', { name: 'Close' })
+    await expect(modalButton).toBeVisible()
+    await modalButton.click()
   })
 
   test('disconnected wallet settings should not be accessible', async ({ page }) => {

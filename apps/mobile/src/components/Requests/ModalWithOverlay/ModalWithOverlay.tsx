@@ -126,7 +126,6 @@ export function ModalWithOverlay({
         contentContainerStyle={
           contentContainerStyle ?? {
             paddingHorizontal: spacing.spacing24,
-            paddingTop: spacing.spacing12,
           }
         }
         showsVerticalScrollIndicator={false}

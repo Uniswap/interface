@@ -30,11 +30,8 @@ export function SmartWalletDisableWarningModal({
       title={t('smartWallet.confirmDisableSmartWallet.title')}
       subtext={t('smartWallet.confirmDisableSmartWallet.description')}
       modalName={ModalName.SmartWalletWarningModal}
-      primaryButtonText={t('common.button.continue')}
-      primaryButtonOnClick={onContinue}
-      primaryButtonVariant="default"
-      secondaryButtonText={t('common.button.cancel')}
-      secondaryButtonOnClick={onCancel}
+      primaryButton={{ text: t('common.button.continue'), onClick: onContinue, variant: 'default' }}
+      secondaryButton={onCancel ? { text: t('common.button.cancel'), onClick: onCancel } : undefined}
       onClose={onClose}
     />
   )

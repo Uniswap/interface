@@ -1,5 +1,5 @@
 import { RowBetween } from 'components/deprecated/Row'
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 
 export const MenuItem = styled(RowBetween)<{ dim?: boolean }>`
   padding: 4px 20px;

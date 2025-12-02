@@ -29,6 +29,7 @@ yarn-error.log*
 
 # local env files
 .env
+.env.local
 .env.defaults.local
 
 # turbo
@@ -49,6 +50,9 @@ packages/uniswap/src/i18n/locales/source/*_old.json
 
 # ci
 .ci-cache/
+
+# cli gh analysis artifacts
+.analysis/
 
 # JetBrains
 .idea/

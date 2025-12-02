@@ -35,11 +35,13 @@ export enum PageType {
   LANDING = '/',
   LIMIT = '/limit',
   MIGRATE_V3 = '/migrate/v3',
+  MIGRATE_V2 = '/migrate/v2',
   POSITIONS = '/positions',
   CREATE_POSITION = '/positions/create',
   SEND = '/send',
   SWAP = '/swap',
   SELL = '/sell',
+  PORTFOLIO = '/portfolio',
 }
 
 // eslint-disable-next-line import/no-unused-modules -- currently used in a test file
@@ -57,11 +59,13 @@ const pageMatchDefaults: Record<PageType, MatchType> = {
   [PageType.LANDING]: MatchType.EXACT,
   [PageType.LIMIT]: MatchType.ENDS_WITH,
   [PageType.MIGRATE_V3]: MatchType.INCLUDES,
+  [PageType.MIGRATE_V2]: MatchType.INCLUDES,
   [PageType.POSITIONS]: MatchType.INCLUDES,
   [PageType.CREATE_POSITION]: MatchType.INCLUDES,
   [PageType.SEND]: MatchType.ENDS_WITH,
   [PageType.SWAP]: MatchType.ENDS_WITH,
   [PageType.SELL]: MatchType.ENDS_WITH,
+  [PageType.PORTFOLIO]: MatchType.INCLUDES,
 }
 
 /**

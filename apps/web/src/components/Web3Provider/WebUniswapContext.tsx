@@ -62,7 +62,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
   const location = useLocation()
   const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()
-  const navigateToFiatOnRamp = useCallback(() => navigate(`/buy`, { replace: true }), [navigate])
+  const navigateToFiatOnRamp = useCallback(() => navigate(`/buy`), [navigate])
 
   const { closeModal: closeSearchModal } = useModalState(ModalName.Search)
   const { openModal: openSendModal } = useModalState(ModalName.Send)
@@ -75,7 +75,7 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
         chainId: inputCurrencyId ? currencyIdToChain(inputCurrencyId) : undefined,
         outputChainId: outputCurrencyId ? currencyIdToChain(outputCurrencyId) : undefined,
       })
-      navigate(`/swap${queryParams}`, { replace: true })
+      navigate(`/swap${queryParams}`)
       closeSearchModal()
       accountDrawer.close()
     },
@@ -96,15 +96,12 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
       const chainUrlParam = getChainInfo(chainId).urlParam
       openSendModal()
       closeSearchModal()
-      accountDrawer.close()
 
       const newPathname = location.pathname === '/' ? '/send' : location.pathname
       const currencyAddressParam = currencyAddress ? `&sendCurrency=${currencyAddress}` : ''
-      navigate(`${newPathname}?sendChain=${chainUrlParam}${currencyAddressParam}`, {
-        replace: true,
-      })
+      navigate(`${newPathname}?sendChain=${chainUrlParam}${currencyAddressParam}`)
     },
-    [openSendModal, closeSearchModal, accountDrawer, navigate, location],
+    [openSendModal, closeSearchModal, navigate, location],
   )
 
   const navigateToReceive = useOpenReceiveCryptoModal({

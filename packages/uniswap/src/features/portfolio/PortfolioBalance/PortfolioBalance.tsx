@@ -6,6 +6,7 @@ import AnimatedNumber, {
 } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
 import { RelativeChange } from 'uniswap/src/components/RelativeChange/RelativeChange'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
@@ -16,16 +17,22 @@ import { NumberType } from 'utilities/src/format/types'
 import { isWebPlatform } from 'utilities/src/platform'
 
 interface PortfolioBalanceProps {
-  owner: Address
+  evmOwner?: Address
+  svmOwner?: Address
   endText?: JSX.Element | string
+  chainIds?: UniverseChainId[]
 }
 
 export const PortfolioBalance = memo(function _PortfolioBalance({
-  owner,
+  evmOwner,
+  svmOwner,
   endText,
+  chainIds,
 }: PortfolioBalanceProps): JSX.Element {
   const { data, loading, networkStatus, refetch } = usePortfolioTotalValue({
-    evmAddress: owner,
+    evmAddress: evmOwner,
+    svmAddress: svmOwner,
+    chainIds,
     // TransactionHistoryUpdater will refetch this query on new transaction.
     // No need to be super aggressive with polling here.
     pollInterval: PollingInterval.Normal,

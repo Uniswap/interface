@@ -102,7 +102,7 @@ function useGetLegacyPoolOrPair({
   const token1 = getCurrencyWithWrap(sortedCurrencies.TOKEN1, protocolVersion)
 
   const poolsQueryEnabled =
-    fee && !isPoolInfoEndpointEnabled && poolEnabledProtocolVersion(protocolVersion) && validCurrencyInput
+    fee !== undefined && !isPoolInfoEndpointEnabled && poolEnabledProtocolVersion(protocolVersion) && validCurrencyInput
   const {
     data: poolData,
     isLoading: poolIsLoading,
@@ -269,6 +269,8 @@ export function useDerivedPositionInfo(
   const token1 = getCurrencyWithWrap(sortedCurrencies.TOKEN1, protocolVersion)
   const protocol = getProtocols(protocolVersion)
 
+  const isFeeValid = protocolVersion === ProtocolVersion.V2 ? true : state.fee !== undefined
+
   const {
     data: poolData,
     isLoading: poolIsLoading,
@@ -287,7 +289,7 @@ export function useDerivedPositionInfo(
         tickSpacing: state.fee?.tickSpacing,
       }),
     }),
-    enabled: isPoolInfoEndpointEnabled && validCurrencyInput && protocol !== undefined && state.fee !== undefined,
+    enabled: isPoolInfoEndpointEnabled && validCurrencyInput && protocol !== undefined && isFeeValid,
   })
 
   const poolOrPair = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined

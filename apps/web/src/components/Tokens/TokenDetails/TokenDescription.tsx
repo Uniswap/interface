@@ -6,7 +6,6 @@ import { NoInfoAvailable, truncateDescription } from 'components/Tokens/TokenDet
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
-import { useTheme } from 'lib/styled-components'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useCallback, useReducer } from 'react'
 import { Copy } from 'react-feather'
@@ -14,7 +13,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
-import { Flex, Paragraph, styled, Text } from 'ui/src'
+import { Flex, Paragraph, styled, Text, useSporeColors } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
@@ -82,7 +81,7 @@ const TRUNCATE_CHARACTER_COUNT = 300
 export function TokenDescription() {
   const { t } = useTranslation()
   const { address, currency, tokenQuery } = useTDPContext()
-  const { neutral1 } = useTheme()
+  const colors = useSporeColors()
 
   const { description, homepageUrl, twitterName } = tokenQuery.data?.token?.project ?? {}
   const explorerUrl = getExplorerLink({
@@ -128,14 +127,14 @@ export function TokenDescription() {
             text={t('common.copied')}
           >
             <TokenInfoButton onPress={copy}>
-              <Copy width="18px" height="18px" color={neutral1} />
+              <Copy width="18px" height="18px" color={colors.neutral1.val} />
               {shortenAddress({ address: currency.address })}
             </TokenInfoButton>
           </MouseoverTooltip>
         )}
         <ExternalLink href={explorerUrl}>
           <TokenInfoButton>
-            <EtherscanLogo width="18px" height="18px" fill={neutral1} />
+            <EtherscanLogo width="18px" height="18px" fill={colors.neutral1.val} />
             {currency.chainId === UniverseChainId.Mainnet ? (
               <Trans i18nKey="common.etherscan" />
             ) : (
@@ -146,7 +145,7 @@ export function TokenDescription() {
         {homepageUrl && (
           <ExternalLink href={homepageUrl}>
             <TokenInfoButton>
-              <Globe width="18px" height="18px" fill={neutral1} />
+              <Globe width="18px" height="18px" fill={colors.neutral1.val} />
               <Trans i18nKey="common.website" />
             </TokenInfoButton>
           </ExternalLink>
@@ -154,7 +153,7 @@ export function TokenDescription() {
         {twitterName && (
           <ExternalLink href={`https://x.com/${twitterName}`}>
             <TokenInfoButton>
-              <TwitterXLogo width="18px" height="18px" fill={neutral1} />
+              <TwitterXLogo width="18px" height="18px" fill={colors.neutral1.val} />
               <Trans i18nKey="common.twitter" />
             </TokenInfoButton>
           </ExternalLink>

@@ -30,10 +30,7 @@ export function SmartWalletEducationalModal({ isOpen, onClose }: SmartWalletEduc
           </Text>
         </Flex>
       }
-      primaryButtonText={t('common.close')}
-      primaryButtonVariant="default"
-      primaryButtonEmphasis="secondary"
-      primaryButtonOnClick={onClose}
+      primaryButton={{ text: t('common.close'), onClick: onClose, variant: 'default', emphasis: 'secondary' }}
       learnMoreUrl={uniswapUrls.helpArticleUrls.smartWalletDelegation}
       modalName={ModalName.SmartWalletEducationalModal}
       onClose={onClose}

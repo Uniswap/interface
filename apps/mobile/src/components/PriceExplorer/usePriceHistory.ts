@@ -67,8 +67,9 @@ export function useTokenPriceHistory({
   })
 
   // Data source strategy for multi-chain tokens:
-  // - Use PER-CHAIN data (onChainData/token.market) for price to show correct price on each chain
-  // - Use AGGREGATED data (offChainData/project.markets) for price history and 24hr change (better coverage)
+  // - Use PER-CHAIN data (token.market) for price and price history to show the correct chain-specific view
+  // - Fallback to AGGREGATED data (project.markets) when per-chain history is unavailable
+  // - Continue using aggregated 24hr change for consistency across platforms
   // Note: TokenProjectMarket is aggregated across chains, TokenMarket is per-chain
   const offChainData = priceData?.tokenProjects?.[0]?.markets?.[0]
 
@@ -81,8 +82,8 @@ export function useTokenPriceHistory({
   const price = onChainData?.price?.value ?? offChainData?.price?.value ?? lastPrice.current
   lastPrice.current = price
 
-  // Use aggregated price history for charts (better data coverage)
-  const priceHistory = offChainData?.priceHistory ?? onChainData?.priceHistory
+  // Prefer per-chain price history so multi-chain tokens render the correct chart for the selected chain
+  const priceHistory = onChainData?.priceHistory ?? offChainData?.priceHistory
 
   // Use aggregated 24hr change (project-level change is more reliable)
   const pricePercentChange24h =

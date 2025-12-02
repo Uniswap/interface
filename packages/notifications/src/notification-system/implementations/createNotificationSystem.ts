@@ -1,43 +1,154 @@
-import { type InAppNotification } from '@universe/api'
+import { type InAppNotification, OnClickAction } from '@universe/api'
 import {
+  type NotificationClickTarget,
   type NotificationSystem,
   type NotificationSystemConfig,
 } from '@universe/notifications/src/notification-system/NotificationSystem'
+import ms from 'ms'
 import { getLogger } from 'utilities/src/logger/logger'
 
 export function createNotificationSystem(config: NotificationSystemConfig): NotificationSystem {
-  const { dataSources, tracker, processor, renderer } = config
+  const { dataSources, tracker, processor, renderer, telemetry, onNavigate } = config
 
   const activeRenders = new Map<string, () => void>()
+  const activeNotifications = new Map<string, InAppNotification>()
+  const chainedNotifications = new Map<string, InAppNotification>()
 
-  const processedIds: Set<string> = new Set()
+  const CLEANUP_OLDER_THAN_MS = ms('30d') // Clean up entries older than 30 days
+
+  /**
+   * Renders a single notification if possible
+   */
+  function renderNotification(notification: InAppNotification): void {
+    if (!renderer.canRender(notification)) {
+      return
+    }
+
+    if (activeRenders.has(notification.id)) {
+      return
+    }
+
+    const cleanup = renderer.render(notification)
+    activeRenders.set(notification.id, cleanup)
+    activeNotifications.set(notification.id, notification)
+
+    telemetry?.onNotificationShown({
+      notificationId: notification.id,
+      type: notification.content?.style.toString() ?? 'unknown',
+      timestamp: Date.now(),
+    })
+  }
 
   async function handleNotifications(notifications: InAppNotification[]): Promise<void> {
-    const notificationsToRender = await processor.process(notifications)
+    const result = await processor.process(notifications)
 
-    for (const notification of notificationsToRender) {
-      if (!renderer.canRender(notification)) {
-        continue
-      }
-
-      if (activeRenders.has(notification.id)) {
-        continue
-      }
-
-      const cleanup = renderer.render(notification)
-      activeRenders.set(notification.id, cleanup)
-
-      // TODO: send onRender analytics event
-
-      processedIds.add(notification.id)
+    for (const [id, notification] of result.chained.entries()) {
+      chainedNotifications.set(id, notification)
     }
+
+    for (const notification of result.primary) {
+      renderNotification(notification)
+    }
+  }
+
+  /**
+   * Get the onClick configuration for a notification based on what was clicked
+   */
+  function getOnClick(
+    notification: InAppNotification,
+    target: NotificationClickTarget,
+  ): { onClick: OnClickAction[]; onClickLink?: string } | undefined {
+    if (target.type === 'button') {
+      const buttons = notification.content?.buttons ?? []
+      if (target.index < 0 || target.index >= buttons.length) {
+        getLogger().warn('NotificationSystem', 'getOnClick', `Invalid button index: ${target.index}`)
+        return undefined
+      }
+      const button = buttons[target.index]
+
+      if (button?.onClick) {
+        return {
+          onClick: button.onClick.onClick,
+          onClickLink: button.onClick.onClickLink,
+        }
+      }
+    }
+    if (target.type === 'background') {
+      const backgroundOnClick = notification.content?.background?.backgroundOnClick
+      if (backgroundOnClick) {
+        return {
+          onClick: backgroundOnClick.onClick,
+          onClickLink: backgroundOnClick.onClickLink,
+        }
+      }
+    }
+    if (target.type === 'dismiss') {
+      // Check if notification specifies custom dismiss behavior
+      const onDismissClick = notification.content?.onDismissClick
+      if (onDismissClick) {
+        return {
+          onClick: onDismissClick.onClick,
+          onClickLink: onDismissClick.onClickLink,
+        }
+      }
+      // Fallback to simple DISMISS if not specified
+      // The processor validates that notifications have DISMISS somewhere,
+      // so this fallback should rarely be used
+      return {
+        onClick: [OnClickAction.DISMISS],
+      }
+    }
+    return undefined
+  }
+
+  /**
+   * Internal method to handle dismissing a notification
+   * Cleans up the render without tracking (tracking only happens on ACK)
+   */
+  async function handleDismiss(notificationId: string): Promise<void> {
+    const notification = activeNotifications.get(notificationId)
+
+    if (notification) {
+      telemetry?.onNotificationDismissed({
+        notificationId,
+        type: notification.content?.style.toString() ?? 'unknown',
+      })
+    }
+
+    const cleanup = activeRenders.get(notificationId)
+    if (cleanup) {
+      cleanup()
+      activeRenders.delete(notificationId)
+    }
+
+    activeNotifications.delete(notificationId)
+  }
+
+  /**
+   * Internal method to handle acknowledging a notification
+   * Tracks the notification as acknowledged/processed
+   */
+  async function handleAcknowledge(notificationId: string): Promise<void> {
+    await tracker.track(notificationId, {
+      timestamp: Date.now(),
+    })
+
+    // TODO: send onAcknowledge analytics event
   }
 
   return {
     async initialize(): Promise<void> {
       for (const dataSource of dataSources) {
-        dataSource.start((notifications) => {
-          // TODO: send onNotificationReceived analytics event
+        dataSource.start((notifications, source) => {
+          for (const notification of notifications) {
+            telemetry?.onNotificationReceived({
+              notificationId: notification.id,
+              type: notification.content?.style.toString() ?? 'unknown',
+              source,
+              timestamp: Date.now(),
+            })
+          }
+
           handleNotifications(notifications).catch((error) => {
             getLogger().error(error, {
               tags: {
@@ -48,33 +159,110 @@ export function createNotificationSystem(config: NotificationSystemConfig): Noti
           })
         })
       }
+
+      // Clean up old tracked notifications on startup
+      const cleanupThreshold = Date.now() - CLEANUP_OLDER_THAN_MS
+      tracker.cleanup?.(cleanupThreshold).catch((error) => {
+        getLogger().error(error, {
+          tags: {
+            file: 'createNotificationSystem',
+            function: 'initialize',
+          },
+        })
+      })
     },
 
-    async onDismiss(notificationId: string): Promise<void> {
-      await tracker.track(notificationId, {
-        timestamp: Date.now(),
-        strategy: 'dismiss',
-      })
-
-      // TODO: send onDismiss analytics event
-
+    onRenderFailed(notificationId: string): void {
+      // Clean up the failed render without marking as processed
       const cleanup = activeRenders.get(notificationId)
       if (cleanup) {
         cleanup()
         activeRenders.delete(notificationId)
       }
 
-      // Add to processed IDs if not already there
-      processedIds.add(notificationId)
+      activeNotifications.delete(notificationId)
     },
 
-    onButtonClick(_notificationId: string, _button: string): void {
-      // TODO: send onButtonClick analytics event
-      // TODO: handle button click (e.g. trigger next notification)
+    onNotificationClick(notificationId: string, target: NotificationClickTarget): void {
+      const notification = activeNotifications.get(notificationId)
+      if (!notification) {
+        getLogger().warn('NotificationSystem', 'onNotificationClick', `Notification not found: ${notificationId}`)
+        return
+      }
+
+      telemetry?.onNotificationInteracted({
+        notificationId,
+        type: notification.content?.style.toString() ?? 'unknown',
+        action: target.type,
+      })
+
+      const onClickConfig = getOnClick(notification, target)
+      if (!onClickConfig) {
+        return
+      }
+
+      for (const action of onClickConfig.onClick) {
+        switch (action) {
+          case OnClickAction.EXTERNAL_LINK:
+            if (onClickConfig.onClickLink) {
+              if (onNavigate) {
+                onNavigate(onClickConfig.onClickLink)
+              } else {
+                getLogger().warn(
+                  'NotificationSystem',
+                  'onNotificationClick',
+                  'onNavigate handler not provided, cannot navigate to link',
+                )
+              }
+            }
+            break
+          case OnClickAction.POPUP:
+            if (onClickConfig.onClickLink) {
+              const chainedNotification = chainedNotifications.get(onClickConfig.onClickLink)
+              if (chainedNotification) {
+                renderNotification(chainedNotification)
+                chainedNotifications.delete(onClickConfig.onClickLink)
+              }
+            }
+            break
+          case OnClickAction.DISMISS:
+            handleDismiss(notificationId).catch((error: unknown) => {
+              getLogger().error(error, {
+                tags: {
+                  file: 'createNotificationSystem',
+                  function: 'onNotificationClick',
+                },
+              })
+            })
+            break
+          case OnClickAction.ACK:
+            handleAcknowledge(notificationId).catch((error: unknown) => {
+              getLogger().error(error, {
+                tags: {
+                  file: 'createNotificationSystem',
+                  function: 'onNotificationClick',
+                },
+              })
+            })
+            break
+          case OnClickAction.UNSPECIFIED:
+            break
+        }
+      }
     },
 
     destroy(): void {
-      // Stop all data sources
+      // Clean up old tracked notifications on teardown
+      const cleanupThreshold = Date.now() - CLEANUP_OLDER_THAN_MS
+      tracker.cleanup?.(cleanupThreshold).catch((error) => {
+        getLogger().error(error, {
+          tags: {
+            file: 'createNotificationSystem',
+            function: 'destroy',
+          },
+        })
+      })
+
       for (const dataSource of dataSources) {
         dataSource.stop().catch((error) => {
           getLogger().error(error, {
@@ -86,7 +274,6 @@ export function createNotificationSystem(config: NotificationSystemConfig): Noti
         })
       }
 
-      // Clean up all active renders
       for (const cleanup of activeRenders.values()) {
         cleanup()
       }

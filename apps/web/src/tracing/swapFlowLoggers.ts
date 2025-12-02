@@ -28,6 +28,7 @@ export function logSwapFinalized({
   analyticsContext,
   status,
   type,
+  isFinalStep,
 }: {
   id: string
   hash: string | undefined
@@ -37,6 +38,7 @@ export function logSwapFinalized({
   analyticsContext: ITraceContext
   status: ConfirmedTransactionDetails['status']
   type: OnChainSwapTransactionType
+  isFinalStep?: boolean
 }) {
   const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FirstSwapSuccess)
   const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstSwapSuccess)
@@ -59,6 +61,7 @@ export function logSwapFinalized({
     chain_id_in: chainInId,
     chain_id_out: chainOutId,
     transactionOriginType: TransactionOriginType.Internal,
+    is_final_step: isFinalStep ?? true, // If no `isFinalStep` is provided, we assume it's not a multi-step transaction and default to `true`
     ...analyticsContext,
   })
 
@@ -88,6 +91,7 @@ export function logUniswapXSwapFinalized({
   analyticsContext,
   routing,
   status,
+  isFinalStep,
 }: {
   id: string
   hash?: string
@@ -96,6 +100,7 @@ export function logUniswapXSwapFinalized({
   analyticsContext: ITraceContext
   routing: TradingApi.Routing
   status: TransactionStatus
+  isFinalStep?: boolean
 }) {
   const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FirstSwapSuccess)
   const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstSwapSuccess)
@@ -116,6 +121,7 @@ export function logUniswapXSwapFinalized({
     id,
     hash,
     chain_id: chainId,
+    is_final_step: isFinalStep ?? true, // If no `isFinalStep` is provided, we assume it's not a multi-step transaction and default to `true`
     ...analyticsContext,
   })
 }

@@ -1,4 +1,7 @@
+import { queryOptions, useQuery } from '@tanstack/react-query'
 import { getBrowser, SharedEventName } from '@uniswap/analytics-events'
+import { provideUniswapIdentifierService } from '@universe/api'
+import { UniswapIdentifierService } from '@universe/sessions'
 import { useEffect } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { useRouterPreference } from 'state/user/hooks'
@@ -6,7 +9,22 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
+
+/**
+ * Query options for fetching the Uniswap identifier
+ */
+function getUniswapIdentifierQueryOptions(getService: () => UniswapIdentifierService) {
+  return queryOptions({
+    queryKey: [ReactQueryCacheKey.UniqueId],
+    queryFn: async () => {
+      return getService().getUniswapIdentifier()
+    },
+    staleTime: Infinity,
+    gcTime: Infinity,
+  })
+}
 
 export function UserPropertyUpdater() {
   const isDarkMode = useIsDarkMode()
@@ -14,6 +32,13 @@ export function UserPropertyUpdater() {
 
   const [routerPreference] = useRouterPreference()
   const rehydrated = useAppSelector((state) => state._persist.rehydrated)
+
+  const { data: uniswapIdentifier } = useQuery(getUniswapIdentifierQueryOptions(provideUniswapIdentifierService))
+  useEffect(() => {
+    if (uniswapIdentifier) {
+      setUserProperty(InterfaceUserPropertyName.UniswapIdentifier, uniswapIdentifier)
+    }
+  }, [uniswapIdentifier])
 
   useEffect(() => {
     // User properties *must* be set before sending corresponding event properties,

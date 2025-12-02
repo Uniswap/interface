@@ -10,7 +10,7 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
-import styled, { css, useTheme } from 'lib/styled-components'
+import { css, styled } from 'lib/styled-components'
 import { ReactNode, useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Link } from 'react-router'
@@ -163,15 +163,23 @@ const PoolBalanceTokenNames = ({ token, chainId }: { token: TokenFullData; chain
 
 interface PoolDetailsStatsProps {
   poolData?: PoolData
+  tokenAColor: string
+  tokenBColor: string
   isReversed?: boolean
   chainId?: number
   loading?: boolean
 }
 
-export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: PoolDetailsStatsProps) {
+export function PoolDetailsStats({
+  poolData,
+  tokenAColor,
+  tokenBColor,
+  isReversed,
+  chainId,
+  loading,
+}: PoolDetailsStatsProps) {
   const media = useMedia()
   const isLargeScreen = !media.xl
-  const theme = useTheme()
 
   const currency0 = useCurrency({
     address: poolData?.token0.address,
@@ -236,8 +244,8 @@ export function PoolDetailsStats({ poolData, isReversed, chainId, loading }: Poo
         </PoolBalanceSymbols>
         {isLargeScreen && (
           <Row data-testid="pool-balance-chart">
-            <BalanceChartSide percent={token0.percent} $color={theme.token0} isLeft={true} />
-            <BalanceChartSide percent={token1.percent} $color={theme.token1} isLeft={false} />
+            <BalanceChartSide percent={token0.percent} $color={tokenAColor} isLeft={true} />
+            <BalanceChartSide percent={token1.percent} $color={tokenBColor} isLeft={false} />
           </Row>
         )}
       </StatItemColumn>

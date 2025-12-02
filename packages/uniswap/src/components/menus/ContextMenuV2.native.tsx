@@ -184,15 +184,22 @@ export function ContextMenu({
               setIsMenuVisible(false)
             }}
             onPress={() => {
-              try {
-                // run both actions; `onPressAny` will not run if `onPressAction` throws
-                onPressAction()
-                onPressAny?.({ name: label, index, indexPath: [index] })
-              } catch (error) {
-                logger.error(error, {
-                  tags: { file: 'ContextMenuV2.tsx', function: 'createPressHandler' },
-                })
-              }
+              // close the menu first to allow the closing animation to trigger asap
+              setIsMenuVisible(false)
+              closeMenu()
+              // pushes the main action (problematic navigation action) to the end of the event loop
+              // to allow the menu to close properly before
+              setTimeout(() => {
+                try {
+                  // run both actions; `onPressAny` will not run if `onPressAction` throws
+                  onPressAction()
+                  onPressAny?.({ name: label, index, indexPath: [index] })
+                } catch (error) {
+                  logger.error(error, {
+                    tags: { file: 'ContextMenuV2.tsx', function: 'createPressHandler' },
+                  })
+                }
+              }, 0)
             }}
             {...otherProps}
           />

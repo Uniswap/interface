@@ -72,6 +72,7 @@ export const SONEIUM_CHAIN_INFO = {
   tokens,
   statusPage: 'https://status.soneium.org/',
   supportsV4: true,
+  supportsNFTs: true,
   urlParam: 'soneium',
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',

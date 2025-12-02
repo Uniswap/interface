@@ -1,4 +1,4 @@
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { useRef } from 'react'
 import { Flex, FlexProps } from 'ui/src'
 import { v4 as uuid } from 'uuid'

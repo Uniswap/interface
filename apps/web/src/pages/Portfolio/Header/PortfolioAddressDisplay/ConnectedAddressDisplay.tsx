@@ -1,40 +1,26 @@
 /* eslint-disable-next-line no-restricted-imports, no-restricted-syntax */
-import { useAccount } from 'hooks/useAccount'
-import { useScroll } from 'hooks/useScroll'
-import { useEffect, useState } from 'react'
-import { AddressDisplay } from 'uniswap/src/components/accounts/AddressDisplay'
+import { MultiBlockchainAddressDisplay } from 'components/AccountDetails/MultiBlockchainAddressDisplay'
+import StatusIcon from 'components/StatusIcon'
+import { useActiveAddresses } from 'features/accounts/store/hooks'
+import { Flex } from 'ui/src'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 
-export function ConnectedAddressDisplay() {
-  const { height: scrollHeight } = useScroll()
-  const [isCompact, setIsCompact] = useState(false)
-  // Use connected address rather than usePortfolioAddress because this is only for the connected view
-  const account = useAccount()
+export function ConnectedAddressDisplay({ isCompact }: { isCompact: boolean }) {
+  const activeAddresses = useActiveAddresses()
 
-  useEffect(() => {
-    setIsCompact((prevIsCompact) => {
-      if (!prevIsCompact && scrollHeight > 120) {
-        return true
-      }
-      if (prevIsCompact && scrollHeight < 80) {
-        return false
-      }
-      return prevIsCompact
-    })
-  }, [scrollHeight])
+  // Use primary address for icon (EVM first, then SVM)
+  const addressToDisplay = activeAddresses.evmAddress ?? activeAddresses.svmAddress
 
-  if (!account.address) {
+  if (!addressToDisplay) {
     return null
   }
 
+  const iconSize = isCompact ? iconSizes.icon24 : iconSizes.icon48
+
   return (
-    <AddressDisplay
-      size={isCompact ? 24 : 48}
-      showCopy
-      address={account.address}
-      hideAddressInSubtitle={isCompact}
-      addressNumVisibleCharacters={4}
-      accountIconTransition="all 0.3s ease"
-      animateAddressSubtitleHeight
-    />
+    <Flex row alignItems="center" gap="$spacing12">
+      <StatusIcon size={iconSize} showMiniIcons={false} />
+      <MultiBlockchainAddressDisplay hideAddressInSubtitle={isCompact} />
+    </Flex>
   )
 }

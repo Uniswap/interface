@@ -212,7 +212,7 @@ export function SelectTokensStep({
   currencyInputs: { tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }
   setCurrencyInputs: Dispatch<SetStateAction<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>>
 } & FlexProps) {
-  const { loadingA, loadingB, fee: parsedQsFee } = useLiquidityUrlState()
+  const { loadingA, loadingB } = useLiquidityUrlState()
   const { formatPercent } = useLocalizationContext()
   const { t } = useTranslation()
   const { setSelectedChainId } = useMultichainContext()
@@ -331,21 +331,9 @@ export function SelectTokensStep({
     return undefined
   }, [hasExistingFeeTiers, feeTierData])
 
-  // If the userApprovedHook changes, we want to reset the default fee tier in the useEffect below.
   useEffect(() => {
-    if (userApprovedHook) {
-      setPositionState((prevState) => ({ ...prevState, fee: undefined }))
-    }
-  }, [userApprovedHook, setPositionState])
-
-  useEffect(() => {
-    // If the user has provided a fee tier (url), return
-    if (parsedQsFee) {
-      return
-    }
-
-    // If the tokens are locked, return
-    if (tokensLocked) {
+    // If a fee tier is already set, return
+    if (fee) {
       return
     }
 
@@ -360,7 +348,7 @@ export function SelectTokensStep({
         ...trace,
       })
     }
-  }, [tokensLocked, mostUsedFeeTier, parsedQsFee, setPositionState, trace])
+  }, [mostUsedFeeTier, fee, setPositionState, trace])
 
   const { chains } = useEnabledChains({ platform: Platform.EVM })
   const supportedChains = useMemo(() => {

@@ -12,7 +12,7 @@ import {
 import { Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
@@ -59,6 +59,7 @@ type WalletConnectRequestModalContentProps = {
   hasSufficientFunds: boolean
   request: WalletConnectSigningRequest
   isBlocked: boolean
+  showSmartWalletActivation?: boolean
 }
 
 export function WalletConnectRequestModalContent({
@@ -66,10 +67,11 @@ export function WalletConnectRequestModalContent({
   hasSufficientFunds,
   isBlocked,
   gasFee,
+  showSmartWalletActivation,
 }: WalletConnectRequestModalContentProps): JSX.Element {
   const chainId = request.chainId
   const permitInfo = getPermitInfo(request)
-  const nativeCurrency = nativeOnChain(chainId)
+  const nativeCurrency = getChainInfo(chainId).nativeCurrency
 
   const { t } = useTranslation()
   const { animatedFooterHeight } = useBottomSheetInternal()
@@ -107,6 +109,7 @@ export function WalletConnectRequestModalContent({
             }
             showNetworkLogo={hasGasFee}
             requestMethod={request.type}
+            showSmartWalletActivation={showSmartWalletActivation}
           />
           <AddressFooter activeAccountAddress={request.account} px="$spacing8" />
         </Flex>
@@ -115,7 +118,7 @@ export function WalletConnectRequestModalContent({
           <Flex p="$spacing16">
             <Text color="$statusWarning" variant="body2">
               {t('walletConnect.request.error.insufficientFunds', {
-                currencySymbol: nativeCurrency.symbol ?? '',
+                currencySymbol: nativeCurrency.symbol,
               })}
             </Text>
           </Flex>

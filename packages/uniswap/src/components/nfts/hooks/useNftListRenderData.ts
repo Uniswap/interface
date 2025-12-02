@@ -3,14 +3,26 @@ import { GraphQLApi, isError } from '@universe/api'
 import { useCallback, useState } from 'react'
 import { NUM_FIRST_NFTS } from 'uniswap/src/components/nfts/constants'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useGroupNftsByVisibility } from 'uniswap/src/features/nfts/hooks/useGroupNftsByVisibility'
 import { type NFTItem } from 'uniswap/src/features/nfts/types'
 import { formatNftItems } from 'uniswap/src/features/nfts/utils'
 
-export function useNftListRenderData({ owner, skip }: { owner: Address; skip?: boolean }): {
+export function useNftListRenderData({
+  owner,
+  skip,
+  chainsFilter,
+}: {
+  owner: Address
+  skip?: boolean
+  chainsFilter?: UniverseChainId[]
+}): {
   nfts: (NFTItem | string)[]
   numHidden: number
   numShown: number
+  hiddenNfts: NFTItem[]
+  shownNfts: NFTItem[]
   isErrorState: boolean
   hasNextPage: boolean
   shouldAddInLoadingItem: boolean
@@ -21,6 +33,8 @@ export function useNftListRenderData({ owner, skip }: { owner: Address; skip?: b
   refetch: () => void
 } {
   const { gqlChains } = useEnabledChains()
+  const gqlChainsParam = chainsFilter?.map(toGraphQLChain)
+  const chains = gqlChainsParam ?? gqlChains
 
   const [hiddenNftsExpanded, setHiddenNftsExpanded] = useState(false)
 
@@ -29,7 +43,7 @@ export function useNftListRenderData({ owner, skip }: { owner: Address; skip?: b
       ownerAddress: owner,
       first: NUM_FIRST_NFTS,
       filter: { filterSpam: false },
-      chains: gqlChains,
+      chains,
     },
     notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
     errorPolicy: 'all', // Suppress non-null image.url fields from backend
@@ -53,7 +67,7 @@ export function useNftListRenderData({ owner, skip }: { owner: Address; skip?: b
     })
   }, [data?.nftBalances?.pageInfo.endCursor, hasNextPage, fetchMore])
 
-  const { nfts, numHidden, numShown } = useGroupNftsByVisibility({
+  const { nfts, numHidden, numShown, hiddenNfts, shownNfts } = useGroupNftsByVisibility({
     nftDataItems,
     showHidden: hiddenNftsExpanded,
     allPagesFetched: !data?.nftBalances?.pageInfo.hasNextPage,
@@ -63,6 +77,8 @@ export function useNftListRenderData({ owner, skip }: { owner: Address; skip?: b
     nfts,
     numHidden,
     numShown,
+    hiddenNfts,
+    shownNfts,
     refetch,
     networkStatus,
     onListEndReached,

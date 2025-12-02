@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
-import { ChildProcess, spawn } from 'child_process'
+import { type ChildProcess, spawn } from 'child_process'
 import 'dotenv/config'
 import * as fs from 'fs'
 import * as path from 'path'
+import { promiseTimeout, sleep } from 'utilities/src/time/timing'
 import { createClient, createTestClient, http, publicActions, walletActions } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
 import { mainnet } from 'viem/chains'
@@ -57,7 +58,7 @@ function buildAnvilConfig(overrides?: Partial<AnvilConfig>): AnvilConfig {
     host: overrides?.host ?? '127.0.0.1',
     forkUrl: overrides?.forkUrl ?? buildForkUrl(),
     timeout: overrides?.timeout ?? 10_000,
-    healthCheckInterval: overrides?.healthCheckInterval ?? 10_000,
+    healthCheckInterval: overrides?.healthCheckInterval ?? 3_000,
     logFile: overrides?.logFile ?? path.join(process.cwd(), `anvil-test-${process.pid}.log`),
   }
 }
@@ -152,7 +153,10 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
     const startTime = Date.now()
 
     try {
-      const blockNumber = await client.getBlockNumber()
+      const blockNumber = await promiseTimeout(client.getBlockNumber(), cfg.timeout)
+      if (!blockNumber) {
+        throw new Error('Anvil health check timed out')
+      }
       const responseTime = Date.now() - startTime
 
       return {
@@ -228,6 +232,9 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
           '--hardfork',
           'prague',
           '--no-rate-limit',
+          '--disable-block-gas-limit',
+          '--disable-code-size-limit',
+          '--disable-min-priority-fee',
           '--print-traces',
         ],
         {
@@ -276,7 +283,7 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
       childProcess.kill('SIGTERM')
 
       // Give it time to shut down gracefully
-      await new Promise((resolve) => setTimeout(resolve, 2000))
+      await sleep(2000)
 
       // Force kill if still running
       childProcess.kill('SIGKILL')
@@ -301,16 +308,14 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
         } else {
           // We have a process reference, do normal restart
           await manager.stop()
-          await new Promise((resolve) => setTimeout(resolve, 1000))
+          await sleep(1000)
           await manager.start()
         }
-
-        isRestarting = false
         return true
       } catch (error) {
-        console.error('Failed to restart Anvil:', error)
+        throw new Error('Failed to restart Anvil', { cause: error })
+      } finally {
         isRestarting = false
-        return false
       }
     },
 

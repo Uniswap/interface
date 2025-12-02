@@ -1,13 +1,10 @@
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
-import styled, { useTheme } from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { ReactNode } from 'react'
-import { Check } from 'react-feather'
 import type { To } from 'react-router'
 import { Link } from 'react-router'
-import { ThemedText } from 'theme/components'
 import { ClickableStyle } from 'theme/components/styles'
-import { breakpoints } from 'ui/src/theme'
+import { Flex, Text } from 'ui/src'
+import { Check } from 'ui/src/components/icons/Check'
 
 const InternalLinkMenuItem = styled(Link)`
   ${ClickableStyle}
@@ -22,9 +19,9 @@ const InternalLinkMenuItem = styled(Link)`
   color: ${({ theme }) => theme.neutral1};
 `
 
-export const MenuColumn = styled(Column)`
-  @media screen and (max-width: ${breakpoints.md}px) {
-    padding-bottom: 14px;
+export const MenuColumn = styled(Flex)`
+  $md: {
+    pb: '$spacing14';
   }
 `
 
@@ -43,19 +40,19 @@ export function MenuItem({
   isActive: boolean
   testId?: string
 }) {
-  const theme = useTheme()
-
   if (!to) {
     return null
   }
 
   return (
     <InternalLinkMenuItem onClick={onClick} to={to}>
-      <Row gap="md">
+      <Flex row centered gap="$gap12">
         {logo && logo}
-        <ThemedText.BodySmall data-testid={testId}>{label}</ThemedText.BodySmall>
-      </Row>
-      {isActive && <Check color={theme.accent1} opacity={1} size={20} style={{ marginRight: '12px' }} />}
+        <Text data-testid={testId} variant="body3">
+          {label}
+        </Text>
+      </Flex>
+      {isActive && <Check color="$accent1" size="$icon.20" mr="$spacing12" />}
     </InternalLinkMenuItem>
   )
 }

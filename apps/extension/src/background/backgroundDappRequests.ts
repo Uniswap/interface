@@ -33,7 +33,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WindowEthereumRequestProperties } from 'uniswap/src/features/telemetry/types'
 import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
-import { getCapabilitiesCore } from 'wallet/src/features/batchedTransactions/utils'
+import { getCapabilitiesResponse } from 'wallet/src/features/batchedTransactions/utils'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
 
@@ -321,7 +321,7 @@ async function handleGetCapabilities({
     })
 
     const chainIds = request.chainIds?.map(hexadecimalStringToInt) ?? enabledChains.map((chain) => chain.valueOf())
-    const response = await getCapabilitiesCore({
+    const response = await getCapabilitiesResponse({
       request,
       chainIds,
       hasSmartWalletConsent,

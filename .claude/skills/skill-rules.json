@@ -1,0 +1,29 @@
+{
+  "version": "1.0",
+  "description": "Skill activation triggers for Claude Code. Controls when skills automatically suggest or block actions.",
+  "skills": {
+    "web-e2e": {
+      "type": "domain",
+      "enforcement": "block",
+      "priority": "critical",
+      "description": "Run, debug, and create Playwright e2e tests for the web app.",
+      "promptTriggers": {
+        "keywords": ["e2e", "end-to-end", "playwright"],
+        "intentPatterns": ["(run|start|debug|create|explain).*?e2e"]
+      }
+    }
+  },
+  "notes": {
+    "enforcement_types": {
+      "suggest": "Skill suggestion appears but doesn't block execution",
+      "block": "Requires skill to be used before proceeding (guardrail)",
+      "warn": "Shows warning but allows proceeding"
+    },
+    "priority_levels": {
+      "critical": "Highest - Always trigger when matched",
+      "high": "Important - Trigger for most matches",
+      "medium": "Moderate - Trigger for clear matches",
+      "low": "Optional - Trigger only for explicit matches"
+    }
+  }
+}

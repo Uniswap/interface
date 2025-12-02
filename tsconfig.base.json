@@ -26,23 +26,29 @@
     "strictPropertyInitialization": true,
     "noImplicitThis": true,
     "noUncheckedIndexedAccess": true,
-    "target": "es2015",
+    "target": "esnext",
     "module": "esnext",
-    "lib": ["es2022", "dom"],
+    "lib": [
+      "es2022",
+      "dom"
+    ],
     "baseUrl": ".",
     "rootDir": ".",
     "outDir": "./dist/out-tsc",
-    "types": ["node"],
+    "types": [
+      "node"
+    ],
     "paths": {
       "@universe/api/*": ["packages/api/*"],
       "@universe/config/*": ["packages/config/*"],
+      "@universe/gating/*": ["packages/gating/*"],
+      "@universe/notifications/*": ["packages/notifications/*"],
       "@universe/sessions/*": ["packages/sessions/*"],
       "ui/*": ["packages/ui/*"],
       "uniswap/*": ["packages/uniswap/*"],
       "utilities/*": ["packages/utilities/*"],
       "wallet/*": ["packages/wallet/*"],
-      "@universe/gating/*": ["packages/gating/*"],
-      "@universe/notifications/*": ["packages/notifications/*"]
+      "@universe/cli/*": ["apps/cli/*"]
     }
   }
 }

@@ -27,7 +27,7 @@ export function calculateTickSpacingFromFeeAmount(feeAmount: number): number {
 }
 
 export function getFeeTierKey(feeTier?: number, isDynamicFee?: boolean): string | undefined {
-  if (!feeTier) {
+  if (feeTier === undefined) {
     return undefined
   }
   return feeTier + (isDynamicFee ? '-dynamic' : '')

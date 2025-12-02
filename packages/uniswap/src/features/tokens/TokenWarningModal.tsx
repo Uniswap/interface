@@ -1,9 +1,8 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { TFunction } from 'i18next'
 import { useState } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { AnimateTransition, Flex, LabeledCheckbox, Text, useSporeColors } from 'ui/src'
-import { BlockaidLogo } from 'ui/src/components/logos/BlockaidLogo'
+import { PoweredByBlockaid } from 'uniswap/src/components/logos/PoweredByBlockaid'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -32,7 +31,6 @@ import {
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { TokenWarningFlagsTable } from 'uniswap/src/features/tokens/TokenWarningFlagsTable'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
-import { isMobileApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export interface FoTPercent {
@@ -65,9 +63,6 @@ export interface TokenWarningModalProps extends TokenWarningProps {
   onAcknowledge: () => void
   onReportSuccess?: () => void // callback to send a report of an incorrect warning, which enables the report UI when applied
 }
-
-const BLOCKAID_LOGO_WIDTH = 50
-const BLOCKAID_LOGO_HEIGHT = 10
 
 // eslint-disable-next-line complexity
 function TokenWarningModalContent({
@@ -144,8 +139,7 @@ function TokenWarningModalContent({
     onAcknowledgeButton()
   }
 
-  const isDataReportingEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
-  const showReportUI = isDataReportingEnabled && tokenProtectionWarning > TokenProtectionWarning.NonDefault
+  const showReportUI = tokenProtectionWarning > TokenProtectionWarning.NonDefault
 
   const sendReport = useEvent((reportText: string) => {
     // send report to amplitude
@@ -224,29 +218,7 @@ function TokenWarningModalContent({
             <TokenWarningFlagsTable currencyInfo={currencyInfo0} tokenProtectionWarning={tokenProtectionWarning} />
           )}
 
-          {showBlockaidLogo && (
-            <Flex row centered>
-              <Text variant="body3" color="$neutral3">
-                <Trans
-                  i18nKey="common.poweredBy"
-                  components={{
-                    name: (
-                      <BlockaidLogo
-                        minHeight={BLOCKAID_LOGO_HEIGHT}
-                        minWidth={BLOCKAID_LOGO_WIDTH}
-                        // Using the "size" prop does not work as expected for non-square icon like this one
-                        // Found that only specifying width fixes all alignment and size issues on mobile
-                        {...(isMobileApp
-                          ? { size: { width: BLOCKAID_LOGO_WIDTH } as { width: number; height: number } }
-                          : { width: BLOCKAID_LOGO_WIDTH, height: BLOCKAID_LOGO_HEIGHT })}
-                        color="$neutral3"
-                      />
-                    ),
-                  }}
-                />
-              </Text>
-            </Flex>
-          )}
+          {showBlockaidLogo && <PoweredByBlockaid />}
 
           {showCheckbox && (
             // only show "Don't show this warning again" checkbox if this is an actionable modal & the token is low-severity

@@ -27,6 +27,7 @@ export const uniswapUrls = {
     batchedSwapsReview: createHelpArticleUrl('36394497329933'),
     cexTransferKorea: createHelpArticleUrl('29425131525901-How-to-transfer-crypto-to-a-Uniswap-Wallet-in-Korea'),
     contractAddressExplainer: createHelpArticleUrl('26757826138637-What-is-a-token-contract-address'),
+    dappProtectionInfo: createHelpArticleUrl('37781087046029'),
     extensionBiometricsEnrollment: createHelpArticleUrl('38225957094541'),
     extensionHelp: createHelpArticleUrl('24458735271181'),
     extensionDappTroubleshooting: createHelpArticleUrl(
@@ -126,6 +127,9 @@ export const uniswapUrls = {
     config.scantasticApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
   forApiUrl: config.forApiUrlOverride || `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/FOR.v1.FORService`,
   tradingApiUrl: config.tradingApiUrlOverride || getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
+  liquidityServiceUrl:
+    config.liquidityServiceUrlOverride ||
+    'https://liquidity.backend-prod.api.uniswap.org/uniswap.liquidity.v1.LiquidityService',
 
   // Merkl Docs for LP Incentives
   merklDocsUrl: 'https://docs.merkl.xyz/earn-with-merkl/faq-earn#how-are-aprs-calculated',

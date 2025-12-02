@@ -59,7 +59,7 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
     throw new HandledTransactionInterrupt('User signed after deadline')
   }
 
-  const swapInfo = getSwapTransactionInfo(trade)
+  const swapInfo = getSwapTransactionInfo({ trade })
   addTransactionBreadcrumb({ step, data: { routing, ...swapInfo }, status: TransactionBreadcrumbStatus.InProgress })
   sendAnalyticsEvent(
     SwapEventName.SwapSigned,

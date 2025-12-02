@@ -62,6 +62,7 @@ export const ZKSYNC_CHAIN_INFO = {
   statusPage: undefined,
   tokens,
   supportsV4: false,
+  supportsNFTs: true,
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',
     symbol: 'WETH',

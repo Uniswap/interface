@@ -298,7 +298,7 @@ function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element
       >
         <AccountHeader />
         <Flex py="$spacing20" px={isBottomTabsEnabled ? '$spacing24' : '$spacing12'}>
-          <PortfolioBalance owner={activeAccount.address} />
+          <PortfolioBalance evmOwner={activeAccount.address} />
         </Flex>
         {isSignerAccount ? (
           <HomeScreenQuickActions />

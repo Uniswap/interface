@@ -1,5 +1,5 @@
 import Row from 'components/deprecated/Row'
-import styled, { css } from 'lib/styled-components'
+import { css, styled } from 'lib/styled-components'
 import { X } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'

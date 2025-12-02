@@ -73,6 +73,7 @@ export const OPTIMISM_CHAIN_INFO = {
   tokens,
   statusPage: 'https://optimism.io/status',
   supportsV4: true,
+  supportsNFTs: true,
   urlParam: 'optimism',
   wrappedNativeCurrency: {
     name: 'Wrapped Ether',

@@ -65,13 +65,21 @@ export function SmartWalletInsufficientFundsOnNetworkModal({
       title={title}
       subtext={t('smartWallet.insufficient.description')}
       modalName={ModalName.SmartWalletInsufficientFundsOnNetworkModal}
-      primaryButtonText={canContinue ? primaryButtonText : secondaryButtonText}
-      primaryButtonOnClick={canContinue ? primaryButtonOnClick : secondaryButtonOnClick}
-      primaryButtonVariant="default"
-      primaryButtonEmphasis={canContinue ? 'tertiary' : 'secondary'}
-      secondaryButtonText={canContinue ? secondaryButtonText : undefined}
-      secondaryButtonOnClick={canContinue ? secondaryButtonOnClick : undefined}
-      secondaryButtonEmphasis="secondary"
+      primaryButton={{
+        text: canContinue ? primaryButtonText : secondaryButtonText,
+        onClick: canContinue ? primaryButtonOnClick : secondaryButtonOnClick,
+        variant: 'default',
+        emphasis: canContinue ? 'tertiary' : 'secondary',
+      }}
+      secondaryButton={
+        canContinue
+          ? {
+              text: secondaryButtonText,
+              onClick: secondaryButtonOnClick,
+              emphasis: 'secondary',
+            }
+          : undefined
+      }
       alignment="top"
       onClose={onClose}
     >

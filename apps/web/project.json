@@ -10,7 +10,7 @@
     "wait-for-webserver": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "wait-on http://localhost:3000 --timeout 60000"
+        "command": "wait-on http://localhost:3000 --timeout 60000 --interval 1000 --delay 5000"
       }
     },
     "e2e": {
@@ -19,7 +19,7 @@
         "command": "nx playwright:test web",
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["anvil:mainnet", "preview", "wait-for-webserver"]
+      "dependsOn": ["preview:e2e", "wait-for-webserver"]
     },
     "e2e:anvil": {
       "executor": "nx:run-commands",
@@ -27,7 +27,7 @@
         "command": "nx playwright:test:anvil web",
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["anvil:mainnet", "preview", "wait-for-webserver"]
+      "dependsOn": ["preview:e2e", "wait-for-webserver"]
     },
     "e2e:no-anvil": {
       "executor": "nx:run-commands",
@@ -35,7 +35,7 @@
         "command": "nx playwright:test:no-anvil web",
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["preview", "wait-for-webserver"]
+      "dependsOn": ["preview:e2e", "wait-for-webserver"]
     },
     "prepare": {
       "command": "bun ajv",
@@ -56,14 +56,14 @@
       }
     },
     "anvil:mainnet": {
-      "command": "dotenv -- bash -c 'RUST_LOG=debug anvil --print-traces --fork-url https://${REACT_APP_QUICKNODE_ENDPOINT_NAME}.quiknode.pro/${REACT_APP_QUICKNODE_ENDPOINT_TOKEN} --hardfork prague --no-rate-limit'",
+      "command": "dotenv -- bash -c './scripts/start-anvil.sh \"https://${REACT_APP_QUICKNODE_ENDPOINT_NAME}.quiknode.pro/${REACT_APP_QUICKNODE_ENDPOINT_TOKEN}\" 8545'",
       "options": {
         "cwd": "{projectRoot}"
       },
       "continuous": true
     },
     "anvil:base": {
-      "command": "dotenv -- bash -c 'RUST_LOG=debug anvil --print-traces --fork-url https://${REACT_APP_QUICKNODE_ENDPOINT_NAME}.base-mainnet.quiknode.pro/${REACT_APP_QUICKNODE_ENDPOINT_TOKEN} --hardfork prague --port 8546'",
+      "command": "dotenv -- bash -c './scripts/start-anvil.sh \"https://${REACT_APP_QUICKNODE_ENDPOINT_NAME}.base-mainnet.quiknode.pro/${REACT_APP_QUICKNODE_ENDPOINT_TOKEN}\" 8546'",
       "options": {
         "cwd": "{projectRoot}"
       },
@@ -131,12 +131,13 @@
       },
       "defaultConfiguration": "staging"
     },
-    "preview:e2e": {
-      "command": "ROLLDOWN_OPTIONS_VALIDATION=loose vite preview --port 3000",
+    "build:e2e": {
+      "command": "REACT_APP_SKIP_CSP=1 VITE_DISABLE_SOURCEMAP=true nx run web:build:production",
       "options": {
         "cwd": "{projectRoot}"
       },
-      "continuous": true
+      "defaultConfiguration": "production",
+      "inputs": ["default", "^production", "!{projectRoot}/build"]
     },
     "preview": {
       "command": "ROLLDOWN_OPTIONS_VALIDATION=loose vite preview --port 3000",
@@ -153,6 +154,14 @@
       },
       "continuous": true,
       "dependsOn": ["build:staging:preview"]
+    },
+    "preview:e2e": {
+      "command": "REACT_APP_SKIP_CSP=1 VITE_DISABLE_SOURCEMAP=true ROLLDOWN_OPTIONS_VALIDATION=loose vite preview --port 3000",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "continuous": true,
+      "dependsOn": ["build:e2e"]
     },
     "analyze": {
       "command": "source-map-explorer 'build/assets/*.js' --no-border-checks --gzip",

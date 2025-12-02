@@ -1,12 +1,11 @@
 import { useCallback } from 'react'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { useTransactionSettingsStore } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import type { GetExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
 import { createExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import type { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
+import type { SwapExecutionCallbacks } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import type { SwapHandlers } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
 import type { SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
@@ -41,15 +40,12 @@ export function useCreateGetExecuteSwapService(ctx: UseSwapServiceParams): GetEx
   // factory function to create a swap service with minimal dependencies at call site
   // what changes between swap service implementations is only the onSuccess and onFailure
   return useCallback(
-    (input: {
-      onSuccess: () => void
-      onFailure: (error?: Error) => void
-      onPending: () => void
-      setCurrentStep: SetCurrentStepFn
-      setSteps: (steps: TransactionStep[]) => void
-      // TODO: remove this once we have a better way to get the swap tx context
-      getSwapTxContext: () => SwapTxAndGasInfo
-    }) => {
+    (
+      input: {
+        // TODO: remove this once we have a better way to get the swap tx context
+        getSwapTxContext: () => SwapTxAndGasInfo
+      } & SwapExecutionCallbacks,
+    ) => {
       return createExecuteSwapService({
         getAccount,
         getSwapTxContext: input.getSwapTxContext,

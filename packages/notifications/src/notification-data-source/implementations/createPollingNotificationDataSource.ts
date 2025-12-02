@@ -2,7 +2,7 @@ import { type QueryClient, type QueryKey, QueryObserver } from '@tanstack/react-
 import { type InAppNotification } from '@universe/api'
 import { createNotificationDataSource } from '@universe/notifications/src/notification-data-source/implementations/createNotificationDataSource'
 import { type NotificationDataSource } from '@universe/notifications/src/notification-data-source/NotificationDataSource'
-import { logger } from 'utilities/src/logger/logger'
+import { getLogger } from 'utilities/src/logger/logger'
 import { type QueryOptionsResult } from 'utilities/src/reactQuery/queryOptions'
 
 export interface CreatePollingNotificationDataSourceContext<TQueryKey extends QueryKey = QueryKey> {
@@ -44,30 +44,46 @@ export function createPollingNotificationDataSource<TQueryKey extends QueryKey =
 ): NotificationDataSource {
   const { queryClient, queryOptions } = ctx
 
+  let observer: QueryObserver<InAppNotification[], Error, InAppNotification[], InAppNotification[], TQueryKey> | null =
+    null
   let unsubscribe: (() => void) | null = null
   let isActive = false
 
-  const start = (onNotifications: (notifications: InAppNotification[]) => void): void => {
+  const start = async (
+    onNotifications: (notifications: InAppNotification[], source: string) => void,
+  ): Promise<void> => {
     if (isActive) {
       return // Prevent multiple starts
     }
 
     isActive = true
 
-    const observer = new QueryObserver<InAppNotification[], Error, InAppNotification[], InAppNotification[], TQueryKey>(
+    observer = new QueryObserver<InAppNotification[], Error, InAppNotification[], InAppNotification[], TQueryKey>(
       queryClient,
       queryOptions,
     )
 
     unsubscribe = observer.subscribe((result) => {
-      if (result.data) {
-        onNotifications(result.data)
+      // Only trigger callback when we have successful data
+      // Check both result.data exists AND status is success to avoid partial states
+      if (result.data && result.status === 'success') {
+        onNotifications(result.data, 'polling_api')
       } else if (result.error) {
-        logger.error(result.error, {
-          tags: { file: 'createPollingNotificationDataSource', function: 'subscribe' },
+        getLogger().error(result.error, {
+          tags: { file: 'createPollingDataSource', function: 'subscribe' },
         })
       }
     })
+
+    // Trigger the initial fetch
+    try {
+      const data = await queryClient.fetchQuery(queryOptions)
+      onNotifications(data, 'polling_api')
+    } catch (error) {
+      getLogger().error(error, {
+        tags: { file: 'createPollingDataSource', function: 'start' },
+      })
+    }
   }
 
   const stop = async (): Promise<void> => {
@@ -76,10 +92,12 @@ export function createPollingNotificationDataSource<TQueryKey extends QueryKey =
       unsubscribe = null
     }
 
+    observer = null
+
     try {
       await queryClient.cancelQueries({ queryKey: queryOptions.queryKey })
     } catch (error) {
-      logger.error(error, {
+      getLogger().error(error, {
         tags: { file: 'createPollingNotificationDataSource', function: 'stop' },
       })
     } finally {

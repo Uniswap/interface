@@ -15,6 +15,7 @@ import svgr from 'vite-plugin-svgr'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { generateAssetsIgnorePlugin } from './vite/generateAssetsIgnorePlugin.js'
 import { cspMetaTagPlugin } from './vite/vite.plugins.js'
+import {createEntryGatewayProxy} from './vite/entry-gateway-proxy'
 
 // Get current file directory (ESM equivalent of __dirname)
 const __filename = fileURLToPath(import.meta.url)
@@ -25,6 +26,8 @@ const ReactCompilerConfig = {
 }
 const DEPLOY_TARGET = process.env.DEPLOY_TARGET || 'cloudflare'
 const VITE_DISABLE_SOURCEMAP = process.env.VITE_DISABLE_SOURCEMAP === 'true'
+const DEBUG_PROXY = process.env.VITE_DEBUG_PROXY === 'true'
+const ENABLE_PROXY = process.env.VITE_ENABLE_ENTRY_GATEWAY_PROXY === 'true'
 
 const DEFAULT_PORT = 3000
 
@@ -300,6 +303,10 @@ export default defineConfig(({ mode }) => {
 
     server: {
       port: DEFAULT_PORT,
+      proxy: {
+        ...(ENABLE_PROXY ? {
+          '/entry-gateway': createEntryGatewayProxy({ getLogger })
+        } : {})}
     },
 
     build: {
@@ -330,3 +337,16 @@ export default defineConfig(({ mode }) => {
     },
   }
 })
+
+function getLogger(): {
+  log: typeof console.log
+} {
+  if(!DEBUG_PROXY) {
+    return {
+      log: () => {}
+    }
+  }
+  return {
+    log: console.log
+  }
+}

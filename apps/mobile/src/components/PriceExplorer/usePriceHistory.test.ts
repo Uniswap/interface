@@ -3,6 +3,7 @@ import { GraphQLApi } from '@universe/api'
 import { act } from 'react-test-renderer'
 import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { renderHookWithProviders } from 'src/test/render'
+import { USDC, USDC_ARBITRUM, USDC_BASE, USDC_OPTIMISM, USDC_POLYGON } from 'uniswap/src/constants/tokens'
 import {
   getLatestPrice,
   priceHistory,
@@ -33,6 +34,24 @@ const mockTokenProjectsQuery = (historyPrices: number[]) => (): GraphQLApi.Token
 
 const formatPriceHistory = (history: GraphQLApi.TimestampedAmount[]): Omit<GraphQLApi.TimestampedAmount, 'id'>[] =>
   history.map(({ timestamp, value }) => ({ value, timestamp: timestamp * 1000 }))
+
+/**
+ * Creates a USDC token project with matching priceHistory for both the aggregated market
+ * and the Ethereum token's market. This ensures the hook returns the expected data since
+ * it prefers per-chain price history over aggregated price history.
+ */
+const createUsdcTokenProjectWithMatchingPriceHistory = (
+  history: (GraphQLApi.TimestampedAmount | undefined)[],
+): GraphQLApi.TokenProject => ({
+  ...usdcTokenProject({ priceHistory: history }),
+  tokens: [
+    token({ sdkToken: USDC, market: tokenMarket({ priceHistory: history }) }),
+    token({ sdkToken: USDC_POLYGON }),
+    token({ sdkToken: USDC_ARBITRUM }),
+    token({ sdkToken: USDC_BASE, market: tokenMarket() }),
+    token({ sdkToken: USDC_OPTIMISM }),
+  ],
+})
 
 describe(useTokenPriceHistory, () => {
   it('returns correct initial values', async () => {
@@ -176,7 +195,7 @@ describe(useTokenPriceHistory, () => {
     it('properly formats price history entries', async () => {
       const history = priceHistory()
       const { resolvers } = queryResolvers({
-        tokenProjects: () => [usdcTokenProject({ priceHistory: history })],
+        tokenProjects: () => [createUsdcTokenProjectWithMatchingPriceHistory(history)],
       })
       const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
         resolvers,
@@ -191,12 +210,9 @@ describe(useTokenPriceHistory, () => {
     })
 
     it('filters out invalid price history entries', async () => {
+      const invalidHistory = [undefined, timestampedAmount({ value: 1 }), undefined, timestampedAmount({ value: 2 })]
       const { resolvers } = queryResolvers({
-        tokenProjects: () => [
-          usdcTokenProject({
-            priceHistory: [undefined, timestampedAmount({ value: 1 }), undefined, timestampedAmount({ value: 2 })],
-          }),
-        ],
+        tokenProjects: () => [createUsdcTokenProjectWithMatchingPriceHistory(invalidHistory)],
       })
       const { result } = renderHookWithProviders(() => useTokenPriceHistory({ currencyId: SAMPLE_CURRENCY_ID_1 }), {
         resolvers,
@@ -226,10 +242,10 @@ describe(useTokenPriceHistory, () => {
     const monthPriceHistory = priceHistory({ duration: GraphQLApi.HistoryDuration.Month })
     const yearPriceHistory = priceHistory({ duration: GraphQLApi.HistoryDuration.Year })
 
-    const dayTokenProject = usdcTokenProject({ priceHistory: dayPriceHistory })
-    const weekTokenProject = usdcTokenProject({ priceHistory: weekPriceHistory })
-    const monthTokenProject = usdcTokenProject({ priceHistory: monthPriceHistory })
-    const yearTokenProject = usdcTokenProject({ priceHistory: yearPriceHistory })
+    const dayTokenProject = createUsdcTokenProjectWithMatchingPriceHistory(dayPriceHistory)
+    const weekTokenProject = createUsdcTokenProjectWithMatchingPriceHistory(weekPriceHistory)
+    const monthTokenProject = createUsdcTokenProjectWithMatchingPriceHistory(monthPriceHistory)
+    const yearTokenProject = createUsdcTokenProjectWithMatchingPriceHistory(yearPriceHistory)
 
     const { resolvers } = queryResolvers({
       // eslint-disable-next-line max-params
@@ -278,7 +294,7 @@ describe(useTokenPriceHistory, () => {
           expect(result.current.data?.spot).toEqual({
             value: expect.objectContaining({ value: ethereumToken?.market?.price?.value }),
             relativeChange: expect.objectContaining({
-              value: dayTokenProject.markets[0]?.pricePercentChange24h.value,
+              value: dayTokenProject.markets?.[0]?.pricePercentChange24h?.value,
             }),
           })
         })
@@ -323,7 +339,7 @@ describe(useTokenPriceHistory, () => {
           expect(result.current.data?.spot).toEqual({
             value: expect.objectContaining({ value: ethereumToken?.market?.price?.value }),
             relativeChange: expect.objectContaining({
-              value: yearTokenProject.markets[0]?.pricePercentChange24h?.value,
+              value: yearTokenProject.markets?.[0]?.pricePercentChange24h?.value,
             }),
           })
         })
@@ -343,7 +359,7 @@ describe(useTokenPriceHistory, () => {
             spot: {
               value: expect.objectContaining({ value: ethereumToken?.market?.price?.value }),
               relativeChange: expect.objectContaining({
-                value: dayTokenProject.markets[0]?.pricePercentChange24h.value,
+                value: dayTokenProject.markets?.[0]?.pricePercentChange24h?.value,
               }),
             },
           })
@@ -361,7 +377,7 @@ describe(useTokenPriceHistory, () => {
             spot: {
               value: expect.objectContaining({ value: ethereumToken?.market?.price?.value }),
               relativeChange: expect.objectContaining({
-                value: weekTokenProject.markets[0]?.pricePercentChange24h?.value,
+                value: weekTokenProject.markets?.[0]?.pricePercentChange24h?.value,
               }),
             },
           })

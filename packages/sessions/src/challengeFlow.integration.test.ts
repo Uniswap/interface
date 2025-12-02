@@ -1,8 +1,10 @@
 import {
-  BotDetectionType,
   ChallengeResponse,
+  ChallengeType,
   DeleteSessionResponse,
+  GetChallengeTypesResponse,
   InitSessionResponse,
+  SignoutResponse,
   VerifyResponse,
 } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
 import { createChallengeSolverService } from '@universe/sessions/src/challenge-solvers/createChallengeSolverService'
@@ -19,6 +21,7 @@ import {
   createTestTransport,
   InMemoryDeviceIdService,
   InMemorySessionStorage,
+  InMemoryUniswapIdentifierService,
   type MockEndpoints,
 } from '@universe/sessions/src/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -29,6 +32,7 @@ const mockTurnstileSolve = vi.fn()
 describe('Challenge Flow Integration Tests', () => {
   let sessionStorage: InMemorySessionStorage
   let deviceIdService: InMemoryDeviceIdService
+  let uniswapIdentifierService: InMemoryUniswapIdentifierService
   let sessionService: SessionService
   let sessionInitializationService: SessionInitializationService
   let mockEndpoints: MockEndpoints
@@ -37,6 +41,7 @@ describe('Challenge Flow Integration Tests', () => {
     // Initialize in-memory storage
     sessionStorage = new InMemorySessionStorage()
     deviceIdService = new InMemoryDeviceIdService()
+    uniswapIdentifierService = new InMemoryUniswapIdentifierService()
 
     // Set up mock endpoints with default responses
     mockEndpoints = {
@@ -50,7 +55,7 @@ describe('Challenge Flow Integration Tests', () => {
       '/uniswap.platformservice.v1.SessionService/Challenge': async (): Promise<ChallengeResponse> => {
         return new ChallengeResponse({
           challengeId: '02c241f3-8d45-4a88-842a-d364c30a6c44',
-          botDetectionType: BotDetectionType.BOT_DETECTION_TURNSTILE,
+          challengeType: ChallengeType.TURNSTILE,
           extra: {
             challengeData: '{"siteKey":"0x4AAAAAABiAHneWOWZHzZtO","action":"session_verification"}',
           },
@@ -63,6 +68,12 @@ describe('Challenge Flow Integration Tests', () => {
       },
       '/uniswap.platformservice.v1.SessionService/DeleteSession': async (): Promise<DeleteSessionResponse> => {
         return new DeleteSessionResponse({})
+      },
+      '/uniswap.platformservice.v1.SessionService/GetChallengeTypes': async (): Promise<GetChallengeTypesResponse> => {
+        return new GetChallengeTypesResponse({ challengeTypes: [] })
+      },
+      '/uniswap.platformservice.v1.SessionService/Signout': async (): Promise<SignoutResponse> => {
+        return new SignoutResponse({})
       },
     } as unknown as MockEndpoints
 
@@ -81,6 +92,7 @@ describe('Challenge Flow Integration Tests', () => {
     sessionService = createSessionService({
       sessionStorage,
       deviceIdService,
+      uniswapIdentifierService,
       sessionRepository,
     })
 
@@ -89,8 +101,8 @@ describe('Challenge Flow Integration Tests', () => {
 
     // Mock the Turnstile solver
     mockTurnstileSolve.mockResolvedValue('test-turnstile-solution-token')
-    challengeSolverService.getSolver = (type: BotDetectionType): ChallengeSolver | null => {
-      if (type === BotDetectionType.BOT_DETECTION_TURNSTILE) {
+    challengeSolverService.getSolver = (type: ChallengeType): ChallengeSolver | null => {
+      if (type === ChallengeType.TURNSTILE) {
         return {
           solve: mockTurnstileSolve,
         }
@@ -100,8 +112,9 @@ describe('Challenge Flow Integration Tests', () => {
 
     // Create session initialization service
     sessionInitializationService = createSessionInitializationService({
-      sessionService,
+      getSessionService: () => sessionService,
       challengeSolverService,
+      getIsSessionUpgradeAutoEnabled: () => true,
     })
   })
 
@@ -194,7 +207,7 @@ describe('Challenge Flow Integration Tests', () => {
 
     expect(challengeResponse).toEqual({
       challengeId: '02c241f3-8d45-4a88-842a-d364c30a6c44',
-      botDetectionType: BotDetectionType.BOT_DETECTION_TURNSTILE,
+      challengeType: ChallengeType.TURNSTILE,
       extra: {
         challengeData: '{"siteKey":"0x4AAAAAABiAHneWOWZHzZtO","action":"session_verification"}',
       },

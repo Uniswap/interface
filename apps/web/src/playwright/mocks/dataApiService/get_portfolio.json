@@ -1,0 +1,99 @@
+{
+  "portfolio": {
+    "balances": [
+      {
+        "token": {
+          "chainId": 1,
+          "address": "0x0000000000000000000000000000000000000000",
+          "symbol": "ETH",
+          "decimals": 18,
+          "name": "Ethereum",
+          "type": "TOKEN_TYPE_NATIVE",
+          "metadata": {
+            "projectName": "Ethereum",
+            "logoUrl": "https://token-icons.s3.amazonaws.com/eth.png",
+            "protectionInfo": {
+              "result": "PROTECTION_RESULT_BENIGN"
+            },
+            "feeData": {
+              "blockaid": {},
+              "feeDetector": {}
+            },
+            "safetyLevel": "SAFETY_LEVEL_VERIFIED",
+            "spamCode": "SPAM_CODE_NOT_SPAM"
+          }
+        },
+        "amount": {
+          "raw": "10000000000000000000000",
+          "amount": 10000
+        },
+        "priceUsd": 3867.45,
+        "pricePercentChange1d": 3.6891564003914246,
+        "valueUsd": 38674500
+      },
+      {
+        "token": {
+          "chainId": 1,
+          "address": "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+          "symbol": "USDT",
+          "decimals": 6,
+          "name": "Tether USD",
+          "type": "TOKEN_TYPE_ERC20",
+          "metadata": {
+            "projectName": "Tether",
+            "logoUrl": "https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png",
+            "protectionInfo": {
+              "result": "PROTECTION_RESULT_BENIGN"
+            },
+            "feeData": {
+              "blockaid": {},
+              "feeDetector": {}
+            },
+            "safetyLevel": "SAFETY_LEVEL_VERIFIED",
+            "spamCode": "SPAM_CODE_NOT_SPAM"
+          }
+        },
+        "amount": {
+          "raw": "1000000000",
+          "amount": 1000
+        },
+        "priceUsd": 1.0,
+        "pricePercentChange1d": -0.04401680473447023,
+        "valueUsd": 1000
+      },
+      {
+        "token": {
+          "chainId": 1,
+          "address": "0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48",
+          "symbol": "USDC",
+          "decimals": 6,
+          "name": "USD Coin",
+          "type": "TOKEN_TYPE_ERC20",
+          "metadata": {
+            "projectName": "USD Coin",
+            "logoUrl": "https://ethereum-optimism.github.io/data/USDC/logo.png",
+            "protectionInfo": {
+              "result": "PROTECTION_RESULT_BENIGN"
+            },
+            "feeData": {
+              "blockaid": {},
+              "feeDetector": {}
+            },
+            "safetyLevel": "SAFETY_LEVEL_VERIFIED",
+            "spamCode": "SPAM_CODE_NOT_SPAM"
+          }
+        },
+        "amount": {
+          "raw": "1000000000",
+          "amount": 1000
+        },
+        "priceUsd": 0.9999,
+        "pricePercentChange1d": -0.01,
+        "valueUsd": 999.9
+      }
+    ],
+    "totalValueUsd": 38676499.9,
+    "totalValueAbsoluteChange1d": 1421619.65,
+    "totalValuePercentChange1d": 3.686303385987782
+  }
+}

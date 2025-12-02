@@ -3,6 +3,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Direction, OnChainTransaction, OnChainTransactionLabel } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { GraphQLApi } from '@universe/api'
+import { extractDappInfo } from 'uniswap/src/features/activity/utils/extractDappInfo'
 import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
@@ -226,6 +227,20 @@ export default function parseTradeTransaction(
 }
 
 /**
+ * Type guard to validate transactedValue structure from REST API
+ */
+function isTransactedValueResponse(value: unknown): value is { currency: string; value: number } {
+  return (
+    typeof value === 'object' &&
+    value !== null &&
+    'currency' in value &&
+    'value' in value &&
+    typeof (value as { currency?: unknown }).currency === 'string' &&
+    typeof (value as { value?: unknown }).value === 'number'
+  )
+}
+
+/**
  * Helper function to calculate total amount for a specific token
  */
 function getTotalAmountForToken(transfers: OnChainTransaction['transfers'], tokenAddress: string): BigNumber {
@@ -292,13 +307,24 @@ export function parseRestSwapTransaction(transaction: OnChainTransaction): Confi
     return undefined
   }
 
+  // Try to parse transactedValue from the sent transfer if available
+  // Note: REST API transfers may not have transactedValue, but we check for it
+  let transactedUSDValue: number | undefined
+  const primarySentTransfer = sentTransfers.find((t) => t.asset.value?.address === primarySent.tokenAddress)
+  // @ts-expect-error - transactedValue may not be in type definition but could exist at runtime
+  const tv = primarySentTransfer?.transactedValue
+  if (isTransactedValueResponse(tv) && tv.currency === 'USD') {
+    transactedUSDValue = tv.value
+  }
+
   return {
     type: TransactionType.Swap,
     inputCurrencyId: buildCurrencyId(chainId, primarySent.tokenAddress),
     outputCurrencyId: buildCurrencyId(chainId, primaryReceived.tokenAddress),
     inputCurrencyAmountRaw: primarySent.amount.toString(),
     outputCurrencyAmountRaw: primaryReceived.amount.toString(),
-    transactedUSDValue: undefined,
+    transactedUSDValue,
+    dappInfo: extractDappInfo(transaction),
   }
 }
 
@@ -317,5 +343,6 @@ export function parseRestWrapTransaction(transaction: OnChainTransaction): WrapT
     type: TransactionType.Wrap,
     unwrapped: label === OnChainTransactionLabel.WITHDRAW || label === OnChainTransactionLabel.UNWRAP,
     currencyAmountRaw: firstTransfer?.amount?.raw ?? '',
+    dappInfo: extractDappInfo(transaction),
   }
 }

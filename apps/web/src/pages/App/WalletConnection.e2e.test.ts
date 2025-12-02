@@ -1,4 +1,5 @@
 import { FeatureFlags, getFeatureFlagName } from '@universe/gating'
+import ms from 'ms'
 import { expect, getTest } from 'playwright/fixtures'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
@@ -14,7 +15,18 @@ test.describe('Wallet Connection', () => {
 
     // Disconnect the wallet
     await page.getByTestId(TestID.Web3StatusConnected).click()
-    await page.getByTestId(TestID.WalletDisconnect).click()
+
+    // Wait for the disconnect button to be visible
+    await page.getByTestId(TestID.WalletDisconnect).waitFor({ state: 'visible' })
+    await page.getByTestId(TestID.WalletDisconnect).hover()
+    await page.getByTestId(TestID.WalletDisconnectInModal).click()
+
+    // Check if tooltip content appears (Solana enabled case)
+    const hasTooltip = await page.getByTestId(TestID.WalletDisconnectInModal).isVisible({ timeout: ms('3s') })
+
+    if (hasTooltip) {
+      await page.getByTestId(TestID.WalletDisconnectInModal).click()
+    }
 
     // Verify wallet has disconnected
     await expect(await page.getByText('Connect wallet')).toBeVisible()

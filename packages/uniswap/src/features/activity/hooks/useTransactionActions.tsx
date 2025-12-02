@@ -1,6 +1,5 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { providers } from 'ethers/lib/ethers'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Eye, Flag } from 'ui/src/components/icons'
@@ -10,6 +9,8 @@ import { HelpCenter } from 'ui/src/components/icons/HelpCenter'
 import { X } from 'ui/src/components/icons/X'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
@@ -35,7 +36,7 @@ import { openFORSupportLink, openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
-import { noop } from 'utilities/src/react/noop'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 enum SupportLinkParams {
@@ -49,13 +50,13 @@ export function useTransactionActions({
   transaction,
   authTrigger,
   onClose,
-  onReportTransaction,
+  onReportSuccess,
   onUnhideTransaction,
 }: {
   transaction: TransactionDetails
   authTrigger?: AuthTrigger
   onClose?: () => void
-  onReportTransaction?: () => void
+  onReportSuccess?: () => void
   onUnhideTransaction?: () => void
 }): {
   renderModals: () => JSX.Element
@@ -63,11 +64,13 @@ export function useTransactionActions({
   menuItems: MenuOptionItem[]
 } {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
+
   const { evmAccount } = useWallet()
   const readonly = !evmAccount || evmAccount.accountType === AccountType.Readonly
 
-  const [showCancelModal, setShowCancelModal] = useState(false)
-  const dispatch = useDispatch()
+  const { value: isCancelModalVisible, setTrue: showCancelModal, setFalse: hideCancelModal } = useBooleanState(false)
+  const { value: isReportModalVisible, setTrue: showReportModal, setFalse: hideReportModal } = useBooleanState(false)
 
   const { status } = transaction
 
@@ -75,9 +78,8 @@ export function useTransactionActions({
 
   const baseActionItems = useTransactionActionItems({
     transactionDetails: transaction,
-    onClose: onClose ?? noop,
-    onReportTransaction,
     onUnhideTransaction,
+    showReportModal,
   })
 
   const handleCancel = useEvent((txRequest: providers.TransactionRequest): void => {
@@ -89,61 +91,88 @@ export function useTransactionActions({
         cancelRequest: txRequest,
       }),
     )
-    setShowCancelModal(false)
+    hideCancelModal()
   })
 
-  const handleCancelModalClose = useEvent((): void => {
-    setShowCancelModal(false)
-  })
-
-  const handleCancelConfirmationBack = useEvent((): void => {
-    setShowCancelModal(false)
+  const onReportTransaction = useEvent((): void => {
+    // Send analytics report
+    submitActivitySpamReport({ transactionDetails: transaction })
+    // Set visibility to false
+    dispatch(setActivityVisibility({ transactionId: transaction.id, isVisible: false }))
+    // Report success
+    onReportSuccess?.()
+    dispatch(
+      pushNotification({
+        type: AppNotificationType.Success,
+        title: t('common.reported'),
+      }),
+    )
+    // close modal
+    onClose?.()
   })
 
   useEffect(() => {
     if (status !== TransactionStatus.Pending) {
-      setShowCancelModal(false)
+      hideCancelModal()
     }
-  }, [status])
-
-  const openCancelModal = useEvent((): void => {
-    setShowCancelModal(true)
-  })
+  }, [status, hideCancelModal])
 
   const menuItems = useMemo(() => {
     const items = [...baseActionItems]
     if (isCancelable) {
       items.push({
         label: t('transaction.action.cancel.button'),
-        onPress: () => setShowCancelModal(true),
+        onPress: showCancelModal,
         Icon: X,
         iconColor: '$statusCritical',
         textColor: '$statusCritical',
       })
     }
     return items
-  }, [baseActionItems, isCancelable, t])
+  }, [baseActionItems, isCancelable, t, showCancelModal])
 
   const renderModals = useCallback(
     (): JSX.Element => (
       <>
-        {showCancelModal && (
-          <Modal hideHandlebar={false} name={ModalName.TransactionCancellation} onClose={handleCancelModalClose}>
+        {isCancelModalVisible && (
+          <Modal hideHandlebar={false} name={ModalName.TransactionCancellation} onClose={hideCancelModal}>
             <CancelConfirmationView
               authTrigger={authTrigger}
               transactionDetails={transaction}
-              onBack={handleCancelConfirmationBack}
+              onBack={hideCancelModal}
               onCancel={handleCancel}
             />
           </Modal>
         )}
+        <WarningModal
+          caption={t('reporting.activity.confirm.subtitle')}
+          rejectText={t('common.button.cancel')}
+          acknowledgeText={t('common.report')}
+          icon={<Flag color="$neutral1" size="$icon.24" />}
+          isOpen={isReportModalVisible}
+          modalName={ModalName.ReportActivityConfirmation}
+          severity={WarningSeverity.None}
+          title={t('reporting.activity.confirm.title')}
+          onClose={hideReportModal}
+          onAcknowledge={onReportTransaction}
+        />
       </>
     ),
-    [showCancelModal, authTrigger, transaction, handleCancelConfirmationBack, handleCancel, handleCancelModalClose],
+    [
+      isCancelModalVisible,
+      authTrigger,
+      transaction,
+      handleCancel,
+      hideReportModal,
+      isReportModalVisible,
+      onReportTransaction,
+      hideCancelModal,
+      t,
+    ],
   )
 
   return {
-    openCancelModal,
+    openCancelModal: showCancelModal,
     renderModals,
     menuItems,
   }
@@ -151,14 +180,12 @@ export function useTransactionActions({
 
 function useTransactionActionItems({
   transactionDetails,
-  onClose,
-  onReportTransaction,
   onUnhideTransaction,
+  showReportModal,
 }: {
   transactionDetails: TransactionDetails
-  onClose: () => void
-  onReportTransaction?: () => void
   onUnhideTransaction?: () => void
+  showReportModal: () => void
 }): MenuOptionItem[] {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -172,8 +199,6 @@ function useTransactionActionItems({
     transactionDetails.typeInfo.type === TransactionType.OffRampSale
       ? transactionDetails.typeInfo.serviceProvider.name
       : undefined
-
-  const isDataReportingAbilitiesEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
 
   const transactionActionItems: MenuOptionItem[] = useMemo(() => {
     const items: MenuOptionItem[] = []
@@ -223,50 +248,33 @@ function useTransactionActionItems({
       })
     }
 
-    if (isDataReportingAbilitiesEnabled) {
-      if (isHiddenActivity) {
-        items.push({
-          label: t('reporting.activity.unhide.action'),
-          Icon: Eye,
-          onPress: async (): Promise<void> => {
-            // Set visibility to true
-            dispatch(setActivityVisibility({ transactionId: transactionDetails.id, isVisible: true }))
+    if (isHiddenActivity) {
+      items.push({
+        label: t('reporting.activity.unhide.action'),
+        Icon: Eye,
+        onPress: async (): Promise<void> => {
+          // Set visibility to true
+          dispatch(setActivityVisibility({ transactionId: transactionDetails.id, isVisible: true }))
 
-            // Show unhiding success
-            onUnhideTransaction?.()
-            dispatch(
-              pushNotification({
-                type: AppNotificationType.AssetVisibility,
-                visible: false,
-                hideDelay: 2 * ONE_SECOND_MS,
-                assetName: t('common.activity'),
-              }),
-            )
-          },
-        })
-      } else {
-        items.push({
-          label: t('nft.reportSpam'),
-          Icon: Flag,
-          destructive: true,
-          onPress: async (): Promise<void> => {
-            // Send analytics report
-            submitActivitySpamReport({ transactionDetails })
-            // Set visibility to false
-            dispatch(setActivityVisibility({ transactionId: transactionDetails.id, isVisible: false }))
-            // Report success
-            onReportTransaction?.()
-            dispatch(
-              pushNotification({
-                type: AppNotificationType.Success,
-                title: t('common.reported'),
-              }),
-            )
-            // close modal
-            onClose()
-          },
-        })
-      }
+          // Show unhiding success
+          onUnhideTransaction?.()
+          dispatch(
+            pushNotification({
+              type: AppNotificationType.AssetVisibility,
+              visible: false,
+              hideDelay: 2 * ONE_SECOND_MS,
+              assetName: t('common.activity'),
+            }),
+          )
+        },
+      })
+    } else {
+      items.push({
+        label: t('nft.reportSpam'),
+        Icon: Flag,
+        destructive: true,
+        onPress: showReportModal,
+      })
     }
 
     return items
@@ -276,11 +284,9 @@ function useTransactionActionItems({
     t,
     transactionDetails,
     transactionId,
-    onClose,
-    isDataReportingAbilitiesEnabled,
-    onReportTransaction,
     onUnhideTransaction,
     isHiddenActivity,
+    showReportModal,
   ])
 
   return transactionActionItems

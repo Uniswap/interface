@@ -92,12 +92,12 @@ const sharedRules = {
       message: 'Use `useEnabledChains` instead.',
     },
     {
-      name: 'api/src/clients/graphql/__generated__/types-and-hooks',
+      name: 'api/src/clients/graphql/__generated__/react-hooks',
       importNames: ['useAccountListQuery'],
       message: 'Use `useAccountListData` instead.',
     },
     {
-      name: 'api/src/clients/graphql/__generated__/types-and-hooks',
+      name: 'api/src/clients/graphql/__generated__/react-hooks',
       importNames: ['usePortfolioBalancesQuery'],
       message: 'Use `usePortfolioBalances` instead.',
     },
@@ -249,7 +249,7 @@ const interfaceRules = {
       message: 'Styled components is deprecated, please use Flex or styled from "ui/src" instead.',
     },
     {
-      name: 'api/src/clients/graphql/__generated__/types-and-hooks',
+      name: 'api/src/clients/graphql/__generated__/react-hooks',
       importNames: ['useActivityWebQuery'],
       message: 'Import cached/subscription-based activity hooks from `AssetActivityProvider` instead.',
     },

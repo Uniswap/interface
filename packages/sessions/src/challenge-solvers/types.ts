@@ -1,8 +1,8 @@
-import type { BotDetectionType } from '@universe/sessions/src/session-service/types'
+import type { ChallengeType } from '@universe/sessions/src/session-service/types'
 
 interface ChallengeData {
   challengeId: string
-  botDetectionType: BotDetectionType
+  challengeType: ChallengeType
   extra?: Record<string, string>
 }
 
@@ -11,7 +11,7 @@ interface ChallengeSolver {
 }
 
 interface ChallengeSolverService {
-  getSolver(type: BotDetectionType): ChallengeSolver | null
+  getSolver(type: ChallengeType): ChallengeSolver | null
 }
 
 export type { ChallengeData, ChallengeSolver, ChallengeSolverService }

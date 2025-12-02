@@ -6,7 +6,16 @@ import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/
 
 export type SetCurrentStepFn = (args: { step: TransactionStep; accepted: boolean }) => void
 
-export interface SwapCallbackParams {
+export type SwapExecutionCallbacks = {
+  setCurrentStep: SetCurrentStepFn
+  setSteps: (steps: TransactionStep[]) => void
+  onSuccess: () => void
+  onFailure: (error?: Error, onPressRetry?: () => void) => void
+  /** Called by async submission code to communicate UI should display a pending state. */
+  onPending: () => void
+}
+
+export interface SwapCallbackParams extends SwapExecutionCallbacks {
   account: SignerMnemonicAccountDetails
   swapTxContext: ValidatedSwapTxContext
   currencyInAmountUSD: Maybe<CurrencyAmount<Currency>>
@@ -16,13 +25,7 @@ export interface SwapCallbackParams {
   preselectAsset?: boolean
   isSmartWalletTransaction?: boolean
   includesDelegation?: boolean
-  onSuccess: () => void
-  onFailure: (error?: Error, onPressRetry?: () => void) => void
-  /** Called by async submission code to communicate UI should display a pending state. */
-  onPending: () => void
   txId?: string
-  setCurrentStep: SetCurrentStepFn
-  setSteps: (steps: TransactionStep[]) => void
   isFiatInputMode?: boolean
 }
 

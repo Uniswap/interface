@@ -174,7 +174,7 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
               <PortfolioHeader address={address} />
             </Flex>
             <Flex pb="$spacing8" pl="$spacing4">
-              <PortfolioBalance owner={address} />
+              <PortfolioBalance evmOwner={address} />
             </Flex>
 
             <PortfolioActionButtons />

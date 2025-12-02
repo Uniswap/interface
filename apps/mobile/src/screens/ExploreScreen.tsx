@@ -1,4 +1,5 @@
-import { useIsFocused, useNavigation, useScrollToTop } from '@react-navigation/native'
+import type { RouteProp } from '@react-navigation/native'
+import { useIsFocused, useNavigation, useRoute, useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect, useRef, useState } from 'react'
@@ -8,6 +9,7 @@ import type { FlatList } from 'react-native-gesture-handler'
 import { useAnimatedRef } from 'react-native-reanimated'
 import type { Edge } from 'react-native-safe-area-context'
 import { useDispatch } from 'react-redux'
+import type { ExploreStackParamList } from 'src/app/navigation/types'
 import { ExploreSections } from 'src/components/explore/ExploreSections/ExploreSections'
 import { ExploreScreenSearchResultsList } from 'src/components/explore/search/ExploreScreenSearchResultsList'
 import { Screen } from 'src/components/layout/Screen'
@@ -38,6 +40,9 @@ export function ExploreScreen(): JSX.Element {
   const { chains } = useEnabledChains()
   const isBottomTabsEnabled = useFeatureFlag(FeatureFlags.BottomTabs)
   const navigation = useNavigation()
+  const route = useRoute<RouteProp<ExploreStackParamList, MobileScreens.Explore>>()
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition -- route.params can be null
+  const { chainId, orderByMetric, showFavorites } = route.params ?? {}
 
   const { isSheetReady } = useBottomSheetContext({ forceSafeReturn: isBottomTabsEnabled })
 
@@ -103,7 +108,7 @@ export function ExploreScreen(): JSX.Element {
   const canRenderList = useRenderNextFrame(isSheetReady && !isSearchMode)
 
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
-    useFilterCallbacks(null, ModalName.Search)
+    useFilterCallbacks(chainId ?? null, ModalName.Search)
 
   const onSearchChangeText = useEvent((newSearchFilter: string): void => {
     onChangeText(newSearchFilter)
@@ -174,7 +179,13 @@ export function ExploreScreen(): JSX.Element {
           parsedChainFilter={parsedChainFilter}
         />
       ) : isSheetReady && canRenderList ? (
-        <ExploreSections listRef={listRef} setIsAtTopOnScroll={isBottomTabsEnabled ? setIsAtTop : undefined} />
+        <ExploreSections
+          listRef={listRef}
+          setIsAtTopOnScroll={isBottomTabsEnabled ? setIsAtTop : undefined}
+          chainId={chainId}
+          orderByMetric={orderByMetric}
+          showFavorites={showFavorites}
+        />
       ) : null}
     </Screen>
   )

@@ -1,5 +1,5 @@
 import { TradingApi } from '@universe/api'
-import { useCallback, useMemo } from 'react'
+import { useCallback } from 'react'
 // biome-ignore lint/style/noRestrictedImports: only using to keep a consistent timing on interface
 import { ADAPTIVE_MODAL_ANIMATION_DURATION } from 'ui/src/components/modal/AdaptiveWebModal'
 import type { ParsedWarnings } from 'uniswap/src/components/modals/WarningModal/types'
@@ -8,12 +8,18 @@ import { TransactionScreen } from 'uniswap/src/features/transactions/components/
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { shouldShowFlashblocksUI } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/utils'
 import { useIsUnichainFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
+import {
+  ensureFreshSwapTxData,
+  useSwapParams,
+  useSwapTxAndGasInfoService,
+} from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/hooks'
 import type { GetExecuteSwapService } from 'uniswap/src/features/transactions/swap/services/executeSwapService'
 import { useSwapDependenciesStore } from 'uniswap/src/features/transactions/swap/stores/swapDependenciesStore/useSwapDependenciesStore'
 import type { SwapFormState } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/types'
-import { useSwapTxStore } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/useSwapTxStore'
 import type { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
+import { tryCatch } from 'utilities/src/errors'
+import { logger } from 'utilities/src/logger/logger'
 import { isWebApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -136,39 +142,67 @@ export function useCreateSwapReviewCallbacks(ctx: {
     updateSwapForm({ showPendingUI: true })
   }, [updateSwapForm, isFlashblocksEnabled, shouldShowConfirmedState])
 
-  const swapTxContext = useSwapTxStore((s) => s)
+  const swapTxAndGasInfoService = useSwapTxAndGasInfoService()
 
-  const getSwapTxContext = useEvent(() => swapTxContext)
+  const swapParams = useSwapParams()
 
-  const executeSwapService = useMemo(
-    () =>
-      getExecuteSwapService({
-        onSuccess,
-        onFailure,
-        onPending,
-        setCurrentStep,
-        setSteps,
-        getSwapTxContext,
-      }),
-    [getExecuteSwapService, onSuccess, onFailure, onPending, setCurrentStep, setSteps, getSwapTxContext],
-  )
+  const executeSwap = useEvent(async () => {
+    if (!swapParams.trade) {
+      onFailure(new Error('No `trade` found when calling `executeSwap`'))
+      return
+    }
 
-  const submitTransaction = useCallback(() => {
+    // Ensure we have fresh transaction data before executing the swap.
+    // We need this because we allow the user to click `Submit` when a new `/quote` response is being displayed in the UI
+    // even though we might still not have the corresponding `/swap` response for that `/quote`.
+    // We use the stale `/swap` response from the previous quote to avoid showing a loading state every time we poll/refetch a new `/quote`.
+    const { data: freshSwapTxData, error } = await tryCatch(
+      // This should return immediately if the data is already cached and fresh.
+      ensureFreshSwapTxData(
+        {
+          trade: swapParams.trade,
+          approvalTxInfo: swapParams.approvalTxInfo,
+          derivedSwapInfo: swapParams.derivedSwapInfo,
+        },
+        swapTxAndGasInfoService,
+      ),
+    )
+
+    if (error) {
+      const wrappedError = new Error('Failed to ensure fresh transaction data when calling `executeSwap`', {
+        cause: error,
+      })
+
+      logger.error(wrappedError, {
+        tags: { file: 'useCreateSwapReviewCallbacks.ts', function: 'executeSwap' },
+      })
+
+      // If we fail to get fresh data, show error and don't proceed with swap
+      onFailure(wrappedError)
+      return
+    }
+
+    const executeSwapService = getExecuteSwapService({
+      onSuccess,
+      onFailure,
+      onPending,
+      setCurrentStep,
+      setSteps,
+      getSwapTxContext: () => freshSwapTxData,
+    })
+
+    executeSwapService.executeSwap()
+  })
+
+  const submitTransaction = useEvent(async () => {
     if (reviewScreenWarning && !showWarningModal && !warningAcknowledged) {
       setShouldSubmitTx(true)
       setShowWarningModal(true)
       return
     }
 
-    executeSwapService.executeSwap()
-  }, [
-    reviewScreenWarning,
-    showWarningModal,
-    warningAcknowledged,
-    setShouldSubmitTx,
-    setShowWarningModal,
-    executeSwapService,
-  ])
+    await executeSwap()
+  })
 
   const onSwapButtonClick = useCallback(async () => {
     updateSwapForm({ isSubmitting: true })
@@ -179,19 +213,19 @@ export function useCreateSwapReviewCallbacks(ctx: {
         failureCallback: onFailure,
       })
     } else {
-      submitTransaction()
+      await submitTransaction()
     }
     await onSubmitSwap?.()
   }, [authTrigger, onFailure, submitTransaction, updateSwapForm, onSubmitSwap])
 
-  const onConfirmWarning = useCallback(() => {
+  const onConfirmWarning = useCallback(async () => {
     setWarningAcknowledged(true)
     setShowWarningModal(false)
 
     if (shouldSubmitTx) {
-      executeSwapService.executeSwap()
+      await executeSwap()
     }
-  }, [shouldSubmitTx, executeSwapService, setShowWarningModal, setWarningAcknowledged])
+  }, [shouldSubmitTx, executeSwap, setShowWarningModal, setWarningAcknowledged])
 
   const onCancelWarning = useCallback(() => {
     if (shouldSubmitTx) {

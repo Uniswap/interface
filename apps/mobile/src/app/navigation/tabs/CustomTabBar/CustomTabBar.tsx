@@ -4,7 +4,7 @@ import type { LayoutChangeEvent } from 'react-native'
 import { useAnimatedStyle, useDerivedValue, withTiming } from 'react-native-reanimated'
 import { TAB_BAR_ANIMATION_DURATION, TAB_ITEMS } from 'src/app/navigation/tabs/CustomTabBar/constants'
 import { SwapButton } from 'src/app/navigation/tabs/SwapButton'
-import { SwapLongPressModal } from 'src/app/navigation/tabs/SwapLongPressModal'
+import { SwapLongPressOverlay } from 'src/app/navigation/tabs/SwapLongPressOverlay'
 import { Flex, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -165,7 +165,7 @@ export function CustomTabBar({ state, navigation }: BottomTabBarProps): JSX.Elem
         </Flex>
       </Flex>
 
-      <SwapLongPressModal
+      <SwapLongPressOverlay
         isVisible={isSwapMenuOpen}
         onClose={handleCloseSwapMenu}
         onSwapLongPress={handleOpenSwapMenu}

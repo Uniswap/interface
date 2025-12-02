@@ -184,6 +184,7 @@ export function AdaptiveWebModal({
   p,
   zIndex,
   hideHandlebar,
+  borderWidth,
   ...rest
 }: ModalProps): JSX.Element {
   const filteredRest = Object.fromEntries(Object.entries(rest).filter(([_, v]) => v !== undefined)) // Filter out undefined properties from rest
@@ -245,11 +246,12 @@ export function AdaptiveWebModal({
         >
           <Dialog.Content
             key="content"
-            bordered
             elevate
+            bordered={borderWidth !== 0}
             animateOnly={['transform', 'opacity']}
             animation={isOpen ? 'fast' : 'fastExit'}
             borderColor="$surface3"
+            borderWidth={borderWidth}
             borderRadius="$rounded16"
             enterStyle={{ x: 0, y: isTopAligned ? -12 : 12, opacity: 0 }}
             exitStyle={{ x: 0, y: isTopAligned ? -12 : 10, opacity: 0 }}
@@ -289,6 +291,7 @@ export function WebModalWithBottomAttachment({
   gap,
   zIndex,
   hideHandlebar,
+  borderWidth,
   ...rest
 }: ModalProps & { bottomAttachment?: ReactNode }): JSX.Element {
   const shadowProps = useShadowPropsShort()
@@ -351,7 +354,7 @@ export function WebModalWithBottomAttachment({
               backgroundColor={backgroundColor}
               borderColor="$surface3"
               borderRadius="$rounded16"
-              borderWidth="$spacing1"
+              borderWidth={borderWidth ?? '$spacing1'}
               px="$spacing24"
               py="$spacing16"
               gap={gap ?? '$gap4'}

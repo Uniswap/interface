@@ -9,4 +9,4 @@ export const TAB_ITEMS = [
   { key: MobileScreens.Activity, icon: TabActivityIcon },
 ] as const
 
-export const ESTIMATED_BOTTOM_TABS_HEIGHT = 60
+export const ESTIMATED_BOTTOM_TABS_HEIGHT = 64

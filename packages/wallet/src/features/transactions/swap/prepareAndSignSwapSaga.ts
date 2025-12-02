@@ -3,10 +3,17 @@ import { call, select } from 'typed-redux-saga'
 import type { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import type { PrepareSwapParams } from 'uniswap/src/features/transactions/swap/types/swapHandlers'
 import { PermitMethod } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { isBridge, isClassic, isUniswapX, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
+import {
+  isBridge,
+  isChained,
+  isClassic,
+  isUniswapX,
+  isWrap,
+} from 'uniswap/src/features/transactions/swap/utils/routing'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import type { SignedTransactionRequest } from 'wallet/src/features/transactions/executeTransaction/types'
 import {
+  BaseTransactionMetadata,
   handleTransactionPreparationError,
   prepareTransactionServices,
   signSingleTransaction,
@@ -145,6 +152,17 @@ export function createPrepareAndSignSwapSaga(dependencies: TransactionSagaDepend
           signedSwapTx: swapResult.signedTransaction,
           swapTxContext,
           metadata: swapResult.metadata,
+          chainId,
+          account,
+        }
+      } else if (isChained(swapTxContext)) {
+        // Chained transactions does not follow the regular transaction preparation flow.
+        preSignedSwapTx = {
+          signedApproveTx,
+          signedPermitTx,
+          signedSwapTx: {} as SignedTransactionRequest,
+          swapTxContext,
+          metadata: {} as BaseTransactionMetadata,
           chainId,
           account,
         }

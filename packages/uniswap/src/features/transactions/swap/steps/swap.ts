@@ -1,5 +1,7 @@
 import { TradingApi } from '@universe/api'
+import invariant from 'tiny-invariant'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
 import {
   OnChainTransactionFields,
   OnChainTransactionFieldsBatched,
@@ -52,4 +54,21 @@ export function createSwapTransactionStepBatched(
   txRequests: ValidatedTransactionRequest[],
 ): SwapTransactionStepBatched {
   return { type: TransactionStepType.SwapTransactionBatched, batchedTxRequests: txRequests }
+}
+
+export async function getSwapTxRequest(
+  step: SwapTransactionStep | SwapTransactionStepAsync,
+  signature: string | undefined,
+): Promise<ValidatedTransactionRequest> {
+  if (step.type === TransactionStepType.SwapTransaction) {
+    return step.txRequest
+  }
+  if (!signature) {
+    throw new UnexpectedTransactionStateError('Signature required for async swap transaction step')
+  }
+
+  const txRequest = await step.getTxRequest(signature)
+  invariant(txRequest !== undefined)
+
+  return txRequest
 }

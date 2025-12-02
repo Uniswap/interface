@@ -1,5 +1,5 @@
 import { AutoColumn } from 'components/deprecated/Column'
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'

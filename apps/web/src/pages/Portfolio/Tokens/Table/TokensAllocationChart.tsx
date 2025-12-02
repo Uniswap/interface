@@ -18,11 +18,11 @@ interface TokenBreakdown {
 function generatePortfolioBreakdown(tokens: TokenData[], totalValue: number): TokenBreakdown[] {
   // Calculate percentages for all tokens (individual network instances)
   const allTokens = tokens.map((token, index) => {
-    const parsedValue = Number.parseFloat(token.value.replace(/[$,]/g, ''))
+    const tokenValue = token.value
 
     return {
       ...token,
-      percentage: Number.parseFloat(((parsedValue / totalValue) * 100).toFixed(3)),
+      percentage: Number.parseFloat(((tokenValue / totalValue) * 100).toFixed(3)),
       color: getTokenColor(index),
     }
   })
@@ -55,7 +55,7 @@ function getTokenColor(index: number): string {
 
 export function TokensAllocationChart({ tokenData }: { tokenData: TokenData[] }): JSX.Element {
   const totalPortfolioValue = useMemo(() => {
-    return tokenData.reduce((sum, token) => sum + Number.parseFloat(token.value.replace(/[$,]/g, '')), 0)
+    return tokenData.reduce((sum, token) => sum + token.value, 0)
   }, [tokenData])
 
   const portfolioBreakdown = generatePortfolioBreakdown(tokenData, totalPortfolioValue)

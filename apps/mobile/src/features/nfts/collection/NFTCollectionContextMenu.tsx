@@ -2,9 +2,9 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
-import { TripleDot } from 'src/components/icons/TripleDot'
 import { NFTCollectionData } from 'src/features/nfts/collection/types'
 import { ColorTokens, Flex, TouchableArea } from 'ui/src'
+import { Ellipsis } from 'ui/src/components/icons/Ellipsis'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { getTwitterLink, openUri } from 'uniswap/src/utils/linking'
 import { noop } from 'utilities/src/react/noop'
@@ -81,8 +81,8 @@ export function NFTCollectionContextMenu({
         onLongPress={noop}
         onPress={noop}
       >
-        <Flex centered grow height={ICON_SIZE} width={ICON_SIZE}>
-          <TripleDot color={iconColor} size={3.5} />
+        <Flex centered grow>
+          <Ellipsis color={iconColor} size={ICON_SIZE} />
         </Flex>
       </TouchableArea>
     </ContextMenu>

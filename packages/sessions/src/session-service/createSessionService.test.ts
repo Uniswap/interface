@@ -3,12 +3,14 @@ import type { SessionRepository } from '@universe/sessions/src/session-repositor
 import { createSessionService } from '@universe/sessions/src/session-service/createSessionService'
 import type { SessionService } from '@universe/sessions/src/session-service/types'
 import type { SessionStorage } from '@universe/sessions/src/session-storage/types'
+import type { UniswapIdentifierService } from '@universe/sessions/src/uniswap-identifier/types'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('createSessionService', () => {
   let storage: SessionStorage
   let repository: SessionRepository
   let deviceIdService: DeviceIdService
+  let uniswapIdentifierService: UniswapIdentifierService
   let service: SessionService
 
   beforeEach(() => {
@@ -35,6 +37,17 @@ describe('createSessionService', () => {
       },
     }
 
+    let uniswapIdentifierData: string | null = null
+    uniswapIdentifierService = {
+      getUniswapIdentifier: async (): Promise<string | null> => uniswapIdentifierData,
+      setUniswapIdentifier: async (identifier: string): Promise<void> => {
+        uniswapIdentifierData = identifier
+      },
+      removeUniswapIdentifier: async (): Promise<void> => {
+        uniswapIdentifierData = null
+      },
+    }
+
     // In-memory repository implementation
     repository = {
       initSession: async (): Promise<{
@@ -55,6 +68,7 @@ describe('createSessionService', () => {
       sessionStorage: storage,
       sessionRepository: repository,
       deviceIdService,
+      uniswapIdentifierService,
     })
   })
 
@@ -89,6 +103,7 @@ describe('createSessionService', () => {
         sessionStorage: storage,
         sessionRepository: repository,
         deviceIdService,
+        uniswapIdentifierService,
       })
 
       await service.initSession()
@@ -163,6 +178,7 @@ describe('createSessionService', () => {
         sessionStorage: storage,
         sessionRepository: repository,
         deviceIdService,
+        uniswapIdentifierService,
       })
 
       expect(await service2.getSessionState()).toEqual({ sessionId: 'test-session-123' })
@@ -185,6 +201,7 @@ describe('createSessionService', () => {
         sessionStorage: storage2,
         sessionRepository: repository,
         deviceIdService,
+        uniswapIdentifierService,
       })
 
       await service.initSession()
@@ -304,6 +321,66 @@ describe('createSessionService', () => {
 
       await service.initSession()
       expect(await deviceIdService.getDeviceId()).toBe('test-device-id')
+    })
+  })
+
+  describe('uniswap identifier handling', () => {
+    it('persists uniswapIdentifier when provided in extra', async () => {
+      repository.initSession = async (): Promise<{
+        sessionId?: string
+        needChallenge: boolean
+        extra: Record<string, string>
+      }> => ({
+        sessionId: 'test-session-123',
+        needChallenge: false,
+        extra: { uniswapIdentifier: '71cef16f-4d99-4082-987c-a6f810f9ca7f' },
+      })
+
+      await service.initSession()
+      expect(await uniswapIdentifierService.getUniswapIdentifier()).toBe('71cef16f-4d99-4082-987c-a6f810f9ca7f')
+    })
+
+    it('does not persist uniswapIdentifier when not provided', async () => {
+      repository.initSession = async (): Promise<{
+        sessionId?: string
+        needChallenge: boolean
+        extra: Record<string, string>
+      }> => ({
+        sessionId: 'test-session-123',
+        needChallenge: false,
+        extra: {},
+      })
+
+      await service.initSession()
+      expect(await uniswapIdentifierService.getUniswapIdentifier()).toBeNull()
+    })
+
+    it('updates uniswapIdentifier on subsequent initSession calls', async () => {
+      repository.initSession = async (): Promise<{
+        sessionId?: string
+        needChallenge: boolean
+        extra: Record<string, string>
+      }> => ({
+        sessionId: 'test-session-123',
+        needChallenge: false,
+        extra: { uniswapIdentifier: 'first-identifier' },
+      })
+
+      await service.initSession()
+      expect(await uniswapIdentifierService.getUniswapIdentifier()).toBe('first-identifier')
+
+      repository.initSession = async (): Promise<{
+        sessionId?: string
+        needChallenge: boolean
+        extra: Record<string, string>
+      }> => ({
+        sessionId: 'test-session-456',
+        needChallenge: false,
+        extra: { uniswapIdentifier: 'second-identifier' },
+      })
+
+      await service.initSession()
+      expect(await uniswapIdentifierService.getUniswapIdentifier()).toBe('second-identifier')
     })
   })
 })

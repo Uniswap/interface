@@ -1,30 +1,41 @@
-import { L2_TXN_DISMISS_MS } from 'constants/misc'
-import { useCallback } from 'react'
+import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS } from 'constants/misc'
+import { useCallback, useMemo } from 'react'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { useTimeout } from 'utilities/src/time/timing'
 
-export function useShowPendingAfterDelay(hasPendingActivity: boolean, isOnlyUnichainPendingActivity: boolean): boolean {
+interface UseShowPendingAfterDelayParams {
+  hasPendingActivity: boolean
+  hasL1PendingActivity: boolean
+}
+
+export function useShowPendingAfterDelay({
+  hasPendingActivity,
+  hasL1PendingActivity,
+}: UseShowPendingAfterDelayParams): boolean {
   const {
-    value: showUnichainTxAnyways,
-    setTrue: setShowUnichainTxAnyways,
-    setFalse: resetShowUnichainTxAnyways,
+    value: showPendingTxAnyways,
+    setTrue: setShowPendingTxAnyways,
+    setFalse: resetShowPendingTxAnyways,
   } = useBooleanState(false)
 
-  // needs to rerender once `isOnlyUnichainPendingActivity` is true so useTimeout starts
-  const showUnichainTxAfterDelay = useCallback(() => {
-    if (isOnlyUnichainPendingActivity && hasPendingActivity) {
-      setShowUnichainTxAnyways()
+  // use longer delay for L1 transactions
+  const dismissDelay = useMemo(
+    () => (hasL1PendingActivity ? DEFAULT_TXN_DISMISS_MS : L2_TXN_DISMISS_MS),
+    [hasL1PendingActivity],
+  )
+
+  const showPendingTxAfterDelay = useCallback(() => {
+    if (hasPendingActivity) {
+      setShowPendingTxAnyways()
       return
     }
 
-    resetShowUnichainTxAnyways()
-  }, [isOnlyUnichainPendingActivity, setShowUnichainTxAnyways, resetShowUnichainTxAnyways, hasPendingActivity])
+    resetShowPendingTxAnyways()
+  }, [setShowPendingTxAnyways, resetShowPendingTxAnyways, hasPendingActivity])
 
-  useTimeout(showUnichainTxAfterDelay, L2_TXN_DISMISS_MS)
+  useTimeout(showPendingTxAfterDelay, dismissDelay)
 
-  const showLoadingState = isOnlyUnichainPendingActivity
-    ? hasPendingActivity && showUnichainTxAnyways
-    : hasPendingActivity
+  const showLoadingState = hasPendingActivity && showPendingTxAnyways
 
   return showLoadingState
 }

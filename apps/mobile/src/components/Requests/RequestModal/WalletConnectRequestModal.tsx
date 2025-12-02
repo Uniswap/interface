@@ -38,8 +38,9 @@ import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { DappRequestType, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'
+import { useLiveAccountDelegationDetails } from 'wallet/src/features/smartWallet/hooks/useLiveAccountDelegationDetails'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
-import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useHasSmartWalletConsent, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 interface Props {
   onClose: () => void
@@ -63,6 +64,8 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const chainId = request.chainId
 
   const enablePermitMismatchUx = useFeatureFlag(FeatureFlags.EnablePermitMismatchUX)
+  const enableEip5792Methods = useFeatureFlag(FeatureFlags.Eip5792Methods)
+  const hasSmartWalletConsent = useHasSmartWalletConsent()
 
   const tx: providers.TransactionRequest | undefined = useMemo(() => {
     if (isTransactionRequest(request)) {
@@ -82,7 +85,18 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
       addressInput2: { address: request.account, platform: Platform.EVM },
     }),
   )
-  const gasFee = useTransactionGasFee({ tx })
+  const delegationData = useLiveAccountDelegationDetails({
+    address: request.account,
+    chainId,
+  })
+  const shouldDelegate = Boolean(delegationData?.needsDelegation && enableEip5792Methods && hasSmartWalletConsent)
+  const smartContractDelegationAddress = shouldDelegate
+    ? delegationData?.contractAddress // latest Uniswap delegation address
+    : delegationData?.currentDelegationAddress
+  const gasFee = useTransactionGasFee({
+    tx,
+    ...(smartContractDelegationAddress && { smartContractDelegationAddress }),
+  })
 
   const hasSufficientFunds = useHasSufficientFunds({
     account: request.account,
@@ -300,6 +314,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
         hasSufficientFunds={hasSufficientFunds}
         isBlocked={isBlocked}
         request={request}
+        showSmartWalletActivation={shouldDelegate}
       />
     </ModalWithOverlay>
   )

@@ -1,16 +1,16 @@
-import { BotDetectionType } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
+import { ChallengeType } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
 import { SessionState } from '@universe/sessions/src/session-storage/types'
 
 interface InitSessionResponse {
   sessionId?: string
   needChallenge: boolean
-  extra?: Record<string, string>
+  extra: Record<string, string>
 }
 
 interface ChallengeResponse {
   challengeId: string
-  botDetectionType: BotDetectionType
-  extra?: Record<string, string>
+  challengeType: ChallengeType
+  extra: Record<string, string>
 }
 
 interface UpgradeSessionRequest {
@@ -36,4 +36,4 @@ interface SessionService {
 }
 
 export type { SessionService, InitSessionResponse, ChallengeResponse, UpgradeSessionRequest, UpgradeSessionResponse }
-export { BotDetectionType }
+export { ChallengeType }

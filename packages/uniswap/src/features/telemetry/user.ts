@@ -73,6 +73,7 @@ export enum InterfaceUserPropertyName {
   ScreenResolutionWidth = 'screen_resolution_width',
   SupportsAtomicBatching = 'supports_atomic_batching',
   TestnetModeEnabled = 'testnet_mode_enabled',
+  UniswapIdentifier = 'uniswap_identifier',
   UserAgent = 'user_agent',
   WalletAddress = 'wallet_address', // for EVM
   WalletAddressSVM = 'wallet_address_svm',

@@ -1,6 +1,5 @@
-import { useTheme } from 'lib/styled-components'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 
@@ -10,7 +9,7 @@ interface LimitedSupportBannerProps {
 
 export function LimitedSupportBanner({ onPress }: LimitedSupportBannerProps) {
   const { t } = useTranslation()
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   return (
     <TouchableArea
@@ -26,7 +25,7 @@ export function LimitedSupportBanner({ onPress }: LimitedSupportBannerProps) {
       mb="$spacing12"
     >
       <Flex row alignItems="center" gap="$spacing8">
-        <AlertTriangleFilled size="$icon.16" fill={theme.neutral1} />
+        <AlertTriangleFilled size="$icon.16" fill={colors.neutral1.val} />
         <Text variant="body3" color="$neutral1">
           {t('smartWallets.delegation.limitedSupport')}
         </Text>

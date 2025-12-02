@@ -1,4 +1,5 @@
 import { TableText } from 'components/Table/styled'
+import { memo } from 'react'
 import { Flex } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -9,7 +10,7 @@ interface TokenAmountDisplayProps {
   usdValue: string | null
 }
 
-export function TokenAmountDisplay({ currencyInfo, formattedAmount, usdValue }: TokenAmountDisplayProps) {
+function _TokenAmountDisplay({ currencyInfo, formattedAmount, usdValue }: TokenAmountDisplayProps) {
   if (!currencyInfo || !formattedAmount) {
     return null
   }
@@ -30,3 +31,5 @@ export function TokenAmountDisplay({ currencyInfo, formattedAmount, usdValue }: 
     </Flex>
   )
 }
+
+export const TokenAmountDisplay = memo(_TokenAmountDisplay)

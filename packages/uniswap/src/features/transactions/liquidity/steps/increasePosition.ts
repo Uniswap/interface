@@ -3,7 +3,11 @@ import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/Trading
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { parseErrorMessageTitle } from 'uniswap/src/features/transactions/liquidity/utils'
-import { OnChainTransactionFields, TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
+import {
+  OnChainTransactionFields,
+  OnChainTransactionFieldsBatched,
+  TransactionStepType,
+} from 'uniswap/src/features/transactions/steps/types'
 import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 import { logger } from 'utilities/src/logger/logger'
@@ -20,6 +24,11 @@ export interface IncreasePositionTransactionStepAsync {
   getTxRequest(
     signature: string,
   ): Promise<{ txRequest: ValidatedTransactionRequest | undefined; sqrtRatioX96: string | undefined }>
+}
+
+export interface IncreasePositionTransactionStepBatched extends OnChainTransactionFieldsBatched {
+  type: TransactionStepType.IncreasePositionTransactionBatched
+  sqrtRatioX96: string | undefined
 }
 
 export function createIncreasePositionStep(
@@ -113,5 +122,16 @@ export function createIncreasePositionAsyncStep(
         throw e
       }
     },
+  }
+}
+
+export function createIncreasePositionStepBatched(
+  txRequests: ValidatedTransactionRequest[],
+  sqrtRatioX96: string | undefined,
+): IncreasePositionTransactionStepBatched {
+  return {
+    type: TransactionStepType.IncreasePositionTransactionBatched,
+    batchedTxRequests: txRequests,
+    sqrtRatioX96,
   }
 }

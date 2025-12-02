@@ -6,6 +6,7 @@ import { isExistingTransaction } from 'state/transactions/utils'
 import { useMergeLocalAndRemoteTransactions } from 'uniswap/src/features/activity/hooks/useMergeLocalAndRemoteTransactions'
 import { useOpenLimitOrders as useOpenLimitOrdersREST } from 'uniswap/src/features/activity/hooks/useOpenLimitOrders'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { CancellationGasFeeDetails } from 'uniswap/src/features/gas/hooks'
 import { useCancellationGasFeeInfo } from 'uniswap/src/features/gas/hooks/useCancellationGasFeeInfo'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
@@ -61,13 +62,11 @@ export function usePendingActivity() {
 
   const hasPendingActivity = pendingTransactions.length > 0 || pendingOrdersWithoutLimits.length > 0
   const pendingActivityCount = pendingTransactions.length + pendingOrdersWithoutLimits.length
-  const isOnlyUnichainPendingActivity =
-    hasPendingActivity &&
-    [...pendingTransactions, ...pendingOrdersWithoutLimits].every((tx) =>
-      [UniverseChainId.Unichain, UniverseChainId.UnichainSepolia].includes(tx.chainId),
-    )
+  // Check if any pending transactions are on L1 networks (which need longer delay)
+  const hasL1PendingActivity =
+    hasPendingActivity && [...pendingTransactions, ...pendingOrdersWithoutLimits].some((tx) => !isL2ChainId(tx.chainId))
 
-  return { hasPendingActivity, pendingActivityCount, isOnlyUnichainPendingActivity }
+  return { hasPendingActivity, pendingActivityCount, hasL1PendingActivity }
 }
 
 export function useCancelOrdersGasEstimate(orders?: UniswapXOrderDetails[]): CancellationGasFeeDetails | undefined {

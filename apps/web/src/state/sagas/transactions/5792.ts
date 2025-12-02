@@ -40,7 +40,7 @@ async function sendCalls(params: {
 export function* handleAtomicSendCalls(
   params: Omit<HandleOnChainStepParams, 'step'> & {
     step: OnChainTransactionStepBatched
-    disableOneClickSwap: () => void
+    disableOneClickSwap?: () => void
   },
 ) {
   const { step, info, account, ignoreInterrupt, disableOneClickSwap } = params
@@ -101,7 +101,7 @@ export function* handleAtomicSendCalls(
         yield* put(setCapabilitiesByChain(updatedCapabilities))
       }
       // If the user tries again,
-      disableOneClickSwap()
+      disableOneClickSwap?.()
     }
     throw error
   }

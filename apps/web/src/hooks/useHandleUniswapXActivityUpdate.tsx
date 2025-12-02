@@ -68,6 +68,7 @@ export function useHandleUniswapXActivityUpdate(): (params: HandleUniswapXActivi
           analyticsContext,
           routing: original.routing,
           status: update.status,
+          isFinalStep: 'isFinalStep' in original.typeInfo ? original.typeInfo.isFinalStep : undefined,
         })
       }
     },

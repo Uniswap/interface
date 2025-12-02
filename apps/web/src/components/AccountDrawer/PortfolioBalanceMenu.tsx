@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { ReportedActivityToggle } from 'components/AccountDrawer/ReportedActivityToggle'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { SmallBalanceToggle } from 'components/AccountDrawer/SmallBalanceToggle'
@@ -9,7 +8,6 @@ import { Flex } from 'ui/src'
 
 export default function PortfolioBalanceMenu({ onClose }: { onClose: () => void }) {
   const { t } = useTranslation()
-  const isDataReportingAbilitiesEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
 
   return (
     <SlideOutMenu title={t('settings.setting.balancesActivity.title')} onClose={onClose}>
@@ -17,7 +15,7 @@ export default function PortfolioBalanceMenu({ onClose }: { onClose: () => void 
         <Flex justifyContent="space-between">
           <SmallBalanceToggle />
           <SpamTokensToggle />
-          {isDataReportingAbilitiesEnabled && <ReportedActivityToggle />}
+          <ReportedActivityToggle />
         </Flex>
       </MenuColumn>
     </SlideOutMenu>

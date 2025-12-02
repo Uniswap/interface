@@ -1,8 +1,7 @@
 import Portal from '@reach/portal'
-import { useTheme } from 'lib/styled-components'
 import { PropsWithChildren, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { Flex, Text, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { logger } from 'utilities/src/logger/logger'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -13,7 +12,7 @@ export function SendButtonTooltip({
 }: PropsWithChildren<{ isSolanaOnlyWallet: boolean }>) {
   const { t } = useTranslation()
   const wrapperRef = useRef<HTMLDivElement>(null)
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   const [showTooltip, setShowTooltip] = useState(false)
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0, width: 0 })
@@ -90,7 +89,7 @@ export function SendButtonTooltip({
             pointerEvents="none"
             zIndex="$tooltip"
           >
-            <InfoCircleFilled size={16} color={theme.neutral2} />
+            <InfoCircleFilled size={16} color={colors.neutral2.val} />
             <Text variant="body3">{t('send.unavailableOnSolana.message')}</Text>
           </Flex>
         </Portal>

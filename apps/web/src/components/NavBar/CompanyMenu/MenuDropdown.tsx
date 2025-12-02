@@ -168,7 +168,11 @@ export function MenuDropdown({ close }: { close?: () => void }) {
             alignItems="center"
             $xl={{ flexDirection: 'column', gap: '$spacing16', alignItems: 'flex-start' }}
           >
-            {isConversionTrackingEnabled && <LegalAndPrivacyMenu closeMenu={close} />}
+            {isConversionTrackingEnabled && (
+              <Flex flex={1}>
+                <LegalAndPrivacyMenu closeMenu={close} />
+              </Flex>
+            )}
             <Flex row alignSelf="flex-end" alignItems="center" justifyContent="space-between" $xl={{ width: '100%' }}>
               <Flex display="none" $xl={{ display: 'flex' }}>
                 <HelpModal showOnXL />

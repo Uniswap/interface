@@ -1,9 +1,14 @@
-import { Button, Flex, Text } from 'ui/src'
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Flex, LabeledCheckbox, Text } from 'ui/src'
+import { DialogButtons } from 'uniswap/src/components/dialog/DialogButtons'
+import { DialogContent } from 'uniswap/src/components/dialog/DialogContent'
 import type { DialogProps } from 'uniswap/src/components/dialog/DialogProps'
 import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
+import { BehaviorType, useDialogVisibility } from 'uniswap/src/components/dialog/hooks/useDialogVisibility'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { isExtensionApp } from 'utilities/src/platform'
+import { useHasValueBecomeTruthy } from 'utilities/src/react/useHasValueBecomeTruthy'
 
 export function Dialog({
   isOpen,
@@ -16,23 +21,105 @@ export function Dialog({
   learnMoreTextColor = '$neutral1',
   learnMoreTextVariant = 'body3',
   modalName,
-  primaryButtonText,
-  primaryButtonOnPress,
-  primaryButtonVariant = 'default',
-  primaryButtonEmphasis = 'primary',
+  primaryButton,
+  secondaryButton,
   isPrimaryButtonLoading,
-  secondaryButtonText,
-  secondaryButtonOnPress,
-  secondaryButtonVariant = 'default',
-  secondaryButtonEmphasis = 'secondary',
   buttonContainerProps,
   alignment = isExtensionApp ? 'top' : undefined,
   children,
   footer,
   textAlign = 'center',
   displayHelpCTA = false,
+  getHelpUrl,
   iconBackgroundColor,
+  visibilityId,
+  dialogPreferencesService,
+  skipModalWrapper = false,
 }: DialogProps): JSX.Element {
+  const { t } = useTranslation()
+  const { shouldShow, isLoading, dontShowAgain, setDontShowAgain, resetDontShowAgain } = useDialogVisibility(
+    visibilityId && dialogPreferencesService
+      ? {
+          visibilityId,
+          dialogPreferencesService,
+          isOpen,
+          behaviorType: BehaviorType.DontShowAgain,
+        }
+      : {
+          isOpen,
+        },
+  )
+
+  // Detects when shouldShow transitions from undefined (loading) to false (user preference set to "don't show again")
+  const hasShouldShowBecomeFalse = useHasValueBecomeTruthy(shouldShow === false)
+  const hasDialogOpened = useHasValueBecomeTruthy(isOpen)
+
+  // Call onClose when shouldShow transitions to false OR when dialog opens with shouldShow already false
+  useEffect(() => {
+    if ((hasShouldShowBecomeFalse || (hasDialogOpened && shouldShow === false)) && isOpen) {
+      onClose()
+    }
+  }, [hasShouldShowBecomeFalse, hasDialogOpened, shouldShow, isOpen, onClose])
+
+  // Wait for visibility check if using preferences
+  if (isLoading) {
+    return <></>
+  }
+
+  // Don't render the modal if it shouldn't be shown
+  if (shouldShow === false) {
+    return <></>
+  }
+
+  const dialogContent = (
+    <>
+      {displayHelpCTA && <GetHelpHeader closeModal={onClose} link={getHelpUrl} />}
+      <DialogContent
+        icon={icon}
+        title={title}
+        titleColor={titleColor}
+        subtext={subtext}
+        learnMoreUrl={learnMoreUrl}
+        learnMoreTextColor={learnMoreTextColor}
+        learnMoreTextVariant={learnMoreTextVariant}
+        textAlign={textAlign}
+        iconBackgroundColor={iconBackgroundColor}
+        footer={footer}
+      >
+        {children}
+      </DialogContent>
+      {visibilityId && dialogPreferencesService && (
+        <Flex centered width="100%" pb="$padding8">
+          <LabeledCheckbox
+            checked={dontShowAgain}
+            text={
+              <Text variant="buttonLabel3" color="$neutral2">
+                {t('common.dialog.dontShowAgain')}
+              </Text>
+            }
+            size="$icon.16"
+            gap="$spacing8"
+            onCheckPressed={() => (dontShowAgain ? resetDontShowAgain() : setDontShowAgain())}
+          />
+        </Flex>
+      )}
+      <DialogButtons
+        primaryButton={primaryButton}
+        secondaryButton={secondaryButton}
+        isPrimaryButtonLoading={isPrimaryButtonLoading}
+        buttonContainerProps={buttonContainerProps}
+      />
+    </>
+  )
+
+  if (skipModalWrapper) {
+    return (
+      <Flex pt="$padding16" gap="$gap16">
+        {dialogContent}
+      </Flex>
+    )
+  }
+
   return (
     <Modal
       alignment={alignment}
@@ -41,76 +128,11 @@ export function Dialog({
       pt="$padding16"
       paddingX={isExtensionApp ? '$spacing12' : undefined}
       pb={isExtensionApp ? '$spacing12' : undefined}
-      gap="$gap24"
+      gap="$gap16"
       maxWidth={isExtensionApp ? 310 : undefined}
       onClose={onClose}
     >
-      {displayHelpCTA && <GetHelpHeader closeModal={onClose} />}
-      <Flex flexDirection="column" alignItems={textAlign === 'center' ? 'center' : 'flex-start'} gap="$spacing16">
-        <Flex
-          backgroundColor={iconBackgroundColor ?? '$surface2'}
-          borderRadius="$rounded12"
-          height="$spacing48"
-          width="$spacing48"
-          alignItems="center"
-          justifyContent="center"
-          data-testid="dialog-icon"
-        >
-          {icon}
-        </Flex>
-        <Flex gap="$spacing8" alignItems={textAlign === 'center' ? 'center' : 'flex-start'}>
-          <Text variant="subheading1" color={titleColor ?? '$neutral1'}>
-            {title}
-          </Text>
-          {typeof subtext === 'string' ? (
-            <Text variant="body3" color="$neutral2" textAlign={textAlign}>
-              {subtext}
-            </Text>
-          ) : (
-            subtext
-          )}
-          {learnMoreUrl && (
-            <LearnMoreLink url={learnMoreUrl} textColor={learnMoreTextColor} textVariant={learnMoreTextVariant} />
-          )}
-        </Flex>
-        {children && (
-          <Flex
-            width="100%"
-            borderRadius="$rounded12"
-            backgroundColor="$surface2"
-            borderWidth="$spacing1"
-            borderColor="$surface3"
-            px="$spacing16"
-            py="$spacing12"
-          >
-            {children}
-          </Flex>
-        )}
-        {footer}
-      </Flex>
-      <Flex gap="$spacing8" width="100%" flexDirection="row" {...buttonContainerProps}>
-        {secondaryButtonText && secondaryButtonOnPress && (
-          <Button
-            variant={secondaryButtonVariant}
-            emphasis={secondaryButtonEmphasis}
-            minHeight="$spacing36"
-            onPress={secondaryButtonOnPress}
-          >
-            {secondaryButtonText}
-          </Button>
-        )}
-        {primaryButtonText && primaryButtonOnPress && (
-          <Button
-            variant={primaryButtonVariant}
-            emphasis={primaryButtonEmphasis}
-            minHeight="$spacing36"
-            loading={isPrimaryButtonLoading}
-            onPress={primaryButtonOnPress}
-          >
-            {primaryButtonText}
-          </Button>
-        )}
-      </Flex>
+      {dialogContent}
     </Modal>
   )
 }

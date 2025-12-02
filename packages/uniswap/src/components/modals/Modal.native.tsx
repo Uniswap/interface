@@ -261,7 +261,9 @@ function BottomSheetModalContents({
   )
 
   const bottomSheetViewStyles: StyleProp<ViewStyle> = useMemo(() => {
-    const styles: StyleProp<ViewStyle> = [{ backgroundColor: backgroundColorValue }]
+    const styles: StyleProp<ViewStyle> = [
+      { backgroundColor: renderBehindTopInset ? 'transparent' : backgroundColorValue },
+    ]
 
     const hiddenHandlebarStyle = {
       borderTopLeftRadius: borderRadius,

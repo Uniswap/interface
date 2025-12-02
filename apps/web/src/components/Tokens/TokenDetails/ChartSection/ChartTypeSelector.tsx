@@ -1,11 +1,10 @@
 import { CHART_TYPE_LABELS, ChartType, PriceChartType } from 'components/Charts/utils'
 import { Dropdown, InternalMenuItem } from 'components/Dropdowns/Dropdown'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { Check, Info } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { TextProps } from 'ui/src'
+import { TextProps, useSporeColors } from 'ui/src'
 import { isMobileWeb } from 'utilities/src/platform'
 
 const StyledDropdownButton = {
@@ -45,7 +44,7 @@ export function ChartTypeDropdown<T extends ChartType | PriceChartType>({
   onSelectOption: (option: T) => void
   tooltipText?: string
 }) {
-  const theme = useTheme()
+  const colors = useSporeColors()
   const [isMenuOpen, toggleMenu] = useState(false)
 
   return (
@@ -80,7 +79,7 @@ export function ChartTypeDropdown<T extends ChartType | PriceChartType>({
               disabled={disabled}
             >
               {display ?? CHART_TYPE_LABELS[chartType]}
-              {chartType === currentChartType && <Check size={20} color={theme.accent1} />}
+              {chartType === currentChartType && <Check size={20} color={colors.accent1.val} />}
               {disabled && <Info size={20} color="$neutral2" />}
             </InternalMenuItem>
           </MouseoverTooltip>

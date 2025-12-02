@@ -1,10 +1,10 @@
-import { useTheme } from 'lib/styled-components'
 import { ComponentProps } from 'react'
+import { useIsDarkMode } from 'ui/src'
 
 // NOTE: until this view is simplified / optimized, it must stay out of the initial bundle!
 export const WalletOneLinkQR = (props: ComponentProps<'svg'>) => {
-  const theme = useTheme()
-  const bg = theme.darkMode ? 'black' : 'white'
+  const isDarkMode = useIsDarkMode()
+  const bg = isDarkMode ? 'black' : 'white'
 
   return (
     <svg width="300" height="300" viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>

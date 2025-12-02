@@ -179,7 +179,9 @@ export function TransactionDetails({
         )}
       </Flex>
       {showWarning && warning && onShowWarning && (
-        <TransactionWarning warning={warning} onShowWarning={onShowWarning} />
+        <Flex mt="$spacing16">
+          <TransactionWarning warning={warning} onShowWarning={onShowWarning} />
+        </Flex>
       )}
       {!isWebApp && isSwap && (
         <TransactionSettingsModal

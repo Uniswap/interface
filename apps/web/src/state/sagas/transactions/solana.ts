@@ -76,7 +76,7 @@ function* refetchBalancesWithDelay({
 }
 
 function* updateAppState({ hash, trade, from }: { hash: string; trade: SolanaTrade; from: string }) {
-  const typeInfo = getSwapTransactionInfo(trade)
+  const typeInfo = getSwapTransactionInfo({ trade })
 
   const transaction: SolanaTransactionDetails<InterfaceBaseTransactionDetails> = {
     from,

@@ -1,7 +1,6 @@
-/* eslint-disable complexity */
 import { useQuery } from '@tanstack/react-query'
 import { UnitagErrorCodes } from '@universe/api'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller'
 import { useDispatch } from 'react-redux'
@@ -53,26 +52,16 @@ export function ChangeUnitagModal({
 
   const [newUnitag, setNewUnitag] = useState(unitag)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
-  const [isCheckingUnitag, setIsCheckingUnitag] = useState(false)
   const [isChangeResponseLoading, setIsChangeResponseLoading] = useState(false)
-  const [unitagToCheck, setUnitagToCheck] = useState(unitag)
 
-  const { error: canClaimUnitagNameError, loading: loadingUnitagErrorCheck } = useCanClaimUnitagName(unitagToCheck)
+  const { error: canClaimUnitagNameError, loading: canClaimUnitagLoading } = useCanClaimUnitagName(newUnitag)
   const { errorCode } = useCanAddressClaimUnitag(address, true)
   const resetUnitagsQueries = useResetUnitagsQueries()
 
   const isUnitagEdited = unitag !== newUnitag
-  const isUnitagInvalid = newUnitag === unitagToCheck && !!canClaimUnitagNameError && !loadingUnitagErrorCheck
-  const isUnitagValid = isUnitagEdited && !canClaimUnitagNameError && !loadingUnitagErrorCheck && !!newUnitag
+  const isUnitagValid = !!newUnitag && isUnitagEdited && !canClaimUnitagNameError && !canClaimUnitagLoading
   const hasReachedAddressLimit = errorCode === UnitagErrorCodes.AddressLimitReached
-  const isSubmitButtonDisabled =
-    isCheckingUnitag ||
-    isChangeResponseLoading ||
-    !deviceId ||
-    hasReachedAddressLimit ||
-    !isUnitagEdited ||
-    !newUnitag ||
-    isUnitagInvalid
+  const isSubmitButtonDisabled = !deviceId || hasReachedAddressLimit || !isUnitagValid
 
   const onFinishEditing = (): void => {
     dismissNativeKeyboard()
@@ -83,11 +72,7 @@ export function ChangeUnitagModal({
   }
 
   const onPressSaveChanges = (): void => {
-    if (newUnitag !== unitagToCheck) {
-      // Unitag needs to be checked for errors and availability
-      setIsCheckingUnitag(true)
-      setUnitagToCheck(newUnitag)
-    } else if (isUnitagValid) {
+    if (isUnitagValid) {
       // If unitag is unchanged and is available, continue to speedbump
       onFinishEditing()
       setShowConfirmModal(true)
@@ -109,7 +94,7 @@ export function ChangeUnitagModal({
       // Change unitag backend call
       const changeResponse = await UnitagsApiClient.changeUnitag({
         data: {
-          username: unitagToCheck,
+          username: newUnitag,
           deviceId,
         },
         address: account.address,
@@ -156,19 +141,6 @@ export function ChangeUnitagModal({
       setIsChangeResponseLoading(false)
     }
   }
-
-  // When useUnitagError completes loading, if unitag is valid then continue to speedbump
-  // biome-ignore lint/correctness/useExhaustiveDependencies: +onFinishEditing
-  useEffect(() => {
-    if (isCheckingUnitag && !!unitagToCheck && !loadingUnitagErrorCheck) {
-      setIsCheckingUnitag(false)
-      // If unitagError is defined, it's rendered in UI. If no error, continue to speedbump
-      if (unitagToCheck === newUnitag && isUnitagValid) {
-        onFinishEditing()
-        setShowConfirmModal(true)
-      }
-    }
-  }, [isCheckingUnitag, isUnitagValid, loadingUnitagErrorCheck, newUnitag, unitagToCheck])
 
   // Position correctly modal and confirm button, depending on platform
   const modalKeyboardOffset = keyboardHeight + (isAndroid ? spacing.spacing20 : -spacing.spacing20)
@@ -262,7 +234,7 @@ export function ChangeUnitagModal({
                 </Flex>
               )}
               <Flex centered row gap="$spacing8" minHeight={fonts.body3.lineHeight}>
-                {isUnitagEdited && unitagToCheck === newUnitag && canClaimUnitagNameError && (
+                {isUnitagEdited && canClaimUnitagNameError && (
                   <Text color="$statusCritical" textAlign="center" variant="body3">
                     {canClaimUnitagNameError}
                   </Text>
@@ -271,7 +243,7 @@ export function ChangeUnitagModal({
             </Flex>
             <ChangeUnitagConfirmButton
               isSubmitButtonDisabled={isSubmitButtonDisabled}
-              isCheckingUnitag={isCheckingUnitag}
+              isCheckingUnitag={canClaimUnitagLoading}
               isChangeResponseLoading={isChangeResponseLoading}
               onPressSaveChanges={onPressSaveChanges}
             />

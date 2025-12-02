@@ -1,6 +1,6 @@
 import { ActionTileWithIconAnimation } from 'components/ActionTiles/ActionTileWithIconAnimation'
 import { useTranslation } from 'react-i18next'
-import { CreditCard } from 'ui/src/components/icons/CreditCard'
+import { Bank } from 'ui/src/components/icons/Bank'
 import { FlexProps } from 'ui/src/components/layout/Flex'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -17,7 +17,7 @@ export function BuyActionTile({ padding = '$spacing12' }: { padding?: FlexProps[
   return (
     <ActionTileWithIconAnimation
       dataTestId={TestID.PortfolioActionTileBuy}
-      Icon={CreditCard}
+      Icon={Bank}
       name={t('common.button.buy')}
       onClick={onPressBuy}
       padding={padding}

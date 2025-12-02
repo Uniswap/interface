@@ -13,10 +13,13 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { LpIncentivesAprDisplay } from 'components/LpIncentives/LpIncentivesAprDisplay'
 import { DetailBubble } from 'components/Pools/PoolDetails/shared'
+import { POPUP_MEDIUM_DISMISS_MS } from 'components/Popups/constants'
+import { popupRegistry } from 'components/Popups/registry'
+import { PopupType } from 'components/Popups/types'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
-import { ActionButtonStyle } from 'components/Tokens/TokenDetails/shared'
+import { ActionButtonStyle, DropdownAction } from 'components/Tokens/TokenDetails/shared'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import styled, { useTheme } from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
@@ -24,13 +27,27 @@ import { Link } from 'react-router'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
-import { Flex, Shine, Text, TouchableArea, styled as tamaguiStyled, useIsTouchDevice, useMedia } from 'ui/src'
+import {
+  Flex,
+  Shine,
+  Text,
+  TouchableArea,
+  styled as tamaguiStyled,
+  useIsTouchDevice,
+  useMedia,
+  useSporeColors,
+} from 'ui/src'
 import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
+import { ChartBarCrossed } from 'ui/src/components/icons/ChartBarCrossed'
+import { Ellipsis } from 'ui/src/components/icons/Ellipsis'
+import { ReportPoolDataModal } from 'uniswap/src/components/reporting/ReportPoolDataModal'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
+import { useEvent } from 'utilities/src/react/hooks'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { getChainUrlParam } from 'utils/chainParams'
 
 const StyledExternalLink = styled(ExternalLink)`
@@ -157,7 +174,7 @@ const ContractsDropdownRow = ({
   chainId?: number
   tokens: (GraphQLApi.Token | undefined)[]
 }) => {
-  const theme = useTheme()
+  const colors = useSporeColors()
   const currency = tokens[0] && gqlToCurrency(tokens[0])
   const isPool = tokens.length === 2
   const currencies = isPool && tokens[1] ? [currency, gqlToCurrency(tokens[1])] : [currency]
@@ -192,7 +209,7 @@ const ContractsDropdownRow = ({
           </ThemedText.BodyPrimary>
           <ThemedText.BodySecondary>{shortenAddress({ address })}</ThemedText.BodySecondary>
         </Row>
-        <ExternalLinkIcon size="16px" stroke={theme.neutral2} />
+        <ExternalLinkIcon size="16px" stroke={colors.neutral2.val} />
       </ContractsDropdownRowContainer>
     </StyledExternalLink>
   )
@@ -206,7 +223,7 @@ const PoolDetailsHeaderActions = ({
   token1,
   protocolVersion,
 }: {
-  chainId?: number
+  chainId?: UniverseChainId
   poolAddress?: string
   poolName: string
   token0?: GraphQLApi.Token
@@ -214,20 +231,43 @@ const PoolDetailsHeaderActions = ({
   protocolVersion?: GraphQLApi.ProtocolVersion
 }) => {
   const { t } = useTranslation()
-  const theme = useTheme()
+  const colors = useSporeColors()
   const isTouchDevice = useIsTouchDevice()
   const [contractsModalIsOpen, toggleContractsModal] = useState(false)
+  const [moreDropdownOpen, toggleMoreDropdown] = useState(false)
+
+  const currency0 = token0 && gqlToCurrency(token0)
+  const currency1 = token1 && gqlToCurrency(token1)
+
+  const {
+    value: reportDataIssueModalIsOpen,
+    setTrue: openReportDataIssueModal,
+    setFalse: closeReportDataIssueModal,
+  } = useBooleanState(false)
+
+  const onReportDataSuccess = useEvent(() => {
+    popupRegistry.addPopup(
+      { type: PopupType.Success, message: t('common.reported') },
+      'report-data-success',
+      POPUP_MEDIUM_DISMISS_MS,
+    )
+  })
+
+  const hasReportData = useMemo(
+    () => Boolean(poolAddress && chainId && currency0 && currency1 && protocolVersion),
+    [poolAddress, chainId, currency0, currency1, protocolVersion],
+  )
 
   return (
-    <Row width="max-content" justify="flex-end" gap="sm">
+    <Flex row width="max-content" alignItems="flex-end" gap="sm">
       <Dropdown
         isOpen={contractsModalIsOpen}
         toggleOpen={toggleContractsModal}
         menuLabel={
           chainId === UniverseChainId.Mainnet ? (
-            <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
+            <EtherscanLogo width="18px" height="18px" fill={colors.neutral1.val} />
           ) : (
-            <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />
+            <ExplorerIcon width="18px" height="18px" fill={colors.neutral1.val} />
           )
         }
         tooltipText={isTouchDevice ? undefined : t('pool.explorers')}
@@ -245,7 +285,40 @@ const PoolDetailsHeaderActions = ({
         </>
       </Dropdown>
       <ShareButton name={poolName} utmSource="share-pool" />
-    </Row>
+      {hasReportData && (
+        <Dropdown
+          isOpen={moreDropdownOpen}
+          toggleOpen={toggleMoreDropdown}
+          menuLabel={<Ellipsis size="$icon.18" color="$neutral1" />}
+          hideChevron
+          buttonStyle={ActionButtonStyle}
+          dropdownStyle={{ minWidth: 235 }}
+          alignRight
+        >
+          <DropdownAction onClick={openReportDataIssueModal}>
+            <ChartBarCrossed size="$icon.16" color="$neutral1" />
+            <Text variant="buttonLabel3" color="$neutral1">
+              {t('reporting.token.data.title')}
+            </Text>
+          </DropdownAction>
+        </Dropdown>
+      )}
+      {/* typescript wants these to be explicit even though hasReportData should be equivalent */}
+      {poolAddress && chainId && currency0 && currency1 && protocolVersion && (
+        <ReportPoolDataModal
+          poolInfo={{
+            poolId: poolAddress,
+            chainId,
+            version: protocolVersion,
+            token0: currency0,
+            token1: currency1,
+          }}
+          onReportSuccess={onReportDataSuccess}
+          isOpen={reportDataIssueModalIsOpen}
+          onClose={closeReportDataIssueModal}
+        />
+      )}
+    </Flex>
   )
 }
 

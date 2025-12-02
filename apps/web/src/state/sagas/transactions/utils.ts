@@ -63,7 +63,6 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getInterfaceTransaction, isInterfaceTransaction } from 'uniswap/src/features/transactions/types/utils'
-import { AccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -191,12 +190,18 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
     const { hash, data, nonce } = yield* call(submitTransaction, params)
     transaction = createTransaction(hash)
 
+    // Add transaction to local state to start polling for status
+    yield* put(addTransaction(transaction))
+
     if (step.txRequest.data !== data && onModification) {
       yield* call(onModification, { hash, data, nonce })
     }
   } else {
     const hash = yield* call(submitTransactionAsync, params)
     transaction = createTransaction(hash)
+
+    // Add transaction to local state to start polling for status
+    yield* put(addTransaction(transaction))
 
     if (onModification) {
       yield* spawn(handleOnModificationAsync, { onModification, hash, step })
@@ -205,9 +210,6 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
 
   // Trigger waiting UI after user accepts
   setCurrentStep({ step, accepted: true })
-
-  // Add transaction to local state to start polling for status
-  yield* put(addTransaction(transaction))
 
   // If the transaction flow was interrupted while awaiting input, throw an error after input is received
   yield* call(throwIfInterrupted)
@@ -415,7 +417,7 @@ function* findDuplicativeTx({
   allowDuplicativeTx,
 }: {
   info: TransactionInfo
-  account: AccountDetails
+  account: { address: Address }
   chainId: number
   allowDuplicativeTx?: boolean
 }) {
@@ -427,11 +429,7 @@ function* findDuplicativeTx({
     throw new Error(`Invalid chainId: ${chainId} is not a valid UniverseChainId`)
   }
 
-  const transactionMap = yield* select(
-    // TODO(INFRA-645): DO NOT REMOVE THIS OPTIONAL CHAINING OPERATOR UNTIL THE TYPE IS FIXED.
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    (state: InterfaceState) => state.transactions[account.address]?.[chainId] ?? {},
-  )
+  const transactionMap = yield* select((state: InterfaceState) => state.transactions[account.address]?.[chainId] ?? {})
 
   const transactionsForAccount = Object.values(transactionMap)
     .filter((tx) =>
@@ -511,18 +509,31 @@ export async function getSigner(account: string): Promise<JsonRpcSigner> {
 }
 
 type SwapInfo = ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
-export function getSwapTransactionInfo(
-  trade: ClassicTrade | BridgeTrade | SolanaTrade | ChainedActionTrade,
-): SwapInfo | BridgeTransactionInfo
-export function getSwapTransactionInfo(trade: UniswapXTrade): SwapInfo & { isUniswapXOrder: true }
-export function getSwapTransactionInfo(
-  trade: ClassicTrade | BridgeTrade | UniswapXTrade | SolanaTrade | ChainedActionTrade,
-): SwapInfo | BridgeTransactionInfo {
+export function getSwapTransactionInfo(params: {
+  trade: ClassicTrade | BridgeTrade | SolanaTrade | ChainedActionTrade
+  isFinalStep?: boolean
+}): SwapInfo | BridgeTransactionInfo
+export function getSwapTransactionInfo(params: {
+  trade: UniswapXTrade
+  isFinalStep?: boolean
+}): SwapInfo & { isUniswapXOrder: true }
+export function getSwapTransactionInfo({
+  trade,
+  isFinalStep,
+}: {
+  trade: ClassicTrade | BridgeTrade | UniswapXTrade | SolanaTrade | ChainedActionTrade
+  isFinalStep?: boolean
+}): SwapInfo | BridgeTransactionInfo {
+  const commonAttributes = {
+    inputCurrencyId: currencyId(trade.inputAmount.currency),
+    outputCurrencyId: currencyId(trade.outputAmount.currency),
+    isFinalStep: isFinalStep ?? true, // If no `isFinalStep` is provided, we assume it's not a multi-step transaction and default to `true`
+  }
+
   if (trade.routing === TradingApi.Routing.BRIDGE) {
     return {
       type: TransactionType.Bridge,
-      inputCurrencyId: currencyId(trade.inputAmount.currency),
-      outputCurrencyId: currencyId(trade.outputAmount.currency),
+      ...commonAttributes,
       inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
       outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
       quoteId: trade.quote.requestId,
@@ -532,8 +543,7 @@ export function getSwapTransactionInfo(
 
   return {
     type: TransactionType.Swap,
-    inputCurrencyId: currencyId(trade.inputAmount.currency),
-    outputCurrencyId: currencyId(trade.outputAmount.currency),
+    ...commonAttributes,
     isUniswapXOrder: isUniswapX(trade),
     ...(trade.tradeType === TradeType.EXACT_INPUT
       ? {

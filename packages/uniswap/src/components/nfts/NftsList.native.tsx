@@ -44,6 +44,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     refreshing,
     onRefresh,
     skip,
+    filteredNumHidden,
     ...rest
   },
   ref,
@@ -53,7 +54,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
 
   const {
     nfts,
-    numHidden,
+    numHidden: internalNumHidden,
     numShown,
     onListEndReached,
     refetch,
@@ -62,6 +63,9 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     setHiddenNftsExpanded,
     isErrorState,
   } = useNftListRenderData({ owner, skip })
+
+  // Use filtered count if provided, otherwise use internal count
+  const numHidden = filteredNumHidden ?? internalNumHidden
 
   const shouldAddInLoadingItem = networkStatus === NetworkStatus.fetchMore && numShown % 2 === 1
 
@@ -72,12 +76,13 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     setHiddenNftsExpanded(!hiddenNftsExpanded)
   }, [hiddenNftsExpanded, footerHeight, setHiddenNftsExpanded, fullHeight])
 
+  // Track NFTs loaded only when initial data loads, not when filtering changes
   useEffect(() => {
     sendAnalyticsEvent(WalletEventName.NFTsLoaded, {
       shown: numShown,
-      hidden: numHidden,
+      hidden: internalNumHidden,
     })
-  }, [numHidden, numShown])
+  }, [numShown, internalNumHidden])
 
   useEffect(() => {
     if (numHidden === 0 && hiddenNftsExpanded) {

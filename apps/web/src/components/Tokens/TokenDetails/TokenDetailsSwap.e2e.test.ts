@@ -18,6 +18,10 @@ test.describe('TokenDetailsSwap', () => {
     await page.setViewportSize({ width: 1200, height: 800 })
 
     await page.goto(`/explore/tokens/ethereum/${UNI_MAINNET.address}`)
+
+    // Wait for swap components to be rendered and ready
+    await page.getByTestId(INPUT_TOKEN_LABEL).waitFor({ state: 'visible' })
+    await page.getByTestId(OUTPUT_TOKEN_LABEL).waitFor({ state: 'visible' })
   })
 
   test('should have the expected output for a tokens detail page', async ({ page }) => {
@@ -57,24 +61,18 @@ test.describe('TokenDetailsSwap', () => {
   })
 
   test.describe('swap input', () => {
-    test.beforeEach(async ({ page }) => {
+    test('should handle amount into input', async ({ page }) => {
       await page.getByTestId(INPUT_TOKEN_LABEL).click()
       await page.getByTestId('token-option-1-USDT').first().click()
-    })
 
-    test('can enter an amount into input', async ({ page }) => {
       await page.getByTestId(TestID.AmountInputIn).clear()
       await page.getByTestId(TestID.AmountInputIn).fill('0.001')
       await expect(page.getByTestId(TestID.AmountInputIn)).toHaveValue('0.001')
-    })
 
-    test('zero swap amount', async ({ page }) => {
       await page.getByTestId(TestID.AmountInputIn).clear()
       await page.getByTestId(TestID.AmountInputIn).fill('0.0')
       await expect(page.getByTestId(TestID.AmountInputIn)).toHaveValue('0.0')
-    })
 
-    test('invalid swap amount', async ({ page }) => {
       await page.getByTestId(TestID.AmountInputIn).clear()
       await page.getByTestId(TestID.AmountInputIn).fill('\\')
       await expect(page.getByTestId(TestID.AmountInputIn)).toHaveValue('')
@@ -82,13 +80,11 @@ test.describe('TokenDetailsSwap', () => {
   })
 
   test.describe('swap output', () => {
-    test('can enter an amount into output', async ({ page }) => {
+    test('should handle amount into input', async ({ page }) => {
       await page.getByTestId(TestID.AmountInputOut).clear()
       await page.getByTestId(TestID.AmountInputOut).fill('0.001')
       await expect(page.getByTestId(TestID.AmountInputOut)).toHaveValue('0.001')
-    })
 
-    test('zero output amount', async ({ page }) => {
       await page.getByTestId(TestID.AmountInputOut).clear()
       await page.getByTestId(TestID.AmountInputOut).fill('0.0')
       await expect(page.getByTestId(TestID.AmountInputOut)).toHaveValue('0.0')

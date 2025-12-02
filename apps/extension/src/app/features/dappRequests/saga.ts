@@ -59,7 +59,7 @@ import { extractBaseUrl } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { getCallsStatusHelper } from 'wallet/src/features/batchedTransactions/eip5792Utils'
 import { addBatchedTransaction } from 'wallet/src/features/batchedTransactions/slice'
-import { generateBatchId, getCapabilitiesCore } from 'wallet/src/features/batchedTransactions/utils'
+import { generateBatchId, getCapabilitiesResponse } from 'wallet/src/features/batchedTransactions/utils'
 import { Call } from 'wallet/src/features/dappRequests/types'
 import {
   ExecuteTransactionParams,
@@ -530,7 +530,7 @@ export function* handleGetCapabilities(request: GetCapabilitiesRequest, senderTa
   const hasSmartWalletConsent = yield* select(selectHasSmartWalletConsent, request.address)
   const chainIds = request.chainIds?.map(hexadecimalStringToInt) ?? enabledChains.map((chain) => chain.valueOf())
 
-  const response = yield* call(getCapabilitiesCore, {
+  const response = yield* call(getCapabilitiesResponse, {
     request,
     chainIds,
     hasSmartWalletConsent,

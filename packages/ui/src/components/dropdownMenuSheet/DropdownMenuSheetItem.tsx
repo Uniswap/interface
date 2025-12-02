@@ -6,7 +6,8 @@ import { CheckCircleFilled, ExternalLink } from 'ui/src/components/icons'
 import { Flex, type FlexProps } from 'ui/src/components/layout'
 import { Text, type TextProps } from 'ui/src/components/text'
 import { TouchableArea } from 'ui/src/components/touchable'
-import { isMobileApp } from 'utilities/src/platform'
+import { spacing } from 'ui/src/theme'
+import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 
 export type DropdownMenuSheetItemProps = {
@@ -92,7 +93,9 @@ export const DropdownMenuSheetItem = ({
       <Flex shrink flexDirection={flexDirection} alignItems="center">
         {icon && <Flex flexShrink={0}>{icon}</Flex>}
         {icon && <Spacer size="$spacing8" />}
-        <Flex>
+        {/* Allow text to ellipsize and not overflow the container, because of the padding */}
+        {/* on the parent container. */}
+        <Flex width={isWebPlatform ? `calc(100% - ${spacing.spacing12}px)` : '90%'}>
           <Text
             flexShrink={1}
             numberOfLines={1}

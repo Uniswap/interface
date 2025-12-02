@@ -81,6 +81,8 @@ export function fromGraphQLChain(chain: GraphQLApi.Chain | string | undefined): 
       return UniverseChainId.Blast
     case GraphQLApi.Chain.Celo:
       return UniverseChainId.Celo
+    case GraphQLApi.Chain.Monad:
+      return UniverseChainId.Monad
     case GraphQLApi.Chain.MonadTestnet:
       return UniverseChainId.MonadTestnet
     case GraphQLApi.Chain.Optimism:
@@ -130,6 +132,8 @@ export function fromUniswapWebAppLink(network: string | null): UniverseChainId {
       return UniverseChainId.Celo
     case GraphQLApi.Chain.MonadTestnet.toLowerCase():
       return UniverseChainId.MonadTestnet
+    case GraphQLApi.Chain.Monad.toLowerCase():
+      return UniverseChainId.Monad
     case GraphQLApi.Chain.Optimism.toLowerCase():
       return UniverseChainId.Optimism
     case GraphQLApi.Chain.Polygon.toLowerCase():
@@ -169,6 +173,8 @@ export function toUniswapWebAppLink(chainId: UniverseChainId): string | null {
       return GraphQLApi.Chain.Bnb.toLowerCase()
     case UniverseChainId.Celo:
       return GraphQLApi.Chain.Celo.toLowerCase()
+    case UniverseChainId.Monad:
+      return GraphQLApi.Chain.Monad.toLowerCase()
     case UniverseChainId.MonadTestnet:
       return GraphQLApi.Chain.MonadTestnet.toLowerCase()
     case UniverseChainId.Optimism:

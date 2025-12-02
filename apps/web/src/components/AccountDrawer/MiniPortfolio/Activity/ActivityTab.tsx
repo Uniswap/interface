@@ -21,11 +21,6 @@ export default function ActivityTab({
       evmOwner,
       svmOwner,
       ownerAddresses: [evmOwner, svmOwner].filter(Boolean) as string[],
-      swapCallbacks: {
-        useLatestSwapTransaction: () => undefined,
-        useSwapFormTransactionState: () => undefined,
-        onRetryGenerator: () => () => {},
-      },
       fiatOnRampParams: undefined,
       skip: false,
     })

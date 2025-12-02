@@ -20,10 +20,7 @@ export function SmartWalletCreatedModal({ isOpen, onClose }: SmartWalletCreatedM
       iconBackgroundColor="$accent2"
       title={t('smartWallets.createdModal.title')}
       subtext={t('smartWallets.createdModal.description')}
-      primaryButtonText={t('common.done')}
-      primaryButtonVariant="default"
-      primaryButtonEmphasis="secondary"
-      primaryButtonOnClick={onClose}
+      primaryButton={{ text: t('common.done'), onClick: onClose, variant: 'default', emphasis: 'secondary' }}
       learnMoreUrl={uniswapUrls.helpArticleUrls.smartWalletDelegation}
       modalName={ModalName.SmartWalletCreatedModal}
       onClose={onClose}

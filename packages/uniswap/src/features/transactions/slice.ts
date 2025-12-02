@@ -23,9 +23,7 @@ import {
 } from 'uniswap/src/features/transactions/types/utils'
 import { assert } from 'utilities/src/errors'
 
-export interface TransactionsState {
-  [address: Address]: ChainIdToTxIdToDetails
-}
+export type TransactionsState = Partial<Record<Address, ChainIdToTxIdToDetails>>
 
 export const initialTransactionsState: TransactionsState = {}
 
@@ -81,7 +79,6 @@ const slice = createSlice({
     ) => {
       const { chainId, id, from } = transaction
       assert(!state[from]?.[chainId]?.[id], `addTransaction: Attempted to overwrite tx with id ${id}`)
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       state[from] ??= {}
       state[from]![chainId] ??= {}
       state[from]![chainId]![id] = transaction
@@ -191,7 +188,6 @@ const slice = createSlice({
         `only FOR transactions can be upserted`,
       )
 
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       state[from] ??= {}
       state[from]![chainId] ??= {}
       state[from]![chainId]![id] = {

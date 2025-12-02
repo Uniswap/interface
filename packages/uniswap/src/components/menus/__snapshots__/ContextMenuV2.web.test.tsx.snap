@@ -228,6 +228,7 @@ exports[`ContextMenu renders without error 1`] = `
                   style={
                     {
                       "flexDirection": "column",
+                      "width": "90%",
                     }
                   }
                 >
@@ -341,6 +342,7 @@ exports[`ContextMenu renders without error 1`] = `
                   style={
                     {
                       "flexDirection": "column",
+                      "width": "90%",
                     }
                   }
                 >

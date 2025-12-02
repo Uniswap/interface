@@ -4,10 +4,9 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
 import { Pool } from 'components/Icons/Pool'
 import { ExtensionRequestMethods, useUniswapExtensionRequest } from 'components/WalletModal/useWagmiConnectorWithId'
-import { useTheme } from 'lib/styled-components'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Image } from 'ui/src'
+import { Button, Flex, Image, useSporeColors } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { ArrowRightToLine } from 'ui/src/components/icons/ArrowRightToLine'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -16,12 +15,12 @@ import { iconSizes } from 'ui/src/theme/iconSizes'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 
 const UnreadIndicator = () => {
-  const theme = useTheme()
+  const colors = useSporeColors()
 
   return (
     <Flex position="absolute" left="60%">
       <svg width="8" height="8" viewBox="0 0 8 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="4" cy="4" r="4" fill={theme.accent1} stroke={theme.surface1} strokeWidth="2px" />
+        <circle cx="4" cy="4" r="4" fill={colors.accent1.val} stroke={colors.surface1.val} strokeWidth="2px" />
       </svg>
     </Flex>
   )
@@ -45,7 +44,7 @@ const DeepLinkButton = ({ Icon, Label, onPress }: { Icon: JSX.Element; Label: st
 
 export function ExtensionDeeplinks({ account }: { account: string }) {
   const { t } = useTranslation()
-  const theme = useTheme()
+  const colors = useSporeColors()
   const uniswapExtensionRequest = useUniswapExtensionRequest()
   const accountDrawer = useAccountDrawer()
   const setMenu = useSetMenu()
@@ -94,7 +93,7 @@ export function ExtensionDeeplinks({ account }: { account: string }) {
       />
       {data && data.positions.length > 0 && (
         <DeepLinkButton
-          Icon={<Pool width="20px" height="20px" fill={theme.neutral1} />}
+          Icon={<Pool width="20px" height="20px" fill={colors.neutral1.val} />}
           Label={t('common.pools')}
           onPress={() => setMenu({ variant: MenuStateVariant.POOLS })}
         />

@@ -23,7 +23,6 @@ import {
   handleSignatureStep,
 } from 'state/sagas/transactions/utils'
 import { VitalTxFields } from 'state/transactions/types'
-import invariant from 'tiny-invariant'
 import { call, SagaGenerator } from 'typed-redux-saga'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -49,16 +48,12 @@ import { getFlashblocksExperimentStatus } from 'uniswap/src/features/transaction
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 import { planSaga } from 'uniswap/src/features/transactions/swap/plan/planSaga'
 import { handleSwitchChains } from 'uniswap/src/features/transactions/swap/plan/utils'
-import {
-  SwapTransactionStep,
-  SwapTransactionStepAsync,
-  SwapTransactionStepBatched,
-} from 'uniswap/src/features/transactions/swap/steps/swap'
+import { getSwapTxRequest, SwapTransactionStepBatched } from 'uniswap/src/features/transactions/swap/steps/swap'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import {
-  SetCurrentStepFn,
   SwapCallback,
   SwapCallbackParams,
+  SwapExecutionCallbacks,
 } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { PermitMethod, ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { BridgeTrade, ChainedActionTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -83,7 +78,10 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 function* handleSwapTransactionStep(params: HandleSwapStepParams): SagaGenerator<string> {
   const { trade, step, signature, analytics, onTransactionHash } = params
 
-  const info = getSwapTransactionInfo(trade)
+  const info = getSwapTransactionInfo({
+    trade,
+    isFinalStep: 'is_final_step' in analytics ? analytics.is_final_step : undefined,
+  })
   const txRequest = yield* call(getSwapTxRequest, step, signature)
 
   const onModification = ({ hash, data }: VitalTxFields) => {
@@ -146,7 +144,7 @@ interface HandleSwapBatchedStepParams extends Omit<HandleOnChainStepParams, 'ste
 function* handleSwapTransactionBatchedStep(params: HandleSwapBatchedStepParams) {
   const { trade, step, disableOneClickSwap } = params
 
-  const info = getSwapTransactionInfo(trade)
+  const info = getSwapTransactionInfo({ trade })
 
   const batchId = yield* handleAtomicSendCalls({
     ...params,
@@ -187,38 +185,21 @@ function handleSwapTransactionAnalytics(params: {
       isBatched: Boolean(batchId),
       includedPermitTransactionStep: analytics.included_permit_transaction_step,
       batchId,
+      planId: analytics.plan_id,
+      stepIndex: analytics.step_index,
     }),
   )
 }
 
-function* getSwapTxRequest(step: SwapTransactionStep | SwapTransactionStepAsync, signature: string | undefined) {
-  if (step.type === TransactionStepType.SwapTransaction) {
-    return step.txRequest
-  }
-
-  if (!signature) {
-    throw new UnexpectedTransactionStateError('Signature required for async swap transaction step')
-  }
-
-  const txRequest = yield* call(step.getTxRequest, signature)
-  invariant(txRequest !== undefined)
-
-  return txRequest
-}
-
-type SwapParams = {
+type SwapParams = SwapExecutionCallbacks & {
   selectChain: (chainId: number) => Promise<boolean>
   startChainId?: number
   account: SignerMnemonicAccountDetails
   analytics: ExtractedBaseTradeAnalyticsProperties
   swapTxContext: ValidatedSwapTxContext
-  setCurrentStep: SetCurrentStepFn
-  setSteps: (steps: TransactionStep[]) => void
   getOnPressRetry: (error: Error | undefined) => (() => void) | undefined
   // TODO(WEB-7763): Upgrade jotai to v2 to avoid need for prop drilling `disableOneClickSwap`
   disableOneClickSwap: () => void
-  onSuccess: () => void
-  onFailure: (error?: Error, onPressRetry?: () => void) => void
   onTransactionHash?: (hash: string) => void
   v4Enabled: boolean
 }
@@ -359,6 +340,7 @@ export function useSwapCallback(): SwapCallback {
         isFiatInputMode,
         setCurrentStep,
         setSteps,
+        onPending,
       } = args
       const { trade, gasFee } = swapTxContext
 
@@ -398,6 +380,7 @@ export function useSwapCallback(): SwapCallback {
         selectChain,
         startChainId,
         v4Enabled: v4SwapEnabled,
+        onPending,
         onTransactionHash: (hash: string): void => {
           updateSwapForm({ txHash: hash, txHashReceivedTime: Date.now() })
         },

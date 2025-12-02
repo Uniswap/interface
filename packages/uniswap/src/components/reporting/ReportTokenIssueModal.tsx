@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Flag } from 'ui/src/components/icons/Flag'
 import { BaseModalProps } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
-import { ReportOption, ReportTokenModal } from 'uniswap/src/components/reporting/ReportModal'
+import { ReportModal, ReportOption } from 'uniswap/src/components/reporting/ReportModal'
 import { DataServiceApiClient } from 'uniswap/src/data/apiClients/dataApi/DataApiClient'
 import { normalizeCurrencyIdForMapLookup } from 'uniswap/src/data/cache'
 import { pushNotification } from 'uniswap/src/features/notifications/slice/slice'
@@ -117,9 +117,9 @@ export function ReportTokenIssueModal({
   )
 
   return (
-    <ReportTokenModal
+    <ReportModal
       modalName={ModalName.ReportTokenIssue}
-      currency={currency}
+      modalTitle={t('reporting.token.report.title.withSymbol', { symbol: currency?.symbol ?? '' })}
       icon={Flag}
       reportOptions={reportOptions}
       textOptionValue={TokenReportOption.Other}

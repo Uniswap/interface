@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { memo } from 'react'
 import { Flex, useColorSchemeFromSeed } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'

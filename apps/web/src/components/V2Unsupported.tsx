@@ -1,5 +1,5 @@
 import { AutoColumn } from 'components/deprecated/Column'
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
 

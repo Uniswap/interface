@@ -2,7 +2,7 @@
  * Preset styles of the Rebass Text component
  */
 
-import styled from 'lib/styled-components'
+import { styled } from 'lib/styled-components'
 import { Text, TextProps as TextPropsOriginal } from 'rebass'
 
 const TextWrapper = styled(Text).withConfig({

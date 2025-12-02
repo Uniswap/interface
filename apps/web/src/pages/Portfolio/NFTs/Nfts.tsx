@@ -1,50 +1,67 @@
+import { PortfolioExpandoRow } from 'pages/Portfolio/components/PortfolioExpandoRow'
 import { SearchInput } from 'pages/Portfolio/components/SearchInput'
-import { usePortfolioAddress } from 'pages/Portfolio/hooks/usePortfolioAddress'
-import { NFTCard } from 'pages/Portfolio/NFTs/NFTCard'
+import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
+import { NFTCard, setOpenNftPopoverId } from 'pages/Portfolio/NFTs/NFTCard'
 import { NFTCardSkeleton } from 'pages/Portfolio/NFTs/NFTCardSkeleton'
-import { filterNft } from 'pages/Portfolio/NFTs/utils/filterNfts'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
-import { useNftListRenderData } from 'uniswap/src/components/nfts/hooks/useNftListRenderData'
+import { useNavigate } from 'react-router'
+import { Flex, Text, useMedia } from 'ui/src'
 import { NftsList } from 'uniswap/src/components/nfts/NftsList'
+import { NftsListEmptyState } from 'uniswap/src/components/nfts/NftsListEmptyState'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useEvent } from 'utilities/src/react/hooks'
 import { assume0xAddress } from 'utils/wagmi'
 
 const LOADING_SKELETON_COUNT = 10
+const DEFAULT_SEARCH_INPUT_WIDTH = 320
+
+// Memoized wrapper component to avoid recreating Flex structure on every render
+const NFTItemWrapper = memo(function NFTItemWrapper({ item, owner }: { item: NFTItem; owner: Address }): JSX.Element {
+  return (
+    <Flex centered>
+      <Flex m="$spacing4" maxWidth={200} width="100%">
+        <NFTCard id={item.tokenId ?? ''} walletAddresses={[owner]} item={item} owner={owner} />
+      </Flex>
+    </Flex>
+  )
+})
 
 export function PortfolioNfts(): JSX.Element {
   const { t } = useTranslation()
-  const owner = usePortfolioAddress()
+  const media = useMedia()
+  const navigate = useNavigate()
+  // TODO(PORT-485): Solana NFTs are not supported yet, add empty state for NFTs when connected to a Solana wallet only
+  const { evmAddress } = usePortfolioAddresses()
+  const { chainId: selectedChainId } = usePortfolioRoutes()
   const nftsContainerRef = useRef<HTMLDivElement>(null)
+  const owner = assume0xAddress(evmAddress) ?? ''
 
   const [search, setSearch] = useState('')
-  const lowercaseSearch = useMemo(() => search.trim().toLowerCase(), [search])
+  const [filteredShownCount, setFilteredShownCount] = useState<number>(0)
 
-  const { numShown } = useNftListRenderData({ owner: assume0xAddress(owner), skip: !owner })
+  useEffect(() => {
+    // Reset popover state when component unmounts
+    return () => {
+      setOpenNftPopoverId(null)
+    }
+  }, [])
 
+  const handleFilteredCountsChange = useEvent(({ shown }: { shown: number }) => {
+    setFilteredShownCount(shown)
+  })
+
+  // renderNFTItem uses memoized wrapper component to avoid recreating Flex structure
   const renderNFTItem = useCallback(
     (item: NFTItem) => {
-      if (!filterNft(item, lowercaseSearch)) {
-        return <Flex display="none" />
-      }
-
-      return (
-        <Flex centered>
-          <Flex m="$spacing4" maxWidth={200} width="100%">
-            <NFTCard
-              id={item.tokenId ?? ''}
-              walletAddresses={[assume0xAddress(owner)]}
-              item={item}
-              owner={assume0xAddress(owner)}
-            />
-          </Flex>
-        </Flex>
-      )
+      return <NFTItemWrapper item={item} owner={owner} />
     },
-    [lowercaseSearch, owner],
+    [owner],
   )
 
   // Custom loading state with Portfolio-specific skeleton
@@ -59,18 +76,57 @@ export function PortfolioNfts(): JSX.Element {
     [],
   )
 
+  // Memoize renderExpandoRow to avoid recreating the function on every render
+  const renderExpandoRow = useCallback(
+    ({ isExpanded, label, onPress }: { isExpanded: boolean; label: string; onPress: () => void }) => (
+      <PortfolioExpandoRow isExpanded={isExpanded} label={label} onPress={onPress} />
+    ),
+    [],
+  )
+
+  // Handler to clear chain filter and show all networks
+  const handleShowAllNetworks = useCallback(() => {
+    navigate('/portfolio/nfts')
+  }, [navigate])
+
+  // Custom empty state for chain filtering
+  const chainFilterEmptyState = useMemo(() => {
+    if (!selectedChainId) {
+      return undefined
+    }
+    const chainName = getChainLabel(selectedChainId)
+    const chainInfo = getChainInfo(selectedChainId)
+    const hasNFTSupport = chainInfo.supportsNFTs === true
+    const title = hasNFTSupport
+      ? t('tokens.nfts.list.noneOnChain.title', { chainName })
+      : t('tokens.nfts.list.notSupported.title', { chainName })
+    return (
+      <NftsListEmptyState
+        description={null}
+        buttonLabel={t('portfolio.networkFilter.seeAllNetworks')}
+        onPress={handleShowAllNetworks}
+        title={title}
+      />
+    )
+  }, [handleShowAllNetworks, selectedChainId, t])
+
   return (
     <Trace logImpression page={InterfacePageName.PortfolioNftsPage}>
-      <Flex gap="$spacing40" mt="$spacing12">
-        <Flex row alignItems="flex-end" justifyContent="space-between">
+      <Flex gap="$spacing24" mt="$spacing12">
+        <Flex
+          row
+          alignItems="flex-end"
+          justifyContent="space-between"
+          $md={{ flexDirection: 'column', alignItems: 'flex-start', gap: '$spacing24' }}
+        >
           <Text variant="body2" color="$neutral2">
-            {numShown ? `${numShown}` : ''} {t('portfolio.nfts.title')}
+            {filteredShownCount ? `${filteredShownCount}` : ''} {t('portfolio.nfts.title')}
           </Text>
           <SearchInput
             value={search}
             onChangeText={setSearch}
             placeholder={t('portfolio.nfts.search.placeholder')}
-            width={320}
+            width={media.md ? '100%' : DEFAULT_SEARCH_INPUT_WIDTH}
           />
         </Flex>
 
@@ -78,9 +134,15 @@ export function PortfolioNfts(): JSX.Element {
           <NftsList
             owner={owner}
             renderNFTItem={renderNFTItem}
-            autoColumns
+            autoColumns={!media.md}
             loadingSkeletonCount={LOADING_SKELETON_COUNT}
             customLoadingState={customLoadingState}
+            chainsFilter={selectedChainId ? [selectedChainId] : undefined}
+            searchString={search}
+            onFilteredCountsChange={handleFilteredCountsChange}
+            skip={!owner}
+            renderExpandoRow={renderExpandoRow}
+            customEmptyState={selectedChainId ? chainFilterEmptyState : undefined}
           />
         </Flex>
       </Flex>

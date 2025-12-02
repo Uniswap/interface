@@ -39,7 +39,7 @@ export function TransactionHistoryUpdater(): JSX.Element | null {
 
   // Poll at different intervals to reduce requests made for non active accounts.
 
-  const activeAddresses = activeAccountAddress ?? []
+  const activeAddresses = activeAccountAddress ? [activeAccountAddress] : []
   const { data: activeAccountData } = GraphQLApi.useTransactionHistoryUpdaterQuery({
     variables: { addresses: activeAddresses, chains: gqlChains },
     pollInterval: PollingInterval.KindaFast,

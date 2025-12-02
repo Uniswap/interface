@@ -94,7 +94,6 @@ function useDropdownOptions({
 }): MenuOptionItem[] {
   const { t } = useTranslation()
   const isOpenLiquidityPosition = liquidityPosition.status !== PositionStatus.CLOSED
-  const isDataReportingEnabled = useFeatureFlag(FeatureFlags.DataReportingAbilities)
 
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -203,7 +202,7 @@ function useDropdownOptions({
         showDivider: true,
       })
 
-      if (isDataReportingEnabled) {
+      if (!liquidityPosition.isHidden) {
         options.push({
           onPress: reportPositionHandler,
           label: t('nft.reportSpam'),
@@ -224,7 +223,6 @@ function useDropdownOptions({
     navigate,
     showVisibilityOption,
     selectChain,
-    isDataReportingEnabled,
     t,
   ])
 }

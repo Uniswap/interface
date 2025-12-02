@@ -1,12 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { calculateTokensLockedV3, calculateTokensLockedV4 } from 'components/Charts/LiquidityChart'
+import { calculateAnchoredLiquidityByTick } from 'components/Charts/LiquidityChart/utils/calculateAnchoredLiquidityByTick'
+import { calculateTokensLocked } from 'components/Charts/LiquidityChart/utils/calculateTokensLocked'
 import { ChartEntry } from 'components/Charts/LiquidityRangeInput/types'
 import { usePoolActiveLiquidity } from 'hooks/usePoolTickData'
+import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { PositionField } from 'types/position'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { TickProcessed } from 'utils/computeSurroundingTicks'
@@ -36,7 +37,7 @@ export function useDensityChartData({
   hooks?: string
   skip?: boolean
 }) {
-  const { isLoading, error, data } = usePoolActiveLiquidity({
+  const { isLoading, error, data, activeTick, liquidity } = usePoolActiveLiquidity({
     sdkCurrencies,
     version,
     poolId,
@@ -48,35 +49,36 @@ export function useDensityChartData({
   })
 
   const fetcher = async () => {
-    if (!data?.length || !sdkCurrencies.TOKEN0 || !sdkCurrencies.TOKEN1 || feeAmount === undefined || !tickSpacing) {
+    if (!sdkCurrencies.TOKEN0 || !sdkCurrencies.TOKEN1 || feeAmount === undefined || !tickSpacing) {
+      return null
+    }
+
+    if (!data || !activeTick || !liquidity) {
       return null
     }
 
     const newData: ChartEntry[] = []
+
+    // Calculate anchored active liquidity per tick using three-step anchoring process
+    const activeLiquidityByTick = calculateAnchoredLiquidityByTick({ ticksProcessed: data, activeTick, liquidity })
 
     for (let i = 0; i < data.length; i++) {
       const t: TickProcessed = data[i]
 
       const price0 = priceInverted ? t.sdkPrice.invert().toSignificant(8) : t.sdkPrice.toSignificant(8)
 
-      const { amount0Locked, amount1Locked } = await (version === ProtocolVersion.V3
-        ? calculateTokensLockedV3({
-            token0: sdkCurrencies.TOKEN0.wrapped,
-            token1: sdkCurrencies.TOKEN1.wrapped,
-            feeTier: feeAmount,
-            tick: t,
-          })
-        : calculateTokensLockedV4({
-            token0: sdkCurrencies.TOKEN0,
-            token1: sdkCurrencies.TOKEN1,
-            feeTier: feeAmount,
-            tickSpacing,
-            hooks: hooks ?? ZERO_ADDRESS,
-            tick: t,
-          }))
+      const { amount0Locked, amount1Locked } = calculateTokensLocked({
+        token0: sdkCurrencies.TOKEN0,
+        token1: sdkCurrencies.TOKEN1,
+        tickSpacing,
+        currentTick: activeTick,
+        amount: activeLiquidityByTick.get(t.tick) ?? JSBI.BigInt(0),
+        tick: t,
+      })
 
       const chartEntry = {
         activeLiquidity: parseFloat(t.liquidityActive.toString()),
+        liquidityNet: parseFloat(t.liquidityNet.toString()),
         price0: parseFloat(price0),
         tick: t.tick,
         amount0Locked: priceInverted ? amount0Locked : amount1Locked,
