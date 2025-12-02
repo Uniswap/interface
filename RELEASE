@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmQSZ5B5asTKTcrUQjXaSjqoK987tHnMxzkcR4tc8kPVym`
-- CIDv1: `bafybeia7hj6dmquaef5l5rwth7kj22ffyflqo7v6h57rn5yrpk3bjxm6rq`
+- CIDv0: `QmYahT5tc2ktTC49p2DyRxxJbUz3rr13Ka4JJDFeK56Ycw`
+- CIDv1: `bafybeieyfymzavdbw3dzqblmbaahtylar3erifpfptgbxvkry2t2noviba`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeia7hj6dmquaef5l5rwth7kj22ffyflqo7v6h57rn5yrpk3bjxm6rq.ipfs.dweb.link/
-- [ipfs://QmQSZ5B5asTKTcrUQjXaSjqoK987tHnMxzkcR4tc8kPVym/](ipfs://QmQSZ5B5asTKTcrUQjXaSjqoK987tHnMxzkcR4tc8kPVym/)
+- https://bafybeieyfymzavdbw3dzqblmbaahtylar3erifpfptgbxvkry2t2noviba.ipfs.dweb.link/
+- [ipfs://QmYahT5tc2ktTC49p2DyRxxJbUz3rr13Ka4JJDFeK56Ycw/](ipfs://QmYahT5tc2ktTC49p2DyRxxJbUz3rr13Ka4JJDFeK56Ycw/)
 
-### 5.120.1 (2025-12-01)
+### 5.120.2 (2025-12-02)
 
 
 ### Bug Fixes
 
-* **web:** disable tamagui compiler in production temporarily (#25933) 603c56f
+* **web:** remove batching capabilities from monad (#25958) c2af53a
 
 
