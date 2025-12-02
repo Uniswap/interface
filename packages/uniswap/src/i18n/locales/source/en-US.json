@@ -741,8 +741,6 @@
   "explore.search.section.nft": "NFT Collections",
   "explore.search.section.popularNFT": "Popular NFT collections",
   "explore.search.section.wallets": "Wallets",
-  "explore.tokens.empty.description": "There are no tokens available for this network and filter combination.",
-  "explore.tokens.empty.title": "No tokens found",
   "explore.tokens.error": "Couldn’t load tokens",
   "explore.tokens.favorite.action.add": "Favorite token",
   "explore.tokens.favorite.action.edit": "Edit favorites",
