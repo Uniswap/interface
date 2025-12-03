@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmNsXxX15TxdeUMfUCn7T2u9hivdRZ6Ar46j1wnGDg1yPH`
-- CIDv1: `bafybeiah5fpqbrntgbxd66esq6mokpd4mpfcuqgy3y2uvwxhyzpk36rsdq`
+- CIDv0: `QmSC1sbHxyqCDMoenbyRbNy3ng8pRFXA1t1WiU8ufuAew5`
+- CIDv1: `bafybeibzhbztvwsi7k2x3mwg44ixqk6awd5jpzzawc4h4mkbbcwng76slq`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiah5fpqbrntgbxd66esq6mokpd4mpfcuqgy3y2uvwxhyzpk36rsdq.ipfs.dweb.link/
-- [ipfs://QmNsXxX15TxdeUMfUCn7T2u9hivdRZ6Ar46j1wnGDg1yPH/](ipfs://QmNsXxX15TxdeUMfUCn7T2u9hivdRZ6Ar46j1wnGDg1yPH/)
+- https://bafybeibzhbztvwsi7k2x3mwg44ixqk6awd5jpzzawc4h4mkbbcwng76slq.ipfs.dweb.link/
+- [ipfs://QmSC1sbHxyqCDMoenbyRbNy3ng8pRFXA1t1WiU8ufuAew5/](ipfs://QmSC1sbHxyqCDMoenbyRbNy3ng8pRFXA1t1WiU8ufuAew5/)
 
-### 5.120.4 (2025-12-03)
+### 5.120.5 (2025-12-03)
 
 
 ### Bug Fixes
 
-* **web:** enable correct tamagui stacking zIndex mode (#26002) b2f3041
+* **web:** zindex/hover fixes for navbar (#26024) 1153033
 
 
