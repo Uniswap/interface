@@ -1,6 +1,6 @@
 import { RefObject, useEffect, useRef } from 'react'
 
-function nodeContainsClick<T extends HTMLElement>(node: RefObject<T | undefined>, e: MouseEvent) {
+function nodeContainsClick<T extends HTMLElement>(node: RefObject<T | undefined | null>, e: MouseEvent) {
   if (node.current?.contains(e.target as Node)) {
     return true
   }
@@ -22,9 +22,9 @@ export function useOnClickOutside<T extends HTMLElement>({
   handler,
   ignoredNodes = [],
 }: {
-  node: RefObject<T | undefined>
+  node: RefObject<T | undefined | null>
   handler?: () => void
-  ignoredNodes?: Array<RefObject<HTMLElement | undefined>>
+  ignoredNodes?: Array<RefObject<HTMLElement | undefined | null>>
 }) {
   const handlerRef = useRef<undefined | (() => void)>(handler)
 

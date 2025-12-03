@@ -14,7 +14,7 @@ import { getTokenProtectionFeeOnTransfer } from 'uniswap/src/features/tokens/saf
  */
 export function useBlockaidFeeComparisonAnalytics(currencyInfo: Maybe<CurrencyInfo>): void {
   const isBlockaidFotLoggingEnabled = useFeatureFlag(FeatureFlags.BlockaidFotLogging)
-  const sentEventCurrencyIdRef = useRef<string>()
+  const sentEventCurrencyIdRef = useRef<string>(undefined)
   const { buyFeePercent, sellFeePercent } = getTokenProtectionFeeOnTransfer(currencyInfo)
   const blockaidBuyFeePercent = currencyInfo?.safetyInfo?.blockaidFees?.buyFeePercent ?? 0
   const blockaidSellFeePercent = currencyInfo?.safetyInfo?.blockaidFees?.sellFeePercent ?? 0

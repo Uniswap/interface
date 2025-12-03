@@ -322,6 +322,8 @@ export function getBaseTradeAnalyticsProperties({
   includedPermitTransactionStep,
   includesDelegation,
   isSmartWalletTransaction,
+  swapStartTimestamp,
+  isFinalStep,
 }: {
   formatter: LocalizationContextState
   trade: Trade<Currency, Currency, TradeType>
@@ -335,6 +337,8 @@ export function getBaseTradeAnalyticsProperties({
   includedPermitTransactionStep?: boolean
   includesDelegation?: boolean
   isSmartWalletTransaction?: boolean
+  swapStartTimestamp?: number
+  isFinalStep?: boolean
 }) {
   const portionAmount = trade.swapFee?.amount
 
@@ -393,6 +397,8 @@ export function getBaseTradeAnalyticsProperties({
     included_permit_transaction_step: includedPermitTransactionStep,
     includes_delegation: includesDelegation,
     is_smart_wallet_transaction: isSmartWalletTransaction,
+    swap_start_timestamp: swapStartTimestamp,
+    is_final_step: isFinalStep,
   } as const
 }
 

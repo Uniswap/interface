@@ -37,7 +37,7 @@ export function useFunctionAfterNavigationTransitionEndWithDelay(fn: () => void,
   const navigation = useAppStackNavigation()
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout | null = null
+    let timeout: NodeJS.Timeout | number | null = null
 
     const unsubscribe = navigation.addListener('transitionEnd', () => {
       timeout = setTimeout(fn, timeoutMs)

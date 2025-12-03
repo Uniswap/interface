@@ -1,3 +1,4 @@
+import type { FetchQueryOptions, QueryClient } from '@tanstack/react-query'
 import type { NotificationsApiClient } from '@universe/api'
 import { createNotificationTracker } from '@universe/notifications/src/notification-tracker/implementations/createNotificationTracker'
 import {
@@ -5,12 +6,14 @@ import {
   TrackingMetadata,
 } from '@universe/notifications/src/notification-tracker/NotificationTracker'
 import { getLogger } from 'utilities/src/logger/logger'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 /**
  * Context for creating an API-based notification tracker
  */
 export interface ApiNotificationTrackerContext {
   notificationsApiClient: NotificationsApiClient
+  queryClient: QueryClient
   /**
    * Optional local storage for tracking state (e.g., to avoid duplicate API calls)
    * If not provided, the tracker will always call the API
@@ -36,12 +39,12 @@ export interface ApiNotificationTrackerContext {
  *
  * const apiClient = createNotificationsApiClient({
  *   fetchClient: myFetchClient,
- *   queryClient: myQueryClient,
  *   getApiPathPrefix: () => '/notifications/v1'
  * })
  *
  * const tracker = createApiNotificationTracker({
- *   notificationsApiClient: apiClient
+ *   notificationsApiClient: apiClient,
+ *   queryClient: myQueryClient
  * })
  *
  * // Track a notification (sends request to backend with automatic retries)
@@ -51,12 +54,26 @@ export interface ApiNotificationTrackerContext {
  * ```
  */
 export function createApiNotificationTracker(ctx: ApiNotificationTrackerContext): NotificationTracker {
-  const { notificationsApiClient, storage } = ctx
+  const { notificationsApiClient, queryClient, storage } = ctx
 
   // Track in-flight acknowledgments to prevent race conditions
   // If a notification is being acknowledged but storage write hasn't completed yet,
   // this ensures isProcessed() returns true immediately to prevent re-appearing notifications
   const pendingAcks = new Set<string>()
+
+  const ackNotificationOptions = (notificationId: string): FetchQueryOptions => ({
+    queryKey: [ReactQueryCacheKey.AckNotification, notificationId],
+    queryFn: () =>
+      notificationsApiClient.ackNotification({
+        ids: [notificationId],
+      }),
+    // Retry up to 3 times for network errors or 5xx server errors
+    retry: 3,
+    // Exponential backoff: 1s, 2s, 4s, capped at 30s
+    retryDelay: (attemptIndex: number) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    // Don't cache the result - this is a write operation
+    gcTime: 0,
+  })
 
   const isProcessed = async (notificationId: string): Promise<boolean> => {
     if (pendingAcks.has(notificationId)) {
@@ -81,11 +98,7 @@ export function createApiNotificationTracker(ctx: ApiNotificationTrackerContext)
     try {
       await Promise.all([
         // Skip API call for local notifications since the backend has no knowledge of them
-        isLocalNotification
-          ? Promise.resolve()
-          : notificationsApiClient.ackNotification({
-              ids: [notificationId],
-            }),
+        isLocalNotification ? Promise.resolve() : queryClient.fetchQuery(ackNotificationOptions(notificationId)),
         // Even if API fails, update localStorage so the notification stays dismissed
         // from the user's perspective. This prioritizes UX over perfect backend consistency.
         //
@@ -105,7 +118,7 @@ export function createApiNotificationTracker(ctx: ApiNotificationTrackerContext)
       ])
     } catch (error) {
       getLogger().error(
-        `Failed to acknowledge notification ${notificationId}: ${error instanceof Error ? error.message : String(error)}`,
+        `Failed to acknowledge notification ${notificationId} after retries: ${error instanceof Error ? error.message : String(error)}`,
         {
           tags: {
             file: 'createApiNotificationTracker',

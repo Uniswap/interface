@@ -1,28 +1,17 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`NotSupportedNetworkNotification renders without error 1`] = `
-[
-  <View
-    collapsable={false}
-    forwardedRef={[Function]}
-    jestAnimatedStyle={
-      {
-        "value": {
-          "opacity": 0,
-          "top": 12,
-          "transform": [
-            {
-              "translateY": -150,
-            },
-          ],
-          "width": "100%",
-        },
-      }
+<View
+  collapsable={false}
+  forwardedRef={[Function]}
+  jestAnimatedProps={
+    {
+      "value": {},
     }
-    pointerEvents="none"
-    style={
-      {
-        "flexDirection": "column",
+  }
+  jestAnimatedStyle={
+    {
+      "value": {
         "opacity": 0,
         "top": 12,
         "transform": [
@@ -31,94 +20,94 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
           },
         ],
         "width": "100%",
-        "zIndex": 100001,
+      },
+    }
+  }
+  jestInlineStyle={
+    [
+      {
+        "flexDirection": "column",
+        "zIndex": 100010,
+      },
+    ]
+  }
+  pointerEvents="none"
+  style={
+    [
+      {
+        "flexDirection": "column",
+        "zIndex": 100010,
+      },
+      {
+        "opacity": 0,
+        "top": 12,
+        "transform": [
+          {
+            "translateY": -150,
+          },
+        ],
+        "width": "100%",
+      },
+    ]
+  }
+>
+  <View
+    pointerEvents="auto"
+    style={
+      {
+        "borderBottomColor": "rgba(19, 19, 19, 0.08)",
+        "borderBottomLeftRadius": 999999,
+        "borderBottomRightRadius": 999999,
+        "borderBottomWidth": 1,
+        "borderLeftColor": "rgba(19, 19, 19, 0.08)",
+        "borderLeftWidth": 1,
+        "borderRightColor": "rgba(19, 19, 19, 0.08)",
+        "borderRightWidth": 1,
+        "borderStyle": "solid",
+        "borderTopColor": "rgba(19, 19, 19, 0.08)",
+        "borderTopLeftRadius": 999999,
+        "borderTopRightRadius": 999999,
+        "borderTopWidth": 1,
+        "flexDirection": "column",
+        "marginLeft": "auto",
+        "marginRight": "auto",
+        "shadowColor": "rgb(0,0,0)",
+        "shadowOffset": {
+          "height": 1,
+          "width": 0,
+        },
+        "shadowOpacity": 0.0196078431372549,
+        "shadowRadius": 6,
       }
     }
   >
     <View
-      pointerEvents="auto"
+      pointerEvents="box-none"
       style={
         {
-          "borderBottomColor": {
-            "dynamic": {
-              "dark": "rgba(255,255,255,0.12)",
-              "light": "rgba(19, 19, 19, 0.08)",
-            },
-          },
-          "borderBottomLeftRadius": 999999,
-          "borderBottomRightRadius": 999999,
-          "borderBottomWidth": 1,
-          "borderLeftColor": {
-            "dynamic": {
-              "dark": "rgba(255,255,255,0.12)",
-              "light": "rgba(19, 19, 19, 0.08)",
-            },
-          },
-          "borderLeftWidth": 1,
-          "borderRightColor": {
-            "dynamic": {
-              "dark": "rgba(255,255,255,0.12)",
-              "light": "rgba(19, 19, 19, 0.08)",
-            },
-          },
-          "borderRightWidth": 1,
-          "borderStyle": "solid",
-          "borderTopColor": {
-            "dynamic": {
-              "dark": "rgba(255,255,255,0.12)",
-              "light": "rgba(19, 19, 19, 0.08)",
-            },
-          },
-          "borderTopLeftRadius": 999999,
-          "borderTopRightRadius": 999999,
-          "borderTopWidth": 1,
-          "flexDirection": "column",
-          "marginLeft": "auto",
-          "marginRight": "auto",
-          "shadowColor": "rgb(0,0,0)",
-          "shadowOffset": {
-            "height": 1,
-            "width": 0,
-          },
-          "shadowOpacity": 0.0196078431372549,
-          "shadowRadius": 6,
+          "alignItems": "center",
+          "flexDirection": "row",
+          "flexShrink": 1,
+          "justifyContent": "center",
         }
       }
     >
       <View
-        pointerEvents="box-none"
-        style={
+        collapsable={false}
+        focusVisibleStyle={{}}
+        forwardedRef={[Function]}
+        jestAnimatedProps={
           {
-            "alignItems": "center",
-            "flexDirection": "row",
-            "flexShrink": 1,
-            "justifyContent": "center",
+            "value": {},
           }
         }
-      >
-        <View
-          cancelable={true}
-          collapsable={false}
-          disabled={false}
-          focusVisibleStyle={{}}
-          focusable={true}
-          forwardedRef={[Function]}
-          jestAnimatedStyle={
-            {
-              "value": {},
-            }
+        jestAnimatedStyle={
+          {
+            "value": {},
           }
-          minPressDuration={0}
-          onBlur={[Function]}
-          onFocus={[Function]}
-          onLayout={[Function]}
-          onMouseEnter={[Function]}
-          onMouseLeave={[Function]}
-          onPress={[Function]}
-          onPressIn={[Function]}
-          onPressOut={[Function]}
-          role="button"
-          style={
+        }
+        jestInlineStyle={
+          [
             {
               "backgroundColor": "#FFFFFF",
               "borderBottomLeftRadius": 999999,
@@ -136,70 +125,111 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
                   "scale": 1,
                 },
               ],
+            },
+          ]
+        }
+        onBlur={[Function]}
+        onClick={[Function]}
+        onFocus={[Function]}
+        onLayout={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
+        role="button"
+        style={
+          [
+            {
+              "backgroundColor": "#FFFFFF",
+              "borderBottomLeftRadius": 999999,
+              "borderBottomRightRadius": 999999,
+              "borderTopLeftRadius": 999999,
+              "borderTopRightRadius": 999999,
+              "flexDirection": "column",
+              "opacity": 1,
+              "paddingBottom": 12,
+              "paddingLeft": 12,
+              "paddingRight": 12,
+              "paddingTop": 12,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+            {},
+          ]
+        }
+      >
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "color": "#222222",
+              "flexDirection": "row",
+              "gap": 8,
+              "justifyContent": "flex-start",
+              "paddingRight": 4,
             }
           }
         >
           <View
-            onBlur={[Function]}
-            onFocus={[Function]}
             style={
               {
-                "alignItems": "center",
-                "color": {
-                  "dynamic": {
-                    "dark": "#FFFFFF",
-                    "light": "#222222",
-                  },
-                },
-                "flexDirection": "row",
-                "gap": 8,
-                "justifyContent": "flex-start",
-                "paddingRight": 4,
+                "flexDirection": "column",
               }
             }
           >
-            <View
-              onBlur={[Function]}
-              onFocus={[Function]}
+            <RNSVGSvgView
+              align="xMidYMid"
+              bbHeight={20}
+              bbWidth={20}
+              fill="currentColor"
+              focusable={false}
+              meetOrSlice={0}
+              minX={0}
+              minY={0}
+              strokeWidth={8}
               style={
-                {
-                  "flexDirection": "column",
-                }
+                [
+                  {
+                    "backgroundColor": "transparent",
+                    "borderWidth": 0,
+                  },
+                  {
+                    "color": "rgba(19, 19, 19, 0.63)",
+                    "height": 20,
+                    "width": 20,
+                  },
+                  {
+                    "flex": 0,
+                    "height": 20,
+                    "width": 20,
+                  },
+                ]
               }
+              vbHeight={24}
+              vbWidth={24}
             >
-              <RNSVGSvgView
-                align="xMidYMid"
-                bbHeight={20}
-                bbWidth={20}
-                fill="currentColor"
-                focusable={false}
-                meetOrSlice={0}
-                minX={0}
-                minY={0}
-                strokeWidth={8}
-                style={
+              <RNSVGGroup
+                color="rgba(19, 19, 19, 0.63)"
+                fill={
+                  {
+                    "type": 2,
+                  }
+                }
+                propList={
                   [
-                    {
-                      "backgroundColor": "transparent",
-                      "borderWidth": 0,
-                    },
-                    {
-                      "color": "rgba(19, 19, 19, 0.63)",
-                      "height": 20,
-                      "width": 20,
-                    },
-                    {
-                      "flex": 0,
-                      "height": 20,
-                      "width": 20,
-                    },
+                    "fill",
+                    "strokeWidth",
                   ]
                 }
-                vbHeight={24}
-                vbWidth={24}
+                strokeWidth={8}
               >
-                <RNSVGGroup
-                  color="rgba(19, 19, 19, 0.63)"
+                <RNSVGPath
+                  d="M21.6074 17.1522L15.0004 4.79599C13.7204 2.40199 10.2814 2.40199 9.00042 4.79599L2.39349 17.1522C1.21949 19.3482 2.81353 22.0001 5.30853 22.0001H18.6923C21.1863 22.0001 22.7814 19.3472 21.6074 17.1522ZM11.2504 10.0001C11.2504 9.58609 11.5864 9.25009 12.0004 9.25009C12.4144 9.25009 12.7504 9.58609 12.7504 10.0001V14.0001C12.7504 14.4141 12.4144 14.7501 12.0004 14.7501C11.5864 14.7501 11.2504 14.4141 11.2504 14.0001V10.0001ZM12.0204 18.0001C11.4684 18.0001 11.0153 17.5521 11.0153 17.0001C11.0153 16.4481 11.4584 16.0001 12.0104 16.0001H12.0204C12.5734 16.0001 13.0204 16.4481 13.0204 17.0001C13.0204 17.5521 12.5724 18.0001 12.0204 18.0001Z"
                   fill={
                     {
                       "type": 2,
@@ -208,64 +238,34 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
                   propList={
                     [
                       "fill",
-                      "strokeWidth",
                     ]
                   }
-                  strokeWidth={8}
-                >
-                  <RNSVGPath
-                    d="M21.6074 17.1522L15.0004 4.79599C13.7204 2.40199 10.2814 2.40199 9.00042 4.79599L2.39349 17.1522C1.21949 19.3482 2.81353 22.0001 5.30853 22.0001H18.6923C21.1863 22.0001 22.7814 19.3472 21.6074 17.1522ZM11.2504 10.0001C11.2504 9.58609 11.5864 9.25009 12.0004 9.25009C12.4144 9.25009 12.7504 9.58609 12.7504 10.0001V14.0001C12.7504 14.4141 12.4144 14.7501 12.0004 14.7501C11.5864 14.7501 11.2504 14.4141 11.2504 14.0001V10.0001ZM12.0204 18.0001C11.4684 18.0001 11.0153 17.5521 11.0153 17.0001C11.0153 16.4481 11.4584 16.0001 12.0104 16.0001H12.0204C12.5734 16.0001 13.0204 16.4481 13.0204 17.0001C13.0204 17.5521 12.5724 18.0001 12.0204 18.0001Z"
-                    fill={
-                      {
-                        "type": 2,
-                      }
-                    }
-                    propList={
-                      [
-                        "fill",
-                      ]
-                    }
-                  />
-                </RNSVGGroup>
-              </RNSVGSvgView>
-            </View>
-            <Text
-              adjustsFontSizeToFit={true}
-              allowFontScaling={false}
-              maxFontSizeMultiplier={1.4}
-              numberOfLines={1}
-              onBlur={[Function]}
-              onFocus={[Function]}
-              style={
-                {
-                  "color": {
-                    "dynamic": {
-                      "dark": "#FFFFFF",
-                      "light": "#131313",
-                    },
-                  },
-                  "fontFamily": "Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif",
-                  "fontSize": 16,
-                  "fontWeight": "400",
-                  "lineHeight": 20.8,
-                }
-              }
-              suppressHighlighting={true}
-              testID="notification-toast-title"
-            >
-              Unsupported network
-            </Text>
+                />
+              </RNSVGGroup>
+            </RNSVGSvgView>
           </View>
+          <Text
+            adjustsFontSizeToFit={true}
+            allowFontScaling={false}
+            maxFontSizeMultiplier={1.4}
+            numberOfLines={1}
+            style={
+              {
+                "color": "#131313",
+                "fontFamily": "Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif",
+                "fontSize": 16,
+                "fontWeight": "400",
+                "lineHeight": 20.8,
+              }
+            }
+            suppressHighlighting={true}
+            testID="notification-toast-title"
+          >
+            Unsupported network
+          </Text>
         </View>
       </View>
     </View>
-  </View>,
-  <div
-    style={
-      {
-        "display": "contents",
-      }
-    }
-  />,
-]
+  </View>
+</View>
 `;

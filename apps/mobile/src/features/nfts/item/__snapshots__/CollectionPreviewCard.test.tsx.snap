@@ -5,10 +5,33 @@ exports[`renders collection preview card 1`] = `
   collapsable={false}
   focusVisibleStyle={{}}
   forwardedRef={[Function]}
+  jestAnimatedProps={
+    {
+      "value": {},
+    }
+  }
   jestAnimatedStyle={
     {
       "value": {},
     }
+  }
+  jestInlineStyle={
+    [
+      {
+        "backgroundColor": "transparent",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
   }
   onBlur={[Function]}
   onClick={[Function]}
@@ -22,25 +45,26 @@ exports[`renders collection preview card 1`] = `
   onStartShouldSetResponder={[Function]}
   role="button"
   style={
-    {
-      "backgroundColor": "transparent",
-      "borderBottomLeftRadius": 12,
-      "borderBottomRightRadius": 12,
-      "borderTopLeftRadius": 12,
-      "borderTopRightRadius": 12,
-      "flexDirection": "column",
-      "opacity": 1,
-      "transform": [
-        {
-          "scale": 1,
-        },
-      ],
-    }
+    [
+      {
+        "backgroundColor": "transparent",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+      {},
+    ]
   }
 >
   <View
-    onBlur={[Function]}
-    onFocus={[Function]}
     style={
       {
         "alignItems": "center",
@@ -60,8 +84,6 @@ exports[`renders collection preview card 1`] = `
     }
   >
     <View
-      onBlur={[Function]}
-      onFocus={[Function]}
       style={
         {
           "alignItems": "center",
@@ -73,8 +95,6 @@ exports[`renders collection preview card 1`] = `
       }
     >
       <View
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "borderBottomLeftRadius": 999999,
@@ -89,18 +109,11 @@ exports[`renders collection preview card 1`] = `
         }
       >
         <View
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
               "alignItems": "center",
               "aspectRatio": 1,
-              "backgroundColor": {
-                "dynamic": {
-                  "dark": "#1F1F1F",
-                  "light": "#F9F9F9",
-                },
-              },
+              "backgroundColor": "#F9F9F9",
               "flex": 1,
               "flexDirection": "column",
               "justifyContent": "center",
@@ -115,16 +128,9 @@ exports[`renders collection preview card 1`] = `
           <Text
             allowFontScaling={true}
             maxFontSizeMultiplier={1.4}
-            onBlur={[Function]}
-            onFocus={[Function]}
             style={
               {
-                "color": {
-                  "dynamic": {
-                    "dark": "rgba(255, 255, 255, 0.65)",
-                    "light": "rgba(19, 19, 19, 0.63)",
-                  },
-                },
+                "color": "rgba(19, 19, 19, 0.63)",
                 "fontFamily": "Basel Grotesk",
                 "fontSize": 17,
                 "fontWeight": "400",
@@ -139,8 +145,6 @@ exports[`renders collection preview card 1`] = `
         </View>
       </View>
       <View
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "flexDirection": "column",
@@ -149,8 +153,6 @@ exports[`renders collection preview card 1`] = `
         }
       >
         <View
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
               "alignItems": "center",
@@ -161,8 +163,6 @@ exports[`renders collection preview card 1`] = `
           }
         >
           <View
-            onBlur={[Function]}
-            onFocus={[Function]}
             style={
               {
                 "flexDirection": "column",
@@ -174,8 +174,6 @@ exports[`renders collection preview card 1`] = `
               allowFontScaling={true}
               maxFontSizeMultiplier={1.4}
               numberOfLines={1}
-              onBlur={[Function]}
-              onFocus={[Function]}
               style={
                 {
                   "color": "#131313",
@@ -306,6 +304,11 @@ exports[`renders collection preview card 1`] = `
     <View
       collapsable={false}
       forwardedRef={[Function]}
+      jestAnimatedProps={
+        {
+          "value": {},
+        }
+      }
       jestAnimatedStyle={
         {
           "value": {
@@ -321,23 +324,34 @@ exports[`renders collection preview card 1`] = `
           },
         }
       }
-      onBlur={[Function]}
-      onFocus={[Function]}
+      jestInlineStyle={
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "justifyContent": "center",
+          },
+        ]
+      }
       style={
-        {
-          "alignItems": "center",
-          "borderBottomLeftRadius": 999999,
-          "borderBottomRightRadius": 999999,
-          "borderTopLeftRadius": 999999,
-          "borderTopRightRadius": 999999,
-          "flexDirection": "column",
-          "justifyContent": "center",
-          "transform": [
-            {
-              "rotate": "180deg",
-            },
-          ],
-        }
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "justifyContent": "center",
+          },
+          {
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "transform": [
+              {
+                "rotate": "180deg",
+              },
+            ],
+          },
+        ]
       }
     >
       <RNSVGSvgView

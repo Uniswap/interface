@@ -47,7 +47,7 @@ export class ToucanChartSeries implements ICustomSeriesPaneView<Time, ToucanChar
     this._renderer.update(data, options)
   }
 
-  defaultOptions() {
+  defaultOptions(): ToucanChartSeriesOptions {
     return {
       ...customSeriesDefaultOptions,
       barColors: this._barColors,

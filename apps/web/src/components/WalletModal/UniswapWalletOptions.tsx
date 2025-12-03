@@ -42,7 +42,7 @@ export function OptionContainer({ hideBackground, recent, children, onPress, tes
       maxHeight={72}
       cursor="pointer"
       zIndex="$default"
-      backgroundColor={!hideBackground ? '$surface2' : undefined}
+      backgroundColor={!hideBackground ? '$surface2' : '$transparent'}
       hoverStyle={{ backgroundColor: '$surface3' }}
       onPress={onPress}
       data-testid={testID}

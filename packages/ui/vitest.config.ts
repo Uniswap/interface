@@ -41,14 +41,14 @@ export default defineConfig({
       // React Native aliases for testing
       'react-native': 'react-native-web',
       'react-native-gesture-handler': path.resolve(__dirname, '../../node_modules/react-native-gesture-handler'),
-      '@tamagui/core': path.resolve(__dirname, '../../node_modules/@tamagui/core/dist/cjs/index.js'),
-      '@tamagui/web': path.resolve(__dirname, '../../node_modules/@tamagui/core/dist/cjs/index.js'),
-      '@tamagui/use-direction': path.resolve(__dirname, '../../node_modules/@tamagui/use-direction/dist/cjs/index.js'),
+      '@tamagui/core': path.resolve(__dirname, '../../node_modules/@tamagui/core/dist/cjs/index.cjs'),
+      '@tamagui/web': path.resolve(__dirname, '../../node_modules/@tamagui/web/dist/cjs/index.cjs'),
+      '@tamagui/use-direction': path.resolve(__dirname, '../../node_modules/@tamagui/use-direction/dist/cjs/index.cjs'),
       '@tamagui/use-callback-ref': path.resolve(
         __dirname,
-        '../../node_modules/@tamagui/use-callback-ref/dist/cjs/index.js',
+        '../../node_modules/@tamagui/use-callback-ref/dist/cjs/index.cjs',
       ),
-      tamagui: path.resolve(__dirname, '../../node_modules/tamagui/dist/cjs/index.js'),
+      tamagui: path.resolve(__dirname, '../../node_modules/tamagui/dist/cjs/index.cjs'),
     },
   },
   optimizeDeps: {

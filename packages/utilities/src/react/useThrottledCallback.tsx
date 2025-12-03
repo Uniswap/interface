@@ -17,7 +17,7 @@ export function useThrottledCallback<T extends (...args: unknown[]) => unknown>(
 ): [(...args: Parameters<T>) => Promise<void>, boolean] {
   const isDebouncingRef = useRef(false)
   const [isDebouncing, setIsDebouncing] = useState(false)
-  const timeoutRef = useRef<NodeJS.Timeout>()
+  const timeoutRef = useRef<NodeJS.Timeout | number>(undefined)
 
   useEffect(() => {
     return () => {

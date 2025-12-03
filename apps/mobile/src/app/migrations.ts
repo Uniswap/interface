@@ -650,7 +650,8 @@ export const migrations = {
         const newNftKey = nftKey && tokenId && getNFTAssetKey(nftKey, tokenId)
 
         const accountNftsData = nftsData[accountAddress]
-        if (newNftKey && accountNftsData) {
+
+        if (newNftKey) {
           accountNftsData[newNftKey] = { isHidden: true }
         }
       }

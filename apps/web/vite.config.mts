@@ -1,8 +1,8 @@
 import { cloudflare } from '@cloudflare/vite-plugin'
-import { tamaguiPlugin } from '@tamagui/vite-plugin'
 import react from '@vitejs/plugin-react'
 import reactOxc from '@vitejs/plugin-react-oxc'
 import { execSync } from 'child_process'
+import { config as dotenvConfig } from 'dotenv'
 import fs from 'fs'
 import path from 'path'
 import process from 'process'
@@ -80,6 +80,23 @@ const commitHash = execSync('git rev-parse HEAD').toString().trim()
 export default defineConfig(({ mode }) => {
   let env = loadEnv(mode, __dirname, '')
 
+  // Force load .env.[mode] files since NX ignores them
+  const modeEnvPath = path.resolve(__dirname, `.env.${mode}`)
+  if (fs.existsSync(modeEnvPath)) {
+    try {
+      const result = dotenvConfig({ path: modeEnvPath })
+      if (result.parsed) {
+        // Override base values with mode-specific values
+        Object.assign(env, result.parsed)
+      }
+      if (result.error) {
+        console.warn(`Warning: Failed to parse ${modeEnvPath}:`, result.error.message)
+      }
+    } catch (error) {
+      console.warn(`Warning: Failed to read ${modeEnvPath}:`, error.message)
+    }
+  }
+
   // Log environment loading for CI verification
   console.log(`ENV_LOADED: mode=${mode} REACT_APP_AWS_API_ENDPOINT=${env.REACT_APP_AWS_API_ENDPOINT}`)
 
@@ -115,6 +132,7 @@ export default defineConfig(({ mode }) => {
       'process.env.REACT_APP_GIT_COMMIT_HASH': JSON.stringify(commitHash),
       'process.env.REACT_APP_STAGING': JSON.stringify(mode === 'staging'),
       'process.env.REACT_APP_WEB_BUILD_TYPE': JSON.stringify('vite'),
+      'process.env.TAMAGUI_STACK_Z_INDEX_GLOBAL': JSON.stringify('true'),
       ...envDefines,
     },
 
@@ -142,21 +160,36 @@ export default defineConfig(({ mode }) => {
     },
 
     plugins: [
+      {
+        name: 'transform-react-native-jsx',
+        async transform(code: string, id: string) {
+          // Transform JSX in react-native libraries that ship JSX in .js files
+          const needsJsxTransform = [
+            'node_modules/react-native-reanimated',
+            'node_modules/expo-blur'  // In case it's not fully mocked
+          ].some(path => id.includes(path))
+
+          if (!needsJsxTransform || !id.endsWith('.js')) {
+            return null
+          }
+
+          // Dynamic import to avoid top-level import issues
+          const { transformWithEsbuild } = await import('vite')
+
+          // Use Vite's transformWithEsbuild to handle JSX
+          return transformWithEsbuild(code, id, {
+            loader: 'jsx',
+            jsx: 'automatic',
+          })
+        },
+      },
       portWarningPlugin(isProduction),
       reactPlugin(),
-      isProduction
-        ? tamaguiPlugin({
-            config: '../../packages/ui/src/tamagui.config.ts',
-            components: ['ui', 'uniswap', 'utilities'],
-            optimize: true,
-            importsWhitelist: ['constants.js'],
-          })
-        : undefined,
       tsconfigPaths({
         // ignores tsconfig files in Nx generator template directories
         skip: (dir) => dir.includes('files'),
       }),
-      env.REACT_APP_SKIP_CSP ? undefined : cspMetaTagPlugin(),
+      env.REACT_APP_SKIP_CSP ? undefined : cspMetaTagPlugin(mode),
       svgr({
         svgrOptions: {
           icon: false,

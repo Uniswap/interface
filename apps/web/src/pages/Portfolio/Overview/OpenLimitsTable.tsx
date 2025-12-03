@@ -1,4 +1,5 @@
 import { createColumnHelper, Row } from '@tanstack/react-table'
+import { SharedEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import {
@@ -20,10 +21,13 @@ import { iconSizes } from 'ui/src/theme'
 import { useFormattedCurrencyAmountAndUSDValue } from 'uniswap/src/components/activity/hooks/useFormattedCurrencyAmountAndUSDValue'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { getDurationRemainingString } from 'utilities/src/time/duration'
 
 /**
@@ -140,6 +144,7 @@ const LimitActionCell = memo(function LimitActionCell({ order }: { order: Uniswa
 
 export const OpenLimitsTable = memo(function OpenLimitsTable({ account, maxLimits = 5 }: OpenLimitsTableProps) {
   const { t } = useTranslation()
+  const trace = useTrace()
   const { openLimitOrders, loading } = useOpenLimitOrders(account)
   const openOffchainActivityModal = useOpenOffchainActivityModal()
 
@@ -197,12 +202,22 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({ account, maxLimit
     (row: Row<UniswapXOrderDetails>, content: JSX.Element) => {
       const order = row.original
       return (
-        <TouchableArea onPress={() => openOffchainActivityModal(order)} cursor="pointer">
+        <TouchableArea
+          onPress={() => {
+            sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+              element: ElementName.PortfolioMiniLimitRow,
+              section: SectionName.PortfolioOverviewTab,
+              ...trace,
+            })
+            openOffchainActivityModal(order)
+          }}
+          cursor="pointer"
+        >
           {content}
         </TouchableArea>
       )
     },
-    [openOffchainActivityModal],
+    [openOffchainActivityModal, trace],
   )
 
   // Only show loading state if we don't have data yet

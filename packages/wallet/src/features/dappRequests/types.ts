@@ -116,3 +116,28 @@ export interface TransactionAsset {
   /** Contract address */
   address: string
 }
+
+/**
+ * Transaction section types that can be displayed in the transaction preview
+ */
+export enum TransactionSectionType {
+  Sending = 'sending',
+  Receiving = 'receiving',
+  Approving = 'approving',
+}
+
+/**
+ * A transaction section to display (e.g., "Sending", "Receiving", "Approving")
+ */
+export interface TransactionSection {
+  type: TransactionSectionType
+  assets: TransactionAsset[]
+}
+
+/**
+ * Parsed transaction data for UI display
+ */
+export interface ParsedTransactionData {
+  sections: TransactionSection[]
+  riskLevel: TransactionRiskLevel
+}

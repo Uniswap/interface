@@ -26,7 +26,7 @@ export function HeaderText({
     })?.toExact()
 
     return readablePermitAmount ? (
-      <Text textAlign="center" variant="heading3">
+      <Text variant="heading3">
         <Trans
           // `variant` prop must be first
           components={{ highlight: <Text variant="heading3" fontWeight="bold" /> }}
@@ -39,7 +39,7 @@ export function HeaderText({
         />
       </Text>
     ) : (
-      <Text textAlign="center" variant="heading3">
+      <Text variant="heading3">
         <Trans
           // `variant` prop must be first
           components={{ highlight: <Text variant="heading3" fontWeight="bold" /> }}
@@ -70,9 +70,5 @@ export function HeaderText({
     return <Trans i18nKey="qrScanner.request.method.default" values={{ dappNameOrUrl }} />
   }
 
-  return (
-    <Text textAlign="center" variant="subheading1">
-      {getReadableMethodName(method, dappRequestInfo.name || dappRequestInfo.url)}
-    </Text>
-  )
+  return <Text variant="subheading1">{getReadableMethodName(method, dappRequestInfo.name || dappRequestInfo.url)}</Text>
 }

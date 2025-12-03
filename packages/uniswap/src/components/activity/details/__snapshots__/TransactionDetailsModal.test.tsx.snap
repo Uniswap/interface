@@ -9,47 +9,69 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
   }
 >
   <View
-    cancelable={true}
     collapsable={false}
-    disabled={false}
     focusVisibleStyle={{}}
-    focusable={true}
     forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {},
       }
     }
-    minPressDuration={0}
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
+    }
     onBlur={[Function]}
+    onClick={[Function]}
     onFocus={[Function]}
     onLayout={[Function]}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
-    onPress={[Function]}
-    onPressIn={[Function]}
-    onPressOut={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
     role="button"
     style={
-      {
-        "backgroundColor": "transparent",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
-        "flexDirection": "column",
-        "opacity": 1,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      }
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+        {},
+      ]
     }
   >
     <View
-      onBlur={[Function]}
-      onFocus={[Function]}
       style={
         {
           "alignItems": "center",
@@ -66,8 +88,6 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
       <Text
         allowFontScaling={true}
         maxFontSizeMultiplier={1.2}
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "color": "#FFFFFF",
@@ -80,8 +100,6 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
         suppressHighlighting={true}
       />
       <View
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "alignItems": "center",
@@ -94,8 +112,6 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
         <Text
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
               "color": "rgba(255, 255, 255, 0.65)",
@@ -246,183 +262,219 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
       </Text>
     </View>
   </View>
-  <View
-    aria-expanded={false}
-    cancelable={true}
-    disabled={false}
-    focusable={true}
-    minPressDuration={0}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
-    onPress={[Function]}
-    onPressIn={[Function]}
-    onPressOut={[Function]}
-  >
-    <div>
-      <View
-        cancelable={true}
-        collapsable={false}
-        disabled={false}
-        focusVisibleStyle={{}}
-        focusable={true}
-        forwardedRef={[Function]}
-        jestAnimatedStyle={
+  <View>
+    <View
+      aria-expanded={false}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+    >
+      <div
+        ref={
           {
-            "value": {},
-          }
-        }
-        minPressDuration={0}
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onLayout={[Function]}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onPress={[Function]}
-        onPressIn={[Function]}
-        onPressOut={[Function]}
-        role="button"
-        style={
-          {
-            "backgroundColor": "transparent",
-            "borderBottomLeftRadius": 999999,
-            "borderBottomRightRadius": 999999,
-            "borderTopLeftRadius": 999999,
-            "borderTopRightRadius": 999999,
-            "flexDirection": "column",
-            "opacity": 1,
-            "paddingBottom": 4,
-            "paddingLeft": 4,
-            "paddingRight": 4,
-            "paddingTop": 4,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
+            "current": null,
           }
         }
       >
-        <RNSVGSvgView
-          align="xMidYMid"
-          bbHeight={20}
-          bbWidth={20}
-          fill="none"
-          focusable={false}
-          meetOrSlice={0}
-          minX={0}
-          minY={0}
-          strokeWidth={8}
+        <View
+          collapsable={false}
+          focusVisibleStyle={{}}
+          forwardedRef={[Function]}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
+          jestAnimatedStyle={
+            {
+              "value": {},
+            }
+          }
+          jestInlineStyle={
+            [
+              {
+                "backgroundColor": "transparent",
+                "borderBottomLeftRadius": 999999,
+                "borderBottomRightRadius": 999999,
+                "borderTopLeftRadius": 999999,
+                "borderTopRightRadius": 999999,
+                "flexDirection": "column",
+                "opacity": 1,
+                "paddingBottom": 4,
+                "paddingLeft": 4,
+                "paddingRight": 4,
+                "paddingTop": 4,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+              },
+            ]
+          }
+          onBlur={[Function]}
+          onClick={[Function]}
+          onFocus={[Function]}
+          onLayout={[Function]}
+          onResponderGrant={[Function]}
+          onResponderMove={[Function]}
+          onResponderRelease={[Function]}
+          onResponderTerminate={[Function]}
+          onResponderTerminationRequest={[Function]}
+          onStartShouldSetResponder={[Function]}
+          role="button"
           style={
             [
               {
                 "backgroundColor": "transparent",
-                "borderWidth": 0,
+                "borderBottomLeftRadius": 999999,
+                "borderBottomRightRadius": 999999,
+                "borderTopLeftRadius": 999999,
+                "borderTopRightRadius": 999999,
+                "flexDirection": "column",
+                "opacity": 1,
+                "paddingBottom": 4,
+                "paddingLeft": 4,
+                "paddingRight": 4,
+                "paddingTop": 4,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
               },
-              {
-                "color": "rgba(255, 255, 255, 0.65)",
-                "height": 20,
-                "width": 20,
-              },
-              {
-                "flex": 0,
-                "height": 20,
-                "width": 20,
-              },
+              {},
             ]
           }
-          vbHeight={4}
-          vbWidth={18}
         >
-          <RNSVGGroup
-            color="rgba(255, 255, 255, 0.65)"
-            fill={null}
-            propList={
+          <RNSVGSvgView
+            align="xMidYMid"
+            bbHeight={20}
+            bbWidth={20}
+            fill="none"
+            focusable={false}
+            meetOrSlice={0}
+            minX={0}
+            minY={0}
+            strokeWidth={8}
+            style={
               [
-                "fill",
-                "strokeWidth",
+                {
+                  "backgroundColor": "transparent",
+                  "borderWidth": 0,
+                },
+                {
+                  "color": "rgba(255, 255, 255, 0.65)",
+                  "height": 20,
+                  "width": 20,
+                },
+                {
+                  "flex": 0,
+                  "height": 20,
+                  "width": 20,
+                },
               ]
             }
-            strokeWidth={8}
+            vbHeight={4}
+            vbWidth={18}
           >
-            <RNSVGPath
-              d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
-              fill={
-                {
-                  "payload": 4278190080,
-                  "type": 0,
-                }
-              }
+            <RNSVGGroup
+              color="rgba(255, 255, 255, 0.65)"
+              fill={null}
               propList={
                 [
-                  "stroke",
+                  "fill",
                   "strokeWidth",
-                  "strokeLinecap",
-                  "strokeLinejoin",
                 ]
               }
-              stroke={
-                {
-                  "type": 2,
+              strokeWidth={8}
+            >
+              <RNSVGPath
+                d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
+                fill={
+                  {
+                    "payload": 4278190080,
+                    "type": 0,
+                  }
                 }
-              }
-              strokeLinecap={1}
-              strokeLinejoin={1}
-              strokeWidth="2"
-            />
-            <RNSVGPath
-              d="M16 3C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2C15 2.55228 15.4477 3 16 3Z"
-              fill={
-                {
-                  "payload": 4278190080,
-                  "type": 0,
+                propList={
+                  [
+                    "stroke",
+                    "strokeWidth",
+                    "strokeLinecap",
+                    "strokeLinejoin",
+                  ]
                 }
-              }
-              propList={
-                [
-                  "stroke",
-                  "strokeWidth",
-                  "strokeLinecap",
-                  "strokeLinejoin",
-                ]
-              }
-              stroke={
-                {
-                  "type": 2,
+                stroke={
+                  {
+                    "type": 2,
+                  }
                 }
-              }
-              strokeLinecap={1}
-              strokeLinejoin={1}
-              strokeWidth="2"
-            />
-            <RNSVGPath
-              d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z"
-              fill={
-                {
-                  "payload": 4278190080,
-                  "type": 0,
+                strokeLinecap={1}
+                strokeLinejoin={1}
+                strokeWidth="2"
+              />
+              <RNSVGPath
+                d="M16 3C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2C15 2.55228 15.4477 3 16 3Z"
+                fill={
+                  {
+                    "payload": 4278190080,
+                    "type": 0,
+                  }
                 }
-              }
-              propList={
-                [
-                  "stroke",
-                  "strokeWidth",
-                  "strokeLinecap",
-                  "strokeLinejoin",
-                ]
-              }
-              stroke={
-                {
-                  "type": 2,
+                propList={
+                  [
+                    "stroke",
+                    "strokeWidth",
+                    "strokeLinecap",
+                    "strokeLinejoin",
+                  ]
                 }
-              }
-              strokeLinecap={1}
-              strokeLinejoin={1}
-              strokeWidth="2"
-            />
-          </RNSVGGroup>
-        </RNSVGSvgView>
-      </View>
-    </div>
+                stroke={
+                  {
+                    "type": 2,
+                  }
+                }
+                strokeLinecap={1}
+                strokeLinejoin={1}
+                strokeWidth="2"
+              />
+              <RNSVGPath
+                d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z"
+                fill={
+                  {
+                    "payload": 4278190080,
+                    "type": 0,
+                  }
+                }
+                propList={
+                  [
+                    "stroke",
+                    "strokeWidth",
+                    "strokeLinecap",
+                    "strokeLinejoin",
+                  ]
+                }
+                stroke={
+                  {
+                    "type": 2,
+                  }
+                }
+                strokeLinecap={1}
+                strokeLinejoin={1}
+                strokeWidth="2"
+              />
+            </RNSVGGroup>
+          </RNSVGSvgView>
+        </View>
+      </div>
+    </View>
   </View>
 </View>
 `;
@@ -540,52 +592,77 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       }
     >
       <View
-        cancelable={true}
         collapsable={false}
-        disabled={false}
         focusVisibleStyle={{}}
-        focusable={true}
         forwardedRef={[Function]}
+        jestAnimatedProps={
+          {
+            "value": {},
+          }
+        }
         jestAnimatedStyle={
           {
             "value": {},
           }
         }
-        minPressDuration={0}
+        jestInlineStyle={
+          [
+            {
+              "alignItems": "center",
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 12,
+              "borderBottomRightRadius": 12,
+              "borderTopLeftRadius": 12,
+              "borderTopRightRadius": 12,
+              "flexDirection": "row",
+              "gap": 6,
+              "justifyContent": "center",
+              "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
+        }
         onBlur={[Function]}
+        onClick={[Function]}
         onFocus={[Function]}
         onLayout={[Function]}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onPress={[Function]}
-        onPressIn={[Function]}
-        onPressOut={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         role="button"
         style={
-          {
-            "alignItems": "center",
-            "backgroundColor": "transparent",
-            "borderBottomLeftRadius": 12,
-            "borderBottomRightRadius": 12,
-            "borderTopLeftRadius": 12,
-            "borderTopRightRadius": 12,
-            "flexDirection": "row",
-            "gap": 6,
-            "justifyContent": "center",
-            "opacity": 1,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          }
+          [
+            {
+              "alignItems": "center",
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 12,
+              "borderBottomRightRadius": 12,
+              "borderTopLeftRadius": 12,
+              "borderTopRightRadius": 12,
+              "flexDirection": "row",
+              "gap": 6,
+              "justifyContent": "center",
+              "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+            {},
+          ]
         }
       >
         <Text
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
               "color": "#FFFFFF",
@@ -829,52 +906,77 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       }
     >
       <View
-        cancelable={true}
         collapsable={false}
-        disabled={false}
         focusVisibleStyle={{}}
-        focusable={true}
         forwardedRef={[Function]}
+        jestAnimatedProps={
+          {
+            "value": {},
+          }
+        }
         jestAnimatedStyle={
           {
             "value": {},
           }
         }
-        minPressDuration={0}
+        jestInlineStyle={
+          [
+            {
+              "alignItems": "center",
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 12,
+              "borderBottomRightRadius": 12,
+              "borderTopLeftRadius": 12,
+              "borderTopRightRadius": 12,
+              "flexDirection": "row",
+              "gap": 6,
+              "justifyContent": "center",
+              "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          ]
+        }
         onBlur={[Function]}
+        onClick={[Function]}
         onFocus={[Function]}
         onLayout={[Function]}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onPress={[Function]}
-        onPressIn={[Function]}
-        onPressOut={[Function]}
+        onResponderGrant={[Function]}
+        onResponderMove={[Function]}
+        onResponderRelease={[Function]}
+        onResponderTerminate={[Function]}
+        onResponderTerminationRequest={[Function]}
+        onStartShouldSetResponder={[Function]}
         role="button"
         style={
-          {
-            "alignItems": "center",
-            "backgroundColor": "transparent",
-            "borderBottomLeftRadius": 12,
-            "borderBottomRightRadius": 12,
-            "borderTopLeftRadius": 12,
-            "borderTopRightRadius": 12,
-            "flexDirection": "row",
-            "gap": 6,
-            "justifyContent": "center",
-            "opacity": 1,
-            "transform": [
-              {
-                "scale": 1,
-              },
-            ],
-          }
+          [
+            {
+              "alignItems": "center",
+              "backgroundColor": "transparent",
+              "borderBottomLeftRadius": 12,
+              "borderBottomRightRadius": 12,
+              "borderTopLeftRadius": 12,
+              "borderTopRightRadius": 12,
+              "flexDirection": "row",
+              "gap": 6,
+              "justifyContent": "center",
+              "opacity": 1,
+              "transform": [
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+            {},
+          ]
         }
       >
         <Text
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
               "color": "#FFFFFF",

@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, styled, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { opacify, zIndexes } from 'ui/src/theme'
+import { ElementName, InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 
 function useBackgroundGradient() {
   const colors = useSporeColors()
@@ -107,16 +109,22 @@ export function ConnectWalletFixedBottomButton({ shouldShow = false }: ConnectWa
           <Text variant="body2" color="$neutral2">
             {t('portfolio.disconnected.connectWallet.cta')}
           </Text>
-          <Button
-            variant="branded"
-            size="medium"
-            width="fit-content"
-            maxHeight="48px"
-            margin="auto"
-            onPress={accountDrawer.open}
+          <Trace
+            logPress
+            eventOnTrigger={InterfaceEventName.ConnectWalletButtonClicked}
+            element={ElementName.PortfolioConnectWalletBottomButton}
           >
-            {t('common.connectWallet.button')}
-          </Button>
+            <Button
+              variant="branded"
+              size="medium"
+              width="fit-content"
+              maxHeight="48px"
+              margin="auto"
+              onPress={accountDrawer.open}
+            >
+              {t('common.connectWallet.button')}
+            </Button>
+          </Trace>
         </Flex>
       </FixedBottomButton>
     </>

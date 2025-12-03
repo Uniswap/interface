@@ -297,10 +297,15 @@ export default function FeatureFlagModal(): JSX.Element {
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Notifications">
-            <FeatureFlagOption flag={FeatureFlags.NotificationSystem} label="Enable Notification System" />
+            <FeatureFlagOption flag={FeatureFlags.NotificationService} label="Enable Notification Service" />
+            <FeatureFlagOption
+              flag={FeatureFlags.NotificationApiDataSource}
+              label="Enable API Data Source for Notifications"
+            />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Misc">
             <FeatureFlagOption flag={FeatureFlags.BridgedAssetsBannerV2} label="Enable V2 Bridged Assets Banner" />
+            <FeatureFlagOption flag={FeatureFlags.UniswapWrapped2025} label="Enable Uniswap Wrapped 2025" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Experiments">
             <Flex ml="$padding8">

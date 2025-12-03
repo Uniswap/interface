@@ -6,6 +6,7 @@ import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
+import { shortenHash } from 'utilities/src/addresses'
 
 interface ActivityAddressCellProps {
   transaction: TransactionDetails
@@ -22,14 +23,21 @@ function _ActivityAddressCell({ transaction }: ActivityAddressCellProps) {
 
   // Determine what to show based on transaction type and available data
   const showProtocol =
-    protocolInfo && transactionType !== TransactionType.Send && transactionType !== TransactionType.Receive
+    protocolInfo &&
+    transactionType !== TransactionType.Send &&
+    transactionType !== TransactionType.Receive &&
+    transactionType !== TransactionType.Swap &&
+    transactionType !== TransactionType.Bridge
   const showAddress = !showProtocol && otherPartyAddress
+  const showTransactionHash = transactionType === TransactionType.Swap || transactionType === TransactionType.Bridge
 
   const label = useMemo(() => {
     if (transactionType === TransactionType.Send) {
       return t('common.text.recipient')
     } else if (transactionType === TransactionType.Receive) {
       return t('common.text.sender')
+    } else if (transactionType === TransactionType.Swap || transactionType === TransactionType.Bridge) {
+      return t('transaction.details.transaction')
     } else if (showProtocol) {
       return t('common.protocol')
     }
@@ -59,6 +67,10 @@ function _ActivityAddressCell({ transaction }: ActivityAddressCellProps) {
               {protocolInfo.name}
             </Text>
           </Flex>
+        ) : showTransactionHash ? (
+          <Text variant="body3" color="$neutral1">
+            {shortenHash(transaction.hash)}
+          </Text>
         ) : (
           showAddress && <AddressWithAvatar address={otherPartyAddress} />
         )}

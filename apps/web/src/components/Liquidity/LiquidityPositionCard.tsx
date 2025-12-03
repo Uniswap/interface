@@ -534,7 +534,7 @@ function MiniPositionCard({
 
 const activeStyle: FlexProps = { opacity: 1, pointerEvents: 'auto', backgroundColor: '$scrim' }
 const PositionDetailsMenuButton = styled(Flex, {
-  animation: 'fast',
+  transition: 'all 0.1s ease-in-out',
   opacity: 0,
   borderRadius: '$rounded12',
   p: '$spacing8',

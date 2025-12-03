@@ -19,7 +19,7 @@ describe('useIsKeyboardOpen', () => {
       height: 800,
       addEventListener: jest.fn((event: string, callback: (event: Event) => void) => {
         listeners[event] = listeners[event] || []
-        listeners[event]?.push(callback)
+        listeners[event].push(callback)
       }),
       dispatchEvent: (event: Event): boolean => {
         if (listeners[event.type]) {

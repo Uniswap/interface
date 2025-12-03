@@ -5,7 +5,7 @@ import { TokenAmountDisplay } from 'pages/Portfolio/Activity/ActivityTable/Token
 import { getTransactionTypeFilterOptions } from 'pages/Portfolio/Activity/Filters/utils'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { EM_DASH, Flex, Text } from 'ui/src'
 import { ArrowRight } from 'ui/src/components/icons/ArrowRight'
 import { iconSizes } from 'ui/src/theme'
 import { useFormattedCurrencyAmountAndUSDValue } from 'uniswap/src/components/activity/hooks/useFormattedCurrencyAmountAndUSDValue'
@@ -36,8 +36,8 @@ interface ActivityAmountCellProps {
 
 function EmptyCell() {
   return (
-    <Text variant="body3" color="$neutral2">
-      —
+    <Text variant="body3" color="$neutral3">
+      {EM_DASH}
     </Text>
   )
 }

@@ -40,8 +40,8 @@ describe('useShakeAnimation', () => {
     const container = result.getByTestId('shake-container')
     const button = result.getByTestId('shake-button')
 
-    // Assert initial state - check that container exists
-    expect(container).toBeDefined()
+    // Assert initial state
+    expect(container.style).toBeDefined()
 
     // Act - trigger the shake animation
     act(() => {
@@ -62,7 +62,9 @@ describe('useShakeAnimation', () => {
     rerender()
 
     // Assert
+    // shakeStyle might be recreated but should have the same structure
     expect(result.current.shakeStyle).toStrictEqual(initialShakeStyle)
+    // triggerShakeAnimation should maintain reference due to useEvent
     expect(result.current.triggerShakeAnimation).toBe(initialTriggerShakeAnimation)
   })
 })

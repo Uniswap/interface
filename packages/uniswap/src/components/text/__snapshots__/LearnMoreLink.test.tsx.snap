@@ -2,26 +2,16 @@
 
 exports[`LearnMoreLink renders without error 1`] = `
 <View
-  cancelable={true}
-  collapsable={false}
-  disabled={false}
-  focusVisibleStyle={{}}
-  focusable={true}
-  forwardedRef={[Function]}
-  jestAnimatedStyle={
-    {
-      "value": {},
-    }
-  }
-  minPressDuration={0}
   onBlur={[Function]}
+  onClick={[Function]}
   onFocus={[Function]}
   onLayout={[Function]}
-  onMouseEnter={[Function]}
-  onMouseLeave={[Function]}
-  onPress={[Function]}
-  onPressIn={[Function]}
-  onPressOut={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   role="button"
   style={
     {

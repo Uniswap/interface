@@ -8,4 +8,7 @@ export default defineConfig({
       exclude: ['**/__generated__/**', '**/node_modules/**', '**/dist/**', '**/*.config.*', '**/scripts/**'],
     },
   },
+  resolve: {
+    extensions: ['.web.ts', '.web.tsx', '.ts', '.tsx', '.js', '.jsx', '.json'],
+  },
 })

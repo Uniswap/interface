@@ -1,11 +1,11 @@
 # @universe/notifications
 
-Client-side notification system for fetching, processing, storing, and displaying notifications from a backend service.
+Client-side notification service for fetching, processing, storing, and displaying notifications from a backend service.
 
 ## Architecture
 
 ```
-NotificationSystem (orchestrator)
+NotificationService (orchestrator)
 ├── NotificationDataSource        → Fetch/websocket notification data
 ├── NotificationTracker           → No-op (backend handles deduplication)
 ├── NotificationProcessor         → Filter & prioritize notifications
@@ -32,12 +32,12 @@ Notifications can trigger follow-up notifications based on user actions:
 
 ## Usage
 
-### Initialize the System
+### Initialize the Service
 
 ```typescript
-import { createNotificationSystem } from '@universe/notifications'
+import { createNotificationService } from '@universe/notifications'
 
-const notificationSystem = createNotificationSystem({
+const notificationService = createNotificationService({
   dataSources: [getFetchNotificationDataSource({ apiClient })],
   tracker: createNoopNotificationTracker(),
   processor: createNotificationProcessor(),
@@ -45,20 +45,20 @@ const notificationSystem = createNotificationSystem({
   chainCoordinator: createNotificationChainCoordinator()
 })
 
-await notificationSystem.initialize()
+await notificationService.initialize()
 ```
 
 ### Handle User Actions
 
 ```typescript
 // When user clicks a button
-notificationSystem.onButtonClick(notificationName, button)
+notificationService.onButtonClick(notificationName, button)
 
 // When user dismisses
-notificationSystem.onDismiss(notificationName)
+notificationService.onDismiss(notificationName)
 
 // When user clicks background
-notificationSystem.onBackgroundClick(notificationName)
+notificationService.onBackgroundClick(notificationName)
 ```
 
 ### React Integration
@@ -69,5 +69,5 @@ notificationSystem.onBackgroundClick(notificationName)
 
 // Container reads from Zustand store
 const activeNotifications = useNotificationStore(state => state.activeNotifications)
-const notificationSystem = useNotificationStore(state => state.notificationSystem)
+const notificationService = useNotificationStore(state => state.notificationService)
 ```

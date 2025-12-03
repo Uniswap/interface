@@ -2,38 +2,44 @@
 
 exports[`ContextMenu renders without error 1`] = `
 [
-  <View
-    aria-expanded={true}
-    cancelable={true}
-    disabled={false}
-    focusable={true}
-    minPressDuration={0}
-    onMouseEnter={[Function]}
-    onMouseLeave={[Function]}
-    onPress={[Function]}
-    onPressIn={[Function]}
-    onPressOut={[Function]}
-  >
-    <div
-      onContextMenu={[Function]}
+  <View>
+    <View
+      aria-expanded={true}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
     >
-      <View
-        style={
+      <div
+        onContextMenu={[Function]}
+        ref={
           {
-            "flexDirection": "column",
+            "current": null,
           }
         }
       >
-        Trigger
-      </View>
-    </div>
+        <View
+          style={
+            {
+              "flexDirection": "column",
+            }
+          }
+        >
+          Trigger
+        </View>
+      </div>
+    </View>
   </View>,
   <View
     pointerEvents="box-none"
     style={
       {
         "bottom": 0,
-        "flexDirection": "column",
         "left": 0,
         "maxWidth": "100%",
         "position": "absolute",
@@ -44,15 +50,15 @@ exports[`ContextMenu renders without error 1`] = `
     }
   >
     <View
-      cancelable={true}
-      disabled={false}
-      focusable={true}
-      minPressDuration={0}
-      onMouseEnter={[Function]}
-      onMouseLeave={[Function]}
-      onPress={[Function]}
-      onPressIn={[Function]}
-      onPressOut={[Function]}
+      onBlur={[Function]}
+      onClick={[Function]}
+      onFocus={[Function]}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
       style={
         {
           "bottom": 0,
@@ -89,6 +95,11 @@ exports[`ContextMenu renders without error 1`] = `
           collapsable={false}
           forwardedRef={[Function]}
           id=":r3:"
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
           jestAnimatedStyle={
             {
               "value": {
@@ -109,33 +120,50 @@ exports[`ContextMenu renders without error 1`] = `
               },
             }
           }
+          jestInlineStyle={
+            [
+              {
+                "alignItems": "center",
+                "flexDirection": "column",
+                "paddingBottom": 8,
+                "paddingLeft": 8,
+                "paddingRight": 8,
+                "paddingTop": 8,
+              },
+            ]
+          }
           style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "transparent",
-              "borderBottomLeftRadius": 0,
-              "borderBottomRightRadius": 0,
-              "borderTopLeftRadius": 0,
-              "borderTopRightRadius": 0,
-              "flexDirection": "column",
-              "opacity": 0,
-              "paddingBottom": 8,
-              "paddingLeft": 8,
-              "paddingRight": 8,
-              "paddingTop": 8,
-              "transform": [
-                {
-                  "scale": 0.98,
-                },
-                {
-                  "translateY": -4,
-                },
-              ],
-            }
+            [
+              {
+                "alignItems": "center",
+                "flexDirection": "column",
+                "paddingBottom": 8,
+                "paddingLeft": 8,
+                "paddingRight": 8,
+                "paddingTop": 8,
+              },
+              {
+                "backgroundColor": "transparent",
+                "borderBottomLeftRadius": 0,
+                "borderBottomRightRadius": 0,
+                "borderTopLeftRadius": 0,
+                "borderTopRightRadius": 0,
+                "opacity": 0,
+                "transform": [
+                  {
+                    "scale": 0.98,
+                  },
+                  {
+                    "translateY": -4,
+                  },
+                ],
+              },
+            ]
           }
         >
           <div
             onContextMenu={[Function]}
+            ref={[Function]}
             style={
               {
                 "backgroundColor": "#131313",
@@ -164,56 +192,86 @@ exports[`ContextMenu renders without error 1`] = `
             }
           >
             <View
-              cancelable={true}
               collapsable={false}
-              disabled={false}
               focusVisibleStyle={{}}
-              focusable={true}
               forwardedRef={[Function]}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {},
                 }
               }
-              minPressDuration={0}
+              jestInlineStyle={
+                [
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#131313",
+                    "borderBottomLeftRadius": 12,
+                    "borderBottomRightRadius": 12,
+                    "borderTopLeftRadius": 12,
+                    "borderTopRightRadius": 12,
+                    "flexDirection": "row",
+                    "flexGrow": 1,
+                    "gap": 8,
+                    "justifyContent": "space-between",
+                    "opacity": 1,
+                    "paddingBottom": 8,
+                    "paddingLeft": 8,
+                    "paddingRight": 8,
+                    "paddingTop": 8,
+                    "transform": [
+                      {
+                        "scale": 1,
+                      },
+                    ],
+                  },
+                ]
+              }
               onBlur={[Function]}
+              onClick={[Function]}
               onFocus={[Function]}
               onLayout={[Function]}
-              onMouseEnter={[Function]}
-              onMouseLeave={[Function]}
-              onPress={[Function]}
-              onPressIn={[Function]}
-              onPressOut={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               role="none"
               selectable={false}
               style={
-                {
-                  "alignItems": "center",
-                  "backgroundColor": "#131313",
-                  "borderBottomLeftRadius": 12,
-                  "borderBottomRightRadius": 12,
-                  "borderTopLeftRadius": 12,
-                  "borderTopRightRadius": 12,
-                  "flexDirection": "row",
-                  "flexGrow": 1,
-                  "gap": 8,
-                  "justifyContent": "space-between",
-                  "opacity": 1,
-                  "paddingBottom": 8,
-                  "paddingLeft": 8,
-                  "paddingRight": 8,
-                  "paddingTop": 8,
-                  "transform": [
-                    {
-                      "scale": 1,
-                    },
-                  ],
-                }
+                [
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#131313",
+                    "borderBottomLeftRadius": 12,
+                    "borderBottomRightRadius": 12,
+                    "borderTopLeftRadius": 12,
+                    "borderTopRightRadius": 12,
+                    "flexDirection": "row",
+                    "flexGrow": 1,
+                    "gap": 8,
+                    "justifyContent": "space-between",
+                    "opacity": 1,
+                    "paddingBottom": 8,
+                    "paddingLeft": 8,
+                    "paddingRight": 8,
+                    "paddingTop": 8,
+                    "transform": [
+                      {
+                        "scale": 1,
+                      },
+                    ],
+                  },
+                  {},
+                ]
               }
             >
               <View
-                onBlur={[Function]}
-                onFocus={[Function]}
                 style={
                   {
                     "alignItems": "center",
@@ -223,8 +281,6 @@ exports[`ContextMenu renders without error 1`] = `
                 }
               >
                 <View
-                  onBlur={[Function]}
-                  onFocus={[Function]}
                   style={
                     {
                       "flexDirection": "column",
@@ -237,8 +293,6 @@ exports[`ContextMenu renders without error 1`] = `
                     ellipsizeMode="tail"
                     maxFontSizeMultiplier={1.2}
                     numberOfLines={1}
-                    onBlur={[Function]}
-                    onFocus={[Function]}
                     style={
                       {
                         "color": "#FFFFFF",
@@ -278,56 +332,86 @@ exports[`ContextMenu renders without error 1`] = `
               }
             />
             <View
-              cancelable={true}
               collapsable={false}
-              disabled={false}
               focusVisibleStyle={{}}
-              focusable={true}
               forwardedRef={[Function]}
+              jestAnimatedProps={
+                {
+                  "value": {},
+                }
+              }
               jestAnimatedStyle={
                 {
                   "value": {},
                 }
               }
-              minPressDuration={0}
+              jestInlineStyle={
+                [
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#131313",
+                    "borderBottomLeftRadius": 12,
+                    "borderBottomRightRadius": 12,
+                    "borderTopLeftRadius": 12,
+                    "borderTopRightRadius": 12,
+                    "flexDirection": "row",
+                    "flexGrow": 1,
+                    "gap": 8,
+                    "justifyContent": "space-between",
+                    "opacity": 1,
+                    "paddingBottom": 8,
+                    "paddingLeft": 8,
+                    "paddingRight": 8,
+                    "paddingTop": 8,
+                    "transform": [
+                      {
+                        "scale": 1,
+                      },
+                    ],
+                  },
+                ]
+              }
               onBlur={[Function]}
+              onClick={[Function]}
               onFocus={[Function]}
               onLayout={[Function]}
-              onMouseEnter={[Function]}
-              onMouseLeave={[Function]}
-              onPress={[Function]}
-              onPressIn={[Function]}
-              onPressOut={[Function]}
+              onResponderGrant={[Function]}
+              onResponderMove={[Function]}
+              onResponderRelease={[Function]}
+              onResponderTerminate={[Function]}
+              onResponderTerminationRequest={[Function]}
+              onStartShouldSetResponder={[Function]}
               role="none"
               selectable={false}
               style={
-                {
-                  "alignItems": "center",
-                  "backgroundColor": "#131313",
-                  "borderBottomLeftRadius": 12,
-                  "borderBottomRightRadius": 12,
-                  "borderTopLeftRadius": 12,
-                  "borderTopRightRadius": 12,
-                  "flexDirection": "row",
-                  "flexGrow": 1,
-                  "gap": 8,
-                  "justifyContent": "space-between",
-                  "opacity": 1,
-                  "paddingBottom": 8,
-                  "paddingLeft": 8,
-                  "paddingRight": 8,
-                  "paddingTop": 8,
-                  "transform": [
-                    {
-                      "scale": 1,
-                    },
-                  ],
-                }
+                [
+                  {
+                    "alignItems": "center",
+                    "backgroundColor": "#131313",
+                    "borderBottomLeftRadius": 12,
+                    "borderBottomRightRadius": 12,
+                    "borderTopLeftRadius": 12,
+                    "borderTopRightRadius": 12,
+                    "flexDirection": "row",
+                    "flexGrow": 1,
+                    "gap": 8,
+                    "justifyContent": "space-between",
+                    "opacity": 1,
+                    "paddingBottom": 8,
+                    "paddingLeft": 8,
+                    "paddingRight": 8,
+                    "paddingTop": 8,
+                    "transform": [
+                      {
+                        "scale": 1,
+                      },
+                    ],
+                  },
+                  {},
+                ]
               }
             >
               <View
-                onBlur={[Function]}
-                onFocus={[Function]}
                 style={
                   {
                     "alignItems": "center",
@@ -337,8 +421,6 @@ exports[`ContextMenu renders without error 1`] = `
                 }
               >
                 <View
-                  onBlur={[Function]}
-                  onFocus={[Function]}
                   style={
                     {
                       "flexDirection": "column",
@@ -351,8 +433,6 @@ exports[`ContextMenu renders without error 1`] = `
                     ellipsizeMode="tail"
                     maxFontSizeMultiplier={1.2}
                     numberOfLines={1}
-                    onBlur={[Function]}
-                    onFocus={[Function]}
                     style={
                       {
                         "color": "#FFFFFF",

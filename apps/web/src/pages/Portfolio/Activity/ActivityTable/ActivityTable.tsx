@@ -1,4 +1,4 @@
-import { createColumnHelper, Row } from '@tanstack/react-table'
+import { ColumnDef, createColumnHelper, Row } from '@tanstack/react-table'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { HeaderCell } from 'components/Table/styled'
@@ -21,16 +21,12 @@ interface ActivityTableProps {
   rowWrapper?: (row: Row<TransactionDetails>, content: JSX.Element) => JSX.Element
 }
 
-function _ActivityTable({ data, loading = false, error = false, rowWrapper }: ActivityTableProps): JSX.Element {
+export function useActivityTableColumns(showLoadingSkeleton: boolean): ColumnDef<TransactionDetails, any>[] {
   const { t } = useTranslation()
   const isTouchDevice = useIsTouchDevice()
   const columnHelper = useMemo(() => createColumnHelper<TransactionDetails>(), [])
-  const showLoadingSkeleton = loading || error
 
-  // Initialize address lookup for batch fetching
-  useActivityAddressLookup(data)
-
-  const columns = useMemo(
+  return useMemo(
     () => [
       // Time Column
       columnHelper.accessor('addedTime', {
@@ -161,6 +157,15 @@ function _ActivityTable({ data, loading = false, error = false, rowWrapper }: Ac
     ],
     [t, columnHelper, showLoadingSkeleton, isTouchDevice],
   )
+}
+
+function _ActivityTable({ data, loading = false, error = false, rowWrapper }: ActivityTableProps): JSX.Element {
+  const showLoadingSkeleton = loading || error
+
+  // Initialize address lookup for batch fetching
+  useActivityAddressLookup(data)
+
+  const columns = useActivityTableColumns(showLoadingSkeleton)
 
   return (
     <Table
@@ -172,6 +177,8 @@ function _ActivityTable({ data, loading = false, error = false, rowWrapper }: Ac
       rowWrapper={rowWrapper}
       rowHeight={ACTIVITY_TABLE_ROW_HEIGHT}
       compactRowHeight={ACTIVITY_TABLE_ROW_HEIGHT}
+      defaultPinnedColumns={['addedTime']}
+      maxWidth={1200}
     />
   )
 }

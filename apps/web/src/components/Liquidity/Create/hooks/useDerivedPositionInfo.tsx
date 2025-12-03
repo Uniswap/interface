@@ -75,7 +75,10 @@ export function getSortedCurrenciesForProtocol({
 }
 
 function filterPoolByFeeTier(pool: Pool, feeTier: FeeData): Pool | undefined {
-  if (getFeeTierKey(feeTier.feeAmount, feeTier.isDynamic) === getFeeTierKey(pool.fee, pool.isDynamicFee)) {
+  if (
+    getFeeTierKey({ feeTier: feeTier.feeAmount, tickSpacing: feeTier.tickSpacing, isDynamicFee: feeTier.isDynamic }) ===
+    getFeeTierKey({ feeTier: pool.fee, tickSpacing: pool.tickSpacing, isDynamicFee: pool.isDynamicFee })
+  ) {
     return pool
   }
   return undefined
@@ -148,16 +151,16 @@ function useGetLegacyPoolOrPair({
   }, [pool, protocolVersion, sortedCurrencies])
 
   const creatingPoolOrPair = useMemo(() => {
-    if (!fee) {
-      return false
-    }
-
     if (protocolVersion === ProtocolVersion.UNSPECIFIED) {
       return false
     }
 
     if (protocolVersion === ProtocolVersion.V2) {
       return pairResult[0] === PairState.NOT_EXISTS
+    }
+
+    if (!fee) {
+      return false
     }
 
     if (protocolVersion === ProtocolVersion.V3) {

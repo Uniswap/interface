@@ -2,16 +2,8 @@
 
 exports[`OpenLimitOrdersButton > should render if there are open limit orders 1`] = `
 .c4 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
 }
 
@@ -23,35 +15,17 @@ exports[`OpenLimitOrdersButton > should render if there are open limit orders 1`
 
 .c2 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
 }
 
 .c3 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 12px;
 }
@@ -62,18 +36,16 @@ exports[`OpenLimitOrdersButton > should render if there are open limit orders 1`
   background: #F9F9F9;
   padding: 12px 16px;
   margin-top: 12px;
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c0:hover {
+.c0 :hover {
   opacity: 0.6;
 }
 
-.c0:active {
+.c0 :active {
   opacity: 0.4;
 }
 
@@ -89,10 +61,13 @@ exports[`OpenLimitOrdersButton > should render if there are open limit orders 1`
         class="c0"
       >
         <div
+          align="center"
           class="c1 c2"
+          justify="space-between"
         >
           <div
             class="c1 c3"
+            gap="md"
           >
             <svg
               fill="rgba(19, 19, 19, 0.63)"

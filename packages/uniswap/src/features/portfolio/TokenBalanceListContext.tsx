@@ -84,7 +84,7 @@ export function TokenBalanceListContextProvider({
 
   const [hiddenTokensExpanded, setHiddenTokensExpanded] = useState(shouldShowHiddenTokens)
 
-  const rowsRef = useRef<TokenBalanceListRow[]>()
+  const rowsRef = useRef<TokenBalanceListRow[]>(undefined)
 
   const rows = useMemo<TokenBalanceListRow[]>(() => {
     const shownTokensArray = shownTokens ?? []

@@ -35,7 +35,7 @@ export function LongMarkdownText(props: LongMarkdownTextProps): JSX.Element {
   const [expanded, toggleExpanded] = useReducer((isExpanded) => !isExpanded, true)
   const [textLengthExceedsLimit, setTextLengthExceedsLimit] = useState(false)
   const [textLineHeight, setTextLineHeight] = useState<number>(fonts[variant].lineHeight)
-  const initialContentHeightRef = useRef<number>()
+  const initialContentHeightRef = useRef<number>(undefined)
   const maxVisibleHeight = textLineHeight * initialDisplayedLines
 
   const onMarkdownLayout = useCallback(

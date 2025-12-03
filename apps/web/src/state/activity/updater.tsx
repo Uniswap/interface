@@ -148,6 +148,7 @@ function useOnActivityUpdate(): OnActivityUpdate {
             status: update.status,
             type: original.typeInfo.type,
             isFinalStep: original.typeInfo.isFinalStep,
+            swapStartTimestamp: original.typeInfo.swapStartTimestamp,
           })
         } else if (original.typeInfo.type === TransactionType.Bridge) {
           logSwapFinalized({
@@ -160,6 +161,7 @@ function useOnActivityUpdate(): OnActivityUpdate {
             status: update.status,
             type: original.typeInfo.type,
             isFinalStep: original.typeInfo.isFinalStep,
+            swapStartTimestamp: original.typeInfo.swapStartTimestamp,
           })
         }
 

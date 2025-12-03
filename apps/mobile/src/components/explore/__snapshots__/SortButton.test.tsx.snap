@@ -6,12 +6,7 @@ exports[`SortButton renders without error 1`] = `
     style={
       {
         "alignItems": "center",
-        "backgroundColor": {
-          "dynamic": {
-            "dark": "rgba(255,255,255,0.12)",
-            "light": "rgba(19, 19, 19, 0.08)",
-          },
-        },
+        "backgroundColor": "rgba(19, 19, 19, 0.08)",
         "borderBottomLeftRadius": 20,
         "borderBottomRightRadius": 20,
         "borderTopLeftRadius": 20,
@@ -29,10 +24,33 @@ exports[`SortButton renders without error 1`] = `
       collapsable={false}
       focusVisibleStyle={{}}
       forwardedRef={[Function]}
+      jestAnimatedProps={
+        {
+          "value": {},
+        }
+      }
       jestAnimatedStyle={
         {
           "value": {},
         }
+      }
+      jestInlineStyle={
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderBottomLeftRadius": 12,
+            "borderBottomRightRadius": 12,
+            "borderTopLeftRadius": 12,
+            "borderTopRightRadius": 12,
+            "flexDirection": "column",
+            "opacity": 1,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          },
+        ]
       }
       onBlur={[Function]}
       onClick={[Function]}
@@ -46,26 +64,27 @@ exports[`SortButton renders without error 1`] = `
       onStartShouldSetResponder={[Function]}
       role="button"
       style={
-        {
-          "backgroundColor": "transparent",
-          "borderBottomLeftRadius": 12,
-          "borderBottomRightRadius": 12,
-          "borderTopLeftRadius": 12,
-          "borderTopRightRadius": 12,
-          "flexDirection": "column",
-          "opacity": 1,
-          "transform": [
-            {
-              "scale": 1,
-            },
-          ],
-        }
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderBottomLeftRadius": 12,
+            "borderBottomRightRadius": 12,
+            "borderTopLeftRadius": 12,
+            "borderTopRightRadius": 12,
+            "flexDirection": "column",
+            "opacity": 1,
+            "transform": [
+              {
+                "scale": 1,
+              },
+            ],
+          },
+          {},
+        ]
       }
     >
       <View
         collapsable={false}
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "alignItems": "center",
@@ -83,16 +102,9 @@ exports[`SortButton renders without error 1`] = `
           lineBreakMode="clip"
           maxFontSizeMultiplier={1.2}
           numberOfLines={1}
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
-              "color": {
-                "dynamic": {
-                  "dark": "rgba(255, 255, 255, 0.65)",
-                  "light": "rgba(19, 19, 19, 0.63)",
-                },
-              },
+              "color": "rgba(19, 19, 19, 0.63)",
               "flexShrink": 1,
               "fontFamily": "Basel Grotesk",
               "fontSize": 15,
@@ -107,6 +119,11 @@ exports[`SortButton renders without error 1`] = `
         <View
           collapsable={false}
           forwardedRef={[Function]}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
           jestAnimatedStyle={
             {
               "value": {
@@ -122,23 +139,34 @@ exports[`SortButton renders without error 1`] = `
               },
             }
           }
-          onBlur={[Function]}
-          onFocus={[Function]}
+          jestInlineStyle={
+            [
+              {
+                "alignItems": "center",
+                "flexDirection": "column",
+                "justifyContent": "center",
+              },
+            ]
+          }
           style={
-            {
-              "alignItems": "center",
-              "borderBottomLeftRadius": 999999,
-              "borderBottomRightRadius": 999999,
-              "borderTopLeftRadius": 999999,
-              "borderTopRightRadius": 999999,
-              "flexDirection": "column",
-              "justifyContent": "center",
-              "transform": [
-                {
-                  "rotate": "270deg",
-                },
-              ],
-            }
+            [
+              {
+                "alignItems": "center",
+                "flexDirection": "column",
+                "justifyContent": "center",
+              },
+              {
+                "borderBottomLeftRadius": 999999,
+                "borderBottomRightRadius": 999999,
+                "borderTopLeftRadius": 999999,
+                "borderTopRightRadius": 999999,
+                "transform": [
+                  {
+                    "rotate": "270deg",
+                  },
+                ],
+              },
+            ]
           }
         >
           <RNSVGSvgView
@@ -210,7 +238,6 @@ exports[`SortButton renders without error 1`] = `
     style={
       {
         "bottom": 0,
-        "flexDirection": "column",
         "left": 0,
         "maxWidth": "100%",
         "position": "absolute",

@@ -1,11 +1,19 @@
 import { toUtf8String } from '@ethersproject/strings'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
+import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { SignMessageRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { Flex, IconButton, Text, Tooltip } from 'ui/src'
 import { AlertTriangleFilled, Code, StickyNoteTextSquare } from 'ui/src/components/icons'
+import { logger } from 'utilities/src/logger/logger'
 import { containsNonPrintableChars } from 'utilities/src/primitives/string'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { DappSignatureScanningContent } from 'wallet/src/components/dappRequests/DappSignatureScanningContent'
+import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
+import { shouldDisableConfirm } from 'wallet/src/features/dappRequests/utils/riskUtils'
 
 enum ViewEncoding {
   UTF8 = 0,
@@ -16,26 +24,111 @@ interface PersonalSignRequestProps {
 }
 
 export function PersonalSignRequestContent({ dappRequest }: PersonalSignRequestProps): JSX.Element | null {
+  const blockaidTransactionScanning = useFeatureFlag(FeatureFlags.BlockaidTransactionScanning)
+
+  // Decode message to UTF-8
+  const hexMessage = dappRequest.messageHex
+  const [utf8Message, setUtf8Message] = useState<string | undefined>()
+
+  useEffect(() => {
+    try {
+      const decodedMessage = toUtf8String(hexMessage)
+      setUtf8Message(decodedMessage)
+    } catch {
+      // If the message is not valid UTF-8, we'll show the hex message instead
+      setUtf8Message(undefined)
+    }
+  }, [hexMessage])
+
+  if (blockaidTransactionScanning) {
+    return <PersonalSignRequestContentWithScanning dappRequest={dappRequest} utf8Message={utf8Message} />
+  }
+
+  return <PersonalSignRequestContentLegacy dappRequest={dappRequest} utf8Message={utf8Message} />
+}
+
+/**
+ * Implementation with Blockaid scanning
+ */
+function PersonalSignRequestContentWithScanning({
+  dappRequest,
+  utf8Message,
+}: {
+  dappRequest: SignMessageRequest
+  utf8Message: string | undefined
+}): JSX.Element {
+  const { t } = useTranslation()
+  const { dappUrl, currentAccount } = useDappRequestQueueContext()
+  const activeChain = useDappLastChainId(dappUrl)
+  const { value: confirmedRisk, setValue: setConfirmedRisk } = useBooleanState(false)
+  // Initialize with null to indicate scan hasn't completed yet
+  const [riskLevel, setRiskLevel] = useState<TransactionRiskLevel | null>(null)
+
+  const hexMessage = dappRequest.messageHex
+  const isDecoded = Boolean(utf8Message && !containsNonPrintableChars(utf8Message))
+  const message = (isDecoded ? utf8Message : hexMessage) || hexMessage
+  const hasLoggedError = useRef(false)
+
+  if (!activeChain) {
+    if (!hasLoggedError.current) {
+      logger.error(new Error('No active chain found'), {
+        tags: { file: 'PersonalSignRequestContent', function: 'PersonalSignRequestContentWithScanning' },
+      })
+      hasLoggedError.current = true
+    }
+    return <PersonalSignRequestContentLegacy dappRequest={dappRequest} utf8Message={utf8Message} />
+  }
+
+  const disableConfirm = shouldDisableConfirm({ riskLevel, confirmedRisk })
+
+  return (
+    <DappRequestContent
+      confirmText={t('common.button.sign')}
+      title={t('dapp.request.signature.header')}
+      showAddressFooter={false}
+      disableConfirm={disableConfirm}
+    >
+      <DappSignatureScanningContent
+        chainId={activeChain}
+        account={currentAccount.address}
+        message={message}
+        isDecoded={isDecoded}
+        method="personal_sign"
+        params={[hexMessage, currentAccount.address]}
+        dappUrl={dappUrl}
+        confirmedRisk={confirmedRisk}
+        onConfirmRisk={setConfirmedRisk}
+        onRiskLevelChange={setRiskLevel}
+      />
+    </DappRequestContent>
+  )
+}
+
+/**
+ * Legacy implementation (existing behavior when feature flag is off)
+ */
+function PersonalSignRequestContentLegacy({
+  dappRequest,
+  utf8Message,
+}: {
+  dappRequest: SignMessageRequest
+  utf8Message: string | undefined
+}): JSX.Element {
   const { t } = useTranslation()
 
   const [viewEncoding, setViewEncoding] = useState(ViewEncoding.UTF8)
-  const [utf8Message, setUtf8Message] = useState<string | undefined>()
 
   const toggleViewEncoding = (): void =>
     setViewEncoding(viewEncoding === ViewEncoding.UTF8 ? ViewEncoding.HEX : ViewEncoding.UTF8)
 
   const hexMessage = dappRequest.messageHex
   const containsUnrenderableCharacters = !utf8Message || containsNonPrintableChars(utf8Message)
+
   useEffect(() => {
-    try {
-      const decodedMessage = toUtf8String(hexMessage)
-      setUtf8Message(decodedMessage)
-    } catch {
-      // If the message is not valid UTF-8, we'll show the hex message instead (e.g. Polymark claim deposit message )
+    if (!utf8Message) {
       setViewEncoding(ViewEncoding.HEX)
-      setUtf8Message(undefined)
     }
-  }, [hexMessage])
+  }, [utf8Message])
 
   const [isScrollable, setIsScrollable] = useState(false)
   const messageRef = useRef<HTMLElement>(null)

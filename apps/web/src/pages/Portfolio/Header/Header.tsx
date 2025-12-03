@@ -5,18 +5,31 @@ import { PortfolioAddressDisplay } from 'pages/Portfolio/Header/PortfolioAddress
 import { PortfolioTabs } from 'pages/Portfolio/Header/Tabs'
 import { useShouldHeaderBeCompact } from 'pages/Portfolio/Header/useShouldHeaderBeCompact'
 import { PortfolioTab } from 'pages/Portfolio/types'
+import { buildPortfolioUrl } from 'pages/Portfolio/utils/portfolioUrls'
 import { useNavigate } from 'react-router'
 import { Flex, useMedia } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ElementName, InterfacePageName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useEvent } from 'utilities/src/react/hooks'
-import { getChainUrlParam } from 'utils/chainParams'
 
 const HEADER_TRANSITION = 'all 0.2s ease'
 
-function buildPortfolioUrl(tab: PortfolioTab | undefined, chainId: UniverseChainId | undefined): string {
-  const chainUrlParam = chainId ? getChainUrlParam(chainId) : ''
-  const currentPath = tab === PortfolioTab.Overview ? '/portfolio' : `/portfolio/${tab}`
-  return `${currentPath}${chainId ? `?chain=${chainUrlParam}` : ''}`
+function getPageNameFromTab(tab: PortfolioTab | undefined): InterfacePageName {
+  switch (tab) {
+    case PortfolioTab.Overview:
+      return InterfacePageName.PortfolioPage
+    case PortfolioTab.Tokens:
+      return InterfacePageName.PortfolioTokensPage
+    case PortfolioTab.Defi:
+      return InterfacePageName.PortfolioDefiPage
+    case PortfolioTab.Nfts:
+      return InterfacePageName.PortfolioNftsPage
+    case PortfolioTab.Activity:
+      return InterfacePageName.PortfolioActivityPage
+    default:
+      return InterfacePageName.PortfolioPage
+  }
 }
 
 interface PortfolioHeaderProps {
@@ -29,6 +42,15 @@ export function PortfolioHeader({ scrollY }: PortfolioHeaderProps) {
   const { tab, chainId: currentChainId } = usePortfolioRoutes()
   const isCompact = useShouldHeaderBeCompact(scrollY)
   const onNetworkPress = useEvent((chainId: UniverseChainId | undefined) => {
+    const currentPageName = getPageNameFromTab(tab)
+    const selectedChain = chainId ?? ('All' as const)
+
+    sendAnalyticsEvent(UniswapEventName.NetworkFilterSelected, {
+      element: ElementName.PortfolioNetworkFilter,
+      page: currentPageName,
+      chain: selectedChain,
+    })
+
     navigate(buildPortfolioUrl(tab, chainId))
   })
 

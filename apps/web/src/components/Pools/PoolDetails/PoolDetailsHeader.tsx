@@ -1,6 +1,7 @@
 import { getTokenDetailsURL, gqlToCurrency } from 'appGraphql/data/util'
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Percent } from '@uniswap/sdk-core'
-import { GraphQLApi } from '@universe/api'
+import { GraphQLApi, parseRestProtocolVersion } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import { Dropdown } from 'components/Dropdowns/Dropdown'
@@ -309,7 +310,7 @@ const PoolDetailsHeaderActions = ({
           poolInfo={{
             poolId: poolAddress,
             chainId,
-            version: protocolVersion,
+            version: parseRestProtocolVersion(protocolVersion) ?? ProtocolVersion.UNSPECIFIED,
             token0: currency0,
             token1: currency1,
           }}

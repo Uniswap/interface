@@ -13,7 +13,7 @@ export const PBKDF2_PARAMS: Omit<Pbkdf2Params, 'salt'> & { hash: string } = {
 export const AES_GCM_PARAMS: AesKeyGenParams = { name: 'AES-GCM', length: 256 }
 
 // TODO: improve encoding/decoding
-export const encodeForStorage = (payload: ArrayBuffer): string => payload.toString()
+export const encodeForStorage = (payload: Uint8Array): string => payload.toString()
 export const decodeFromStorage = (payload: string): Uint8Array =>
   new Uint8Array(payload.split(',').map((x) => Number(x)))
 

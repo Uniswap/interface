@@ -3,24 +3,13 @@
 exports[`StatusIcon > with account > renders children in correct order 1`] = `
 .c0 {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-flow: column nowrap;
-  -ms-flex-flow: column nowrap;
   flex-flow: column nowrap;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
 }
 
-.c0 > img,
+.c0>img,
 .c0 span {
   height: 16px;
   width: 16px;
@@ -28,17 +17,8 @@ exports[`StatusIcon > with account > renders children in correct order 1`] = `
 
 .c1 {
   position: absolute;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   width: 16px;
   height: 16px;
@@ -53,17 +33,8 @@ exports[`StatusIcon > with account > renders children in correct order 1`] = `
 
 .c3 {
   position: absolute;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   width: 16px;
   height: 16px;
@@ -81,28 +52,25 @@ exports[`StatusIcon > with account > renders children in correct order 1`] = `
   height: 16px;
 }
 
-@media only screen and (min-width:1024px) {
+@media only screen and (min-width: 1024px) {
   .c0 {
     margin-right: 4px;
   }
 }
 
-@media (max-width:960px) {
+@media (max-width: 960px) {
   .c0 {
-    -webkit-align-items: flex-end;
-    -webkit-box-align: flex-end;
-    -ms-flex-align: flex-end;
     align-items: flex-end;
   }
 }
 
-@supports (overflow:clip) {
+@supports (overflow: clip) {
   .c1 {
     overflow: clip;
   }
 }
 
-@supports (overflow:clip) {
+@supports (overflow: clip) {
   .c3 {
     overflow: clip;
   }
@@ -118,7 +86,7 @@ exports[`StatusIcon > with account > renders children in correct order 1`] = `
     data-testid="account-icon"
   >
     <div
-      class="_opacity-0enter-0 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _opacity-1"
+      style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1;"
     >
       <span
         data-testid="unicon"
@@ -130,6 +98,7 @@ exports[`StatusIcon > with account > renders children in correct order 1`] = `
   <div
     class="c1"
     data-testid="MiniIcon"
+    side="right"
   >
     <img
       alt="MetaMask icon"
@@ -139,6 +108,7 @@ exports[`StatusIcon > with account > renders children in correct order 1`] = `
   </div>
   <div
     class="c3"
+    side="left"
   >
     <img
       class="c2"
@@ -151,24 +121,13 @@ exports[`StatusIcon > with account > renders children in correct order 1`] = `
 exports[`StatusIcon > with no account > renders children in correct order 1`] = `
 .c0 {
   position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-flow: column nowrap;
-  -ms-flex-flow: column nowrap;
   flex-flow: column nowrap;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
 }
 
-.c0 > img,
+.c0>img,
 .c0 span {
   height: 16px;
   width: 16px;
@@ -176,17 +135,8 @@ exports[`StatusIcon > with no account > renders children in correct order 1`] = 
 
 .c1 {
   position: absolute;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   width: 16px;
   height: 16px;
@@ -204,22 +154,19 @@ exports[`StatusIcon > with no account > renders children in correct order 1`] = 
   height: 16px;
 }
 
-@media only screen and (min-width:1024px) {
+@media only screen and (min-width: 1024px) {
   .c0 {
     margin-right: 4px;
   }
 }
 
-@media (max-width:960px) {
+@media (max-width: 960px) {
   .c0 {
-    -webkit-align-items: flex-end;
-    -webkit-box-align: flex-end;
-    -ms-flex-align: flex-end;
     align-items: flex-end;
   }
 }
 
-@supports (overflow:clip) {
+@supports (overflow: clip) {
   .c1 {
     overflow: clip;
   }
@@ -232,6 +179,7 @@ exports[`StatusIcon > with no account > renders children in correct order 1`] = 
 >
   <div
     class="c1"
+    side="left"
   >
     <img
       class="c2"

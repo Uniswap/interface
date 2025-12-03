@@ -18,5 +18,5 @@ export const zIndexes = {
   tooltip: 1080,
   // Custom value needed to properly display components
   // above modals (e.g. in the extension app)
-  overlay: 100001,
+  overlay: 100010,
 }

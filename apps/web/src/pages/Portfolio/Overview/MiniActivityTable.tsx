@@ -1,4 +1,5 @@
 import { createColumnHelper, Row } from '@tanstack/react-table'
+import { SharedEventName } from '@uniswap/analytics-events'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { hasRow } from 'components/Table/utils/hasRow'
@@ -12,13 +13,17 @@ import { TableSectionHeader } from 'pages/Portfolio/Overview/TableSectionHeader'
 import { ViewAllButton } from 'pages/Portfolio/Overview/ViewAllButton'
 import { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from 'react-router'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotateRight } from 'ui/src/components/icons/RotateRight'
 import { TransactionDetailsModal } from 'uniswap/src/components/activity/details/TransactionDetailsModal'
 import { isLoadingItem } from 'uniswap/src/components/activity/utils'
 import { ActivityRenderData } from 'uniswap/src/features/activity/hooks/useActivityData'
+import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ONE_DAY_MS } from 'utilities/src/time/time'
 
 interface MiniActivityTableProps {
@@ -31,8 +36,10 @@ export const MiniActivityTable = memo(function MiniActivityTable({
   activityData,
 }: MiniActivityTableProps) {
   const { t } = useTranslation()
+  const trace = useTrace()
   const { chainId } = usePortfolioRoutes()
   const [selectedTransaction, setSelectedTransaction] = useState<TransactionDetails | null>(null)
+  const navigate = useNavigate()
 
   // Show loading skeleton while data is being fetched
   const loading = Boolean(activityData.sectionData?.some(isLoadingItem))
@@ -103,9 +110,17 @@ export const MiniActivityTable = memo(function MiniActivityTable({
     ]
   }, [loading])
 
-  const handleTransactionClick = useCallback((transaction: TransactionDetails) => {
-    setSelectedTransaction(transaction)
-  }, [])
+  const handleTransactionClick = useCallback(
+    (transaction: TransactionDetails) => {
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        element: ElementName.PortfolioMiniActivityRow,
+        section: SectionName.PortfolioOverviewTab,
+        ...trace,
+      })
+      setSelectedTransaction(transaction)
+    },
+    [trace],
+  )
 
   const rowWrapper = useCallback(
     (row: Row<TransactionDetails>, content: JSX.Element) => {
@@ -122,6 +137,10 @@ export const MiniActivityTable = memo(function MiniActivityTable({
   const handleCloseTransactionDetails = useCallback(() => {
     setSelectedTransaction(null)
   }, [])
+
+  const handleSeeAllActivity = useCallback(() => {
+    navigate('/portfolio/activity')
+  }, [navigate])
 
   // Only show loading state if we don't have data yet
   const tableLoading = loading && !transactionData.length
@@ -167,14 +186,18 @@ export const MiniActivityTable = memo(function MiniActivityTable({
         )}
       </TableSectionHeader>
       {chainId && transactionData.length === 0 ? (
-        <Flex row alignItems="center" gap="$gap8">
+        <TouchableArea row alignItems="center" gap="$gap8" onPress={handleSeeAllActivity}>
           <Text variant="body3" color="$neutral2">
             {t('portfolio.overview.activity.seeAllActivity')}
           </Text>
           <RotateRight color="$neutral1" size="$icon.16" />
-        </Flex>
+        </TouchableArea>
       ) : (
-        <ViewAllButton href="/portfolio/activity" label={t('portfolio.overview.activity.table.viewAllActivity')} />
+        <ViewAllButton
+          href="/portfolio/activity"
+          label={t('portfolio.overview.activity.table.viewAllActivity')}
+          elementName={ElementName.PortfolioViewAllActivity}
+        />
       )}
       {selectedTransaction && (
         <TransactionDetailsModal

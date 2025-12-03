@@ -68,7 +68,10 @@ export function buildActivityRowFragments(details: TransactionDetails): Activity
   // Simple LRU: remove oldest entry if cache is full
   if (fragmentsCache.size >= MAX_CACHE_SIZE) {
     const firstKey = fragmentsCache.keys().next().value
-    fragmentsCache.delete(firstKey)
+
+    if (typeof firstKey === 'string') {
+      fragmentsCache.delete(firstKey)
+    }
   }
 
   // Cache and return

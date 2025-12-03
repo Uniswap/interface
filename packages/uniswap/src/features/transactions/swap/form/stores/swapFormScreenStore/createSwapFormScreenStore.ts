@@ -45,7 +45,7 @@ export type SwapFormScreenStoreState = {
   showExactOutputUnavailableWarning: boolean | undefined
   outputTokenHasBuyTax: boolean
   exactAmountToken: string | undefined
-  isBridge: boolean
+  isCrossChain: boolean
 
   // Trade-related values
   trade: TradeWithStatus

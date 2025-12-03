@@ -202,7 +202,7 @@ const AnimatedPane = styled(Flex, {
 const isVertical = (dir: Direction): boolean => dir === 'up' || dir === 'down'
 
 function useConstant<A>(c: A): A {
-  const out = useRef<A>()
+  const out = useRef<A>(undefined)
   if (!out.current) {
     out.current = c
   }

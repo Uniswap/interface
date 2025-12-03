@@ -24,7 +24,7 @@ export default function parseNFTMintTransaction(
   const nftChange = transaction.details.assetChanges.find((change) => change?.__typename === 'NftTransfer')
 
   // Mints must include the NFT minted
-  if (!nftChange || nftChange.__typename !== 'NftTransfer') {
+  if (nftChange?.__typename !== 'NftTransfer') {
     return undefined
   }
 
@@ -44,7 +44,7 @@ export default function parseNFTMintTransaction(
 
   let purchaseCurrencyId: string | undefined
   let purchaseCurrencyAmountRaw: string | undefined
-  if (tokenChange && tokenChange.__typename === 'TokenTransfer') {
+  if (tokenChange?.__typename === 'TokenTransfer') {
     purchaseCurrencyId =
       tokenChange.tokenStandard === 'NATIVE'
         ? buildNativeCurrencyId(chainId)

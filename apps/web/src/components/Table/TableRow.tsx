@@ -15,11 +15,21 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 interface TableCellProps<T extends RowData> {
   cell: Cell<T, unknown>
   colors: UseSporeColorsReturn
+  v2?: boolean
 }
 
-function TableCellComponent<T extends RowData>({ cell, colors }: TableCellProps<T>): JSX.Element {
+function TableCellComponent<T extends RowData>({ cell, colors, v2 = true }: TableCellProps<T>): JSX.Element {
+  const isPinned = cell.column.getIsPinned()
+  const isFirstPinnedColumn = isPinned && cell.column.getIsFirstColumn('left')
+  const pinnedStyles = getCommonPinningStyles({ column: cell.column, colors, v2, isHeader: false })
+
   return (
-    <CellContainer style={getCommonPinningStyles(cell.column, colors)}>
+    <CellContainer
+      style={pinnedStyles}
+      borderTopLeftRadius={v2 && isFirstPinnedColumn ? '$rounded12' : undefined}
+      borderBottomLeftRadius={v2 && isFirstPinnedColumn ? '$rounded12' : undefined}
+      overflow="hidden"
+    >
       {flexRender(cell.column.columnDef.cell, cell.getContext())}
     </CellContainer>
   )
@@ -64,7 +74,7 @@ function TableRowComponent<T extends RowData>({
   )
   const cells = row
     .getVisibleCells()
-    .map((cell: Cell<T, unknown>) => <TableCell<T> key={cell.id} cell={cell} colors={colors} />)
+    .map((cell: Cell<T, unknown>) => <TableCell<T> key={cell.id} cell={cell} colors={colors} v2={v2} />)
 
   const rowContent = (
     <Trace

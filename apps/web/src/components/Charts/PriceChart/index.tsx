@@ -34,6 +34,7 @@ export type PriceChartData = CandlestickData<UTCTimestamp> & AreaData<UTCTimesta
 interface PriceChartModelParams extends ChartModelParams<PriceChartData> {
   type: PriceChartType
   timePeriod?: GraphQLApi.HistoryDuration
+  hideYAxis?: boolean
 }
 
 const LOW_PRICE_RANGE_THRESHOLD = 0.2
@@ -157,7 +158,7 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   }
 
   updateOptions(params: PriceChartModelParams) {
-    const { data, colors, type, locale, format, tokenFormatType } = params
+    const { data, colors, type, locale, format, tokenFormatType, hideYAxis } = params
     const { min, max } = getCandlestickPriceBounds(data)
 
     // Handles changes in time period
@@ -192,11 +193,13 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
           )
         },
       },
-      ...(scaleMargins && {
-        rightPriceScale: {
+      rightPriceScale: {
+        borderVisible: false,
+        ...(hideYAxis && { visible: false, minimumWidth: 0 }),
+        ...(scaleMargins && {
           scaleMargins,
-        },
-      }),
+        }),
+      },
     })
 
     // Handles changing between line/candlestick view
@@ -372,6 +375,8 @@ interface PriceChartProps {
   timePeriod?: GraphQLApi.HistoryDuration
   pricePercentChange24h?: number
   overrideColor?: string
+  headerTotalValueOverride?: number
+  hideYAxis?: boolean
 }
 
 const CandlestickTooltipRow = styled(Flex, {
@@ -414,6 +419,8 @@ export function PriceChart({
   timePeriod,
   pricePercentChange24h,
   overrideColor,
+  headerTotalValueOverride,
+  hideYAxis,
 }: PriceChartProps) {
   const startingPrice = data[0]
   const lastPrice = data[data.length - 1]
@@ -427,7 +434,7 @@ export function PriceChart({
   return (
     <Chart
       Model={PriceChartModel}
-      params={useMemo(() => ({ data, type, stale, timePeriod }), [data, stale, type, timePeriod])}
+      params={useMemo(() => ({ data, type, stale, timePeriod, hideYAxis }), [data, stale, type, timePeriod, hideYAxis])}
       height={height}
       overrideColor={overrideColor}
       TooltipBody={type === PriceChartType.CANDLESTICK ? CandlestickTooltip : undefined}
@@ -435,23 +442,28 @@ export function PriceChart({
       showLeftFadeOverlay={type === PriceChartType.LINE}
       showCustomHoverMarker={type === PriceChartType.LINE}
     >
-      {(crosshairData) => (
-        <ChartHeader
-          value={(crosshairData ?? lastPrice).value}
-          additionalFields={
-            <PriceChartDelta
-              startingPrice={startingPrice.close}
-              endingPrice={(crosshairData ?? lastPrice).close}
-              shouldIncludeFiatDelta
-              shouldTreatAsStablecoin={shouldTreatAsStablecoin}
-              pricePercentChange24h={pricePercentChange24h}
-              isHovering={!!crosshairData}
-            />
-          }
-          valueFormatterType={NumberType.FiatTokenPrice}
-          time={crosshairData?.time}
-        />
-      )}
+      {(crosshairData) => {
+        // Use override value when provided, otherwise use chart data value
+        const headerValue = crosshairData ? crosshairData.value : (headerTotalValueOverride ?? lastPrice.value)
+
+        return (
+          <ChartHeader
+            value={headerValue}
+            additionalFields={
+              <PriceChartDelta
+                startingPrice={startingPrice.close}
+                endingPrice={(crosshairData ?? lastPrice).close}
+                shouldIncludeFiatDelta
+                shouldTreatAsStablecoin={shouldTreatAsStablecoin}
+                pricePercentChange24h={pricePercentChange24h}
+                isHovering={!!crosshairData}
+              />
+            }
+            valueFormatterType={NumberType.FiatTokenPrice}
+            time={crosshairData?.time}
+          />
+        )
+      }}
     </Chart>
   )
 }

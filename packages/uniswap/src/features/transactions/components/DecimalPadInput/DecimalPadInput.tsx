@@ -1,7 +1,7 @@
 import {
   forwardRef,
   memo,
-  RefObject,
+  type RefObject,
   useCallback,
   useEffect,
   useImperativeHandle,
@@ -11,9 +11,9 @@ import {
 } from 'react'
 import type { LayoutChangeEvent } from 'react-native'
 import { Flex, useIsShortMobileDevice } from 'ui/src'
-import { TextInputProps } from 'uniswap/src/components/input/TextInput'
+import { type TextInputProps } from 'uniswap/src/components/input/TextInput'
 import { DecimalPad } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPad'
-import { KeyAction, KeyLabel } from 'uniswap/src/features/transactions/components/DecimalPadInput/types'
+import { KeyAction, type KeyLabel } from 'uniswap/src/features/transactions/components/DecimalPadInput/types'
 import { maxDecimalsReached } from 'utilities/src/format/truncateToMaxDecimals'
 import { useEvent } from 'utilities/src/react/hooks'
 
@@ -63,7 +63,7 @@ export function DecimalPadCalculateSpace({
   additionalElementsHeight = 0,
 }: {
   id: DecimalPadCalculatedSpaceId
-  decimalPadRef: RefObject<DecimalPadInputRef>
+  decimalPadRef: RefObject<DecimalPadInputRef | null>
   additionalElementsHeight?: number
 }): JSX.Element {
   const isShortMobileDevice = useIsShortMobileDevice()

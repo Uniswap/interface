@@ -137,7 +137,7 @@ const RollNumber = ({
       const newOffset = DIGIT_HEIGHT * -digit
       yOffset.value = newOffset
     }
-  })
+  }, [digit])
 
   const animatedWrapperStyle = useAnimatedStyle(() => {
     return {

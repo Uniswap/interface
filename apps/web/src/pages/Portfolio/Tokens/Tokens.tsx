@@ -14,7 +14,7 @@ import { TokensListEmptyState } from 'uniswap/src/components/tokens/TokensListEm
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/portfolio/PortfolioBalance/PortfolioBalance'
-import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { parseChainFromTokenSearchQuery } from 'uniswap/src/utils/search/parseChainFromTokenSearchQuery'
 
@@ -111,32 +111,42 @@ export const PortfolioTokens = memo(function PortfolioTokens() {
             gap="$spacing8"
             $md={{ flexDirection: 'column', alignItems: 'flex-start', gap: '$spacing24' }}
           >
-            <PortfolioBalance
-              evmOwner={portfolioAddresses.evmAddress}
-              svmOwner={portfolioAddresses.svmAddress}
-              endText={tokenData ? <TokenCountIndicator count={tokenData.length} /> : undefined}
-              chainIds={effectiveChainId ? [effectiveChainId] : undefined}
-            />
-            <SearchInput
-              value={search}
-              onChangeText={setSearch}
-              placeholder={t('tokens.table.search.placeholder.tokens')}
-              width={media.md ? '100%' : undefined}
-            />
+            <Trace section={SectionName.PortfolioTokensTab} element={ElementName.PortfolioBalance}>
+              <PortfolioBalance
+                evmOwner={portfolioAddresses.evmAddress}
+                svmOwner={portfolioAddresses.svmAddress}
+                endText={tokenData ? <TokenCountIndicator count={tokenData.length} /> : undefined}
+                chainIds={effectiveChainId ? [effectiveChainId] : undefined}
+              />
+            </Trace>
+            <Trace logFocus section={SectionName.PortfolioTokensTab} element={ElementName.PortfolioTokensSearch}>
+              <SearchInput
+                value={search}
+                onChangeText={setSearch}
+                placeholder={t('tokens.table.search.placeholder.tokens')}
+                width={media.md ? '100%' : undefined}
+              />
+            </Trace>
           </Flex>
 
           {(tokenData && tokenData.length > 0) || loading ? (
             <>
-              {isPortfolioTokensAllocationChartEnabled && <TokensAllocationChart tokenData={tokenData || []} />}
+              {isPortfolioTokensAllocationChartEnabled && (
+                <Trace section={SectionName.PortfolioTokensTab} element={ElementName.TokensAllocationChart}>
+                  <TokensAllocationChart tokenData={tokenData || []} />
+                </Trace>
+              )}
               {(filteredTokenData?.length ?? 0) > 0 || loading ? (
-                <TokensTable
-                  visible={filteredTokenData || []}
-                  hidden={filteredHiddenTokenData}
-                  loading={loading && !refetching}
-                  refetching={refetching}
-                  networkStatus={networkStatus}
-                  error={error}
-                />
+                <Trace section={SectionName.PortfolioTokensTab} element={ElementName.PortfolioTokensTable}>
+                  <TokensTable
+                    visible={filteredTokenData || []}
+                    hidden={filteredHiddenTokenData}
+                    loading={loading && !refetching}
+                    refetching={refetching}
+                    networkStatus={networkStatus}
+                    error={error}
+                  />
+                </Trace>
               ) : (
                 <Flex flexDirection="column" alignItems="center" justifyContent="center" py="$spacing48">
                   <Text variant="body1" color="$neutral2">

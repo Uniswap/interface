@@ -4,15 +4,12 @@ exports[`OffchainOrderLineItem > should render type EXCHANGE_RATE 1`] = `
 <DocumentFragment>
   .c0 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c1 {
   cursor: auto;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
 }
 
 .c2 {
@@ -24,31 +21,15 @@ exports[`OffchainOrderLineItem > should render type EXCHANGE_RATE 1`] = `
   background-color: transparent;
   border: none;
   cursor: pointer;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   padding: 0;
   grid-template-columns: 1fr auto;
   grid-gap: 0.25rem;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: row;
-  -ms-flex-direction: row;
   flex-direction: row;
   text-align: left;
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  -webkit-user-select: text;
-  -moz-user-select: text;
-  -ms-user-select: text;
   user-select: text;
 }
 
@@ -92,15 +73,12 @@ exports[`OffchainOrderLineItem > should render type NETWORK_COST 1`] = `
 <DocumentFragment>
   .c0 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c1 {
   cursor: auto;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
 }
 
 .c2 {
@@ -140,15 +118,12 @@ exports[`OffchainOrderLineItem > should render type TRANSACTION_ID 1`] = `
 <DocumentFragment>
   .c0 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c1 {
   cursor: auto;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
 }
 
 .c2 {
@@ -157,21 +132,19 @@ exports[`OffchainOrderLineItem > should render type TRANSACTION_ID 1`] = `
 }
 
 .c3 {
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
   color: #FF37C7;
   stroke: #FF37C7;
   font-weight: 500;
 }
 
-.c3:hover {
+.c3 :hover {
   opacity: 0.6;
 }
 
-.c3:active {
+.c3 :active {
   opacity: 0.4;
 }
 

@@ -62,6 +62,7 @@ query V4Pool($chain: Chain!, $poolId: String!) {
     protocolVersion
     feeTier
     isDynamicFee
+    tickSpacing
     poolId
     hook {
       id

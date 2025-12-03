@@ -39,7 +39,7 @@ export async function promiseMinDelay(promise: Promise<unknown>, milliseconds: n
 // https://usehooks-typescript.com/react-hook/use-interval
 // eslint-disable-next-line max-params
 export function useInterval(callback: () => void, delay: number | null, immediateStart?: boolean): void {
-  const savedCallback = useRef<() => void | null>()
+  const savedCallback = useRef<() => void | null>(undefined)
 
   // Remember the latest callback.
   useEffect(() => {
@@ -76,7 +76,7 @@ export const useTimeout = (
   callback: () => void,
   delay = 0, // in ms (default: immediately put into JS Event Queue)
 ): (() => void) => {
-  const timeoutIdRef = useRef<Timeout>()
+  const timeoutIdRef = useRef<Timeout>(undefined)
 
   const cancel = useCallback(() => {
     const timeoutId = timeoutIdRef.current
@@ -148,7 +148,7 @@ export function debounceCallback<T extends (...args: void[]) => void>(
   func: T,
   wait: number,
 ): { triggerDebounce: () => void; cancelDebounce: () => void } {
-  let timeout: NodeJS.Timeout
+  let timeout: NodeJS.Timeout | number
 
   const cancelDebounce = (): void => {
     clearTimeout(timeout)

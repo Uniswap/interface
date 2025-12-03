@@ -11,7 +11,6 @@ import styledFn, {
   createGlobalStyle as createGlobalStyleSC,
   css as cssSC,
   type DefaultTheme as DefaultThemeSC,
-  type Keyframes as KeyframesTypeSC,
   keyframes as keyframesFnSC,
   ThemeProvider as ThemeProviderSC,
   // biome-ignore lint/style/noRestrictedImports: This is a legacy compatibility file that re-exports styled-components for migration purposes
@@ -28,9 +27,6 @@ export const css = cssSC
 
 /** @deprecated use alternatives from `ui/src` instead */
 export const keyframes = keyframesFnSC
-
-/** @deprecated use alternatives from `ui/src` instead */
-export type Keyframes = KeyframesTypeSC
 
 /** @deprecated use alternatives from `ui/src` instead */
 export const createGlobalStyle = createGlobalStyleSC

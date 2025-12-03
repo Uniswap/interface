@@ -195,6 +195,7 @@ export type SwapTradeBaseProperties = {
   plan_id?: string
   step_index?: number
   is_final_step?: boolean
+  swap_start_timestamp?: number
 } & ITraceContext
 
 type BaseSwapTransactionResultProperties = {
@@ -228,6 +229,7 @@ type BaseSwapTransactionResultProperties = {
   includes_delegation?: SwapTradeBaseProperties['includes_delegation']
   is_smart_wallet_transaction?: SwapTradeBaseProperties['is_smart_wallet_transaction']
   is_final_step?: boolean
+  swap_start_timestamp?: number
 }
 
 type ClassicSwapTransactionResultProperties = BaseSwapTransactionResultProperties
@@ -753,8 +755,10 @@ export type UniverseEventProperties = {
     actual: string
   } & LiquidityAnalyticsProperties
   [LiquidityEventName.PriceDiscrepancyChecked]: {
+    event_name: LiquidityEventName
     status: OnChainStatus
     price_discrepancy: string
+    absolute_price_discrepancy: number
     sqrt_ratio_x96_before: string
     sqrt_ratio_x96_after: string
   } & LiquidityAnalyticsProperties
@@ -856,6 +860,7 @@ export type UniverseEventProperties = {
     collection_name?: string
     collection_address?: string
     token_id?: string
+    link_type?: string
   }
   [SharedEventName.PAGE_VIEWED]: ITraceContext
   [SharedEventName.ANALYTICS_SWITCH_TOGGLED]: {
@@ -1018,6 +1023,12 @@ export type UniverseEventProperties = {
     attackType?: string
     protectionResult?: string
   }
+  [UniswapEventName.ContextMenuClosed]: ITraceContext
+  [UniswapEventName.ContextMenuItemClicked]: ITraceContext & {
+    menu_item: string
+    menu_item_index: number
+  }
+  [UniswapEventName.ContextMenuOpened]: ITraceContext
   [UniswapEventName.LowNetworkTokenInfoModalOpened]: {
     location: 'send' | 'swap'
   }
@@ -1026,6 +1037,9 @@ export type UniverseEventProperties = {
   [UniswapEventName.LpIncentiveCollectRewardsRetry]: undefined
   [UniswapEventName.LpIncentiveCollectRewardsSuccess]: { token_rewards: string }
   [UniswapEventName.LpIncentiveLearnMoreCtaClicked]: undefined
+  [UniswapEventName.NetworkFilterSelected]: ITraceContext & {
+    chain: UniverseChainId | 'All'
+  }
   [UniswapEventName.SmartWalletMismatchDetected]: {
     chainId: string
     delegatedAddress: string
@@ -1106,9 +1120,6 @@ export type UniverseEventProperties = {
     query: string
   }
   [WalletEventName.ModalClosed]: ITraceContext & Record<string, unknown>
-  [WalletEventName.NetworkFilterSelected]: ITraceContext & {
-    chain: UniverseChainId | 'All'
-  }
   [WalletEventName.NFTVisibilityChanged]: {
     tokenId?: string
     chainId?: UniverseChainId

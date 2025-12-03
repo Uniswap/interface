@@ -11,6 +11,8 @@ import { Plus } from 'ui/src/components/icons/Plus'
 import { FlexProps } from 'ui/src/components/layout/Flex'
 import { iconSizes } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
@@ -60,33 +62,41 @@ export function MoreActionTile({ padding = '$spacing12' }: { padding?: FlexProps
       containerStyle={{ height: '100%' }}
       alignRight={false}
     >
-      <InternalMenuItem onPress={onPressSell}>
-        <Flex row alignItems="center" gap="$gap8">
-          <ArrowDownCircleFilled size="$icon.16" color="$neutral2" transform="rotate(180deg)" />
-          <Text variant="buttonLabel3">{t('common.sell.label')}</Text>
-        </Flex>
-      </InternalMenuItem>
+      <Trace logPress element={ElementName.PortfolioActionSell}>
+        <InternalMenuItem onPress={onPressSell}>
+          <Flex row alignItems="center" gap="$gap8">
+            <ArrowDownCircleFilled size="$icon.16" color="$neutral2" transform="rotate(180deg)" />
+            <Text variant="buttonLabel3">{t('common.sell.label')}</Text>
+          </Flex>
+        </InternalMenuItem>
+      </Trace>
 
-      <InternalMenuItem onPress={onPressReceive}>
-        <Flex row alignItems="center" gap="$gap8">
-          <ArrowDownCircleFilled size="$icon.16" color="$neutral2" />
-          <Text variant="buttonLabel3">{t('common.receive')}</Text>
-        </Flex>
-      </InternalMenuItem>
+      <Trace logPress element={ElementName.PortfolioActionReceive}>
+        <InternalMenuItem onPress={onPressReceive}>
+          <Flex row alignItems="center" gap="$gap8">
+            <ArrowDownCircleFilled size="$icon.16" color="$neutral2" />
+            <Text variant="buttonLabel3">{t('common.receive')}</Text>
+          </Flex>
+        </InternalMenuItem>
+      </Trace>
 
-      <InternalMenuItem onPress={onPressLimit}>
-        <Flex row alignItems="center" gap="$gap8">
-          <Limit width={iconSizes.icon16} height={iconSizes.icon16} fill={colors.neutral2.val} />
-          <Text variant="buttonLabel3">{t('swap.limit')}</Text>
-        </Flex>
-      </InternalMenuItem>
+      <Trace logPress element={ElementName.PortfolioActionLimit}>
+        <InternalMenuItem onPress={onPressLimit}>
+          <Flex row alignItems="center" gap="$gap8">
+            <Limit width={iconSizes.icon16} height={iconSizes.icon16} fill={colors.neutral2.val} />
+            <Text variant="buttonLabel3">{t('swap.limit')}</Text>
+          </Flex>
+        </InternalMenuItem>
+      </Trace>
 
-      <InternalMenuItem onPress={onPressCreatePool}>
-        <Flex row alignItems="center" gap="$gap8">
-          <Plus size="$icon.16" color="$neutral2" />
-          <Text variant="buttonLabel3">{t('pool.newPosition.title')}</Text>
-        </Flex>
-      </InternalMenuItem>
+      <Trace logPress element={ElementName.PortfolioActionPosition}>
+        <InternalMenuItem onPress={onPressCreatePool}>
+          <Flex row alignItems="center" gap="$gap8">
+            <Plus size="$icon.16" color="$neutral2" />
+            <Text variant="buttonLabel3">{t('pool.newPosition.title')}</Text>
+          </Flex>
+        </InternalMenuItem>
+      </Trace>
     </AdaptiveDropdown>
   )
 }

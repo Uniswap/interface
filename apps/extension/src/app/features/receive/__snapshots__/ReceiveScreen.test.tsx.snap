@@ -20,8 +20,10 @@ exports[`ReceiveScreen renders without error 1`] = `
             >
               <div
                 class=" is_TouchableArea  t_group_true"
+                jestanimatedprops="[object Object]"
+                jestinlinestyle="[object Object]"
                 role="button"
-                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1);"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
                 tabindex="0"
               >
                 <svg
@@ -53,6 +55,8 @@ exports[`ReceiveScreen renders without error 1`] = `
             data-testid="wallet-qr-code"
           >
             <div
+              jestanimatedprops="[object Object]"
+              jestinlinestyle="[object Object]"
               style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; flex-grow: 1; align-items: center; gap: 12px; justify-content: flex-start; margin-bottom: 8px; padding: 24px 16px 24px 16px;"
             >
               <div
@@ -5930,6 +5934,8 @@ exports[`ReceiveScreen renders without error 1`] = `
                       data-testid="account-icon"
                     >
                       <div
+                        jestanimatedprops="[object Object]"
+                        jestinlinestyle="[object Object]"
                         style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
                       >
                         <svg
@@ -5972,8 +5978,10 @@ exports[`ReceiveScreen renders without error 1`] = `
               </div>
               <div
                 class=" is_TouchableArea  t_group_true"
+                jestanimatedprops="[object Object]"
+                jestinlinestyle="[object Object]"
                 role="button"
-                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); width: 100%; transform: scale(1);"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; width: 100%; transform: scale(1);"
                 tabindex="0"
               >
                 <div
@@ -6018,8 +6026,10 @@ exports[`ReceiveScreen renders without error 1`] = `
               </div>
               <div
                 class=" is_TouchableArea  t_group_true"
+                jestanimatedprops="[object Object]"
+                jestinlinestyle="[object Object]"
                 role="button"
-                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); gap: 4px; margin-top: 4px; transform: scale(1);"
+                style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; gap: 4px; margin-top: 4px; transform: scale(1);"
                 tabindex="0"
               >
                 <span
@@ -6079,7 +6089,7 @@ exports[`ReceiveScreen renders without error 1`] = `
               <h2
                 class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
                 data-disable-theme="true"
-                id="title-:r1f:"
+                id="Dialog--:r1f:-title"
                 role="heading"
               />
             </span>
@@ -6090,6 +6100,19 @@ exports[`ReceiveScreen renders without error 1`] = `
         />
       </span>
     </div>
+    <span
+      style="z-index: 1060; position: fixed; inset: 0; contain: strict; pointer-events: none;"
+    >
+      <span
+        class=" "
+        style="display: contents;"
+      >
+        <span
+          class="t_sub_theme t_light is_Theme"
+          style="display: contents;"
+        />
+      </span>
+    </span>
   </body>,
   "container": <div>
     <span
@@ -6107,8 +6130,10 @@ exports[`ReceiveScreen renders without error 1`] = `
           >
             <div
               class=" is_TouchableArea  t_group_true"
+              jestanimatedprops="[object Object]"
+              jestinlinestyle="[object Object]"
               role="button"
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); transform: scale(1);"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; transform: scale(1);"
               tabindex="0"
             >
               <svg
@@ -6140,6 +6165,8 @@ exports[`ReceiveScreen renders without error 1`] = `
           data-testid="wallet-qr-code"
         >
           <div
+            jestanimatedprops="[object Object]"
+            jestinlinestyle="[object Object]"
             style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; flex-grow: 1; align-items: center; gap: 12px; justify-content: flex-start; margin-bottom: 8px; padding: 24px 16px 24px 16px;"
           >
             <div
@@ -12017,6 +12044,8 @@ exports[`ReceiveScreen renders without error 1`] = `
                     data-testid="account-icon"
                   >
                     <div
+                      jestanimatedprops="[object Object]"
+                      jestinlinestyle="[object Object]"
                       style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 0;"
                     >
                       <svg
@@ -12059,8 +12088,10 @@ exports[`ReceiveScreen renders without error 1`] = `
             </div>
             <div
               class=" is_TouchableArea  t_group_true"
+              jestanimatedprops="[object Object]"
+              jestinlinestyle="[object Object]"
               role="button"
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); width: 100%; transform: scale(1);"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; width: 100%; transform: scale(1);"
               tabindex="0"
             >
               <div
@@ -12105,8 +12136,10 @@ exports[`ReceiveScreen renders without error 1`] = `
             </div>
             <div
               class=" is_TouchableArea  t_group_true"
+              jestanimatedprops="[object Object]"
+              jestinlinestyle="[object Object]"
               role="button"
-              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; opacity: 1; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); gap: 4px; margin-top: 4px; transform: scale(1);"
+              style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; border-top-left-radius: 12px; border-top-right-radius: 12px; border-bottom-right-radius: 12px; border-bottom-left-radius: 12px; background-color: transparent; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; gap: 4px; margin-top: 4px; transform: scale(1);"
               tabindex="0"
             >
               <span
@@ -12166,7 +12199,7 @@ exports[`ReceiveScreen renders without error 1`] = `
             <h2
               class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _userSelect-auto _color-color _whiteSpace-normal _fontFamily-f-family _mt-0px _mr-0px _mb-0px _ml-0px"
               data-disable-theme="true"
-              id="title-:r1f:"
+              id="Dialog--:r1f:-title"
               role="heading"
             />
           </span>

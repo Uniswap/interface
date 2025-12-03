@@ -1,17 +1,10 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { PortfolioTab } from 'pages/Portfolio/types'
+import { pathToPortfolioTab } from 'pages/Portfolio/utils/portfolioUrls'
 import { useEffect } from 'react'
 import { useLocation, useNavigate, useSearchParams } from 'react-router'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainIdFromChainUrlParam, isChainUrlParam } from 'utils/chainParams'
-
-const PATHNAME_TO_TAB: Partial<Record<string, PortfolioTab>> = {
-  '/portfolio': PortfolioTab.Overview,
-  '/portfolio/tokens': PortfolioTab.Tokens,
-  '/portfolio/defi': PortfolioTab.Defi,
-  '/portfolio/nfts': PortfolioTab.Nfts,
-  '/portfolio/activity': PortfolioTab.Activity,
-}
 
 export function usePortfolioRoutes(): {
   tab?: PortfolioTab
@@ -24,7 +17,7 @@ export function usePortfolioRoutes(): {
   const isPortfolioDefiTabEnabled = useFeatureFlag(FeatureFlags.PortfolioDefiTab)
 
   // Get tab from pathname mapping
-  const tab = PATHNAME_TO_TAB[pathname] ?? PortfolioTab.Overview
+  const tab = pathToPortfolioTab(pathname) ?? PortfolioTab.Overview
 
   // Redirect to overview if trying to access DeFi tab when feature flag is disabled
   useEffect(() => {

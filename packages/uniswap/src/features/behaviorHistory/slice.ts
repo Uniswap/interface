@@ -27,6 +27,7 @@ export interface UniswapBehaviorHistoryState {
   }
   hasShownSmartWalletNudge?: boolean
   hasSeenToucanIntroModal?: boolean
+  hasDismissedUniswapWrapped2025Banner?: boolean
 }
 
 export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
@@ -47,6 +48,7 @@ export const initialUniswapBehaviorHistoryState: UniswapBehaviorHistoryState = {
   hasShownMismatchToast: false,
   hasShownSmartWalletNudge: false,
   hasSeenToucanIntroModal: false,
+  hasDismissedUniswapWrapped2025Banner: false,
 }
 
 const slice = createSlice({
@@ -113,6 +115,9 @@ const slice = createSlice({
     setHasDismissedBridgedAssetsBannerV2: (state, action: PayloadAction<boolean>) => {
       state.hasDismissedBridgedAssetsBannerV2 = action.payload
     },
+    setHasDismissedUniswapWrapped2025Banner: (state, action: PayloadAction<boolean>) => {
+      state.hasDismissedUniswapWrapped2025Banner = action.payload
+    },
   },
 })
 
@@ -134,6 +139,7 @@ export const {
   setHasShownSmartWalletNudge,
   setHasSeenToucanIntroModal,
   setHasDismissedBridgedAssetsBannerV2,
+  setHasDismissedUniswapWrapped2025Banner,
 } = slice.actions
 
 export const uniswapBehaviorHistoryReducer = slice.reducer

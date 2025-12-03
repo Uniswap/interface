@@ -84,7 +84,8 @@ export function useNftListRenderData({
     onListEndReached,
     hiddenNftsExpanded,
     setHiddenNftsExpanded,
-    isErrorState: isError(networkStatus, !!data),
+    // Don't show error state when query is intentionally skipped
+    isErrorState: skip ? false : isError(networkStatus, !!data),
     hasNextPage: Boolean(hasNextPage),
     shouldAddInLoadingItem: networkStatus === NetworkStatus.fetchMore && numShown % 2 === 1,
   }

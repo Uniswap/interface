@@ -22,6 +22,7 @@ import {
   type UseTradeArgs,
   validateIndicativeQuoteResponse,
 } from 'uniswap/src/features/transactions/swap/types/trade'
+import { getIdentifierForQuote } from 'uniswap/src/features/transactions/swap/utils/getIdForQuote'
 import {
   createGetProtocolsForChain,
   DEFAULT_PROTOCOL_OPTIONS,
@@ -99,6 +100,8 @@ export function createEVMTradeService(ctx: EVMTradeServiceContext): TradeService
         // Step 4: Fetch quote from API
         const quoteResponse = await tradeRepository.fetchQuote(quoteRequestArgs)
 
+        const quoteHash = getIdentifierForQuote(quoteRequestArgs)
+
         // Step 5: Transform quote to trade
         const result = transformQuoteToTrade({
           quote: quoteResponse,
@@ -111,6 +114,7 @@ export function createEVMTradeService(ctx: EVMTradeServiceContext): TradeService
         })
         // Return trade with gas estimates
         return {
+          quoteHash,
           trade: result?.trade ?? null,
           gasEstimate: result?.gasEstimate,
         }

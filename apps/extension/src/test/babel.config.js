@@ -16,10 +16,11 @@ module.exports = function (api) {
     ],
     // https://github.com/software-mansion/react-native-reanimated/issues/3364#issuecomment-1268591867
     '@babel/plugin-proposal-export-namespace-from',
+    'react-native-reanimated/plugin',
   ].filter(Boolean)
 
   return {
-    presets: ['module:@react-native/babel-preset'],
+    presets: ['babel-preset-expo'],
     plugins,
   }
 }

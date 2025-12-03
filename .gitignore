@@ -63,8 +63,11 @@ packages/uniswap/src/i18n/locales/source/*_old.json
 # CodeTours Extension
 .tours/*
 
-# RNEF
-.rnef/
+# Expo
+.expo/
+
+# auto-generated test ids
+apps/mobile/.maestro/scripts/testIds.js
 
 # claude
 claude.local.md

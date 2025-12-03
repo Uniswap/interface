@@ -133,54 +133,83 @@ exports[`ErrorState renders without error 1`] = `
 
 exports[`Header renders without error 1`] = `
 <View
-  cancelable={true}
   collapsable={false}
-  disabled={false}
   focusVisibleStyle={{}}
-  focusable={true}
   forwardedRef={[Function]}
+  jestAnimatedProps={
+    {
+      "value": {},
+    }
+  }
   jestAnimatedStyle={
     {
       "value": {},
     }
   }
-  minPressDuration={0}
+  jestInlineStyle={
+    [
+      {
+        "backgroundColor": "transparent",
+        "borderBottomColor": "rgba(255,255,255,0.12)",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderBottomWidth": 0.25,
+        "borderStyle": "solid",
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
+        "flexDirection": "column",
+        "opacity": 1,
+        "paddingBottom": 12,
+        "paddingLeft": 16,
+        "paddingRight": 16,
+        "paddingTop": 12,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+    ]
+  }
   onBlur={[Function]}
+  onClick={[Function]}
   onFocus={[Function]}
   onLayout={[Function]}
-  onMouseEnter={[Function]}
-  onMouseLeave={[Function]}
-  onPress={[Function]}
-  onPressIn={[Function]}
-  onPressOut={[Function]}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
   role="button"
   style={
-    {
-      "backgroundColor": "transparent",
-      "borderBottomColor": "rgba(255,255,255,0.12)",
-      "borderBottomLeftRadius": 12,
-      "borderBottomRightRadius": 12,
-      "borderBottomWidth": 0.25,
-      "borderStyle": "solid",
-      "borderTopLeftRadius": 12,
-      "borderTopRightRadius": 12,
-      "flexDirection": "column",
-      "opacity": 1,
-      "paddingBottom": 12,
-      "paddingLeft": 16,
-      "paddingRight": 16,
-      "paddingTop": 12,
-      "transform": [
-        {
-          "scale": 1,
-        },
-      ],
-    }
+    [
+      {
+        "backgroundColor": "transparent",
+        "borderBottomColor": "rgba(255,255,255,0.12)",
+        "borderBottomLeftRadius": 12,
+        "borderBottomRightRadius": 12,
+        "borderBottomWidth": 0.25,
+        "borderStyle": "solid",
+        "borderTopLeftRadius": 12,
+        "borderTopRightRadius": 12,
+        "flexDirection": "column",
+        "opacity": 1,
+        "paddingBottom": 12,
+        "paddingLeft": 16,
+        "paddingRight": 16,
+        "paddingTop": 12,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      },
+      {},
+    ]
   }
 >
   <View
-    onBlur={[Function]}
-    onFocus={[Function]}
     style={
       {
         "alignItems": "center",
@@ -191,8 +220,6 @@ exports[`Header renders without error 1`] = `
     }
   >
     <View
-      onBlur={[Function]}
-      onFocus={[Function]}
       style={
         {
           "flexDirection": "column",
@@ -201,8 +228,6 @@ exports[`Header renders without error 1`] = `
       }
     >
       <View
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "alignItems": "center",
@@ -214,8 +239,6 @@ exports[`Header renders without error 1`] = `
         <Text
           allowFontScaling={true}
           maxFontSizeMultiplier={1.4}
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
               "color": "rgba(255, 255, 255, 0.65)",
@@ -234,6 +257,11 @@ exports[`Header renders without error 1`] = `
     <View
       collapsable={false}
       forwardedRef={[Function]}
+      jestAnimatedProps={
+        {
+          "value": {},
+        }
+      }
       jestAnimatedStyle={
         {
           "value": {
@@ -249,23 +277,34 @@ exports[`Header renders without error 1`] = `
           },
         }
       }
-      onBlur={[Function]}
-      onFocus={[Function]}
+      jestInlineStyle={
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "justifyContent": "center",
+          },
+        ]
+      }
       style={
-        {
-          "alignItems": "center",
-          "borderBottomLeftRadius": 999999,
-          "borderBottomRightRadius": 999999,
-          "borderTopLeftRadius": 999999,
-          "borderTopRightRadius": 999999,
-          "flexDirection": "column",
-          "justifyContent": "center",
-          "transform": [
-            {
-              "rotate": "180deg",
-            },
-          ],
-        }
+        [
+          {
+            "alignItems": "center",
+            "flexDirection": "column",
+            "justifyContent": "center",
+          },
+          {
+            "borderBottomLeftRadius": 999999,
+            "borderBottomRightRadius": 999999,
+            "borderTopLeftRadius": 999999,
+            "borderTopRightRadius": 999999,
+            "transform": [
+              {
+                "rotate": "180deg",
+              },
+            ],
+          },
+        ]
       }
     >
       <RNSVGSvgView

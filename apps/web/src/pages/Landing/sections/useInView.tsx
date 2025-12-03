@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 export const useInView = () => {
-  const ref = useRef<any>()
+  const ref = useRef<any>(undefined)
   const [inView, setInView] = useState(false)
 
   useEffect(() => {

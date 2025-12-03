@@ -26,10 +26,14 @@ export function tradeToTransactionInfo({
   trade,
   transactedUSDValue,
   gasEstimate,
+  swapStartTimestamp,
+  isFinalStep,
 }: {
   trade: Trade
   transactedUSDValue?: number
   gasEstimate?: GasEstimate
+  swapStartTimestamp?: number
+  isFinalStep?: boolean
 }): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo | BridgeTransactionInfo {
   const { quote, slippageTolerance } = trade
   const { quoteId, gasUseEstimate, routeString } = getClassicQuoteFromResponse(quote) ?? {}
@@ -50,6 +54,8 @@ export function tradeToTransactionInfo({
       gasUseEstimate,
       transactedUSDValue,
       gasEstimate,
+      swapStartTimestamp,
+      isFinalStep,
     }
   }
 
@@ -65,6 +71,8 @@ export function tradeToTransactionInfo({
     simulationFailureReasons: isClassic(trade) ? trade.quote.quote.txFailureReasons : undefined,
     transactedUSDValue,
     gasEstimate,
+    swapStartTimestamp,
+    isFinalStep,
   }
 
   return trade.tradeType === TradeType.EXACT_INPUT

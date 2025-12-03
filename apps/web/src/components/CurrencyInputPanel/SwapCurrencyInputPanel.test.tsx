@@ -16,7 +16,7 @@ import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyIn
 import { useAccount } from 'hooks/useAccount'
 import { useCurrencyBalance } from 'state/connection/hooks'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
-import { render } from 'test-utils/render'
+import { renderWithUniswapContext as render } from 'test-utils/render'
 import { nativeOnChain, USDT } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { CurrencyField } from 'uniswap/src/types/currency'

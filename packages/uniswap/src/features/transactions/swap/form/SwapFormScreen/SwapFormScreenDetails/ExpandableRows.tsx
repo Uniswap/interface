@@ -1,3 +1,4 @@
+import { TradingApi } from '@universe/api'
 import { useTranslation } from 'react-i18next'
 import { Accordion, Flex, Text } from 'ui/src'
 import {
@@ -17,7 +18,7 @@ import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
-export function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Element | null {
+export function ExpandableRows(): JSX.Element | null {
   const { t } = useTranslation()
   const { gasFee, gasFeeBreakdown } = useSwapTxStore((s) => {
     if (isUniswapX(s)) {
@@ -54,8 +55,8 @@ export function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Elemen
     <Accordion.HeightAnimator animation="fast" mt="$spacing8">
       <Accordion.Content animation="fast" p="$none" exitStyle={{ opacity: 0 }}>
         <TransactionDetails
-          isSwap
           showExpandedChildren
+          routingType={trade.trade.routing}
           chainId={trade.trade.inputAmount.currency.chainId}
           gasFee={gasFee}
           swapFee={trade.trade.swapFee}
@@ -83,7 +84,7 @@ export function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Elemen
         >
           {/* Price impact row is hidden if a price impact warning is already being shown in the expando toggle row. */}
           <PriceImpactRow derivedSwapInfo={derivedSwapInfo} hide={showPriceImpactWarning} />
-          {!isBridge && (
+          {trade.trade.routing !== TradingApi.Routing.BRIDGE && (
             <MaxSlippageRow
               acceptedDerivedSwapInfo={derivedSwapInfo}
               autoSlippageTolerance={autoSlippageTolerance}

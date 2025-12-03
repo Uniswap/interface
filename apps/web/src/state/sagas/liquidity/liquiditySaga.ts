@@ -181,11 +181,13 @@ function* handlePositionTransactionStep(params: HandlePositionStepParams) {
 
           sendAnalyticsEvent(LiquidityEventName.PriceDiscrepancyChecked, {
             ...analytics,
+            event_name: getLiquidityEventName(onChainStep.type),
             transaction_hash: hash,
             status: priceDiscrepancyResponse.status,
             sqrt_ratio_x96_before: priceDiscrepancyResponse.sqrtRatioX96Before,
             sqrt_ratio_x96_after: priceDiscrepancyResponse.sqrtRatioX96After,
             price_discrepancy: priceDiscrepancyResponse.percentPriceDifference,
+            absolute_price_discrepancy: Math.abs(Number(priceDiscrepancyResponse.percentPriceDifference)),
           })
         } catch (error) {
           // Don't break the main flow if price discrepancy call fails
@@ -257,15 +259,15 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
       switch (step.type) {
         case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {
-          yield* call(handleApprovalTransactionStep, { account, step, setCurrentStep })
+          yield* call(handleApprovalTransactionStep, { address: account.address, step, setCurrentStep })
           break
         }
         case TransactionStepType.Permit2Signature: {
-          signature = yield* call(handleSignatureStep, { account, step, setCurrentStep })
+          signature = yield* call(handleSignatureStep, { address: account.address, step, setCurrentStep })
           break
         }
         case TransactionStepType.Permit2Transaction: {
-          yield* call(handlePermitTransactionStep, { account, step, setCurrentStep })
+          yield* call(handlePermitTransactionStep, { address: account.address, step, setCurrentStep })
           break
         }
         case TransactionStepType.IncreasePositionTransaction:
@@ -274,11 +276,18 @@ function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }
         case TransactionStepType.MigratePositionTransaction:
         case TransactionStepType.MigratePositionTransactionAsync:
         case TransactionStepType.CollectFeesTransactionStep:
-          yield* call(handlePositionTransactionStep, { account, step, setCurrentStep, action, signature, analytics })
+          yield* call(handlePositionTransactionStep, {
+            address: account.address,
+            step,
+            setCurrentStep,
+            action,
+            signature,
+            analytics,
+          })
           break
         case TransactionStepType.IncreasePositionTransactionBatched:
           yield* call(handlePositionTransactionBatchedStep, {
-            account,
+            address: account.address,
             step,
             setCurrentStep,
             action,

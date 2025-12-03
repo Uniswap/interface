@@ -15,10 +15,11 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useNFTContextMenuItems } from 'uniswap/src/features/nfts/hooks/useNftContextMenuItems'
 import { getNFTAssetKey } from 'uniswap/src/features/nfts/utils'
-import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getNftExplorerLink, getOpenseaLink, openUri } from 'uniswap/src/utils/linking'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { filterDefinedWalletAddresses } from 'utils/filterDefinedWalletAddresses'
 
 const FLOAT_UP_ON_HOVER_OFFSET = -4
@@ -53,18 +54,39 @@ function _NFTCard(props: NftCardProps): JSX.Element {
 
   const [openPopoverId, setOpenPopoverId] = useState<string | null>(() => getOpenNftPopoverId())
   const isPopoverOpen = openPopoverId === nftUniqueId
+  const trace = useTrace()
 
   useEffect(() => {
     setOpenPopoverId(getOpenNftPopoverId())
   }, [])
+
+  // Track menu open
+  useEffect(() => {
+    if (isPopoverOpen) {
+      sendAnalyticsEvent(UniswapEventName.ContextMenuOpened, {
+        element: ElementName.PortfolioNftContextMenu,
+        section: SectionName.PortfolioNftsTab,
+        ...trace,
+      })
+    }
+  }, [isPopoverOpen, trace])
 
   const handlePopoverOpenChange = useCallback(
     (open: boolean) => {
       const newId = open ? nftUniqueId : null
       setOpenNftPopoverId(newId)
       setOpenPopoverId(newId)
+
+      // Track menu close
+      if (!open && isPopoverOpen) {
+        sendAnalyticsEvent(UniswapEventName.ContextMenuClosed, {
+          element: ElementName.PortfolioNftContextMenu,
+          section: SectionName.PortfolioNftsTab,
+          ...trace,
+        })
+      }
     },
-    [nftUniqueId],
+    [nftUniqueId, isPopoverOpen, trace],
   )
 
   const closePopover = useCallback(() => {
@@ -134,15 +156,19 @@ function _NFTCard(props: NftCardProps): JSX.Element {
     async (event?: any) => {
       // Prefer OpenSea URL, fall back to block explorer if no OpenSea URL available
       const url = openseaUrl || explorerUrl
+      const linkType = openseaUrl ? 'opensea' : 'block_explorer'
+
       if (url) {
         await openUri({ uri: url })
       }
+
       sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
         element: ElementName.PortfolioNftItem,
         section: SectionName.PortfolioNftsTab,
         collection_name: props.item.collectionName,
         collection_address: props.item.contractAddress,
         token_id: props.item.tokenId,
+        link_type: linkType,
       })
       props.onPress?.()
     },
@@ -193,7 +219,13 @@ function _NFTCard(props: NftCardProps): JSX.Element {
               zIndex={zIndexes.modal}
               {...animationPresets.fadeInDownOutUp}
             >
-              <MenuContent items={menuItems} handleCloseMenu={closePopover} />
+              <MenuContent
+                items={menuItems}
+                handleCloseMenu={closePopover}
+                elementName={ElementName.PortfolioNftContextMenuItem}
+                sectionName={SectionName.PortfolioNftsTab}
+                trackItemClicks
+              />
             </Popover.Content>
           </Popover>
         </Flex>

@@ -3,31 +3,15 @@
 exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
 <DocumentFragment>
   .c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 24px;
 }
 
 .c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
 }
@@ -46,18 +30,9 @@ exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
 
 .c4 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
   gap: 12px;
 }
@@ -68,29 +43,23 @@ exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
 }
 
 .c6 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
 .c7 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c8 {
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
   margin-right: 8px;
 }
 
 .c10 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
   margin-right: 8px;
 }
 
@@ -104,15 +73,21 @@ exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
   >
     <div
       class="c0 c1"
+      gap="sm"
     >
       <div
         class="c2"
+        gap="lg"
       >
         <div
+          align="center"
           class="c3 c4"
+          gap="md"
+          justify="space-between"
         >
           <div
             class="c5"
+            gap="xs"
           >
             <div
               class="c6 css-1urox24"
@@ -125,6 +100,7 @@ exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
             </div>
             <div
               class="c5"
+              gap="xs"
             >
               <div
                 class="c7 css-15popx1"
@@ -141,10 +117,14 @@ exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
           </div>
         </div>
         <div
+          align="center"
           class="c3 c4"
+          gap="md"
+          justify="space-between"
         >
           <div
             class="c5"
+            gap="xs"
           >
             <div
               class="c6 css-1urox24"
@@ -166,6 +146,7 @@ exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
             </div>
             <div
               class="c5"
+              gap="xs"
             >
               <div
                 class="c7 css-15popx1"
@@ -193,31 +174,15 @@ exports[`SwapPreview.tsx > matches base snapshot, test trade exact input 1`] = `
 exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swap 1`] = `
 <DocumentFragment>
   .c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 24px;
 }
 
 .c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
 }
@@ -236,18 +201,9 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swa
 
 .c4 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
   gap: 12px;
 }
@@ -258,29 +214,23 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swa
 }
 
 .c6 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
 .c7 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c8 {
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
   margin-right: 8px;
 }
 
 .c10 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
   margin-right: 8px;
 }
 
@@ -294,15 +244,21 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swa
   >
     <div
       class="c0 c1"
+      gap="sm"
     >
       <div
         class="c2"
+        gap="lg"
       >
         <div
+          align="center"
           class="c3 c4"
+          gap="md"
+          justify="space-between"
         >
           <div
             class="c5"
+            gap="xs"
           >
             <div
               class="c6 css-1urox24"
@@ -315,6 +271,7 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swa
             </div>
             <div
               class="c5"
+              gap="xs"
             >
               <div
                 class="c7 css-15popx1"
@@ -350,10 +307,14 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swa
           </div>
         </div>
         <div
+          align="center"
           class="c3 c4"
+          gap="md"
+          justify="space-between"
         >
           <div
             class="c5"
+            gap="xs"
           >
             <div
               class="c6 css-1urox24"
@@ -375,6 +336,7 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swa
             </div>
             <div
               class="c5"
+              gap="xs"
             >
               <div
                 class="c7 css-15popx1"
@@ -402,31 +364,15 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX swa
 exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 swap 1`] = `
 <DocumentFragment>
   .c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 24px;
 }
 
 .c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
 }
@@ -445,18 +391,9 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 
 
 .c4 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
   gap: 12px;
 }
@@ -467,29 +404,23 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 
 }
 
 .c6 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
 .c7 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c8 {
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
   margin-right: 8px;
 }
 
 .c10 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
   margin-right: 8px;
 }
 
@@ -503,15 +434,21 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 
   >
     <div
       class="c0 c1"
+      gap="sm"
     >
       <div
         class="c2"
+        gap="lg"
       >
         <div
+          align="center"
           class="c3 c4"
+          gap="md"
+          justify="space-between"
         >
           <div
             class="c5"
+            gap="xs"
           >
             <div
               class="c6 css-1urox24"
@@ -524,6 +461,7 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 
             </div>
             <div
               class="c5"
+              gap="xs"
             >
               <div
                 class="c7 css-15popx1"
@@ -559,10 +497,14 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 
           </div>
         </div>
         <div
+          align="center"
           class="c3 c4"
+          gap="md"
+          justify="space-between"
         >
           <div
             class="c5"
+            gap="xs"
           >
             <div
               class="c6 css-1urox24"
@@ -584,6 +526,7 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 
             </div>
             <div
               class="c5"
+              gap="xs"
             >
               <div
                 class="c7 css-15popx1"
@@ -611,31 +554,15 @@ exports[`SwapPreview.tsx > renders ETH input token for an ETH input UniswapX v2 
 exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
 <DocumentFragment>
   .c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 24px;
 }
 
 .c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
 }
@@ -654,18 +581,9 @@ exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
 
 .c4 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
   gap: 12px;
 }
@@ -676,29 +594,23 @@ exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
 }
 
 .c6 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
 .c7 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c8 {
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
   margin-right: 8px;
 }
 
 .c10 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
   margin-right: 8px;
 }
 
@@ -712,15 +624,21 @@ exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
   >
     <div
       class="c0 c1"
+      gap="sm"
     >
       <div
         class="c2"
+        gap="lg"
       >
         <div
+          align="center"
           class="c3 c4"
+          gap="md"
+          justify="space-between"
         >
           <div
             class="c5"
+            gap="xs"
           >
             <div
               class="c6 css-1urox24"
@@ -733,6 +651,7 @@ exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
             </div>
             <div
               class="c5"
+              gap="xs"
             >
               <div
                 class="c7 css-15popx1"
@@ -749,10 +668,14 @@ exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
           </div>
         </div>
         <div
+          align="center"
           class="c3 c4"
+          gap="md"
+          justify="space-between"
         >
           <div
             class="c5"
+            gap="xs"
           >
             <div
               class="c6 css-1urox24"
@@ -774,6 +697,7 @@ exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
             </div>
             <div
               class="c5"
+              gap="xs"
             >
               <div
                 class="c6 css-15popx1"
@@ -801,31 +725,15 @@ exports[`SwapPreview.tsx > renders preview trades with loading states 1`] = `
 exports[`SwapPreview.tsx > test trade exact output, no recipient 1`] = `
 <DocumentFragment>
   .c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 24px;
 }
 
 .c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
   flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
 }
@@ -844,18 +752,9 @@ exports[`SwapPreview.tsx > test trade exact output, no recipient 1`] = `
 
 .c4 {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
   justify-content: space-between;
   gap: 12px;
 }
@@ -866,29 +765,23 @@ exports[`SwapPreview.tsx > test trade exact output, no recipient 1`] = `
 }
 
 .c6 {
-  color: rgba(19,19,19,0.63);
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
+  color: rgba(19, 19, 19, 0.63);
   letter-spacing: -0.01em;
 }
 
 .c7 {
   color: #131313;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c8 {
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
   margin-right: 8px;
 }
 
 .c10 {
   cursor: help;
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
   margin-right: 8px;
 }
 
@@ -902,15 +795,21 @@ exports[`SwapPreview.tsx > test trade exact output, no recipient 1`] = `
   >
     <div
       class="c0 c1"
+      gap="sm"
     >
       <div
         class="c2"
+        gap="lg"
       >
         <div
+          align="center"
           class="c3 c4"
+          gap="md"
+          justify="space-between"
         >
           <div
             class="c5"
+            gap="xs"
           >
             <div
               class="c6 css-1urox24"
@@ -923,6 +822,7 @@ exports[`SwapPreview.tsx > test trade exact output, no recipient 1`] = `
             </div>
             <div
               class="c5"
+              gap="xs"
             >
               <div
                 class="c7 css-15popx1"
@@ -939,10 +839,14 @@ exports[`SwapPreview.tsx > test trade exact output, no recipient 1`] = `
           </div>
         </div>
         <div
+          align="center"
           class="c3 c4"
+          gap="md"
+          justify="space-between"
         >
           <div
             class="c5"
+            gap="xs"
           >
             <div
               class="c6 css-1urox24"
@@ -964,6 +868,7 @@ exports[`SwapPreview.tsx > test trade exact output, no recipient 1`] = `
             </div>
             <div
               class="c5"
+              gap="xs"
             >
               <div
                 class="c7 css-15popx1"

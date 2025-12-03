@@ -8,15 +8,10 @@ import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import type { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
-import {
-  HandleApprovalStepParams,
-  HandleSignatureStepParams,
-  HandleSwapStepParams,
-} from 'uniswap/src/features/transactions/steps/types'
+import { HandleUniswapXPlanSignatureStepParams } from 'uniswap/src/features/transactions/steps/types'
 import { FLASHBLOCKS_UI_SKIP_ROUTES } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
 import { getIsFlashblocksEnabled } from 'uniswap/src/features/transactions/swap/hooks/useIsUnichainFlashblocksEnabled'
 import { plan } from 'uniswap/src/features/transactions/swap/plan/planSaga'
-import { getSwapTxRequest } from 'uniswap/src/features/transactions/swap/steps/swap'
 import { SwapExecutionCallbacks } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import type {
   SwapGasFeeEstimation,
@@ -34,7 +29,10 @@ import {
   getShouldWaitBetweenTransactions,
   getSwapTransactionCount,
 } from 'wallet/src/features/transactions/swap/confirmation'
-import type { createPrepareAndSignSwapSaga } from 'wallet/src/features/transactions/swap/prepareAndSignSwapSaga'
+import {
+  type createPrepareAndSignSwapSaga,
+  shouldSubmitViaPrivateRpc,
+} from 'wallet/src/features/transactions/swap/prepareAndSignSwapSaga'
 import type { TransactionExecutor } from 'wallet/src/features/transactions/swap/services/transactionExecutor'
 import type {
   ApprovalTransactionData,
@@ -184,14 +182,19 @@ function* executeTransactionStep(params: {
 function* executeChainedSwap(params: SwapParams, dependencies: TransactionSagaDependencies) {
   const { account, swapTxContext } = params
 
-  // TODO: SWAP-703 - Add private RPC support for chained swaps
-  const submitViaPrivateRpc = false
   const delegationType = swapTxContext.includesDelegation ? DelegationType.Delegate : DelegationType.Auto
 
   /**
    * Reusable helper to prepare transaction services with common parameters
    */
-  function* prepareServicesForChain(chainId: UniverseChainId) {
+  function* prepareServicesForChain(
+    chainId: UniverseChainId,
+    // TODO: SWAP-458 - update with proper typings once available
+    stepType?: string,
+  ) {
+    // TODO: SWAP-458 - update with proper typings once available
+    const submitViaPrivateRpc = stepType === 'CLASSIC' && (yield* call(shouldSubmitViaPrivateRpc, chainId))
+
     return yield* prepareTransactionServices(dependencies, {
       account,
       chainId,
@@ -202,10 +205,14 @@ function* executeChainedSwap(params: SwapParams, dependencies: TransactionSagaDe
 
   yield* plan({
     ...params,
+    address: account.address,
     selectChain: (chainId: number) => Promise.resolve(true),
-    *handleApprovalTransactionStep(handleApprovalStepParams: HandleApprovalStepParams): SagaGenerator<string> {
-      const payload = handleApprovalStepParams.step.txRequest
-      const { transactionSigner } = yield* prepareServicesForChain(payload.chainId)
+    *handleApprovalTransactionStep(handleApprovalStepParams): SagaGenerator<string> {
+      const { payload, stepSwapType, stepType, tokenInChainId } = handleApprovalStepParams.step
+      const { transactionSigner } = yield* prepareServicesForChain(
+        tokenInChainId as unknown as UniverseChainId,
+        stepSwapType ?? stepType,
+      )
       const preparedTransaction = yield* call([transactionSigner, transactionSigner.prepareTransaction], {
         request: payload,
       })
@@ -214,11 +221,14 @@ function* executeChainedSwap(params: SwapParams, dependencies: TransactionSagaDe
       const result = yield* call([transactionSigner, transactionSigner.sendTransaction], { signedTx })
       return result
     },
-    *handleSwapTransactionStep(handleSwapStepParams: HandleSwapStepParams): SagaGenerator<string> {
-      const txRequest = yield* call(getSwapTxRequest, handleSwapStepParams.step, handleSwapStepParams.signature)
-      const { transactionSigner } = yield* prepareServicesForChain(txRequest.chainId)
+    *handleSwapTransactionStep(handleSwapStepParams): SagaGenerator<string> {
+      const { payload, stepSwapType, stepType, tokenInChainId } = handleSwapStepParams.step
+      const { transactionSigner } = yield* prepareServicesForChain(
+        tokenInChainId as unknown as UniverseChainId,
+        stepSwapType ?? stepType,
+      )
       const preparedTransaction = yield* call([transactionSigner, transactionSigner.prepareTransaction], {
-        request: txRequest,
+        request: payload,
       })
       const signedTx = yield* call([transactionSigner, transactionSigner.signTransaction], preparedTransaction)
       const hash = yield* call([transactionSigner, transactionSigner.sendTransaction], { signedTx })
@@ -230,8 +240,23 @@ function* executeChainedSwap(params: SwapParams, dependencies: TransactionSagaDe
 
       return hash
     },
-    *handleSignatureStep(handleSignatureStepParams: HandleSignatureStepParams): SagaGenerator<string> {
-      const payload = handleSignatureStepParams.step
+    *handleSignatureStep(handleSignatureStepParams): SagaGenerator<string> {
+      const { domain, types, values, stepSwapType, stepType, tokenInChainId } = handleSignatureStepParams.step
+      const { transactionSigner } = yield* prepareServicesForChain(
+        tokenInChainId as unknown as UniverseChainId,
+        stepSwapType ?? stepType,
+      )
+      const result = yield* call([transactionSigner, transactionSigner.signTypedData], {
+        domain,
+        types,
+        value: values,
+      })
+      return result
+    },
+    *handleUniswapXPlanSignatureStep(
+      handleUniswapXPlanSignatureStepParams: HandleUniswapXPlanSignatureStepParams,
+    ): SagaGenerator<string> {
+      const payload = handleUniswapXPlanSignatureStepParams.step
       const { transactionSigner } = yield* prepareServicesForChain(payload.domain.chainId as UniverseChainId)
       const result = yield* call([transactionSigner, transactionSigner.signTypedData], {
         domain: payload.domain,
@@ -262,6 +287,7 @@ export function createExecuteSwapSaga(
       const { account, txId, analytics, onSuccess, onFailure, onPending, swapTxContext } = params
 
       if (isChained(swapTxContext)) {
+        yield* call(onPending)
         yield* executeChainedSwap(params, dependencies)
         return
       }

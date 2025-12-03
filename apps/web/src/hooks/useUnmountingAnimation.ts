@@ -30,9 +30,9 @@ export function useUnmountingAnimation({
   animatedElements,
   skip = false,
 }: {
-  node: RefObject<HTMLElement>
+  node: RefObject<HTMLElement | null>
   getAnimatingClass: () => string
-  animatedElements?: RefObject<HTMLElement>[]
+  animatedElements?: RefObject<HTMLElement | null>[]
   skip?: boolean
 }) {
   useEffect(() => {

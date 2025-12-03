@@ -2,6 +2,9 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { Limit } from 'components/Icons/Limit'
 import { SwapV2 } from 'components/Icons/SwapV2'
 import { MenuItem } from 'components/NavBar/CompanyMenu/Content'
+import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
+import { PortfolioTab } from 'pages/Portfolio/types'
+import { buildPortfolioUrl } from 'pages/Portfolio/utils/portfolioUrls'
 import { useTranslation } from 'react-i18next'
 import { useLocation } from 'react-router'
 import { useSporeColors } from 'ui/src'
@@ -11,6 +14,7 @@ import { CreditCard } from 'ui/src/components/icons/CreditCard'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { ReceiveAlt } from 'ui/src/components/icons/ReceiveAlt'
 import { Wallet } from 'ui/src/components/icons/Wallet'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
 export type TabsSection = {
   title: string
@@ -23,11 +27,13 @@ export type TabsSection = {
 
 export type TabsItem = MenuItem & {
   icon?: JSX.Element
+  elementName?: ElementName
 }
 
 export const useTabsContent = (): TabsSection[] => {
   const { t } = useTranslation()
   const { pathname } = useLocation()
+  const { chainId: portfolioChainId } = usePortfolioRoutes()
   const colors = useSporeColors()
   const isFiatOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
   const isPortfolioPageEnabled = useFeatureFlag(FeatureFlags.PortfolioPage)
@@ -84,7 +90,7 @@ export const useTabsContent = (): TabsSection[] => {
           href: '/explore/transactions',
           internal: true,
         },
-        ...(isToucanEnabled ? [{ label: 'Toucan', href: '/explore/toucan', internal: true }] : []),
+        ...(isToucanEnabled ? [{ label: 'Toucan', href: '/explore/auctions', internal: true }] : []),
       ],
     },
     {
@@ -109,38 +115,43 @@ export const useTabsContent = (): TabsSection[] => {
       ? [
           {
             title: t('common.portfolio'),
-            href: '/portfolio',
+            href: buildPortfolioUrl(PortfolioTab.Overview, portfolioChainId),
             isActive: pathname.startsWith('/portfolio'),
             icon: <Wallet color="$accent1" size="$icon.20" />,
             items: [
               {
                 label: t('portfolio.overview.title'),
-                href: '/portfolio',
+                href: buildPortfolioUrl(PortfolioTab.Overview, portfolioChainId),
                 internal: true,
+                elementName: ElementName.NavbarPortfolioDropdownOverview,
               },
               {
                 label: t('portfolio.tokens.title'),
-                href: '/portfolio/tokens',
+                href: buildPortfolioUrl(PortfolioTab.Tokens, portfolioChainId),
                 internal: true,
+                elementName: ElementName.NavbarPortfolioDropdownTokens,
               },
               ...(isPortfolioDefiTabEnabled
                 ? [
                     {
                       label: t('portfolio.defi.title'),
-                      href: '/portfolio/defi',
+                      href: buildPortfolioUrl(PortfolioTab.Defi, portfolioChainId),
                       internal: true,
+                      elementName: ElementName.NavbarPortfolioDropdownDefi,
                     },
                   ]
                 : []),
               {
                 label: t('portfolio.nfts.title'),
-                href: '/portfolio/nfts',
+                href: buildPortfolioUrl(PortfolioTab.Nfts, portfolioChainId),
                 internal: true,
+                elementName: ElementName.NavbarPortfolioDropdownNfts,
               },
               {
                 label: t('portfolio.activity.title'),
-                href: '/portfolio/activity',
+                href: buildPortfolioUrl(PortfolioTab.Activity, portfolioChainId),
                 internal: true,
+                elementName: ElementName.NavbarPortfolioDropdownActivity,
               },
             ],
           },

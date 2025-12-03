@@ -2,6 +2,7 @@ import { Fragment, PropsWithChildren, useRef, useState } from 'react'
 import { Popover } from 'ui/src'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenuProps } from 'uniswap/src/components/menus/ContextMenuV2'
+import { useContextMenuTracking } from 'uniswap/src/components/menus/hooks/useContextMenuTracking'
 import { ContextMenuTriggerMode } from 'uniswap/src/components/menus/types'
 import { isMobileWeb } from 'utilities/src/platform'
 import { useEvent, useOnClickOutside } from 'utilities/src/react/hooks'
@@ -18,6 +19,9 @@ export function ContextMenu({
   isOpen,
   closeMenu,
   openMenu,
+  elementName,
+  sectionName,
+  trackItemClicks,
 }: PropsWithChildren<ContextMenuProps>): JSX.Element {
   const containerRef = useRef<HTMLDivElement>(null)
   const triggerContainerRef = useRef<HTMLDivElement>(null)
@@ -25,9 +29,16 @@ export function ContextMenu({
 
   const isLeftClick = triggerMode === ContextMenuTriggerMode.Primary
 
+  const handleCloseMenu = useContextMenuTracking({
+    isOpen,
+    closeMenu,
+    elementName,
+    sectionName,
+  })
+
   useOnClickOutside({
     node: containerRef,
-    handler: closeMenu,
+    handler: handleCloseMenu,
     event: isLeftClick ? 'mouseup' : 'mousedown',
   })
 
@@ -109,7 +120,13 @@ export function ContextMenu({
           transform: [{ translateY: -4 }],
         }}
       >
-        <MenuContent items={menuItems} handleCloseMenu={closeMenu} />
+        <MenuContent
+          items={menuItems}
+          handleCloseMenu={handleCloseMenu}
+          elementName={elementName}
+          sectionName={sectionName}
+          trackItemClicks={trackItemClicks}
+        />
       </Popover.Content>
     </Popover>
   )

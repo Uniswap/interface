@@ -1,4 +1,5 @@
 import { createColumnHelper, Row } from '@tanstack/react-table'
+import { SharedEventName } from '@uniswap/analytics-events'
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { PositionInfo } from 'components/Liquidity/types'
 import { getPositionUrl } from 'components/Liquidity/utils/getPositionUrl'
@@ -21,6 +22,12 @@ import { Flex, Text, TouchableArea } from 'ui/src'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+
+const POOLS_TABLE_MAX_HEIGHT = 800
+const POOLS_TABLE_MAX_WIDTH = 1200
 
 interface MiniPoolsTableProps {
   account: string
@@ -31,6 +38,7 @@ interface MiniPoolsTableProps {
 export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools = 5, chainId }: MiniPoolsTableProps) {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const trace = useTrace()
   const { chains } = useEnabledChains()
 
   // Positions are EVM-only (Uniswap V2/V3/V4), so skip if no EVM address
@@ -147,12 +155,22 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools =
     (row: Row<PositionInfo>, content: JSX.Element) => {
       const position = row.original
       return (
-        <TouchableArea onPress={() => navigate(getPositionUrl(position))} cursor="pointer">
+        <TouchableArea
+          onPress={() => {
+            sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+              element: ElementName.PortfolioMiniPoolRow,
+              section: SectionName.PortfolioOverviewTab,
+              ...trace,
+            })
+            navigate(getPositionUrl(position))
+          }}
+          cursor="pointer"
+        >
           {content}
         </TouchableArea>
       )
     },
-    [navigate],
+    [navigate, trace],
   )
 
   // Only show loading state if we don't have data yet
@@ -180,9 +198,17 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools =
           rowWrapper={rowWrapper}
           rowHeight={POOLS_TABLE_ROW_HEIGHT}
           compactRowHeight={POOLS_TABLE_ROW_HEIGHT}
+          defaultPinnedColumns={['poolInfo']}
+          maxWidth={POOLS_TABLE_MAX_WIDTH}
+          centerArrows
+          maxHeight={POOLS_TABLE_MAX_HEIGHT}
         />
       </TableSectionHeader>
-      <ViewAllButton href="/positions" label={t('portfolio.overview.pools.table.viewAllPools')} />
+      <ViewAllButton
+        href="/positions"
+        label={t('portfolio.overview.pools.table.viewAllPools')}
+        elementName={ElementName.PortfolioViewAllPools}
+      />
     </Flex>
   )
 })

@@ -3,7 +3,7 @@ import type { TextInput } from 'react-native'
 import type { CurrencyField } from 'uniswap/src/types/currency'
 
 export interface UseInputFocusSyncProps {
-  inputRef: RefObject<TextInput>
+  inputRef: RefObject<TextInput | null>
   focus?: boolean
   value?: string
   currencyField: CurrencyField

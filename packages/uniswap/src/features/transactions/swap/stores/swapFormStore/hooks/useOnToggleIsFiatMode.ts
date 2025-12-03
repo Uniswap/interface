@@ -1,4 +1,4 @@
-import type { MutableRefObject } from 'react'
+import type { RefObject } from 'react'
 import { useSwapFormStore } from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import type { CurrencyField } from 'uniswap/src/types/currency'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -7,8 +7,8 @@ export const useOnToggleIsFiatMode = ({
   formattedDerivedValueRef,
   moveCursorToEnd,
 }: {
-  formattedDerivedValueRef: MutableRefObject<string>
-  moveCursorToEnd: ({ targetInputRef }: { targetInputRef: MutableRefObject<string> }) => void
+  formattedDerivedValueRef: RefObject<string>
+  moveCursorToEnd: ({ targetInputRef }: { targetInputRef: RefObject<string> }) => void
 }): ((currencyField: CurrencyField) => void) => {
   const {
     exactAmountFiatRef,
@@ -28,7 +28,7 @@ export const useOnToggleIsFiatMode = ({
 
   return useEvent((currencyField: CurrencyField): void => {
     const newIsFiatMode = !isFiatMode
-    let targetInputRef: MutableRefObject<string> | undefined
+    let targetInputRef: RefObject<string> | undefined
 
     if (currencyField !== focusOnCurrencyField) {
       // Case 1: Clicking fiat toggle on a derived (non-exact) field should only focus that field
@@ -60,9 +60,7 @@ export const useOnToggleIsFiatMode = ({
     }
     // We want this update to happen on the next tick, after the input value is updated.
     setTimeout(() => {
-      if (targetInputRef) {
-        moveCursorToEnd({ targetInputRef })
-      }
+      moveCursorToEnd({ targetInputRef })
     }, 0)
   })
 }

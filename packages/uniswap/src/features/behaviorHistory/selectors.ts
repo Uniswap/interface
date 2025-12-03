@@ -17,3 +17,6 @@ export const selectHasShownMismatchToast = (state: UniswapState): boolean =>
 
 export const selectHasSeenToucanIntroModal = (state: UniswapState): boolean =>
   state.uniswapBehaviorHistory.hasSeenToucanIntroModal === true
+
+export const selectHasDismissedUniswapWrapped2025Banner = (state: UniswapState): boolean =>
+  state.uniswapBehaviorHistory.hasDismissedUniswapWrapped2025Banner === true

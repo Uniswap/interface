@@ -30,8 +30,8 @@ function _TimeCell({ timestamp, showFullDateOnHover = false, textAlign = 'left' 
       <Flex
         position="absolute"
         justifyContent="center"
+        transition={showFullDateOnHover ? 'all 0.1s ease-in-out' : undefined}
         flexDirection="column"
-        animation={showFullDateOnHover ? 'fast' : undefined}
         y={0}
         $group-hover={showFullDateOnHover ? { y: -CELL_HEIGHT } : undefined}
         width="100%"

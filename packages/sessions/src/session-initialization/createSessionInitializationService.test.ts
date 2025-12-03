@@ -315,7 +315,7 @@ describe('createSessionInitializationService', () => {
 
         // Verify behavior - session initialized but challenge not handled
         expect(result).toEqual({
-          sessionId: '',
+          sessionId: 'new-session-222',
           isNewSession: true,
         })
 
@@ -340,7 +340,7 @@ describe('createSessionInitializationService', () => {
 
         // Verify behavior - defaults to disabled (opt-in)
         expect(result).toEqual({
-          sessionId: '',
+          sessionId: 'new-session-222',
           isNewSession: true,
         })
 

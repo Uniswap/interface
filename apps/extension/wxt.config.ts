@@ -16,7 +16,7 @@ const icons = {
 
 const BASE_NAME = 'Uniswap Extension'
 const BASE_DESCRIPTION = "The Uniswap Extension is a self-custody crypto wallet that's built for swapping."
-const BASE_VERSION = '1.62.1'
+const BASE_VERSION = '1.63.0'
 
 const BUILD_NUM = parseInt(process.env.BUILD_NUM || '0')
 const EXTENSION_VERSION = `${BASE_VERSION}.${BUILD_NUM}`
@@ -187,10 +187,14 @@ export default defineConfig({
 
       plugins: [
         {
-          name: 'transform-expo-blur-jsx',
+          name: 'transform-react-native-jsx',
           async transform(code, id) {
-            // Only transform expo-blur .js files
-            if (!id.includes('node_modules/expo-blur') || !id.endsWith('.js')) {
+            // Transform JSX in react-native libraries that ship JSX in .js files
+            const needsJsxTransform = ['node_modules/expo-blur', 'node_modules/react-native-reanimated'].some((path) =>
+              id.includes(path),
+            )
+
+            if (!needsJsxTransform || !id.endsWith('.js')) {
               return null
             }
 

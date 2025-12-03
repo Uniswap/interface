@@ -30,7 +30,7 @@ export const StyledNumericalInput = styled(Input)<
   }
 `
 
-export const NumericalInputMimic = styled.span`
+export const NumericalInputMimic = styled.span<{ $fontSize?: number }>`
   position: absolute;
   visibility: hidden;
   bottom: 0px;

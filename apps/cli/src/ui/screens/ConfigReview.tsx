@@ -242,8 +242,8 @@ export function ConfigReview({ onConfirm, onBack }: ConfigReviewProps): JSX.Elem
       for (const slug of teamSlugs) {
         // Check cache first
         if (state.teamMembersCache[slug]) {
-          allEmails.push(...(state.teamMembersCache[slug]?.emails ?? []))
-          allUsernames.push(...(state.teamMembersCache[slug]?.usernames ?? []))
+          allEmails.push(...state.teamMembersCache[slug].emails)
+          allUsernames.push(...state.teamMembersCache[slug].usernames)
         } else {
           // Fetch if not cached (fallback, should be rare if user viewed details)
           try {

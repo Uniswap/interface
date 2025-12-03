@@ -10,26 +10,14 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly 1`] 
 
 .c1 {
   width: unset;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 1px;
 }
 
 .c3 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
@@ -37,74 +25,52 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly 1`] 
   color: #131313;
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  background-color: rgba(19,19,19,0.08);
+  background-color: rgba(19, 19, 19, 0.08);
   border-radius: 999px 0px 0px 999px;
-  border-top: 1px solid rgba(19,19,19,0.08);
-  border-bottom: 1px solid rgba(19,19,19,0.08);
-  border-left: 1px solid rgba(19,19,19,0.08);
+  border-top: 1px solid rgba(19, 19, 19, 0.08);
+  border-bottom: 1px solid rgba(19, 19, 19, 0.08);
+  border-left: 1px solid rgba(19, 19, 19, 0.08);
   border-right: 0px;
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c2:hover {
+.c2 :hover {
   opacity: 0.6;
 }
 
-.c2:active {
+.c2 :active {
   opacity: 0.4;
 }
 
 .c4 {
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  background-color: rgba(19,19,19,0.08);
-  color: rgba(19,19,19,0.63);
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+  background-color: rgba(19, 19, 19, 0.08);
+  color: rgba(19, 19, 19, 0.63);
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
   text-align: center;
   padding: 6px 6px 6px 4px;
   height: 28px;
   border-radius: 0px 999px 999px 0px;
-  border-top: 1px solid rgba(19,19,19,0.08);
-  border-bottom: 1px solid rgba(19,19,19,0.08);
-  border-right: 1px solid rgba(19,19,19,0.08);
+  border-top: 1px solid rgba(19, 19, 19, 0.08);
+  border-bottom: 1px solid rgba(19, 19, 19, 0.08);
+  border-right: 1px solid rgba(19, 19, 19, 0.08);
   border-left: 1px solid transparent;
 }
 
-.c4:hover {
+.c4 :hover {
   opacity: 0.6;
 }
 
-.c4:active {
+.c4 :active {
   opacity: 0.4;
 }
 
@@ -114,6 +80,7 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly 1`] 
 >
   <div
     class="c0 c1"
+    gap="1px"
     width="unset"
   >
     <button
@@ -171,26 +138,14 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly, neg
 
 .c1 {
   width: unset;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
   padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 1px;
 }
 
 .c3 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
@@ -198,74 +153,52 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly, neg
   color: #131313;
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  background-color: rgba(19,19,19,0.08);
+  background-color: rgba(19, 19, 19, 0.08);
   border-radius: 999px 0px 0px 999px;
-  border-top: 1px solid rgba(19,19,19,0.08);
-  border-bottom: 1px solid rgba(19,19,19,0.08);
-  border-left: 1px solid rgba(19,19,19,0.08);
+  border-top: 1px solid rgba(19, 19, 19, 0.08);
+  border-bottom: 1px solid rgba(19, 19, 19, 0.08);
+  border-left: 1px solid rgba(19, 19, 19, 0.08);
   border-right: 0px;
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c2:hover {
+.c2 :hover {
   opacity: 0.6;
 }
 
-.c2:active {
+.c2 :active {
   opacity: 0.4;
 }
 
 .c4 {
-  -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  background-color: rgba(19,19,19,0.08);
-  color: rgba(19,19,19,0.63);
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
+  background-color: rgba(19, 19, 19, 0.08);
+  color: rgba(19, 19, 19, 0.63);
   display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
   text-align: center;
   padding: 6px 6px 6px 4px;
   height: 28px;
   border-radius: 0px 999px 999px 0px;
-  border-top: 1px solid rgba(19,19,19,0.08);
-  border-bottom: 1px solid rgba(19,19,19,0.08);
-  border-right: 1px solid rgba(19,19,19,0.08);
+  border-top: 1px solid rgba(19, 19, 19, 0.08);
+  border-bottom: 1px solid rgba(19, 19, 19, 0.08);
+  border-right: 1px solid rgba(19, 19, 19, 0.08);
   border-left: 1px solid transparent;
 }
 
-.c4:hover {
+.c4 :hover {
   opacity: 0.6;
 }
 
-.c4:active {
+.c4 :active {
   opacity: 0.4;
 }
 
@@ -275,6 +208,7 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly, neg
 >
   <div
     class="c0 c1"
+    gap="1px"
     width="unset"
   >
     <button
@@ -323,43 +257,29 @@ exports[`LimitCustomMarketPriceButton > renders the custom amount correctly, neg
 
 exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 0 false false 1`] = `
 .c1 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   background-color: unset;
   border-radius: 999px;
-  border: 1px solid rgba(19,19,19,0.08);
-  -webkit-text-decoration: none;
+  border: 1px solid rgba(19, 19, 19, 0.08);
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c0:hover {
+.c0 :hover {
   opacity: 0.6;
 }
 
-.c0:active {
+.c0 :active {
   opacity: 0.4;
 }
 
@@ -384,9 +304,6 @@ exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected
 
 exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 0 false true 1`] = `
 .c1 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
@@ -394,33 +311,22 @@ exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected
   color: #131313;
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  background-color: rgba(19,19,19,0.08);
+  background-color: rgba(19, 19, 19, 0.08);
   border-radius: 999px;
-  border: 1px solid rgba(19,19,19,0.08);
-  -webkit-text-decoration: none;
+  border: 1px solid rgba(19, 19, 19, 0.08);
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c0:hover {
+.c0 :hover {
   opacity: 0.6;
 }
 
-.c0:active {
+.c0 :active {
   opacity: 0.4;
 }
 
@@ -445,31 +351,19 @@ exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected
 
 exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 0 true false 1`] = `
 .c1 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   background-color: unset;
   border-radius: 999px;
-  border: 1px solid rgba(19,19,19,0.08);
+  border: 1px solid rgba(19, 19, 19, 0.08);
 }
 
 <span
@@ -493,9 +387,6 @@ exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected
 
 exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 5 false true 1`] = `
 .c1 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
@@ -503,33 +394,22 @@ exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected
   color: #131313;
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  background-color: rgba(19,19,19,0.08);
+  background-color: rgba(19, 19, 19, 0.08);
   border-radius: 999px;
-  border: 1px solid rgba(19,19,19,0.08);
-  -webkit-text-decoration: none;
+  border: 1px solid rgba(19, 19, 19, 0.08);
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c0:hover {
+.c0 :hover {
   opacity: 0.6;
 }
 
-.c0:active {
+.c0 :active {
   opacity: 0.4;
 }
 
@@ -555,31 +435,19 @@ exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected
 
 exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 5 true false 1`] = `
 .c1 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
 .c0 {
-  color: rgba(19,19,19,0.63);
+  color: rgba(19, 19, 19, 0.63);
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
   background-color: unset;
   border-radius: 999px;
-  border: 1px solid rgba(19,19,19,0.08);
+  border: 1px solid rgba(19, 19, 19, 0.08);
 }
 
 <span
@@ -604,9 +472,6 @@ exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected
 
 exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected %p 10 false true 1`] = `
 .c1 {
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
 }
 
@@ -614,33 +479,22 @@ exports[`LimitPresetPriceButton > renders %p correctly, disabled %p and selected
   color: #131313;
   padding: 2px 8px;
   height: 28px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
   justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  background-color: rgba(19,19,19,0.08);
+  background-color: rgba(19, 19, 19, 0.08);
   border-radius: 999px;
-  border: 1px solid rgba(19,19,19,0.08);
-  -webkit-text-decoration: none;
+  border: 1px solid rgba(19, 19, 19, 0.08);
   text-decoration: none;
   cursor: pointer;
-  -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
 }
 
-.c0:hover {
+.c0 :hover {
   opacity: 0.6;
 }
 
-.c0:active {
+.c0 :active {
   opacity: 0.4;
 }
 

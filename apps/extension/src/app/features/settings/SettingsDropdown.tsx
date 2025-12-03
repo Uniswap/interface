@@ -46,7 +46,7 @@ export function SettingsDropdown({ selected, items, disableDropdown, onSelect }:
             />
           </Flex>
         </Popover.Trigger>
-        <Popover.Content zIndex={zIndexes.popover} backgroundColor="$transparent" disableRemoveScroll={false}>
+        <Popover.Content zIndex={zIndexes.popover} backgroundColor="$transparent" enableRemoveScroll={true}>
           <Flex
             borderColor="$surface3"
             borderRadius="$rounded16"

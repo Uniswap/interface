@@ -20,12 +20,7 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": {
-          "dynamic": {
-            "dark": "rgba(255, 255, 255, 0.65)",
-            "light": "rgba(19, 19, 19, 0.63)",
-          },
-        },
+        "color": "rgba(19, 19, 19, 0.63)",
         "fontFamily": "Basel Grotesk",
         "fontSize": 17,
         "fontWeight": "400",
@@ -41,10 +36,33 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
     focusVisibleStyle={{}}
     forwardedRef={[Function]}
     hitSlop={16}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {},
       }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
     }
     onBlur={[Function]}
     onClick={[Function]}
@@ -58,35 +76,31 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
     onStartShouldSetResponder={[Function]}
     role="button"
     style={
-      {
-        "backgroundColor": "transparent",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
-        "flexDirection": "column",
-        "opacity": 1,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      }
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+        {},
+      ]
     }
   >
     <Text
       allowFontScaling={true}
       maxFontSizeMultiplier={1.2}
-      onBlur={[Function]}
-      onFocus={[Function]}
       style={
         {
-          "color": {
-            "dynamic": {
-              "dark": "#FF37C7",
-              "light": "#FF37C7",
-            },
-          },
+          "color": "#FF37C7",
           "fontFamily": "Basel Grotesk",
           "fontSize": 17,
           "fontWeight": "500",
@@ -122,12 +136,7 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": {
-          "dynamic": {
-            "dark": "rgba(255, 255, 255, 0.65)",
-            "light": "rgba(19, 19, 19, 0.63)",
-          },
-        },
+        "color": "rgba(19, 19, 19, 0.63)",
         "fontFamily": "Basel Grotesk",
         "fontSize": 17,
         "fontWeight": "400",
@@ -143,10 +152,33 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
     focusVisibleStyle={{}}
     forwardedRef={[Function]}
     hitSlop={16}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {},
       }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
     }
     onBlur={[Function]}
     onClick={[Function]}
@@ -160,20 +192,23 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
     onStartShouldSetResponder={[Function]}
     role="button"
     style={
-      {
-        "backgroundColor": "transparent",
-        "borderBottomLeftRadius": 12,
-        "borderBottomRightRadius": 12,
-        "borderTopLeftRadius": 12,
-        "borderTopRightRadius": 12,
-        "flexDirection": "column",
-        "opacity": 1,
-        "transform": [
-          {
-            "scale": 1,
-          },
-        ],
-      }
+      [
+        {
+          "backgroundColor": "transparent",
+          "borderBottomLeftRadius": 12,
+          "borderBottomRightRadius": 12,
+          "borderTopLeftRadius": 12,
+          "borderTopRightRadius": 12,
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+        {},
+      ]
     }
     testID="edit"
   >

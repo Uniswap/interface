@@ -62,3 +62,5 @@ package-lock.json
 # Storybook
 *storybook.log
 storybook-static/
+
+coverage/

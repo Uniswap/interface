@@ -169,7 +169,12 @@ export function DappConnectionPermissions({
         </Flex>
       )}
 
-      <DappScanInfoModal isOpen={isInfoModalOpen} onClose={closeInfoModal} />
+      <DappScanInfoModal
+        isOpen={isInfoModalOpen}
+        title={t('dapp.request.scanInfo.title')}
+        description={t('dapp.request.scanInfo.description')}
+        onClose={closeInfoModal}
+      />
     </Flex>
   )
 }

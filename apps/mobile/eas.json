@@ -1,0 +1,72 @@
+{
+  "cli": {
+    "version": ">= 15.0.15",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "bun": "1.3.1",
+      "node": "22.13.1",
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleDevDebug"
+      }
+    },
+    "development-simulator": {
+      "bun": "1.3.1",
+      "node": "22.13.1",
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleDevDebug",
+        "withoutCredentials": true
+      },
+      "ios": {
+        "simulator": true,
+        "withoutCredentials": true
+      }
+    },
+    "development-release": {
+      "bun": "1.3.1",
+      "node": "22.13.1",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleDevRelease"
+      }
+    },
+    "beta": {
+      "bun": "1.3.1",
+      "node": "22.13.1",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleBetaDebug"
+      }
+    },
+    "beta-release": {
+      "bun": "1.3.1",
+      "node": "22.13.1",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleBetaRelease"
+      }
+    },
+    "production": {
+      "bun": "1.3.1",
+      "node": "22.13.1",
+      "autoIncrement": true,
+      "android": {
+        "buildType": "apk",
+        "gradleCommand": ":app:assembleProdRelease"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

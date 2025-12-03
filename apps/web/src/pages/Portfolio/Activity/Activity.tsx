@@ -1,15 +1,15 @@
 import { Row } from '@tanstack/react-table'
+import { SharedEventName } from '@uniswap/analytics-events'
 import { POPUP_MEDIUM_DISMISS_MS } from 'components/Popups/constants'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
-import { Cell } from 'components/Table/Cell'
-import { DataRow } from 'components/Table/styled'
 import { ActivityFilters } from 'pages/Portfolio/Activity/ActivityFilters'
 import { ActivityTable } from 'pages/Portfolio/Activity/ActivityTable/ActivityTable'
 import {
   filterTransactionDetailsFromActivityItems,
   getTransactionTypesForFilter,
 } from 'pages/Portfolio/Activity/Filters/utils'
+import { PaginationSkeletonRow } from 'pages/Portfolio/Activity/PaginationSkeletonRow'
 import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
 import { useCallback, useMemo, useState } from 'react'
@@ -21,11 +21,13 @@ import { TransactionDetailsModal } from 'uniswap/src/components/activity/details
 import { ActivityItem } from 'uniswap/src/components/activity/generateActivityItemRenderer'
 import { useActivityData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
-import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useInfiniteScroll } from 'utilities/src/react/useInfiniteScroll'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { ONE_DAY_MS } from 'utilities/src/time/time'
 import { filterDefinedWalletAddresses } from 'utils/filterDefinedWalletAddresses'
 
@@ -65,6 +67,7 @@ function filterTransactions({
 export default function PortfolioActivity() {
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const trace = useTrace()
   const [selectedTransactionType, setSelectedTransactionType] = useState('all')
   const [selectedTimePeriod, setSelectedTimePeriod] = useState('all')
   const [selectedTransaction, setSelectedTransaction] = useState<TransactionDetails | null>(null)
@@ -100,21 +103,23 @@ export default function PortfolioActivity() {
 
   const error = false
 
-  const handleTransactionClick = useCallback((transaction: TransactionDetails) => {
+  const handleTransactionClick = useEvent((transaction: TransactionDetails) => {
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.ActivityRow,
+      section: SectionName.PortfolioActivityTab,
+      ...trace,
+    })
     setSelectedTransaction(transaction)
-  }, [])
+  })
 
-  const rowWrapper = useCallback(
-    (row: Row<TransactionDetails>, content: JSX.Element) => {
-      const transaction = row.original
-      return (
-        <TouchableArea onPress={() => handleTransactionClick(transaction)} cursor="pointer">
-          {content}
-        </TouchableArea>
-      )
-    },
-    [handleTransactionClick],
-  )
+  const rowWrapper = useEvent((row: Row<TransactionDetails>, content: JSX.Element) => {
+    const transaction = row.original
+    return (
+      <TouchableArea onPress={() => handleTransactionClick(transaction)} cursor="pointer">
+        {content}
+      </TouchableArea>
+    )
+  })
 
   const handleCloseTransactionDetails = () => {
     setSelectedTransaction(null)
@@ -161,12 +166,14 @@ export default function PortfolioActivity() {
     <Trace logImpression page={InterfacePageName.PortfolioActivityPage}>
       <Flex gap="$spacing28" mt="$spacing12">
         {/* Filtering Controls */}
-        <ActivityFilters
-          selectedTransactionType={selectedTransactionType}
-          onTransactionTypeChange={setSelectedTransactionType}
-          selectedTimePeriod={selectedTimePeriod}
-          onTimePeriodChange={setSelectedTimePeriod}
-        />
+        <Trace section={SectionName.PortfolioActivityTab} element={ElementName.ActivityFilters}>
+          <ActivityFilters
+            selectedTransactionType={selectedTransactionType}
+            onTransactionTypeChange={setSelectedTransactionType}
+            selectedTimePeriod={selectedTimePeriod}
+            onTimePeriodChange={setSelectedTimePeriod}
+          />
+        </Trace>
 
         <Flex>
           {!isLoading && transactionData.length === 0 ? (
@@ -176,27 +183,17 @@ export default function PortfolioActivity() {
               <ActivityListEmptyState />
             )
           ) : (
-            <>
-              <ActivityTable data={transactionData} loading={isLoading} error={error} rowWrapper={rowWrapper} />
+            <Trace section={SectionName.PortfolioActivityTab} element={ElementName.PortfolioActivityTable}>
+              <>
+                <ActivityTable data={transactionData} loading={isLoading} error={error} rowWrapper={rowWrapper} />
 
-              {/* Show skeleton loading indicator while fetching next page */}
-              {isFetchingNextPage && (
-                <DataRow v2={true}>
-                  {[...Array(4)].map((_, index) => (
-                    <Cell
-                      key={index}
-                      loading={true}
-                      justifyContent="flex-start"
-                      grow
-                      {...(index === 2 && { minWidth: '280px' })}
-                    />
-                  ))}
-                </DataRow>
-              )}
+                {/* Show skeleton loading indicator while fetching next page */}
+                {isFetchingNextPage && <PaginationSkeletonRow />}
 
-              {/* Intersection observer sentinel for infinite scroll */}
-              <Flex ref={sentinelRef} height={1} my={10} />
-            </>
+                {/* Intersection observer sentinel for infinite scroll */}
+                <Flex ref={sentinelRef} height={1} my={10} />
+              </>
+            </Trace>
           )}
         </Flex>
 

@@ -107,6 +107,7 @@ export function logSwapTransactionCompleted(updatedTransaction: TransactionDetai
     includes_delegation: includesDelegation,
     is_smart_wallet_transaction: isSmartWalletTransaction,
     is_final_step: typeInfo.isFinalStep,
+    swap_start_timestamp: typeInfo.swapStartTimestamp,
     ...getRouteAnalyticsData(updatedTransaction),
   }
 

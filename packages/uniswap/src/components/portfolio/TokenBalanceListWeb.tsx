@@ -1,6 +1,6 @@
 import { NetworkStatus } from '@apollo/client'
 import { Currency } from '@uniswap/sdk-core'
-import { memo, useCallback, useMemo, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { AnimatePresence, Flex, Loader } from 'ui/src'
@@ -20,6 +20,7 @@ import { isHiddenTokenBalancesRow, TokenBalanceListRow } from 'uniswap/src/featu
 import { HiddenTokenInfoModal } from 'uniswap/src/features/transactions/modals/HiddenTokenInfoModal'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { usePrevious } from 'utilities/src/react/hooks'
 
 type TokenBalanceListProps = {
   evmOwner?: Address
@@ -68,6 +69,27 @@ function TokenBalanceListInner({
   const { t } = useTranslation()
 
   const { rows, balancesById, networkStatus, refetch, hiddenTokensExpanded } = useTokenBalanceListContext()
+  const hiddenTokensRowRef = useRef<HTMLDivElement | null>(null)
+  const previousHiddenTokensExpanded = usePrevious(hiddenTokensExpanded)
+
+  // Handle auto scroll, after hiding section of hidden tokens.
+  // We additionally wait 100ms to allow the animation to start before scrolling.
+  useEffect(() => {
+    // Only scroll when transitioning from expanded to collapsed (not on initial render)
+    if (previousHiddenTokensExpanded && !hiddenTokensExpanded) {
+      // Use setTimeout to ensure the animation has started before scrolling
+      const timeoutId = setTimeout(() => {
+        hiddenTokensRowRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'end',
+        })
+      }, 100) // Allow animation to start before scrolling
+
+      return () => clearTimeout(timeoutId)
+    }
+
+    return () => {}
+  }, [hiddenTokensExpanded, previousHiddenTokensExpanded])
 
   const visible: string[] = []
   const hidden: string[] = []
@@ -122,7 +144,11 @@ function TokenBalanceListInner({
           <BaseCard.InlineErrorState title={t('home.tokens.error.fetch')} onRetry={refetch} />
         </Flex>
       )}
-      <TokenBalanceItems rows={visible} openReportTokenModal={openReportTokenModal} />
+      <TokenBalanceItems
+        rows={visible}
+        openReportTokenModal={openReportTokenModal}
+        hiddenTokensRowRef={hiddenTokensRowRef}
+      />
       <AnimatePresence initial={false}>
         {hiddenTokensExpanded && (
           <TokenBalanceItems animated rows={hidden} openReportTokenModal={openReportTokenModal} />
@@ -136,21 +162,30 @@ const TokenBalanceItems = ({
   animated,
   rows,
   openReportTokenModal,
+  hiddenTokensRowRef,
 }: {
   animated?: boolean
   rows: string[]
   openReportTokenModal: (currency: Currency, isMarkedSpam: Maybe<boolean>) => void
+  hiddenTokensRowRef?: React.RefObject<HTMLDivElement | null>
 }): JSX.Element => {
   return (
     <Flex
       {...(animated && {
-        animation: 'quick',
+        animation: 'quicker',
         enterStyle: { opacity: 0, y: -10 },
         exitStyle: { opacity: 0, y: -10 },
       })}
     >
       {rows.map((balance: TokenBalanceListRow) => {
-        return <TokenBalanceItemRow key={balance} item={balance} openReportTokenModal={openReportTokenModal} />
+        return (
+          <TokenBalanceItemRow
+            key={balance}
+            item={balance}
+            openReportTokenModal={openReportTokenModal}
+            hiddenTokensRowRef={hiddenTokensRowRef}
+          />
+        )
       })}
     </Flex>
   )
@@ -159,9 +194,11 @@ const TokenBalanceItems = ({
 const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
   item,
   openReportTokenModal,
+  hiddenTokensRowRef,
 }: {
   item: TokenBalanceListRow
   openReportTokenModal: (currency: Currency, isMarkedSpam: Maybe<boolean>) => void
+  hiddenTokensRowRef?: React.RefObject<HTMLDivElement | null>
 }) {
   const { balancesById, isWarmLoading, onPressToken } = useTokenBalanceListContext()
   const dispatch = useDispatch()
@@ -201,7 +238,9 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
   if (isHiddenTokenBalancesRow(item)) {
     return (
       <>
-        <HiddenTokensRow onPressLearnMore={openModal} />
+        <Flex ref={hiddenTokensRowRef}>
+          <HiddenTokensRow onPressLearnMore={openModal} />
+        </Flex>
         <HiddenTokenInfoModal isOpen={isModalVisible} onClose={closeModal} />
       </>
     )

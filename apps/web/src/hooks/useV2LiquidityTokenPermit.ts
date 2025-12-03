@@ -1,5 +1,5 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { PermitInfo, PermitType, useERC20Permit } from 'hooks/useERC20Permit'
+import { ERC20PermitReturnType, PermitInfo, PermitType, useERC20Permit } from 'hooks/useERC20Permit'
 import useTransactionDeadline from 'hooks/useTransactionDeadline'
 
 const REMOVE_V2_LIQUIDITY_PERMIT_INFO: PermitInfo = {
@@ -11,7 +11,7 @@ const REMOVE_V2_LIQUIDITY_PERMIT_INFO: PermitInfo = {
 export function useV2LiquidityTokenPermit(
   liquidityAmount: CurrencyAmount<Token> | null | undefined,
   spender: string | null | undefined,
-) {
+): ERC20PermitReturnType {
   const transactionDeadline = useTransactionDeadline()
   return useERC20Permit({
     currencyAmount: liquidityAmount,

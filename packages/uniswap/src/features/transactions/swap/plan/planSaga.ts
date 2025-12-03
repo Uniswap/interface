@@ -7,6 +7,7 @@ import { PlanParams } from 'uniswap/src/features/transactions/swap/plan/types'
 import {
   createOrRefreshPlan,
   findFirstActionableStep,
+  getStepLogArray,
   updateExistingPlanWithRetry,
   waitForStepCompletion,
 } from 'uniswap/src/features/transactions/swap/plan/utils'
@@ -27,7 +28,7 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
  */
 export function* plan(params: PlanParams) {
   const {
-    account,
+    address,
     setCurrentStep,
     setSteps,
     swapTxContext,
@@ -38,9 +39,11 @@ export function* plan(params: PlanParams) {
     handleApprovalTransactionStep,
     handleSwapTransactionStep,
     handleSignatureStep,
+    handleUniswapXPlanSignatureStep,
     getDisplayableError,
   } = params
 
+  const startTime = Date.now()
   logger.debug('planSaga', 'plan', '🚨 plan saga started', swapTxContext)
   if (!isChained(swapTxContext)) {
     onFailure(new Error('Route not enabled for the plan saga'))
@@ -54,6 +57,7 @@ export function* plan(params: PlanParams) {
     quote: swapTxContext.trade.quote.quote,
     routing: swapTxContext.trade.quote.routing,
   })
+  const timeToCreatePlan = Date.now() - startTime
 
   let steps: TransactionAndPlanStep[] = transformSteps(response.steps, swapTxContext.trade.inputAmount)
   const planId = response.planId
@@ -64,6 +68,8 @@ export function* plan(params: PlanParams) {
   if (currentStep) {
     setCurrentStep({ step: currentStep, accepted: false })
   }
+
+  const stepLogArray = getStepLogArray(steps)
 
   try {
     while (currentStepIndex < steps.length) {
@@ -90,11 +96,21 @@ export function* plan(params: PlanParams) {
       switch (currentStep?.type) {
         case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {
-          hash = yield* call(handleApprovalTransactionStep, { account, step: currentStep, setCurrentStep })
+          hash = yield* call(handleApprovalTransactionStep, { address, step: currentStep, setCurrentStep })
+          break
+        }
+        case TransactionStepType.UniswapXPlanSignature: {
+          signature = yield* call(handleUniswapXPlanSignatureStep, {
+            address,
+            step: currentStep,
+            setCurrentStep,
+            analytics,
+          })
           break
         }
         case TransactionStepType.Permit2Signature: {
-          signature = yield* call(handleSignatureStep, { account, step: currentStep, setCurrentStep })
+          signature = yield* call(handleSignatureStep, { address, step: currentStep, setCurrentStep })
+          setCurrentStep({ step: currentStep, accepted: true })
           break
         }
         case TransactionStepType.SwapTransaction:
@@ -110,7 +126,7 @@ export function* plan(params: PlanParams) {
           }
 
           hash = yield* call(handleSwapTransactionStep, {
-            account,
+            address,
             signature,
             step: currentStep,
             setCurrentStep,
@@ -131,12 +147,28 @@ export function* plan(params: PlanParams) {
           planId,
           steps: [{ stepIndex: currentStep.stepIndex, proof: { txHash: hash, signature } }],
         })
+        // TODO: SWAP-446 address analytics InterfaceEventName.UniswapXOrderSubmitted
       } else {
         throw new Error('No hash or signature found.')
       }
 
       if (isLastStep) {
         yield* call(onSuccess)
+        const timeToCompletePlan = Date.now() - startTime
+        logger.info('planSaga', 'plan', 'plan saga completed', {
+          timeToCreatePlan: timeToCreatePlan.toString(),
+          timeToCompletePlan: timeToCompletePlan.toString(),
+          stepsNumber: response.steps.length.toString(),
+          // @ts-expect-error TODO: SWAP-458 update when types are available
+          chainIn: swapTxContext.trade.quote.quote.tokenInChainId.toString(),
+          // @ts-expect-error TODO: SWAP-458 update when types are available
+          chainOut: swapTxContext.trade.quote.quote.tokenOutChainId.toString(),
+          planId: response.planId,
+          quoteId: swapTxContext.trade.quote.quote.quoteId,
+          quote: JSON.stringify(swapTxContext.trade.quote.quote),
+          initialPlan: JSON.stringify(response),
+          stepLogArray,
+        })
         return
       }
 
@@ -168,6 +200,20 @@ export function* plan(params: PlanParams) {
     }
     const onPressRetry = params.getOnPressRetry?.(displayableError)
     onFailure(displayableError, onPressRetry)
+    logger.warn('planSaga', 'plan', 'plan saga errored', {
+      timeToCreatePlan: timeToCreatePlan.toString(),
+      stepsNumber: response.steps.length.toString(),
+      // @ts-expect-error TODO: SWAP-458 update when types are available
+      chainIn: swapTxContext.trade.quote.quote.tokenInChainId.toString(),
+      // @ts-expect-error TODO: SWAP-458 update when types are available
+      chainOut: swapTxContext.trade.quote.quote.tokenOutChainId.toString(),
+      planId: response.planId,
+      quoteId: swapTxContext.trade.quote.quote.quoteId,
+      quote: JSON.stringify(swapTxContext.trade.quote.quote),
+      initialPlan: JSON.stringify(response),
+      stepLogArray,
+      error: JSON.stringify(error),
+    })
     return
   }
 }

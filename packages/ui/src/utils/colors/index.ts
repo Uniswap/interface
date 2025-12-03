@@ -63,7 +63,7 @@ function getSpecialCaseTokenColor(imageUrl: Maybe<string>, isDarkMode: boolean):
     return null
   }
 
-  return SPECIAL_CASE_TOKEN_COLORS[imageUrl] ?? null
+  return SPECIAL_CASE_TOKEN_COLORS[imageUrl]
 }
 /**
  * Picks a contrast-passing color from a given token image URL and background color.

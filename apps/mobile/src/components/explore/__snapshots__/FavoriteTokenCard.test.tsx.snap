@@ -38,10 +38,50 @@ exports[`FavoriteTokenCard renders without error 1`] = `
     collapsable={false}
     focusVisibleStyle={{}}
     forwardedRef={[Function]}
+    jestAnimatedProps={
+      {
+        "value": {},
+      }
+    }
     jestAnimatedStyle={
       {
         "value": {},
       }
+    }
+    jestInlineStyle={
+      [
+        {
+          "backgroundColor": "#FFFFFF",
+          "borderBottomColor": "rgba(19, 19, 19, 0.08)",
+          "borderBottomLeftRadius": 16,
+          "borderBottomRightRadius": 16,
+          "borderBottomWidth": 1,
+          "borderLeftColor": "rgba(19, 19, 19, 0.08)",
+          "borderLeftWidth": 1,
+          "borderRightColor": "rgba(19, 19, 19, 0.08)",
+          "borderRightWidth": 1,
+          "borderStyle": "solid",
+          "borderTopColor": "rgba(19, 19, 19, 0.08)",
+          "borderTopLeftRadius": 16,
+          "borderTopRightRadius": 16,
+          "borderTopWidth": 1,
+          "flexDirection": "column",
+          "opacity": 1,
+          "overflow": "hidden",
+          "shadowColor": "rgb(0,0,0)",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
+          },
+          "shadowOpacity": 0.0196078431372549,
+          "shadowRadius": 6,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+      ]
     }
     onBlur={[Function]}
     onClick={[Function]}
@@ -55,43 +95,44 @@ exports[`FavoriteTokenCard renders without error 1`] = `
     onStartShouldSetResponder={[Function]}
     role="button"
     style={
-      {
-        "backgroundColor": "#FFFFFF",
-        "borderBottomColor": "rgba(19, 19, 19, 0.08)",
-        "borderBottomLeftRadius": 16,
-        "borderBottomRightRadius": 16,
-        "borderBottomWidth": 1,
-        "borderLeftColor": "rgba(19, 19, 19, 0.08)",
-        "borderLeftWidth": 1,
-        "borderRightColor": "rgba(19, 19, 19, 0.08)",
-        "borderRightWidth": 1,
-        "borderStyle": "solid",
-        "borderTopColor": "rgba(19, 19, 19, 0.08)",
-        "borderTopLeftRadius": 16,
-        "borderTopRightRadius": 16,
-        "borderTopWidth": 1,
-        "flexDirection": "column",
-        "opacity": 1,
-        "overflow": "hidden",
-        "shadowColor": "rgb(0,0,0)",
-        "shadowOffset": {
-          "height": 1,
-          "width": 0,
-        },
-        "shadowOpacity": 0.0196078431372549,
-        "shadowRadius": 6,
-        "transform": [
-          {
-            "scale": 1,
+      [
+        {
+          "backgroundColor": "#FFFFFF",
+          "borderBottomColor": "rgba(19, 19, 19, 0.08)",
+          "borderBottomLeftRadius": 16,
+          "borderBottomRightRadius": 16,
+          "borderBottomWidth": 1,
+          "borderLeftColor": "rgba(19, 19, 19, 0.08)",
+          "borderLeftWidth": 1,
+          "borderRightColor": "rgba(19, 19, 19, 0.08)",
+          "borderRightWidth": 1,
+          "borderStyle": "solid",
+          "borderTopColor": "rgba(19, 19, 19, 0.08)",
+          "borderTopLeftRadius": 16,
+          "borderTopRightRadius": 16,
+          "borderTopWidth": 1,
+          "flexDirection": "column",
+          "opacity": 1,
+          "overflow": "hidden",
+          "shadowColor": "rgb(0,0,0)",
+          "shadowOffset": {
+            "height": 1,
+            "width": 0,
           },
-        ],
-      }
+          "shadowOpacity": 0.0196078431372549,
+          "shadowRadius": 6,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        },
+        {},
+      ]
     }
     testID="favorite-token-card-undefined"
   >
     <View
-      onBlur={[Function]}
-      onFocus={[Function]}
       style={
         {
           "alignItems": "flex-start",
@@ -105,8 +146,6 @@ exports[`FavoriteTokenCard renders without error 1`] = `
       }
     >
       <View
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "flexDirection": "row",
@@ -116,8 +155,6 @@ exports[`FavoriteTokenCard renders without error 1`] = `
         }
       >
         <View
-          onBlur={[Function]}
-          onFocus={[Function]}
           style={
             {
               "alignItems": "center",
@@ -128,8 +165,6 @@ exports[`FavoriteTokenCard renders without error 1`] = `
           }
         >
           <View
-            onBlur={[Function]}
-            onFocus={[Function]}
             onLayout={[Function]}
             style={
               {
@@ -140,8 +175,6 @@ exports[`FavoriteTokenCard renders without error 1`] = `
             testID="shimmer-placeholder"
           >
             <View
-              onBlur={[Function]}
-              onFocus={[Function]}
               style={
                 {
                   "flexDirection": "column",
@@ -149,16 +182,9 @@ exports[`FavoriteTokenCard renders without error 1`] = `
               }
             >
               <View
-                onBlur={[Function]}
-                onFocus={[Function]}
                 style={
                   {
-                    "backgroundColor": {
-                      "dynamic": {
-                        "dark": "rgba(255, 255, 255, 0.38)",
-                        "light": "rgba(19, 19, 19, 0.35)",
-                      },
-                    },
+                    "backgroundColor": "rgba(19, 19, 19, 0.35)",
                     "borderBottomLeftRadius": 999999,
                     "borderBottomRightRadius": 999999,
                     "borderTopLeftRadius": 999999,
@@ -174,16 +200,9 @@ exports[`FavoriteTokenCard renders without error 1`] = `
           <Text
             allowFontScaling={true}
             maxFontSizeMultiplier={1.4}
-            onBlur={[Function]}
-            onFocus={[Function]}
             style={
               {
-                "color": {
-                  "dynamic": {
-                    "dark": "#FFFFFF",
-                    "light": "#131313",
-                  },
-                },
+                "color": "#131313",
                 "fontFamily": "Basel Grotesk",
                 "fontSize": 19,
                 "fontWeight": "400",
@@ -198,50 +217,74 @@ exports[`FavoriteTokenCard renders without error 1`] = `
           collapsable={false}
           focusVisibleStyle={{}}
           forwardedRef={[Function]}
+          jestAnimatedProps={
+            {
+              "value": {},
+            }
+          }
           jestAnimatedStyle={
             {
               "value": {},
             }
           }
+          jestInlineStyle={
+            [
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(19, 19, 19, 0.35)",
+                "borderBottomLeftRadius": 999999,
+                "borderBottomRightRadius": 999999,
+                "borderTopLeftRadius": 999999,
+                "borderTopRightRadius": 999999,
+                "flexDirection": "column",
+                "height": 24,
+                "justifyContent": "center",
+                "opacity": 0,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+                "width": 24,
+                "zIndex": 1080,
+              },
+            ]
+          }
           onLayout={[Function]}
           pointerEvents="box-none"
           role="button"
           style={
-            {
-              "alignItems": "center",
-              "backgroundColor": "rgba(19, 19, 19, 0.35)",
-              "borderBottomLeftRadius": 999999,
-              "borderBottomRightRadius": 999999,
-              "borderTopLeftRadius": 999999,
-              "borderTopRightRadius": 999999,
-              "flexDirection": "column",
-              "height": 24,
-              "justifyContent": "center",
-              "opacity": 0,
-              "transform": [
-                {
-                  "scale": 1,
-                },
-              ],
-              "width": 24,
-              "zIndex": 1080,
-            }
+            [
+              {
+                "alignItems": "center",
+                "backgroundColor": "rgba(19, 19, 19, 0.35)",
+                "borderBottomLeftRadius": 999999,
+                "borderBottomRightRadius": 999999,
+                "borderTopLeftRadius": 999999,
+                "borderTopRightRadius": 999999,
+                "flexDirection": "column",
+                "height": 24,
+                "justifyContent": "center",
+                "opacity": 0,
+                "transform": [
+                  {
+                    "scale": 1,
+                  },
+                ],
+                "width": 24,
+                "zIndex": 1080,
+              },
+              {},
+            ]
           }
           tabIndex={-1}
           testID="explore/remove-button"
           userSelect="none"
         >
           <View
-            onBlur={[Function]}
-            onFocus={[Function]}
             style={
               {
-                "backgroundColor": {
-                  "dynamic": {
-                    "dark": "#131313",
-                    "light": "#FFFFFF",
-                  },
-                },
+                "backgroundColor": "#FFFFFF",
                 "borderBottomLeftRadius": 12,
                 "borderBottomRightRadius": 12,
                 "borderTopLeftRadius": 12,
@@ -255,8 +298,6 @@ exports[`FavoriteTokenCard renders without error 1`] = `
         </View>
       </View>
       <View
-        onBlur={[Function]}
-        onFocus={[Function]}
         style={
           {
             "flexDirection": "column",
@@ -265,8 +306,6 @@ exports[`FavoriteTokenCard renders without error 1`] = `
         }
       >
         <View
-          onBlur={[Function]}
-          onFocus={[Function]}
           onLayout={[Function]}
           style={
             {
@@ -277,8 +316,6 @@ exports[`FavoriteTokenCard renders without error 1`] = `
           testID="shimmer-placeholder"
         >
           <View
-            onBlur={[Function]}
-            onFocus={[Function]}
             style={
               {
                 "flexDirection": "column",
@@ -286,16 +323,9 @@ exports[`FavoriteTokenCard renders without error 1`] = `
             }
           >
             <View
-              onBlur={[Function]}
-              onFocus={[Function]}
               style={
                 {
-                  "backgroundColor": {
-                    "dynamic": {
-                      "dark": "rgba(255, 255, 255, 0.38)",
-                      "light": "rgba(19, 19, 19, 0.35)",
-                    },
-                  },
+                  "backgroundColor": "rgba(19, 19, 19, 0.35)",
                   "borderBottomLeftRadius": 12,
                   "borderBottomRightRadius": 12,
                   "borderTopLeftRadius": 12,
@@ -310,8 +340,6 @@ exports[`FavoriteTokenCard renders without error 1`] = `
           </View>
         </View>
         <View
-          onBlur={[Function]}
-          onFocus={[Function]}
           onLayout={[Function]}
           style={
             {
@@ -322,8 +350,6 @@ exports[`FavoriteTokenCard renders without error 1`] = `
           testID="shimmer-placeholder"
         >
           <View
-            onBlur={[Function]}
-            onFocus={[Function]}
             style={
               {
                 "flexDirection": "column",
@@ -331,16 +357,9 @@ exports[`FavoriteTokenCard renders without error 1`] = `
             }
           >
             <View
-              onBlur={[Function]}
-              onFocus={[Function]}
               style={
                 {
-                  "backgroundColor": {
-                    "dynamic": {
-                      "dark": "rgba(255, 255, 255, 0.38)",
-                      "light": "rgba(19, 19, 19, 0.35)",
-                    },
-                  },
+                  "backgroundColor": "rgba(19, 19, 19, 0.35)",
                   "borderBottomLeftRadius": 12,
                   "borderBottomRightRadius": 12,
                   "borderTopLeftRadius": 12,

@@ -103,6 +103,9 @@ export type WalletConnectSigningRequest =
 export const isTransactionRequest = (request: WalletConnectSigningRequest): request is TransactionRequest =>
   request.type === EthMethod.EthSendTransaction || request.type === UwULinkMethod.Erc20Send
 
+export const isPersonalSignRequest = (request: WalletConnectSigningRequest): request is SignRequest =>
+  request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign
+
 export const isBatchedTransactionRequest = (
   request: WalletConnectSigningRequest,
 ): request is WalletSendCallsEncodedRequest => request.type === EthMethod.WalletSendCalls

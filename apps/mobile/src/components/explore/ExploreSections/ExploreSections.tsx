@@ -30,6 +30,7 @@ import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { getTokenMetadataDisplayType } from 'src/features/explore/utils'
 import { Flex, Loader, Text } from 'ui/src'
 import { AnimatedBottomSheetFlashList } from 'ui/src/components/AnimatedFlashList/AnimatedFlashList'
+import { NoTokens } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useTokenRankingsQuery } from 'uniswap/src/data/rest/tokenRankings'
@@ -154,8 +155,13 @@ function _ExploreSections({
   }, [insets.bottom])
 
   const dataWithBottomTabs = useMemo(
-    () => (showFullScreenLoadingState ? [] : (topTokenItems ?? [])),
+    () => (showFullScreenLoadingState ? [] : topTokenItems),
     [showFullScreenLoadingState, topTokenItems],
+  )
+
+  const listEmptyComponent = useMemo(
+    () => <TokenListEmptyComponent isLoading={showFullScreenLoadingState} />,
+    [showFullScreenLoadingState],
   )
 
   if (!hasAllData && error) {
@@ -176,7 +182,7 @@ function _ExploreSections({
         <LegendList
           ref={legendListRef}
           refScrollView={scrollRef}
-          ListEmptyComponent={ListEmptyComponent}
+          ListEmptyComponent={listEmptyComponent}
           ListHeaderComponent={
             <ListHeaderComponent
               listRef={scrollRef}
@@ -208,7 +214,7 @@ function _ExploreSections({
     <Flex fill animation="100ms">
       <AnimatedBottomSheetFlashList
         ref={listRef}
-        ListEmptyComponent={ListEmptyComponent}
+        ListEmptyComponent={listEmptyComponent}
         ListHeaderComponent={
           <ListHeaderComponent
             listRef={listRef}
@@ -298,9 +304,9 @@ function processTokens(
 
 function processTokenRankings(
   tokenRankings: TokenRankingsResponse['tokenRankings'] | undefined,
-): Record<ExploreOrderBy, TokenItemDataWithMetadata[]> {
+): Partial<Record<ExploreOrderBy, TokenItemDataWithMetadata[]>> {
   if (!tokenRankings) {
-    return {} as Record<ExploreOrderBy, TokenItemDataWithMetadata[]>
+    return {} as const
   }
 
   const result: Record<string, TokenItemDataWithMetadata[]> = {}
@@ -321,14 +327,11 @@ function processTokenRankings(
   return result
 }
 
-function useTokenItems(
-  data: TokenRankingsResponse | undefined,
-  orderBy: ExploreOrderBy,
-): TokenItemDataWithMetadata[] | undefined {
+function useTokenItems(data: TokenRankingsResponse | undefined, orderBy: ExploreOrderBy): TokenItemDataWithMetadata[] {
   // process all the token rankings into a map of orderBy to token items (only do this once)
   const allTokenItemsByOrderBy = useMemo(() => processTokenRankings(data?.tokenRankings), [data])
-  // return the token items for the given orderBy
-  return useMemo(() => allTokenItemsByOrderBy[orderBy], [allTokenItemsByOrderBy, orderBy])
+  // return the token items for the given orderBy, or empty array if the orderBy key doesn't exist
+  return useMemo(() => allTokenItemsByOrderBy[orderBy] ?? [], [allTokenItemsByOrderBy, orderBy])
 }
 
 type ListHeaderProps = {
@@ -386,11 +389,31 @@ const ListHeaderComponent = ({
   )
 }
 
-const ListEmptyComponent = (): JSX.Element => (
-  <Flex mx="$spacing24" my="$spacing12">
-    <Loader.Token repeat={5} />
-  </Flex>
-)
+const TokenListEmptyComponent = memo(function TokenListEmptyComponent({
+  isLoading,
+}: {
+  isLoading: boolean
+}): JSX.Element {
+  const { t } = useTranslation()
+
+  if (isLoading) {
+    return (
+      <Flex mx="$spacing24" my="$spacing12">
+        <Loader.Token repeat={5} />
+      </Flex>
+    )
+  }
+
+  return (
+    <Flex centered pt="$spacing48" px="$spacing36">
+      <BaseCard.EmptyState
+        description={t('explore.tokens.empty.description')}
+        icon={<NoTokens color="$neutral3" size="$icon.70" />}
+        title={t('explore.tokens.empty.title')}
+      />
+    </Flex>
+  )
+})
 
 function useOrderBy(): {
   uiOrderBy: ExploreOrderBy

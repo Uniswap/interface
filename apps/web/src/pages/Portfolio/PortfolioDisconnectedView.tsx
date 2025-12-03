@@ -8,6 +8,8 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, styled, Text, useIsDarkMode, useMedia, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
+import { ElementName, InterfaceEventName, InterfacePageName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 
 const PADDING_TOP = 60
 const LEFT_CONTENT_MAX_WIDTH = 262
@@ -64,87 +66,97 @@ export default function PortfolioDisconnectedView() {
   const backgroundGradient = useBackgroundGradient()
 
   return (
-    <Flex
-      row
-      maxWidth="$maxWidth1200"
-      width="100%"
-      height={`calc(100vh - ${TOTAL_INTERFACE_NAV_HEIGHT}px)`}
-      $platform-web={{ overflowX: 'visible', overflowY: 'clip' }}
-      pt={PADDING_TOP}
-      $lg={{
-        flexDirection: 'column',
-        alignItems: 'center',
-        pt: 0,
-      }}
-    >
+    <Trace logImpression page={InterfacePageName.PortfolioDisconnectedPage}>
       <Flex
-        width="50%"
-        height="100%"
-        justifyContent="center"
-        gap="$gap32"
-        px="$spacing40"
-        $lg={{ width: '100%', height: '50%', alignItems: 'center' }}
+        row
+        maxWidth="$maxWidth1200"
+        width="100%"
+        height={`calc(100vh - ${TOTAL_INTERFACE_NAV_HEIGHT}px)`}
+        $platform-web={{ overflowX: 'visible', overflowY: 'clip' }}
+        pt={PADDING_TOP}
+        $lg={{
+          flexDirection: 'column',
+          alignItems: 'center',
+          pt: 0,
+        }}
       >
-        <Flex maxWidth={LEFT_CONTENT_MAX_WIDTH} gap="$gap16">
-          <Text variant="heading3" $lg={{ textAlign: 'center' }}>
-            {t('common.getStarted')}
-          </Text>
-          <Text variant="body1" color="$neutral2" $lg={{ textAlign: 'center' }}>
-            {t('portfolio.disconnected.cta.description', { numNetworks: enabledChains.chains.length })}
-          </Text>
-        </Flex>
-        <Button
-          variant="branded"
-          emphasis="primary"
-          size="large"
-          maxHeight="fit-content"
-          alignSelf="flex-start"
-          $lg={{ alignSelf: 'center' }}
-          onPress={() => accountDrawer.open()}
+        <Flex
+          width="50%"
+          height="100%"
+          justifyContent="center"
+          gap="$gap32"
+          px="$spacing40"
+          $lg={{ width: '100%', height: '50%', alignItems: 'center' }}
         >
-          <Text variant="buttonLabel1" color="$white">
-            {t('common.connectWallet.button')}
-          </Text>
-        </Button>
-      </Flex>
-
-      {media.lg ? (
-        <Flex height="50%" width="100%" alignItems="center">
-          <Flex
-            width="100%"
-            maxWidth={440}
-            borderTopLeftRadius={39}
-            borderTopRightRadius={39}
-            borderWidth={1}
-            borderColor="$surface3"
-            boxShadow={`0 8px 34.09px -3.933px ${colors.shadowColor.val}, 0 1.626px 4.065px -1.626px ${colors.shadowColor.val}`}
-            overflow="hidden"
-          >
-            <img
-              src={isDarkMode ? PREVIEW_IMG_MOBILE_DARK : PREVIEW_IMG_MOBILE_LIGHT}
-              alt="Portfolio overview mobile preview image"
-              style={{ width: '100%', height: 'auto' }}
-            />
+          <Flex maxWidth={LEFT_CONTENT_MAX_WIDTH} gap="$gap16">
+            <Text variant="heading3" $lg={{ textAlign: 'center' }}>
+              {t('common.getStarted')}
+            </Text>
+            <Text variant="body1" color="$neutral2" $lg={{ textAlign: 'center' }}>
+              {t('portfolio.disconnected.cta.description', { numNetworks: enabledChains.chains.length })}
+            </Text>
           </Flex>
-          <BottomFadeOverlay background={backgroundGradient} fullWidth />
-        </Flex>
-      ) : (
-        <Flex width="50%" position="relative" overflow="visible" height="100%">
-          <ImageWrapper
-            $platform-web={{
-              boxShadow: `0 14.293px 46.453px -5.36px ${colors.shadowColor.val}, 0 2.216px 5.539px -2.216px ${colors.shadowColor.val}`,
-            }}
+          <Trace
+            logPress
+            eventOnTrigger={InterfaceEventName.ConnectWalletButtonClicked}
+            element={ElementName.ConnectWalletButton}
           >
-            <img
-              src={isDarkMode ? PREVIEW_IMG_DARK : PREVIEW_IMG_LIGHT}
-              alt="Portfolio overview preview image"
-              style={{ minWidth: '100%', minHeight: '100%' }}
-            />
-          </ImageWrapper>
-
-          <BottomFadeOverlay background={backgroundGradient} />
+            {/* Wrap in a flex with set height to avoid growing too tall in firefox */}
+            <Flex height="54px">
+              <Button
+                variant="branded"
+                emphasis="primary"
+                size="large"
+                alignSelf="flex-start"
+                $lg={{ alignSelf: 'center' }}
+                onPress={() => accountDrawer.open()}
+              >
+                <Text variant="buttonLabel1" color="$white">
+                  {t('common.connectWallet.button')}
+                </Text>
+              </Button>
+            </Flex>
+          </Trace>
         </Flex>
-      )}
-    </Flex>
+
+        {media.lg ? (
+          <Flex height="50%" width="100%" alignItems="center">
+            <Flex
+              width="100%"
+              maxWidth={440}
+              borderTopLeftRadius={39}
+              borderTopRightRadius={39}
+              borderWidth={1}
+              borderColor="$surface3"
+              boxShadow={`0 8px 34.09px -3.933px ${colors.shadowColor.val}, 0 1.626px 4.065px -1.626px ${colors.shadowColor.val}`}
+              overflow="hidden"
+            >
+              <img
+                src={isDarkMode ? PREVIEW_IMG_MOBILE_DARK : PREVIEW_IMG_MOBILE_LIGHT}
+                alt="Portfolio overview mobile preview image"
+                style={{ width: '100%', height: 'auto' }}
+              />
+            </Flex>
+            <BottomFadeOverlay background={backgroundGradient} fullWidth />
+          </Flex>
+        ) : (
+          <Flex width="50%" position="relative" overflow="visible" height="100%">
+            <ImageWrapper
+              $platform-web={{
+                boxShadow: `0 14.293px 46.453px -5.36px ${colors.shadowColor.val}, 0 2.216px 5.539px -2.216px ${colors.shadowColor.val}`,
+              }}
+            >
+              <img
+                src={isDarkMode ? PREVIEW_IMG_DARK : PREVIEW_IMG_LIGHT}
+                alt="Portfolio overview preview image"
+                style={{ minWidth: '100%', minHeight: '100%' }}
+              />
+            </ImageWrapper>
+
+            <BottomFadeOverlay background={backgroundGradient} />
+          </Flex>
+        )}
+      </Flex>
+    </Trace>
   )
 }

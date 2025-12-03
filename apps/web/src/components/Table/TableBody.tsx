@@ -38,7 +38,7 @@ function TableBodyInner<T extends RowData>(
   if (loading || error) {
     return (
       <>
-        <Flex gap={v2 ? '$spacing2' : '$none'}>
+        <Flex>
           {Array.from({ length: loadingRowsCount }, (_, rowIndex) => (
             <DataRow key={`skeleton-row-${rowIndex}`} height={skeletonRowHeight} v2={v2}>
               {table.getAllColumns().map((column, columnIndex) => (
@@ -73,7 +73,7 @@ function TableBodyInner<T extends RowData>(
   }
 
   return (
-    <Flex ref={ref} position="relative" gap={v2 ? '$spacing2' : '$none'}>
+    <Flex ref={ref} position="relative">
       {rows.map((row) => (
         <TableRow<T>
           key={row.id}

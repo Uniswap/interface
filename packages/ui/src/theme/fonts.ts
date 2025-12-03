@@ -53,6 +53,10 @@ const baselBook = isWebPlatform
   ? 'Basel, -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif'
   : fontFamily.sansSerif.book
 
+const monospaceFontFamily = isWebPlatform
+  ? 'ui-monospace, SFMono-Regular, SF Mono, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono", "Roboto Mono", "Courier New", monospace'
+  : fontFamily.sansSerif.monospace
+
 type SansSerifFontFamilyKey = keyof typeof fontFamily.sansSerif
 type SansSerifFontFamilyValue = (typeof fontFamily.sansSerif)[SansSerifFontFamilyKey]
 
@@ -276,9 +280,29 @@ export const buttonFont = createFont({
   },
 })
 
+export const monospaceFont = createFont({
+  family: monospaceFontFamily,
+  size: {
+    micro: fonts.body4.fontSize,
+    small: fonts.body3.fontSize,
+    medium: fonts.body2.fontSize,
+    large: fonts.body1.fontSize,
+    true: fonts.body4.fontSize,
+  },
+  weight: defaultWeights,
+  lineHeight: {
+    micro: fonts.body4.lineHeight,
+    small: fonts.body3.lineHeight,
+    medium: fonts.body2.lineHeight,
+    large: fonts.body1.lineHeight,
+    true: fonts.body4.lineHeight,
+  },
+})
+
 export const allFonts = {
   heading: headingFont,
   subHeading: subHeadingFont,
   body: bodyFont,
   button: buttonFont,
+  monospace: monospaceFont,
 }
