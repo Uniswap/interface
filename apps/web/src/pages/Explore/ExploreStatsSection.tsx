@@ -168,7 +168,7 @@ const StatDisplayWithPopover = memo(({ data, isLoading }: StatDisplayProps) => {
         <StatDisplay data={data} isLoading={isLoading} isHoverable />
       </Popover.Trigger>
       <Popover.Content
-        zIndex={zIndexes.dropdown}
+        zIndex={zIndexes.popover}
         borderColor="$surface2"
         borderRadius="$rounded16"
         borderWidth="$spacing1"

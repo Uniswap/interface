@@ -10,6 +10,7 @@ import { useAppDispatch } from 'state/hooks'
 import { Button, DropdownMenuSheetItem, Flex, IconButton, Popover, useIsTouchDevice, useMedia } from 'ui/src'
 import { GridView } from 'ui/src/components/icons/GridView'
 import { X } from 'ui/src/components/icons/X'
+import { zIndexes } from 'ui/src/theme'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
@@ -172,6 +173,7 @@ function MWebActionButtons({ actionItems }: { actionItems: MenuOptionItem[] }): 
             <IconButton emphasis="secondary" icon={isOpen ? <X color="$neutral1" /> : <GridView color="$neutral1" />} />
           </Popover.Trigger>
           <Popover.Content
+            zIndex={zIndexes.popover}
             backgroundColor="transparent"
             animation="125ms"
             enterStyle={{

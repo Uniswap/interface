@@ -1,5 +1,6 @@
 import { Fragment, PropsWithChildren, useRef, useState } from 'react'
 import { Popover } from 'ui/src'
+import { zIndexes } from 'ui/src/theme'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { ContextMenuProps } from 'uniswap/src/components/menus/ContextMenuV2'
 import { useContextMenuTracking } from 'uniswap/src/components/menus/hooks/useContextMenuTracking'
@@ -119,6 +120,7 @@ export function ContextMenu({
           scale: 0.98,
           transform: [{ translateY: -4 }],
         }}
+        zIndex={zIndexes.popover}
       >
         <MenuContent
           items={menuItems}

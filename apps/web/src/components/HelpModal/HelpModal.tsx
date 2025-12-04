@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Flex, Popover, TouchableArea, useMedia } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons/QuestionInCircleFilled'
+import { zIndexes } from 'ui/src/theme'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function HelpModal({ showOnXL = false }: { showOnXL?: boolean }) {
@@ -43,6 +44,7 @@ export function HelpModal({ showOnXL = false }: { showOnXL?: boolean }) {
           </TouchableArea>
         </Popover.Trigger>
         <Popover.Content
+          zIndex={zIndexes.popover}
           enterStyle={{ scale: 0.95, opacity: 0 }}
           exitStyle={{ scale: 0.95, opacity: 0 }}
           animation="quick"
