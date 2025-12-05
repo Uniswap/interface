@@ -1,5 +1,8 @@
-import { styled, Tooltip as TamaguiTooltip, withStaticProperties } from 'tamagui'
+import { AdaptParent } from '@tamagui/adapt'
+import { useEffect, useId } from 'react'
+import { styled, Tooltip as TamaguiTooltip, useEvent, withStaticProperties } from 'tamagui'
 import { TooltipContentProps } from 'ui/src/components/tooltip/Tooltip'
+import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export type { TooltipProps } from 'tamagui'
 
@@ -90,7 +93,40 @@ const TooltipRoot = styled(TamaguiTooltip, {
 
 TooltipRoot.displayName = 'TooltipRoot'
 
-export const Tooltip = withStaticProperties(TooltipRoot, {
+function TooltipBase(props: React.ComponentProps<typeof TamaguiTooltip>): JSX.Element {
+  const { open: openProp, onOpenChange, ...rest } = props
+
+  const isControlled = openProp !== undefined
+  const { value: isOpenInternal, setValue: setIsOpenInternal } = useBooleanState(openProp ?? false)
+
+  const currentOpen = isControlled ? openProp : isOpenInternal
+
+  // Generate a unique scope to isolate this tooltip from parent Adapt contexts (e.g., AdaptiveWebModal).
+  // Without this, when rendered inside a component using Adapt (like a bottom sheet modal),
+  // the tooltip content gets captured by the parent's Adapt and renders as sheet content instead of floating.
+  const tooltipAdaptScope = `TooltipIsolated${useId()}`
+
+  useEffect(() => {
+    if (isControlled) {
+      setIsOpenInternal(openProp)
+    }
+  }, [isControlled, setIsOpenInternal, openProp])
+
+  const handleOpenChange = useEvent((nextOpen: boolean) => {
+    if (!isControlled) {
+      setIsOpenInternal(nextOpen)
+    }
+    onOpenChange?.(nextOpen)
+  })
+
+  return (
+    <AdaptParent scope={tooltipAdaptScope}>
+      <TooltipRoot open={currentOpen} onOpenChange={handleOpenChange} {...rest} />
+    </AdaptParent>
+  )
+}
+
+export const Tooltip = withStaticProperties(TooltipBase, {
   Trigger: TamaguiTooltip.Trigger,
   Content,
   Arrow,

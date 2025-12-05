@@ -163,7 +163,7 @@ const AutocompleteRow = ({
                 <Tooltip.Trigger>
                   <Text variant="subheading2">{formattedAddress}</Text>
                 </Tooltip.Trigger>
-                <Tooltip.Content zIndex={zIndexes.tooltip} maxWidth="fit-content">
+                <Tooltip.Content zIndex={zIndexes.overlay} maxWidth="fit-content">
                   <Text variant="body4">{address}</Text>
                 </Tooltip.Content>
               </Tooltip>
@@ -179,7 +179,7 @@ const AutocompleteRow = ({
                   {formattedAddress}
                 </Text>
               </Tooltip.Trigger>
-              <Tooltip.Content zIndex={zIndexes.tooltip} maxWidth="fit-content">
+              <Tooltip.Content zIndex={zIndexes.overlay} maxWidth="fit-content">
                 <Text variant="body4">{address}</Text>
               </Tooltip.Content>
             </Tooltip>
@@ -381,7 +381,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
           )}
         </Popover.Trigger>
         <Popover.Content
-          zIndex={zIndexes.popover}
+          zIndex={zIndexes.overlay}
           background="transparent"
           width={(inputNode.current?.clientWidth ?? 0) + 32}
           ref={popoverContentRef}

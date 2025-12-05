@@ -22,7 +22,7 @@ export function WarningMessage({ warningMessage, color, tooltipText }: WarningMe
     return (
       <Tooltip>
         <Tooltip.Trigger>{warningContent}</Tooltip.Trigger>
-        <Tooltip.Content zIndex={zIndexes.tooltip}>
+        <Tooltip.Content zIndex={zIndexes.overlay}>
           <Text variant="body4">{tooltipText}</Text>
         </Tooltip.Content>
       </Tooltip>

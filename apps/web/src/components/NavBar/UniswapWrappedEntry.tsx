@@ -61,7 +61,7 @@ export function UniswapWrappedEntry() {
               <Snowflake size="$icon.24" color="inherit" />
             </Text>
           </Tooltip.Trigger>
-          <Tooltip.Content zIndex={zIndexes.tooltip}>
+          <Tooltip.Content zIndex={zIndexes.overlay}>
             <Tooltip.Arrow />
             <Flex centered>
               <Text variant="buttonLabel4" color="$accent1">

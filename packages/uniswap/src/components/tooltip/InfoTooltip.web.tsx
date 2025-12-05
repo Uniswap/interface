@@ -43,7 +43,7 @@ export function InfoTooltip({
         <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
         {text && (
           <Tooltip.Content
-            zIndex={zIndexes.tooltip}
+            zIndex={zIndexes.overlay}
             pointerEvents="auto"
             maxWidth={maxWidth ?? (isWebPlatform ? 280 : '100%')}
             mx="$spacing24"

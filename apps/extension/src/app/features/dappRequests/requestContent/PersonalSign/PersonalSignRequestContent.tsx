@@ -190,7 +190,7 @@ function PersonalSignRequestContentLegacy({
             />
           </Tooltip.Trigger>
         </Flex>
-        <Tooltip.Content animationDirection="left" zIndex={zIndexes.tooltip}>
+        <Tooltip.Content animationDirection="left" zIndex={zIndexes.overlay}>
           <Tooltip.Arrow />
           <Text variant="body4">
             {viewEncoding === ViewEncoding.UTF8

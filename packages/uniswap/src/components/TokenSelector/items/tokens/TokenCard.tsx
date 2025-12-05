@@ -64,7 +64,7 @@ function _TokenCard({
     return (
       <Tooltip placement="bottom" offset={{ mainAxis: 4 }} delay={{ close: 0, open: 750 }}>
         <Tooltip.Trigger>{tokenCard}</Tooltip.Trigger>
-        <Tooltip.Content zIndex={zIndexes.tooltip}>
+        <Tooltip.Content zIndex={zIndexes.overlay}>
           <Text variant="body3" color="$neutral1">
             {chainLabel}
           </Text>

@@ -153,7 +153,7 @@ export function LiquidityPositionInfoBadges({
         return (
           <Tooltip allowFlip stayInFrame placement="top" key={key}>
             <Tooltip.Trigger>{content}</Tooltip.Trigger>
-            <Tooltip.Content maxWidth="fit-content" zIndex={zIndexes.tooltip}>
+            <Tooltip.Content maxWidth="fit-content" zIndex={zIndexes.overlay}>
               <Tooltip.Arrow />
               <Text variant="body4" color="$neutral2">
                 {tooltipContent}

@@ -26,7 +26,7 @@ export const TokenOptionItem = ({
           currencyField={currencyField}
         />
       </Tooltip.Trigger>
-      <Tooltip.Content zIndex={zIndexes.tooltip}>
+      <Tooltip.Content zIndex={zIndexes.overlay}>
         <Text variant="body4">{symbol}</Text>
         <Tooltip.Arrow />
       </Tooltip.Content>

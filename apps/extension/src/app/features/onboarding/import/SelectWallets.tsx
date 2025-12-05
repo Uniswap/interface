@@ -132,7 +132,7 @@ function SmartWalletTooltip(): JSX.Element | undefined {
           <Trans components={{ highlight: triggerComponent }} i18nKey="account.wallet.select.smartWalletDisclaimer" />
         </Text>
       </Flex>
-      <Tooltip.Content animationDirection="top" pointerEvents="auto" zIndex={zIndexes.tooltip}>
+      <Tooltip.Content animationDirection="top" pointerEvents="auto" zIndex={zIndexes.overlay}>
         <Tooltip.Arrow />
         <Flex>
           <Text variant="body4" color="$neutral2">

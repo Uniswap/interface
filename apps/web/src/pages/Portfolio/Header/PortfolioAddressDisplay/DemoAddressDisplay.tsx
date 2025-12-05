@@ -28,7 +28,7 @@ export function DemoAddressDisplay() {
             <Eye color="$neutral2" size="$icon.16" />
           </Flex>
         </Tooltip.Trigger>
-        <Tooltip.Content ml="$spacing8" zIndex={zIndexes.tooltip}>
+        <Tooltip.Content ml="$spacing8" zIndex={zIndexes.overlay}>
           <Text variant="body4">{t('portfolio.disconnected.demoWallet.description')}</Text>
         </Tooltip.Content>
       </Tooltip>
