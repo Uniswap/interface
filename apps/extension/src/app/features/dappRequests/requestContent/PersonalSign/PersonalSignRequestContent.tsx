@@ -8,6 +8,7 @@ import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRe
 import { SignMessageRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { Flex, IconButton, Text, Tooltip } from 'ui/src'
 import { AlertTriangleFilled, Code, StickyNoteTextSquare } from 'ui/src/components/icons'
+import { zIndexes } from 'ui/src/theme'
 import { logger } from 'utilities/src/logger/logger'
 import { containsNonPrintableChars } from 'utilities/src/primitives/string'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
@@ -189,7 +190,7 @@ function PersonalSignRequestContentLegacy({
             />
           </Tooltip.Trigger>
         </Flex>
-        <Tooltip.Content animationDirection="left">
+        <Tooltip.Content animationDirection="left" zIndex={zIndexes.tooltip}>
           <Tooltip.Arrow />
           <Text variant="body4">
             {viewEncoding === ViewEncoding.UTF8

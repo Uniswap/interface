@@ -100,7 +100,7 @@ function DisconnectMenuTooltip({ children }: PropsWithChildren) {
   return (
     <Tooltip placement="bottom-end">
       <Tooltip.Trigger>{children}</Tooltip.Trigger>
-      <Tooltip.Content pointerEvents="auto" paddingVertical={8} paddingHorizontal={8} zIndex={zIndexes.overlay}>
+      <Tooltip.Content pointerEvents="auto" paddingVertical={8} paddingHorizontal={8} zIndex={zIndexes.tooltip}>
         <DisconnectMenu />
       </Tooltip.Content>
     </Tooltip>

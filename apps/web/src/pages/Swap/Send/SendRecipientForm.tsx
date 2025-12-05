@@ -163,7 +163,7 @@ const AutocompleteRow = ({
                 <Tooltip.Trigger>
                   <Text variant="subheading2">{formattedAddress}</Text>
                 </Tooltip.Trigger>
-                <Tooltip.Content maxWidth="fit-content">
+                <Tooltip.Content zIndex={zIndexes.tooltip} maxWidth="fit-content">
                   <Text variant="body4">{address}</Text>
                 </Tooltip.Content>
               </Tooltip>
@@ -179,7 +179,7 @@ const AutocompleteRow = ({
                   {formattedAddress}
                 </Text>
               </Tooltip.Trigger>
-              <Tooltip.Content maxWidth="fit-content">
+              <Tooltip.Content zIndex={zIndexes.tooltip} maxWidth="fit-content">
                 <Text variant="body4">{address}</Text>
               </Tooltip.Content>
             </Tooltip>

@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { Flex, Text, Tooltip } from 'ui/src'
 import { Snowflake } from 'ui/src/components/icons/Snowflake'
+import { zIndexes } from 'ui/src/theme'
 import { WRAPPED_PATH } from 'uniswap/src/components/banners/shared/utils'
 import { selectHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/selectors'
 import { setHasDismissedUniswapWrapped2025Banner } from 'uniswap/src/features/behaviorHistory/slice'
@@ -60,7 +61,7 @@ export function UniswapWrappedEntry() {
               <Snowflake size="$icon.24" color="inherit" />
             </Text>
           </Tooltip.Trigger>
-          <Tooltip.Content>
+          <Tooltip.Content zIndex={zIndexes.tooltip}>
             <Tooltip.Arrow />
             <Flex centered>
               <Text variant="buttonLabel4" color="$accent1">

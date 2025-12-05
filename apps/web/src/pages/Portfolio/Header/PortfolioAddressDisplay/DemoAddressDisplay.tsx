@@ -2,7 +2,7 @@ import { ReactComponent as Unicon } from 'assets/svg/demo-wallet-emblem.svg'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip, useSporeColors } from 'ui/src'
 import { Eye } from 'ui/src/components/icons/Eye'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 
 export function DemoAddressDisplay() {
   const colors = useSporeColors()
@@ -28,7 +28,7 @@ export function DemoAddressDisplay() {
             <Eye color="$neutral2" size="$icon.16" />
           </Flex>
         </Tooltip.Trigger>
-        <Tooltip.Content ml="$spacing8">
+        <Tooltip.Content ml="$spacing8" zIndex={zIndexes.tooltip}>
           <Text variant="body4">{t('portfolio.disconnected.demoWallet.description')}</Text>
         </Tooltip.Content>
       </Tooltip>
