@@ -26,7 +26,7 @@ localRubyVersion=$(echo "$localRubyOutput" | awk '/ruby/ {print $2}')
 check "ruby" $localRubyVersion "3.2.2"
 
 # Check cocoapods version
-localPodVersion="$(cd apps/mobile && bundle exec pod --version cd ../..)"
+localPodVersion="$(cd apps/mobile && bundle exec pod --version)"
 check "pod" $localPodVersion "1.14.3"
 
 echo "All versions match!"
