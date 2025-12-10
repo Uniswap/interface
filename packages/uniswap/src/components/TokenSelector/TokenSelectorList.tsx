@@ -65,7 +65,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
     value: tokenOption.quantity,
     type: NumberType.TokenTx,
   })
-  const fiatBalance = convertFiatAmountFormatted(tokenOption.balanceUSD, NumberType.FiatTokenPrice)
+  const fiatBalance = convertFiatAmountFormatted(tokenOption.balanceUSD, NumberType.FiatTokenQuantity)
 
   const { isTestnetModeEnabled } = useEnabledChains()
   const balanceText = isTestnetModeEnabled ? tokenBalance : fiatBalance

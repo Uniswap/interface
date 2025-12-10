@@ -515,9 +515,9 @@ export const fiatTokenDetailsFormatter: Formatter = {
 export const fiatTokenPricesFormatter: Formatter = {
   rules: [
     {
-      upperBound: 0.01,
-      overrideValue: 0.01,
-      formatter: TwoDecimalsCurrency,
+      upperBound: 0.00000001,
+      overrideValue: 0.00000001,
+      formatter: SmallestNumCurrency,
       postFormatModifier: lessThanPostFormatModifier,
     },
     { upperBound: 1, formatter: ThreeSigFigsCurrency },
