@@ -165,7 +165,7 @@ function createMockDutchOutput({
   }
 }
 
-const createMockPermitData = (token: string): TradingApi.NullablePermit => ({
+export const createMockPermitData = (token: string): TradingApi.NullablePermit => ({
   domain: {
     name: 'Permit2',
     chainId: 1,

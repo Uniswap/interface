@@ -1,6 +1,6 @@
 import { ErrorBoundary as DatadogErrorBoundary } from '@datadog/browser-rum-react'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { PropsWithChildren, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
@@ -11,7 +11,7 @@ import { CopyAlt } from 'ui/src/components/icons/CopyAlt'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 
-const Code = styled.code`
+const Code = deprecatedStyled.code`
   font-weight: 485;
   font-size: 12px;
   line-height: 16px;
@@ -24,7 +24,7 @@ const Code = styled.code`
   -webkit-overflow-scrolling: touch;
 `
 
-const Separator = styled.div`
+const Separator = deprecatedStyled.div`
   border-bottom: 1px solid ${({ theme }) => theme.surface3};
 `
 

@@ -41,6 +41,7 @@ export interface BehaviorHistoryState {
   hasCopiedPrivateKeys?: boolean
   isAllSmartWalletNudgesDisabled?: boolean
   hasDismissedMonadAnnouncement?: boolean
+  hasDismissedNoAppFeesAnnouncement?: boolean
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
@@ -56,6 +57,7 @@ export const initialBehaviorHistoryState: BehaviorHistoryState = {
   smartWalletNudge: {},
   hasCopiedPrivateKeys: false,
   hasDismissedMonadAnnouncement: false,
+  hasDismissedNoAppFeesAnnouncement: false,
 }
 
 const slice = createSlice({
@@ -165,6 +167,9 @@ const slice = createSlice({
     setHasDismissedMonadAnnouncement: (state, action: PayloadAction<boolean>) => {
       state.hasDismissedMonadAnnouncement = action.payload
     },
+    setHasDismissedNoAppFeesAnnouncement: (state, action: PayloadAction<boolean>) => {
+      state.hasDismissedNoAppFeesAnnouncement = action.payload
+    },
   },
 })
 
@@ -188,6 +193,7 @@ export const {
   setIsAllSmartWalletNudgesDisabled,
   setHasShownSmartWalletHomeScreenNudge,
   setHasDismissedMonadAnnouncement,
+  setHasDismissedNoAppFeesAnnouncement,
 } = slice.actions
 
 export const behaviorHistoryReducer = slice.reducer

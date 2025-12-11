@@ -3,10 +3,10 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { hasRow } from 'components/Table/utils/hasRow'
-import { ActivityAmountCell } from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell'
+import { ActivityAmountCell } from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/ActivityAmountCell'
 import { TimeCell } from 'pages/Portfolio/Activity/ActivityTable/TimeCell'
 import { filterTransactionDetailsFromActivityItems } from 'pages/Portfolio/Activity/Filters/utils'
-import { ACTIVITY_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
+import { PORTFOLIO_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
 import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { MAX_ACTIVITY_ROWS } from 'pages/Portfolio/Overview/constants'
 import { TableSectionHeader } from 'pages/Portfolio/Overview/TableSectionHeader'
@@ -173,11 +173,11 @@ export const MiniActivityTable = memo(function MiniActivityTable({
             v2={true}
             rowWrapper={rowWrapper}
             loadingRowsCount={MAX_ACTIVITY_ROWS}
-            rowHeight={ACTIVITY_TABLE_ROW_HEIGHT}
-            compactRowHeight={ACTIVITY_TABLE_ROW_HEIGHT}
+            rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
+            compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
           />
         ) : (
-          <Flex row alignItems="center" height={ACTIVITY_TABLE_ROW_HEIGHT} gap="$gap8">
+          <Flex row alignItems="center" height={PORTFOLIO_TABLE_ROW_HEIGHT} gap="$gap8">
             <InfoCircleFilled color="$neutral2" size="$icon.20" />
             <Text variant="buttonLabel3" color="$neutral1">
               {t('portfolio.overview.activity.table.empty', { count: transactionData.length })}

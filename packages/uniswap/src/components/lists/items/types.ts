@@ -65,7 +65,7 @@ export interface NFTCollectionOption extends BaseOption {
 }
 // Union of item types for different list use cases
 export type MobileExploreSearchModalOption = TokenOption | WalletOption | NFTCollectionOption
-export type WebSearchModalOption = TokenOption | PoolOption
+export type WebSearchModalOption = TokenOption | PoolOption | WalletOption
 export type SearchModalOption = MobileExploreSearchModalOption | WebSearchModalOption
 
 export type TokenSelectorOption = TokenOption | TokenOption[]

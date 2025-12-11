@@ -57,7 +57,16 @@ export {
   createJupiterApiClient,
   type JupiterApiClient,
 } from '@universe/api/src/clients/jupiter/createJupiterApiClient'
-export type { JupiterExecuteResponse, JupiterOrderResponse } from '@universe/api/src/clients/jupiter/types'
+export type {
+  JupiterExecuteResponse,
+  JupiterOrderResponse,
+  JupiterExecuteUrlParams,
+  JupiterOrderUrlParams,
+} from '@universe/api/src/clients/jupiter/types'
+export {
+  jupiterExecuteResponseSchema,
+  jupiterOrderResponseSchema,
+} from '@universe/api/src/clients/jupiter/types'
 
 // Blockaid API
 export {
@@ -95,15 +104,10 @@ export {
   type DutchQuoteResponse,
   type DutchV3QuoteResponse,
   type ExistingPlanRequest,
-  Method,
-  type NewPlanRequest,
-  type PlanStep,
-  PlanStepStatus,
   type PriorityQuoteResponse,
   type SwappableTokensParams,
-  type PlanResponse,
   type UnwrapQuoteResponse,
-  type UpdateExistingPlanRequest,
+  type UpdatePlanRequestWithPlanId,
   type WrapQuoteResponse,
 } from '@universe/api/src/clients/trading/tradeTypes'
 export {
@@ -154,6 +158,7 @@ export {
   type DataServiceApiClient,
   type DataServiceApiClientContext,
   TokenReportEventType,
+  ReportAssetType,
 } from '@universe/api/src/clients/data/createDataServiceApiClient'
 
 // Notifications API
@@ -200,7 +205,7 @@ export {
 } from '@universe/api/src/clients/base/utils'
 
 // Session API
-export { ApiInit } from '@universe/api/src/components/ApiInit'
+export { ApiInit, SESSION_INIT_QUERY_KEY } from '@universe/api/src/components/ApiInit'
 export { provideSessionService } from '@universe/api/src/provideSessionService'
 
 export type {

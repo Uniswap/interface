@@ -1,4 +1,4 @@
-import { PlanStep, TradingApi } from '@universe/api'
+import { TradingApi } from '@universe/api'
 import { SignTypedDataStepFields } from 'uniswap/src/features/transactions/steps/permit2Signature'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { ValidatedPermit } from 'uniswap/src/features/transactions/swap/utils/trade'
@@ -16,19 +16,20 @@ export function createSignUniswapXOrderStep(
   return { type: TransactionStepType.UniswapXSignature, deadline: quote.orderInfo.deadline, quote, ...permitData }
 }
 
-export interface UniswapXPlanSignatureStep extends SignTypedDataStepFields, PlanStep {
+export interface UniswapXPlanSignatureStep extends SignTypedDataStepFields, TradingApi.PlanStep {
   type: TransactionStepType.UniswapXPlanSignature
   deadline: number
 }
 
 export function createUniswapXPlanSignatureStep(
   permitData: ValidatedPermit,
-  step: PlanStep,
+  step: TradingApi.PlanStep,
 ): UniswapXPlanSignatureStep {
-  return {
+  const uniswapXPlanSignatureStep: UniswapXPlanSignatureStep = {
     ...step,
     ...permitData,
     type: TransactionStepType.UniswapXPlanSignature,
     deadline: Number(permitData.values.deadline),
   }
+  return uniswapXPlanSignatureStep
 }

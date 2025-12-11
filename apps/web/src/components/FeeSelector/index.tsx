@@ -8,7 +8,7 @@ import { FEE_AMOUNT_DETAIL } from 'components/FeeSelector/shared'
 import { useAccount } from 'hooks/useAccount'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState, usePools } from 'hooks/usePools'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { Button, Flex, RadioButtonGroup, Text } from 'ui/src'
@@ -19,7 +19,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { FeePoolSelectAction } from 'uniswap/src/features/telemetry/types'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
-const Select = styled.div`
+const Select = deprecatedStyled.div`
   align-items: flex-start;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -27,7 +27,7 @@ const Select = styled.div`
   width: 100%;
 `
 
-const DynamicSection = styled(AutoColumn)<{ disabled?: boolean }>`
+const DynamicSection = deprecatedStyled(AutoColumn)<{ disabled?: boolean }>`
   opacity: ${({ disabled }) => (disabled ? '0.2' : '1')};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'initial')};
 `

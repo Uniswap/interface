@@ -1,13 +1,13 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { OutlineCard } from 'components/Card/cards'
 import { Input as NumericalInput } from 'components/NumericalInput'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { Button, Flex, Text, styled as tamaguiStyled, useSporeColors } from 'ui/src'
+import { Button, Flex, styled, Text, useSporeColors } from 'ui/src'
 
-const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
+const StyledInput = deprecatedStyled(NumericalInput)<{ usePercent?: boolean }>`
   background-color: transparent;
   font-weight: 535;
   text-align: left;
@@ -18,7 +18,7 @@ const StyledInput = styled(NumericalInput)<{ usePercent?: boolean }>`
   `};
 `
 
-const InputTitle = tamaguiStyled(Text, {
+const InputTitle = styled(Text, {
   fontSize: 12,
   fontWeight: '$medium',
   color: '$neutral2',

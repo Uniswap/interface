@@ -21,8 +21,8 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import { ElementName, InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useDismissedCompatibleAddressWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useDismissedCompatibleAddressWarnings } from 'uniswap/src/features/tokens/warnings/slice/hooks'
 import {
   TransactionScreen,
   useTransactionModalContext,

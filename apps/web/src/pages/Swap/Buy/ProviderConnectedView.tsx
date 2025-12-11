@@ -1,4 +1,4 @@
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
 import { Trans, useTranslation } from 'react-i18next'
 import { ExternalLink } from 'theme/components/Links'
@@ -7,7 +7,7 @@ import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/const
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 
-const StyledLink = styled(ExternalLink)`
+const StyledLink = deprecatedStyled(ExternalLink)`
   font-weight: 535;
   color: ${({ theme }) => theme.neutral3};
 `

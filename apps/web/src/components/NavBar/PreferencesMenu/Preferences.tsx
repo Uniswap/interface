@@ -1,6 +1,6 @@
 import { PreferencesHeader } from 'components/NavBar/PreferencesMenu/Header'
 import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ChevronRight } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
 import { ThemeSelector } from 'theme/components/ThemeToggle'
@@ -8,7 +8,7 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
 
-const Pref = styled.div`
+const Pref = deprecatedStyled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -16,10 +16,10 @@ const Pref = styled.div`
   align-items: center;
   gap: 12px;
 `
-const StyledChevron = styled(ChevronRight)`
+const StyledChevron = deprecatedStyled(ChevronRight)`
   opacity: 0.8;
 `
-const SelectButtonContainer = styled.div`
+const SelectButtonContainer = deprecatedStyled.div`
   display: flex;
   align-items: center;
   gap: 4px;

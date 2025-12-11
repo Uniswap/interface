@@ -1,18 +1,18 @@
 import { ArrowContainer, ArrowWrapper } from 'components/swap/styled'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ArrowDown } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { styled as TamaguiStyled, useSporeColors } from 'ui/src'
+import { styled, useSporeColors } from 'ui/src'
 
-const StyledArrowWrapper = TamaguiStyled(ArrowWrapper, {
+const StyledArrowWrapper = styled(ArrowWrapper, {
   position: 'absolute',
   left: '50%',
   transform: 'translate(-50%, -50%)',
   margin: 0,
 })
 
-const LoadingWrapper = styled.div`
+const LoadingWrapper = deprecatedStyled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -24,29 +24,29 @@ const LoadingWrapper = styled.div`
   background-color: ${({ theme }) => theme.surface1};
 `
 
-const Blob = styled.div<{ width?: number; radius?: number }>`
+const Blob = deprecatedStyled.div<{ width?: number; radius?: number }>`
   background-color: ${({ theme }) => theme.surface2};
   border-radius: ${({ radius }) => (radius ?? 4) + 'px'};
   height: 56px;
   width: ${({ width }) => (width ? width + 'px' : '100%')};
 `
 
-const ModuleBlob = styled(Blob)`
+const ModuleBlob = deprecatedStyled(Blob)`
   background-color: ${({ theme }) => theme.surface3};
   height: 36px;
 `
 
-const TitleColumn = styled.div`
+const TitleColumn = deprecatedStyled.div`
   padding: 8px;
 `
 
-const Row = styled.div`
+const Row = deprecatedStyled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
 `
 
-const InputColumn = styled.div`
+const InputColumn = deprecatedStyled.div`
   display: flex;
   flex-flow: column;
   background-color: ${({ theme }) => theme.surface2};
@@ -56,7 +56,7 @@ const InputColumn = styled.div`
   padding: 48px 12px;
 `
 
-const OutputWrapper = styled.div`
+const OutputWrapper = deprecatedStyled.div`
   position: relative;
 `
 

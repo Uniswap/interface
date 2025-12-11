@@ -8,6 +8,7 @@ import { TransactionDetails, WCConfirmInfo } from 'uniswap/src/features/transact
 export function WCSummaryItem({
   transaction,
   index,
+  isExternalProfile,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: WCConfirmInfo }
 }): JSX.Element {
@@ -29,6 +30,7 @@ export function WCSummaryItem({
       icon={icon}
       index={index}
       transaction={transaction}
+      isExternalProfile={isExternalProfile}
     />
   )
 }

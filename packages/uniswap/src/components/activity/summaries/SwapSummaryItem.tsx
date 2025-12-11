@@ -20,6 +20,7 @@ function _SwapSummaryItem({
   transaction,
   swapCallbacks,
   index,
+  isExternalProfile,
 }: SummaryItemProps & {
   transaction: TransactionDetails & {
     typeInfo: ExactOutputSwapTransactionInfo | ExactInputSwapTransactionInfo
@@ -69,7 +70,14 @@ function _SwapSummaryItem({
   )
 
   return (
-    <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} onRetry={onRetry} />
+    <TransactionSummaryLayout
+      caption={caption}
+      icon={icon}
+      index={index}
+      transaction={transaction}
+      isExternalProfile={isExternalProfile}
+      onRetry={onRetry}
+    />
   )
 }
 

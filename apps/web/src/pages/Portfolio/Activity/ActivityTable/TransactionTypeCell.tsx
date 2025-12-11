@@ -1,9 +1,8 @@
-import { TableText } from 'components/Table/styled'
 import { buildActivityRowFragments } from 'pages/Portfolio/Activity/ActivityTable/registry'
 import { getTransactionTypeFilterOptions } from 'pages/Portfolio/Activity/Filters/utils'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, SpinningLoader } from 'ui/src'
+import { Flex, SpinningLoader, Text } from 'ui/src'
 import { Receipt } from 'ui/src/components/icons/Receipt'
 import { getTransactionSummaryTitle } from 'uniswap/src/features/activity/utils/getTransactionSummaryTitle'
 import {
@@ -25,7 +24,7 @@ function _TransactionTypeCell({ transaction }: TransactionTypeCellProps) {
     return (
       <Flex row alignItems="center" gap="$gap8">
         <SpinningLoader color="$accent1" size={16} />
-        <TableText variant="body3">{pendingLabel}</TableText>
+        <Text variant="body3">{pendingLabel}</Text>
       </Flex>
     )
   }
@@ -45,7 +44,7 @@ function _TransactionTypeCell({ transaction }: TransactionTypeCellProps) {
   return (
     <Flex row alignItems="center" gap="$gap8">
       <IconComponent size="$icon.16" color="$neutral1" />
-      <TableText variant="body3">{label}</TableText>
+      <Text variant="body3">{label}</Text>
     </Flex>
   )
 }

@@ -48,8 +48,8 @@ export function RelativeChangeText({
   shouldTreatAsStablecoin = false,
 }: {
   loading: boolean
-  /** 24hr price change from API (used when not scrubbing chart) */
-  spotRelativeChange?: SharedValue<number>
+  /** Price change for selected duration (used when not scrubbing chart) */
+  spotRelativeChange?: SharedValue<number | undefined>
   startingPrice?: number
   shouldTreatAsStablecoin?: boolean
 }): JSX.Element {
@@ -85,7 +85,9 @@ export function RelativeChangeText({
   })
 
   const changeColor = useDerivedValue(() => {
-    if (relativeChange.value === 0) {
+    // Round the range to 2 decimal places to check if is equal to 0
+    const absRelativeChange = Math.round(Math.abs(relativeChange.value) * 100)
+    if (absRelativeChange === 0) {
       return colors.neutral3.val
     }
     return relativeChange.value > 0 ? colors.statusSuccess.val : colors.statusCritical.val

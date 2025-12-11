@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { AutoColumn } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/UniswapXRouterLabel'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
 import { InterfaceTrade } from 'state/routing/types'
@@ -18,7 +18,7 @@ import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
-const Container = styled(AutoColumn)`
+const Container = deprecatedStyled(AutoColumn)`
   padding: 4px;
 `
 
@@ -102,7 +102,7 @@ function NetworkCostDescription({ native }: { native: Currency }) {
   )
 }
 
-const InlineUniswapXGradient = styled(UniswapXGradient)`
+const InlineUniswapXGradient = deprecatedStyled(UniswapXGradient)`
   display: inline;
 `
 export function UniswapXDescription() {

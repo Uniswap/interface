@@ -1,6 +1,6 @@
 import Row from 'components/deprecated/Row'
 import { Input, InputProps } from 'components/NumericalInput'
-import { css, styled } from 'lib/styled-components'
+import { css, deprecatedStyled } from 'lib/styled-components'
 import { useLayoutEffect, useState } from 'react'
 
 export const NumericalInputFontStyle = css<{ $fontSize?: number }>`
@@ -10,13 +10,13 @@ export const NumericalInputFontStyle = css<{ $fontSize?: number }>`
   line-height: 60px;
 `
 
-export const NumericalInputWrapper = styled(Row)`
+export const NumericalInputWrapper = deprecatedStyled(Row)`
   position: relative;
   max-width: 100%;
   width: max-content;
 `
 
-export const StyledNumericalInput = styled(Input)<
+export const StyledNumericalInput = deprecatedStyled(Input)<
   { $width?: number; $hasPrefix?: boolean; $fontSize?: number } & InputProps
 >`
   max-height: 84px;
@@ -30,7 +30,7 @@ export const StyledNumericalInput = styled(Input)<
   }
 `
 
-export const NumericalInputMimic = styled.span<{ $fontSize?: number }>`
+export const NumericalInputMimic = deprecatedStyled.span<{ $fontSize?: number }>`
   position: absolute;
   visibility: hidden;
   bottom: 0px;
@@ -38,7 +38,7 @@ export const NumericalInputMimic = styled.span<{ $fontSize?: number }>`
   ${NumericalInputFontStyle}
 `
 
-export const NumericalInputSymbolContainer = styled.span<{ showPlaceholder: boolean; $fontSize?: number }>`
+export const NumericalInputSymbolContainer = deprecatedStyled.span<{ showPlaceholder: boolean; $fontSize?: number }>`
   user-select: none;
   color: ${({ theme }) => theme.neutral1};
   ${NumericalInputFontStyle}

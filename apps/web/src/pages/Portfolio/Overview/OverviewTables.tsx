@@ -36,7 +36,7 @@ export const PortfolioOverviewTables = memo(function PortfolioOverviewTables({
       grow
       $xl={{ flexDirection: 'column-reverse' }}
     >
-      <Flex gap="$spacing16" grow shrink $xl={{ width: '100%' }}>
+      <Flex gap="$spacing40" grow shrink $xl={{ width: '100%' }}>
         <MiniTokensTable maxTokens={MAX_TOKENS_ROWS} chainId={chainId} />
         {portfolioAddresses.evmAddress && (
           <MiniPoolsTable account={portfolioAddresses.evmAddress} maxPools={MAX_POOLS_ROWS} chainId={chainId} />

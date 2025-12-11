@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useTranslation } from 'react-i18next'
 import { UniswapLogo } from 'ui/src/components/icons/UniswapLogo'
 import { UniswapX } from 'ui/src/components/icons/UniswapX'
@@ -28,6 +29,8 @@ export function YouReceiveDetailsTooltip({
   const swapFeeUsd = getSwapFeeUsdFromDerivedSwapInfo(derivedSwapInfo)
   const formatter = useLocalizationContext()
   const { convertFiatAmountFormatted } = formatter
+
+  const isNoInterfaceFees = useFeatureFlag(FeatureFlags.NoUniswapInterfaceFees)
 
   const outputCurrencyUSDValue = useUSDCValue(derivedSwapInfo.outputAmountUserWillReceive)
   const formattedOutputCurrencyUSDValue: string | undefined = outputCurrencyUSDValue
@@ -85,7 +88,9 @@ export function YouReceiveDetailsTooltip({
         </Tooltip.Row>
       </Tooltip.Content>
       <Tooltip.Separator />
-      <Tooltip.Description text={t('swap.warning.uniswapFee.message')} />
+      <Tooltip.Description
+        text={isNoInterfaceFees ? t('swap.warning.noInterfaceFees.message') : t('swap.warning.uniswapFee.message')}
+      />
     </Tooltip.Outer>
   )
 }

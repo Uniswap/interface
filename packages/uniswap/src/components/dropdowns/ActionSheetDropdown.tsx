@@ -21,6 +21,7 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { Scrollbar } from 'uniswap/src/components/misc/Scrollbar'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
+import { closeKeyboardBeforeCallback } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isAndroid, isTouchable, isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { executeWithFrameDelay } from 'utilities/src/react/delayUtils'
 import { useEvent } from 'utilities/src/react/hooks'
@@ -113,21 +114,24 @@ export function ActionSheetDropdown({
   const openDropdown = (event: GestureResponderEvent): void => {
     onPress?.(event)
 
-    const containerNode = containerRef.current
+    // Dismiss the keyboard before opening the dropdown to avoid touch handling issues
+    closeKeyboardBeforeCallback(() => {
+      const containerNode = containerRef.current
 
-    if (containerNode) {
-      // eslint-disable-next-line max-params
-      containerNode.measureInWindow((x, y, width, height) => {
-        setToggleMeasurements({
-          x,
-          y: y + (isAndroid ? insets.top : 0),
-          width,
-          height,
-          sticky: styles?.sticky,
+      if (containerNode) {
+        // eslint-disable-next-line max-params
+        containerNode.measureInWindow((x, y, width, height) => {
+          setToggleMeasurements({
+            x,
+            y: y + (isAndroid ? insets.top : 0),
+            width,
+            height,
+            sticky: styles?.sticky,
+          })
+          setOpen(true)
         })
-        setOpen(true)
-      })
-    }
+      }
+    })
   }
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: +toggleMeasurements?.sticky, insets.top
@@ -180,6 +184,7 @@ export function ActionSheetDropdown({
           gap="$spacing8"
           px={styles?.buttonPaddingX}
           py={styles?.buttonPaddingY || '$spacing8'}
+          // TODO(INFRA-1126) -- testIDs inside TouchableArea are not recognized by Maestro
           testID={testID || 'dropdown-toggle'}
         >
           {children}

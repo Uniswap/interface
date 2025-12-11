@@ -11,7 +11,7 @@ import { SwapPreview } from 'components/swap/SwapPreview'
 import { useConfirmModalState } from 'hooks/useConfirmModalState'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapTransactionStatus } from 'hooks/useSwapCallback'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useSuppressPopups } from 'state/application/hooks'
 import { InterfaceTrade } from 'state/routing/types'
@@ -30,7 +30,7 @@ import { SignatureExpiredError, UniswapXv2HardQuoteError } from 'utils/errors'
 import { formatSwapPriceUpdatedEventProperties } from 'utils/loggingFormatters'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
-const Container = styled.div<{ $height?: string; $padding?: string }>`
+const Container = deprecatedStyled.div<{ $height?: string; $padding?: string }>`
   height: ${({ $height }) => $height ?? ''};
   padding: ${({ $padding }) => $padding ?? ''};
 `

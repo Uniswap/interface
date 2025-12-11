@@ -30,7 +30,7 @@ import {
   UnitagEventName,
   WalletEventName,
 } from 'uniswap/src/features/telemetry/constants'
-import { TokenProtectionWarning } from 'uniswap/src/features/tokens/safetyUtils'
+import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -367,11 +367,6 @@ export enum FeePoolSelectAction {
   Search = 'Search',
 }
 
-type InterfaceTokenSelectedProperties = {
-  is_imported_by_user: boolean
-  token_balance_usd?: number | string
-}
-
 export enum DappRequestAction {
   Accept = 'Accept',
   Reject = 'Reject',
@@ -386,6 +381,7 @@ export enum OnboardingCardLoggingName {
   EnablePushNotifications = 'enable_push_notifications',
   BridgedAsset = 'bridged_asset',
   MonadAnnouncement = 'monad_announcement',
+  NoAppFeesAnnouncement = 'no_app_fees_announcement',
 }
 
 export enum DappRequestCardLoggingName {
@@ -1011,7 +1007,7 @@ export type UniverseEventProperties = {
           preselect_asset: boolean
           tokenSection?: OnchainItemSectionName
         })
-    | InterfaceTokenSelectedProperties
+    | { token_balance_usd?: number | string }
   [UniswapEventName.BlockaidFeesMismatch]: {
     symbol: string
     address: string

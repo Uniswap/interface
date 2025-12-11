@@ -19,8 +19,6 @@ const EDGES: Edge[] = ['top', 'left', 'right']
 type HeaderScrollScreenProps = {
   centerElement?: JSX.Element
   rightElement?: JSX.Element
-  alwaysShowCenterElement?: boolean
-  fullScreen?: boolean // Expand to device edges
   renderedInModal?: boolean // Apply styling to display within bottom sheet modal
   showHandleBar?: boolean // add handlebar element to top of view
   backgroundColor?: ColorTokens
@@ -30,8 +28,6 @@ type HeaderScrollScreenProps = {
 export function HeaderScrollScreen({
   centerElement,
   rightElement = <Flex width={iconSizes.icon24} />,
-  alwaysShowCenterElement,
-  fullScreen = false,
   renderedInModal = false,
   showHandleBar = false,
   backgroundColor = '$surface1',
@@ -63,14 +59,12 @@ export function HeaderScrollScreen({
   )
 
   return (
-    <Screen backgroundColor={backgroundColor} edges={EDGES} noInsets={fullScreen}>
+    <Screen backgroundColor={backgroundColor} edges={EDGES}>
       {showHandleBar ? <HandleBar backgroundColor={colors.surface1.get()} /> : null}
       <ScrollHeader
-        alwaysShowCenterElement={alwaysShowCenterElement}
         backButtonColor={backButtonColor}
         backgroundColor={backgroundColor}
         centerElement={centerElement}
-        fullScreen={fullScreen}
         listRef={listRef}
         rightElement={rightElement}
         scrollY={scrollY}

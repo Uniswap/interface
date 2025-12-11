@@ -6,6 +6,7 @@ import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { HexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { hexlifyTransaction } from 'utilities/src/transactions/hexlifyTransaction'
 import { PublicClient } from 'viem'
 import { getAccountDelegationDetails } from 'wallet/src/features/smartWallet/delegation/utils'
 import {
@@ -14,7 +15,6 @@ import {
   signAndSerializeEIP7702Transaction,
 } from 'wallet/src/features/transactions/executeTransaction/eip7702Utils'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
-import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 
 export async function signAndSubmitTransaction({
   request,

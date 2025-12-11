@@ -4,7 +4,7 @@ import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { UniswapXGradient, UniswapXRouterIcon } from 'components/RouterLabel/UniswapXRouterLabel'
 import { GasBreakdownTooltip } from 'components/swap/GasBreakdownTooltip'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { SubmittableTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
@@ -14,7 +14,7 @@ import { ElementName, SwapEventName } from 'uniswap/src/features/telemetry/const
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NumberType } from 'utilities/src/format/types'
 
-const StyledGasIcon = styled(Gas)`
+const StyledGasIcon = deprecatedStyled(Gas)`
   height: 16px;
   width: 16px;
   // We apply the following to all children of the SVG in order to override the default color

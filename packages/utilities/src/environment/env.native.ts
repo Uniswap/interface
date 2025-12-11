@@ -7,7 +7,12 @@ export function isPlaywrightEnv(): boolean {
 }
 
 export function isTestEnv(): boolean {
-  return !!process.env.JEST_WORKER_ID || process.env.NODE_ENV === 'test' || !!process.env.VITEST_POOL_ID
+  return (
+    !!process.env.JEST_WORKER_ID ||
+    process.env.NODE_ENV === 'test' ||
+    !!process.env.VITEST_POOL_ID ||
+    process.env.IS_E2E_TEST?.toLowerCase() === 'true'
+  )
 }
 
 export function isDevEnv(): boolean {

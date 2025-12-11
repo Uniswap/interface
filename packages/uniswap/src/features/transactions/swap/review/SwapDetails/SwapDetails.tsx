@@ -91,8 +91,7 @@ export function SwapDetails({
     }
 
     if (isChained(tradeQuote)) {
-      // TODO: SWAP-458 - Add proper typings when available.
-      return 'timeEstimateMs' in tradeQuote.quote ? (tradeQuote.quote.timeEstimateMs as number) : undefined
+      return tradeQuote.quote.timeEstimateMs
     }
     if (isBridge(tradeQuote)) {
       return tradeQuote.quote.estimatedFillTimeMs

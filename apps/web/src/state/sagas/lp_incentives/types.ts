@@ -1,11 +1,11 @@
+import { TransactionRequest as LiquidityTransactionRequest } from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/types_pb'
 import { TradingApi } from '@universe/api'
 import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import { type SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/AccountDetails'
 
 export interface LpIncentivesClaimParams {
-  account: SignerMnemonicAccountDetails
+  address: string
   chainId: TradingApi.ChainId
-  claimData: TradingApi.ClaimLPRewardsResponse
+  claimData: TradingApi.TransactionRequest | LiquidityTransactionRequest
   tokenAddress: string
   setCurrentStep: SetCurrentStepFn
   selectChain: (chainId: number) => Promise<boolean>

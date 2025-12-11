@@ -7,10 +7,9 @@ import { FormStepsWrapper, FormWrapper } from 'components/Liquidity/Create/FormW
 import { useLiquidityUrlState } from 'components/Liquidity/Create/hooks/useLiquidityUrlState'
 import { useLPSlippageValue } from 'components/Liquidity/Create/hooks/useLPSlippageValues'
 import { DEFAULT_POSITION_STATE, InitialPosition, PositionFlowStep } from 'components/Liquidity/Create/types'
-import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
 import { LoadingRow } from 'components/Liquidity/Loader'
-import { TokenInfo } from 'components/Liquidity/TokenInfo'
+import { ReviewModal } from 'components/Liquidity/ReviewModal'
 import type { PositionInfo } from 'components/Liquidity/types'
 import { getCurrencyForProtocol } from 'components/Liquidity/utils/currency'
 import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
@@ -35,11 +34,9 @@ import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate, useParams } from 'react-router'
 import { MultichainContextProvider } from 'state/multichain/MultichainContext'
 import { liquiditySaga } from 'state/sagas/liquidity/liquiditySaga'
-import { Button, Flex, Main, styled, Text } from 'ui/src'
+import { Button, Flex, Main, styled } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
-import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
-import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { InterfacePageName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -81,7 +78,7 @@ function MigrateInner({
   const trace = useTrace()
   const { t } = useTranslation()
 
-  const { setStep, currentTransactionStep, setCurrentTransactionStep } = useCreateLiquidityContext()
+  const { setStep, setCurrentTransactionStep } = useCreateLiquidityContext()
   const { version: initialProtocolVersion } = positionInfo
 
   const [transactionSteps, setTransactionSteps] = useState<TransactionStep[]>([])
@@ -90,7 +87,7 @@ function MigrateInner({
   const startChainId = connectedAccount.chainId
   const account = useWallet().evmAccount
   const dispatch = useDispatch()
-  const { txInfo, transactionError, refetch, setTransactionError } = useMigrateTxContext()
+  const { txInfo, transactionError, refetch, setTransactionError, refundedAmounts } = useMigrateTxContext()
   const navigate = useNavigate()
 
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
@@ -228,38 +225,21 @@ function MigrateInner({
         )}
       </Flex>
 
-      <Modal
-        name={ModalName.MigrateLiquidity}
+      <ReviewModal
+        modalName={ModalName.MigrateLiquidity}
+        headerTitle={t('pool.migrateLiquidity')}
+        depositText={t('migrate.migrating')}
+        confirmButtonText={t('common.migrate')}
+        currencyAmounts={{ TOKEN0: currency0Amount, TOKEN1: currency1Amount }}
+        currencyAmountsUSDValue={{ TOKEN0: currency0FiatAmount, TOKEN1: currency1FiatAmount }}
+        isDisabled={!txInfo?.action}
+        refundedAmounts={refundedAmounts}
+        transactionError={transactionError}
+        steps={transactionSteps}
+        isOpen={isReviewModalOpen}
         onClose={onClose}
-        isDismissible
-        isModalOpen={isReviewModalOpen}
-        padding="$none"
-      >
-        <Flex px="$spacing8" pt="$spacing12" pb="$spacing8" gap="$spacing24">
-          <LiquidityModalHeader title={t('pool.migrateLiquidity')} closeModal={onClose} />
-          <Flex gap="$gap16" px="$padding16" my="$spacing8">
-            <TokenInfo currencyAmount={currency0Amount} currencyUSDAmount={currency0FiatAmount} isMigrating />
-            <Text variant="body3" color="$neutral2">
-              {t('common.and')}
-            </Text>
-            <TokenInfo currencyAmount={currency1Amount} currencyUSDAmount={currency1FiatAmount} isMigrating />
-          </Flex>
-          <ErrorCallout errorMessage={transactionError} />
-          {currentTransactionStep && transactionSteps.length > 1 ? (
-            <ProgressIndicator steps={transactionSteps} currentStep={currentTransactionStep} />
-          ) : (
-            <Button
-              size="large"
-              variant="branded"
-              fill={false}
-              onPress={handleConfirm}
-              loading={Boolean(currentTransactionStep)}
-            >
-              {currentTransactionStep ? t('common.confirmWallet') : t('common.migrate')}
-            </Button>
-          )}
-        </Flex>
-      </Modal>
+        onConfirm={handleConfirm}
+      />
     </>
   )
 }

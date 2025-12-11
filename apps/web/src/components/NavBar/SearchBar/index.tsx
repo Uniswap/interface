@@ -3,7 +3,7 @@ import { NavIcon } from 'components/NavBar/NavIcon'
 import { SearchModal } from 'components/NavBar/SearchBar/SearchModal'
 import { useIsSearchBarVisible } from 'components/NavBar/SearchBar/useIsSearchBarVisible'
 import { useModalState } from 'hooks/useModalState'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { Search } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -15,7 +15,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const NAV_SEARCH_MIN_WIDTH = '340px'
 
-const KeyShortcut = styled.div`
+const KeyShortcut = deprecatedStyled.div`
   background-color: ${({ theme }) => theme.surface3};
   color: ${({ theme }) => theme.neutral2};
   padding: 0px 8px;
@@ -32,7 +32,7 @@ const KeyShortcut = styled.div`
   backdrop-filter: blur(60px);
 `
 
-const SearchIcon = styled.div`
+const SearchIcon = deprecatedStyled.div`
   width: 20px;
   height: 20px;
 `

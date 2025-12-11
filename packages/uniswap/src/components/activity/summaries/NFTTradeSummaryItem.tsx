@@ -5,8 +5,16 @@ import { NFTTradeTransactionInfo, TransactionDetails } from 'uniswap/src/feature
 export function NFTTradeSummaryItem({
   transaction,
   index,
+  isExternalProfile,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: NFTTradeTransactionInfo }
 }): JSX.Element {
-  return <NFTSummaryItem index={index} transaction={transaction} transactionType={transaction.typeInfo.type} />
+  return (
+    <NFTSummaryItem
+      index={index}
+      transaction={transaction}
+      transactionType={transaction.typeInfo.type}
+      isExternalProfile={isExternalProfile}
+    />
+  )
 }

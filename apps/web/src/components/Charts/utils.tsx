@@ -1,5 +1,4 @@
 import { TickMarkType, UTCTimestamp } from 'lightweight-charts'
-import { Trans } from 'react-i18next'
 
 /** Compatible with ISeriesApi<'Area' | 'Candlestick'> */
 export enum PriceChartType {
@@ -12,15 +11,6 @@ export enum ChartType {
   VOLUME = 'Volume',
   TVL = 'TVL', // Locked value distributed by timestamp
   LIQUIDITY = 'Liquidity', // Locked value distributed by tick
-}
-
-export const CHART_TYPE_LABELS: Record<ChartType | PriceChartType, JSX.Element> = {
-  [ChartType.PRICE]: <Trans i18nKey="common.price" />,
-  [ChartType.VOLUME]: <Trans i18nKey="common.volume" />,
-  [ChartType.TVL]: <Trans i18nKey="common.totalValueLocked" />,
-  [ChartType.LIQUIDITY]: <Trans i18nKey="common.liquidity" />,
-  [PriceChartType.LINE]: <Trans i18nKey="chart.line" />,
-  [PriceChartType.CANDLESTICK]: <Trans i18nKey="chart.candlestick" />,
 }
 
 /**

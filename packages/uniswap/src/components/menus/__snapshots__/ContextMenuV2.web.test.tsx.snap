@@ -284,7 +284,7 @@ exports[`ContextMenu renders without error 1`] = `
                   style={
                     {
                       "flexDirection": "column",
-                      "width": "90%",
+                      "maxWidth": "90%",
                     }
                   }
                 >
@@ -309,6 +309,16 @@ exports[`ContextMenu renders without error 1`] = `
                   </Text>
                 </View>
               </View>
+              <View
+                style={
+                  {
+                    "alignItems": "flex-end",
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 0,
+                  }
+                }
+              />
             </View>
             <View
               style={
@@ -424,7 +434,7 @@ exports[`ContextMenu renders without error 1`] = `
                   style={
                     {
                       "flexDirection": "column",
-                      "width": "90%",
+                      "maxWidth": "90%",
                     }
                   }
                 >
@@ -449,6 +459,16 @@ exports[`ContextMenu renders without error 1`] = `
                   </Text>
                 </View>
               </View>
+              <View
+                style={
+                  {
+                    "alignItems": "flex-end",
+                    "flexDirection": "column",
+                    "flexGrow": 1,
+                    "flexShrink": 0,
+                  }
+                }
+              />
             </View>
           </div>
         </View>

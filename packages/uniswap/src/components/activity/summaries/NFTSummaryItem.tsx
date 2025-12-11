@@ -16,6 +16,7 @@ export function NFTSummaryItem({
   transaction,
   transactionType,
   index,
+  isExternalProfile,
 }: SummaryItemProps & {
   transaction: TransactionDetails & {
     typeInfo: NFTApproveTransactionInfo | NFTTradeTransactionInfo | NFTMintTransactionInfo
@@ -41,6 +42,7 @@ export function NFTSummaryItem({
       caption={transaction.typeInfo.nftSummaryInfo.name}
       icon={icon}
       index={index}
+      isExternalProfile={isExternalProfile}
       transaction={transaction}
     />
   )

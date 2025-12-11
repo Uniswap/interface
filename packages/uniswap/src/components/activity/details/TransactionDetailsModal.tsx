@@ -32,7 +32,6 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useTransactionActions } from 'uniswap/src/features/activity/hooks/useTransactionActions'
 import { getTransactionSummaryTitle } from 'uniswap/src/features/activity/utils/getTransactionSummaryTitle'
-import { useIsActiveSignerAddress } from 'uniswap/src/features/address/useIsActiveSignerAddress'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { FORMAT_DATE_TIME_MEDIUM, useFormattedDateTime } from 'uniswap/src/features/language/localizedDayjs'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -47,6 +46,7 @@ import { isExtensionApp, isWebPlatform } from 'utilities/src/platform'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 type TransactionDetailsModalProps = {
+  isExternalProfile?: boolean
   transactionDetails: TransactionDetails
   authTrigger?: AuthTrigger
   onClose: () => void
@@ -57,15 +57,15 @@ type TransactionDetailsModalProps = {
 export function TransactionDetailsHeader({
   transactionDetails,
   transactionActions,
+  hideTransactionActions = false,
 }: {
   transactionDetails: TransactionDetails
   transactionActions: MenuOptionItem[]
+  hideTransactionActions?: boolean
 }): JSX.Element {
   const { t } = useTranslation()
   const { value: isContextMenuOpen, setTrue: openContextMenu, setFalse: closeContextMenu } = useBooleanState(false)
-
-  const isActiveSignerAddress = useIsActiveSignerAddress(transactionDetails.from)
-  const showTransactionActions = transactionActions.length > 0 && isActiveSignerAddress
+  const showTransactionActions = transactionActions.length > 0 && !hideTransactionActions
 
   const dateString = useFormattedDateTime(dayjs(transactionDetails.addedTime), FORMAT_DATE_TIME_MEDIUM)
   const title = getTransactionSummaryTitle(transactionDetails, t)
@@ -175,7 +175,9 @@ const isNFTActivity = (typeInfo: TransactionTypeInfo): boolean => {
   return isNft
 }
 
+// eslint-disable-next-line complexity
 export function TransactionDetailsModal({
+  isExternalProfile = false,
   transactionDetails,
   authTrigger,
   onClose,
@@ -196,6 +198,7 @@ export function TransactionDetailsModal({
   const readonly = evmAccount?.accountType === AccountType.Readonly
   const isCancelable = useIsCancelable(transactionDetails) && !readonly
 
+  const hideTransactionActions = readonly || isExternalProfile
   const transactionActions = useTransactionActions({
     transaction: transactionDetails,
     authTrigger,
@@ -243,7 +246,11 @@ export function TransactionDetailsModal({
         onClose={onClose}
       >
         <Flex gap="$spacing12" pb={isWebPlatform ? '$none' : '$spacing12'} px={isWebPlatform ? '$none' : '$spacing24'}>
-          <TransactionDetailsHeader transactionActions={menuItems} transactionDetails={transactionDetails} />
+          <TransactionDetailsHeader
+            hideTransactionActions={hideTransactionActions}
+            transactionActions={menuItems}
+            transactionDetails={transactionDetails}
+          />
           {!hideTopSeparator && <Separator />}
           {detailsContent}
           {!hideBottomSeparator && detailsContent !== null && hasMoreInfoRows && (

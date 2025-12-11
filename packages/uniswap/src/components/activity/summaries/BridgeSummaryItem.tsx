@@ -15,6 +15,7 @@ export function BridgeSummaryItem({
   transaction,
   swapCallbacks,
   index,
+  isExternalProfile,
 }: SummaryItemProps & {
   transaction: TransactionDetails & {
     typeInfo: BridgeTransactionInfo
@@ -69,6 +70,13 @@ export function BridgeSummaryItem({
   )
 
   return (
-    <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} onRetry={onRetry} />
+    <TransactionSummaryLayout
+      caption={caption}
+      icon={icon}
+      index={index}
+      transaction={transaction}
+      isExternalProfile={isExternalProfile}
+      onRetry={onRetry}
+    />
   )
 }

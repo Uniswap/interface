@@ -65,7 +65,7 @@ describe('cleanTransactionGasFields', () => {
       expect(cleaned).toEqual(request)
     })
 
-    it('should handle undefined type as legacy transaction', () => {
+    it('should not modify transaction with undefined type', () => {
       const request: providers.TransactionRequest = {
         to: '0x123',
         gasPrice: '100',
@@ -74,8 +74,11 @@ describe('cleanTransactionGasFields', () => {
 
       const cleaned = cleanTransactionGasFields(request)
 
+      // When type is undefined, we don't modify the transaction
+      // This allows ethers to properly populate it based on network capabilities
       expect(cleaned.gasPrice).toBe('100')
-      expect(cleaned.maxFeePerGas).toBeUndefined()
+      expect(cleaned.maxFeePerGas).toBe('200')
+      expect(cleaned).toEqual(request)
     })
   })
 

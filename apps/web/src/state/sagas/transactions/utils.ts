@@ -29,9 +29,9 @@ import {
   finalizeTransaction,
   interfaceUpdateTransactionInfo,
 } from 'uniswap/src/features/transactions/slice'
-import type { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
+import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import type { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
-import type { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
+import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
 import type {
   HandleApprovalStepParams,
   HandleOnChainPermit2TransactionStep,
@@ -69,6 +69,7 @@ import { currencyId } from 'uniswap/src/utils/currencyId'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { HexString, isValidHexString } from 'utilities/src/addresses/hex'
 import { noop } from 'utilities/src/react/noop'
+import { hexlifyTransaction } from 'utilities/src/transactions/hexlifyTransaction'
 import { signTypedData } from 'utils/signing'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import type { Transaction } from 'viem'
@@ -285,8 +286,10 @@ function* submitTransactionAsync(params: HandleOnChainStepParams): SagaGenerator
   const signer = yield* call(getSigner, address)
 
   try {
+    const hexlifiedTransactionRequest = hexlifyTransaction(step.txRequest)
+
     const response = yield* call([signer.provider, 'send'], 'eth_sendTransaction', [
-      { from: address, ...step.txRequest },
+      { from: address, ...hexlifiedTransactionRequest },
     ])
 
     if (!isValidHexString(response)) {
@@ -376,7 +379,7 @@ function getApprovalTransactionInfo(
 ): ApproveTransactionInfo {
   return {
     type: TransactionType.Approve,
-    tokenAddress: approvalStep.token.address,
+    tokenAddress: approvalStep.tokenAddress,
     spender: approvalStep.spender,
     approvalAmount: approvalStep.amount,
   }

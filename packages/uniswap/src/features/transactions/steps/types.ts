@@ -1,4 +1,6 @@
 import type { TransactionResponse } from '@ethersproject/abstract-provider'
+import { Currency } from '@uniswap/sdk-core'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { CollectFeesSteps } from 'uniswap/src/features/transactions/liquidity/steps/collectFeesSteps'
 import type { CollectLpIncentiveRewardsSteps } from 'uniswap/src/features/transactions/liquidity/steps/collectIncentiveRewardsSteps'
 import type { DecreaseLiquiditySteps } from 'uniswap/src/features/transactions/liquidity/steps/decreaseLiquiditySteps'
@@ -66,6 +68,15 @@ export interface OnChainTransactionFields {
 
 export interface OnChainTransactionFieldsBatched {
   batchedTxRequests: ValidatedTransactionRequest[]
+}
+
+export interface RevokeApproveFields extends OnChainTransactionFields {
+  type: TransactionStepType.TokenApprovalTransaction | TransactionStepType.TokenRevocationTransaction
+  tokenAddress: Address
+  chainId: UniverseChainId
+  amount: string
+  pair?: [Currency, Currency]
+  spender: string
 }
 
 export interface HandleOnChainStepParams<

@@ -1,11 +1,12 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { ChainedQuoteResponse, PlanResponse, PlanStep, PlanStepStatus, UpdateExistingPlanRequest } from '@universe/api'
+import { ChainedQuoteResponse, TradingApi } from '@universe/api'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionAndPlanStep, transformSteps } from 'uniswap/src/features/transactions/swap/plan/planStepTransformer'
 import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isJupiter } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { RetryConfig, retryWithBackoff } from 'utilities/src/async/retryWithBackoff'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { sleep } from 'utilities/src/time/timing'
@@ -29,16 +30,18 @@ export async function handleSwitchChains(params: {
   return { chainSwitchFailed: !chainSwitched }
 }
 
-export function stepHasFinalized(step: PlanStep): boolean {
-  return step.status === PlanStepStatus.COMPLETE || step.status === PlanStepStatus.STEP_ERROR
+export function stepHasFinalized(step: TradingApi.PlanStep): boolean {
+  return step.status === TradingApi.PlanStepStatus.COMPLETE || step.status === TradingApi.PlanStepStatus.STEP_ERROR
 }
 
-export function findFirstActionableStep<T extends PlanStep | TransactionAndPlanStep>(steps: T[]): T | undefined {
-  return steps.find((step) => step.status === PlanStepStatus.AWAITING_ACTION)
+export function findFirstActionableStep<T extends TradingApi.PlanStep | TransactionAndPlanStep>(
+  steps: T[],
+): T | undefined {
+  return steps.find((step) => step.status === TradingApi.PlanStepStatus.AWAITING_ACTION)
 }
 
-export function allStepsComplete(steps: PlanStep[]): boolean {
-  return steps.every((step) => step.status === PlanStepStatus.COMPLETE)
+export function allStepsComplete(steps: TradingApi.PlanStep[]): boolean {
+  return steps.every((step) => step.status === TradingApi.PlanStepStatus.COMPLETE)
 }
 
 const MAX_ATTEMPTS = 60
@@ -55,7 +58,7 @@ const EXTENDED_POLLING_MULTIPLIER = 2
 export async function waitForStepCompletion(params: {
   chainId?: number
   planId: string
-  targetStepIndex: PlanStep['stepIndex']
+  targetStepIndex: TradingApi.PlanStep['stepIndex']
   currentStepIndex: number
   inputAmount: CurrencyAmount<Currency>
 }): Promise<TransactionAndPlanStep[]> {
@@ -75,12 +78,14 @@ export async function waitForStepCompletion(params: {
       })
 
       const tradeStatusResponse = await TradingApiClient.getExistingPlan({ planId })
-      const latestTargetStep = tradeStatusResponse.steps.find((_step) => _step.stepIndex === targetStepIndex)
+      const latestTargetStep = tradeStatusResponse.steps.find(
+        (_step: TradingApi.PlanStep) => _step.stepIndex === targetStepIndex,
+      )
       if (!latestTargetStep) {
         throw new Error(`Target stepIndex=${targetStepIndex} not found in latest plan.`)
       }
       if (stepHasFinalized(latestTargetStep)) {
-        return transformSteps(tradeStatusResponse.steps, inputAmount)
+        return transformSteps(tradeStatusResponse.steps)
       }
       attempt++
 
@@ -106,69 +111,43 @@ export async function waitForStepCompletion(params: {
   }
 }
 
-/**
- * Updates the existing plan with the given proof. If the update fails, it will retry the update.
- */
-export async function updateExistingPlanWithRetry(
-  params: UpdateExistingPlanRequest,
-  maxRetries = 5,
-): Promise<PlanResponse | undefined> {
-  let attempt = 0
-  while (attempt < maxRetries) {
-    try {
-      return await TradingApiClient.updateExistingPlan(params)
-    } catch (error: unknown) {
-      attempt++
-      if (attempt >= maxRetries) {
-        throw new Error(`Failed to update plan after ${maxRetries} retries`)
-      }
-      logger.warn(
-        'planSaga',
-        'retryUpdateExistingPlan',
-        `🔁 Retry ${attempt}/${maxRetries} after error on updateExistingTrade ` + error,
-      )
-    }
-    await sleep(ONE_SECOND_MS * attempt)
-  }
-  return undefined
-}
-
-type PlanOperationParams =
-  | { inputPlanId: string; quote?: ChainedQuoteResponse['quote']; routing?: ChainedQuoteResponse['routing'] }
-  | { inputPlanId?: never; quote: ChainedQuoteResponse['quote']; routing: ChainedQuoteResponse['routing'] }
+type PlanOperationParams = { retryConfig: RetryConfig } & (
+  | ({ inputPlanId: string } & Maybe<Pick<ChainedQuoteResponse, 'quote' | 'routing'>>)
+  | ({ inputPlanId?: never } & Pick<ChainedQuoteResponse, 'quote' | 'routing'>)
+)
 
 /**
  * Helper function to execute a plan API call. If a planId is provided,
  * it will refresh the plan if the operation is 'refresh'
  * or get the plan if the operation is 'get'.
  */
-async function executePlanOperation(operation: 'get' | 'refresh', params: PlanOperationParams): Promise<PlanResponse> {
-  const { inputPlanId, quote, routing } = params
-
-  try {
-    if (inputPlanId !== undefined) {
-      return operation === 'refresh'
-        ? await TradingApiClient.refreshExistingPlan({ planId: inputPlanId })
-        : await TradingApiClient.getExistingPlan({ planId: inputPlanId })
-    } else {
-      return await TradingApiClient.createNewPlan({ quote, routing })
-    }
-  } catch (error) {
-    throw new Error(`Failed to ${operation} plan: ${error instanceof Error ? error.message : 'Unknown error'}`)
-  }
+async function executePlanOperation(
+  operation: 'get' | 'refresh',
+  params: PlanOperationParams,
+): Promise<TradingApi.PlanResponse> {
+  const { retryConfig, inputPlanId, quote, routing } = params
+  return await retryWithBackoff({
+    fn: async () => {
+      if (inputPlanId !== undefined) {
+        return operation === 'refresh'
+          ? await TradingApiClient.refreshExistingPlan({ planId: inputPlanId })
+          : await TradingApiClient.getExistingPlan({ planId: inputPlanId })
+      } else {
+        // @ts-expect-error - CHAINED is the only supported but doesn't satisfy input param type for some reason
+        return await TradingApiClient.createNewPlan({ quote, routing })
+      }
+    },
+    config: retryConfig,
+  })
 }
 
-/**
- * Helper function to create or get a plan if the planId is provided.
- */
-export async function createOrGetPlan(params: PlanOperationParams): Promise<PlanResponse> {
+/** Helper function to create or get a plan if the planId is provided. */
+export async function createOrGetPlan(params: PlanOperationParams): Promise<TradingApi.PlanResponse> {
   return executePlanOperation('get', params)
 }
 
-/**
- * Helper function to create or update/refresh a plan if the planId is provided.
- */
-export async function createOrRefreshPlan(params: PlanOperationParams): Promise<PlanResponse> {
+/** Helper function to create or update/refresh a plan if the planId is provided. */
+export async function createOrRefreshPlan(params: PlanOperationParams): Promise<TradingApi.PlanResponse> {
   return executePlanOperation('refresh', params)
 }
 
@@ -180,7 +159,7 @@ export async function createOrRefreshPlan(params: PlanOperationParams): Promise<
  * getStepLogArray([{ stepSwapType: 'swap' }, { stepSwapType: 'approval' }]) // ['swap', 'approval']
  */
 export const getStepLogArray = (steps: TransactionAndPlanStep[]): string[] => {
-  return steps.map((step) => step.stepSwapType ?? '')
+  return steps.map((step) => String(step.stepSwapType))
 }
 
 /**
@@ -273,7 +252,7 @@ const FALLBACK_STEP_POLLING_INTERVAL_MS = 500
  *
  * @returns The progress state object containing totalTime, stepTimings, and stepPercentageRanges.
  */
-export function getPlanProgressEstimates(steps: PlanStep[]): PlanProgressEstimates {
+export function getPlanProgressEstimates(steps: TradingApi.PlanStep[]): PlanProgressEstimates {
   const stepTimings: number[] = steps.map((step, index) => {
     let waitTime = step.tokenInChainId
       ? getChainInfo(step.tokenInChainId as unknown as UniverseChainId).tradingApiPollingIntervalMs

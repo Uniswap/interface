@@ -4,6 +4,7 @@ import {
   createNotificationsApiClient,
   getEntryGatewayUrl,
   provideSessionService,
+  SESSION_INIT_QUERY_KEY,
   SharedQueryClient,
 } from '@universe/api'
 import { FeatureFlags, getIsSessionServiceEnabled, useFeatureFlag } from '@universe/gating'
@@ -11,13 +12,13 @@ import {
   createApiNotificationTracker,
   createBaseNotificationProcessor,
   createNotificationService,
+  createPollingNotificationDataSource,
   getIsNotificationServiceEnabled,
+  getNotificationQueryOptions,
   type NotificationService,
 } from '@universe/notifications'
 import { createLocalStorageAdapter } from 'notification-service/createLocalStorageAdapter'
 import { createLegacyBannersNotificationDataSource } from 'notification-service/data-sources/createLegacyBannersNotificationDataSource'
-import { createPollingNotificationDataSource } from 'notification-service/data-sources/createPollingNotificationDataSource'
-import { getNotificationQueryOptions } from 'notification-service/data-sources/notificationQueryOptions'
 import { createWebNotificationRenderer } from 'notification-service/notification-renderer/createWebNotificationRenderer'
 import { NotificationContainer } from 'notification-service/notification-renderer/NotificationContainer'
 import { useNotificationStore } from 'notification-service/notification-renderer/notificationStore'
@@ -29,6 +30,7 @@ import { useIsDarkMode } from 'ui/src'
 import { mapLocaleToBackendLocale } from 'uniswap/src/features/language/constants'
 import { getLocale } from 'uniswap/src/features/language/hooks'
 import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
+import { isPlaywrightEnv } from 'utilities/src/environment/env'
 import { getLogger } from 'utilities/src/logger/logger'
 import { REQUEST_SOURCE } from 'utilities/src/platform/requestSource'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -73,6 +75,10 @@ function provideWebNotificationService(ctx: {
   const queryOptions = getNotificationQueryOptions({
     apiClient,
     pollIntervalMs: 120000, // Poll every 2 minutes
+    getIsSessionInitialized: () => {
+      const sessionData = SharedQueryClient.getQueryData(SESSION_INIT_QUERY_KEY)
+      return !!sessionData
+    },
   })
 
   const backendDataSource = createPollingNotificationDataSource({
@@ -160,7 +166,8 @@ function getNotificationServiceQueryOptions(ctx: {
 
 export function WebNotificationServiceManager(): JSX.Element | null {
   const isNotificationServiceEnabledFlag = useFeatureFlag(FeatureFlags.NotificationService)
-  const isNotificationServiceEnabled = getIsNotificationServiceEnabled() || isNotificationServiceEnabledFlag
+  const isNotificationServiceEnabled =
+    !isPlaywrightEnv() && (getIsNotificationServiceEnabled() || isNotificationServiceEnabledFlag)
   const isApiDataSourceEnabledFlag = useFeatureFlag(FeatureFlags.NotificationApiDataSource)
   const location = useLocation()
   const navigate = useNavigate()
@@ -204,6 +211,7 @@ export function WebNotificationServiceManager(): JSX.Element | null {
   return (
     <NotificationContainer
       onRenderFailed={notificationService.onRenderFailed}
+      onNotificationShown={notificationService.onNotificationShown}
       onNotificationClick={notificationService.onNotificationClick}
     />
   )

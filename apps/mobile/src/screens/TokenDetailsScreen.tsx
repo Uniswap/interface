@@ -1,7 +1,8 @@
 import { useApolloClient } from '@apollo/client'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { GQLQueries, GraphQLApi } from '@universe/api'
-import React, { memo, useCallback, useEffect, useMemo } from 'react'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
+import React, { memo, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useDispatch } from 'react-redux'
@@ -23,12 +24,16 @@ import { useTokenDetailsCTAVariant } from 'src/components/TokenDetails/useTokenD
 import { useTokenDetailsCurrentChainBalance } from 'src/components/TokenDetails/useTokenDetailsCurrentChainBalance'
 import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetailsHeaders'
 import { useIsScreenNavigationReady } from 'src/utils/useIsScreenNavigationReady'
-import { Flex, Separator } from 'ui/src'
+import { Flex, Separator, Text } from 'ui/src'
 import { ArrowDownCircle, ArrowUpCircle, Bank, SendRoundedAirplane } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import type { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
 import {
   useTokenBasicInfoPartsFragment,
@@ -45,9 +50,10 @@ import { AppNotificationType } from 'uniswap/src/features/notifications/slice/ty
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
-import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
+import { TokenWarningCard } from 'uniswap/src/features/tokens/warnings/TokenWarningCard'
+import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
+import { useShouldShowAztecWarning } from 'uniswap/src/hooks/useShouldShowAztecWarning'
 import type { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
@@ -155,12 +161,12 @@ const TokenDetailsErrorCard = memo(function _TokenDetailsErrorCard(): JSX.Elemen
   const apolloClient = useApolloClient()
   const { error, setError } = useTokenDetailsContext()
 
-  const onRetry = useCallback(() => {
+  const onRetry = useEvent(() => {
     setError(undefined)
     apolloClient
       .refetchQueries({ include: [GQLQueries.TokenDetailsScreen, GQLQueries.TokenPriceHistory] })
       .catch((e) => setError(e))
-  }, [apolloClient, setError])
+  })
 
   return error ? (
     <AnimatedFlex entering={FadeInDown} exiting={FadeOutDown} px="$spacing24">
@@ -173,6 +179,7 @@ const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const { navigateToSwapFlow } = useWalletNavigation()
+  const isAztecDisabled = useFeatureFlag(FeatureFlags.DisableAztecToken)
 
   const {
     chainId,
@@ -181,14 +188,12 @@ const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
     currencyInfo,
     isTokenWarningModalOpen,
     isContractAddressExplainerModalOpen,
+    isAztecWarningModalOpen,
     closeTokenWarningModal,
     closeContractAddressExplainerModal,
+    closeAztecWarningModal,
     copyAddressToClipboard,
   } = useTokenDetailsContext()
-
-  const onCloseTokenWarning = useEvent(() => {
-    closeTokenWarningModal()
-  })
 
   const onAcknowledgeTokenWarning = useEvent(() => {
     closeTokenWarningModal()
@@ -220,7 +225,7 @@ const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
           isInfoOnlyWarning
           currencyInfo0={currencyInfo}
           isVisible={isTokenWarningModalOpen}
-          closeModalOnly={onCloseTokenWarning}
+          closeModalOnly={closeTokenWarningModal}
           onReportSuccess={onTokenWarningReportSuccess}
           onAcknowledge={onAcknowledgeTokenWarning}
         />
@@ -228,6 +233,31 @@ const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
 
       {isContractAddressExplainerModalOpen && (
         <ContractAddressExplainerModal onAcknowledge={onAcknowledgeContractAddressExplainer} />
+      )}
+
+      {isAztecWarningModalOpen && isAztecDisabled && (
+        <WarningModal
+          isOpen={isAztecWarningModalOpen}
+          modalName={ModalName.SwapWarning}
+          severity={WarningSeverity.Blocked}
+          title={t('swap.warning.noRoutesFound.title')}
+          captionComponent={
+            <>
+              <Text color="$neutral2" textAlign="center" variant="body3">
+                {t('swap.warning.aztecUnavailable.message')}
+              </Text>
+              <LearnMoreLink
+                display="inline"
+                textColor="$neutral1"
+                textVariant="buttonLabel3"
+                url={uniswapUrls.aztecUrl}
+              />
+            </>
+          }
+          acknowledgeText={t('common.button.close')}
+          onClose={closeAztecWarningModal}
+          onAcknowledge={closeAztecWarningModal}
+        />
       )}
     </>
   )
@@ -239,8 +269,19 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
   const activeAddress = useActiveAccountAddressWithThrow()
   const { isTestnetModeEnabled } = useEnabledChains()
 
-  const { currencyId, chainId, address, currencyInfo, openTokenWarningModal, tokenColorLoading, navigation } =
-    useTokenDetailsContext()
+  const {
+    currencyId,
+    chainId,
+    address,
+    currencyInfo,
+    openTokenWarningModal,
+    openAztecWarningModal,
+    tokenColorLoading,
+    navigation,
+  } = useTokenDetailsContext()
+  const showAztecWarning = useShouldShowAztecWarning(
+    currencyInfo?.currency.isToken ? currencyInfo.currency.address : '',
+  )
 
   const { navigateToFiatOnRamp, navigateToSwapFlow, navigateToSend, navigateToReceive } = useWalletNavigation()
 
@@ -274,42 +315,50 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
       currencyChainId: chainId,
     })
 
-  const onPressSwap = useCallback(
-    (currencyField: CurrencyField) => {
-      if (isBlocked) {
-        openTokenWarningModal()
-      } else {
-        navigateToSwapFlow({ currencyField, currencyAddress: address, currencyChainId: chainId })
-      }
-    },
-    [isBlocked, openTokenWarningModal, navigateToSwapFlow, address, chainId],
-  )
+  const onPressSwap = useEvent((currencyField: CurrencyField) => {
+    if (showAztecWarning) {
+      openAztecWarningModal()
+    } else if (isBlocked) {
+      openTokenWarningModal()
+    } else {
+      navigateToSwapFlow({ currencyField, currencyAddress: address, currencyChainId: chainId })
+    }
+  })
 
-  const onPressBuyFiatOnRamp = useCallback(
-    (isOfframp = false): void => {
+  const onPressBuyFiatOnRamp = useEvent((isOfframp: boolean = false): void => {
+    if (showAztecWarning) {
+      openAztecWarningModal()
+    } else {
       navigateToFiatOnRamp({ prefilledCurrency: fiatOnRampCurrency, isOfframp })
-    },
-    [navigateToFiatOnRamp, fiatOnRampCurrency],
-  )
+    }
+  })
 
-  const onPressGet = useCallback(() => {
-    navigate(ModalName.BuyNativeToken, {
-      chainId,
-      currencyId,
-    })
-  }, [chainId, currencyId])
+  const onPressGet = useEvent(() => {
+    if (showAztecWarning) {
+      openAztecWarningModal()
+    } else {
+      navigate(ModalName.BuyNativeToken, {
+        chainId,
+        currencyId,
+      })
+    }
+  })
 
-  const onPressSend = useCallback(() => {
-    navigateToSend({ currencyAddress: address, chainId })
-  }, [address, chainId, navigateToSend])
+  const onPressSend = useEvent(() => {
+    if (showAztecWarning) {
+      openAztecWarningModal()
+    } else {
+      navigateToSend({ currencyAddress: address, chainId })
+    }
+  })
 
-  const onPressWithdraw = useCallback(() => {
+  const onPressWithdraw = useEvent(() => {
     setTimeout(() => {
       navigate(ModalName.Wormhole, {
         currencyInfo,
       })
     }, MODAL_OPEN_WAIT_TIME)
-  }, [currencyInfo])
+  })
 
   const bridgedWithdrawalInfo = currencyInfo?.bridgedWithdrawalInfo
 
@@ -332,7 +381,12 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     const actions: MenuOptionItem[] = []
 
     if (fiatOnRampCurrency) {
-      actions.push({ label: t('common.button.buy'), Icon: Bank, onPress: () => onPressBuyFiatOnRamp() })
+      actions.push({
+        label: t('common.button.buy'),
+        Icon: Bank,
+        onPress: () => onPressBuyFiatOnRamp(),
+        disabled: showAztecWarning,
+      })
     }
 
     if (bridgedWithdrawalInfo && hasTokenBalance) {
@@ -347,7 +401,12 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     }
 
     if (hasTokenBalance && fiatOnRampCurrency) {
-      actions.push({ label: t('common.button.sell'), Icon: ArrowUpCircle, onPress: () => onPressBuyFiatOnRamp(true) })
+      actions.push({
+        label: t('common.button.sell'),
+        Icon: ArrowUpCircle,
+        onPress: () => onPressBuyFiatOnRamp(true),
+        disabled: showAztecWarning,
+      })
     }
 
     if (hasTokenBalance) {
@@ -363,6 +422,7 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
     t,
     bridgedWithdrawalInfo,
     hasTokenBalance,
+    showAztecWarning,
     onPressWithdraw,
     onPressSend,
     navigateToReceive,
@@ -384,13 +444,15 @@ const TokenDetailsActionButtonsWrapper = memo(function _TokenDetailsActionButton
         actionMenuOptions={actionMenuOptions}
         userHasBalance={hasTokenBalance}
         onPressDisabled={
-          isTestnetModeEnabled
-            ? (): void =>
-                navigate(ModalName.TestnetMode, {
-                  unsupported: true,
-                  descriptionCopy: t('tdp.noTestnetSupportDescription'),
-                })
-            : openTokenWarningModal
+          showAztecWarning
+            ? openAztecWarningModal
+            : isTestnetModeEnabled
+              ? (): void =>
+                  navigate(ModalName.TestnetMode, {
+                    unsupported: true,
+                    descriptionCopy: t('tdp.noTestnetSupportDescription'),
+                  })
+              : openTokenWarningModal
         }
       />
     </AnimatedFlex>

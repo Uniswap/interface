@@ -221,7 +221,7 @@ export function ContextMenu({
                     tags: { file: 'ContextMenuV2.tsx', function: 'createPressHandler' },
                   })
                 }
-              }, 0)
+              }, ANIMATION_TIME)
             }}
             {...otherProps}
           />

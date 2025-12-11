@@ -80,7 +80,10 @@ export function DappSendCallsScanningContent({
   const contractName = useMemo(() => extractContractName(scanResult, toAddress), [scanResult, toAddress])
 
   // Parse the Blockaid scan result into displayable sections
-  const { sections, riskLevel } = useMemo(() => parseTransactionSections(scanResult ?? null), [scanResult])
+  const { sections, riskLevel } = useMemo(
+    () => parseTransactionSections(scanResult ?? null, chainId),
+    [scanResult, chainId],
+  )
 
   // Determine the appropriate error type (if any) to display
   const errorType = determineTransactionErrorType({ sections, providedErrorType, rawData: rawData ?? '' })

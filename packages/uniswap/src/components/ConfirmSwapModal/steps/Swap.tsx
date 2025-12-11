@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex } from 'ui/src'
 import { Swap } from 'ui/src/components/icons/Swap'
 import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
@@ -39,7 +39,6 @@ export function SwapTransactionStepRow({
   totalStepsCount,
 }: StepRowProps<SwapSteps>): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
 
   const deadline =
     step.type === TransactionStepType.UniswapXSignature || step.type === TransactionStepType.UniswapXPlanSignature
@@ -68,7 +67,6 @@ export function SwapTransactionStepRow({
             : uniswapUrls.helpArticleUrls.howToSwapTokens,
         text: t('common.learnMoreSwap'),
       }}
-      rippleColor={colors.DEP_blue400.val}
       status={status}
       secondsRemaining={secondsRemaining}
       currentStepIndex={currentStepIndex}

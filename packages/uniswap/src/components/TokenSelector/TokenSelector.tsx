@@ -1,6 +1,5 @@
 import type { BottomSheetView } from '@gorhom/bottom-sheet'
 import { Currency } from '@uniswap/sdk-core'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { hasStringAsync } from 'expo-clipboard'
 import { ComponentProps, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -18,6 +17,7 @@ import { TokenSelectorSearchResultsList } from 'uniswap/src/components/TokenSele
 import { TokenSelectorSendList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSendList'
 import { TokenSelectorSwapList } from 'uniswap/src/components/TokenSelector/lists/TokenSelectorSwapList'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import { UnsupportedChainedActionsBanner } from 'uniswap/src/components/TokenSelector/UnsupportedChainedActionsBanner'
 import { flowToModalName } from 'uniswap/src/components/TokenSelector/utils'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
@@ -36,6 +36,7 @@ import {
 } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { isChainSupportedForChainedActions } from 'uniswap/src/features/transactions/swap/utils/chainedActions'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getClipboard } from 'uniswap/src/utils/clipboard'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
@@ -110,7 +111,8 @@ export function TokenSelectorContent({
   const debouncedParsedSearchFilter = useDebounce(parsedSearchFilter)
   const scrollbarStyles = useScrollbarStyles()
   const { navigateToBuyOrReceiveWithEmptyWallet } = useUniswapContext()
-  const isChainedActionsEnabled = useFeatureFlag(FeatureFlags.ChainedActions)
+
+  const oppositeToken = currencyField === CurrencyField.INPUT ? output : input
 
   const media = useMedia()
   const isSmallScreen = (media.sm && isWebApp) || isMobileApp || isMobileWeb
@@ -176,8 +178,13 @@ export function TokenSelectorContent({
         preselect_asset: false,
       })
 
-      const allowCrossChainPair =
-        isChainedActionsEnabled || section.sectionKey === OnchainItemSectionName.BridgingTokens
+      const oppositeChainId = oppositeToken?.chainId
+
+      const isUnsupportedCombo =
+        (oppositeChainId && !isChainSupportedForChainedActions(oppositeChainId)) ||
+        !isChainSupportedForChainedActions(currencyInfo.currency.chainId)
+
+      const allowCrossChainPair = !isUnsupportedCombo || section.sectionKey === OnchainItemSectionName.BridgingTokens
 
       onSelectCurrency({
         currency: currencyInfo.currency,
@@ -186,7 +193,7 @@ export function TokenSelectorContent({
         isPreselectedAsset: false,
       })
     },
-    [debouncedSearchFilter, chainFilter, flow, page, currencyField, onSelectCurrency, isChainedActionsEnabled],
+    [debouncedSearchFilter, chainFilter, flow, page, currencyField, onSelectCurrency, oppositeToken?.chainId],
   )
 
   const handlePaste = async (): Promise<void> => {
@@ -355,7 +362,13 @@ export function TokenSelectorContent({
               <Text variant="body3">{t('limits.form.disclaimer.mainnet.short')}</Text>
             </Flex>
           )}
-          {isSurfaceReady && <Flex grow>{tokenSelector}</Flex>}
+
+          {isSurfaceReady && (
+            <Flex grow>
+              <UnsupportedChainedActionsBanner oppositeToken={oppositeToken} chainFilter={chainFilter ?? undefined} />
+              {tokenSelector}
+            </Flex>
+          )}
         </Flex>
       </Trace>
     </Trace>

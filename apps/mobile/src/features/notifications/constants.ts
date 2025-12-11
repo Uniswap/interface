@@ -11,6 +11,7 @@ export enum OneSignalUserTagField {
   SwapLastCompletedAt = 'swap_last_completed_at',
   AccountIsUnfunded = 'account_is_unfunded',
   GatingUnfundedWalletsEnabled = 'gating_unfunded_wallets_enabled',
+  ActiveWalletAddress = 'active_wallet_address',
 }
 
 export enum NotificationType {

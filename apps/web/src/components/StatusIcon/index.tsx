@@ -2,7 +2,7 @@ import sockImg from 'assets/svg/socks.svg'
 import { CONNECTOR_ICON_OVERRIDE_MAP } from 'components/Web3Provider/constants'
 import { useActiveAddresses, useActiveWallet } from 'features/accounts/store/hooks'
 import { useHasSocks } from 'hooks/useSocksBalance'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { flexColumnNoWrap } from 'theme/styles'
 import { Flex, FlexProps } from 'ui/src/components/layout'
 import { breakpoints } from 'ui/src/theme'
@@ -10,7 +10,7 @@ import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 
-const IconWrapper = styled.div<{ size?: number }>`
+const IconWrapper = deprecatedStyled.div<{ size?: number }>`
   position: relative;
   ${flexColumnNoWrap};
   align-items: center;
@@ -30,7 +30,7 @@ const IconWrapper = styled.div<{ size?: number }>`
 
 const MINI_ICON_SIZE = 16
 
-const MiniIconContainer = styled.div<{ side: 'left' | 'right'; size?: number; isIndicator?: boolean }>`
+const MiniIconContainer = deprecatedStyled.div<{ side: 'left' | 'right'; size?: number; isIndicator?: boolean }>`
   position: absolute;
   display: flex;
   justify-content: center;
@@ -49,7 +49,7 @@ const MiniIconContainer = styled.div<{ side: 'left' | 'right'; size?: number; is
   }
 `
 
-const MiniImg = styled.img`
+const MiniImg = deprecatedStyled.img`
   width: ${MINI_ICON_SIZE + 'px'};
   height: ${MINI_ICON_SIZE + 'px'};
 `

@@ -1,5 +1,5 @@
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
-import { css, keyframes, styled } from 'lib/styled-components'
+import { css, deprecatedStyled, keyframes } from 'lib/styled-components'
 import { useRef } from 'react'
 
 const fadeIn = keyframes`
@@ -113,7 +113,7 @@ function getAnimationDelayCss($animationDelay: string, animationType: FadePresen
   }
 }
 
-const FadeWrapper = styled.div<{
+const FadeWrapper = deprecatedStyled.div<{
   animationType: FadePresenceAnimationType
   $transitionDuration?: string
   $animationDelay?: string

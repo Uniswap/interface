@@ -1,3 +1,5 @@
+import { type ContentStyle } from '@universe/api'
+
 /**
  * Telemetry interface for tracking notification lifecycle events
  * This interface is injected by the callsite (e.g. web) to allow
@@ -10,7 +12,7 @@ export interface NotificationTelemetry {
    */
   onNotificationReceived(params: {
     notificationId: string
-    type: string
+    type: ContentStyle | undefined
     source: string // 'backend' | 'websocket' | 'legacy'
     timestamp: number
   }): void
@@ -18,14 +20,14 @@ export interface NotificationTelemetry {
   /**
    * Called when a notification is rendered to the user
    */
-  onNotificationShown(params: { notificationId: string; type: string; timestamp: number }): void
+  onNotificationShown(params: { notificationId: string; type: ContentStyle | undefined; timestamp: number }): void
 
   /**
    * Called when a user interacts with a notification (clicks, etc.)
    */
   onNotificationInteracted(params: {
     notificationId: string
-    type: string
+    type: ContentStyle | undefined
     action: string // 'button' | 'background' | 'dismiss'
   }): void
 }

@@ -34,7 +34,7 @@ import { LimitOrderTrade, TradeFillType } from 'state/routing/types'
 import { useOnSwitchTokens } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
-import { Anchor, Button, Flex, styled as TamaguiStyled, Text, useIsShortMobileDevice, useSporeColors } from 'ui/src'
+import { Anchor, Button, Flex, styled, Text, useIsShortMobileDevice, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -52,16 +52,16 @@ import { formatCurrencyAmount as formatCurrencyAmountRaw } from 'utilities/src/f
 import { NumberType } from 'utilities/src/format/types'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
 
-const CustomHeightSwapSection = TamaguiStyled(SwapSection, {
+const CustomHeightSwapSection = styled(SwapSection, {
   height: 'unset',
 })
 
-const ShortArrowWrapper = TamaguiStyled(ArrowWrapper, {
+const ShortArrowWrapper = styled(ArrowWrapper, {
   mt: -22,
   mb: -22,
 })
 
-const LearnMore = TamaguiStyled(Text, {
+const LearnMore = styled(Text, {
   variant: 'body3',
   color: '$accent1',
   animation: '100ms',

@@ -2,8 +2,10 @@ import { useTranslation } from 'react-i18next'
 import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
 export function TokenApprovalTransactionStepRow({
   step,
@@ -12,8 +14,10 @@ export function TokenApprovalTransactionStepRow({
   totalStepsCount,
 }: StepRowProps<TokenApprovalTransactionStep>): JSX.Element {
   const { t } = useTranslation()
-  const { token, pair } = step
-  const symbol = token.symbol ?? ''
+
+  const { chainId, tokenAddress, pair } = step
+  const currencyInfo = useCurrencyInfo(buildCurrencyId(chainId, tokenAddress))
+  const symbol = currencyInfo?.currency.symbol ?? ''
 
   const title = {
     [StepStatus.Preview]: t('common.approveSpend', { symbol }),
@@ -25,7 +29,7 @@ export function TokenApprovalTransactionStepRow({
   return (
     <StepRowSkeleton
       title={title}
-      currency={token}
+      currency={currencyInfo?.currency}
       pair={pair}
       learnMore={{
         url: uniswapUrls.helpArticleUrls.approvalsExplainer,
@@ -40,10 +44,11 @@ export function TokenApprovalTransactionStepRow({
 
 export function TokenRevocationTransactionStepRow(props: StepRowProps<TokenRevocationTransactionStep>): JSX.Element {
   const { step, status, currentStepIndex, totalStepsCount } = props
+  const { chainId, tokenAddress } = step
 
+  const currencyInfo = useCurrencyInfo(buildCurrencyId(chainId, tokenAddress))
   const { t } = useTranslation()
-  const { token } = step
-  const symbol = token.symbol ?? ''
+  const symbol = currencyInfo?.currency.symbol ?? ''
 
   const title = {
     [StepStatus.Preview]: t('common.resetLimit', { symbol }),
@@ -55,7 +60,7 @@ export function TokenRevocationTransactionStepRow(props: StepRowProps<TokenRevoc
   return (
     <StepRowSkeleton
       title={title}
-      currency={token}
+      currency={currencyInfo?.currency}
       status={status}
       currentStepIndex={currentStepIndex}
       totalStepsCount={totalStepsCount}

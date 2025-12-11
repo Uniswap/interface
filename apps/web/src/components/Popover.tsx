@@ -1,12 +1,12 @@
 import { Options, Placement } from '@popperjs/core'
 import Portal from '@reach/portal'
 import useInterval from 'lib/hooks/useInterval'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import React, { CSSProperties, memo, useCallback, useMemo, useState } from 'react'
 import { usePopper } from 'react-popper'
 import { Z_INDEX } from 'theme/zIndex'
 
-const PopoverContainer = styled.div<{ show: boolean }>`
+const PopoverContainer = deprecatedStyled.div<{ show: boolean }>`
   z-index: ${Z_INDEX.popover};
   pointer-events: none;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
@@ -17,12 +17,12 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   color: ${({ theme }) => theme.neutral2};
 `
 
-const ReferenceElement = styled.div`
+const ReferenceElement = deprecatedStyled.div`
   display: inline-block;
   height: inherit;
 `
 
-const Arrow = styled.div`
+const Arrow = deprecatedStyled.div`
   width: 8px;
   height: 8px;
   z-index: 9998;

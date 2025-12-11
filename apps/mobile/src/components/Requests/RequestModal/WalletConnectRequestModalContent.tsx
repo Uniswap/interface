@@ -7,7 +7,6 @@ import { ClientDetails, PermitInfo } from 'src/components/Requests/RequestModal/
 import { RequestDetails } from 'src/components/Requests/RequestModal/RequestDetails'
 import {
   isBatchedTransactionRequest,
-  isPersonalSignRequest,
   isTransactionRequest,
   WalletConnectSigningRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
@@ -17,13 +16,13 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
-import { isPrimaryTypePermit } from 'uniswap/src/types/walletConnect'
+import { isPrimaryTypePermit, UwULinkMethod } from 'uniswap/src/types/walletConnect'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { MAX_HIDDEN_CALLS_BY_DEFAULT } from 'wallet/src/components/BatchedTransactions/BatchedTransactionDetails'
+import { DappPersonalSignContent } from 'wallet/src/components/dappRequests/DappPersonalSignContent'
 import { DappSendCallsScanningContent } from 'wallet/src/components/dappRequests/DappSendCallsScanningContent'
-import { DappSignatureScanningContent } from 'wallet/src/components/dappRequests/DappSignatureScanningContent'
+import { DappSignTypedDataContent } from 'wallet/src/components/dappRequests/DappSignTypedDataContent'
 import { DappTransactionScanningContent } from 'wallet/src/components/dappRequests/DappTransactionScanningContent'
 import { WarningBox } from 'wallet/src/components/WarningBox/WarningBox'
 import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
@@ -64,7 +63,6 @@ type WalletConnectRequestModalContentProps = {
   gasFee: GasFeeResult
   hasSufficientFunds: boolean
   request: WalletConnectSigningRequest
-  isBlocked: boolean
   showSmartWalletActivation?: boolean
   confirmedRisk: boolean
   onConfirmRisk: (confirmed: boolean) => void
@@ -74,7 +72,6 @@ type WalletConnectRequestModalContentProps = {
 export function WalletConnectRequestModalContent({
   request,
   hasSufficientFunds,
-  isBlocked,
   gasFee,
   showSmartWalletActivation,
   confirmedRisk,
@@ -109,60 +106,22 @@ export function WalletConnectRequestModalContent({
       {blockaidTransactionScanning ? (
         <>
           <Flex px="$spacing16">
-            {/* Render appropriate scanning content based on request type */}
-            {isTransactionRequest(request) ? (
-              <DappTransactionScanningContent
-                transaction={request.transaction}
-                chainId={chainId}
-                account={request.account}
-                dappUrl={request.dappRequestInfo.url}
-                gasFee={gasFee}
-                requestMethod={request.type}
-                showSmartWalletActivation={showSmartWalletActivation}
-                confirmedRisk={confirmedRisk}
-                onConfirmRisk={onConfirmRisk}
-                onRiskLevelChange={onRiskLevelChange}
-              />
-            ) : isPersonalSignRequest(request) ? (
-              <DappSignatureScanningContent
-                chainId={chainId}
-                account={request.account}
-                message={request.message || request.rawMessage}
-                isDecoded={true}
-                method={request.type === EthMethod.PersonalSign ? 'personal_sign' : 'eth_sign'}
-                params={
-                  request.type === EthMethod.PersonalSign
-                    ? [request.rawMessage, request.account]
-                    : [request.account, request.rawMessage]
-                }
-                dappUrl={request.dappRequestInfo.url}
-                confirmedRisk={confirmedRisk}
-                onConfirmRisk={onConfirmRisk}
-                onRiskLevelChange={onRiskLevelChange}
-              />
-            ) : isBatchedTransactionRequest(request) ? (
-              <DappSendCallsScanningContent
-                calls={request.calls}
-                chainId={chainId}
-                account={request.account}
-                dappUrl={request.dappRequestInfo.url}
-                gasFee={gasFee}
-                requestMethod={request.type}
-                showSmartWalletActivation={showSmartWalletActivation}
-                confirmedRisk={confirmedRisk}
-                onConfirmRisk={onConfirmRisk}
-                onRiskLevelChange={onRiskLevelChange}
-              />
-            ) : null}
+            <ScanningContent
+              request={request}
+              chainId={chainId}
+              gasFee={gasFee}
+              showSmartWalletActivation={showSmartWalletActivation}
+              confirmedRisk={confirmedRisk}
+              onConfirmRisk={onConfirmRisk}
+              onRiskLevelChange={onRiskLevelChange}
+            />
 
             <RequestWarnings
               request={request}
               hasSufficientFunds={hasSufficientFunds}
-              isBlocked={isBlocked}
               isNetworkReachable={Boolean(netInfo.isInternetReachable)}
               suppressOfflineWarning={Boolean(suppressOfflineWarning)}
               nativeCurrencySymbol={nativeCurrency.symbol}
-              isRequestScanned={true}
             />
           </Flex>
           <Animated.View style={bottomSpacerStyle} />
@@ -195,11 +154,9 @@ export function WalletConnectRequestModalContent({
             <RequestWarnings
               request={request}
               hasSufficientFunds={hasSufficientFunds}
-              isBlocked={isBlocked}
               isNetworkReachable={Boolean(netInfo.isInternetReachable)}
               suppressOfflineWarning={Boolean(suppressOfflineWarning)}
               nativeCurrencySymbol={nativeCurrency.symbol}
-              isRequestScanned={false}
             />
           </Flex>
           <Animated.View style={bottomSpacerStyle} />
@@ -212,19 +169,15 @@ export function WalletConnectRequestModalContent({
 function RequestWarnings({
   request,
   hasSufficientFunds,
-  isBlocked,
   isNetworkReachable,
   suppressOfflineWarning,
   nativeCurrencySymbol,
-  isRequestScanned,
 }: {
   request: WalletConnectSigningRequest
   hasSufficientFunds: boolean
-  isBlocked: boolean
   isNetworkReachable: boolean
   suppressOfflineWarning: boolean
   nativeCurrencySymbol: string
-  isRequestScanned: boolean
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -247,14 +200,8 @@ function RequestWarnings({
           textColor="$statusWarning"
           title={t('walletConnect.request.error.network')}
         />
-      ) : isRequestScanned ? (
-        isBlocked && <BlockedAddressWarning centered row alignSelf="center" />
       ) : (
-        <WarningSection
-          isBlockedAddress={isBlocked}
-          request={request}
-          showUnsafeWarning={isPotentiallyUnsafe(request)}
-        />
+        <WarningSection request={request} showUnsafeWarning={isPotentiallyUnsafe(request)} />
       )}
     </>
   )
@@ -263,20 +210,14 @@ function RequestWarnings({
 function WarningSection({
   request,
   showUnsafeWarning,
-  isBlockedAddress,
 }: {
   request: WalletConnectSigningRequest
   showUnsafeWarning: boolean
-  isBlockedAddress: boolean
 }): JSX.Element | null {
   const { t } = useTranslation()
 
-  if (!showUnsafeWarning && !isBlockedAddress) {
+  if (!showUnsafeWarning) {
     return null
-  }
-
-  if (isBlockedAddress) {
-    return <BlockedAddressWarning centered row alignSelf="center" />
   }
 
   if (isBatchedTransactionRequest(request)) {
@@ -293,4 +234,98 @@ function WarningSection({
   }
 
   return null
+}
+
+/** Helper component to render appropriate scanning content based on request type */
+function ScanningContent({
+  request,
+  chainId,
+  gasFee,
+  showSmartWalletActivation,
+  confirmedRisk,
+  onConfirmRisk,
+  onRiskLevelChange,
+}: {
+  request: WalletConnectSigningRequest
+  chainId: number
+  gasFee: GasFeeResult
+  showSmartWalletActivation?: boolean
+  confirmedRisk: boolean
+  onConfirmRisk: (confirmed: boolean) => void
+  onRiskLevelChange: (riskLevel: TransactionRiskLevel) => void
+}): JSX.Element {
+  switch (request.type) {
+    case EthMethod.EthSendTransaction:
+    case UwULinkMethod.Erc20Send:
+      return (
+        <DappTransactionScanningContent
+          transaction={request.transaction}
+          chainId={chainId}
+          account={request.account}
+          dappUrl={request.dappRequestInfo.url}
+          gasFee={gasFee}
+          requestMethod={request.type}
+          showSmartWalletActivation={showSmartWalletActivation}
+          confirmedRisk={confirmedRisk}
+          onConfirmRisk={onConfirmRisk}
+          onRiskLevelChange={onRiskLevelChange}
+        />
+      )
+
+    case EthMethod.PersonalSign:
+    case EthMethod.EthSign:
+      return (
+        <DappPersonalSignContent
+          chainId={chainId}
+          account={request.account}
+          message={request.message || request.rawMessage}
+          method={request.type}
+          params={
+            request.type === EthMethod.PersonalSign
+              ? [request.rawMessage, request.account]
+              : [request.account, request.rawMessage]
+          }
+          dappUrl={request.dappRequestInfo.url}
+          confirmedRisk={confirmedRisk}
+          onConfirmRisk={onConfirmRisk}
+          onRiskLevelChange={onRiskLevelChange}
+        />
+      )
+
+    case EthMethod.WalletSendCalls:
+      return (
+        <DappSendCallsScanningContent
+          calls={request.calls}
+          chainId={chainId}
+          account={request.account}
+          dappUrl={request.dappRequestInfo.url}
+          gasFee={gasFee}
+          requestMethod={request.type}
+          showSmartWalletActivation={showSmartWalletActivation}
+          confirmedRisk={confirmedRisk}
+          onConfirmRisk={onConfirmRisk}
+          onRiskLevelChange={onRiskLevelChange}
+        />
+      )
+
+    case EthMethod.SignTypedData:
+    case EthMethod.SignTypedDataV4:
+      return (
+        <DappSignTypedDataContent
+          chainId={chainId}
+          account={request.account}
+          method={request.type}
+          params={
+            request.type === EthMethod.SignTypedDataV4
+              ? [request.account, request.rawMessage]
+              : [request.rawMessage, request.account]
+          }
+          dappUrl={request.dappRequestInfo.url}
+          confirmedRisk={confirmedRisk}
+          typedData={request.rawMessage}
+          onConfirmRisk={onConfirmRisk}
+          onRiskLevelChange={onRiskLevelChange}
+        />
+      )
+  }
 }

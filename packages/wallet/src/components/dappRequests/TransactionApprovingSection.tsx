@@ -1,4 +1,5 @@
 import type { TFunction } from 'i18next'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { type ColorTokens, Flex } from 'ui/src'
 import { ApproveAlt, Clear } from 'ui/src/components/icons'
@@ -54,6 +55,70 @@ export function formatAssetDisplay({ asset, t, formatNumberOrString }: FormatAss
   return asset.symbol ?? asset.name ?? ''
 }
 
+/**
+ * Grouped asset data for displaying multiple approvals of the same token
+ */
+export interface GroupedApprovalAsset {
+  /** The primary asset with the highest approval amount */
+  primaryAsset: TransactionAsset
+  /** All assets in this group (including the primary) */
+  allAssets: TransactionAsset[]
+}
+
+/**
+ * Groups approval assets by token (address + chainId) and selects highest amount for display
+ * @param assets - Array of approval assets
+ * @returns Array of grouped assets or ungrouped single assets
+ */
+function groupApprovalAssets(assets: TransactionAsset[]): GroupedApprovalAsset[] {
+  const groups: Record<string, TransactionAsset[]> = {}
+
+  // Group by token (address + chainId)
+  assets.forEach((asset) => {
+    const key = `${asset.address}-${asset.chainId}`
+    const existing = groups[key]
+    if (existing) {
+      existing.push(asset)
+    } else {
+      groups[key] = [asset]
+    }
+  })
+
+  // For each token group, select the asset with the highest approval amount across all spenders
+  return Object.values(groups).map((groupAssets) => {
+    // groupAssets is guaranteed to be non-empty due to how groups are built
+    let primaryAsset = (groupAssets as [TransactionAsset, ...TransactionAsset[]])[0]
+
+    if (groupAssets.length > 1) {
+      // Find the spender requesting the highest approval amount for this token
+      for (const asset of groupAssets) {
+        const primaryAmount = primaryAsset.amount
+        const currentAmount = asset.amount
+
+        // Unlimited is always highest, no need to check further
+        if (currentAmount === UNLIMITED_APPROVAL_AMOUNT) {
+          primaryAsset = asset
+          break
+        }
+
+        // Compare numeric amounts
+        if (primaryAmount && currentAmount) {
+          const primaryNum = parseFloat(primaryAmount)
+          const currentNum = parseFloat(currentAmount)
+          if (!isNaN(currentNum) && !isNaN(primaryNum) && currentNum > primaryNum) {
+            primaryAsset = asset
+          }
+        }
+      }
+    }
+
+    return {
+      primaryAsset,
+      allAssets: groupAssets,
+    }
+  })
+}
+
 export function TransactionApprovingSection({ assets, riskLevel }: TransactionApprovingSectionProps): JSX.Element {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
@@ -63,20 +128,28 @@ export function TransactionApprovingSection({ assets, riskLevel }: TransactionAp
   const revokingAssets = assets.filter((asset) => asset.amount === '0')
   const approvingAssets = assets.filter((asset) => asset.amount !== '0')
 
+  // Group revoking assets by token to handle multiple spenders
+  const groupedRevokingAssets = useMemo(() => groupApprovalAssets(revokingAssets), [revokingAssets])
+
+  // Group approving assets by token to handle multiple spenders
+  const groupedApprovingAssets = useMemo(() => groupApprovalAssets(approvingAssets), [approvingAssets])
+
   return (
     <Flex gap="$spacing12" px="$spacing16">
-      {revokingAssets.length > 0 && (
+      {groupedRevokingAssets.length > 0 && (
         <TransactionAssetList
-          assets={revokingAssets}
+          assets={groupedRevokingAssets.map((g) => g.primaryAsset)}
+          groupedAssets={groupedRevokingAssets}
           icon={Clear}
           iconColor="$statusCritical"
           titleText={t('dapp.request.revoke.action')}
           formatAmount={(asset) => formatAssetDisplay({ asset, t, formatNumberOrString })}
         />
       )}
-      {approvingAssets.length > 0 && (
+      {groupedApprovingAssets.length > 0 && (
         <TransactionAssetList
-          assets={approvingAssets}
+          assets={groupedApprovingAssets.map((g) => g.primaryAsset)}
+          groupedAssets={groupedApprovingAssets}
           icon={ApproveAlt}
           iconColor={iconColor}
           titleText={t('common.approving')}

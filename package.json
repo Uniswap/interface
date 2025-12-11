@@ -67,7 +67,8 @@
     "@tamagui/portal@1.136.1": "Fixes issue with not rendering content in sheets on mweb (e.g. Selecting a token on swap flow) on web production builds.",
     "@tamagui/static@1.136.1": "Fixes applying styles (e.g. with hoverStyle) for buttons on web production builds.",
     "webpack@5.90.0": "Fixes issues with incompatible webpack typings in storybook",
-    "@expo/config-plugins@10.1.1": "Allows overriding Xcode build configuration via EXPO_BUILD_CONFIGURATION env var for 'expo start' interactive mode. Fixes bundle ID resolution when using variable substitution ($(BUNDLE_ID_SUFFIX)) in Xcode project."
+    "@expo/config-plugins@10.1.1": "Allows overriding Xcode build configuration via EXPO_BUILD_CONFIGURATION env var for 'expo start' interactive mode. Fixes bundle ID resolution when using variable substitution ($(BUNDLE_ID_SUFFIX)) in Xcode project.",
+    "@expo/cli@0.24.21": "Fixes issue with not launching the correct activity on android, so we pass EXPO_ANDROID_LAUNCH_ACTIVITY env var."
   },
   "resolutions": {
     "@expo/config-plugins": "10.1.1",
@@ -207,6 +208,7 @@
     "@vercel/og@0.5.8": "patches/@vercel%2Fog@0.5.8.patch",
     "@tamagui/portal@1.136.1": "patches/@tamagui%2Fportal@1.136.1.patch",
     "@tamagui/static@1.136.1": "patches/@tamagui%2Fstatic@1.136.1.patch",
-    "@expo/config-plugins@10.1.1": "patches/@expo%2Fconfig-plugins@10.1.1.patch"
+    "@expo/config-plugins@10.1.1": "patches/@expo%2Fconfig-plugins@10.1.1.patch",
+    "@expo/cli@0.24.21": "patches/@expo%2Fcli@0.24.21.patch"
   }
 }

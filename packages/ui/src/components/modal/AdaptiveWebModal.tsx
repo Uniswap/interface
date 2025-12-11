@@ -212,7 +212,7 @@ export function AdaptiveWebModal({
       </VisuallyHidden>
       {adaptToSheet &&
         !isTopAligned && ( // Tamagui Sheets always animate in from the bottom, so we cannot use Sheets on top aligned modals
-          <Adapt when="sm">
+          <Adapt when="md">
             <WebBottomSheet
               isOpen={isOpen}
               gap={gap ?? '$spacing4'}
@@ -229,7 +229,7 @@ export function AdaptiveWebModal({
         )}
 
       <Dialog.Portal zIndex={zIndex ?? zIndexes.modal}>
-        <Overlay key="overlay" zIndex={zIndexes.modalBackdrop} />
+        <Overlay key="overlay" />
         <Flex
           grow
           maxHeight={filteredRest.maxHeight ?? 'calc(100vh - 32px)'}
@@ -258,7 +258,6 @@ export function AdaptiveWebModal({
             py={py ?? p ?? '$spacing16'}
             style={Object.assign({}, scrollbarStyles, style)}
             width="calc(100vw - 32px)"
-            zIndex={zIndexes.modal}
             {...filteredRest}
           >
             {children}
@@ -310,7 +309,7 @@ export function WebModalWithBottomAttachment({
       </VisuallyHidden>
       {adaptToSheet &&
         !isTopAligned && ( // Tamagui Sheets always animate in from the bottom, so we cannot use Sheets on top aligned modals
-          <Adapt when="sm">
+          <Adapt when="md">
             <WebBottomSheet
               isOpen={isOpen}
               style={style}
@@ -324,7 +323,7 @@ export function WebModalWithBottomAttachment({
         )}
 
       <Dialog.Portal zIndex={zIndex ?? zIndexes.modal}>
-        <Overlay key="overlay" zIndex={zIndexes.modalBackdrop} />
+        <Overlay key="overlay" />
 
         <Dialog.Content
           key="content"
@@ -340,7 +339,6 @@ export function WebModalWithBottomAttachment({
           p="$none"
           style={style}
           width="calc(100vw - 32px)"
-          zIndex={zIndexes.modal}
         >
           <Flex height="100%" width="100%" gap="$spacing8">
             <Flex

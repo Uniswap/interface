@@ -77,4 +77,5 @@ export const BLAST_CHAIN_INFO = {
   },
   gasConfig: GENERIC_L2_GAS_CONFIG,
   tradingApiPollingIntervalMs: 200,
+  acrossProtocolAddress: '0x2D509190Ed0172ba588407D4c2df918F955Cc6E1',
 } as const satisfies UniverseChainInfo

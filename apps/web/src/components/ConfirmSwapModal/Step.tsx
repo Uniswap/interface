@@ -1,6 +1,6 @@
 import { CheckMark } from 'components/Icons/CheckMark'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import styled, { keyframes } from 'lib/styled-components'
+import { deprecatedStyled, keyframes } from 'lib/styled-components'
 import { ReactElement, useEffect, useState } from 'react'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
@@ -40,7 +40,7 @@ const ringAnimation = keyframes`
     opacity: 0;
   }
 `
-const Ring = styled.div<{ $borderColor: string; $animation: ReturnType<typeof keyframes> }>`
+const Ring = deprecatedStyled.div<{ $borderColor: string; $animation: ReturnType<typeof keyframes> }>`
   position: absolute;
   width: ${ICON_SIZE}px;
   height: ${ICON_SIZE}px;
@@ -107,7 +107,7 @@ function Title({
   }
 }
 
-const MonospacedTimer = styled(ThemedText.LabelSmall)`
+const MonospacedTimer = deprecatedStyled(ThemedText.LabelSmall)`
   font-variant-numeric: tabular-nums;
   padding-right: 8px;
 `
@@ -120,7 +120,7 @@ function Timer({ secondsRemaining }: { secondsRemaining: number }) {
   return <MonospacedTimer data-testid="step-timer">{timerText}</MonospacedTimer>
 }
 
-const StyledExternalLink = styled(ExternalLink)`
+const StyledExternalLink = deprecatedStyled(ExternalLink)`
   font-size: 12px;
   font-weight: 485px;
   line-height: 16px;

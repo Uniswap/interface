@@ -24,6 +24,7 @@ import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/ut
 export function LiquiditySummaryItem({
   transaction,
   index,
+  isExternalProfile,
 }: SummaryItemProps & {
   transaction: TransactionDetails & {
     typeInfo:
@@ -106,5 +107,13 @@ export function LiquiditySummaryItem({
     return <ContractInteraction color="$neutral2" fill={colors.surface1.get()} size="$icon.40" />
   }, [colors.surface1, currency0Info, currency1Info, transaction, typeInfo.type])
 
-  return <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} />
+  return (
+    <TransactionSummaryLayout
+      caption={caption}
+      icon={icon}
+      index={index}
+      transaction={transaction}
+      isExternalProfile={isExternalProfile}
+    />
+  )
 }

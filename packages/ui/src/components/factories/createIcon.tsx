@@ -62,11 +62,16 @@ export function createIcon({
       },
     )
 
+    // On web, style must be an object, not an array. The Tamagui compiler may
+    // return an array in production builds which causes React DOM to throw:
+    // "Failed to set an indexed property [0] on 'CSSStyleDeclaration'"
+    const flattenedStyle = isWebPlatform && Array.isArray(style) ? Object.assign({}, ...style) : style
+
+    // @ts-expect-error this type is hard to map but its right
     const svgProps: SvgPropsWithRef = {
       ref,
       ...props,
-      // @ts-expect-error this type is hard to map but its right
-      style,
+      style: flattenedStyle,
     }
 
     const comp = props.Component ? createElement(props.Component, svgProps) : getIcon(svgProps)
@@ -87,9 +92,15 @@ export function createIcon({
   Icon.displayName = name
 
   const IconPlain = forwardRef<Svg, IconProps>((props, ref) => {
+    // Flatten style array on web - Animated.createAnimatedComponent may wrap styles in an array
+    // which causes React DOM to throw: "Failed to set an indexed property [0] on 'CSSStyleDeclaration'"
+    const { style, ...rest } = props as SvgPropsWithRef
+    const flatStyle = isWebPlatform && Array.isArray(style) ? Object.assign({}, ...style) : style
+
     return getIcon({
       // biome-ignore lint/suspicious/noExplicitAny: Type casting needed for complex SVG prop types
-      ...(props as any as SvgPropsWithRef),
+      ...(rest as any),
+      style: flatStyle,
       ref,
     })
   })

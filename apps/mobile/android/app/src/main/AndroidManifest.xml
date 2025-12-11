@@ -132,18 +132,5 @@
           android:pathPrefix="/app/wc" />
       </intent-filter>
     </activity>
-    <!--
-      nosemgrep: java.android.security.exported_activity.exported_activity
-      Justification: This activity-alias must be exported for the Android launcher to start the app.
-      It only responds to MAIN/LAUNCHER intents (required for app launching) and targets the
-      properly secured MainActivity. No privileged functionality is exposed through this alias.
-    -->
-    <activity-alias android:name="com.uniswap.mobile.MainActivity" android:exported="true"
-      android:targetActivity="com.uniswap.MainActivity">
-      <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
-        <category android:name="android.intent.category.LAUNCHER" />
-      </intent-filter>
-    </activity-alias>
   </application>
 </manifest>

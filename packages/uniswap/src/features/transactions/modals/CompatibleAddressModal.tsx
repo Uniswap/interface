@@ -8,7 +8,7 @@ import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trace } from 'uniswap/src/features/telemetry/Trace'
-import { useDismissedCompatibleAddressWarnings } from 'uniswap/src/features/tokens/slice/hooks'
+import { useDismissedCompatibleAddressWarnings } from 'uniswap/src/features/tokens/warnings/slice/hooks'
 import { openUri } from 'uniswap/src/utils/linking'
 
 interface CompatibleAddressModalProps {

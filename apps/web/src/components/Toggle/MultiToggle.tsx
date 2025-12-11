@@ -1,6 +1,6 @@
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 
-export const ToggleWrapper = styled.button<{ width?: string }>`
+export const ToggleWrapper = deprecatedStyled.button<{ width?: string }>`
   display: flex;
   align-items: center;
   width: ${({ width }) => width ?? '100%'};
@@ -12,7 +12,7 @@ export const ToggleWrapper = styled.button<{ width?: string }>`
   outline: none;
 `
 
-export const ToggleElement = styled.span<{ isActive?: boolean; fontSize?: string }>`
+export const ToggleElement = deprecatedStyled.span<{ isActive?: boolean; fontSize?: string }>`
   display: flex;
   align-items: center;
   width: 100%;

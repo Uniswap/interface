@@ -1,4 +1,4 @@
-import type { PlanStep } from '@universe/api/src/clients/trading/tradeTypes'
+import { TradingApi } from '@universe/api'
 import { useEffect, useMemo, useRef } from 'react'
 import { useAnimatedStyle, useSharedValue, withSequence, withTiming } from 'react-native-reanimated'
 import { Button, Flex, useIsShortMobileDevice, useSporeColors } from 'ui/src'
@@ -47,7 +47,7 @@ function useSwapProgressState(): {
   const progressEstimatesRef = useRef<PlanProgressEstimates | null>(null)
 
   if (!progressEstimatesRef.current && steps.length > 0) {
-    progressEstimatesRef.current = getPlanProgressEstimates(steps as unknown as PlanStep[])
+    progressEstimatesRef.current = getPlanProgressEstimates(steps as unknown as TradingApi.PlanStep[])
   }
 
   const progress = useSharedValue(PROGRESS_BAR_MIN_WIDTH)
@@ -55,7 +55,7 @@ function useSwapProgressState(): {
   const currentStepIndex = useMemo(() => {
     const _currentStepIndex =
       currentStep && 'step' in currentStep && 'stepIndex' in currentStep.step
-        ? (currentStep.step as unknown as PlanStep).stepIndex
+        ? (currentStep.step as unknown as TradingApi.PlanStep).stepIndex
         : -1
     if (_currentStepIndex === -1) {
       return _currentStepIndex

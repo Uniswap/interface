@@ -104,6 +104,7 @@ function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element
   const activeAccount = useActiveAccountWithThrow()
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const darkColors = useSporeColors('dark')
   const media = useMedia()
   const insets = useAppInsets()
   const dimensions = useDeviceDimensions()
@@ -154,7 +155,9 @@ function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element
     const tabs: Array<HomeRoute> = [
       { key: SectionName.HomeTokensTab, title: tokensTitle },
       { key: SectionName.HomeNFTsTab, title: nftsTitle },
-      ...(!isBottomTabsEnabled ? [{ key: SectionName.HomeActivityTab, title: activityTitle }] : []),
+      ...(!isBottomTabsEnabled
+        ? [{ key: SectionName.HomeActivityTab, title: activityTitle, enableNotificationBadge: true }]
+        : []),
     ]
 
     return tabs
@@ -325,7 +328,6 @@ function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element
             <UniswapWrapped2025Banner
               handleDismiss={handleDismissWrappedBanner}
               handlePress={handlePressWrappedBanner}
-              bannerHeight={116}
             />
             <Flex
               height="$spacing24"
@@ -437,11 +439,9 @@ function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element
   )
 
   const statusBarStyle = useAnimatedStyle(() => ({
-    backgroundColor: interpolateColor(
-      currentScrollValue.value,
-      [0, headerHeightDiff],
-      [colors.surface1.val, colors.surface1.val],
-    ),
+    backgroundColor: shouldShowWrappedBanner
+      ? darkColors.surface1.val
+      : interpolateColor(currentScrollValue.value, [0, headerHeightDiff], [colors.surface1.val, colors.surface1.val]),
   }))
 
   const apolloClient = useApolloClient()

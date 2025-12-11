@@ -1,7 +1,7 @@
 import { AutoColumn } from 'components/deprecated/Column'
 import { RowBetween } from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { ExternalLink } from 'theme/components/Links'
@@ -10,7 +10,7 @@ import { Text, useSporeColors } from 'ui/src'
 import { useENS } from 'uniswap/src/features/ens/useENS'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
-const InputPanel = styled.div`
+const InputPanel = deprecatedStyled.div`
   ${flexColumnNoWrap};
   position: relative;
   border-radius: 1.25rem;
@@ -19,7 +19,7 @@ const InputPanel = styled.div`
   width: 100%;
 `
 
-const ContainerRow = styled.div<{ error: boolean }>`
+const ContainerRow = deprecatedStyled.div<{ error: boolean }>`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -31,12 +31,12 @@ const ContainerRow = styled.div<{ error: boolean }>`
   background-color: ${({ theme }) => theme.surface1};
 `
 
-const InputContainer = styled.div`
+const InputContainer = deprecatedStyled.div`
   flex: 1;
   padding: 1rem;
 `
 
-const Input = styled.input<{ error?: boolean }>`
+const Input = deprecatedStyled.input<{ error?: boolean }>`
   font-size: 1.25rem;
   outline: none;
   border: none;

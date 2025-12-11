@@ -17,10 +17,7 @@ import styledFn, {
 } from 'styled-components'
 
 /** @deprecated use `styled` from `ui/src` instead */
-export default styledFn
-
-/** @deprecated use `styled` from `ui/src` instead */
-export const styled = styledFn
+export const deprecatedStyled = styledFn
 
 /** @deprecated use alternatives from `ui/src` instead */
 export const css = cssSC

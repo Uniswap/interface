@@ -1,5 +1,5 @@
 import NetworkFilter from 'components/NetworkFilter/NetworkFilter'
-import { TOTAL_INTERFACE_NAV_HEIGHT } from 'pages/Portfolio/constants'
+import { useAppHeaderHeight } from 'hooks/useAppHeaderHeight'
 import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { PortfolioAddressDisplay } from 'pages/Portfolio/Header/PortfolioAddressDisplay/PortfolioAddressDisplay'
 import { PortfolioTabs } from 'pages/Portfolio/Header/Tabs'
@@ -41,6 +41,7 @@ export function PortfolioHeader({ scrollY }: PortfolioHeaderProps) {
   const media = useMedia()
   const { tab, chainId: currentChainId } = usePortfolioRoutes()
   const isCompact = useShouldHeaderBeCompact(scrollY)
+  const headerHeight = useAppHeaderHeight()
   const onNetworkPress = useEvent((chainId: UniverseChainId | undefined) => {
     const currentPageName = getPageNameFromTab(tab)
     const selectedChain = chainId ?? ('All' as const)
@@ -62,7 +63,7 @@ export function PortfolioHeader({ scrollY }: PortfolioHeaderProps) {
       zIndex="$header"
       $platform-web={{
         position: 'sticky',
-        top: TOTAL_INTERFACE_NAV_HEIGHT,
+        top: headerHeight,
       }}
       gap={isCompact ? '$gap12' : '$spacing40'}
       transition="gap 200ms ease"

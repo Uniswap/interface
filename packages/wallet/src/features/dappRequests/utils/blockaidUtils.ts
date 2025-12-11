@@ -1,8 +1,16 @@
-import { type BlockaidScanTransactionResponse } from '@universe/api/src'
+import { type BlockaidScanTransactionResponse } from '@universe/api'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
 import { formatUnits } from 'viem'
 import { TransactionErrorType } from 'wallet/src/components/dappRequests/TransactionErrorSection'
+import {
+  type ParsedTransactionData,
+  type TransactionAsset,
+  TransactionRiskLevel,
+  type TransactionSection,
+  TransactionSectionType,
+} from 'wallet/src/features/dappRequests/types'
 
 /**
  * Special marker for unlimited approvals to be localized in the UI
@@ -19,7 +27,7 @@ const MAX_DECIMAL_PLACES = 6
  * @param value - The value to round (number or string)
  * @returns Rounded value as string
  */
-function roundToDecimals(value: number | string): string {
+export function roundToDecimals(value: number | string): string {
   const numValue = typeof value === 'string' ? parseFloat(value) : value
 
   if (isNaN(numValue)) {
@@ -135,63 +143,6 @@ function formatApprovalAmount(approval: string | undefined, decimals: number): s
   }
 }
 
-/**
- * Transaction section types that can be displayed in the transaction preview
- */
-export enum TransactionSectionType {
-  Sending = 'sending',
-  Receiving = 'receiving',
-  Approving = 'approving',
-}
-
-/**
- * Risk level derived from Blockaid validation classification
- */
-export enum TransactionRiskLevel {
-  /** No risk detected - benign transaction */
-  None = 'none',
-  /** Warning level - potentially risky but not malicious */
-  Warning = 'warning',
-  /** Critical/Malicious - high risk transaction */
-  Critical = 'critical',
-}
-
-/**
- * Asset information to display in transaction sections
- */
-export interface TransactionAsset {
-  /** Asset type (ERC20, NATIVE, NFT, etc.) */
-  type: string
-  /** Token/NFT symbol or name */
-  symbol?: string
-  /** Token/NFT name */
-  name?: string
-  /** Amount as formatted string */
-  amount?: string
-  /** USD value as formatted string */
-  usdValue?: string
-  /** Logo/image URL */
-  logoUrl?: string
-  /** Contract address */
-  address: string
-}
-
-/**
- * A transaction section to display (e.g., "Sending", "Receiving", "Approving")
- */
-export interface TransactionSection {
-  type: TransactionSectionType
-  assets: TransactionAsset[]
-}
-
-/**
- * Parsed transaction data for UI display
- */
-export interface ParsedTransactionData {
-  sections: TransactionSection[]
-  riskLevel: TransactionRiskLevel
-}
-
 interface DetermineTransactionErrorTypeParams {
   sections: TransactionSection[]
   providedErrorType: TransactionErrorType | undefined
@@ -269,7 +220,7 @@ type Exposures = NonNullable<
 /**
  * Parses sending assets from Blockaid asset diffs
  */
-export function parseSendingAssets(assetsDiffs: AssetDiffs): TransactionSection | null {
+export function parseSendingAssets(assetsDiffs: AssetDiffs, chainId: UniverseChainId): TransactionSection | null {
   const sendingAssets: TransactionAsset[] = []
 
   assetsDiffs.forEach((assetDiff: (typeof assetsDiffs)[number]) => {
@@ -288,6 +239,7 @@ export function parseSendingAssets(assetsDiffs: AssetDiffs): TransactionSection 
         usdValue: outAmount.usd_price ? String(outAmount.usd_price) : undefined,
         logoUrl: asset.logo_url,
         address: getAssetAddress(asset),
+        chainId,
       })
     }
   })
@@ -305,7 +257,7 @@ export function parseSendingAssets(assetsDiffs: AssetDiffs): TransactionSection 
 /**
  * Parses receiving assets from Blockaid asset diffs
  */
-export function parseReceivingAssets(assetsDiffs: AssetDiffs): TransactionSection | null {
+export function parseReceivingAssets(assetsDiffs: AssetDiffs, chainId: UniverseChainId): TransactionSection | null {
   const receivingAssets: TransactionAsset[] = []
 
   assetsDiffs.forEach((assetDiff: (typeof assetsDiffs)[number]) => {
@@ -324,6 +276,7 @@ export function parseReceivingAssets(assetsDiffs: AssetDiffs): TransactionSectio
         usdValue: inAmount.usd_price ? String(inAmount.usd_price) : undefined,
         logoUrl: asset.logo_url,
         address: getAssetAddress(asset),
+        chainId,
       })
     }
   })
@@ -341,13 +294,13 @@ export function parseReceivingAssets(assetsDiffs: AssetDiffs): TransactionSectio
 /**
  * Parses approval exposures from Blockaid exposures
  */
-export function parseApprovals(exposures: Exposures): TransactionSection | null {
+export function parseApprovals(exposures: Exposures, chainId: UniverseChainId): TransactionSection | null {
   const exposureAssets: TransactionAsset[] = []
 
   exposures.forEach((exposure: (typeof exposures)[number]) => {
     const asset = exposure.asset
     // Spenders is a record keyed by address
-    Object.entries(exposure.spenders).forEach(([, spenderData]) => {
+    Object.entries(exposure.spenders).forEach(([spenderAddress, spenderData]) => {
       // Get the asset decimals for unlimited approval detection
       const decimals = asset.type === 'ERC20' && 'decimals' in asset ? asset.decimals : 18
       const unlimited = isUnlimitedApproval(spenderData.approval, decimals)
@@ -376,6 +329,8 @@ export function parseApprovals(exposures: Exposures): TransactionSection | null 
           usdValue: undefined,
           logoUrl: asset.logo_url,
           address: getAssetAddress(asset),
+          chainId,
+          spenderAddress,
         })
       }
     })
@@ -394,7 +349,10 @@ export function parseApprovals(exposures: Exposures): TransactionSection | null 
 /**
  * Parses Blockaid scan result into transaction sections for UI display
  */
-export function parseTransactionSections(scanResult: BlockaidScanTransactionResponse | null): ParsedTransactionData {
+export function parseTransactionSections(
+  scanResult: BlockaidScanTransactionResponse | null,
+  chainId: UniverseChainId,
+): ParsedTransactionData {
   // Always check validation classification first (critical for signature requests that lack simulation)
   const classification = scanResult?.validation?.classification
   const riskLevel = getRiskLevelFromClassification(classification)
@@ -409,9 +367,11 @@ export function parseTransactionSections(scanResult: BlockaidScanTransactionResp
   const { assets_diffs, exposures } = scanResult.simulation.account_summary
 
   return {
-    sections: [parseSendingAssets(assets_diffs), parseReceivingAssets(assets_diffs), parseApprovals(exposures)].filter(
-      (section): section is TransactionSection => section !== null,
-    ),
+    sections: [
+      parseSendingAssets(assets_diffs, chainId),
+      parseReceivingAssets(assets_diffs, chainId),
+      parseApprovals(exposures, chainId),
+    ].filter((section): section is TransactionSection => section !== null),
     riskLevel,
   }
 }

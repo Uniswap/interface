@@ -1,9 +1,9 @@
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import { css, styled } from 'lib/styled-components'
+import { css, deprecatedStyled } from 'lib/styled-components'
 import { FadePresence, FadePresenceAnimationType } from 'theme/components/FadePresence'
 import { useSporeColors } from 'ui/src'
 
-export const LogoContainer = styled.div`
+export const LogoContainer = deprecatedStyled.div`
   height: 64px;
   width: 64px;
   position: relative;
@@ -13,7 +13,7 @@ export const LogoContainer = styled.div`
   overflow: visible;
 `
 
-const LoadingIndicator = styled(LoaderV3)`
+const LoadingIndicator = deprecatedStyled(LoaderV3)`
   stroke: ${({ theme }) => theme.neutral3};
   fill: ${({ theme }) => theme.neutral3};
   width: calc(100% + 8px);
@@ -80,10 +80,10 @@ const IconCss = css`
   width: 64px;
 `
 
-export const AnimatedEntranceConfirmationIcon = styled(ConfirmedIcon)`
+export const AnimatedEntranceConfirmationIcon = deprecatedStyled(ConfirmedIcon)`
   ${IconCss}
 `
 
-export const AnimatedEntranceSubmittedIcon = styled(SubmittedIcon)`
+export const AnimatedEntranceSubmittedIcon = deprecatedStyled(SubmittedIcon)`
   ${IconCss}
 `

@@ -121,6 +121,7 @@
     "d3-shape": "3.2.0",
     "dayjs": "1.11.7",
     "dotenv": "16.0.3",
+    "eas-build-cache-provider": "16.4.2",
     "eslint-plugin-rulesdir": "0.2.2",
     "ethers": "5.7.2",
     "expo": "53.0.22",

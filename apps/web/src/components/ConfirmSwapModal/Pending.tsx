@@ -13,7 +13,7 @@ import { useAccount } from 'hooks/useAccount'
 import { SwapResult, useSwapTransactionStatus } from 'hooks/useSwapCallback'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
 import { TFunction } from 'i18next'
-import { css, styled } from 'lib/styled-components'
+import { css, deprecatedStyled } from 'lib/styled-components'
 import { ReactNode, useMemo, useRef } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
@@ -27,22 +27,22 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
-const Container = styled(ColumnCenter)`
+const Container = deprecatedStyled(ColumnCenter)`
   margin: 48px 0 8px;
 `
-const HeaderContainer = styled(ColumnCenter)<{ $disabled?: boolean }>`
+const HeaderContainer = deprecatedStyled(ColumnCenter)<{ $disabled?: boolean }>`
   ${({ $disabled }) => $disabled && `opacity: 0.5;`}
   padding: 0 32px;
   overflow: visible;
 `
-const AnimationWrapper = styled.div`
+const AnimationWrapper = deprecatedStyled.div`
   position: relative;
   width: 100%;
   min-height: 72px;
   display: flex;
   flex-grow: 1;
 `
-const StepTitleAnimationContainer = styled(Column)<{ disableEntranceAnimation?: boolean }>`
+const StepTitleAnimationContainer = deprecatedStyled(Column)<{ disableEntranceAnimation?: boolean }>`
   position: absolute;
   width: 100%;
   height: 100%;

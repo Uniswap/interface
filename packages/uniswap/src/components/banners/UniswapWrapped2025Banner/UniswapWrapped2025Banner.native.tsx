@@ -14,8 +14,8 @@ import { useSnowflakeAnimation } from 'uniswap/src/hooks/useSnowflakeAnimation'
 const BannerWrapper = styled(Flex, {
   width: '100%',
   position: 'relative',
-  p: '$spacing20',
-  pt: '$spacing16',
+  px: '$spacing20',
+  py: '$spacing24',
   overflow: 'hidden',
   zIndex: '$sticky',
 })
@@ -26,7 +26,7 @@ export function UniswapWrapped2025Banner({
   bannerHeight = 116,
 }: UniswapWrapped2025BannerProps): JSX.Element {
   const { t } = useTranslation()
-  const { snowflakes, removeSnowflake } = useSnowflakeAnimation()
+  const { snowflakes, removeSnowflake } = useSnowflakeAnimation({})
   const darkColors = useSporeColorsForTheme('dark')
 
   return (
@@ -44,8 +44,6 @@ export function UniswapWrapped2025Banner({
             right: 0,
             bottom: 0,
             padding: 20,
-            borderTopLeftRadius: 20,
-            borderTopRightRadius: 20,
           }}
         />
 
@@ -71,7 +69,7 @@ export function UniswapWrapped2025Banner({
           centered
           position="absolute"
           right="$spacing24"
-          top="$spacing16"
+          top="$spacing24"
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
           p="$spacing4"
           backgroundColor={darkColors.surface3.val}

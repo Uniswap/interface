@@ -1,11 +1,11 @@
-import { ChainOutageData } from 'featureFlags/flags/outageBanner'
 import { useState } from 'react'
 import { Globe, X } from 'react-feather'
 import { Trans } from 'react-i18next'
+import { ChainOutageData } from 'state/outage/types'
 import { ExternalLink } from 'theme/components/Links'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { capitalize } from 'tsafe'
-import { Flex, Text, styled as tamaguiStyled, useSporeColors } from 'ui/src'
+import { Flex, styled, Text, useSporeColors } from 'ui/src'
 import { iconSizes, zIndexes } from 'ui/src/theme'
 import { useShadowPropsShort } from 'ui/src/theme/shadows'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -16,7 +16,7 @@ export function getOutageBannerSessionStorageKey(chainId: UniverseChainId) {
 }
 
 // TODO replace with IconButton when it's available from buttons migration
-const OutageCloseButton = tamaguiStyled(X, {
+const OutageCloseButton = styled(X, {
   ...ClickableTamaguiStyle,
   size: iconSizes.icon24,
   p: '$spacing4',

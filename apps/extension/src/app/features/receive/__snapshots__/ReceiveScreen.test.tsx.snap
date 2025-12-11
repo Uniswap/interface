@@ -6007,7 +6007,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                         class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
                         data-disable-theme="true"
                       >
-                        Ethereum address
+                        Wallet address
                       </span>
                       <svg
                         fill="none"
@@ -12117,7 +12117,7 @@ exports[`ReceiveScreen renders without error 1`] = `
                       class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral2 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-micr111 _lineHeight-f-lineHeigh1263414315 _fontWeight-f-weight-bo3548"
                       data-disable-theme="true"
                     >
-                      Ethereum address
+                      Wallet address
                     </span>
                     <svg
                       fill="none"

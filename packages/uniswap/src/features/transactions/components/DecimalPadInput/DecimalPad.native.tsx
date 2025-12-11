@@ -132,6 +132,11 @@ export const DecimalPad = memo(function DecimalPad({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: +sizeMultiplier, onReady
   useEffect(() => {
+    // skip resize if the layout is still the same height as before
+    if (currentHeightRef.current === currentHeight) {
+      return
+    }
+
     currentHeightRef.current = currentHeight
     maxHeightRef.current = maxHeight
 
@@ -140,8 +145,8 @@ export const DecimalPad = memo(function DecimalPad({
     }
 
     if (currentHeight < maxHeight) {
-      // We call `onReady` on the next tick in case the layout is still changing and `maxHeight` is now different.
-      setTimeout(() => {
+      // We call `onReady` on the next frame to ensure layout has stabilized and `maxHeight` is accurate.
+      requestAnimationFrame(() => {
         if (
           currentHeightRef.current !== null &&
           maxHeightRef.current !== null &&
@@ -149,7 +154,7 @@ export const DecimalPad = memo(function DecimalPad({
         ) {
           onReady()
         }
-      }, 0)
+      })
       return
     }
 

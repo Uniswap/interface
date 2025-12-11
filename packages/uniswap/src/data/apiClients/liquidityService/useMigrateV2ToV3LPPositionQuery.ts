@@ -2,7 +2,7 @@ import { UseQueryResult, useQuery } from '@tanstack/react-query'
 import {
   MigrateV2ToV3LPPositionRequest,
   MigrateV2ToV3LPPositionResponse,
-} from '@uniswap/client-trading/dist/trading/v1/api_pb'
+} from '@uniswap/client-liquidity/dist/uniswap/liquidity/v1/api_pb'
 import { LIQUIDITY_PATHS, type UseQueryApiHelperHookArgs } from '@universe/api'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { LiquidityServiceClient } from 'uniswap/src/data/apiClients/liquidityService/LiquidityServiceClient'

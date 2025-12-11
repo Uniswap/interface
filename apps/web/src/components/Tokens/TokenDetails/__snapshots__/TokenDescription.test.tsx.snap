@@ -3,23 +3,6 @@
 exports[`TokenDescription > no description or social buttons shown when not available 1`] = `
 <DocumentFragment>
   .c0 {
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c0 :hover {
-  opacity: 0.6;
-}
-
-.c0 :active {
-  opacity: 0.4;
-}
-
-.c1 {
   color: rgba(19, 19, 19, 0.35);
   font-weight: 485;
   font-size: 16px;
@@ -30,7 +13,7 @@ exports[`TokenDescription > no description or social buttons shown when not avai
     style="display: contents;"
   >
     <div
-      class="_gap-_xl_24px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1573 _width-10037"
+      class="_gap-_xl_t-space-gap1602 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1573 _width-10037"
       data-testid="token-details-info-section"
     >
       <h3
@@ -40,7 +23,7 @@ exports[`TokenDescription > no description or social buttons shown when not avai
         Info
       </h3>
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _width-10037 _flexWrap-wrap"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _gap-t-space-gap56 _width-10037"
         data-testid="token-details-info-links"
       >
         <span
@@ -73,44 +56,41 @@ exports[`TokenDescription > no description or social buttons shown when not avai
           </svg>
           0xA0b8...eB48
         </span>
-        <a
-          class="c0"
-          href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-          rel="noopener noreferrer"
-          target="_blank"
+        <div
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; gap: 4px; background-color: rgb(249, 249, 249); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; padding: 8px 12px 8px 12px; transform: [object Object];"
+          tabindex="0"
         >
-          <span
-            class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741 _display-flex _flexDirection-row _alignItems-center _gap-t-space-gap52 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _backgroundColor-surface2 _width-max-content _cursor-pointer"
-            data-disable-theme="true"
-            style="transition: 100ms;"
+          <svg
+            fill="none"
+            stroke-width="8"
+            style="width: 18px; height: 18px; color: rgb(0, 0, 0);"
+            viewBox="0 0 123 123"
           >
-            <svg
-              fill="#131313"
-              height="18px"
-              stroke="transparent"
-              viewBox="0 0 18 18"
-              width="18px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5.08042 8.66148C5.08043 8.58693 5.09517 8.51313 5.12378 8.44429C5.1524 8.37546 5.19432 8.31297 5.24716 8.26038C5.30001 8.2078 5.3627 8.16617 5.43167 8.13788C5.50064 8.1096 5.57452 8.09522 5.64907 8.09557L6.59187 8.09865C6.74218 8.09865 6.88635 8.15836 6.99263 8.26465C7.09893 8.37094 7.15865 8.5151 7.15865 8.66543V12.2303C7.26478 12.1988 7.4011 12.1652 7.55026 12.1301C7.65387 12.1058 7.74621 12.0471 7.8123 11.9637C7.87839 11.8803 7.91434 11.777 7.91432 11.6705V7.24848C7.91432 7.09814 7.97403 6.95397 8.08032 6.84766C8.1866 6.74135 8.33077 6.68162 8.4811 6.68158H9.42577C9.57609 6.68162 9.72026 6.74135 9.82655 6.84766C9.93284 6.95397 9.99255 7.09814 9.99255 7.24848V11.3526C9.99255 11.3526 10.2291 11.2569 10.4595 11.1596C10.545 11.1234 10.6181 11.0629 10.6694 10.9854C10.7208 10.908 10.7482 10.8172 10.7483 10.7242V5.83152C10.7483 5.68122 10.808 5.53707 10.9143 5.43078C11.0206 5.32449 11.1647 5.26478 11.315 5.26474H12.2597C12.41 5.26474 12.5542 5.32445 12.6604 5.43075C12.7667 5.53704 12.8265 5.6812 12.8265 5.83152V9.86056C13.6455 9.267 14.4754 8.55315 15.1341 7.69474C15.2297 7.57015 15.2929 7.42383 15.3181 7.26887C15.3434 7.1139 15.3299 6.95509 15.2788 6.8066C14.9739 5.9294 14.4894 5.12551 13.856 4.44636C13.2226 3.76722 12.4544 3.22777 11.6005 2.86256C10.7467 2.49734 9.82602 2.31439 8.89742 2.32542C7.96882 2.33645 7.05275 2.54121 6.20783 2.9266C5.36291 3.31199 4.60774 3.86952 3.99066 4.56352C3.37358 5.25751 2.90817 6.07269 2.62422 6.95689C2.34027 7.84107 2.24403 8.7748 2.34166 9.69832C2.43929 10.6218 2.72863 11.5148 3.19118 12.3201C3.27176 12.459 3.39031 12.572 3.53289 12.6459C3.67548 12.7198 3.83618 12.7514 3.99614 12.7372C4.17482 12.7215 4.3973 12.6992 4.66181 12.6681C4.77695 12.655 4.88326 12.6001 4.96048 12.5137C5.0377 12.4273 5.08043 12.3155 5.08053 12.1996L5.08042 8.66148Z"
-                fill="#131313"
-              />
-              <path
-                d="M5.05957 14.3792C6.05531 15.1036 7.23206 15.5384 8.45961 15.6356C9.68716 15.7326 10.9176 15.4883 12.0149 14.9294C13.1122 14.3705 14.0334 13.519 14.6768 12.4691C15.3201 11.4191 15.6605 10.2116 15.6601 8.98024C15.6601 8.82658 15.653 8.67457 15.6428 8.52344C13.2041 12.1605 8.70139 13.8609 5.05978 14.3786"
-                fill="#131313"
-              />
-            </svg>
+            <path
+              d="M25.79 58.4149C25.7901 57.7357 25.9244 57.0633 26.1851 56.4361C26.4458 55.809 26.8278 55.2396 27.3092 54.7605C27.7907 54.2814 28.3619 53.9021 28.9903 53.6444C29.6187 53.3867 30.2918 53.2557 30.971 53.2589L39.561 53.2869C40.9305 53.2869 42.244 53.831 43.2124 54.7994C44.1809 55.7678 44.725 57.0813 44.725 58.4509V90.9309C45.692 90.6439 46.934 90.3379 48.293 90.0179C49.237 89.7962 50.0783 89.262 50.6805 88.5019C51.2826 87.7418 51.6102 86.8006 51.61 85.8309V45.5409C51.61 44.1712 52.154 42.8576 53.1224 41.889C54.0908 40.9204 55.4043 40.3762 56.774 40.3759H65.381C66.7506 40.3762 68.0641 40.9204 69.0325 41.889C70.0009 42.8576 70.545 44.1712 70.545 45.5409V82.9339C70.545 82.9339 72.7 82.0619 74.799 81.1759C75.5787 80.8462 76.2441 80.2941 76.7122 79.5886C77.1803 78.8832 77.4302 78.0555 77.431 77.2089V32.6309C77.431 31.2615 77.9749 29.9481 78.9431 28.9797C79.9113 28.0113 81.2245 27.4672 82.5939 27.4669H91.201C92.5706 27.4669 93.884 28.0109 94.8525 28.9794C95.8209 29.9478 96.365 31.2613 96.365 32.6309V69.3399C103.827 63.9319 111.389 57.4279 117.39 49.6069C118.261 48.4717 118.837 47.1386 119.067 45.7267C119.297 44.3148 119.174 42.8678 118.709 41.5149C115.931 33.5227 111.516 26.1983 105.745 20.0105C99.974 13.8228 92.9749 8.90785 85.1955 5.58032C77.4161 2.2528 69.0277 0.585938 60.5671 0.686416C52.1065 0.786893 43.7601 2.6525 36.062 6.16383C28.3638 9.67517 21.4834 14.7549 15.8611 21.078C10.2388 27.401 5.99842 34.8282 3.41131 42.8842C0.824207 50.9401 -0.0526487 59.4474 0.836851 67.8617C1.72635 76.276 4.36263 84.4119 8.57696 91.7489C9.31111 93.0145 10.3912 94.0444 11.6903 94.7175C12.9894 95.3906 14.4536 95.679 15.911 95.5489C17.539 95.4059 19.566 95.2029 21.976 94.9199C23.0251 94.8008 23.9937 94.2999 24.6972 93.5126C25.4008 92.7253 25.7901 91.7067 25.791 90.6509L25.79 58.4149Z"
+              fill="currentColor"
+            />
+            <path
+              d="M25.6021 110.51C34.6744 117.11 45.3959 121.072 56.5802 121.957C67.7646 122.841 78.9757 120.615 88.9731 115.523C98.9705 110.431 107.364 102.673 113.226 93.1068C119.087 83.5405 122.188 72.539 122.185 61.3197C122.185 59.9197 122.12 58.5347 122.027 57.1577C99.808 90.2957 58.7831 105.788 25.604 110.505"
+              fill="currentColor"
+            />
+          </svg>
+          <span
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            data-disable-theme="true"
+          >
             Etherscan
           </span>
-        </a>
+        </div>
       </div>
       <span
         class="font_body _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-24px _fontWeight-f-weight-bo3548 _maxWidth-10037 _maxHeight-fit-content _whiteSpace-pre-wrap"
         data-disable-theme="true"
       >
         <p
-          class="c1"
+          class="c0"
         >
           No token information available
         </p>
@@ -125,29 +105,12 @@ exports[`TokenDescription > no description or social buttons shown when not avai
 
 exports[`TokenDescription > renders token information correctly with defaults 1`] = `
 <DocumentFragment>
-  .c0 {
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c0 :hover {
-  opacity: 0.6;
-}
-
-.c0 :active {
-  opacity: 0.4;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <div
-      class="_gap-_xl_24px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1573 _width-10037"
+      class="_gap-_xl_t-space-gap1602 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1573 _width-10037"
       data-testid="token-details-info-section"
     >
       <h3
@@ -157,7 +120,7 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
         Info
       </h3>
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _width-10037 _flexWrap-wrap"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _gap-t-space-gap56 _width-10037"
         data-testid="token-details-info-links"
       >
         <span
@@ -190,91 +153,81 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
           </svg>
           0xA0b8...eB48
         </span>
-        <a
-          class="c0"
-          href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-          rel="noopener noreferrer"
-          target="_blank"
+        <div
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; gap: 4px; background-color: rgb(249, 249, 249); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; padding: 8px 12px 8px 12px; transform: [object Object];"
+          tabindex="0"
         >
-          <span
-            class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741 _display-flex _flexDirection-row _alignItems-center _gap-t-space-gap52 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _backgroundColor-surface2 _width-max-content _cursor-pointer"
-            data-disable-theme="true"
-            style="transition: 100ms;"
+          <svg
+            fill="none"
+            stroke-width="8"
+            style="width: 18px; height: 18px; color: rgb(0, 0, 0);"
+            viewBox="0 0 123 123"
           >
-            <svg
-              fill="#131313"
-              height="18px"
-              stroke="transparent"
-              viewBox="0 0 18 18"
-              width="18px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5.08042 8.66148C5.08043 8.58693 5.09517 8.51313 5.12378 8.44429C5.1524 8.37546 5.19432 8.31297 5.24716 8.26038C5.30001 8.2078 5.3627 8.16617 5.43167 8.13788C5.50064 8.1096 5.57452 8.09522 5.64907 8.09557L6.59187 8.09865C6.74218 8.09865 6.88635 8.15836 6.99263 8.26465C7.09893 8.37094 7.15865 8.5151 7.15865 8.66543V12.2303C7.26478 12.1988 7.4011 12.1652 7.55026 12.1301C7.65387 12.1058 7.74621 12.0471 7.8123 11.9637C7.87839 11.8803 7.91434 11.777 7.91432 11.6705V7.24848C7.91432 7.09814 7.97403 6.95397 8.08032 6.84766C8.1866 6.74135 8.33077 6.68162 8.4811 6.68158H9.42577C9.57609 6.68162 9.72026 6.74135 9.82655 6.84766C9.93284 6.95397 9.99255 7.09814 9.99255 7.24848V11.3526C9.99255 11.3526 10.2291 11.2569 10.4595 11.1596C10.545 11.1234 10.6181 11.0629 10.6694 10.9854C10.7208 10.908 10.7482 10.8172 10.7483 10.7242V5.83152C10.7483 5.68122 10.808 5.53707 10.9143 5.43078C11.0206 5.32449 11.1647 5.26478 11.315 5.26474H12.2597C12.41 5.26474 12.5542 5.32445 12.6604 5.43075C12.7667 5.53704 12.8265 5.6812 12.8265 5.83152V9.86056C13.6455 9.267 14.4754 8.55315 15.1341 7.69474C15.2297 7.57015 15.2929 7.42383 15.3181 7.26887C15.3434 7.1139 15.3299 6.95509 15.2788 6.8066C14.9739 5.9294 14.4894 5.12551 13.856 4.44636C13.2226 3.76722 12.4544 3.22777 11.6005 2.86256C10.7467 2.49734 9.82602 2.31439 8.89742 2.32542C7.96882 2.33645 7.05275 2.54121 6.20783 2.9266C5.36291 3.31199 4.60774 3.86952 3.99066 4.56352C3.37358 5.25751 2.90817 6.07269 2.62422 6.95689C2.34027 7.84107 2.24403 8.7748 2.34166 9.69832C2.43929 10.6218 2.72863 11.5148 3.19118 12.3201C3.27176 12.459 3.39031 12.572 3.53289 12.6459C3.67548 12.7198 3.83618 12.7514 3.99614 12.7372C4.17482 12.7215 4.3973 12.6992 4.66181 12.6681C4.77695 12.655 4.88326 12.6001 4.96048 12.5137C5.0377 12.4273 5.08043 12.3155 5.08053 12.1996L5.08042 8.66148Z"
-                fill="#131313"
-              />
-              <path
-                d="M5.05957 14.3792C6.05531 15.1036 7.23206 15.5384 8.45961 15.6356C9.68716 15.7326 10.9176 15.4883 12.0149 14.9294C13.1122 14.3705 14.0334 13.519 14.6768 12.4691C15.3201 11.4191 15.6605 10.2116 15.6601 8.98024C15.6601 8.82658 15.653 8.67457 15.6428 8.52344C13.2041 12.1605 8.70139 13.8609 5.05978 14.3786"
-                fill="#131313"
-              />
-            </svg>
+            <path
+              d="M25.79 58.4149C25.7901 57.7357 25.9244 57.0633 26.1851 56.4361C26.4458 55.809 26.8278 55.2396 27.3092 54.7605C27.7907 54.2814 28.3619 53.9021 28.9903 53.6444C29.6187 53.3867 30.2918 53.2557 30.971 53.2589L39.561 53.2869C40.9305 53.2869 42.244 53.831 43.2124 54.7994C44.1809 55.7678 44.725 57.0813 44.725 58.4509V90.9309C45.692 90.6439 46.934 90.3379 48.293 90.0179C49.237 89.7962 50.0783 89.262 50.6805 88.5019C51.2826 87.7418 51.6102 86.8006 51.61 85.8309V45.5409C51.61 44.1712 52.154 42.8576 53.1224 41.889C54.0908 40.9204 55.4043 40.3762 56.774 40.3759H65.381C66.7506 40.3762 68.0641 40.9204 69.0325 41.889C70.0009 42.8576 70.545 44.1712 70.545 45.5409V82.9339C70.545 82.9339 72.7 82.0619 74.799 81.1759C75.5787 80.8462 76.2441 80.2941 76.7122 79.5886C77.1803 78.8832 77.4302 78.0555 77.431 77.2089V32.6309C77.431 31.2615 77.9749 29.9481 78.9431 28.9797C79.9113 28.0113 81.2245 27.4672 82.5939 27.4669H91.201C92.5706 27.4669 93.884 28.0109 94.8525 28.9794C95.8209 29.9478 96.365 31.2613 96.365 32.6309V69.3399C103.827 63.9319 111.389 57.4279 117.39 49.6069C118.261 48.4717 118.837 47.1386 119.067 45.7267C119.297 44.3148 119.174 42.8678 118.709 41.5149C115.931 33.5227 111.516 26.1983 105.745 20.0105C99.974 13.8228 92.9749 8.90785 85.1955 5.58032C77.4161 2.2528 69.0277 0.585938 60.5671 0.686416C52.1065 0.786893 43.7601 2.6525 36.062 6.16383C28.3638 9.67517 21.4834 14.7549 15.8611 21.078C10.2388 27.401 5.99842 34.8282 3.41131 42.8842C0.824207 50.9401 -0.0526487 59.4474 0.836851 67.8617C1.72635 76.276 4.36263 84.4119 8.57696 91.7489C9.31111 93.0145 10.3912 94.0444 11.6903 94.7175C12.9894 95.3906 14.4536 95.679 15.911 95.5489C17.539 95.4059 19.566 95.2029 21.976 94.9199C23.0251 94.8008 23.9937 94.2999 24.6972 93.5126C25.4008 92.7253 25.7901 91.7067 25.791 90.6509L25.79 58.4149Z"
+              fill="currentColor"
+            />
+            <path
+              d="M25.6021 110.51C34.6744 117.11 45.3959 121.072 56.5802 121.957C67.7646 122.841 78.9757 120.615 88.9731 115.523C98.9705 110.431 107.364 102.673 113.226 93.1068C119.087 83.5405 122.188 72.539 122.185 61.3197C122.185 59.9197 122.12 58.5347 122.027 57.1577C99.808 90.2957 58.7831 105.788 25.604 110.505"
+              fill="currentColor"
+            />
+          </svg>
+          <span
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            data-disable-theme="true"
+          >
             Etherscan
           </span>
-        </a>
-        <a
-          class="c0"
-          href="https://www.circle.com/en/usdc"
-          rel="noopener noreferrer"
-          target="_blank"
+        </div>
+        <div
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; gap: 4px; background-color: rgb(249, 249, 249); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; padding: 8px 12px 8px 12px; transform: [object Object];"
+          tabindex="0"
         >
-          <span
-            class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741 _display-flex _flexDirection-row _alignItems-center _gap-t-space-gap52 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _backgroundColor-surface2 _width-max-content _cursor-pointer"
-            data-disable-theme="true"
-            style="transition: 100ms;"
+          <svg
+            fill="none"
+            stroke-width="8"
+            style="width: 18px; height: 18px; color: rgb(19, 19, 19);"
+            viewBox="0 0 16 16"
           >
-            <svg
-              fill="#131313"
-              height="18px"
-              stroke="transparent"
-              viewBox="0 0 18 18"
-              width="18px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5.12245 9.5625C5.23495 11.8725 6.01495 14.2275 7.37245 16.32C4.19245 15.615 1.76996 12.8925 1.52246 9.5625H5.12245ZM7.37245 1.67999C4.19245 2.38499 1.76996 5.1075 1.52246 8.4375H5.12245C5.23495 6.1275 6.01495 3.77249 7.37245 1.67999ZM9.14997 1.5H8.84995L8.62496 1.82249C7.19996 3.84749 6.36745 6.1725 6.24745 8.4375H11.7525C11.6325 6.1725 10.8 3.84749 9.37496 1.82249L9.14997 1.5ZM6.24745 9.5625C6.36745 11.8275 7.19996 14.1525 8.62496 16.1775L8.84995 16.5H9.14997L9.37496 16.1775C10.8 14.1525 11.6325 11.8275 11.7525 9.5625H6.24745ZM12.8775 9.5625C12.765 11.8725 11.985 14.2275 10.6275 16.32C13.8075 15.615 16.23 12.8925 16.4775 9.5625H12.8775ZM16.4775 8.4375C16.23 5.1075 13.8075 2.38499 10.6275 1.67999C11.985 3.77249 12.765 6.1275 12.8775 8.4375H16.4775Z"
-                fill="#131313"
-              />
-            </svg>
+            <path
+              d="M4.12251 8.5625C4.23501 10.8725 5.01501 13.2275 6.37251 15.32C3.19251 14.615 0.770022 11.8925 0.522522 8.5625H4.12251ZM6.37251 0.679993C3.19251 1.38499 0.770022 4.1075 0.522522 7.4375H4.12251C4.23501 5.1275 5.01501 2.77249 6.37251 0.679993ZM8.15003 0.5H7.85001L7.62502 0.822495C6.20002 2.84749 5.36751 5.1725 5.24751 7.4375H10.7525C10.6325 5.1725 9.80002 2.84749 8.37502 0.822495L8.15003 0.5ZM5.24751 8.5625C5.36751 10.8275 6.20002 13.1525 7.62502 15.1775L7.85001 15.5H8.15003L8.37502 15.1775C9.80002 13.1525 10.6325 10.8275 10.7525 8.5625H5.24751ZM11.8775 8.5625C11.765 10.8725 10.985 13.2275 9.62753 15.32C12.8075 14.615 15.23 11.8925 15.4775 8.5625H11.8775ZM15.4775 7.4375C15.23 4.1075 12.8075 1.38499 9.62753 0.679993C10.985 2.77249 11.765 5.1275 11.8775 7.4375H15.4775Z"
+              fill="currentColor"
+            />
+          </svg>
+          <span
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            data-disable-theme="true"
+          >
             Website
           </span>
-        </a>
-        <a
-          class="c0"
-          href="https://x.com/circle"
-          rel="noopener noreferrer"
-          target="_blank"
+        </div>
+        <div
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; gap: 4px; background-color: rgb(249, 249, 249); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; padding: 8px 12px 8px 12px; transform: [object Object];"
+          tabindex="0"
         >
-          <span
-            class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741 _display-flex _flexDirection-row _alignItems-center _gap-t-space-gap52 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _backgroundColor-surface2 _width-max-content _cursor-pointer"
-            data-disable-theme="true"
-            style="transition: 100ms;"
+          <svg
+            fill="currentColor"
+            stroke-width="8"
+            style="width: 18px; height: 18px; color: rgb(19, 19, 19);"
+            viewBox="0 0 512 512"
           >
-            <svg
-              fill="#131313"
-              height="18px"
-              stroke="transparent"
-              viewBox="0 0 18 18"
-              width="18px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12.8761 3H14.9451L10.4251 8.16609L15.7425 15.196H11.579L8.31797 10.9324L4.58662 15.196H2.51644L7.35104 9.67026L2.25 3H6.51922L9.46689 6.89708L12.8761 3ZM12.15 13.9576H13.2964L5.89628 4.17332H4.66605L12.15 13.9576Z"
-                fill="#131313"
-              />
-            </svg>
+            <path
+              d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
+            />
+          </svg>
+          <span
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            data-disable-theme="true"
+          >
             Twitter
           </span>
-        </a>
+        </div>
       </div>
       <span
         class="font_body _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-24px _fontWeight-f-weight-bo3548 _maxWidth-10037 _maxHeight-fit-content _whiteSpace-pre-wrap"
@@ -311,29 +264,12 @@ exports[`TokenDescription > renders token information correctly with defaults 1`
 
 exports[`TokenDescription > truncates description and shows more 1`] = `
 <DocumentFragment>
-  .c0 {
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
-  font-weight: 500;
-}
-
-.c0 :hover {
-  opacity: 0.6;
-}
-
-.c0 :active {
-  opacity: 0.4;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <div
-      class="_gap-_xl_24px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1573 _width-10037"
+      class="_gap-_xl_t-space-gap1602 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-t-space-gap1573 _width-10037"
       data-testid="token-details-info-section"
     >
       <h3
@@ -343,7 +279,7 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
         Info
       </h3>
       <div
-        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _width-10037 _flexWrap-wrap"
+        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _gap-t-space-gap56 _width-10037"
         data-testid="token-details-info-links"
       >
         <span
@@ -376,91 +312,81 @@ exports[`TokenDescription > truncates description and shows more 1`] = `
           </svg>
           0xA0b8...eB48
         </span>
-        <a
-          class="c0"
-          href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
-          rel="noopener noreferrer"
-          target="_blank"
+        <div
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; gap: 4px; background-color: rgb(249, 249, 249); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; padding: 8px 12px 8px 12px; transform: [object Object];"
+          tabindex="0"
         >
-          <span
-            class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741 _display-flex _flexDirection-row _alignItems-center _gap-t-space-gap52 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _backgroundColor-surface2 _width-max-content _cursor-pointer"
-            data-disable-theme="true"
-            style="transition: 100ms;"
+          <svg
+            fill="none"
+            stroke-width="8"
+            style="width: 18px; height: 18px; color: rgb(0, 0, 0);"
+            viewBox="0 0 123 123"
           >
-            <svg
-              fill="#131313"
-              height="18px"
-              stroke="transparent"
-              viewBox="0 0 18 18"
-              width="18px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5.08042 8.66148C5.08043 8.58693 5.09517 8.51313 5.12378 8.44429C5.1524 8.37546 5.19432 8.31297 5.24716 8.26038C5.30001 8.2078 5.3627 8.16617 5.43167 8.13788C5.50064 8.1096 5.57452 8.09522 5.64907 8.09557L6.59187 8.09865C6.74218 8.09865 6.88635 8.15836 6.99263 8.26465C7.09893 8.37094 7.15865 8.5151 7.15865 8.66543V12.2303C7.26478 12.1988 7.4011 12.1652 7.55026 12.1301C7.65387 12.1058 7.74621 12.0471 7.8123 11.9637C7.87839 11.8803 7.91434 11.777 7.91432 11.6705V7.24848C7.91432 7.09814 7.97403 6.95397 8.08032 6.84766C8.1866 6.74135 8.33077 6.68162 8.4811 6.68158H9.42577C9.57609 6.68162 9.72026 6.74135 9.82655 6.84766C9.93284 6.95397 9.99255 7.09814 9.99255 7.24848V11.3526C9.99255 11.3526 10.2291 11.2569 10.4595 11.1596C10.545 11.1234 10.6181 11.0629 10.6694 10.9854C10.7208 10.908 10.7482 10.8172 10.7483 10.7242V5.83152C10.7483 5.68122 10.808 5.53707 10.9143 5.43078C11.0206 5.32449 11.1647 5.26478 11.315 5.26474H12.2597C12.41 5.26474 12.5542 5.32445 12.6604 5.43075C12.7667 5.53704 12.8265 5.6812 12.8265 5.83152V9.86056C13.6455 9.267 14.4754 8.55315 15.1341 7.69474C15.2297 7.57015 15.2929 7.42383 15.3181 7.26887C15.3434 7.1139 15.3299 6.95509 15.2788 6.8066C14.9739 5.9294 14.4894 5.12551 13.856 4.44636C13.2226 3.76722 12.4544 3.22777 11.6005 2.86256C10.7467 2.49734 9.82602 2.31439 8.89742 2.32542C7.96882 2.33645 7.05275 2.54121 6.20783 2.9266C5.36291 3.31199 4.60774 3.86952 3.99066 4.56352C3.37358 5.25751 2.90817 6.07269 2.62422 6.95689C2.34027 7.84107 2.24403 8.7748 2.34166 9.69832C2.43929 10.6218 2.72863 11.5148 3.19118 12.3201C3.27176 12.459 3.39031 12.572 3.53289 12.6459C3.67548 12.7198 3.83618 12.7514 3.99614 12.7372C4.17482 12.7215 4.3973 12.6992 4.66181 12.6681C4.77695 12.655 4.88326 12.6001 4.96048 12.5137C5.0377 12.4273 5.08043 12.3155 5.08053 12.1996L5.08042 8.66148Z"
-                fill="#131313"
-              />
-              <path
-                d="M5.05957 14.3792C6.05531 15.1036 7.23206 15.5384 8.45961 15.6356C9.68716 15.7326 10.9176 15.4883 12.0149 14.9294C13.1122 14.3705 14.0334 13.519 14.6768 12.4691C15.3201 11.4191 15.6605 10.2116 15.6601 8.98024C15.6601 8.82658 15.653 8.67457 15.6428 8.52344C13.2041 12.1605 8.70139 13.8609 5.05978 14.3786"
-                fill="#131313"
-              />
-            </svg>
+            <path
+              d="M25.79 58.4149C25.7901 57.7357 25.9244 57.0633 26.1851 56.4361C26.4458 55.809 26.8278 55.2396 27.3092 54.7605C27.7907 54.2814 28.3619 53.9021 28.9903 53.6444C29.6187 53.3867 30.2918 53.2557 30.971 53.2589L39.561 53.2869C40.9305 53.2869 42.244 53.831 43.2124 54.7994C44.1809 55.7678 44.725 57.0813 44.725 58.4509V90.9309C45.692 90.6439 46.934 90.3379 48.293 90.0179C49.237 89.7962 50.0783 89.262 50.6805 88.5019C51.2826 87.7418 51.6102 86.8006 51.61 85.8309V45.5409C51.61 44.1712 52.154 42.8576 53.1224 41.889C54.0908 40.9204 55.4043 40.3762 56.774 40.3759H65.381C66.7506 40.3762 68.0641 40.9204 69.0325 41.889C70.0009 42.8576 70.545 44.1712 70.545 45.5409V82.9339C70.545 82.9339 72.7 82.0619 74.799 81.1759C75.5787 80.8462 76.2441 80.2941 76.7122 79.5886C77.1803 78.8832 77.4302 78.0555 77.431 77.2089V32.6309C77.431 31.2615 77.9749 29.9481 78.9431 28.9797C79.9113 28.0113 81.2245 27.4672 82.5939 27.4669H91.201C92.5706 27.4669 93.884 28.0109 94.8525 28.9794C95.8209 29.9478 96.365 31.2613 96.365 32.6309V69.3399C103.827 63.9319 111.389 57.4279 117.39 49.6069C118.261 48.4717 118.837 47.1386 119.067 45.7267C119.297 44.3148 119.174 42.8678 118.709 41.5149C115.931 33.5227 111.516 26.1983 105.745 20.0105C99.974 13.8228 92.9749 8.90785 85.1955 5.58032C77.4161 2.2528 69.0277 0.585938 60.5671 0.686416C52.1065 0.786893 43.7601 2.6525 36.062 6.16383C28.3638 9.67517 21.4834 14.7549 15.8611 21.078C10.2388 27.401 5.99842 34.8282 3.41131 42.8842C0.824207 50.9401 -0.0526487 59.4474 0.836851 67.8617C1.72635 76.276 4.36263 84.4119 8.57696 91.7489C9.31111 93.0145 10.3912 94.0444 11.6903 94.7175C12.9894 95.3906 14.4536 95.679 15.911 95.5489C17.539 95.4059 19.566 95.2029 21.976 94.9199C23.0251 94.8008 23.9937 94.2999 24.6972 93.5126C25.4008 92.7253 25.7901 91.7067 25.791 90.6509L25.79 58.4149Z"
+              fill="currentColor"
+            />
+            <path
+              d="M25.6021 110.51C34.6744 117.11 45.3959 121.072 56.5802 121.957C67.7646 122.841 78.9757 120.615 88.9731 115.523C98.9705 110.431 107.364 102.673 113.226 93.1068C119.087 83.5405 122.188 72.539 122.185 61.3197C122.185 59.9197 122.12 58.5347 122.027 57.1577C99.808 90.2957 58.7831 105.788 25.604 110.505"
+              fill="currentColor"
+            />
+          </svg>
+          <span
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            data-disable-theme="true"
+          >
             Etherscan
           </span>
-        </a>
-        <a
-          class="c0"
-          href="https://www.circle.com/en/usdc"
-          rel="noopener noreferrer"
-          target="_blank"
+        </div>
+        <div
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; gap: 4px; background-color: rgb(249, 249, 249); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; padding: 8px 12px 8px 12px; transform: [object Object];"
+          tabindex="0"
         >
-          <span
-            class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741 _display-flex _flexDirection-row _alignItems-center _gap-t-space-gap52 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _backgroundColor-surface2 _width-max-content _cursor-pointer"
-            data-disable-theme="true"
-            style="transition: 100ms;"
+          <svg
+            fill="none"
+            stroke-width="8"
+            style="width: 18px; height: 18px; color: rgb(19, 19, 19);"
+            viewBox="0 0 16 16"
           >
-            <svg
-              fill="#131313"
-              height="18px"
-              stroke="transparent"
-              viewBox="0 0 18 18"
-              width="18px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5.12245 9.5625C5.23495 11.8725 6.01495 14.2275 7.37245 16.32C4.19245 15.615 1.76996 12.8925 1.52246 9.5625H5.12245ZM7.37245 1.67999C4.19245 2.38499 1.76996 5.1075 1.52246 8.4375H5.12245C5.23495 6.1275 6.01495 3.77249 7.37245 1.67999ZM9.14997 1.5H8.84995L8.62496 1.82249C7.19996 3.84749 6.36745 6.1725 6.24745 8.4375H11.7525C11.6325 6.1725 10.8 3.84749 9.37496 1.82249L9.14997 1.5ZM6.24745 9.5625C6.36745 11.8275 7.19996 14.1525 8.62496 16.1775L8.84995 16.5H9.14997L9.37496 16.1775C10.8 14.1525 11.6325 11.8275 11.7525 9.5625H6.24745ZM12.8775 9.5625C12.765 11.8725 11.985 14.2275 10.6275 16.32C13.8075 15.615 16.23 12.8925 16.4775 9.5625H12.8775ZM16.4775 8.4375C16.23 5.1075 13.8075 2.38499 10.6275 1.67999C11.985 3.77249 12.765 6.1275 12.8775 8.4375H16.4775Z"
-                fill="#131313"
-              />
-            </svg>
+            <path
+              d="M4.12251 8.5625C4.23501 10.8725 5.01501 13.2275 6.37251 15.32C3.19251 14.615 0.770022 11.8925 0.522522 8.5625H4.12251ZM6.37251 0.679993C3.19251 1.38499 0.770022 4.1075 0.522522 7.4375H4.12251C4.23501 5.1275 5.01501 2.77249 6.37251 0.679993ZM8.15003 0.5H7.85001L7.62502 0.822495C6.20002 2.84749 5.36751 5.1725 5.24751 7.4375H10.7525C10.6325 5.1725 9.80002 2.84749 8.37502 0.822495L8.15003 0.5ZM5.24751 8.5625C5.36751 10.8275 6.20002 13.1525 7.62502 15.1775L7.85001 15.5H8.15003L8.37502 15.1775C9.80002 13.1525 10.6325 10.8275 10.7525 8.5625H5.24751ZM11.8775 8.5625C11.765 10.8725 10.985 13.2275 9.62753 15.32C12.8075 14.615 15.23 11.8925 15.4775 8.5625H11.8775ZM15.4775 7.4375C15.23 4.1075 12.8075 1.38499 9.62753 0.679993C10.985 2.77249 11.765 5.1275 11.8775 7.4375H15.4775Z"
+              fill="currentColor"
+            />
+          </svg>
+          <span
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            data-disable-theme="true"
+          >
             Website
           </span>
-        </a>
-        <a
-          class="c0"
-          href="https://x.com/circle"
-          rel="noopener noreferrer"
-          target="_blank"
+        </div>
+        <div
+          class="is_TouchableArea  t_group_true"
+          role="button"
+          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; cursor: pointer; outline-color: rgba(0, 0, 0, 0); opacity: 1; align-items: center; gap: 4px; background-color: rgb(249, 249, 249); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; padding: 8px 12px 8px 12px; transform: [object Object];"
+          tabindex="0"
         >
-          <span
-            class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0--2s _textDecorationLine-_platformweb_none _opacity-0hover-0--8 _opacity-0active-0--6 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741 _display-flex _flexDirection-row _alignItems-center _gap-t-space-gap52 _pt-t-space-pad95589114 _pb-t-space-pad95589114 _pr-t-space-pad1331704929 _pl-t-space-pad1331704929 _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424 _backgroundColor-surface2 _width-max-content _cursor-pointer"
-            data-disable-theme="true"
-            style="transition: 100ms;"
+          <svg
+            fill="currentColor"
+            stroke-width="8"
+            style="width: 18px; height: 18px; color: rgb(19, 19, 19);"
+            viewBox="0 0 512 512"
           >
-            <svg
-              fill="#131313"
-              height="18px"
-              stroke="transparent"
-              viewBox="0 0 18 18"
-              width="18px"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M12.8761 3H14.9451L10.4251 8.16609L15.7425 15.196H11.579L8.31797 10.9324L4.58662 15.196H2.51644L7.35104 9.67026L2.25 3H6.51922L9.46689 6.89708L12.8761 3ZM12.15 13.9576H13.2964L5.89628 4.17332H4.66605L12.15 13.9576Z"
-                fill="#131313"
-              />
-            </svg>
+            <path
+              d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z"
+            />
+          </svg>
+          <span
+            class="font_button _color-_grouptrue-hover_neutral1Hov3121676 _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-smal108 _lineHeight-f-lineHeigh1269072494 _fontWeight-f-weight-me3083741"
+            data-disable-theme="true"
+          >
             Twitter
           </span>
-        </a>
+        </div>
       </div>
       <span
         class="font_body _whiteSpace-_platformweb_nowrap _overflowX-_platformweb_hidden _overflowY-_platformweb_hidden _textOverflow-_platformweb_ellipsis _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-neutral1 _fontFamily-f-family _wordWrap-break-word _fontSize-f-size-larg101 _lineHeight-24px _fontWeight-f-weight-bo3548 _maxWidth-10037 _maxHeight-fit-content _whiteSpace-pre-wrap"

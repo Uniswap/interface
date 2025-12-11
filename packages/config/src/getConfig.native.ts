@@ -37,8 +37,16 @@ import {
 } from 'react-native-dotenv'
 import { isNonTestDev } from 'utilities/src/environment/constants'
 
+// Module-level cache for config to avoid recomputing on every call
+let cachedConfig: Config | undefined
+
 // eslint-disable-next-line complexity
 export const getConfig = (): Config => {
+  // Return cached config if already computed
+  if (cachedConfig !== undefined) {
+    return cachedConfig
+  }
+
   /**
    * Naming requirements for different environments:
    * - Web ENV vars: must have process.env.REACT_APP_<var_name>
@@ -110,5 +118,7 @@ export const getConfig = (): Config => {
     console.debug('Using app config:', config)
   }
 
-  return Object.freeze(config)
+  // Cache and return frozen config
+  cachedConfig = Object.freeze(config)
+  return cachedConfig
 }

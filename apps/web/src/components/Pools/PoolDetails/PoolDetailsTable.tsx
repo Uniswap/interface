@@ -6,7 +6,7 @@ import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
 import { PoolDetailsPositionsTable } from 'components/Pools/PoolDetails/PoolDetailsPositionsTable'
 import { PoolDetailsTransactionsTable } from 'components/Pools/PoolDetails/PoolDetailsTransactionsTable'
 import { useAccount } from 'hooks/useAccount'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
@@ -18,7 +18,7 @@ enum PoolDetailsTableTabs {
   POSITIONS = 'positions',
 }
 
-const TableHeader = styled(ThemedText.HeadlineMedium)<{ active: boolean }>`
+const TableHeader = deprecatedStyled(ThemedText.HeadlineMedium)<{ active: boolean }>`
   color: ${({ theme, active }) => !active && theme.neutral2};
   ${({ disabled }) => !disabled && ClickableStyle}
   user-select: none;

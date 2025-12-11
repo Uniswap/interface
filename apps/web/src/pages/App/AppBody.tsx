@@ -1,7 +1,7 @@
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
-export const BodyWrapper = styled.main<BodyWrapperProps>`
+export const BodyWrapper = deprecatedStyled.main<BodyWrapperProps>`
   position: relative;
   margin-top: ${({ $margin }) => $margin ?? '0px'};
   max-width: ${({ $maxWidth }) => $maxWidth ?? '420px'};

@@ -15,7 +15,7 @@ import { SwitchNetworkAction } from 'components/Popups/types'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { parseUnits } from 'ethers/lib/utils'
 import JSBI from 'jsbi'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useCallback, useMemo, useState } from 'react'
 import { useLimitContext } from 'state/limit/LimitContext'
 import { CurrencyState } from 'state/swap/types'
@@ -31,17 +31,17 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { formatCurrencyAmount as formatCurrencyAmountRaw } from 'utilities/src/format/localeBased'
 import { NumberType } from 'utilities/src/format/types'
 
-const Container = styled(InputPanel)`
+const Container = deprecatedStyled(InputPanel)`
   gap: 4px;
 `
 
-const OutputCurrencyContainer = styled(PrefetchBalancesWrapper)`
+const OutputCurrencyContainer = deprecatedStyled(PrefetchBalancesWrapper)`
   display: flex;
   align-items: center;
   justify-content: center;
 `
 
-const OutputCurrencyButton = styled.button`
+const OutputCurrencyButton = deprecatedStyled.button`
   user-select: none;
   white-space: nowrap;
   overflow: hidden;
@@ -52,7 +52,7 @@ const OutputCurrencyButton = styled.button`
   ${ClickableStyle}
 `
 
-const TextInputRow = styled.div`
+const TextInputRow = deprecatedStyled.div`
   display: flex;
   flex-grow: 1;
 `

@@ -7,12 +7,11 @@ import { useAbbreviatedTimeString } from 'components/Table/utils'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
-import { styled as deprecatedStyled } from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
 import { Link } from 'react-router'
-import { ClickableStyle, ClickableTamaguiStyle } from 'theme/components/styles'
+import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Flex, styled, Text, TextProps, View } from 'ui/src'
 import { breakpoints, zIndexes } from 'ui/src/theme'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
@@ -189,17 +188,20 @@ export const StyledExternalLink = styled(Anchor, {
   target: '_blank',
   rel: 'noopener noreferrer',
 })
-const StyledInternalLink = deprecatedStyled(Link)`
-  text-decoration: none;
-  ${ClickableStyle}
-  color: ${({ theme }) => theme.neutral1};
-`
+const StyledInternalLink = styled(Link, {
+  ...ClickableTamaguiStyle,
+  color: '$neutral1',
+  '$platform-web': {
+    textDecoration: 'none',
+  },
+})
 
-export const TableRowLink = deprecatedStyled(Link)`
-  color: none;
-  text-decoration: none;
-  cursor: pointer;
-`
+export const TableRowLink = styled(Link, {
+  cursor: 'pointer',
+  '$platform-web': {
+    textDecoration: 'none',
+  },
+})
 
 export const ClickableHeaderRow = styled(Flex, {
   row: true,

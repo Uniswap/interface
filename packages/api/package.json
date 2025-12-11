@@ -28,6 +28,7 @@
     "@uniswap/client-data-api": "0.0.24",
     "@uniswap/client-embeddedwallet": "0.0.16",
     "@uniswap/client-explore": "0.0.17",
+    "@uniswap/client-liquidity": "0.0.6",
     "@uniswap/client-notification-service": "0.0.3",
     "@uniswap/client-trading": "0.1.2",
     "@universe/config": "workspace:^",

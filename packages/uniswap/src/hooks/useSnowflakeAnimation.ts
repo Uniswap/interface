@@ -141,10 +141,15 @@ interface MouseInteractionResult {
  * @param speedFactor - Speed multiplier for snowfall (1.0 = normal, 0.5 = half speed)
  * @returns Array of active snowflakes, removal function, and optional mouse interaction handlers
  */
-export function useSnowflakeAnimation(
-  mouseInteraction?: MouseInteractionConfig,
+export function useSnowflakeAnimation({
+  mouseInteraction,
   speedFactor = 1.0,
-): {
+  delay = 900,
+}: {
+  mouseInteraction?: MouseInteractionConfig
+  speedFactor?: number
+  delay?: number
+}): {
   snowflakes: SnowflakeProps[]
   removeSnowflake: (id: number) => void
   mouseInteraction?: MouseInteractionResult
@@ -361,8 +366,8 @@ export function useSnowflakeAnimation(
   const spawnSnowflakes = useCallback(() => {
     // Calculate spawn amount to maintain high density with continuous spawning
     // Strategy: Spawn small groups frequently instead of large batches infrequently
-    const maxSnowflakeFactor = 59 // Density factor (lower = more snowflakes)
-    const maxSnowflakes = Math.floor(fullWidth / maxSnowflakeFactor)
+    const maxSnowflakeFactor = 60 // Density factor (lower = more snowflakes)
+    const maxSnowflakes = Math.floor(Math.max(fullWidth, 780) / maxSnowflakeFactor)
     const averageSpawnInterval = (MIN_SPAWN_INTERVAL + MAX_SPAWN_INTERVAL) / 2 // ~275ms average
     const oldBatchInterval = 1500 // Previous batch spawn interval for reference
     const spawnsPerOldBatch = oldBatchInterval / averageSpawnInterval // ~5.45 spawns in old cycle
@@ -452,7 +457,7 @@ export function useSnowflakeAnimation(
     // Start continuous spawning after initial delay
     const startTimer = setTimeout(() => {
       scheduleNextSpawn()
-    }, 900)
+    }, delay)
 
     // Cleanup: Stop spawning when component unmounts
     return () => {

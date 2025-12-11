@@ -9,8 +9,16 @@ import {
 export function NFTApproveSummaryItem({
   transaction,
   index,
+  isExternalProfile,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: NFTApproveTransactionInfo }
 }): JSX.Element {
-  return <NFTSummaryItem index={index} transaction={transaction} transactionType={TransactionType.NFTApprove} />
+  return (
+    <NFTSummaryItem
+      index={index}
+      transaction={transaction}
+      transactionType={TransactionType.NFTApprove}
+      isExternalProfile={isExternalProfile}
+    />
+  )
 }

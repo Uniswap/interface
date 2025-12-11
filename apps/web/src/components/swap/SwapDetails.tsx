@@ -8,7 +8,7 @@ import SwapLineItem, { SwapLineItemType } from 'components/swap/SwapLineItem'
 import { SwapCallbackError, SwapShowAcceptChanges } from 'components/swap/styled'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult } from 'hooks/useSwapCallback'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { PropsWithChildren, ReactNode, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { InterfaceTrade, LimitOrderTrade, RouterPreference } from 'state/routing/types'
@@ -23,11 +23,11 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
 
-const DetailsContainer = styled(Column)`
+const DetailsContainer = deprecatedStyled(Column)`
   padding: 0px 12px 8px;
 `
 
-const DropdownControllerWrapper = styled.div`
+const DropdownControllerWrapper = deprecatedStyled.div`
   display: flex;
   align-items: center;
   margin-right: -6px;
@@ -37,7 +37,7 @@ const DropdownControllerWrapper = styled.div`
   white-space: nowrap;
 `
 
-const DropdownButton = styled.button`
+const DropdownButton = deprecatedStyled.button`
   padding: 0px 16px;
   margin-top: 4px;
   margin-bottom: 4px;
@@ -50,7 +50,7 @@ const DropdownButton = styled.button`
   cursor: pointer;
 `
 
-const HelpLink = styled(ExternalLink)`
+const HelpLink = deprecatedStyled(ExternalLink)`
   width: 100%;
   text-align: center;
   margin-top: 16px;

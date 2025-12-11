@@ -1,5 +1,5 @@
 import Popover, { PopoverProps } from 'components/Popover'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { transparentize } from 'polished'
 import { Fragment, memo, PropsWithChildren, ReactNode, useEffect, useState } from 'react'
 import { Flex } from 'ui/src'
@@ -25,7 +25,7 @@ const getPaddingForSize = (size: TooltipSize) => {
   }
 }
 
-const TooltipContainer = styled.div<{ size: TooltipSize; padding?: number }>`
+const TooltipContainer = deprecatedStyled.div<{ size: TooltipSize; padding?: number }>`
   max-width: ${({ size }) => size};
   width: ${({ size }) => (size === TooltipSize.Max ? 'auto' : `calc(100vw - 16px)`)};
   cursor: default;

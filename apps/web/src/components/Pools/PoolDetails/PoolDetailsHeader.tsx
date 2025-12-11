@@ -20,7 +20,7 @@ import { PopupType } from 'components/Popups/types'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
 import { ActionButtonStyle, DropdownAction } from 'components/Tokens/TokenDetails/shared'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
@@ -28,16 +28,7 @@ import { Link } from 'react-router'
 import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
-import {
-  Flex,
-  Shine,
-  Text,
-  TouchableArea,
-  styled as tamaguiStyled,
-  useIsTouchDevice,
-  useMedia,
-  useSporeColors,
-} from 'ui/src'
+import { Flex, Shine, styled, Text, TouchableArea, useIsTouchDevice, useMedia, useSporeColors } from 'ui/src'
 import { ArrowDownArrowUp } from 'ui/src/components/icons/ArrowDownArrowUp'
 import { ChartBarCrossed } from 'ui/src/components/icons/ChartBarCrossed'
 import { Ellipsis } from 'ui/src/components/icons/Ellipsis'
@@ -51,7 +42,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { getChainUrlParam } from 'utils/chainParams'
 
-const StyledExternalLink = styled(ExternalLink)`
+const StyledExternalLink = deprecatedStyled(ExternalLink)`
   &:hover {
     // Override hover behavior from ExternalLink
     opacity: 1;
@@ -149,7 +140,7 @@ const PoolDetailsTitle = ({
   )
 }
 
-const ContractsDropdownRowContainer = tamaguiStyled(Flex, {
+const ContractsDropdownRowContainer = styled(Flex, {
   row: true,
   alignItems: 'center',
   cursor: 'pointer',
@@ -323,7 +314,7 @@ const PoolDetailsHeaderActions = ({
   )
 }
 
-const StyledLink = tamaguiStyled(Link, {
+const StyledLink = styled(Link, {
   color: '$neutral1',
   ...ClickableTamaguiStyle,
   '$platform-web': {

@@ -39,7 +39,7 @@
       }
     },
     "tradingapi:schema": {
-      "command": "curl https://api.uniswap.org/v2/trade/api.json -o ./src/clients/trading/api.json",
+      "command": "curl https://trading-api-labs.interface.gateway.uniswap.org/v1/api.json -o ./src/clients/trading/api.json",
       "options": {
         "cwd": "{projectRoot}"
       }

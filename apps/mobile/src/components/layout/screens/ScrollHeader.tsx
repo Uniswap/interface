@@ -12,13 +12,12 @@ import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 type ScrollHeaderProps = {
   scrollY: SharedValue<number>
   showHeaderScrollYDistance: number
+  fullScreen?: boolean
   // hard to type
   // biome-ignore lint/suspicious/noExplicitAny: Ref type varies based on list component used
   listRef: React.MutableRefObject<any>
   centerElement?: JSX.Element
   rightElement?: JSX.Element
-  alwaysShowCenterElement?: boolean
-  fullScreen?: boolean // Expand to device edges
   backgroundColor?: ColorTokens
   backButtonColor?: ColorTokens
 }
@@ -36,7 +35,6 @@ export function ScrollHeader({
   showHeaderScrollYDistance,
   centerElement,
   rightElement = <Flex width={iconSizes.icon24} />,
-  alwaysShowCenterElement,
   fullScreen = false,
   backgroundColor,
   backButtonColor,
@@ -74,11 +72,7 @@ export function ScrollHeader({
         >
           <BackButton color={backButtonColor} />
           <Flex shrink gap="$spacing16">
-            {alwaysShowCenterElement ? (
-              centerElement
-            ) : (
-              <AnimatedFlex style={visibleOnScrollStyle}>{centerElement}</AnimatedFlex>
-            )}
+            <AnimatedFlex style={visibleOnScrollStyle}>{centerElement}</AnimatedFlex>
           </Flex>
           {rightElement}
         </Flex>

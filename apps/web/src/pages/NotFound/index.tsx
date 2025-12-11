@@ -1,7 +1,7 @@
 import darkImage from 'assets/images/404-page-dark.png'
 import lightImage from 'assets/images/404-page-light.png'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
@@ -10,23 +10,23 @@ import { Button, Flex } from 'ui/src'
 import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
-const Image = styled.img`
+const Image = deprecatedStyled.img`
   max-width: 510px;
   width: 100%;
   padding: 0 75px;
 `
 
-const Container = styled.div`
+const Container = deprecatedStyled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
 `
 
-const Header = styled(Container)`
+const Header = deprecatedStyled(Container)`
   gap: 30px;
 `
 
-const PageWrapper = styled(Container)`
+const PageWrapper = deprecatedStyled(Container)`
   flex: 1;
   justify-content: center;
   gap: 50px;

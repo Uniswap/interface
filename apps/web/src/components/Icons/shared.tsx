@@ -1,4 +1,4 @@
-import { css, keyframes, styled } from 'lib/styled-components'
+import { css, deprecatedStyled, keyframes } from 'lib/styled-components'
 
 const rotateAnimation = keyframes`
   from {
@@ -13,7 +13,7 @@ const RotationStyle = css`
   animation: 2s ${rotateAnimation} linear infinite;
 `
 
-export const StyledSVG = styled.svg<{ size: string; stroke?: string; fill?: string }>`
+export const StyledSVG = deprecatedStyled.svg<{ size: string; stroke?: string; fill?: string }>`
   height: ${({ size }) => size};
   width: ${({ size }) => size};
   path {
@@ -23,6 +23,6 @@ export const StyledSVG = styled.svg<{ size: string; stroke?: string; fill?: stri
   }
 `
 
-export const StyledRotatingSVG = styled(StyledSVG)`
+export const StyledRotatingSVG = deprecatedStyled(StyledSVG)`
   ${RotationStyle}
 `

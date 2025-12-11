@@ -19,7 +19,7 @@
         "cwd": "{projectRoot}"
       },
       "cache": true,
-      "inputs": ["default", "!{projectRoot}/src/abis/types/**", "!{projectRoot}/src/data/graphql/**"],
+      "inputs": ["{projectRoot}/src/abis/**/*.json", "!{projectRoot}/src/abis/types/**"],
       "outputs": ["{projectRoot}/src/abis/types/*.ts", "{projectRoot}/src/abis/types/factories"]
     },
     "contracts:compile:v3": {
@@ -28,11 +28,8 @@
         "cwd": "{projectRoot}"
       },
       "cache": true,
-      "inputs": ["default", "!{projectRoot}/src/abis/types/**", "!{projectRoot}/src/data/graphql/**"],
-      "outputs": [
-        "{projectRoot}/src/abis/types/v3/**",
-        "{workspaceRoot}/node_modules/@uniswap/**/artifacts/contracts/**/*[!dbg].json"
-      ]
+      "inputs": ["{projectRoot}/package.json"],
+      "outputs": ["{projectRoot}/src/abis/types/v3/**"]
     },
     "contracts": {
       "command": "echo \"Compiling contracts...\"",

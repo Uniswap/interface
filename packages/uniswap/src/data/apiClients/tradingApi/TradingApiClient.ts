@@ -31,6 +31,7 @@ export enum TradingApiHeaders {
   Erc20EthEnabled = 'x-erc20eth-enabled',
   ChainedActionsEnabled = 'x-chained-actions-enabled',
   UnirouteEnabled = 'x-uniroute-enabled',
+  DisableUniswapInterfaceFees = 'x-disable-uniswap-interface-fees',
 }
 
 /**
@@ -53,11 +54,17 @@ export const getFeatureFlaggedHeaders = (
   const chainedActionsEnabled = getFeatureFlag(FeatureFlags.ChainedActions)
   const unirouteEnabled = getFeatureFlag(FeatureFlags.UnirouteEnabled)
   const ethAsErc20UniswapXEnabled = getFeatureFlag(FeatureFlags.EthAsErc20UniswapX)
+  const disableUniswapInterfaceFees = getFeatureFlag(FeatureFlags.NoUniswapInterfaceFees)
   switch (tradingApiPath) {
     case TRADING_API_PATHS.quote:
       addHeaderIfEnabled({ headers, key: TradingApiHeaders.UnirouteEnabled, enabled: unirouteEnabled })
       addHeaderIfEnabled({ headers, key: TradingApiHeaders.Erc20EthEnabled, enabled: ethAsErc20UniswapXEnabled })
       addHeaderIfEnabled({ headers, key: TradingApiHeaders.ChainedActionsEnabled, enabled: chainedActionsEnabled })
+      addHeaderIfEnabled({
+        headers,
+        key: TradingApiHeaders.DisableUniswapInterfaceFees,
+        enabled: disableUniswapInterfaceFees,
+      })
       break
     case TRADING_API_PATHS.plan:
       addHeaderIfEnabled({ headers, key: TradingApiHeaders.ChainedActionsEnabled, enabled: chainedActionsEnabled })

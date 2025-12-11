@@ -43,14 +43,12 @@ import type {
   WalletCheckDelegationResponseBody,
   WalletEncode7702RequestBody,
 } from '@universe/api/src/clients/trading/__generated__'
-import { RoutingPreference } from '@universe/api/src/clients/trading/__generated__'
+import { CreatePlanRequest, PlanResponse, RoutingPreference } from '@universe/api/src/clients/trading/__generated__'
 import type {
   DiscriminatedQuoteResponse,
   ExistingPlanRequest,
-  NewPlanRequest,
-  PlanResponse,
   SwappableTokensParams,
-  UpdateExistingPlanRequest,
+  UpdatePlanRequestWithPlanId,
 } from '@universe/api/src/clients/trading/tradeTypes'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -119,9 +117,9 @@ export interface TradingApiClient {
   checkWalletDelegationWithoutBatching: (
     params: WalletCheckDelegationRequestBody,
   ) => Promise<WalletCheckDelegationResponseBody>
-  createNewPlan: (params: NewPlanRequest) => Promise<PlanResponse>
+  createNewPlan: (params: CreatePlanRequest) => Promise<PlanResponse>
   fetchPlan: (params: ExistingPlanRequest) => Promise<PlanResponse>
-  updateExistingPlan: (params: UpdateExistingPlanRequest) => Promise<PlanResponse>
+  updateExistingPlan: (params: UpdatePlanRequestWithPlanId) => Promise<PlanResponse>
   getExistingPlan: (params: ExistingPlanRequest) => Promise<PlanResponse>
   refreshExistingPlan: (params: ExistingPlanRequest) => Promise<PlanResponse>
 }
@@ -380,7 +378,7 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
   })
 
   // TODO: SWAP-429 - Uses this endpoint.
-  const fetchNewPlan = createFetcher<NewPlanRequest, PlanResponse>({
+  const fetchNewPlan = createFetcher<CreatePlanRequest, PlanResponse>({
     client,
     url: getApiPath(TRADING_API_PATHS.plan),
     method: 'post',
@@ -398,7 +396,7 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     }),
   })
 
-  const updateExistingPlan = createFetcher<UpdateExistingPlanRequest, PlanResponse>({
+  const updateExistingPlan = createFetcher<UpdatePlanRequestWithPlanId, PlanResponse>({
     client,
     url: getApiPath(TRADING_API_PATHS.plan),
     method: 'patch',

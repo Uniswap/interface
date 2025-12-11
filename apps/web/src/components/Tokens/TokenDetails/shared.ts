@@ -1,4 +1,4 @@
-import { styled as deprecatedStyled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { colors } from 'theme/colors'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { TextProps } from 'ui/src'

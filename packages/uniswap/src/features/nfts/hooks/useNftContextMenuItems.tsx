@@ -1,4 +1,4 @@
-import { TokenReportEventType } from '@universe/api'
+import { ReportAssetType, TokenReportEventType } from '@universe/api'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -88,6 +88,7 @@ export function useNFTContextMenuItems({
         chainId,
         address: contractAddress,
         event: TokenReportEventType.FalseNegative,
+        assetType: ReportAssetType.NFT,
       })
 
       if (showNotification) {

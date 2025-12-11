@@ -149,6 +149,7 @@ function SwapFormDecimalPadContent({
         id={DecimalPadCalculatedSpaceId.Swap}
         decimalPadRef={decimalPadRef}
         additionalElementsHeight={additionalElementsHeight}
+        isDecimalPadReady={isDecimalPadReady}
       />
 
       <Flex

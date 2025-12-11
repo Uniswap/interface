@@ -12,6 +12,7 @@ import { shortenAddress } from 'utilities/src/addresses'
 export function UnknownSummaryItem({
   transaction,
   index,
+  isExternalProfile,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: UnknownTransactionInfo }
 }): JSX.Element {
@@ -45,5 +46,13 @@ export function UnknownSummaryItem({
     [colors.surface1, transaction.chainId, transaction.typeInfo.dappInfo?.icon, transaction.typeInfo.dappInfo?.name],
   )
 
-  return <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} />
+  return (
+    <TransactionSummaryLayout
+      caption={caption}
+      icon={icon}
+      index={index}
+      transaction={transaction}
+      isExternalProfile={isExternalProfile}
+    />
+  )
 }

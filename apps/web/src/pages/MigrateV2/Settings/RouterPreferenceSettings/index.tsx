@@ -1,7 +1,7 @@
 import Column from 'components/deprecated/Column'
 import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { Trans } from 'react-i18next'
 import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference } from 'state/user/hooks'
@@ -9,7 +9,7 @@ import { ThemedText } from 'theme/components'
 import { ExternalLink } from 'theme/components/Links'
 import { Switch } from 'ui/src'
 
-const InlineLink = styled(ThemedText.BodySmall)`
+const InlineLink = deprecatedStyled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.accent1};
   display: inline;
   cursor: pointer;

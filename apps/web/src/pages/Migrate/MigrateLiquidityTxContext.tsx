@@ -1,16 +1,9 @@
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { V2PairInfo, V3PositionInfo } from 'components/Liquidity/types'
-import { useMigrateLPPositionTxInfo } from 'pages/Migrate/hooks/useMigrateLPPositionTxInfo'
-import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext } from 'react'
-import { MigratePositionTxAndGasInfo } from 'uniswap/src/features/transactions/liquidity/types'
-
-interface MigratePositionTxContextType {
-  txInfo?: MigratePositionTxAndGasInfo
-  gasFeeEstimateUSD?: CurrencyAmount<Currency>
-  transactionError: boolean | string
-  refetch?: () => void
-  setTransactionError: Dispatch<SetStateAction<string | boolean>>
-}
+import {
+  MigratePositionTxContextType,
+  useMigrateLPPositionTxInfo,
+} from 'pages/Migrate/hooks/useMigrateLPPositionTxInfo'
+import { createContext, PropsWithChildren, useContext } from 'react'
 
 const MigratePositionTxContext = createContext<MigratePositionTxContextType | undefined>(undefined)
 
@@ -26,7 +19,7 @@ export function MigratePositionTxContextProvider({
   children,
   positionInfo,
 }: PropsWithChildren<{ positionInfo: V2PairInfo | V3PositionInfo }>): JSX.Element {
-  const { txInfo, transactionError, setTransactionError, refetch } = useMigrateLPPositionTxInfo({
+  const { txInfo, transactionError, setTransactionError, refetch, refundedAmounts } = useMigrateLPPositionTxInfo({
     positionInfo,
   })
 
@@ -34,6 +27,7 @@ export function MigratePositionTxContextProvider({
     <MigratePositionTxContext.Provider
       value={{
         txInfo,
+        refundedAmounts,
         transactionError,
         setTransactionError,
         refetch,

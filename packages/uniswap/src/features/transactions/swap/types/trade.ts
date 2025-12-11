@@ -835,7 +835,6 @@ export class UnwrapTrade extends BaseWrapTrade<TradingApi.Routing.UNWRAP, Unwrap
   }
 }
 
-// TODO: SWAP-458 - Subject to change.
 export class ChainedActionTrade {
   readonly routing = TradingApi.Routing.CHAINED
   quote: ChainedQuoteResponse
@@ -867,12 +866,12 @@ export class ChainedActionTrade {
     this.quote = quote
 
     const inputAmount = getCurrencyAmount({
-      value: this.quote.quote.input?.amount,
+      value: this.quote.quote.input.amount,
       valueType: ValueType.Raw,
       currency: currencyIn,
     })
     const outputAmount = getCurrencyAmount({
-      value: this.quote.quote.output?.amount,
+      value: this.quote.quote.output.amount,
       valueType: ValueType.Raw,
       currency: currencyOut,
     })

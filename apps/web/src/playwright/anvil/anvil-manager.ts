@@ -236,7 +236,6 @@ function createAnvilManager(configOverrides?: Partial<AnvilConfig>): AnvilManage
           '--hardfork',
           'prague',
           '--no-rate-limit',
-          '--disable-block-gas-limit',
           '--disable-code-size-limit',
           '--disable-min-priority-fee',
           '--print-traces',

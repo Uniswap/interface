@@ -1,10 +1,10 @@
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useRef } from 'react'
 import { Flex, FlexProps } from 'ui/src'
 import { v4 as uuid } from 'uuid'
 
 // Gradient with a fallback to solid color.
-const Gradient = styled.div`
+const Gradient = deprecatedStyled.div`
   color: #4673fa;
 
   @supports (-webkit-background-clip: text) and (-webkit-text-fill-color: transparent) {

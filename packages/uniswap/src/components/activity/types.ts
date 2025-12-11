@@ -4,6 +4,7 @@ import { TransactionDetails } from 'uniswap/src/features/transactions/types/tran
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 
 export interface TransactionSummaryLayoutProps {
+  isExternalProfile?: boolean
   authTrigger?: AuthTrigger
   transaction: TransactionDetails
   title?: string
@@ -14,6 +15,7 @@ export interface TransactionSummaryLayoutProps {
 }
 
 export interface SummaryItemProps {
+  isExternalProfile?: boolean
   index?: number
   authTrigger?: AuthTrigger
   transaction: TransactionDetails

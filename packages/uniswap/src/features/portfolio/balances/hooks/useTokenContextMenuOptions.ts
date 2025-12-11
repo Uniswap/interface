@@ -132,8 +132,8 @@ export function useTokenContextMenuOptions({
   const hasViewedContractAddressExplainer = useSelector(selectHasViewedContractAddressExplainer)
 
   const onPressCopyAddress = useCallback(async () => {
-    if (isMobileApp && !hasViewedContractAddressExplainer) {
-      openContractAddressExplainerModal?.()
+    if (isMobileApp && !hasViewedContractAddressExplainer && openContractAddressExplainerModal) {
+      openContractAddressExplainerModal()
       return
     }
 

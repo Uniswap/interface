@@ -187,12 +187,7 @@ function* executeChainedSwap(params: SwapParams, dependencies: TransactionSagaDe
   /**
    * Reusable helper to prepare transaction services with common parameters
    */
-  function* prepareServicesForChain(
-    chainId: UniverseChainId,
-    // TODO: SWAP-458 - update with proper typings once available
-    stepType?: string,
-  ) {
-    // TODO: SWAP-458 - update with proper typings once available
+  function* prepareServicesForChain(chainId: UniverseChainId, stepType?: string) {
     const submitViaPrivateRpc = stepType === 'CLASSIC' && (yield* call(shouldSubmitViaPrivateRpc, chainId))
 
     return yield* prepareTransactionServices(dependencies, {

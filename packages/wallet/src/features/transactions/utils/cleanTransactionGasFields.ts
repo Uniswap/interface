@@ -22,10 +22,20 @@ export const EthereumTransactionType = {
  *
  * This function removes the incompatible fields to prevent errors during transaction processing.
  *
+ * IMPORTANT: This should only be applied to transactions that have an explicit type field set.
+ * Transactions without a type field are unpopulated and should be left as-is to allow ethers
+ * to properly populate them based on network capabilities.
+ *
  * @param request - The transaction request to clean
  * @returns A cleaned transaction request with only compatible gas fields
  */
 export function cleanTransactionGasFields(request: providers.TransactionRequest): providers.TransactionRequest {
+  // Only clean transactions that have an explicit type field set
+  // If type is undefined, the transaction hasn't been populated yet and we shouldn't modify it
+  if (request.type === undefined) {
+    return request
+  }
+
   const txType = Number(request.type)
 
   // EIP-1559 transaction: remove gasPrice if present
@@ -36,9 +46,7 @@ export function cleanTransactionGasFields(request: providers.TransactionRequest)
 
   // Legacy or EIP-2930 transaction: remove EIP-1559 gas fields if present
   if (
-    (txType === EthereumTransactionType.Legacy ||
-      txType === EthereumTransactionType.AccessList ||
-      Number.isNaN(txType)) &&
+    (txType === EthereumTransactionType.Legacy || txType === EthereumTransactionType.AccessList) &&
     (request.maxFeePerGas !== undefined || request.maxPriorityFeePerGas !== undefined)
   ) {
     const { maxFeePerGas: _maxFeePerGas, maxPriorityFeePerGas: _maxPriorityFeePerGas, ...cleanedRequest } = request

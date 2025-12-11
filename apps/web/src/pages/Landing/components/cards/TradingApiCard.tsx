@@ -1,3 +1,4 @@
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { CardContents } from 'pages/Landing/components/cards/CardContents'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
 import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
@@ -10,6 +11,7 @@ const primary = '#FF4D00'
 
 export function TradingApiCard() {
   const { t } = useTranslation()
+  const isUnificationCopyEnabled = useFeatureFlag(FeatureFlags.UnificationCopy)
 
   return (
     <ValuePropCard
@@ -28,7 +30,7 @@ export function TradingApiCard() {
         />
       }
       bodyText={t('landing.tradingApiBody')}
-      subtitle={t('landing.tradingApiSubtitle')}
+      subtitle={isUnificationCopyEnabled ? t('landing.tradingApiSubtitle') : t('landing.tradingApiSubtitle.old')}
       button={<PillButton backgroundColor="$surface1" color={primary} label={t('landing.tradingApiButton')} />}
       alignTextToBottom
     >

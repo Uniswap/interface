@@ -177,7 +177,7 @@ export function RemoveLiquidityReview({ onClose }: { onClose: () => void }) {
           currencyUSDAmount={currency1FiatAmount?.multiply(percent).divide(100)}
         />
         {positionInfo.version !== ProtocolVersion.V2 && (
-          <Flex p="$spacing16" gap="$gap12" background="$surface2" borderRadius="$rounded12">
+          <Flex p="$spacing12" gap="$gap12" background="$surface2" borderRadius="$rounded12">
             <Text variant="body4" color="$neutral2">
               {t('fee.uncollected')}
             </Text>

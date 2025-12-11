@@ -2,7 +2,7 @@ import { Percent } from '@uniswap/sdk-core'
 import Row, { RowBetween } from 'components/deprecated/Row'
 import Expand from 'components/Expand'
 import QuestionHelper from 'components/QuestionHelper'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { Input, InputContainer } from 'pages/MigrateV2/Settings/Input'
 import { useState } from 'react'
 import { Trans } from 'react-i18next'
@@ -17,7 +17,7 @@ enum SlippageError {
   InvalidInput = 'InvalidInput',
 }
 
-const Option = styled(Row)<{ isActive: boolean }>`
+const Option = deprecatedStyled(Row)<{ isActive: boolean }>`
   width: auto;
   cursor: pointer;
   padding: 6px 12px;
@@ -28,7 +28,7 @@ const Option = styled(Row)<{ isActive: boolean }>`
   pointer-events: ${({ isActive }) => isActive && 'none'};
 `
 
-const Switch = styled(Row)`
+const Switch = deprecatedStyled(Row)`
   width: auto;
   padding: 4px;
   border: 1px solid ${({ theme }) => theme.surface3};

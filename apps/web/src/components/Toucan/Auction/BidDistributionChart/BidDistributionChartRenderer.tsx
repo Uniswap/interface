@@ -26,7 +26,7 @@ import {
   DisplayMode,
 } from 'components/Toucan/Auction/store/types'
 import { useAuctionStore, useAuctionStoreActions } from 'components/Toucan/Auction/store/useAuctionStore'
-import styled from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ColorType, createChart, IChartApi, ISeriesApi, LineStyle, UTCTimestamp } from 'lightweight-charts'
 import { useCallback, useEffect, useMemo, useRef } from 'react'
 import { Flex, useSporeColors } from 'ui/src'
@@ -37,7 +37,7 @@ import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { formatUnits } from 'viem'
 
-const ChartContainer = styled.div<{ height: number }>`
+const ChartContainer = deprecatedStyled.div<{ height: number }>`
   width: 100%;
   height: ${({ height }) => height}px;
 

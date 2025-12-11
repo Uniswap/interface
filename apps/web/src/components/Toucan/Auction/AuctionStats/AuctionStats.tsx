@@ -1,6 +1,6 @@
 import { AuctionStatsData, FAKE_AUCTION_STATS } from 'components/Toucan/Auction/store/mockData'
 import { TFunction } from 'i18next'
-import styledComponent from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components/CopyHelper'
@@ -142,7 +142,7 @@ const CompanyIcon = styled(Flex, {
 })
 
 // Override ExternalLink's pink stroke to prevent it from affecting child SVG icons
-const StyledExternalLink = styledComponent(ExternalLink)`
+const StyledExternalLink = deprecatedStyled(ExternalLink)`
   stroke: none;
 `
 

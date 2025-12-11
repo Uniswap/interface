@@ -1,4 +1,4 @@
-import { css, keyframes, styled } from 'lib/styled-components'
+import { css, deprecatedStyled, keyframes } from 'lib/styled-components'
 
 const loadingAnimation = keyframes`
   0% {
@@ -22,7 +22,7 @@ const shimmerMixin = css`
   will-change: background-position;
 `
 
-export const LoadingRows = styled.div`
+export const LoadingRows = deprecatedStyled.div`
   display: grid;
 
   & > div {
@@ -32,7 +32,7 @@ export const LoadingRows = styled.div`
   }
 `
 
-export const LoadingRow = styled.div<{ height: number; width: number }>`
+export const LoadingRow = deprecatedStyled.div<{ height: number; width: number }>`
   ${shimmerMixin}
   border-radius: 12px;
   height: ${({ height }) => height}px;
@@ -46,11 +46,11 @@ export const loadingOpacityMixin = css<{ $loading: boolean }>`
     $loading ? 'none' : `opacity ${theme.transition.duration.medium} ${theme.transition.timing.inOut}`};
 `
 
-export const LoadingOpacityContainer = styled.div<{ $loading: boolean }>`
+export const LoadingOpacityContainer = deprecatedStyled.div<{ $loading: boolean }>`
   ${loadingOpacityMixin}
 `
 
-export const LoadingFullscreen = styled.div`
+export const LoadingFullscreen = deprecatedStyled.div`
   ${shimmerMixin}
   inset: 0;
   position: absolute;

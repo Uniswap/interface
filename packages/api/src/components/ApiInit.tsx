@@ -6,13 +6,20 @@ import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
 interface ApiInitProps {
   getSessionInitService: () => SessionInitializationService
-  getIsSessionServiceEnabled: () => boolean
+  isSessionServiceEnabled: boolean
 }
+
+/**
+ * Query key for session initialization.
+ * Shared between ApiInit (which triggers the query) and InitializationStatusProvider (which observes it).
+ */
+export const SESSION_INIT_QUERY_KEY = [ReactQueryCacheKey.Session, 'initialization'] as const
+
 function createInitServiceQuery(ctx: {
   getSessionInitService: () => SessionInitializationService
 }): ReturnType<typeof queryOptions<SessionInitResult>> {
   return queryOptions<SessionInitResult>({
-    queryKey: [ReactQueryCacheKey.Session, 'initialization'],
+    queryKey: SESSION_INIT_QUERY_KEY,
     queryFn: async (): Promise<SessionInitResult> => {
       return await ctx.getSessionInitService().initialize()
     },
@@ -31,15 +38,12 @@ function createInitServiceQuery(ctx: {
   })
 }
 
-function ApiInit({ getSessionInitService, getIsSessionServiceEnabled }: ApiInitProps): null {
+function ApiInit({ getSessionInitService, isSessionServiceEnabled }: ApiInitProps): null {
   const [query] = useState(() => createInitServiceQuery({ getSessionInitService }))
-
-  // Short-circuit if session service is disabled
-  const shouldInitialize = getIsSessionServiceEnabled()
 
   useQuery({
     ...query,
-    enabled: shouldInitialize,
+    enabled: isSessionServiceEnabled,
   })
 
   return null

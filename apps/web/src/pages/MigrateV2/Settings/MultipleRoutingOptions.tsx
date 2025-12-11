@@ -5,7 +5,7 @@ import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import QuestionHelper from 'components/QuestionHelper'
 import { useIsUniswapXSupportedChain } from 'hooks/useIsUniswapXSupportedChain'
 import { atom, useAtom } from 'jotai'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ReactNode, useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { RouterPreference } from 'state/routing/types'
@@ -15,7 +15,7 @@ import { Flex, Switch } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useV4SwapEnabled } from 'uniswap/src/features/transactions/swap/hooks/useV4SwapEnabled'
 
-const LabelWrapper = styled(Column)`
+const LabelWrapper = deprecatedStyled(Column)`
   height: 100%;
   justify-content: center;
 `

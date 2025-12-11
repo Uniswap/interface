@@ -5,7 +5,7 @@ import { TestnetsToggle } from 'components/AccountDrawer/TestnetsToggle'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useAccount } from 'hooks/useAccount'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
@@ -17,15 +17,15 @@ import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
-const Container = styled(Column)`
+const Container = deprecatedStyled(Column)`
   height: 100%;
 `
 
-const StyledChevron = styled(ChevronRight)`
+const StyledChevron = deprecatedStyled(ChevronRight)`
   color: ${({ theme }) => theme.neutral2};
 `
 
-const LanguageLabel = styled(Row)`
+const LanguageLabel = deprecatedStyled(Row)`
   white-space: nowrap;
 `
 

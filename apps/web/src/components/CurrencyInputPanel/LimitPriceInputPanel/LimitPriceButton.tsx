@@ -1,5 +1,5 @@
 import Row from 'components/deprecated/Row'
-import { css, styled } from 'lib/styled-components'
+import { css, deprecatedStyled } from 'lib/styled-components'
 import { X } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
@@ -26,7 +26,7 @@ const highlightedBorderCss = css`
   border-right: 0px;
 `
 
-const Container = styled.button<{ $selected?: boolean; $disabled?: boolean; $highlighted: boolean }>`
+const Container = deprecatedStyled.button<{ $selected?: boolean; $disabled?: boolean; $highlighted: boolean }>`
   color: ${({ theme, $selected, $disabled, $highlighted }) => {
     if ($highlighted) {
       return theme.neutral1
@@ -51,7 +51,7 @@ const Container = styled.button<{ $selected?: boolean; $disabled?: boolean; $hig
   ${({ $disabled }) => !$disabled && ClickableStyle};
 `
 
-const HighlightedContainerXButton = styled.button`
+const HighlightedContainerXButton = deprecatedStyled.button`
   ${ClickableStyle}
   background-color: ${({ theme }) => theme.surface3};
   color: ${({ theme }) => theme.neutral2};

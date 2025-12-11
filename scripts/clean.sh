@@ -47,12 +47,23 @@ prompt_yes_no() {
   fi
 }
 
+echo "This script will automatically remove build artifacts and caches. For a more thorough reset, you can use the following options:"
+
 # Only prompt if no CLI args were provided
 if [ "$HAS_CLI_ARGS" = false ]; then
   prompt_yes_no "⚠️  UNTRACKED FILES: Do you want to remove all files untracked by git (except .env files)?" "GIT_CLEAN"
   prompt_yes_no "📦 NODE MODULES: Local packages will be cleaned. Should ALL other node_modules be removed (slower but more thorough)?" "NODE_MODULES"
   prompt_yes_no "🗑️  BUN CACHE: Do you want to clear the global bun cache (force re-download of dependencies)?" "BUN_CACHE"
 fi
+
+# Always remove specific build artifacts and cache directories
+echo "Removing build artifacts and cache directories..."
+# Remove build artifacts dirs in apps
+rm -rf dist apps/extension/.output apps/extension/.wxt apps/web/.wrangler
+# Remove nested node_modules dirs (not the root ./node_modules will not be affected here)
+find . -path "./node_modules" -prune -o -type d -name "node_modules" -exec sh -c 'echo "Removing $1" && rm -rf "$1"' _ {} \; 2>/dev/null || true
+# Remove tsbuildinfo files (except those in node_modules)
+find . -path "./node_modules" -prune -o -type f -name "tsconfig.tsbuildinfo" -exec sh -c 'echo "Removing $1" && rm -f "$1"' _ {} \; 2>/dev/null || true
 
 # Execute git clean if confirmed
 if [ "$GIT_CLEAN" = true ]; then
@@ -69,9 +80,11 @@ fi
 # Execute node_modules cleanup
 if [ "$NODE_MODULES" = true ]; then
   echo "Removing node_modules..."
+  # Recursively remove all node_modules directories
   bun run g:rm:nodemodules
 else
   echo "Removing local packages..."
+  # Remove only the symlinks for the local packages
   bun run g:rm:local-packages
 fi
 
@@ -79,15 +92,16 @@ fi
 echo "Installing dependencies..."
 bun install
 
-# Clear NX cache
+# Clear NX cache. Use '|| true' to avoid failing if NX is not yet ready
 echo "Clearing NX cache..."
-bun nx reset
-# Sync NX but silence errors because sometimes the first NX command
-# after a reset fails due to a race condition with the NX daemon
+bun nx reset || true
+bun nx daemon --start 2>/dev/null || true  # Restart the daemon
 bun nx sync 2>/dev/null || true
 
-# Prepare packages
-echo "Preparing packages..."
-bun run g:prepare
+# If all artifacts were removed, run prepare to auto-generate files
+if [ "$GIT_CLEAN" = true ]; then
+  echo "Preparing packages..."
+  bun run g:prepare
+fi
 
 echo "✅ Clean completed successfully!"

@@ -16,6 +16,8 @@ import {
   useMedia,
   useSporeColors,
 } from 'ui/src'
+import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -89,6 +91,20 @@ export function PortfolioChart({
   const media = useMedia()
   const colors = useSporeColors()
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const locale = useCurrentLocale()
+  const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
+  const isChartEmpty = useMemo(() => {
+    if (!portfolioChartData?.points || portfolioChartData.points.length === 0) {
+      return true
+    }
+
+    // if the last point is 0, check all other points to determine if there has ever been value here
+    if (portfolioChartData.points[portfolioChartData.points.length - 1].value === 0) {
+      return portfolioChartData.points.every((point) => point.value === 0)
+    }
+
+    return false
+  }, [portfolioChartData?.points])
 
   const periodOptions = useMemo<Array<SegmentedControlOption<string>>>(() => {
     const options: Array<[ChartPeriod, string]> = [
@@ -131,29 +147,38 @@ export function PortfolioChart({
     return colors.statusSuccess.val
   }, [chartData, colors])
 
-  if (error) {
-    return (
-      <ChartContainer centered grow shrink>
-        <ChartSkeleton
-          type={ChartType.PRICE}
-          height={CHART_HEIGHT}
-          errorText={t('portfolio.overview.chart.errorText')}
-        />
-      </ChartContainer>
-    )
-  }
+  const isLoading = isPending || !chartData.length
+  const isDisabled = isPortfolioZero || !!error
 
-  if (isPending || !chartData.length) {
-    return (
-      <ChartContainer centered grow shrink>
-        <ChartSkeleton type={ChartType.PRICE} height={CHART_HEIGHT} />
-      </ChartContainer>
-    )
-  }
+  // Custom y-axis formatter that removes decimals
+  const yAxisFormatter = useMemo(() => {
+    return (price: number): string => {
+      const rounded = Math.floor(price)
+      const formatter = new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: appFiatCurrencyInfo.code,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      })
+      return formatter.format(rounded)
+    }
+  }, [locale, appFiatCurrencyInfo.code])
 
   return (
     <Flex gap="$spacing16" grow shrink>
-      {isPortfolioZero ? (
+      {error ? (
+        <ChartContainer centered grow shrink>
+          <ChartSkeleton
+            type={ChartType.PRICE}
+            height={CHART_HEIGHT}
+            errorText={t('portfolio.overview.chart.errorText')}
+          />
+        </ChartContainer>
+      ) : isLoading ? (
+        <ChartContainer centered grow shrink>
+          <ChartSkeleton type={ChartType.PRICE} height={CHART_HEIGHT} />
+        </ChartContainer>
+      ) : isPortfolioZero || isChartEmpty ? (
         <Flex height={UNFUNDED_CHART_SKELETON_HEIGHT} position="relative">
           <Text variant="heading1" color="$neutral3">
             {convertFiatAmountFormatted(0, NumberType.PortfolioBalance)}
@@ -171,6 +196,7 @@ export function PortfolioChart({
             overrideColor={chartColor}
             headerTotalValueOverride={portfolioTotalBalanceUSD}
             hideYAxis={!isTotalValueMatch}
+            yAxisFormatter={yAxisFormatter}
           />
         </Flex>
       )}
@@ -180,7 +206,7 @@ export function PortfolioChart({
         pointerEvents={isPortfolioZero ? 'none' : 'auto'}
       >
         <SegmentedControl
-          disabled={isPortfolioZero}
+          disabled={isDisabled}
           fullWidth={media.md}
           options={periodOptions}
           selectedOption={String(selectedPeriod)}

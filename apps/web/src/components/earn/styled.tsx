@@ -2,9 +2,9 @@ import uImage from 'assets/images/big_unicorn.png'
 import noise from 'assets/images/noise.png'
 import xlUnicorn from 'assets/images/xl_uni.png'
 import { AutoColumn } from 'components/deprecated/Column'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 
-export const CardBGImage = styled.span<{ desaturate?: boolean }>`
+export const CardBGImage = deprecatedStyled.span<{ desaturate?: boolean }>`
   background: url(${uImage});
   width: 1000px;
   height: 600px;
@@ -18,7 +18,7 @@ export const CardBGImage = styled.span<{ desaturate?: boolean }>`
   ${({ desaturate }) => desaturate && `filter: saturate(0)`}
 `
 
-export const CardBGImageSmaller = styled.span<{ desaturate?: boolean }>`
+export const CardBGImageSmaller = deprecatedStyled.span<{ desaturate?: boolean }>`
   background: url(${xlUnicorn});
   width: 1200px;
   height: 1200px;
@@ -32,7 +32,7 @@ export const CardBGImageSmaller = styled.span<{ desaturate?: boolean }>`
   ${({ desaturate }) => desaturate && `filter: saturate(0)`}
 `
 
-export const CardNoise = styled.span`
+export const CardNoise = deprecatedStyled.span`
   background: url(${noise});
   background-size: cover;
   mix-blend-mode: overlay;
@@ -46,13 +46,13 @@ export const CardNoise = styled.span`
   user-select: none;
 `
 
-export const CardSection = styled(AutoColumn)<{ disabled?: boolean }>`
+export const CardSection = deprecatedStyled(AutoColumn)<{ disabled?: boolean }>`
   padding: 1rem;
   z-index: 1;
   opacity: ${({ disabled }) => disabled && '0.4'};
 `
 
-export const Break = styled.div`
+export const Break = deprecatedStyled.div`
   width: 100%;
   background-color: rgba(255, 255, 255, 0.2);
   height: 1px;

@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { TokenReportEventType } from '@universe/api/src/clients/data/createDataServiceApiClient'
+import { ReportAssetType, TokenReportEventType } from '@universe/api'
 import { atom } from 'jotai'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -69,6 +69,7 @@ export function ReportTokenIssueModal({
           chainId: currency.chainId,
           address: currency.address,
           event: TokenReportEventType.FalseNegative,
+          assetType: ReportAssetType.Token,
         }).catch((error: unknown) => {
           // Still show success since analytics and local hiding succeeded, but log the issue for monitoring
           logger.warn('ReportTokenIssueModal', 'submitReport', 'Failed to submit token report to backend', {

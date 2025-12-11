@@ -1,4 +1,4 @@
-import { css, styled } from 'lib/styled-components'
+import { css, deprecatedStyled } from 'lib/styled-components'
 import React, { HTMLProps, useCallback } from 'react'
 import { Link } from 'react-router'
 import { ClickableStyle } from 'theme/components/styles'
@@ -13,7 +13,7 @@ const LinkStyle = css`
 `
 
 // An internal link from the react-router library that is correctly styled
-export const StyledInternalLink = styled(Link)`
+export const StyledInternalLink = deprecatedStyled(Link)`
   ${ClickableStyle}
   ${LinkStyle}
 `
@@ -39,7 +39,7 @@ function handleClickExternalLink(event: React.MouseEvent<HTMLAnchorElement>) {
   }
 }
 
-const StyledLink = styled.a`
+const StyledLink = deprecatedStyled.a`
   ${ClickableStyle}
   ${LinkStyle}
 `

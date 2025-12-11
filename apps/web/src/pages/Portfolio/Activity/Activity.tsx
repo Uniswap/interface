@@ -12,7 +12,7 @@ import {
 import { PaginationSkeletonRow } from 'pages/Portfolio/Activity/PaginationSkeletonRow'
 import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRoutes'
 import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Flex, TouchableArea } from 'ui/src'
@@ -75,14 +75,28 @@ export default function PortfolioActivity() {
   const { evmAddress, svmAddress } = usePortfolioAddresses()
   const { chainId } = usePortfolioRoutes()
 
-  const { sectionData, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useActivityData({
+  const { sectionData, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isFetching } = useActivityData({
     evmOwner: evmAddress,
     svmOwner: svmAddress,
     ownerAddresses: filterDefinedWalletAddresses([evmAddress, svmAddress]),
     fiatOnRampParams: undefined,
     chainIds: chainId ? [chainId] : undefined,
-    showLoadingOnRefetch: true,
   })
+
+  // Track chainId changes to show loading skeleton when switching networks
+  // We need this because placeholderData keeps old data visible during refetch,
+  // but we want to show a skeleton when the chain filter changes
+  const prevChainIdRef = useRef(chainId)
+  const chainIdChanged = prevChainIdRef.current !== chainId
+  if (chainIdChanged && !isFetching) {
+    // Update ref once we're done fetching for the new chainId
+    prevChainIdRef.current = chainId
+  }
+
+  // Show loading skeleton when:
+  // 1. Initial load (isLoading is true, no cached data)
+  // 2. Chain filter changed and we're fetching new data
+  const showLoading = isLoading || (chainIdChanged && isFetching)
 
   const { sentinelRef } = useInfiniteScroll({
     onLoadMore: fetchNextPage,
@@ -176,7 +190,7 @@ export default function PortfolioActivity() {
         </Trace>
 
         <Flex>
-          {!isLoading && transactionData.length === 0 ? (
+          {!showLoading && transactionData.length === 0 ? (
             chainId ? (
               chainFilterEmptyState
             ) : (
@@ -185,7 +199,7 @@ export default function PortfolioActivity() {
           ) : (
             <Trace section={SectionName.PortfolioActivityTab} element={ElementName.PortfolioActivityTable}>
               <>
-                <ActivityTable data={transactionData} loading={isLoading} error={error} rowWrapper={rowWrapper} />
+                <ActivityTable data={transactionData} loading={showLoading} error={error} rowWrapper={rowWrapper} />
 
                 {/* Show skeleton loading indicator while fetching next page */}
                 {isFetchingNextPage && <PaginationSkeletonRow />}

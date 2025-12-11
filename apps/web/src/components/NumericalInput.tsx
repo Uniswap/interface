@@ -1,11 +1,16 @@
 import { loadingOpacityMixin } from 'components/Loader/styled'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import React, { forwardRef } from 'react'
 import { Locale } from 'uniswap/src/features/language/constants'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 import { escapeRegExp } from 'utils/escapeRegExp'
 
-export const StyledInput = styled.input<{ error?: boolean; fontSize?: string; align?: string; disabled?: boolean }>`
+export const StyledInput = deprecatedStyled.input<{
+  error?: boolean
+  fontSize?: string
+  align?: string
+  disabled?: boolean
+}>`
   color: ${({ error, theme }) => (error ? theme.critical : theme.neutral1)};
   pointer-events: ${({ disabled }) => (disabled ? 'none' : 'auto')};
   width: 0;
@@ -130,7 +135,7 @@ const MemoizedInput = React.memo(Input)
 export { MemoizedInput as Input }
 // const inputRegex = RegExp(`^\\d*(?:\\\\[.])?\\d*$`) // match escaped "." characters via in a non-capturing group
 
-export const StyledNumericalInput = styled(MemoizedInput)<{ $loading: boolean }>`
+export const StyledNumericalInput = deprecatedStyled(MemoizedInput)<{ $loading: boolean }>`
   ${loadingOpacityMixin};
   text-align: left;
   font-size: 36px;

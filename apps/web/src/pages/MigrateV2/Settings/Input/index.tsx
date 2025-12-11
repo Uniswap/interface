@@ -1,7 +1,7 @@
 import Row from 'components/deprecated/Row'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 
-export const Input = styled.input`
+export const Input = deprecatedStyled.input`
   width: 100%;
   display: flex;
   flex: 1;
@@ -19,7 +19,7 @@ export const Input = styled.input`
   }
 `
 
-export const InputContainer = styled(Row)<{ error?: boolean }>`
+export const InputContainer = deprecatedStyled(Row)<{ error?: boolean }>`
   padding: 8px 16px;
   border-radius: 12px;
   width: auto;

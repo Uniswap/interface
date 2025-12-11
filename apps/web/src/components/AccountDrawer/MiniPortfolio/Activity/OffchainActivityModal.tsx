@@ -22,7 +22,7 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import { TFunction } from 'i18next'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -63,17 +63,17 @@ export function useOpenOffchainActivityModal() {
   )
 }
 
-const Wrapper = styled(AutoColumn).attrs({ gap: 'md', grow: true })`
+const Wrapper = deprecatedStyled(AutoColumn).attrs({ gap: 'md', grow: true })`
     padding: 12px 20px 20px 20px;
     width: 100%;
     background-color: ${({ theme }) => theme.surface1};
 `
 
-const OffchainModalDivider = styled(Divider)`
+const OffchainModalDivider = deprecatedStyled(Divider)`
     margin: 28px 0;
 `
 
-const InsufficientFundsCopyContainer = styled(Row)`
+const InsufficientFundsCopyContainer = deprecatedStyled(Row)`
     margin-top: 16px;
     padding: 12px;
     border: 1.3px solid ${({ theme }) => theme.surface3};
@@ -83,7 +83,7 @@ const InsufficientFundsCopyContainer = styled(Row)`
     align-items: flex-start;
 `
 
-const AlertIconContainer = styled.div`
+const AlertIconContainer = deprecatedStyled.div`
     display: flex;
     flex-shrink: 0;
     background-color: ${({ theme }) => theme.deprecated_accentWarning};

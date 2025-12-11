@@ -1,4 +1,4 @@
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { EllipsisStyle } from 'theme/components/styles'
 import { Flex } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
@@ -7,7 +7,7 @@ import { useENSName } from 'uniswap/src/features/ens/api'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'utilities/src/addresses'
 
-const IdentifierText = styled.span`
+const IdentifierText = deprecatedStyled.span`
   ${EllipsisStyle}
 `
 

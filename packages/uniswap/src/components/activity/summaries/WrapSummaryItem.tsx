@@ -11,6 +11,7 @@ import { getFormattedCurrencyAmount } from 'uniswap/src/utils/currency'
 export function WrapSummaryItem({
   transaction,
   index,
+  isExternalProfile,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: WrapTransactionInfo }
 }): JSX.Element {
@@ -55,5 +56,13 @@ export function WrapSummaryItem({
     [nativeCurrencyInfo, transaction.chainId, unwrapped, wrappedCurrencyInfo],
   )
 
-  return <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} />
+  return (
+    <TransactionSummaryLayout
+      caption={caption}
+      icon={icon}
+      index={index}
+      transaction={transaction}
+      isExternalProfile={isExternalProfile}
+    />
+  )
 }

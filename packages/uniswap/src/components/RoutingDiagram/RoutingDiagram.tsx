@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, Tooltip, styled as tamaguiStyled } from 'ui/src'
+import { Flex, styled, Text, Tooltip } from 'ui/src'
 import { DotLine } from 'ui/src/components/icons/DotLine'
 import { zIndexes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
@@ -13,13 +13,13 @@ import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/
 import { currencyId, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import type { RoutingDiagramEntry, RoutingHop } from 'uniswap/src/utils/routingDiagram/types'
 
-const PoolBadge = tamaguiStyled(Flex, {
+const PoolBadge = styled(Flex, {
   row: true,
   centered: true,
   p: '$spacing8',
 })
 
-const OpaqueBadge = tamaguiStyled(PoolBadge, {
+const OpaqueBadge = styled(PoolBadge, {
   backgroundColor: '$surface2',
   borderRadius: '$rounded8',
   justifyContent: 'flex-start',
@@ -32,7 +32,7 @@ const OpaqueBadge = tamaguiStyled(PoolBadge, {
   },
 })
 
-const BadgeText = tamaguiStyled(Text, {
+const BadgeText = styled(Text, {
   variant: 'body4',
   '$platform-web': {
     wordBreak: 'normal',

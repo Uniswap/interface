@@ -1,5 +1,4 @@
 import { getTokenExploreURL } from 'appGraphql/data/util'
-import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import PoolNotFoundModal from 'components/NotFoundModal/PoolNotFoundModal'
@@ -23,8 +22,9 @@ import { useDispatch } from 'react-redux'
 import { useLocation, useNavigate, useSearchParams } from 'react-router'
 import { setOpenModal } from 'state/application/reducer'
 import { ExploreContextProvider } from 'state/explore'
+import { manualChainOutageAtom } from 'state/outage/atoms'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Button, Flex, Text, styled as tamaguiStyled, useMedia } from 'ui/src'
+import { Button, Flex, styled, Text, useMedia } from 'ui/src'
 import { Plus } from 'ui/src/components/icons/Plus'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
@@ -79,7 +79,7 @@ function usePages(): Array<Page> {
   return pages
 }
 
-const HeaderTab = tamaguiStyled(Text, {
+const HeaderTab = styled(Text, {
   ...ClickableTamaguiStyle,
   variant: 'heading3',
   userSelect: 'none',

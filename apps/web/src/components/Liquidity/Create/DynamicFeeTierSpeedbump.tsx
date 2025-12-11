@@ -5,6 +5,7 @@ import { Flex } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { Dialog } from 'uniswap/src/components/dialog/Dialog'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export const DynamicFeeTierSpeedbump = () => {
   const { setPositionState, dynamicFeeTierSpeedbumpData, setDynamicFeeTierSpeedbumpData } = useCreateLiquidityContext()
@@ -36,7 +37,12 @@ export const DynamicFeeTierSpeedbump = () => {
   }, [setPositionState, setDynamicFeeTierSpeedbumpData, dynamicFeeTierSpeedbumpData.wishFeeData])
 
   const primaryButton = useMemo(
-    () => ({ text: t('common.button.continue'), onPress: handleConfirm, variant: 'default' as const }),
+    () => ({
+      testID: TestID.DynamicFeeTierSpeedbumpContinue,
+      text: t('common.button.continue'),
+      onPress: handleConfirm,
+      variant: 'default' as const,
+    }),
     [t, handleConfirm],
   )
 

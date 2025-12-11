@@ -125,7 +125,6 @@ export interface SolanaSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   includesDelegation: false
 }
 
-// TODO: SWAP-458 - Subject to change.
 export interface ChainedSwapTxAndGasInfo extends BaseSwapTxAndGasInfo {
   routing: TradingApi.Routing.CHAINED
   planId: string | undefined

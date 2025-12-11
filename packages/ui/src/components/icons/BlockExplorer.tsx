@@ -13,5 +13,4 @@ export const [BlockExplorer, AnimatedBlockExplorer] = createIcon({
       />
     </Svg>
   ),
-  defaultFill: '#7D7D7D',
 })

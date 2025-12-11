@@ -1,12 +1,12 @@
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import type { To } from 'react-router'
 import { Link } from 'react-router'
 import { ClickableStyle } from 'theme/components/styles'
-import { Flex, Text } from 'ui/src'
+import { Flex, styled, Text } from 'ui/src'
 import { Check } from 'ui/src/components/icons/Check'
 
-const InternalLinkMenuItem = styled(Link)`
+const InternalLinkMenuItem = deprecatedStyled(Link)`
   ${ClickableStyle}
 
   flex: 1;
@@ -19,11 +19,11 @@ const InternalLinkMenuItem = styled(Link)`
   color: ${({ theme }) => theme.neutral1};
 `
 
-export const MenuColumn = styled(Flex)`
+export const MenuColumn = styled(Flex, {
   $md: {
-    pb: '$spacing14';
-  }
-`
+    pb: '$spacing14',
+  },
+})
 
 export function MenuItem({
   label,

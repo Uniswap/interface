@@ -10,12 +10,6 @@ def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
 
 def nodeModulesPath = "../../../../node_modules"
 
-def keystorePropertiesFile = rootProject.file("keystore.properties");
-def keystoreProperties = new Properties()
-if (keystorePropertiesFile.exists()) {
-  keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
-
 react {
     // From expo docs: https://docs.expo.dev/brownfield/get-started
     entryFile = file(["node", "-e", "require('expo/scripts/resolveAppEntry')", rootDir.getAbsoluteFile().getParentFile().getAbsolutePath(), "android", "absolute"].execute(null, rootDir).text.trim())
@@ -73,9 +67,9 @@ if (isCI && datadogPropertiesAvailable) {
   apply from: "../../../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
 }
 
-def devVersionName = "1.63.1"
-def betaVersionName = "1.63.1"
-def prodVersionName = "1.63.1"
+def devVersionName = "1.64"
+def betaVersionName = "1.64"
+def prodVersionName = "1.64"
 
 android {
     ndkVersion rootProject.ext.ndkVersion
@@ -108,10 +102,18 @@ android {
             keyPassword 'android'
         }
         release {
-            storeFile file(System.getenv("ANDROID_KEYSTORE_FILE") ?: 'keystore.jks')
-            storePassword System.getenv("ANDROID_STORE_PASSWORD") ?: keystoreProperties.getProperty("STORE_PASSWORD")
-            keyAlias System.getenv("ANDROID_KEYSTORE_ALIAS") ?: keystoreProperties.getProperty("KEYSTORE_ALIAS")
-            keyPassword System.getenv("ANDROID_KEY_PASSWORD") ?: keystoreProperties.getProperty("KEY_PASSWORD")
+            def useDebugKeystore = System.getenv("ANDROID_USE_DEBUG_KEYSTORE") == "true"
+            if (useDebugKeystore) {
+                storeFile file('debug.keystore')
+                storePassword 'android'
+                keyAlias 'androiddebugkey'
+                keyPassword 'android'
+            } else {
+                storeFile file(System.getenv("ANDROID_KEYSTORE_FILE") ?: 'keystore.jks')
+                storePassword System.getenv("ANDROID_STORE_PASSWORD") ?: ""
+                keyAlias System.getenv("ANDROID_KEYSTORE_ALIAS") ?: ""
+                keyPassword System.getenv("ANDROID_KEY_PASSWORD") ?: ""
+            }
         }
     }
 
@@ -147,7 +149,23 @@ android {
     }
 
     // applicationVariants are e.g. debug, release
-    applicationVariants.all { variant ->
+    applicationVariants.configureEach { variant ->
+        // Prevent using debug keystore for production builds
+        if (variant.flavorName == "prod" && variant.buildType.name == "release") {
+            def useDebugKeystore = System.getenv("ANDROID_USE_DEBUG_KEYSTORE") == "true"
+            if (useDebugKeystore) {
+                def blockTask = tasks.register("blockDebugKeystoreFor${variant.name.capitalize()}") {
+                    doLast {
+                        throw new GradleException(
+                            "ANDROID_USE_DEBUG_KEYSTORE cannot be used for production builds.\n" +
+                            "This prevents accidentally publishing an improperly signed APK."
+                        )
+                    }
+                }
+                variant.assembleProvider.configure { dependsOn blockTask }
+            }
+        }
+
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // https://developer.android.com/studio/build/configure-apk-splits.html
@@ -158,7 +176,6 @@ android {
                 output.versionCodeOverride =
                         defaultConfig.versionCode * 1000 + versionCodes.get(abi)
             }
-
         }
     }
 

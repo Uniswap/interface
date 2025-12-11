@@ -1,6 +1,6 @@
 import { isWarmLoadingStatus } from '@universe/api'
 import { memo, useMemo } from 'react'
-import { Flex, Shine, useIsDarkMode } from 'ui/src'
+import { Flex, RefreshButton, Shine, useIsDarkMode } from 'ui/src'
 import AnimatedNumber, {
   BALANCE_CHANGE_INDICATION_DURATION,
 } from 'uniswap/src/components/AnimatedNumber/AnimatedNumber'
@@ -11,7 +11,6 @@ import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/ba
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { RefreshBalanceButton } from 'uniswap/src/features/portfolio/PortfolioBalance/RefreshBalanceButton'
 import i18next from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
 import { isWebPlatform } from 'utilities/src/platform'
@@ -58,9 +57,9 @@ export const PortfolioBalance = memo(function _PortfolioBalance({
   const shouldFadePortfolioDecimals =
     (currency === FiatCurrency.UnitedStatesDollar || currency === FiatCurrency.Euro) && currencyComponents.symbolAtFront
 
-  const RefreshButton = useMemo(() => {
+  const RefreshBalanceButton = useMemo(() => {
     if (isWebPlatform) {
-      return <RefreshBalanceButton isLoading={loading} onPress={refetch} />
+      return <RefreshButton isLoading={loading} onPress={refetch} />
     }
     return undefined
   }, [loading, refetch])
@@ -76,7 +75,7 @@ export const PortfolioBalance = memo(function _PortfolioBalance({
         value={totalBalance}
         warmLoading={isWarmLoading}
         isRightToLeft={isRightToLeft}
-        EndElement={RefreshButton}
+        EndElement={RefreshBalanceButton}
       />
       <Flex row grow alignItems="center">
         <Shine disabled={!isWarmLoading}>

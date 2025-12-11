@@ -49,7 +49,7 @@ export const approvedERC20: InteractiveToken[] = [
   },
   {
     name: 'Euro Coin',
-    symbol: 'EUROC',
+    symbol: 'EURC',
     address: '0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c',
     chain: GraphQLApi.Chain.Ethereum,
     color: '#60BFFE',
@@ -82,15 +82,6 @@ export const approvedERC20: InteractiveToken[] = [
     color: '#833ADD',
     logoUrl:
       'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/polygon/assets/0x0000000000000000000000000000000000001010/logo.png',
-  },
-  {
-    name: 'Moss Carbon Credit',
-    symbol: 'MCO2',
-    address: '0xAa7DbD1598251f856C12f63557A4C4397c253Cea',
-    chain: GraphQLApi.Chain.Polygon,
-    color: '#E1F345',
-    logoUrl:
-      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/polygon/assets/0xAa7DbD1598251f856C12f63557A4C4397c253Cea/logo.png',
   },
   {
     name: 'Optimism',
@@ -174,15 +165,6 @@ export const approvedERC20: InteractiveToken[] = [
     chain: GraphQLApi.Chain.Ethereum,
   },
   {
-    name: 'Blur',
-    symbol: 'BLUR',
-    color: '#EA672B',
-    logoUrl:
-      'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x5283D291DBCF85356A21bA090E6db59121208b44/logo.png',
-    address: '0x5283D291DBCF85356A21bA090E6db59121208b44',
-    chain: GraphQLApi.Chain.Ethereum,
-  },
-  {
     name: 'Compound',
     symbol: 'COMP',
     color: '#00D395',
@@ -208,5 +190,22 @@ export const approvedERC20: InteractiveToken[] = [
       'https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72/logo.png',
     address: '0xC18360217D8F7Ab5e7c516566761Ea12Ce7F9D72',
     chain: GraphQLApi.Chain.Ethereum,
+  },
+  {
+    name: 'Solana',
+    symbol: 'SOL',
+    color: '#48577F',
+    logoUrl:
+      'https://raw.githubusercontent.com/trustwallet/assets/master/blockchains/solana/assets/So11111111111111111111111111111111111111112/logo.png',
+    address: NATIVE_CHAIN_ID,
+    chain: GraphQLApi.Chain.Solana,
+  },
+  {
+    name: 'Monad',
+    symbol: 'MON',
+    color: '#680BF3',
+    logoUrl: 'https://assets.coingecko.com/coins/images/38927/large/monad.jpg',
+    address: NATIVE_CHAIN_ID,
+    chain: GraphQLApi.Chain.Monad,
   },
 ]

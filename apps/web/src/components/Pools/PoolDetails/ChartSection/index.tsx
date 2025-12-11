@@ -18,7 +18,7 @@ import ErrorBoundary from 'components/ErrorBoundary'
 import { getTokenOrZeroAddress } from 'components/Liquidity/utils/currency'
 import { usePDPVolumeChartData } from 'components/Pools/PoolDetails/ChartSection/hooks'
 import { ChartActionsContainer, DEFAULT_PILL_TIME_SELECTOR_OPTIONS } from 'components/Tokens/TokenDetails/ChartSection'
-import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
+import { ChartTypeToggle } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeToggle'
 import { ChartQueryResult, DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
 import {
@@ -28,7 +28,7 @@ import {
 } from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
 import { usePoolPriceChartData } from 'hooks/usePoolPriceChartData'
 import { useAtomValue } from 'jotai/utils'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -47,35 +47,6 @@ import { NumberType } from 'utilities/src/format/types'
 const PDP_CHART_HEIGHT_PX = 356
 const PDP_CHART_SELECTOR_OPTIONS = [ChartType.VOLUME, ChartType.PRICE, ChartType.LIQUIDITY] as const
 export type PoolsDetailsChartType = (typeof PDP_CHART_SELECTOR_OPTIONS)[number]
-
-const ChartTypeSelectorContainer = styled.div`
-  display: flex;
-  gap: 8px;
-
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
-    width: 100%;
-  }
-`
-
-const PDPChartTypeSelector = ({
-  chartType,
-  onChartTypeChange,
-  disabledOption,
-}: {
-  chartType: PoolsDetailsChartType
-  onChartTypeChange: (c: PoolsDetailsChartType) => void
-  disabledOption?: PoolsDetailsChartType
-}) => (
-  <ChartTypeSelectorContainer>
-    <ChartTypeDropdown
-      options={PDP_CHART_SELECTOR_OPTIONS}
-      currentChartType={chartType}
-      onSelectOption={onChartTypeChange}
-      disabledOption={disabledOption}
-    />
-  </ChartTypeSelectorContainer>
-)
-
 interface ChartSectionProps {
   poolData?: PoolData
   loading: boolean
@@ -249,11 +220,16 @@ export default function ChartSection(props: ChartSectionProps) {
     <Flex data-testid="pdp-chart-container">
       {ChartBody}
       <ChartActionsContainer>
-        <PDPChartTypeSelector
-          chartType={activeQuery.chartType}
-          onChartTypeChange={setChartType}
-          disabledOption={disabledChartOption}
-        />
+        <Flex $md={{ width: '100%' }}>
+          <ChartTypeToggle
+            availableOptions={PDP_CHART_SELECTOR_OPTIONS}
+            currentChartType={activeQuery.chartType}
+            onChartTypeChange={(c: ChartType) => {
+              setChartType(c as PoolsDetailsChartType)
+            }}
+            disabledOption={disabledChartOption}
+          />
+        </Flex>
         {activeQuery.chartType !== ChartType.LIQUIDITY && (
           <Flex $md={{ width: '100%' }}>
             <SegmentedControl
@@ -276,13 +252,13 @@ export default function ChartSection(props: ChartSectionProps) {
   )
 }
 
-const PriceDisplayContainer = styled.div`
+const PriceDisplayContainer = deprecatedStyled.div`
   display: flex;
   flex-wrap: wrap;
   column-gap: 4px;
 `
 
-const ChartPriceText = styled(ThemedText.HeadlineMedium)`
+const ChartPriceText = deprecatedStyled(ThemedText.HeadlineMedium)`
   ${EllipsisStyle}
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
     font-size: 24px !important;

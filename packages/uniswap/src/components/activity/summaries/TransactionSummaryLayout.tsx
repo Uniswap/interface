@@ -28,6 +28,7 @@ const displayNameTextProps: TextProps = { color: '$accent1', variant: 'body1' }
 
 export const TransactionSummaryLayout = memo(function _TransactionSummaryLayout({
   caption,
+  isExternalProfile,
   transaction,
   authTrigger,
   icon,
@@ -49,6 +50,7 @@ export const TransactionSummaryLayout = memo(function _TransactionSummaryLayout(
       title={title}
       authTrigger={authTrigger}
       transaction={transaction}
+      isExternalProfile={isExternalProfile}
       onRetry={onRetry}
     />
   )
@@ -67,6 +69,7 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
   index,
   isQueued,
   onRetry,
+  isExternalProfile,
 }: TransactionSummaryLayoutProps & {
   isQueued: boolean
 }): JSX.Element {
@@ -151,7 +154,7 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
                 {!inProgress && rightBlock}
               </Flex>
               <Flex grow row gap="$spacing16">
-                {typeof caption === 'string' ? <Text flex={1}>{caption}</Text> : caption}
+                {typeof caption === 'string' ? <Text flex={1}>{caption}</Text> : <Flex flex={1}>{caption}</Flex>}
                 {status === TransactionStatus.Failed && onRetry && (
                   <Flex flexShrink={0}>
                     <Text color="$accent1" variant="buttonLabel2" onPress={onRetry}>
@@ -173,6 +176,7 @@ const TransactionSummaryLayoutContent = memo(function _TransactionSummaryLayoutC
         {showDetailsModal && (
           <TransactionDetailsModal
             authTrigger={authTrigger}
+            isExternalProfile={isExternalProfile}
             transactionDetails={transaction}
             onClose={handleHideDetailsModal}
           />

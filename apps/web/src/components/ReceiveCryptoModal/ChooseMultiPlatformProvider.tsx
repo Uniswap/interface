@@ -1,5 +1,5 @@
 import { useActiveAddresses } from 'features/accounts/store/hooks'
-import styled from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
 import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
 import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
@@ -27,7 +27,7 @@ import { shortenAddress } from 'utilities/src/addresses'
 import { useEvent } from 'utilities/src/react/hooks'
 import { v4 as uuid } from 'uuid'
 
-const StyledLink = styled(ExternalLink)`
+const StyledLink = deprecatedStyled(ExternalLink)`
   font-weight: 535;
   color: ${({ theme }) => theme.neutral3};
 `

@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
@@ -27,7 +28,6 @@ export function SwapFee({
 
   // Track the last valid (non-loading) swapFee
   const lastValidSwapFee = useRef<SwapFeeType | undefined>(undefined)
-
   // Update the last valid swapFee when not loading
   if (!loading) {
     lastValidSwapFee.current = swapFee
@@ -47,42 +47,69 @@ export function SwapFee({
       }
     : undefined
 
-  // If we're loading and the last valid swapFee was null, don't show the fee line
-  if (loading && !lastValidSwapFee.current) {
-    return null
-  }
-
-  if (!swapFeeInfo && !loading) {
-    return null
-  }
-
-  const showFeePercentage = swapFeeInfo?.formattedPercent && !swapFeeInfo.noFeeCharged
+  const isNoUniswapInterfaceFees = useFeatureFlag(FeatureFlags.NoUniswapInterfaceFees)
   const isJupiterSwap = currency.chainId === UniverseChainId.Solana
 
-  return (
-    <Flex row alignItems="center" justifyContent="space-between">
-      <SwapFeeWarning noFee={Boolean(swapFeeInfo?.noFeeCharged)} isJupiter={isJupiterSwap}>
-        <Flex centered row gap="$spacing4">
-          <Text color="$neutral2" variant="body3">
-            {isJupiterSwap ? t('swap.fees.jupiter.label') : t('swap.details.uniswapFee')}
-            {showFeePercentage && ` (${swapFeeInfo.formattedPercent})`}
-          </Text>
-        </Flex>
-      </SwapFeeWarning>
-      <IndicativeLoadingWrapper loading={loading}>
-        {swapFeeInfo && (
-          <Flex row alignItems="center" gap="$spacing8">
-            <Flex row alignItems="center" justifyContent="space-between">
-              <Text color="$neutral1" variant="body3">
-                {swapFeeInfo.formattedAmountFiat ??
-                  (swapFeeInfo.noFeeCharged
-                    ? formatNumberOrString({ value: 0, type: NumberType.FiatGasPrice })
-                    : swapFeeInfo.formattedAmount)}
-              </Text>
-            </Flex>
+  if (isNoUniswapInterfaceFees && !isJupiterSwap && (!swapFeeInfo || swapFeeInfo.noFeeCharged)) {
+    return (
+      <Flex row alignItems="center" justifyContent="space-between">
+        <SwapFeeWarning noUniswapInterfaceFees noFeeOnThisSwap isJupiter={false}>
+          <Flex centered row gap="$spacing4">
+            <Text color="$neutral2" variant="body3">
+              {t('swap.details.uniswapFee')}
+            </Text>
           </Flex>
-        )}
-      </IndicativeLoadingWrapper>
-    </Flex>
-  )
+        </SwapFeeWarning>
+        <Flex row alignItems="center" gap="$spacing8">
+          <Flex row alignItems="center" justifyContent="space-between">
+            <Text color="$accent1" variant="body3">
+              {t('common.free')}
+            </Text>
+          </Flex>
+        </Flex>
+      </Flex>
+    )
+  } else {
+    // If we're loading and the last valid swapFee was null, don't show the fee line
+    if (loading && !lastValidSwapFee.current) {
+      return null
+    }
+
+    if (!swapFeeInfo && !loading) {
+      return null
+    }
+
+    const showFeePercentage = swapFeeInfo?.formattedPercent && !swapFeeInfo.noFeeCharged
+
+    return (
+      <Flex row alignItems="center" justifyContent="space-between">
+        <SwapFeeWarning
+          noUniswapInterfaceFees={false}
+          noFeeOnThisSwap={Boolean(swapFeeInfo?.noFeeCharged)}
+          isJupiter={isJupiterSwap}
+        >
+          <Flex centered row gap="$spacing4">
+            <Text color="$neutral2" variant="body3">
+              {isJupiterSwap ? t('swap.fees.jupiter.label') : t('swap.details.uniswapFee')}
+              {showFeePercentage && ` (${swapFeeInfo.formattedPercent})`}
+            </Text>
+          </Flex>
+        </SwapFeeWarning>
+        <IndicativeLoadingWrapper loading={loading}>
+          {swapFeeInfo && (
+            <Flex row alignItems="center" gap="$spacing8">
+              <Flex row alignItems="center" justifyContent="space-between">
+                <Text color="$neutral1" variant="body3">
+                  {swapFeeInfo.formattedAmountFiat ??
+                    (swapFeeInfo.noFeeCharged
+                      ? formatNumberOrString({ value: 0, type: NumberType.FiatGasPrice })
+                      : swapFeeInfo.formattedAmount)}
+                </Text>
+              </Flex>
+            </Flex>
+          )}
+        </IndicativeLoadingWrapper>
+      </Flex>
+    )
+  }
 }

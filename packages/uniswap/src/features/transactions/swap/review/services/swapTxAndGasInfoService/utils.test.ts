@@ -22,6 +22,8 @@ import { DEFAULT_PROTOCOL_OPTIONS } from 'uniswap/src/features/transactions/swap
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
+const mockPermitData = { fakePermitField: 'hi' } as unknown as TradingApi.NullablePermit
+
 describe('processWrapResponse', () => {
   it('should process wrap response with gas fee result', () => {
     // Given
@@ -115,7 +117,7 @@ describe('createPrepareSwapRequestParams', () => {
       quote: {} as TradingApi.ClassicQuote,
       routing: TradingApi.Routing.CLASSIC,
       requestId: '123',
-      permitData: { fakePermitField: 'hi' },
+      permitData: mockPermitData,
     } satisfies ClassicQuoteResponse
     const signature = '0x123'
     const transactionSettings: TransactionSettingsState = {
@@ -327,7 +329,7 @@ describe('createProcessSwapResponse', () => {
       error: null,
       swapQuote,
       isSwapLoading: false,
-      permitData: { fakePermitField: 'hi' },
+      permitData: mockPermitData,
       swapRequestParams: { quote: swapQuote },
       isRevokeNeeded: false,
     })
@@ -341,7 +343,7 @@ describe('createProcessSwapResponse', () => {
         error: null,
       },
       txRequests: response.transactions,
-      permitData: { fakePermitField: 'hi' },
+      permitData: mockPermitData,
       gasEstimate: {
         swapEstimate: response.gasEstimate,
       },

@@ -39,17 +39,15 @@ export const AdvancedPriceChartToggle = ({
     },
     {
       value: PriceChartType.CANDLESTICK,
-      // TODO: WEB-6733 -- update segmented control to support disabled options + tooltip
-      display: (
+      display: <CandlestickIcon color={iconColor} isDisabled={disableCandlestickUI} />,
+      disabled: disableCandlestickUI,
+      wrapper: disableCandlestickUI ? (
         <MouseoverTooltip
           text={t('token.chart.candlestick.unavailable')}
-          placement="auto"
-          disabled={!disableCandlestickUI}
-          style={{ marginTop: 9 }}
-        >
-          <CandlestickIcon color={iconColor} isDisabled={disableCandlestickUI} />
-        </MouseoverTooltip>
-      ),
+          placement="bottom"
+          style={{ alignContent: 'center' }}
+        />
+      ) : undefined,
     },
   ]
 

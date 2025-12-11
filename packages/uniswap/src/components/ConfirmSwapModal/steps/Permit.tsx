@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, useSporeColors } from 'ui/src'
+import { Flex } from 'ui/src'
 import { Contract } from 'ui/src/components/icons/Contract'
 import { Sign } from 'ui/src/components/icons/Sign'
 import { StepRowProps, StepRowSkeleton } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
@@ -20,7 +20,6 @@ export function Permit2SignatureStepRow({
   totalStepsCount,
 }: StepRowProps<Permit2SignatureStep>): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
 
   const title = status === StepStatus.Active ? t('common.signMessageWallet') : t('common.signMessage')
 
@@ -32,7 +31,6 @@ export function Permit2SignatureStepRow({
         url: uniswapUrls.helpArticleUrls.approvalsExplainer,
         text: t('common.whySign'),
       }}
-      rippleColor={colors.accent1.val}
       status={status}
       currentStepIndex={currentStepIndex}
       totalStepsCount={totalStepsCount}
@@ -45,7 +43,6 @@ const ContractIcon = (): JSX.Element => (
     <Contract size="$icon.24" />
   </Flex>
 )
-const CONTRACT_ICON_COLOR = '#00C3A0'
 
 export function Permit2TransactionStepRow({
   step,
@@ -74,7 +71,6 @@ export function Permit2TransactionStepRow({
     <StepRowSkeleton
       title={title}
       icon={<ContractIcon />}
-      rippleColor={CONTRACT_ICON_COLOR}
       learnMore={{
         url: uniswapUrls.helpArticleUrls.mismatchedImports,
         text: t('common.approvePermitTx.explainer'),

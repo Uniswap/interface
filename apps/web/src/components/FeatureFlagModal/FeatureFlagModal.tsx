@@ -12,7 +12,7 @@ import {
   useFeatureFlagWithExposureLoggingDisabled,
 } from '@universe/gating'
 import { useModalState } from 'hooks/useModalState'
-import { styled as styledDep } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useExternallyConnectableExtensionId } from 'pages/ExtensionPasskeyAuthPopUp/useExternallyConnectableExtensionId'
 import type { ChangeEvent, PropsWithChildren } from 'react'
 import { memo } from 'react'
@@ -59,7 +59,7 @@ const FeatureFlagGroup = memo(function FeatureFlagGroup({
   )
 })
 
-const FlagVariantSelection = styledDep.select`
+const FlagVariantSelection = deprecatedStyled.select`
   border-radius: 12px;
   padding: 8px;
   background: ${({ theme }) => theme.surface3};
@@ -201,6 +201,7 @@ export default function FeatureFlagModal(): JSX.Element {
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Swap Features">
+            <FeatureFlagOption flag={FeatureFlags.NoUniswapInterfaceFees} label="Turn off Uniswap interface fees" />
             <FeatureFlagOption flag={FeatureFlags.ChainedActions} label="Enable Chained Actions" />
             <FeatureFlagOption flag={FeatureFlags.BatchedSwaps} label="Enable Batched Swaps" />
             <FeatureFlagOption flag={FeatureFlags.EthAsErc20UniswapX} label="Enable Eth as ERC20 for UniswapX " />
@@ -220,6 +221,10 @@ export default function FeatureFlagModal(): JSX.Element {
             <FeatureFlagOption
               flag={FeatureFlags.ForceDisableWalletGetCapabilities}
               label="Force disable wallet get capabilities result"
+            />
+            <FeatureFlagOption
+              flag={FeatureFlags.AllowUniswapXOnlyRoutesInSwapSettings}
+              label="Allow UniswapX-Only Routes in Swap Settings (for local testing only)"
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="UniswapX">
@@ -241,6 +246,13 @@ export default function FeatureFlagModal(): JSX.Element {
             <FeatureFlagOption
               flag={FeatureFlags.PoolInfoEndpoint}
               label="Enable create flow with new PoolInfo endpoint"
+            />
+          </FeatureFlagGroup>
+          <FeatureFlagGroup name="ECS LP Migration">
+            <FeatureFlagOption flag={FeatureFlags.MigrateLiquidityApi} label="Enable Migrate Liquidity API" />
+            <FeatureFlagOption
+              flag={FeatureFlags.ClaimRewardsLiquidityApi}
+              label="Enable Claim Rewards Liquidity API"
             />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Toucan">
@@ -295,6 +307,7 @@ export default function FeatureFlagModal(): JSX.Element {
               flag={FeatureFlags.PortfolioTokensAllocationChart}
               label="Enable Portfolio Tokens Allocation Chart"
             />
+            <FeatureFlagOption flag={FeatureFlags.ViewExternalWalletsOnWeb} label="View external wallets on web" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Notifications">
             <FeatureFlagOption flag={FeatureFlags.NotificationService} label="Enable Notification Service" />
@@ -306,6 +319,8 @@ export default function FeatureFlagModal(): JSX.Element {
           <FeatureFlagGroup name="Misc">
             <FeatureFlagOption flag={FeatureFlags.BridgedAssetsBannerV2} label="Enable V2 Bridged Assets Banner" />
             <FeatureFlagOption flag={FeatureFlags.UniswapWrapped2025} label="Enable Uniswap Wrapped 2025" />
+            <FeatureFlagOption flag={FeatureFlags.UnificationCopy} label="Enable Unification Copy" />
+            <FeatureFlagOption flag={FeatureFlags.DisableAztecToken} label="Disable Aztec Token" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Experiments">
             <Flex ml="$padding8">

@@ -1,6 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { FetchError } from '@universe/api/src'
-import { type JupiterOrderUrlParams } from '@universe/api/src/clients/jupiter/types'
+import { FetchError, type JupiterOrderUrlParams } from '@universe/api'
 import { JupiterApiClient } from 'uniswap/src/data/apiClients/jupiterApi/JupiterFetchClient'
 import { isSVMChain } from 'uniswap/src/features/platforms/utils/chains'
 import {

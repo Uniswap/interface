@@ -9,7 +9,7 @@ import { useBlockConfirmationTime } from 'hooks/useBlockConfirmationTime'
 import { useColor } from 'hooks/useColor'
 import { SwapResult, useSwapTransactionStatus } from 'hooks/useSwapCallback'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InterfaceTrade } from 'state/routing/types'
@@ -23,7 +23,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { SignatureExpiredError } from 'utils/errors'
 
-const DividerContainer = styled(Column)`
+const DividerContainer = deprecatedStyled(Column)`
   height: 28px;
   padding: 0px 16px;
   justify-content: center;

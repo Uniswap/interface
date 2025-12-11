@@ -9,6 +9,7 @@ export interface Permit2TransactionStep extends OnChainTransactionFields {
   spender: string
   pair?: [Currency, Currency]
   amount: string
+  tokenAddress: Address
 }
 
 export function createPermit2TransactionStep({
@@ -29,5 +30,5 @@ export function createPermit2TransactionStep({
   const { spender } = parseERC20ApproveCalldata(txRequest.data.toString())
   const amount = amountIn.quotient.toString()
 
-  return { type, txRequest, token, spender, amount, pair }
+  return { type, txRequest, token, spender, amount, pair, tokenAddress: token.address }
 }

@@ -19,6 +19,7 @@ import { logger } from 'utilities/src/logger/logger'
 
 export function OnRampTransferSummaryItem({
   transaction,
+  isExternalProfile,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: OnRampPurchaseInfo | OnRampTransferInfo }
 }): JSX.Element {
@@ -72,5 +73,12 @@ export function OnRampTransferSummaryItem({
     [outputCurrencyInfo, transaction.chainId, transaction.status, transaction.typeInfo.type],
   )
 
-  return <TransactionSummaryLayout caption={caption} icon={icon} transaction={transaction} />
+  return (
+    <TransactionSummaryLayout
+      caption={caption}
+      icon={icon}
+      transaction={transaction}
+      isExternalProfile={isExternalProfile}
+    />
+  )
 }

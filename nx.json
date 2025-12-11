@@ -46,7 +46,7 @@
           "dependentTasksOutputFiles": "**/*.d.ts"
         }
       ],
-      "outputs": [],
+      "outputs": ["{workspaceRoot}/dist/out-tsc/{projectRoot}"],
       "cache": true
     },
     "lint:biome": {
@@ -54,30 +54,46 @@
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["@uniswap/biome-config:prepare"]
+      "dependsOn": ["@uniswap/biome-config:prepare"],
+      "cache": true,
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.biome*",
+        "{workspaceRoot}/biome.json",
+        "{workspaceRoot}/packages/biome-config/**/*"
+      ]
     },
     "lint:biome:fix": {
       "command": "biome check . --write",
       "options": {
         "cwd": "{projectRoot}"
       },
-      "dependsOn": ["@uniswap/biome-config:prepare"]
+      "dependsOn": ["@uniswap/biome-config:prepare"],
+      "cache": false
     },
     "lint:eslint": {
       "command": "eslint . --ext ts,tsx --max-warnings=0",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "cache": true,
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslint*",
+        "{projectRoot}/.eslint*",
+        "{workspaceRoot}/packages/eslint-config/**/*"
+      ]
     },
     "lint:eslint:fix": {
       "command": "eslint . --ext ts,tsx --fix",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "cache": false
     },
     "lint": {
       "executor": "nx:noop",
-      "dependsOn": ["typecheck", "check:circular", "lint:eslint", "lint:biome"],
+      "dependsOn": ["typecheck", "check:circular", "lint:biome", "lint:eslint"],
       "inputs": ["default"],
       "cache": true
     },

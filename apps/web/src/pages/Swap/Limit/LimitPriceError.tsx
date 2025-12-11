@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { LimitPriceErrorType } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Trans } from 'react-i18next'
@@ -11,14 +11,14 @@ import { FadePresence, FadePresenceAnimationType } from 'theme/components/FadePr
 import { transitions } from 'theme/styles'
 import { useSporeColors } from 'ui/src'
 
-const Container = styled(Row)`
+const Container = deprecatedStyled(Row)`
   padding: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 16px;
   margin-top: 4px;
 `
 
-const LogoContainer = styled.div`
+const LogoContainer = deprecatedStyled.div`
   height: 40px;
   width: 40px;
   position: relative;

@@ -1,4 +1,4 @@
-import { type BlockaidScanTransactionRequest } from '@universe/api/src'
+import { type BlockaidScanTransactionRequest } from '@universe/api'
 import type { UniverseChainId } from 'uniswap/src/features/chains/types'
 import type { EthTransaction } from 'uniswap/src/types/walletConnect'
 

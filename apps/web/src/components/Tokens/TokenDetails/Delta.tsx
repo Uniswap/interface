@@ -1,13 +1,13 @@
 import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
 import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { colorsDark, colorsLight } from 'ui/src/theme'
 
-const StyledUpArrow = styled(ArrowChangeUp)<{ $noColor?: boolean }>`
+const StyledUpArrow = deprecatedStyled(ArrowChangeUp)<{ $noColor?: boolean }>`
   color: ${({ theme, $noColor }) =>
     $noColor ? theme.neutral3 : theme.darkMode ? colorsDark.statusSuccess : colorsLight.statusSuccess};
 `
-const StyledDownArrow = styled(ArrowChangeDown)<{ $noColor?: boolean }>`
+const StyledDownArrow = deprecatedStyled(ArrowChangeDown)<{ $noColor?: boolean }>`
   color: ${({ theme, $noColor }) =>
     $noColor ? theme.neutral3 : theme.darkMode ? colorsDark.statusCritical : colorsLight.statusCritical};
 `
@@ -47,7 +47,7 @@ export function DeltaArrow({ delta, formattedDelta, noColor = false, size = 16 }
   )
 }
 
-export const DeltaText = styled.span<{ delta?: number }>`
+export const DeltaText = deprecatedStyled.span<{ delta?: number }>`
   color: ${({ theme, delta }) => {
     if (delta === undefined || delta === 0) {
       return theme.neutral3

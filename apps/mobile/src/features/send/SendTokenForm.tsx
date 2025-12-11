@@ -364,7 +364,11 @@ export function SendTokenForm(): JSX.Element {
 
         {!nftIn && (
           <>
-            <DecimalPadCalculateSpace id={DecimalPadCalculatedSpaceId.Send} decimalPadRef={decimalPadRef} />
+            <DecimalPadCalculateSpace
+              id={DecimalPadCalculatedSpaceId.Send}
+              decimalPadRef={decimalPadRef}
+              isDecimalPadReady={decimalPadReady}
+            />
 
             <Flex
               animation="quick"

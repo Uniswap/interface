@@ -2,7 +2,7 @@ import { POPUP_MAX_WIDTH } from 'components/Popups/constants'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import useMachineTimeMs from 'hooks/useMachineTime'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import ms from 'ms'
 import { useMemo, useState } from 'react'
 import { X } from 'react-feather'
@@ -10,7 +10,7 @@ import { Trans } from 'react-i18next'
 import { CautionTriangle } from 'theme/components/icons/CautionTriangle'
 import { ExternalLink } from 'theme/components/Links'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
-import { Flex, styled as tamaguiStyled } from 'ui/src'
+import { Flex, styled } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
@@ -19,29 +19,29 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { AVERAGE_L1_BLOCK_TIME_MS } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
 
-const BodyRow = styled.div`
+const BodyRow = deprecatedStyled.div`
   color: ${({ theme }) => theme.neutral1};
   font-weight: 485;
   font-size: 14px;
   line-height: 20px;
 `
-const Link = styled(ExternalLink)`
+const Link = deprecatedStyled(ExternalLink)`
   color: ${({ theme }) => theme.black};
   text-decoration: underline;
 `
-const TitleRow = styled.div`
+const TitleRow = deprecatedStyled.div`
   align-items: center;
   display: flex;
   justify-content: flex-start;
 `
-const TitleText = styled.div`
+const TitleText = deprecatedStyled.div`
   color: ${({ theme }) => theme.neutral1};
   font-weight: 535;
   font-size: 16px;
   line-height: 24px;
   margin: 0px 12px;
 `
-const Wrapper = styled.div`
+const Wrapper = deprecatedStyled.div`
   background-color: ${({ theme }) => theme.surface1};
   border-radius: 12px;
   border: 1px solid ${({ theme }) => theme.surface3};
@@ -53,7 +53,7 @@ const Wrapper = styled.div`
   bottom: 16px;
   right: 16px;
 `
-const CloseButton = tamaguiStyled(X, {
+const CloseButton = styled(X, {
   ...ClickableTamaguiStyle,
   size: iconSizes.icon20,
 })

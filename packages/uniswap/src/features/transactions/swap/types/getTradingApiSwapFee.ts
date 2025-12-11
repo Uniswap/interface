@@ -17,7 +17,7 @@ export function getTradingApiSwapFee(quoteResponse?: DiscriminatedQuoteResponse)
 
   // TODO(WALL-5756): remove this once the Trading API adds `aggregatedOuputs` to all quote types.
   if (!aggregatedOutputs || !swapper) {
-    if (!quote.portionAmount || !quote.portionBips) {
+    if (!('portionAmount' in quote) || !('portionBips' in quote) || !quote.portionAmount || !quote.portionBips) {
       return undefined
     }
 
@@ -29,7 +29,7 @@ export function getTradingApiSwapFee(quoteResponse?: DiscriminatedQuoteResponse)
     }
   }
 
-  // In the UL frontend, there should always be a single fee,
+  // In the UL frontend, there should always at most 1 fee,
   // so we just need to look for the first fee where the output isn't going to the swapper address.
 
   const ulFees = aggregatedOutputs.filter((output) => output.recipient !== swapper)

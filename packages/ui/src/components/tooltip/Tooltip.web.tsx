@@ -1,7 +1,8 @@
 import { AdaptParent } from '@tamagui/adapt'
 import { useEffect, useId } from 'react'
-import { styled, Tooltip as TamaguiTooltip, useEvent, withStaticProperties } from 'tamagui'
+import { styled, Tooltip as TamaguiTooltip, withStaticProperties } from 'tamagui'
 import { TooltipContentProps } from 'ui/src/components/tooltip/Tooltip'
+import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 export type { TooltipProps } from 'tamagui'

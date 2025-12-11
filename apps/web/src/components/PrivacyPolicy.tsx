@@ -3,7 +3,7 @@ import Card, { DarkGrayCard } from 'components/Card/cards'
 import { AutoColumn } from 'components/deprecated/Column'
 import Row, { AutoRow, RowBetween } from 'components/deprecated/Row'
 import { useModalState } from 'hooks/useModalState'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useEffect, useMemo, useRef } from 'react'
 import { ArrowDown, Info } from 'react-feather'
 import { useTranslation } from 'react-i18next'
@@ -15,13 +15,13 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isMobileWeb } from 'utilities/src/platform'
 
-const Wrapper = styled.div`
+const Wrapper = deprecatedStyled.div`
   max-height: 70vh;
   overflow: auto;
   padding: 0 1rem;
 `
 
-const StyledExternalCard = styled(Card)`
+const StyledExternalCard = deprecatedStyled(Card)`
   background-color: ${({ theme }) => theme.accent2};
   padding: 0.5rem;
   width: 100%;
@@ -33,7 +33,7 @@ const StyledExternalCard = styled(Card)`
   }
 `
 
-const StyledLinkOut = styled(ArrowDown)`
+const StyledLinkOut = deprecatedStyled(ArrowDown)`
   transform: rotate(230deg);
 `
 

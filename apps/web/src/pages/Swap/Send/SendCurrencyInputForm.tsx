@@ -1,5 +1,5 @@
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
-import { Currency } from '@uniswap/sdk-core'
+import { type Currency } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { isInputGreaterThanDecimals } from 'components/NumericalInput'
 import { SwitchNetworkAction } from 'components/Popups/types'
@@ -11,7 +11,7 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useMultichainContext } from 'state/multichain/useMultichainContext'
 import { SendInputError } from 'state/send/hooks'
 import { useSendContext } from 'state/send/SendContext'
-import { CurrencyState } from 'state/swap/types'
+import { type CurrencyState } from 'state/swap/types'
 import { ThemedText } from 'theme/components'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Button, type ButtonProps, Flex, styled, Text } from 'ui/src'
@@ -27,6 +27,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType } from 'utilities/src/format/types'
 import { maxAmountSpend } from 'utils/maxAmountSpend'
@@ -257,6 +258,7 @@ export default function SendCurrencyInputForm({
               maxDecimals={inputInFiat ? 6 : inputCurrency?.decimals}
               $fontSize={fontSize}
               style={{ lineHeight: `${lineHeight}px` }}
+              testId={TestID.SendFormAmountInput}
             />
             <NumericalInputMimic
               ref={hiddenObserver.ref}

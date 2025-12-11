@@ -1,7 +1,7 @@
 import Column from 'components/deprecated/Column'
 import { useModalInitialState } from 'hooks/useModalInitialState'
 import { ModalState } from 'hooks/useModalState'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { Slash } from 'react-feather'
 import { Trans } from 'react-i18next'
 import { ThemedText } from 'theme/components'
@@ -11,7 +11,7 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
-const ContentWrapper = styled(Column)`
+const ContentWrapper = deprecatedStyled(Column)`
   align-items: center;
   margin: 32px;
   text-align: center;

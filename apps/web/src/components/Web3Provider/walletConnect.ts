@@ -1,3 +1,4 @@
+import { Z_INDEX } from 'theme/zIndex'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { createConnector } from 'wagmi'
 import { walletConnect } from 'wagmi/connectors'
@@ -41,8 +42,7 @@ export const WC_PARAMS = {
   qrModalOptions: {
     themeVariables: {
       '--wcm-font-family': '"Inter custom", sans-serif',
-      // Higher than tamagui's default modal z-index
-      '--wcm-z-index': '100011',
+      '--wcm-z-index': Z_INDEX.overlay.toString(),
     },
   },
 }

@@ -19,10 +19,9 @@ export const [SolscanLogoLight, AnimatedSolscanLogoLight] = createIcon({
       </G>
       <Defs>
         <ClipPath id="clip0_15320_6385">
-          <Rect width="316" height="315" fill="white" />
+          <Rect width="316" height="315" fill="currentColor" />
         </ClipPath>
       </Defs>
     </Svg>
   ),
-  defaultFill: '#00E8B5',
 })

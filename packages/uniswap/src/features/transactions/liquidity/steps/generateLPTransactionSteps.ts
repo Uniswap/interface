@@ -1,5 +1,4 @@
-import { ADDRESS_ZERO } from '@uniswap/router-sdk'
-import { CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { createCollectFeesStep } from 'uniswap/src/features/transactions/liquidity/steps/collectFees'
 import { orderCollectFeesSteps } from 'uniswap/src/features/transactions/liquidity/steps/collectFeesSteps'
 import { orderDecreaseLiquiditySteps } from 'uniswap/src/features/transactions/liquidity/steps/decreaseLiquiditySteps'
@@ -50,25 +49,42 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
       positionTokenPermitTransaction,
     } = txContext
 
-    const revokeToken0 = createRevocationTransactionStep(
-      txContext.revokeToken0Request,
-      action.currency0Amount.currency.wrapped,
-    )
-    const revokeToken1 = createRevocationTransactionStep(
-      txContext.revokeToken1Request,
-      action.currency1Amount.currency.wrapped,
-    )
+    const token0Fields = {
+      txRequest: txContext.revokeToken0Request,
+      tokenAddress: action.currency0Amount.currency.wrapped.address,
+      chainId: action.currency0Amount.currency.chainId,
+      amount: action.currency0Amount.quotient.toString(),
+    }
+
+    const token1Fields = {
+      txRequest: txContext.revokeToken1Request,
+      tokenAddress: action.currency1Amount.currency.wrapped.address,
+      chainId: action.currency1Amount.currency.chainId,
+      amount: action.currency1Amount.quotient.toString(),
+    }
+
+    const revokeToken0 = createRevocationTransactionStep({
+      ...token0Fields,
+      txRequest: txContext.revokeToken0Request,
+    })
+    const revokeToken1 = createRevocationTransactionStep({
+      ...token1Fields,
+      txRequest: txContext.revokeToken1Request,
+    })
     const approvalToken0 = createApprovalTransactionStep({
+      ...token0Fields,
       txRequest: approveToken0Request,
-      amountIn: action.currency0Amount,
     })
     const approvalToken1 = createApprovalTransactionStep({
+      ...token1Fields,
       txRequest: approveToken1Request,
-      amountIn: action.currency1Amount,
     })
+
     const approvalPositionToken = createApprovalTransactionStep({
+      amount: action.liquidityToken ? CurrencyAmount.fromRawAmount(action.liquidityToken, 1).quotient.toString() : '0',
+      tokenAddress: action.liquidityToken?.wrapped.address,
+      chainId: action.liquidityToken?.chainId,
       txRequest: approvePositionTokenRequest,
-      amountIn: action.liquidityToken ? CurrencyAmount.fromRawAmount(action.liquidityToken, 1) : undefined,
       pair: [action.currency0Amount.currency, action.currency1Amount.currency],
     })
 
@@ -99,10 +115,7 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
       case 'migrate':
         if (txContext.unsigned) {
           return orderMigrateLiquiditySteps({
-            permit: createPermit2SignatureStep(
-              txContext.permit.typedData,
-              new Token(1, ADDRESS_ZERO, 1, 'Uniswap V3 Positions NFT-V1', 'Uniswap V3 Positions NFT-V1'),
-            ),
+            permit: createPermit2SignatureStep(txContext.permit.typedData),
             migrate: createMigratePositionAsyncStep(
               txContext.migratePositionRequestArgs,
               txContext.permit.typedData.values.deadline as number,
@@ -127,7 +140,7 @@ export function generateLPTransactionSteps(txContext: LiquidityTxAndGasInfo): Tr
             approvalToken0,
             approvalToken1,
             approvalPositionToken,
-            permit: createPermit2SignatureStep(txContext.permit.typedData, action.currency0Amount.currency), // TODO: what about for multiple tokens
+            permit: createPermit2SignatureStep(txContext.permit.typedData),
             token0PermitTransaction: undefined,
             token1PermitTransaction: undefined,
             increasePosition:

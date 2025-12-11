@@ -12,6 +12,7 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 
 export function OffRampTransferSummaryItem({
   transaction,
+  isExternalProfile,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: OffRampSaleInfo }
 }): JSX.Element {
@@ -42,6 +43,7 @@ export function OffRampTransferSummaryItem({
         />
       }
       transaction={transaction}
+      isExternalProfile={isExternalProfile}
     />
   )
 }

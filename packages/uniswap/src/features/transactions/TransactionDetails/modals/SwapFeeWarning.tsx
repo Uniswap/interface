@@ -12,10 +12,11 @@ import { openUri } from 'uniswap/src/utils/linking'
 import { isWebPlatform } from 'utilities/src/platform'
 
 export function SwapFeeWarning({
-  noFee,
+  noUniswapInterfaceFees,
+  noFeeOnThisSwap,
   children,
   isJupiter,
-}: PropsWithChildren<{ noFee: boolean; isJupiter: boolean }>): JSX.Element {
+}: PropsWithChildren<{ noUniswapInterfaceFees: boolean; noFeeOnThisSwap: boolean; isJupiter: boolean }>): JSX.Element {
   const priceUXEnabled = usePriceUXEnabled()
   const colors = useSporeColors()
   const { t } = useTranslation()
@@ -24,13 +25,16 @@ export function SwapFeeWarning({
     await openUri({ uri: uniswapUrls.helpArticleUrls.swapFeeInfo })
   }
 
-  const caption = priceUXEnabled
-    ? t('fee.uniswap.description')
-    : noFee
-      ? t('swap.warning.uniswapFee.message.default')
-      : isJupiter
-        ? t('swap.fees.jupiter.message')
-        : t('swap.warning.uniswapFee.message.included')
+  const caption =
+    noUniswapInterfaceFees && !isJupiter
+      ? t('swap.warning.noInterfaceFees.message')
+      : priceUXEnabled
+        ? t('fee.uniswap.description')
+        : noFeeOnThisSwap
+          ? t('swap.warning.uniswapFee.message.default')
+          : isJupiter
+            ? t('swap.fees.jupiter.message')
+            : t('swap.warning.uniswapFee.message.included')
 
   return (
     <WarningInfo

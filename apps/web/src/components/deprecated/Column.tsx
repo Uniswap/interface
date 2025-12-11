@@ -1,8 +1,8 @@
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { Gap } from 'theme'
 
 /** @deprecated Please use `Flex` from `ui/src` going forward */
-const Column = styled.div<{
+const Column = deprecatedStyled.div<{
   gap?: Gap | string
   flex?: string
 }>`
@@ -14,12 +14,12 @@ const Column = styled.div<{
 `
 
 /** @deprecated Please use `Flex` from `ui/src` going forward */
-export const ColumnCenter = styled(Column)`
+export const ColumnCenter = deprecatedStyled(Column)`
   width: 100%;
   align-items: center;
 `
 
-export const AutoColumn = styled.div<{
+export const AutoColumn = deprecatedStyled.div<{
   gap?: Gap | string
   justify?: 'stretch' | 'center' | 'start' | 'end' | 'flex-start' | 'flex-end' | 'space-between'
   grow?: true

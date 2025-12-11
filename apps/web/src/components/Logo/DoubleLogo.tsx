@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { memo } from 'react'
 import { Flex, useColorSchemeFromSeed } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
@@ -12,7 +12,7 @@ import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { isMobileApp } from 'utilities/src/platform'
 
-const MissingImageLogo = styled.div<{ $size?: string; $textColor: string; $backgroundColor: string }>`
+const MissingImageLogo = deprecatedStyled.div<{ $size?: string; $textColor: string; $backgroundColor: string }>`
   --size: ${({ $size }) => $size};
   border-radius: 100px;
   color: ${({ $textColor }) => $textColor};

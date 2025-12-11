@@ -1,5 +1,6 @@
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { getExploreDescription, getExploreTitle } from 'pages/getExploreTitle'
+import { getPortfolioDescription, getPortfolioTitle } from 'pages/getPortfolioTitle'
 import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from 'pages/Landing'
@@ -93,8 +94,6 @@ const StaticTitlesAndDescriptions = {
   MigrateDescriptionV4: i18n.t('title.easilyRemoveV4'),
   AddLiquidityDescription: i18n.t('title.earnFees'),
   PasskeyManagementTitle: i18n.t('title.managePasskeys'),
-  PortfolioTitle: i18n.t('portfolio.title'),
-  PortfolioDescription: i18n.t('portfolio.description'),
   // TODO(LP-295): Update after launch
   ToucanPlaceholderDescription: 'Placeholder description for Toucan page',
 }
@@ -398,8 +397,8 @@ export const routes: RouteDefinition[] = [
   createRouteDefinition({
     path: '/portfolio',
     getElement: () => <Portfolio />,
-    getTitle: () => StaticTitlesAndDescriptions.PortfolioTitle,
-    getDescription: () => StaticTitlesAndDescriptions.PortfolioDescription,
+    getTitle: getPortfolioTitle,
+    getDescription: getPortfolioDescription,
     enabled: (args) => args.isPortfolioPageEnabled ?? false,
     nestedPaths: ['tokens', 'defi', 'nfts', 'activity'],
   }),

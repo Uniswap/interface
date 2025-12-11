@@ -21,7 +21,7 @@ export function BridgingCurrencyRow({
   formattedOutputTokenAmount: string
 }): JSX.Element {
   return (
-    <Flex grow row py="$spacing2" gap="$spacing4" alignItems="center">
+    <Flex grow row py="$spacing2" gap="$spacing4" alignItems="center" flexWrap="wrap">
       <CurrencyAmount
         chainId={inputCurrencyInfo?.currency.chainId ?? null}
         amount={formattedInputTokenAmount}

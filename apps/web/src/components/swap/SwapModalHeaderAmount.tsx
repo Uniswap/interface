@@ -3,7 +3,7 @@ import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { PropsWithChildren, ReactNode } from 'react'
 import { TextProps } from 'rebass'
 import { ThemedText } from 'theme/components'
@@ -13,7 +13,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 
-const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
+const Label = deprecatedStyled(ThemedText.BodySmall)<{ cursor?: string }>`
   cursor: ${({ cursor }) => cursor};
   color: ${({ theme }) => theme.neutral2};
   margin-right: 8px;

@@ -8,6 +8,7 @@ import { ActivityContent } from 'src/components/activity/ActivityContent'
 import { Screen } from 'src/components/layout/Screen'
 import { Text } from 'ui/src'
 import { spacing } from 'ui/src/theme'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/slice/hooks'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
@@ -47,7 +48,12 @@ export function ActivityScreen(): JSX.Element {
       <Text variant="heading3" py="$padding16" px="$spacing24">
         {t('common.activity')}
       </Text>
-      <ActivityContent ref={scrollRef} containerProps={containerProps} owner={activeAccount.address} />
+      <ActivityContent
+        ref={scrollRef}
+        isExternalProfile={activeAccount.type === AccountType.Readonly}
+        containerProps={containerProps}
+        owner={activeAccount.address}
+      />
     </Screen>
   )
 }

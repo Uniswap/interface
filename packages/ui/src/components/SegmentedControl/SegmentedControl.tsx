@@ -167,10 +167,14 @@ OptionButton.displayName = 'OptionButton'
 export interface SegmentedControlOption<T extends string = string> {
   // String value to be selected/stored, used as default display value
   value: T
+  // Optional display text, different from value
+  displayText?: string
   // Optional custom display element
   display?: JSX.Element
   // Optional wrapper around the display element
   wrapper?: JSX.Element
+  // Disable the specific option
+  disabled?: boolean
 }
 
 type SegmentedControlSize = 'xsmall' | 'small' | 'smallThumbnail' | 'default' | 'large' | 'largeThumbnail'
@@ -263,13 +267,15 @@ export function SegmentedControl<T extends string = string>({
         gap={gap}
       >
         {options.map((option, index) => {
-          const { value, display, wrapper } = option
+          const { value, display, displayText, wrapper } = option
+
+          const itemDisabled = disabled || option.disabled
 
           const optionButton = (
             <OptionButton
               key={value}
               active={selectedOption === value}
-              disabled={disabled}
+              disabled={itemDisabled}
               fullWidth={fullWidth}
               size={size}
               value={value}
@@ -285,12 +291,12 @@ export function SegmentedControl<T extends string = string>({
                   color={getOptionTextColor({
                     active: selectedOption === value,
                     hovered: hoveredIndex === index,
-                    disabled,
+                    disabled: itemDisabled,
                   })}
                   userSelect="none"
                   variant={size === 'large' ? 'buttonLabel3' : 'buttonLabel4'}
                 >
-                  {value}
+                  {displayText ?? value}
                 </Text>
               )}
             </OptionButton>

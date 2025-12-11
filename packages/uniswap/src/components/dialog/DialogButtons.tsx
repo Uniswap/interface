@@ -1,6 +1,8 @@
 import { Button, type ButtonEmphasis, type ButtonVariant, Flex, type FlexProps } from 'ui/src'
+import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 
 export type ButtonConfig = {
+  testID?: TestIDType
   text: string
   onPress: () => void
   variant?: ButtonVariant
@@ -30,6 +32,7 @@ export function DialogButtons({
     <Flex {...DEFAULT_BUTTON_CONTAINER_PROPS} {...buttonContainerProps}>
       {secondaryButton?.text && (
         <Button
+          testID={secondaryButton.testID}
           variant={secondaryButton.variant ?? 'default'}
           emphasis={secondaryButton.emphasis ?? 'secondary'}
           minHeight="$spacing36"
@@ -41,6 +44,7 @@ export function DialogButtons({
       )}
       {primaryButton?.text && (
         <Button
+          testID={primaryButton.testID}
           variant={primaryButton.variant ?? 'default'}
           emphasis={primaryButton.emphasis ?? 'primary'}
           minHeight="$spacing36"

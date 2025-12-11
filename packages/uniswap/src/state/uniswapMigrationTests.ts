@@ -1,5 +1,6 @@
 /* biome-ignore-all lint/suspicious/noExplicitAny: legacy code needs review */
 import { SearchHistoryResultType } from 'uniswap/src/features/search/SearchHistoryResult'
+import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 import { PreV55SearchResultType } from 'uniswap/src/state/oldTypes'
 
 // Mobile: 89
@@ -44,4 +45,19 @@ export function testMigrateSearchHistory(migration: (state: any) => any, prevSch
 export function testAddActivityVisibility(migration: (state: any) => any, prevSchema: any): void {
   const result = migration(prevSchema)
   expect(result.visibility.activity).toEqual({})
+}
+
+// Mobile: 96
+// Extension: 30
+// Web: 60
+export function testMigrateDismissedTokenWarnings(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+
+  for (const chainId in result.tokens.dismissedTokenWarnings) {
+    for (const address in result.tokens.dismissedTokenWarnings[chainId]) {
+      expect(result.tokens.dismissedTokenWarnings[chainId][address].warnings).toEqual([
+        TokenProtectionWarning.NonDefault,
+      ])
+    }
+  }
 }

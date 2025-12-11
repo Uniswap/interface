@@ -1,11 +1,11 @@
 import { motion } from 'framer-motion'
-import { keyframes, styled } from 'lib/styled-components'
+import { deprecatedStyled, keyframes } from 'lib/styled-components'
 import { parseToRgb } from 'polished'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
 import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
 
-const Mask = motion(styled.div`
+const Mask = motion(deprecatedStyled.div`
   position: relative;
   display: flex;
   flex: 0;
@@ -20,7 +20,7 @@ const Mask = motion(styled.div`
   }
 `)
 
-const Char = motion(styled.div<{ color: string }>`
+const Char = motion(deprecatedStyled.div<{ color: string }>`
   font-variant-numeric: lining-nums tabular-nums;
   font-family: Basel;
   font-size: 52px;
@@ -45,7 +45,7 @@ const Char = motion(styled.div<{ color: string }>`
     line-height: 22px;
   }
 `)
-const Container = styled.div<{ live?: boolean }>`
+const Container = deprecatedStyled.div<{ live?: boolean }>`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -73,7 +73,7 @@ const Container = styled.div<{ live?: boolean }>`
   background-size: 12px 12px;
   background-position: -8.5px -8.5px;
 `
-const SpriteContainer = motion(styled.div`
+const SpriteContainer = motion(deprecatedStyled.div`
   pointer-events: none;
   diplay: flex;
   flex-direction: column;
@@ -88,7 +88,7 @@ const pulsate = (color: string) => keyframes`
     box-shadow: 0 0 0 4px ${opacify(24, color)};
   }
 `
-export const LiveIcon = styled.div<{ display: string }>`
+export const LiveIcon = deprecatedStyled.div<{ display: string }>`
   display: ${({ display }) => display};
   width: 6px;
   height: 6px;
@@ -102,7 +102,7 @@ export const LiveIcon = styled.div<{ display: string }>`
   animation-timing-function: ease-in-out;
 `
 
-const Title = styled.h3<{ color: string }>`
+const Title = deprecatedStyled.h3<{ color: string }>`
   padding: 0;
   margin: 0;
   font-family: Basel;

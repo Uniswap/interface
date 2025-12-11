@@ -2,30 +2,24 @@
 
 exports[`TDPPoolTable > renders data filled state 1`] = `
 <DocumentFragment>
-  .c2 {
+  .c1 {
   height: 16px;
   width: 16px;
 }
 
-.c2 path {
+.c1 path {
   stroke: #FF37C7;
   background: rgba(19, 19, 19, 0.63);
   fill: none;
 }
 
-.c3 {
+.c2 {
   animation: 2s fvtopB linear infinite;
 }
 
 .c0 {
   display: inline-block;
   height: inherit;
-}
-
-.c1 {
-  color: none;
-  text-decoration: none;
-  cursor: pointer;
 }
 
 <span
@@ -394,9 +388,9 @@ exports[`TDPPoolTable > renders data filled state 1`] = `
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column t_group_true"
             >
               <a
-                class="c1"
                 data-discover="true"
                 href="/explore/pools/ethereum/0x123"
+                style="cursor: pointer; text-decoration: none;"
               >
                 <div
                   class="_backgroundColor-0hover-surface1Hov3121676 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-fit-content _minWidth-10037 _transition-background-1323681470 _height-48px _borderTopLeftRadius-t-radius-ro291586424 _borderTopRightRadius-t-radius-ro291586424 _borderBottomRightRadius-t-radius-ro291586424 _borderBottomLeftRadius-t-radius-ro291586424"
@@ -597,7 +591,7 @@ exports[`TDPPoolTable > renders data filled state 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-accent2Soli100 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _width-fit-content _pt-t-space-pad95589114 _pr-t-space-pad95589114 _pb-t-space-pad95589114 _pl-t-space-pad95589114 _gap-t-space-gap56 _height-34px"
           >
             <svg
-              class="c2 c3"
+              class="c1 c2"
               fill="none"
               stroke="#FF37C7"
               viewBox="0 0 24 24"

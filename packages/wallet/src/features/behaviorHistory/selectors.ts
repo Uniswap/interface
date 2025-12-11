@@ -81,3 +81,6 @@ export const selectHasSeenCreatedSmartWalletModal = (state: WalletState): boolea
 
 export const selectHasDismissedMonadAnnouncement = (state: WalletState): boolean =>
   state.behaviorHistory.hasDismissedMonadAnnouncement ?? false
+
+export const selectHasDismissedNoAppFeesAnnouncement = (state: WalletState): boolean =>
+  state.behaviorHistory.hasDismissedNoAppFeesAnnouncement ?? false

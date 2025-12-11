@@ -1,11 +1,11 @@
 import { PersistState } from 'redux-persist'
-import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
-import { SerializedTokenMap } from 'uniswap/src/features/tokens/slice/types'
+import { TokensState } from 'uniswap/src/features/tokens/warnings/slice/slice'
+import { SerializedTokenMap, TokenDismissInfo } from 'uniswap/src/features/tokens/warnings/slice/types'
 
 export type PersistAppStateV16 = {
   _persist: PersistState
   user?: {
-    tokens: SerializedTokenMap
+    tokens: SerializedTokenMap<TokenDismissInfo>
   }
   tokens?: TokensState
 }

@@ -2,31 +2,27 @@
 
 exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
 <DocumentFragment>
-  .c5 {
+  .c4 {
   height: 16px;
   width: 16px;
 }
 
-.c5 path {
+.c4 path {
   stroke: #FF37C7;
   background: rgba(19, 19, 19, 0.63);
   fill: none;
 }
 
-.c6 {
+.c5 {
   animation: 2s fvtopB linear infinite;
 }
 
-.c2 {
+.c1 {
   display: inline-block;
   height: inherit;
 }
 
-.c1 {
-  position: relative;
-}
-
-.c3 {
+.c2 {
   text-decoration: none;
   cursor: pointer;
   transition-duration: 125ms;
@@ -35,15 +31,15 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
   font-weight: 500;
 }
 
-.c3 :hover {
+.c2 :hover {
   opacity: 0.6;
 }
 
-.c3 :active {
+.c2 :active {
   opacity: 0.4;
 }
 
-.c4 {
+.c3 {
   color: rgba(19, 19, 19, 0.63);
   stroke: rgba(19, 19, 19, 0.63);
 }
@@ -98,20 +94,14 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
                   style="transition: 100ms;"
                 >
                   <svg
-                    class="c1"
                     fill="none"
-                    height="17"
-                    viewBox="0 0 16 17"
-                    width="16"
-                    xmlns="http://www.w3.org/2000/svg"
+                    stroke-width="8"
+                    style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.35);"
+                    viewBox="0 0 17 16"
                   >
                     <path
-                      d="M7.99954 13.1667C7.82887 13.1667 7.65818 13.1014 7.52818 12.9714L4.86152 10.3047C4.60085 10.044 4.60085 9.62267 4.86152 9.362C5.12218 9.10134 5.54356 9.10134 5.80422 9.362L7.99954 11.5573L10.1948 9.362C10.4555 9.10134 10.8769 9.10134 11.1376 9.362C11.3982 9.62267 11.3982 10.044 11.1376 10.3047L8.47089 12.9714C8.34089 13.1014 8.1702 13.1667 7.99954 13.1667Z"
-                      fill="#9B9B9B"
-                    />
-                    <path
-                      d="M10.6662 7.83336C10.4955 7.83336 10.3248 7.76805 10.1948 7.63805L7.99954 5.44274L5.80422 7.63805C5.54356 7.89872 5.12218 7.89872 4.86152 7.63805C4.60085 7.37738 4.60085 6.95601 4.86152 6.69534L7.52818 4.02868C7.78885 3.76801 8.21022 3.76801 8.47089 4.02868L11.1376 6.69534C11.3982 6.95601 11.3982 7.37738 11.1376 7.63805C11.0076 7.76805 10.8369 7.83336 10.6662 7.83336Z"
-                      fill="#9B9B9B"
+                      d="M11.638 8.86209C11.8987 9.12275 11.8987 9.54413 11.638 9.80479L8.97138 12.4715C8.84138 12.6015 8.67069 12.6668 8.50002 12.6668C8.32936 12.6668 8.15867 12.6015 8.02867 12.4715L5.362 9.80479C5.10134 9.54413 5.10134 9.12275 5.362 8.86209C5.62267 8.60142 6.04405 8.60142 6.30471 8.86209L8.50002 11.0574L10.6953 8.86209C10.956 8.60142 11.3774 8.60142 11.638 8.86209ZM6.30471 7.13813L8.50002 4.94281L10.6953 7.13813C10.8253 7.26813 10.996 7.33344 11.1667 7.33344C11.3374 7.33344 11.508 7.26813 11.638 7.13813C11.8987 6.87746 11.8987 6.45609 11.638 6.19542L8.97138 3.52875C8.71071 3.26809 8.28934 3.26809 8.02867 3.52875L5.362 6.19542C5.10134 6.45609 5.10134 6.87746 5.362 7.13813C5.62267 7.39879 6.04405 7.39879 6.30471 7.13813Z"
+                      fill="currentColor"
                     />
                   </svg>
                   <span
@@ -205,7 +195,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
                       target="_blank"
                     >
                       <div
-                        class="c2"
+                        class="c1"
                       >
                         <div
                           class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
@@ -286,7 +276,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
                     class="_fontVariantNumeric-_platformweb_lining-nums1570946179 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-t-space-spa1360334080 _pl-t-space-spa1360334080 _pt-t-space-spa1360334076 _pb-t-space-spa1360334076 _alignItems-center _flexGrow-1"
                   >
                     <a
-                      class="c3 c4"
+                      class="c2 c3"
                       href="https://etherscan.io/address/0xabc"
                       rel="noopener noreferrer"
                       target="_blank"
@@ -309,7 +299,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _backgroundColor-accent2Soli100 _borderTopLeftRadius-t-radius-ro840690002 _borderTopRightRadius-t-radius-ro840690002 _borderBottomRightRadius-t-radius-ro840690002 _borderBottomLeftRadius-t-radius-ro840690002 _width-fit-content _pt-t-space-pad95589114 _pr-t-space-pad95589114 _pb-t-space-pad95589114 _pl-t-space-pad95589114 _gap-t-space-gap56 _height-34px"
           >
             <svg
-              class="c5 c6"
+              class="c4 c5"
               fill="none"
               stroke="#FF37C7"
               viewBox="0 0 24 24"
@@ -336,11 +326,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
 
 exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
 <DocumentFragment>
-  .c1 {
-  position: relative;
-}
-
-.c0 {
+  .c0 {
   min-height: 256px;
 }
 
@@ -390,20 +376,14 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
                   style="transition: 100ms;"
                 >
                   <svg
-                    class="c1"
                     fill="none"
-                    height="17"
-                    viewBox="0 0 16 17"
-                    width="16"
-                    xmlns="http://www.w3.org/2000/svg"
+                    stroke-width="8"
+                    style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.35);"
+                    viewBox="0 0 17 16"
                   >
                     <path
-                      d="M7.99954 13.1667C7.82887 13.1667 7.65818 13.1014 7.52818 12.9714L4.86152 10.3047C4.60085 10.044 4.60085 9.62267 4.86152 9.362C5.12218 9.10134 5.54356 9.10134 5.80422 9.362L7.99954 11.5573L10.1948 9.362C10.4555 9.10134 10.8769 9.10134 11.1376 9.362C11.3982 9.62267 11.3982 10.044 11.1376 10.3047L8.47089 12.9714C8.34089 13.1014 8.1702 13.1667 7.99954 13.1667Z"
-                      fill="#9B9B9B"
-                    />
-                    <path
-                      d="M10.6662 7.83336C10.4955 7.83336 10.3248 7.76805 10.1948 7.63805L7.99954 5.44274L5.80422 7.63805C5.54356 7.89872 5.12218 7.89872 4.86152 7.63805C4.60085 7.37738 4.60085 6.95601 4.86152 6.69534L7.52818 4.02868C7.78885 3.76801 8.21022 3.76801 8.47089 4.02868L11.1376 6.69534C11.3982 6.95601 11.3982 7.37738 11.1376 7.63805C11.0076 7.76805 10.8369 7.83336 10.6662 7.83336Z"
-                      fill="#9B9B9B"
+                      d="M11.638 8.86209C11.8987 9.12275 11.8987 9.54413 11.638 9.80479L8.97138 12.4715C8.84138 12.6015 8.67069 12.6668 8.50002 12.6668C8.32936 12.6668 8.15867 12.6015 8.02867 12.4715L5.362 9.80479C5.10134 9.54413 5.10134 9.12275 5.362 8.86209C5.62267 8.60142 6.04405 8.60142 6.30471 8.86209L8.50002 11.0574L10.6953 8.86209C10.956 8.60142 11.3774 8.60142 11.638 8.86209ZM6.30471 7.13813L8.50002 4.94281L10.6953 7.13813C10.8253 7.26813 10.996 7.33344 11.1667 7.33344C11.3374 7.33344 11.508 7.26813 11.638 7.13813C11.8987 6.87746 11.8987 6.45609 11.638 6.19542L8.97138 3.52875C8.71071 3.26809 8.28934 3.26809 8.02867 3.52875L5.362 6.19542C5.10134 6.45609 5.10134 6.87746 5.362 7.13813C5.62267 7.39879 6.04405 7.39879 6.30471 7.13813Z"
+                      fill="currentColor"
                     />
                   </svg>
                   <span
@@ -4128,11 +4108,7 @@ exports[`PoolDetailsTransactionsTable > renders error state 1`] = `
 
 exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
 <DocumentFragment>
-  .c1 {
-  position: relative;
-}
-
-.c0 {
+  .c0 {
   min-height: 256px;
 }
 
@@ -4182,20 +4158,14 @@ exports[`PoolDetailsTransactionsTable > renders loading state 1`] = `
                   style="transition: 100ms;"
                 >
                   <svg
-                    class="c1"
                     fill="none"
-                    height="17"
-                    viewBox="0 0 16 17"
-                    width="16"
-                    xmlns="http://www.w3.org/2000/svg"
+                    stroke-width="8"
+                    style="width: 16px; height: 16px; color: rgba(19, 19, 19, 0.35);"
+                    viewBox="0 0 17 16"
                   >
                     <path
-                      d="M7.99954 13.1667C7.82887 13.1667 7.65818 13.1014 7.52818 12.9714L4.86152 10.3047C4.60085 10.044 4.60085 9.62267 4.86152 9.362C5.12218 9.10134 5.54356 9.10134 5.80422 9.362L7.99954 11.5573L10.1948 9.362C10.4555 9.10134 10.8769 9.10134 11.1376 9.362C11.3982 9.62267 11.3982 10.044 11.1376 10.3047L8.47089 12.9714C8.34089 13.1014 8.1702 13.1667 7.99954 13.1667Z"
-                      fill="#9B9B9B"
-                    />
-                    <path
-                      d="M10.6662 7.83336C10.4955 7.83336 10.3248 7.76805 10.1948 7.63805L7.99954 5.44274L5.80422 7.63805C5.54356 7.89872 5.12218 7.89872 4.86152 7.63805C4.60085 7.37738 4.60085 6.95601 4.86152 6.69534L7.52818 4.02868C7.78885 3.76801 8.21022 3.76801 8.47089 4.02868L11.1376 6.69534C11.3982 6.95601 11.3982 7.37738 11.1376 7.63805C11.0076 7.76805 10.8369 7.83336 10.6662 7.83336Z"
-                      fill="#9B9B9B"
+                      d="M11.638 8.86209C11.8987 9.12275 11.8987 9.54413 11.638 9.80479L8.97138 12.4715C8.84138 12.6015 8.67069 12.6668 8.50002 12.6668C8.32936 12.6668 8.15867 12.6015 8.02867 12.4715L5.362 9.80479C5.10134 9.54413 5.10134 9.12275 5.362 8.86209C5.62267 8.60142 6.04405 8.60142 6.30471 8.86209L8.50002 11.0574L10.6953 8.86209C10.956 8.60142 11.3774 8.60142 11.638 8.86209ZM6.30471 7.13813L8.50002 4.94281L10.6953 7.13813C10.8253 7.26813 10.996 7.33344 11.1667 7.33344C11.3374 7.33344 11.508 7.26813 11.638 7.13813C11.8987 6.87746 11.8987 6.45609 11.638 6.19542L8.97138 3.52875C8.71071 3.26809 8.28934 3.26809 8.02867 3.52875L5.362 6.19542C5.10134 6.45609 5.10134 6.87746 5.362 7.13813C5.62267 7.39879 6.04405 7.39879 6.30471 7.13813Z"
+                      fill="currentColor"
                     />
                   </svg>
                   <span

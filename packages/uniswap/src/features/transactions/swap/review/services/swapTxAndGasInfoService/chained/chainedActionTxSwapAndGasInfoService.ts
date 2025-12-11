@@ -51,13 +51,8 @@ export function createChainedActionSwapTxAndGasInfoService(): SwapTxAndGasInfoSe
       // // Preserve tradeId if previous fetch was skipped
       // planId = tradeResponse?.planId ?? planId
 
-      // @ts-expect-error TODO API-1530 SWAP-458: once fixed use convertGasFeeToDisplayValue(newQuote.gasFee, newQuote.gasStrategy)
-      const gasStrategy: GasStrategy | undefined = newQuote.gasStrategies?.[0]
-        ? {
-            // @ts-expect-error TODO API-1530 SWAP-458: once fixed use convertGasFeeToDisplayValue(newQuote.gasFee, newQuote.gasStrategy)
-            ...newQuote.gasStrategies[0],
-            displayLimitInflationFactor: 1,
-          }
+      const gasStrategy: GasStrategy | undefined = newQuote.gasEstimates?.[0]
+        ? { ...newQuote.gasEstimates[0].strategy, displayLimitInflationFactor: 1 }
         : undefined
 
       const gasFee: GasFeeResult = {

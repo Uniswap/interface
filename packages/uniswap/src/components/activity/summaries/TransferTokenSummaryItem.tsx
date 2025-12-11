@@ -26,6 +26,7 @@ function _TransferTokenSummaryItem({
   otherAddress,
   transaction,
   index,
+  isExternalProfile,
 }: SummaryItemProps & {
   transactionType: TransactionType.Send | TransactionType.Receive
   otherAddress: string
@@ -137,7 +138,15 @@ function _TransferTokenSummaryItem({
     [captionText, unitag?.username],
   )
 
-  return <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} />
+  return (
+    <TransactionSummaryLayout
+      caption={caption}
+      icon={icon}
+      index={index}
+      transaction={transaction}
+      isExternalProfile={isExternalProfile}
+    />
+  )
 }
 
 export const TransferTokenSummaryItem = memo(_TransferTokenSummaryItem)

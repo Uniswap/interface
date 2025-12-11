@@ -24,11 +24,13 @@ export function generateActivityItemRenderer({
   loadingItem,
   sectionHeaderElement,
   swapCallbacks,
+  isExternalProfile = false,
   authTrigger,
 }: {
   loadingItem: JSX.Element
   sectionHeaderElement: React.FunctionComponent<{ title: string; index?: number }>
   swapCallbacks: SwapSummaryCallbacks | undefined
+  isExternalProfile?: boolean
   authTrigger: ((args: { successCallback: () => void; failureCallback: () => void }) => Promise<void>) | undefined
 }): ActivityItemRenderer {
   // eslint-disable-next-line complexity
@@ -99,6 +101,7 @@ export function generateActivityItemRenderer({
       transaction: item,
       swapCallbacks,
       index,
+      isExternalProfile,
     })
   }
 }

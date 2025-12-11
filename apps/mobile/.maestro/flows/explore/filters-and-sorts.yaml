@@ -1,7 +1,5 @@
 appId: com.uniswap.mobile.dev
 jsEngine: graaljs
-tags:
-  - language-agnostic
 env:
   E2E_RECOVERY_PHRASE: ${E2E_RECOVERY_PHRASE}
   DATADOG_API_KEY: ${DATADOG_API_KEY}
@@ -72,11 +70,11 @@ env:
 # Wait for sort options to appear
 - extendedWaitUntil:
     visible:
-      id: "MARKET_CAP"
+      text: ".*Market.*"
     timeout: 3000
 
 - tapOn:
-    id: "MARKET_CAP"
+    text: ".*Market.*"
 
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
@@ -106,11 +104,11 @@ env:
 - waitForAnimationToEnd
 - extendedWaitUntil:
     visible:
-      id: "TOTAL_VALUE_LOCKED"
+      text: ".*TVL.*"
     timeout: 3000
 
 - tapOn:
-    id: "TOTAL_VALUE_LOCKED"
+    text: ".*TVL.*"
 
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
@@ -142,11 +140,11 @@ env:
 # Wait for sort options to appear
 - extendedWaitUntil:
     visible:
-      id: "PRICE_PERCENT_CHANGE_1_DAY_DESC"
+      text: ".*Price.*increase.*"
     timeout: 3000
 
 - tapOn:
-    id: "PRICE_PERCENT_CHANGE_1_DAY_DESC"
+    text: ".*Price.*increase.*"
 
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
@@ -178,11 +176,11 @@ env:
 # Wait for sort options to appear
 - extendedWaitUntil:
     visible:
-      id: "PRICE_PERCENT_CHANGE_1_DAY_ASC"
+      text: ".*Price.*decrease.*"
     timeout: 3000
 
 - tapOn:
-    id: "PRICE_PERCENT_CHANGE_1_DAY_ASC"
+    text: ".*Price.*decrease.*"
 
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js
@@ -214,11 +212,11 @@ env:
 # Wait for sort options to appear
 - extendedWaitUntil:
     visible:
-      id: "VOLUME"
+      text: ".*Volume.*"
     timeout: 3000
 
 - tapOn:
-    id: "VOLUME"
+    text: ".*Volume.*"
 
 - runScript:
     file: ../../scripts/performance/dist/actions/track-action.js

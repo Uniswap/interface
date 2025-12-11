@@ -1,3 +1,4 @@
+import { useTheme } from '@react-navigation/core'
 import { memo, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewStyle } from 'react-native'
@@ -58,6 +59,7 @@ const NetworkPillsRow = memo(function NetworkPillsRow({
   onSelectNetwork: (chainId: UniverseChainId | null) => void
 }): JSX.Element {
   const colors = useSporeColors()
+  const theme = useTheme()
   const { chains } = useEnabledChains()
   const flatListRef = useRef<FlatList<UniverseChainId>>(null)
 
@@ -68,6 +70,7 @@ const NetworkPillsRow = memo(function NetworkPillsRow({
     items: chains,
   })
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: need theme dep for foregroundColor to change on theme change
   const renderItemNetworkPills = useCallback(
     ({ item }: { item: UniverseChainId }) => {
       return (
@@ -90,7 +93,7 @@ const NetworkPillsRow = memo(function NetworkPillsRow({
         </TouchableArea>
       )
     },
-    [colors.neutral1.val, onSelectNetwork, selectedNetwork],
+    [colors.neutral1.val, onSelectNetwork, selectedNetwork, theme],
   )
 
   const ListHeaderComponent = useMemo(() => {

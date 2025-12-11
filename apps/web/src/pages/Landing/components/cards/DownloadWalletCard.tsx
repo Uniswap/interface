@@ -1,4 +1,5 @@
 import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
+import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
 import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
 import { Wallet } from 'pages/Landing/components/Icons'
@@ -12,6 +13,7 @@ export function DownloadWalletCard() {
   const theme = useSporeColors()
   const isDarkMode = useIsDarkMode()
   const { t } = useTranslation()
+  const isUnificationCopyEnabled = useFeatureFlag(FeatureFlags.UnificationCopy)
 
   const { rive: lightAnimation, RiveComponent: LightAnimation } = useRive({
     src: '/rive/landing-page.riv',
@@ -42,12 +44,21 @@ export function DownloadWalletCard() {
       }
       subtitle={t('landing.walletSubtitle')}
       bodyText={
-        <Trans
-          i18nKey="landing.walletBody"
-          components={{
-            Star: <Star color="$accent1" size="$icon.24" mb={-4} />,
-          }}
-        />
+        isUnificationCopyEnabled ? (
+          <Trans
+            i18nKey="landing.walletBody"
+            components={{
+              Star: <Star color="$accent1" size="$icon.24" mb={-4} />,
+            }}
+          />
+        ) : (
+          <Trans
+            i18nKey="landing.walletBody.old"
+            components={{
+              Star: <Star color="$accent1" size="$icon.24" mb={-4} />,
+            }}
+          />
+        )
       }
       button={
         <PillButton color={theme.accent1.val} label={t('common.downloadUniswapWallet')} backgroundColor="$surface1" />

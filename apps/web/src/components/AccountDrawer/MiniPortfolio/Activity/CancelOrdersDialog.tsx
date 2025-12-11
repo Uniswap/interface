@@ -6,7 +6,7 @@ import { ColumnCenter } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useMemo } from 'react'
 import { Slash } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
@@ -25,11 +25,11 @@ import { UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/tr
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
 
-const ModalHeader = styled(GetHelpHeader)`
+const ModalHeader = deprecatedStyled(GetHelpHeader)`
   padding: 4px 0px;
 `
 
-const Container = styled(ColumnCenter)`
+const Container = deprecatedStyled(ColumnCenter)`
   background-color: ${({ theme }) => theme.surface1};
   border-radius: 16px;
   padding: 16px 24px 24px 24px;

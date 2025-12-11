@@ -2,30 +2,14 @@
 
 exports[`TokenLinkCell > renders known token on a different chain 1`] = `
 <DocumentFragment>
-  .c0 {
-  text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #131313;
-}
-
-.c0 :hover {
-  opacity: 0.6;
-}
-
-.c0 :active {
-  opacity: 0.4;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <a
-      class="c0"
       data-discover="true"
       href="/explore/tokens/polygon/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+      style="cursor: pointer; text-decoration: none; opacity: 1; transition: 100ms;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _maxWidth-100px _alignItems-center"
@@ -99,30 +83,14 @@ exports[`TokenLinkCell > renders known token on a different chain 1`] = `
 
 exports[`TokenLinkCell > renders known token on mainnet 1`] = `
 <DocumentFragment>
-  .c0 {
-  text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #131313;
-}
-
-.c0 :hover {
-  opacity: 0.6;
-}
-
-.c0 :active {
-  opacity: 0.4;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <a
-      class="c0"
       data-discover="true"
       href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+      style="cursor: pointer; text-decoration: none; opacity: 1; transition: 100ms;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _maxWidth-100px _alignItems-center"
@@ -171,30 +139,14 @@ exports[`TokenLinkCell > renders known token on mainnet 1`] = `
 
 exports[`TokenLinkCell > renders unknown token 1`] = `
 <DocumentFragment>
-  .c0 {
-  text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  transition-duration: 125ms;
-  color: #131313;
-}
-
-.c0 :hover {
-  opacity: 0.6;
-}
-
-.c0 :active {
-  opacity: 0.4;
-}
-
-<span
+  <span
     class=""
     style="display: contents;"
   >
     <a
-      class="c0"
       data-discover="true"
       href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+      style="cursor: pointer; text-decoration: none; opacity: 1; transition: 100ms;"
     >
       <div
         class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-t-space-gap56 _maxWidth-100px _alignItems-center"

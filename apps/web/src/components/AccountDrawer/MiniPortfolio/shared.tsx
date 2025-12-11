@@ -1,13 +1,13 @@
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ArrowRight } from 'react-feather'
 import { ThemedText } from 'theme/components'
 import { ClickableStyle } from 'theme/components/styles'
 import { Text, useSporeColors } from 'ui/src'
 
-const Container = styled.button`
+const Container = deprecatedStyled.button`
   border-radius: 16px;
   border: none;
   background: ${({ theme }) => theme.surface2};

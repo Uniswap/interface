@@ -14,7 +14,7 @@ import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
 import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetailsStatsButtons'
 import { PoolDetailsTableTab } from 'components/Pools/PoolDetails/PoolDetailsTable'
 import { useColor } from 'hooks/useColor'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { ExploreTab } from 'pages/Explore/constants'
 import { useDynamicMetatags } from 'pages/metatags'
 import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
@@ -24,8 +24,12 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeProvider } from 'theme'
-import { Flex, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, GeneratedIcon, useIsDarkMode, useSporeColors } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
+import { InlineWarningCard } from 'uniswap/src/components/InlineWarningCard/InlineWarningCard'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
+import { AZTEC_POOL_ADDRESS } from 'uniswap/src/constants/addresses'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -33,7 +37,7 @@ import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/address
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
-const PageWrapper = styled(Row)`
+const PageWrapper = deprecatedStyled(Row)`
   padding: 0 20px 52px;
   justify-content: center;
   width: 100%;
@@ -50,7 +54,7 @@ const PageWrapper = styled(Row)`
   }
 `
 
-const LeftColumn = styled(Column)`
+const LeftColumn = deprecatedStyled(Column)`
   gap: 40px;
   max-width: 780px;
   overflow: hidden;
@@ -62,12 +66,12 @@ const LeftColumn = styled(Column)`
   }
 `
 
-const HR = styled.hr`
+const HR = deprecatedStyled.hr`
   border: 0.5px solid ${({ theme }) => theme.surface3};
   width: 100%;
 `
 
-const TokenDetailsWrapper = styled(Column)`
+const TokenDetailsWrapper = deprecatedStyled(Column)`
   gap: 24px;
   padding: 20px;
 
@@ -82,14 +86,14 @@ const TokenDetailsWrapper = styled(Column)`
   }
 `
 
-const TokenDetailsHeader = styled(Text)`
+const TokenDetailsHeader = deprecatedStyled(Text)`
   width: 100%;
   font-size: 24px;
   font-weight: 485;
   line-height: 32px;
 `
 
-const LinksContainer = styled(Column)`
+const LinksContainer = deprecatedStyled(Column)`
   gap: 16px;
   width: 100%;
 `
@@ -111,6 +115,27 @@ function getUnwrappedPoolToken({
   return poolData && chainId
     ? [unwrapToken(chainId, poolData.token0), unwrapToken(chainId, poolData.token1)]
     : [undefined, undefined]
+}
+
+function AztecPoolWarningBanner({ poolAddress }: { poolAddress: string }): JSX.Element | null {
+  const { t } = useTranslation()
+  const isAztecDisabled = useFeatureFlag(FeatureFlags.DisableAztecToken)
+  const isAztecPool = poolAddress.toLowerCase() === AZTEC_POOL_ADDRESS.toLowerCase()
+  const showWarning = isAztecPool && isAztecDisabled
+
+  if (!showWarning) {
+    return null
+  }
+
+  return (
+    <Flex mt="$spacing24">
+      <InlineWarningCard
+        severity={WarningSeverity.Low}
+        Icon={WarningIcon as GeneratedIcon}
+        heading={t('web.explore.tokenDetails.data.warning')}
+      />
+    </Flex>
+  )
 }
 
 export default function PoolDetailsPage() {
@@ -247,6 +272,7 @@ export default function PoolDetailsPage() {
                 tokenAColor={isReversed ? color1 : color0}
                 tokenBColor={isReversed ? color0 : color1}
               />
+              <AztecPoolWarningBanner poolAddress={poolAddress} />
             </Column>
             <HR />
             <PoolDetailsTableTab

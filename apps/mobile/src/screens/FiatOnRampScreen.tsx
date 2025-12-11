@@ -566,6 +566,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               id={DecimalPadCalculatedSpaceId.FiatOnRamp}
               decimalPadRef={decimalPadRef}
               additionalElementsHeight={DECIMAL_PAD_EXTRA_ELEMENTS_HEIGHT}
+              isDecimalPadReady={decimalPadReady}
             />
 
             <AnimatedFlex

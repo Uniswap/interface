@@ -1,0 +1,26 @@
+{
+  "targets": {
+    "prepare": {
+      "command": "bun ./scripts/generate.js && biome check --write",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": [
+        "{projectRoot}/base.jsonc",
+        "{projectRoot}/scripts/**",
+        "{projectRoot}/src/**",
+        "{projectRoot}/package.json"
+      ],
+      "outputs": ["{projectRoot}/compiled/base.json"]
+    },
+    "test": {
+      "command": "bun test",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "cache": true,
+      "inputs": ["{projectRoot}/src/**", "{projectRoot}/scripts/**"]
+    }
+  }
+}

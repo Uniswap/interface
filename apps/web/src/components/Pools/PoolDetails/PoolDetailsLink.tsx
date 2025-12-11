@@ -9,7 +9,7 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useCallback, useState } from 'react'
 import { ChevronRight, Copy } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
@@ -27,7 +27,7 @@ import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { getChainUrlParam } from 'utils/chainParams'
 
-const TokenName = styled(ThemedText.BodyPrimary)`
+const TokenName = deprecatedStyled(ThemedText.BodyPrimary)`
   display: none;
 
   @media (max-width: ${breakpoints.xl}px) and (min-width: ${breakpoints.xs}px) {
@@ -36,14 +36,14 @@ const TokenName = styled(ThemedText.BodyPrimary)`
   ${EllipsisStyle}
 `
 
-const TokenTextWrapper = styled(Row)<{ isClickable?: boolean }>`
+const TokenTextWrapper = deprecatedStyled(Row)<{ isClickable?: boolean }>`
   gap: 8px;
   margin-right: 12px;
   ${EllipsisStyle}
   ${({ isClickable }) => isClickable && ClickableStyle}
 `
 
-const SymbolText = styled(ThemedText.BodyPrimary)`
+const SymbolText = deprecatedStyled(ThemedText.BodyPrimary)`
   flex-shrink: 0;
 
   @media (max-width: ${breakpoints.xl}px) and (min-width: ${breakpoints.xs}px) {
@@ -51,7 +51,7 @@ const SymbolText = styled(ThemedText.BodyPrimary)`
   }
 `
 
-const CopyAddress = styled(Row)`
+const CopyAddress = deprecatedStyled(Row)`
   gap: 8px;
   padding: 8px 12px;
   border-radius: 20px;
@@ -63,14 +63,14 @@ const CopyAddress = styled(Row)`
   flex-shrink: 0;
   ${ClickableStyle}
 `
-const StyledCopyIcon = styled(Copy)`
+const StyledCopyIcon = deprecatedStyled(Copy)`
   width: 16px;
   height: 16px;
   color: ${({ theme }) => theme.neutral2};
   flex-shrink: 0;
 `
 
-const ExplorerWrapper = styled.div`
+const ExplorerWrapper = deprecatedStyled.div`
   padding: 8px;
   border-radius: 20px;
   background-color: ${({ theme }) => theme.surface3};
@@ -78,7 +78,7 @@ const ExplorerWrapper = styled.div`
   ${ClickableStyle}
 `
 
-const ButtonsRow = styled(Row)`
+const ButtonsRow = deprecatedStyled(Row)`
   gap: 8px;
   flex-shrink: 0;
   width: max-content;

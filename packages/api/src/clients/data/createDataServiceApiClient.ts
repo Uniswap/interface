@@ -30,6 +30,11 @@ export enum TokenReportEventType {
   FalsePositive = 'TOKEN_REPORT_EVENT_TYPE_FALSE_POSITIVE',
 }
 
+export enum ReportAssetType {
+  Token = 'Token',
+  NFT = 'NFT',
+}
+
 interface SubmitReportRequestBody {
   chainId: number
   address: string
@@ -41,10 +46,16 @@ interface SubmitTokenReportParams {
   chainId: number
   address: string
   event: TokenReportEventType
+  assetType: ReportAssetType
 }
 
 interface SubmitReportResponse {
   success: boolean
+}
+
+const ASSET_TO_REPORT_STRING = {
+  [ReportAssetType.Token]: 'User reported as a spam token',
+  [ReportAssetType.NFT]: 'User reported as a spam NFT',
 }
 
 /**
@@ -57,13 +68,14 @@ async function submitTokenReport({
   chainId,
   address,
   event,
+  assetType,
   fetchClient,
 }: SubmitTokenReportParams & { fetchClient: FetchClient }): Promise<void> {
   const requestBody: SubmitReportRequestBody = {
     chainId,
     address,
     event,
-    details: 'User reported as a spam NFT',
+    details: ASSET_TO_REPORT_STRING[assetType],
   }
 
   try {

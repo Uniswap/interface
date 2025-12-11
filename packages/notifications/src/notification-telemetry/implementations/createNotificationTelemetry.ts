@@ -1,4 +1,5 @@
 import { type NotificationTelemetry } from '@universe/notifications/src/notification-telemetry/NotificationTelemetry'
+import { formatNotificationType } from '@universe/notifications/src/utils/formatNotificationType'
 
 /**
  * Basic implementation of the NotificationTelemetry interface.
@@ -11,13 +12,22 @@ export function createNotificationTelemetry(ctx: {
 }): NotificationTelemetry {
   return {
     onNotificationReceived: (params): void => {
-      ctx.onNotificationReceived(params)
+      ctx.onNotificationReceived({
+        ...params,
+        type: formatNotificationType(params.type),
+      })
     },
     onNotificationShown: (params): void => {
-      ctx.onNotificationShown(params)
+      ctx.onNotificationShown({
+        ...params,
+        type: formatNotificationType(params.type),
+      })
     },
     onNotificationInteracted: (params): void => {
-      ctx.onNotificationInteracted(params)
+      ctx.onNotificationInteracted({
+        ...params,
+        type: formatNotificationType(params.type),
+      })
     },
   }
 }

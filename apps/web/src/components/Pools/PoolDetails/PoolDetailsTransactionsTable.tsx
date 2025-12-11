@@ -14,7 +14,7 @@ import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
 import { FilterHeaderRow, TableText, TimestampCell } from 'components/Table/styled'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { ExternalLink } from 'theme/components/Links'
@@ -30,12 +30,12 @@ import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { useChainIdFromUrlParam } from 'utils/chainParams'
 
-const StyledExternalLink = styled(ExternalLink)`
+const StyledExternalLink = deprecatedStyled(ExternalLink)`
   color: ${({ theme }) => theme.neutral2};
   stroke: ${({ theme }) => theme.neutral2};
 `
 
-const TableWrapper = styled.div`
+const TableWrapper = deprecatedStyled.div`
   min-height: 256px;
 `
 

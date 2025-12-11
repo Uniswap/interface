@@ -1,4 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
@@ -11,6 +12,7 @@ export function useFormattedCurrencyAmountAndUSDValue({
   isApproximateAmount = false,
   valueType = ValueType.Raw,
   isUniswapX = false,
+  pollInterval = PollingInterval.Fast,
 }: {
   currency: Maybe<Currency>
   currencyAmountRaw: string | undefined
@@ -18,6 +20,7 @@ export function useFormattedCurrencyAmountAndUSDValue({
   isApproximateAmount?: boolean
   valueType?: ValueType
   isUniswapX?: boolean
+  pollInterval?: PollingInterval
 }): { amount: string; value: string; tilde: string } {
   const currencyAmount = getCurrencyAmount({
     value: currencyAmountRaw,
@@ -25,7 +28,7 @@ export function useFormattedCurrencyAmountAndUSDValue({
     currency,
   })
 
-  const value = useUSDCValue(currencyAmount)
+  const value = useUSDCValue(currencyAmount, pollInterval)
 
   if (isUniswapX) {
     return {

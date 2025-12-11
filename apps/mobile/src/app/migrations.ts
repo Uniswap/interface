@@ -20,6 +20,7 @@ import {
 import {
   addActivityVisibility,
   addDismissedBridgedAndCompatibleWarnings,
+  migrateDismissedTokenWarnings,
   migrateSearchHistory,
   removeThaiBahtFromFiatCurrency,
   unchecksumDismissedTokenWarningKeys,
@@ -1087,6 +1088,7 @@ export const migrations = {
   93: migrateSearchHistory,
   94: addDismissedBridgedAndCompatibleWarnings,
   95: addActivityVisibility,
+  96: migrateDismissedTokenWarnings,
 }
 
-export const MOBILE_STATE_VERSION = 95
+export const MOBILE_STATE_VERSION = 96

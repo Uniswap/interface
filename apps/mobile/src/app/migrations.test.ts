@@ -97,6 +97,7 @@ import {
   v91Schema,
   v92Schema,
   v93Schema,
+  v95Schema,
 } from 'src/app/schema'
 import { persistConfig } from 'src/app/store'
 import { initialBiometricsSettingsState } from 'src/features/biometricsSettings/slice'
@@ -106,6 +107,7 @@ import { initialPushNotificationsState } from 'src/features/notifications/slice'
 import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { ScannerModalState } from 'uniswap/src/components/ReceiveQRCode/constants'
+import { USDC } from 'uniswap/src/constants/tokens'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -115,12 +117,13 @@ import { initialNotificationsState } from 'uniswap/src/features/notifications/sl
 import { initialSearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
 import { initialUserSettingsState } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
+import { initialTokensState } from 'uniswap/src/features/tokens/warnings/slice/slice'
 import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { initialVisibilityState } from 'uniswap/src/features/visibility/slice'
 import {
   testAddActivityVisibility,
+  testMigrateDismissedTokenWarnings,
   testMigrateSearchHistory,
   testRemoveTHBFromCurrency,
 } from 'uniswap/src/state/uniswapMigrationTests'
@@ -1792,5 +1795,21 @@ describe('Redux state migrations', () => {
 
   it('migrates from v93 to v95', () => {
     testAddActivityVisibility(migrations[95], v93Schema)
+  })
+
+  it('migrates from v95 to v96', () => {
+    testMigrateDismissedTokenWarnings(migrations[96], {
+      ...v95Schema,
+      tokens: {
+        dismissedTokenWarnings: {
+          [UniverseChainId.Mainnet]: {
+            [USDC.address]: {
+              chainId: UniverseChainId.Mainnet,
+              address: USDC.address,
+            },
+          },
+        },
+      },
+    })
   })
 })

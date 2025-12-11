@@ -1,6 +1,11 @@
 import { defineConfig, devices } from '@playwright/test'
+import { config } from 'dotenv'
 import ms from 'ms'
 import path from 'path'
+
+// Load environment variables from .env file
+// This ensures the VSCode Playwright extension has access to env vars
+config({ path: path.resolve(__dirname, '.env') })
 
 const IS_CI = process.env.CI === 'true'
 

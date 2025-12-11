@@ -5,7 +5,6 @@ EXTRA_FLAGS=${3:-}
 
 RUST_LOG=debug anvil \
   --print-traces \
-  --disable-block-gas-limit \
   --disable-code-size-limit \
   --disable-min-priority-fee \
   --no-rate-limit \

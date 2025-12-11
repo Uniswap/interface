@@ -3,6 +3,7 @@ import Animated, { Easing, runOnJS, useAnimatedStyle, useSharedValue, withTiming
 import { Snowflake } from 'ui/src/components/icons/Snowflake'
 import { Flex } from 'ui/src/components/layout'
 import { styled } from 'ui/src/index'
+import { useEvent } from 'utilities/src/react/hooks'
 
 // Shared styled components
 export const SnowflakeContainer = styled(Flex, {
@@ -129,8 +130,8 @@ function SnowflakeAnimated({ flake, fallDistance, totalRotation, onComplete }: S
   const translateY = useSharedValue(0)
   const translateX = useSharedValue(0)
   const rotation = useSharedValue(0)
+  const stableOnComplete = useEvent(onComplete)
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: improve animation performance by not overly re-rending
   useEffect(() => {
     translateY.value = withTiming(
       fallDistance,
@@ -140,7 +141,7 @@ function SnowflakeAnimated({ flake, fallDistance, totalRotation, onComplete }: S
       },
       (finished) => {
         if (finished) {
-          runOnJS(onComplete)()
+          runOnJS(stableOnComplete)()
         }
       },
     )
@@ -152,7 +153,7 @@ function SnowflakeAnimated({ flake, fallDistance, totalRotation, onComplete }: S
       duration: flake.duration * 1000,
       easing: Easing.linear,
     })
-  }, [])
+  }, [fallDistance, flake.drift, totalRotation, flake.duration, stableOnComplete])
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateX: translateX.value }, { translateY: translateY.value }, { rotate: `${rotation.value}deg` }],

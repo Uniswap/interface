@@ -28,6 +28,10 @@ import {
 import { isInterfaceTransaction } from 'uniswap/src/features/transactions/types/utils'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
 import { usePrevious } from 'utilities/src/react/hooks'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+
+// Maximum age for a pending transaction to be displayed (5 minutes)
+const MAX_PENDING_TRANSACTION_AGE_MS = 5 * ONE_MINUTE_MS
 
 // helper that can take a ethers library transaction response and add it to the list of transactions
 export function useTransactionAdder(): (
@@ -253,6 +257,17 @@ export function useHasPendingRevocation(token?: Token, spender?: string): boolea
   return usePendingApprovalAmount(token, spender)?.eq(0) ?? false
 }
 
+function isPendingTransactionRecent(tx: TransactionDetails): boolean {
+  return Date.now() - tx.addedTime < MAX_PENDING_TRANSACTION_AGE_MS
+}
+
+/**
+ * Returns pending transactions that are less than MAX_PENDING_TRANSACTION_AGE_MS old.
+ * Note: The age filter is evaluated on re-render, not in real-time. Transactions won't
+ * automatically disappear after 5 minutes - they'll be filtered on the next re-render
+ * triggered by user interaction or state changes. This is intentional to avoid
+ * unnecessary polling/timer complexity.
+ */
 export function usePendingTransactions(): PendingTransactionDetails[] {
   const allTransactions = useAllTransactionsByChain()
   const account = useAccount()
@@ -260,7 +275,8 @@ export function usePendingTransactions(): PendingTransactionDetails[] {
   return useMemo(
     () =>
       Object.values(allTransactions).filter(
-        (tx): tx is PendingTransactionDetails => tx.from === account.address && isPendingTx(tx),
+        (tx): tx is PendingTransactionDetails =>
+          tx.from === account.address && isPendingTx(tx) && isPendingTransactionRecent(tx),
       ),
     [account.address, allTransactions],
   )

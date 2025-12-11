@@ -10,7 +10,7 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
-import { css, styled } from 'lib/styled-components'
+import { css, deprecatedStyled } from 'lib/styled-components'
 import { ReactNode, useMemo } from 'react'
 import { Trans } from 'react-i18next'
 import { Link } from 'react-router'
@@ -26,7 +26,7 @@ import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 
-const HeaderText = styled(RebassText)`
+const HeaderText = deprecatedStyled(RebassText)`
   font-weight: 485;
   font-size: 24px;
   line-height: 36px;
@@ -35,7 +35,7 @@ const HeaderText = styled(RebassText)`
   }
 `
 
-const StatsWrapper = styled(Column)<{ loaded?: boolean }>`
+const StatsWrapper = deprecatedStyled(Column)<{ loaded?: boolean }>`
   gap: 24px;
   padding: 20px;
   border-radius: 20px;
@@ -54,7 +54,7 @@ const StatsWrapper = styled(Column)<{ loaded?: boolean }>`
   }
 `
 
-const StatItemColumn = styled(Column)`
+const StatItemColumn = deprecatedStyled(Column)`
   gap: 8px;
   flex: 1;
   min-width: 180px;
@@ -64,7 +64,7 @@ const StatItemColumn = styled(Column)`
   }
 `
 
-const PoolBalanceSymbols = styled(Row)`
+const PoolBalanceSymbols = deprecatedStyled(Row)`
   justify-content: space-between;
 
   @media (max-width: ${breakpoints.xl}px) {
@@ -72,7 +72,7 @@ const PoolBalanceSymbols = styled(Row)`
   }
 `
 
-const PoolBalanceTokenNamesContainer = styled(Row)`
+const PoolBalanceTokenNamesContainer = deprecatedStyled(Row)`
   font-weight: 485;
   font-size: 16px;
   line-height: 24px;
@@ -85,7 +85,7 @@ const PoolBalanceTokenNamesContainer = styled(Row)`
   }
 `
 
-const StyledLink = styled(Link)`
+const StyledLink = deprecatedStyled(Link)`
   display: flex;
   align-items: center;
   color: ${({ theme }) => theme.neutral1};
@@ -104,19 +104,19 @@ const rightBarChartStyles = css`
   border-left: 1px solid ${({ theme }) => theme.surface2};
 `
 
-const BalanceChartSide = styled.div<{ percent: number; $color: string; isLeft: boolean }>`
+const BalanceChartSide = deprecatedStyled.div<{ percent: number; $color: string; isLeft: boolean }>`
   height: 8px;
   width: ${({ percent }) => percent * 100}%;
   background: ${({ $color }) => $color};
   ${({ isLeft }) => (isLeft ? leftBarChartStyles : rightBarChartStyles)}
 `
 
-const StatSectionBubble = styled(LoadingBubble)`
+const StatSectionBubble = deprecatedStyled(LoadingBubble)`
   width: 180px;
   height: 40px;
 `
 
-const StatHeaderBubble = styled(LoadingBubble)`
+const StatHeaderBubble = deprecatedStyled(LoadingBubble)`
   width: 116px;
   height: 24px;
   border-radius: 8px;
@@ -273,7 +273,7 @@ export function PoolDetailsStats({
   )
 }
 
-const StatsTextContainer = styled(Row)`
+const StatsTextContainer = deprecatedStyled(Row)`
   gap: 4px;
   width: 100%;
   align-items: flex-end;
@@ -285,7 +285,7 @@ const StatsTextContainer = styled(Row)`
   }
 `
 
-const StatItemText = styled(RebassText)`
+const StatItemText = deprecatedStyled(RebassText)`
   color: ${({ theme }) => theme.neutral1};
   font-size: 36px;
   font-weight: 485;

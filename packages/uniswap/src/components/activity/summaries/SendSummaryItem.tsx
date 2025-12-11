@@ -9,6 +9,7 @@ import {
 export function SendSummaryItem({
   transaction,
   index,
+  isExternalProfile,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: SendTokenTransactionInfo }
 }): JSX.Element {
@@ -18,6 +19,7 @@ export function SendSummaryItem({
       otherAddress={transaction.typeInfo.recipient}
       transaction={transaction}
       transactionType={TransactionType.Send}
+      isExternalProfile={isExternalProfile}
     />
   )
 }

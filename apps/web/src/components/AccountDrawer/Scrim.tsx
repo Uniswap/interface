@@ -1,11 +1,11 @@
-import { styled } from 'lib/styled-components'
+import { deprecatedStyled } from 'lib/styled-components'
 import { useEffect } from 'react'
 import { Z_INDEX } from 'theme/zIndex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { breakpoints } from 'ui/src/theme'
 
 // TODO(WEB-6717): Replace with Tamagui Overlay
-const ScrimBackground = styled.div<{ $open: boolean; $maxWidth?: number; $zIndex?: number }>`
+const ScrimBackground = deprecatedStyled.div<{ $open: boolean; $maxWidth?: number; $zIndex?: number }>`
   z-index: ${({ $zIndex }) => $zIndex ?? Z_INDEX.modalBackdrop};
   overflow: hidden;
   top: 0;

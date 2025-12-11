@@ -4,37 +4,37 @@
       "executor": "nx:noop"
     },
     "android": {
-      "command": "bunx expo run:android --variant=devDebug --app-id=com.uniswap.mobile.dev",
+      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.dev/com.uniswap.MainActivity' bunx expo run:android --variant=devDebug --app-id=com.uniswap.mobile.dev",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "android:release": {
-      "command": "bunx expo run:android --variant=devRelease --app-id=com.uniswap.mobile.dev",
+      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.dev/com.uniswap.MainActivity' bunx expo run:android --variant=devRelease --app-id=com.uniswap.mobile.dev",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "android:beta": {
-      "command": "bunx expo run:android --variant=betaDebug --app-id=com.uniswap.mobile.beta",
+      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.beta/com.uniswap.MainActivity' bunx expo run:android --variant=betaDebug --app-id=com.uniswap.mobile.beta",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "android:beta:release": {
-      "command": "bunx expo run:android --variant=betaRelease --app-id=com.uniswap.mobile.beta",
+      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.beta/com.uniswap.MainActivity' bunx expo run:android --variant=betaRelease --app-id=com.uniswap.mobile.beta",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "android:prod": {
-      "command": "bunx expo run:android --variant=prodDebug",
+      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile/com.uniswap.MainActivity' bunx expo run:android --variant=prodDebug",
       "options": {
         "cwd": "{projectRoot}"
       }
     },
     "android:prod:release": {
-      "command": "bunx expo run:android --variant=prodRelease",
+      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile/com.uniswap.MainActivity' bunx expo run:android --variant=prodRelease",
       "options": {
         "cwd": "{projectRoot}"
       }
@@ -244,22 +244,25 @@
     "lint:eslint": {},
     "lint:eslint:fix": {},
     "start": {
-      "command": "EXPO_BUILD_CONFIGURATION=Debug NODE_ENV=development bunx expo start --scheme uniswap",
+      "command": "EXPO_ANDROID_LAUNCH_ACTIVITY='com.uniswap.mobile.dev/com.uniswap.MainActivity' EXPO_BUILD_CONFIGURATION=Debug NODE_ENV=development bunx expo start --scheme uniswap",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "dependsOn": ["pod:ensure", "android:ensure"]
     },
     "start:e2e": {
       "command": "NODE_ENV=development IS_E2E_TEST=true bunx expo start",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "dependsOn": ["pod:ensure", "android:ensure"]
     },
     "start:production": {
       "command": "NODE_ENV=production bunx expo start --reset-cache",
       "options": {
         "cwd": "{projectRoot}"
-      }
+      },
+      "dependsOn": ["pod:ensure", "android:ensure"]
     },
     "test": {
       "command": "node --max-old-space-size=8912 ../../node_modules/.bin/jest",
@@ -285,6 +288,27 @@
       "options": {
         "cwd": "{projectRoot}"
       }
+    },
+    "pod:ensure": {
+      "command": "./scripts/check-podfile.sh",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "inputs": ["{projectRoot}/ios/Podfile", "{projectRoot}/ios/Podfile.lock"],
+      "cache": true
+    },
+    "android:ensure": {
+      "command": "./scripts/check-android-gradle.sh",
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [
+        "{projectRoot}/android/build.gradle",
+        "{projectRoot}/android/app/build.gradle",
+        "{projectRoot}/android/settings.gradle",
+        "{projectRoot}/android/gradle.properties"
+      ],
+      "cache": true
     },
     "pod:update": {
       "command": "./scripts/podinstall.sh -u",

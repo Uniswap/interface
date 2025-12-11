@@ -33,7 +33,7 @@ const LOW_VARIANCE_Y_PADDING = 100
 
 type PriceTextProps = {
   loading: boolean
-  relativeChange?: SharedValue<number>
+  relativeChange?: SharedValue<number | undefined>
   numberOfDigits: PriceNumberOfDigits
   spotPrice?: SharedValue<number>
   startingPrice?: number

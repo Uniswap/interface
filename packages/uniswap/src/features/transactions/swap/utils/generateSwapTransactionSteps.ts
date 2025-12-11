@@ -20,8 +20,19 @@ export function generateSwapTransactionSteps(txContext: SwapTxAndGasInfo): Trans
   if (isValidSwap) {
     const { trade, approveTxRequest, revocationTxRequest } = txContext
 
-    const revocation = createRevocationTransactionStep(revocationTxRequest, trade.inputAmount.currency.wrapped)
-    const approval = createApprovalTransactionStep({ txRequest: approveTxRequest, amountIn: trade.inputAmount })
+    const requestFields = {
+      tokenAddress: trade.inputAmount.currency.wrapped.address,
+      chainId: trade.inputAmount.currency.chainId,
+    }
+    const revocation = createRevocationTransactionStep({
+      ...requestFields,
+      txRequest: revocationTxRequest,
+    })
+    const approval = createApprovalTransactionStep({
+      ...requestFields,
+      txRequest: approveTxRequest,
+      amount: trade.inputAmount.quotient.toString(),
+    })
 
     if (isClassic(txContext)) {
       const { swapRequestArgs } = txContext
@@ -30,7 +41,7 @@ export function generateSwapTransactionSteps(txContext: SwapTxAndGasInfo): Trans
         return orderClassicSwapSteps({
           revocation,
           approval,
-          permit: createPermit2SignatureStep(txContext.permit.typedData, trade.inputAmount.currency),
+          permit: createPermit2SignatureStep(txContext.permit.typedData),
           swap: createSwapTransactionAsyncStep(swapRequestArgs),
         })
       }

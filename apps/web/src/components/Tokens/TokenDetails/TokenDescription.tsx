@@ -1,6 +1,3 @@
-import { EtherscanLogo } from 'components/Icons/Etherscan'
-import { Globe } from 'components/Icons/Globe'
-import { TwitterXLogo } from 'components/Icons/TwitterX'
 import { FOTTooltipContent } from 'components/swap/SwapLineItem'
 import { NoInfoAvailable, truncateDescription } from 'components/Tokens/TokenDetails/shared'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
@@ -9,33 +6,17 @@ import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useCallback, useReducer } from 'react'
 import { Copy } from 'react-feather'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { ThemedText } from 'theme/components'
-import { ExternalLink } from 'theme/components/Links'
 import { ClickableTamaguiStyle, EllipsisTamaguiStyle } from 'theme/components/styles'
-import { Flex, Paragraph, styled, Text, useSporeColors } from 'ui/src'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Flex, Paragraph, styled, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { GlobeFilled } from 'ui/src/components/icons/GlobeFilled'
+import { XTwitter } from 'ui/src/components/icons/XTwitter'
+import { getBlockExplorerIcon } from 'uniswap/src/components/chains/BlockExplorerIcon'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
+import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
-
-const TokenInfoSection = styled(Flex, {
-  gap: '$gap16',
-  width: '100%',
-  $xl: {
-    gap: 24,
-  },
-})
-
-const TokenNameRow = styled(Flex, {
-  row: true,
-  gap: '$gap8',
-  width: '100%',
-})
-
-const TokenButtonRow = styled(TokenNameRow, {
-  flexWrap: 'wrap',
-})
 
 const TokenInfoButton = styled(Text, {
   variant: 'buttonLabel3',
@@ -78,6 +59,27 @@ const DescriptionVisibilityWrapper = styled(Paragraph, {
 
 const TRUNCATE_CHARACTER_COUNT = 300
 
+function TokenLinkButton({ uri, icon, name }: { uri: string; icon: JSX.Element; name: string }) {
+  return (
+    <TouchableArea
+      row
+      alignItems="center"
+      gap="$gap4"
+      backgroundColor="$surface2"
+      borderRadius="$rounded20"
+      px="$padding12"
+      py="$padding8"
+      width="max-content"
+      onPress={() => openUri({ uri })}
+    >
+      {icon}
+      <Text variant="buttonLabel3" color="$neutral1">
+        {name}
+      </Text>
+    </TouchableArea>
+  )
+}
+
 export function TokenDescription() {
   const { t } = useTranslation()
   const { address, currency, tokenQuery } = useTDPContext()
@@ -112,12 +114,13 @@ export function TokenDescription() {
   const hasFee = Boolean(parseFloat(sellFeeString)) || Boolean(parseFloat(buyFee.toFixed(2)))
   const sameFee = sellFeeString === buyFeeString
 
+  const Icon = getBlockExplorerIcon(currency.chainId)
+  const explorerName = getChainInfo(currency.chainId).explorer.name
+
   return (
-    <TokenInfoSection data-testid="token-details-info-section">
-      <Text variant="heading3">
-        <Trans i18nKey="common.info.label" />
-      </Text>
-      <TokenButtonRow data-testid="token-details-info-links">
+    <Flex data-testid="token-details-info-section" gap="$gap16" width="100%" $xl={{ gap: '$gap24' }}>
+      <Text variant="heading3">{t('common.info.label')}</Text>
+      <Flex row flexWrap="wrap" gap="$gap8" width="100%" data-testid="token-details-info-links">
         {!currency.isNative && (
           <MouseoverTooltip
             disabled
@@ -132,39 +135,24 @@ export function TokenDescription() {
             </TokenInfoButton>
           </MouseoverTooltip>
         )}
-        <ExternalLink href={explorerUrl}>
-          <TokenInfoButton>
-            <EtherscanLogo width="18px" height="18px" fill={colors.neutral1.val} />
-            {currency.chainId === UniverseChainId.Mainnet ? (
-              <Trans i18nKey="common.etherscan" />
-            ) : (
-              <Trans i18nKey="common.explorer" />
-            )}
-          </TokenInfoButton>
-        </ExternalLink>
+        <TokenLinkButton uri={explorerUrl} icon={<Icon size="$icon.18" color="$neutral1" />} name={explorerName} />
         {homepageUrl && (
-          <ExternalLink href={homepageUrl}>
-            <TokenInfoButton>
-              <Globe width="18px" height="18px" fill={colors.neutral1.val} />
-              <Trans i18nKey="common.website" />
-            </TokenInfoButton>
-          </ExternalLink>
+          <TokenLinkButton
+            uri={homepageUrl}
+            icon={<GlobeFilled size="$icon.18" color="$neutral1" />}
+            name={t('common.website')}
+          />
         )}
         {twitterName && (
-          <ExternalLink href={`https://x.com/${twitterName}`}>
-            <TokenInfoButton>
-              <TwitterXLogo width="18px" height="18px" fill={colors.neutral1.val} />
-              <Trans i18nKey="common.twitter" />
-            </TokenInfoButton>
-          </ExternalLink>
+          <TokenLinkButton
+            uri={`https://x.com/${twitterName}`}
+            icon={<XTwitter size="$icon.18" color="$neutral1" />}
+            name={t('common.twitter')}
+          />
         )}
-      </TokenButtonRow>
+      </Flex>
       <TokenDescriptionContainer>
-        {!description && (
-          <NoInfoAvailable>
-            <Trans i18nKey="tdp.noInfoAvailable" />
-          </NoInfoAvailable>
-        )}
+        {!description && <NoInfoAvailable>{t('tdp.noInfoAvailable')}</NoInfoAvailable>}
         {description && (
           <>
             <DescriptionVisibilityWrapper data-testid="token-description-full" visible={!showTruncatedDescription}>
@@ -187,11 +175,7 @@ export function TokenDescription() {
             {...ClickableTamaguiStyle}
             data-testid="token-description-show-more-button"
           >
-            {isDescriptionTruncated ? (
-              <Trans i18nKey="common.showMore.button" />
-            ) : (
-              <Trans i18nKey="common.hide.button" />
-            )}
+            {isDescriptionTruncated ? t('common.showMore.button') : t('common.hide.button')}
           </Text>
         )}
       </TokenDescriptionContainer>
@@ -209,19 +193,19 @@ export function TokenDescription() {
             {sameFee ? (
               <ThemedText.BodyPrimary>
                 {currency.symbol}&nbsp;
-                <Trans i18nKey="token.fee.label" />
+                {t('token.fee.label')}
                 :&nbsp;{sellFeeString}
               </ThemedText.BodyPrimary>
             ) : (
               <>
                 <ThemedText.BodyPrimary>
                   {currency.symbol}&nbsp;
-                  <Trans i18nKey="token.fee.buy.label" />
+                  {t('token.fee.buy.label')}
                   :&nbsp;{buyFeeString}
                 </ThemedText.BodyPrimary>{' '}
                 <ThemedText.BodyPrimary>
                   {currency.symbol}&nbsp;
-                  <Trans i18nKey="token.fee.sell.label" />
+                  {t('token.fee.sell.label')}
                   :&nbsp;{sellFeeString}
                 </ThemedText.BodyPrimary>{' '}
               </>
@@ -229,6 +213,6 @@ export function TokenDescription() {
           </Flex>
         </MouseoverTooltip>
       )}
-    </TokenInfoSection>
+    </Flex>
   )
 }

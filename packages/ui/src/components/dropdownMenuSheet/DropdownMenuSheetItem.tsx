@@ -95,7 +95,7 @@ export const DropdownMenuSheetItem = ({
         {icon && <Spacer size="$spacing8" />}
         {/* Allow text to ellipsize and not overflow the container, because of the padding */}
         {/* on the parent container. */}
-        <Flex width={isWebPlatform ? `calc(100% - ${spacing.spacing12}px)` : '90%'}>
+        <Flex maxWidth={isWebPlatform ? `calc(100% - ${spacing.spacing12}px)` : '90%'}>
           <Text
             flexShrink={1}
             numberOfLines={1}
@@ -113,14 +113,15 @@ export const DropdownMenuSheetItem = ({
           )}
         </Flex>
       </Flex>
-      {actionType === 'external-link' && (
-        <Flex grow flexShrink={0} alignItems="flex-end">
+      <Flex grow flexShrink={0} alignItems="flex-end">
+        {actionType === 'external-link' && (
           <ExternalLink
             size={isMobileApp ? (subheader ? '$icon.20' : '$icon.16') : subheader ? '$icon.16' : '$icon.12'}
             color="$neutral2"
           />
-        </Flex>
-      )}
+        )}
+      </Flex>
+
       {isSelected !== undefined && (
         <Flex flexShrink={0}>{isSelected ? <CheckCircleFilled size="$icon.20" /> : <Spacer size="$spacing20" />}</Flex>
       )}
