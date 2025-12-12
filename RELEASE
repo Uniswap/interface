@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmZLgue86DopPSEeUnHyM3Wr5vcB8LM2qxqxnHsAx63Kf6`
-- CIDv1: `bafybeifdomfn4wr7d44hy24ekkgs7paglr26rq5e77qw3a7mfxo4fctdne`
+- CIDv0: `QmQkWMh3BFN88esw7V29ibtjsX9SpUqAudnhP5puUbR9in`
+- CIDv1: `bafybeibd2ppkb4pcw546t3rz7rnqh7766xxlhfkh6krmahe3gdv3hske24`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,79 +10,14 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeifdomfn4wr7d44hy24ekkgs7paglr26rq5e77qw3a7mfxo4fctdne.ipfs.dweb.link/
-- [ipfs://QmZLgue86DopPSEeUnHyM3Wr5vcB8LM2qxqxnHsAx63Kf6/](ipfs://QmZLgue86DopPSEeUnHyM3Wr5vcB8LM2qxqxnHsAx63Kf6/)
+- https://bafybeibd2ppkb4pcw546t3rz7rnqh7766xxlhfkh6krmahe3gdv3hske24.ipfs.dweb.link/
+- [ipfs://QmQkWMh3BFN88esw7V29ibtjsX9SpUqAudnhP5puUbR9in/](ipfs://QmQkWMh3BFN88esw7V29ibtjsX9SpUqAudnhP5puUbR9in/)
 
-## 5.121.0 (2025-12-11)
-
-
-### Features
-
-* **web:** add proper page titles to each portfolio tab (#25875) cdd3bb3
-* **web:** add refunded amounts to the migrate modal (#25824) bf676a1
-* **web:** add view_external_wallets_on_web flag (#25973) 4a5b0b1
-* **web:** add wallet search results (#25974) 286c62d
-* **web:** align block explorer icons on web TDP (#25838) 681b6f5
-* **web:** final wrapped cherry-picks - staging (#26314) b479480
-* **web:** Update homepage copy pre-unification vote (#26093) 66c4bc6
-* **web:** update TDP and PDP chart type selection to segmented controls (#25839) e9a85ed
-* **web:** wrapped dynamic aspect ratio & iframe url connection (#26079) cdc5dde
+### 5.121.1 (2025-12-12)
 
 
 ### Bug Fixes
 
-* **web:** catch errors when lazy-loading modals (#24420) 0eb09f7
-* **web:** Change step icon ripple to pink (#25721) 7e4a304
-* **web:** disable handler onclickoutside for sheet staging (#26362) c6f2c72
-* **web:** disable notification service in e2e tests (#25811) 93c5137
-* **web:** disable tamagui compiler for CurrencyInputPanel (#26363) dc15502
-* **web:** dynamically compute app header height including Top Level B… (#26401) 2ab6c9e
-* **web:** enable correct tamagui stacking zIndex mode (#26000) 095d746
-* **web:** enable tamagui compiler in staging (#25930) 6c55793
-* **web:** Ensure env vars are loaded for playwright tests (#25638) e4017db
-* **web:** Ensure TXs are hexlified before sending to dapp (#25924) fe44f2c
-* **web:** fix activity table loading skeleton logic (#25893) 9476c4a
-* **web:** Fix displaying web tooltip on mobile (#25061) e3aeb79
-* **web:** Fix dividers in swap steps (#25940) 4e8b492
-* **web:** handle solana only wallet connection for Portfolio (#25790) 024ed51
-* **web:** make amount column on activity table appear to be two columns (#25636) 81c03d1
-* **web:** properly cache NFTs so it doesn't load every time you change back to NFTs tab (#25761) 749f5e2
-* **web:** quick nit fixes (#25774) 0d1e97c
-* **web:** reduce polling for useFormattedCurrencyAmountAndUSDValue (#25635) 1785af3
-* **web:** remove batching capabilities from monad (#25957) 62b6e49
-* **web:** remove unnecessary animation properties from various components to fix crashes (#25714) 2606015
-* **web:** Replace swap flow with send flow for wallet rejection e2e test (#25650) b801033
-* **web:** replace use usd price with use usdc value in trade price component staging (#26385) fe955b8
-* **web:** reverting trading api key (#26181) 82efb64
-* **web:** tamagui style bug with Animated Icons (#25904) 081924f
-* **web:** tamagui Tooltip Adapt context  && increase Popover zIndexes (#26144) b4d68db
-* **web:** tamagui Tooltip zIndex fix (#26106) ff9ebe1
-* **web:** tamagui z-index fix (#25976) 52f1276
-* **web:** Update dev (#26036) b52e28b
-* **web:** use popover zIndex for tamagui popover (#26070) e46fcf7
-* **web:** wait for Session to init before fetching notifs (#25820) ea3cdfb
-* **web:** zindex/hover fixes for navbar (#26023) 8cabbce
-
-
-### Continuous Integration
-
-* **web:** update sitemaps 9c275de
-
-
-### Code Refactoring
-
-* **web:** add retry link to specific graphql queries (#25829) 8c501fa
-* **web:** extract hooks from outage banner component (#25744) 8efdde3
-* **web:** update logic to determine when to show outage banner (#25745) 45540a7
-
-
-### Styles
-
-* **web:** better logic for empty portfolio chart (#26065) a4236e6
-* **web:** fix chart loading state thrash (#25629) 5ef5890
-* **web:** fix overview tables gap (#25625) 8e52a6a
-* **web:** remove decimals on overview chart price labels (#25890) 2164000
-* **web:** slow emblems animation on connect wallet banner (#25931) 6ac4f05
-* **web:** table style nits (#25896) b4a01c6
+* **web:** use no-cache for useTokenPriceHistoryQuery (#26378) (#26439) 09786b8
 
 
