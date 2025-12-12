@@ -20,23 +20,15 @@ function NotificationRenderer({
   notification,
   onRenderFailed,
   onNotificationClick,
-  onNotificationShown,
 }: {
   notification: InAppNotification
   onRenderFailed?: (id: string) => void
   onNotificationClick?: (notificationId: string, target: NotificationClickTarget) => void
-  onNotificationShown?: (notificationId: string) => void
 }) {
   const style = notification.content?.style
   switch (style) {
     case ContentStyle.MODAL:
-      return (
-        <ModalNotification
-          notification={notification}
-          onNotificationClick={onNotificationClick}
-          onNotificationShown={onNotificationShown}
-        />
-      )
+      return <ModalNotification notification={notification} onNotificationClick={onNotificationClick} />
     case ContentStyle.LOWER_LEFT_BANNER:
       // Lower left banners are handled by StackedLowerLeftBanners in NotificationContainer
       return null
@@ -67,12 +59,10 @@ function NotificationRenderer({
  */
 export function NotificationContainer({
   onRenderFailed,
-  onNotificationShown,
   onNotificationClick,
   store = useNotificationStore,
 }: {
   onRenderFailed?: (notificationId: string) => void
-  onNotificationShown?: (notificationId: string) => void
   onNotificationClick?: (notificationId: string, target: NotificationClickTarget) => void
   store?: UseBoundStore<StoreApi<NotificationState>>
 }) {
@@ -106,11 +96,7 @@ export function NotificationContainer({
   return (
     <>
       {/* Render stacked lower left banner notifications */}
-      <StackedLowerLeftBanners
-        notifications={lowerLeftBannerNotifications}
-        onNotificationClick={onNotificationClick}
-        onNotificationShown={onNotificationShown}
-      />
+      <StackedLowerLeftBanners notifications={lowerLeftBannerNotifications} onNotificationClick={onNotificationClick} />
 
       {/* Render other notification types */}
       {otherNotifications.map((notification) => (
@@ -119,7 +105,6 @@ export function NotificationContainer({
           notification={notification}
           onRenderFailed={handleRenderFailed}
           onNotificationClick={onNotificationClick}
-          onNotificationShown={onNotificationShown}
         />
       ))}
     </>

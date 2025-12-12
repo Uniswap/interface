@@ -27,7 +27,7 @@ import { SearchHistoryState } from 'uniswap/src/features/search/searchHistorySli
 import { UserSettingsState } from 'uniswap/src/features/settings/slice'
 import { DelegatedState } from 'uniswap/src/features/smartWallet/delegation/types'
 import { TimingState } from 'uniswap/src/features/timing/slice'
-import { TokensState } from 'uniswap/src/features/tokens/warnings/slice/slice'
+import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
 import { SwapSettingsState } from 'uniswap/src/features/transactions/swap/state/slice'
 import {

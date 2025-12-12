@@ -55,7 +55,6 @@ type FormattedTransactionInputs = UseFormattedTransactionDataOptions &
 export interface FormattedTransactionDataResult extends PaginationControls {
   hasData: boolean
   isLoading: boolean
-  isFetching: boolean
   isError: Error | undefined
   sectionData: ActivityItem[] | undefined
   keyExtractor: (item: ActivityItem) => string
@@ -179,7 +178,6 @@ export function useFormattedTransactionDataForActivity({
     hasData,
     isError: error ?? undefined,
     isLoading: showLoading,
-    isFetching,
     keyExtractor,
     fetchNextPage,
     hasNextPage: hasNextPage && !hasReachedLimit(transactions),

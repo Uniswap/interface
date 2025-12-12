@@ -11,8 +11,6 @@ import {
   SnowflakeContainer,
 } from 'uniswap/src/components/banners/shared/SharedSnowflakeComponents'
 import { UniswapWrapped2025BannerProps } from 'uniswap/src/components/banners/UniswapWrapped2025Banner/types'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useSnowflakeAnimation } from 'uniswap/src/hooks/useSnowflakeAnimation'
 import { isExtensionApp } from 'utilities/src/platform'
 
@@ -93,10 +91,8 @@ export function UniswapWrapped2025Banner({
   }, [])
 
   const { snowflakes, removeSnowflake, mouseInteraction } = useSnowflakeAnimation({
-    mouseInteraction: {
-      enabled: true,
-      containerWidth: bannerWidth,
-    },
+    enabled: true,
+    containerWidth: bannerWidth,
   })
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>): void => {
@@ -112,71 +108,67 @@ export function UniswapWrapped2025Banner({
       onMouseLeave={mouseInteraction?.handleMouseLeave}
       onMouseMove={handleMouseMove}
     >
-      <Trace logPress element={ElementName.UniswapWrappedBanner}>
-        <BannerWrapper height={bannerHeight} onPress={handlePress}>
-          <GradientBackground />
-          <GlowEffect />
-          {/* Mouse-following glow effect */}
-          {mouseInteraction?.mousePosition && (
-            <MouseGlow
-              width={isExtensionApp ? MOUSE_WAKE_RADIUS / 2 : MOUSE_WAKE_RADIUS}
-              height={isExtensionApp ? MOUSE_WAKE_RADIUS / 2 : MOUSE_WAKE_RADIUS}
-              style={{
-                left:
-                  mouseInteraction.mousePosition.x - (isExtensionApp ? MOUSE_WAKE_RADIUS / 4 : MOUSE_WAKE_RADIUS / 2), // Center the glow on cursor (width/2)
-                top:
-                  mouseInteraction.mousePosition.y - (isExtensionApp ? MOUSE_WAKE_RADIUS / 4 : MOUSE_WAKE_RADIUS / 2), // Center the glow on cursor (height/2)
-              }}
-            />
-          )}
-          <SnowflakeContainer>
-            {renderSnowflakesWeb({
-              snowflakes,
-              containerHeight: bannerHeight,
-              removeSnowflake,
-              getSnowflakeDrift: mouseInteraction?.getSnowflakeDrift,
-              keyPrefix: 'banner',
-            })}
-          </SnowflakeContainer>
-          <RisingTextContainer
-            row={!isExtensionApp}
-            centered={!isExtensionApp}
-            gap={isExtensionApp ? '$spacing4' : '$spacing8'}
-            visible={isTextVisible}
-          >
-            <Flex row={!isExtensionApp} centered={!isExtensionApp} gap={isExtensionApp ? '$spacing4' : '$spacing8'}>
-              {!isExtensionApp && <Gift color={darkColors.neutral1.val} size="$icon.20" />}
-              <Text variant="buttonLabel3" color={darkColors.neutral1.val}>
-                {t('home.banner.uniswapWrapped2025.title')}
-              </Text>
-            </Flex>
-            {isExtensionApp ? (
+      <BannerWrapper height={bannerHeight} onPress={handlePress}>
+        <GradientBackground />
+        <GlowEffect />
+        {/* Mouse-following glow effect */}
+        {mouseInteraction?.mousePosition && (
+          <MouseGlow
+            width={isExtensionApp ? MOUSE_WAKE_RADIUS / 2 : MOUSE_WAKE_RADIUS}
+            height={isExtensionApp ? MOUSE_WAKE_RADIUS / 2 : MOUSE_WAKE_RADIUS}
+            style={{
+              left: mouseInteraction.mousePosition.x - (isExtensionApp ? MOUSE_WAKE_RADIUS / 4 : MOUSE_WAKE_RADIUS / 2), // Center the glow on cursor (width/2)
+              top: mouseInteraction.mousePosition.y - (isExtensionApp ? MOUSE_WAKE_RADIUS / 4 : MOUSE_WAKE_RADIUS / 2), // Center the glow on cursor (height/2)
+            }}
+          />
+        )}
+        <SnowflakeContainer>
+          {renderSnowflakesWeb({
+            snowflakes,
+            containerHeight: bannerHeight,
+            removeSnowflake,
+            getSnowflakeDrift: mouseInteraction?.getSnowflakeDrift,
+            keyPrefix: 'banner',
+          })}
+        </SnowflakeContainer>
+        <RisingTextContainer
+          row={!isExtensionApp}
+          centered={!isExtensionApp}
+          gap={isExtensionApp ? '$spacing4' : '$spacing8'}
+          visible={isTextVisible}
+        >
+          <Flex row={!isExtensionApp} centered={!isExtensionApp} gap={isExtensionApp ? '$spacing4' : '$spacing8'}>
+            {!isExtensionApp && <Gift color={darkColors.neutral1.val} size="$icon.20" />}
+            <Text variant="buttonLabel3" color={darkColors.neutral1.val}>
+              {t('home.banner.uniswapWrapped2025.title')}
+            </Text>
+          </Flex>
+          {isExtensionApp ? (
+            <Text variant="body4" color="$pinkLight">
+              {t('home.banner.uniswapWrapped2025.subtitle')}
+            </Text>
+          ) : (
+            <Badge>
               <Text variant="body4" color="$pinkLight">
                 {t('home.banner.uniswapWrapped2025.subtitle')}
               </Text>
-            ) : (
-              <Badge>
-                <Text variant="body4" color="$pinkLight">
-                  {t('home.banner.uniswapWrapped2025.subtitle')}
-                </Text>
-              </Badge>
-            )}
-          </RisingTextContainer>
-          <TouchableArea
-            centered
-            top={isExtensionApp ? 16 : undefined}
-            position="absolute"
-            right={isExtensionApp ? '$spacing16' : '$spacing20'}
-            p={isExtensionApp ? '$spacing4' : 0}
-            backgroundColor={isExtensionApp ? darkColors.surface3.val : 'transparent'}
-            borderRadius="$roundedFull"
-            backdropFilter="blur(4px)"
-            onPress={handleDismiss}
-          >
-            <X size={isExtensionApp ? '$icon.16' : '$icon.20'} color={darkColors.neutral1.val} />
-          </TouchableArea>
-        </BannerWrapper>
-      </Trace>
+            </Badge>
+          )}
+        </RisingTextContainer>
+        <TouchableArea
+          centered
+          top={isExtensionApp ? 16 : undefined}
+          position="absolute"
+          right={isExtensionApp ? '$spacing16' : '$spacing20'}
+          p={isExtensionApp ? '$spacing4' : 0}
+          backgroundColor={isExtensionApp ? darkColors.surface3.val : 'transparent'}
+          borderRadius="$roundedFull"
+          backdropFilter="blur(4px)"
+          onPress={handleDismiss}
+        >
+          <X size={isExtensionApp ? '$icon.16' : '$icon.20'} color={darkColors.neutral1.val} />
+        </TouchableArea>
+      </BannerWrapper>
     </div>
   )
 }

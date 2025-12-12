@@ -8,10 +8,9 @@ import { useUpdateScrollLock } from 'uniswap/src/components/modals/ScrollLock'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useFilterCallbacks } from 'uniswap/src/features/search/SearchModal/hooks/useFilterCallbacks'
-import { useWebSearchTabs } from 'uniswap/src/features/search/SearchModal/hooks/useWebSearchTabs'
 import { SearchModalNoQueryList } from 'uniswap/src/features/search/SearchModal/SearchModalNoQueryList'
 import { SearchModalResultsList } from 'uniswap/src/features/search/SearchModal/SearchModalResultsList'
-import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
+import { SearchTab, WEB_SEARCH_TABS } from 'uniswap/src/features/search/SearchModal/types'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { ElementName, InterfaceEventName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -21,7 +20,6 @@ import { useDebounce } from 'utilities/src/time/timing'
 
 export const SearchModal = memo(function _SearchModal(): JSX.Element {
   const poolSearchEnabled = useFeatureFlag(FeatureFlags.PoolSearch)
-  const webSearchTabs = useWebSearchTabs()
   const colors = useSporeColors()
   const { t } = useTranslation()
   const media = useMedia()
@@ -116,7 +114,7 @@ export const SearchModal = memo(function _SearchModal(): JSX.Element {
         </Flex>
         {poolSearchEnabled && (
           <Flex row px="$spacing20" pt="$spacing16" pb="$spacing8" gap="$spacing16">
-            {webSearchTabs.map((tab) => (
+            {WEB_SEARCH_TABS.map((tab) => (
               <Trace element={ElementName.SearchTab} logPress key={tab} properties={{ search_tab: tab }}>
                 <TouchableArea onPress={() => setActiveTab(tab)}>
                   <Text color={activeTab === tab ? '$neutral1' : '$neutral2'} variant="buttonLabel2">

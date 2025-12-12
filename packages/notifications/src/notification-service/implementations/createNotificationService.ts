@@ -7,12 +7,6 @@ import {
 import ms from 'ms'
 import { getLogger } from 'utilities/src/logger/logger'
 
-// Module-level singletons to track notification telemetry across service recreations.
-// This prevents duplicate telemetry events when the service is destroyed
-// and recreated (e.g., during navigation in the extension sidebar).
-const receivedNotifications = new Set<string>()
-const shownNotifications = new Set<string>()
-
 export function createNotificationService(config: NotificationServiceConfig): NotificationService {
   const { dataSources, tracker, processor, renderer, telemetry, onNavigate } = config
 
@@ -37,6 +31,12 @@ export function createNotificationService(config: NotificationServiceConfig): No
     const cleanup = renderer.render(notification)
     activeRenders.set(notification.id, cleanup)
     activeNotifications.set(notification.id, notification)
+
+    telemetry?.onNotificationShown({
+      notificationId: notification.id,
+      type: notification.content?.style,
+      timestamp: Date.now(),
+    })
   }
 
   async function handleNotifications(notifications: InAppNotification[]): Promise<void> {
@@ -113,7 +113,6 @@ export function createNotificationService(config: NotificationServiceConfig): No
     }
 
     activeNotifications.delete(notificationId)
-    shownNotifications.delete(notificationId)
   }
 
   /**
@@ -138,10 +137,12 @@ export function createNotificationService(config: NotificationServiceConfig): No
       for (const button of buttons) {
         if (button.onClick?.onClick.includes(OnClickAction.POPUP) && button.onClick.onClickLink) {
           const targetId = button.onClick.onClickLink
-          // Only add to downstream if the notification actually exists
-          const nextNotification = activeNotifications.get(targetId) ?? chainedNotifications.get(targetId)
-          if (nextNotification && !visited.has(targetId)) {
+          if (!visited.has(targetId)) {
             downstream.push(targetId)
+          }
+          // Look up the next notification in the chain
+          const nextNotification = activeNotifications.get(targetId) ?? chainedNotifications.get(targetId)
+          if (nextNotification) {
             traverse(nextNotification)
           }
         }
@@ -151,10 +152,12 @@ export function createNotificationService(config: NotificationServiceConfig): No
       const backgroundOnClick = currentNotification.content?.background?.backgroundOnClick
       if (backgroundOnClick?.onClick.includes(OnClickAction.POPUP) && backgroundOnClick.onClickLink) {
         const targetId = backgroundOnClick.onClickLink
-        // Only add to downstream if the notification actually exists
-        const nextNotification = activeNotifications.get(targetId) ?? chainedNotifications.get(targetId)
-        if (nextNotification && !visited.has(targetId)) {
+        if (!visited.has(targetId)) {
           downstream.push(targetId)
+        }
+        // Look up the next notification in the chain
+        const nextNotification = activeNotifications.get(targetId) ?? chainedNotifications.get(targetId)
+        if (nextNotification) {
           traverse(nextNotification)
         }
       }
@@ -163,10 +166,12 @@ export function createNotificationService(config: NotificationServiceConfig): No
       const onDismissClick = currentNotification.content?.onDismissClick
       if (onDismissClick?.onClick.includes(OnClickAction.POPUP) && onDismissClick.onClickLink) {
         const targetId = onDismissClick.onClickLink
-        // Only add to downstream if the notification actually exists
-        const nextNotification = activeNotifications.get(targetId) ?? chainedNotifications.get(targetId)
-        if (nextNotification && !visited.has(targetId)) {
+        if (!visited.has(targetId)) {
           downstream.push(targetId)
+        }
+        // Look up the next notification in the chain
+        const nextNotification = activeNotifications.get(targetId) ?? chainedNotifications.get(targetId)
+        if (nextNotification) {
           traverse(nextNotification)
         }
       }
@@ -196,15 +201,12 @@ export function createNotificationService(config: NotificationServiceConfig): No
       for (const dataSource of dataSources) {
         dataSource.start((notifications, source) => {
           for (const notification of notifications) {
-            if (!receivedNotifications.has(notification.id)) {
-              receivedNotifications.add(notification.id)
-              telemetry?.onNotificationReceived({
-                notificationId: notification.id,
-                type: notification.content?.style,
-                source,
-                timestamp: Date.now(),
-              })
-            }
+            telemetry?.onNotificationReceived({
+              notificationId: notification.id,
+              type: notification.content?.style,
+              source,
+              timestamp: Date.now(),
+            })
           }
 
           handleNotifications(notifications).catch((error) => {
@@ -239,7 +241,6 @@ export function createNotificationService(config: NotificationServiceConfig): No
       }
 
       activeNotifications.delete(notificationId)
-      shownNotifications.delete(notificationId)
     },
 
     onNotificationClick(notificationId: string, target: NotificationClickTarget): void {
@@ -310,25 +311,6 @@ export function createNotificationService(config: NotificationServiceConfig): No
       }
     },
 
-    onNotificationShown(notificationId: string): void {
-      if (shownNotifications.has(notificationId)) {
-        return
-      }
-
-      const notification = activeNotifications.get(notificationId)
-      if (!notification) {
-        getLogger().warn('NotificationService', 'onNotificationShown', `Notification not found: ${notificationId}`)
-        return
-      }
-
-      shownNotifications.add(notificationId)
-      telemetry?.onNotificationShown({
-        notificationId,
-        type: notification.content?.style,
-        timestamp: Date.now(),
-      })
-    },
-
     destroy(): void {
       // Clean up old tracked notifications on teardown
       const cleanupThreshold = Date.now() - CLEANUP_OLDER_THAN_MS
@@ -356,9 +338,6 @@ export function createNotificationService(config: NotificationServiceConfig): No
         cleanup()
       }
       activeRenders.clear()
-      // Note: receivedNotifications and shownNotifications are intentionally NOT cleared here.
-      // They are module-level singletons that persist across service recreations
-      // to prevent duplicate telemetry events.
     },
   }
 }

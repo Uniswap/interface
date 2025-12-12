@@ -9,7 +9,6 @@ import {
 import {
   addActivityVisibility,
   addDismissedBridgedAndCompatibleWarnings,
-  migrateDismissedTokenWarnings,
   migrateSearchHistory,
   removeThaiBahtFromFiatCurrency,
   unchecksumDismissedTokenWarningKeys,
@@ -70,7 +69,6 @@ export const migrations = {
   27: migrateSearchHistory,
   28: addDismissedBridgedAndCompatibleWarnings,
   29: addActivityVisibility,
-  30: migrateDismissedTokenWarnings,
 }
 
-export const EXTENSION_STATE_VERSION = 30
+export const EXTENSION_STATE_VERSION = 29

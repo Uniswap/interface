@@ -37,11 +37,6 @@ export interface NotificationService {
    * @param target - What was clicked (button, background, dismiss, or acknowledge)
    */
   onNotificationClick(notificationId: string, target: NotificationClickTarget): void
-  /**
-   * Handle a notification being shown to the user
-   * @param notificationId - ID of the notification that was shown
-   */
-  onNotificationShown(notificationId: string): void
   // Cleanup and teardown
   destroy(): void
 }

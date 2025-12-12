@@ -1,5 +1,6 @@
+import { TableText } from 'components/Table/styled'
 import { memo } from 'react'
-import { Flex, styled, Text } from 'ui/src'
+import { Flex, styled } from 'ui/src'
 import { NFTViewer } from 'uniswap/src/components/nfts/images/NFTViewer'
 
 interface NftAmountDisplayProps {
@@ -36,18 +37,18 @@ function _NftAmountDisplay({
         </NftImageContainer>
       )}
       <Flex gap="$gap2">
-        <Text variant="body3" fontWeight="500">
+        <TableText variant="body3" fontWeight="500">
           {nftName}
-        </Text>
+        </TableText>
         {nftCollectionName && (
-          <Text variant="body3" color="$neutral2">
+          <TableText variant="body3" color="$neutral2">
             {nftCollectionName}
-          </Text>
+          </TableText>
         )}
         {purchaseAmountText && (
-          <Text variant="body3" color="$neutral2">
+          <TableText variant="body3" color="$neutral2">
             {purchaseAmountText}
-          </Text>
+          </TableText>
         )}
       </Flex>
     </Flex>

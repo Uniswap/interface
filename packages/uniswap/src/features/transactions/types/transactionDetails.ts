@@ -313,9 +313,6 @@ export interface BaseTransactionInfo {
 }
 
 export const INFINITE_APPROVAL_AMOUNT = 'INF'
-// The maximum approval amount, used to detect max approvals and improve their display in the UI
-export const INFINITE_APPROVAL_NUMBER = '1.157920892373162e+71'
-export const INFINITE_APPROVAL_NUMBER_PERMIT2 = '1.157920892373162e+59'
 export const REVOKE_APPROVAL_AMOUNT = '0.0'
 
 export interface ApproveTransactionInfo extends BaseTransactionInfo {

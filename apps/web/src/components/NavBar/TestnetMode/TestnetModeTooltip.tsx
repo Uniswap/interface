@@ -3,7 +3,6 @@ import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip } from 'ui/src'
 import { Wrench } from 'ui/src/components/icons/Wrench'
-import { zIndexes } from 'ui/src/theme'
 
 export default function TestnetModeTooltip() {
   const { t } = useTranslation()
@@ -29,7 +28,7 @@ export default function TestnetModeTooltip() {
           <Wrench color="$statusSuccess" size="$icon.16" />
         </Flex>
       </Tooltip.Trigger>
-      <Tooltip.Content animationDirection="right" zIndex={zIndexes.overlay}>
+      <Tooltip.Content animationDirection="right">
         <Text variant="body4">{t('home.banner.testnetMode.nav')}</Text>
         <Tooltip.Arrow />
       </Tooltip.Content>

@@ -1,7 +1,5 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { MenuStateVariant, useSetMenuCallback } from 'components/AccountDrawer/menuState'
-import { useActiveAddresses } from 'features/accounts/store/hooks'
-import { RefObject, useCallback, useEffect, useState } from 'react'
+import { RefObject, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, styled, Text, useWindowDimensions } from 'ui/src'
 import { Gift } from 'ui/src/components/icons/Gift'
@@ -11,10 +9,7 @@ import {
   renderSnowflakesWeb,
   SnowflakeContainer,
 } from 'uniswap/src/components/banners/shared/SharedSnowflakeComponents'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useSnowflakeAnimation } from 'uniswap/src/hooks/useSnowflakeAnimation'
-import { isMobileWeb } from 'utilities/src/platform'
 
 const DisconnectedContainer = styled(Flex, {
   width: '100%',
@@ -56,18 +51,9 @@ export function DisconnectedState({ parentRef }: { parentRef: RefObject<HTMLDivE
   const [containerWidth, setContainerWidth] = useState<number>(0)
   const [containerHeight, setContainerHeight] = useState<number>(0)
   const { open: openAccountDrawer } = useAccountDrawer()
-  const setMenuToWalletConnectionPanel = useSetMenuCallback(MenuStateVariant.SWITCH)
-  const connectedSVMWalletAddress = useActiveAddresses().svmAddress
   const { t } = useTranslation()
   const darkColors = useSporeColorsForTheme('dark')
   const { width: windowWidth, height: windowHeight } = useWindowDimensions()
-
-  const handleConnectPress = useCallback(() => {
-    if (connectedSVMWalletAddress) {
-      setMenuToWalletConnectionPanel()
-    }
-    openAccountDrawer()
-  }, [setMenuToWalletConnectionPanel, openAccountDrawer, connectedSVMWalletAddress])
 
   // set initital container height and width
   useEffect(() => {
@@ -76,15 +62,14 @@ export function DisconnectedState({ parentRef }: { parentRef: RefObject<HTMLDivE
     setContainerHeight(rect?.height ?? windowHeight * 0.8)
   }, [parentRef, windowWidth, windowHeight])
 
-  const { snowflakes, removeSnowflake, mouseInteraction } = useSnowflakeAnimation({
-    mouseInteraction: {
-      enabled: !isMobileWeb,
+  const { snowflakes, removeSnowflake, mouseInteraction } = useSnowflakeAnimation(
+    {
+      enabled: true,
       containerWidth,
       bannerHeight: containerHeight,
     },
-    speedFactor: 0.5,
-    delay: 0,
-  })
+    0.5,
+  )
 
   return (
     // biome-ignore lint/correctness/noRestrictedElements: Web-only mouse tracking for glow effect
@@ -124,7 +109,7 @@ export function DisconnectedState({ parentRef }: { parentRef: RefObject<HTMLDivE
           })}
         </SnowflakeContainer>
 
-        <Flex centered gap="$spacing32" p="$spacing24">
+        <Flex centered gap="$spacing32">
           <IconWrapper>
             <Gift color={darkColors.neutral1.val} size={32} />
           </IconWrapper>
@@ -139,19 +124,17 @@ export function DisconnectedState({ parentRef }: { parentRef: RefObject<HTMLDivE
             </Text>
           </Flex>
           <Flex row centered>
-            <Trace logPress element={ElementName.ConnectWalletButton}>
-              <Button
-                variant="default"
-                emphasis="primary"
-                backgroundColor={darkColors.neutral1.val}
-                size="medium"
-                onPress={handleConnectPress}
-              >
-                <Text px="$spacing20" color={darkColors.surface1.val} variant="buttonLabel1">
-                  {t('common.button.connect')}
-                </Text>
-              </Button>
-            </Trace>
+            <Button
+              variant="default"
+              emphasis="primary"
+              backgroundColor={darkColors.neutral1.val}
+              size="medium"
+              onPress={openAccountDrawer}
+            >
+              <Text px="$spacing20" color={darkColors.surface1.val} variant="buttonLabel1">
+                {t('common.button.connect')}
+              </Text>
+            </Button>
           </Flex>
         </Flex>
       </DisconnectedContainer>

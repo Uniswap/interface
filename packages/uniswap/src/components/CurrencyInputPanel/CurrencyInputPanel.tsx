@@ -1,5 +1,3 @@
-//! tamagui-ignore
-// tamagui-ignore
 /* eslint-disable complexity */
 import { forwardRef, memo, useCallback } from 'react'
 import { Flex, TouchableArea, useIsShortMobileDevice, useShakeAnimation } from 'ui/src'
@@ -162,8 +160,7 @@ export const CurrencyInputPanel = memo(
               gap="$spacing8"
               mb={showPercentagePresetsOnBottom ? '$spacing6' : undefined}
               // maintain layout when balance is hidden
-              opacity={currencyInfo ? 1 : 0}
-              pointerEvents={currencyInfo ? 'auto' : 'none'}
+              {...(!currencyInfo && { opacity: 0, pointerEvents: 'none' })}
             >
               {showPercentagePresetsOnBottom && currencyBalance && !currencyAmount ? (
                 <Flex position="absolute">

@@ -59,7 +59,6 @@ describe('useActivityData', () => {
     mockUseHideSpamTokensSetting.mockReturnValue(false)
     mockUseFormattedTransactionDataForActivity.mockReturnValue({
       isLoading: false,
-      isFetching: false,
       isError: undefined,
       hasData: true,
       onRetry: mockOnRetry,
@@ -85,7 +84,6 @@ describe('useActivityData', () => {
       expect(result.current.hasNextPage).toBeDefined()
       expect(result.current.isFetchingNextPage).toBeDefined()
       expect(result.current.isLoading).toBeDefined()
-      expect(result.current.isFetching).toBeDefined()
       expect(result.current.refetch).toBeDefined()
     })
 
@@ -118,7 +116,6 @@ describe('useActivityData', () => {
     it('should handle loading state', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: true,
-        isFetching: true,
         isError: undefined,
         hasData: false,
         onRetry: mockOnRetry,
@@ -141,7 +138,6 @@ describe('useActivityData', () => {
     it('should handle fetching next page state', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
-        isFetching: true,
         isError: undefined,
         hasData: true,
         onRetry: mockOnRetry,
@@ -166,7 +162,6 @@ describe('useActivityData', () => {
       const mockError = new Error('Test error')
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
-        isFetching: false,
         isError: mockError,
         hasData: false,
         onRetry: mockOnRetry,
@@ -190,7 +185,6 @@ describe('useActivityData', () => {
       const mockError = new Error('Test error')
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
-        isFetching: false,
         isError: mockError,
         hasData: false,
         onRetry: mockOnRetry,
@@ -216,7 +210,6 @@ describe('useActivityData', () => {
     it('should handle empty sectionData', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
-        isFetching: false,
         isError: undefined,
         hasData: false,
         onRetry: mockOnRetry,
@@ -239,7 +232,6 @@ describe('useActivityData', () => {
     it('should handle empty array sectionData', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
-        isFetching: false,
         isError: undefined,
         hasData: false,
         onRetry: mockOnRetry,
@@ -280,7 +272,6 @@ describe('useActivityData', () => {
       const extraTransaction = createMockTransaction('extra-tx-1')
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
-        isFetching: false,
         isError: undefined,
         hasData: false,
         onRetry: mockOnRetry,
@@ -386,7 +377,6 @@ describe('useActivityData', () => {
     it('should handle skip prop', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
-        isFetching: false,
         isError: undefined,
         hasData: false,
         onRetry: mockOnRetry,
@@ -434,7 +424,6 @@ describe('useActivityData', () => {
       const mockOnPressEmptyState = jest.fn()
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
-        isFetching: false,
         isError: undefined,
         hasData: false,
         onRetry: mockOnRetry,
@@ -492,7 +481,6 @@ describe('useActivityData', () => {
     it('should handle hasNextPage and fetchNextPage', () => {
       mockUseFormattedTransactionDataForActivity.mockReturnValue({
         isLoading: false,
-        isFetching: false,
         isError: undefined,
         hasData: true,
         onRetry: mockOnRetry,

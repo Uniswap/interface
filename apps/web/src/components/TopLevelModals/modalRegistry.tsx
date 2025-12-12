@@ -1,10 +1,8 @@
-import ErrorBoundary from 'components/ErrorBoundary'
 import { ModalRegistry, ModalWrapperProps } from 'components/TopLevelModals/types'
 import { useModalState } from 'hooks/useModalState'
 import { memo, Suspense } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { logger } from 'utilities/src/logger/logger'
 import { createLazy } from 'utils/lazyWithRetry'
 
 const AddressClaimModal = createLazy(() => import('components/claim/AddressClaimModal'))
@@ -89,29 +87,13 @@ const ReportTokenModal = createLazy(() =>
     default: module.ReportTokenIssueModal,
   })),
 )
-function ModalLoadingFallback(): null {
-  return null
-}
-
-function ModalErrorFallback({ error }: { error: Error }): null {
-  logger.error(error, {
-    tags: {
-      file: 'modalRegistry',
-      function: 'ModalErrorFallback',
-    },
-    extra: {
-      message: 'Modal failed to load - error caught by ErrorBoundary. Modal will not be displayed.',
-    },
-  })
-  return null
-}
+const ModalLoadingFallback = memo(() => null)
+ModalLoadingFallback.displayName = 'ModalLoadingFallback'
 
 const ModalWrapper = memo(({ Component, componentProps }: ModalWrapperProps) => (
-  <ErrorBoundary fallback={ModalErrorFallback}>
-    <Suspense fallback={<ModalLoadingFallback />}>
-      <Component {...componentProps} />
-    </Suspense>
-  </ErrorBoundary>
+  <Suspense fallback={<ModalLoadingFallback />}>
+    <Component {...componentProps} />
+  </Suspense>
 ))
 ModalWrapper.displayName = 'ModalWrapper'
 

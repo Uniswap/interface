@@ -8,7 +8,7 @@ import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { HeaderCell } from 'components/Table/styled'
 import { hasRow } from 'components/Table/utils/hasRow'
-import { PORTFOLIO_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
+import { POOLS_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
 import { PoolBalanceCell } from 'pages/Portfolio/Overview/MiniPoolsTable/columns/Balance'
 import { PoolFeesCell } from 'pages/Portfolio/Overview/MiniPoolsTable/columns/Fees'
 import { PoolInfoCell } from 'pages/Portfolio/Overview/MiniPoolsTable/columns/Info'
@@ -196,8 +196,8 @@ export const MiniPoolsTable = memo(function MiniPoolsTable({ account, maxPools =
           error={false}
           v2={true}
           rowWrapper={rowWrapper}
-          rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
-          compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
+          rowHeight={POOLS_TABLE_ROW_HEIGHT}
+          compactRowHeight={POOLS_TABLE_ROW_HEIGHT}
           defaultPinnedColumns={['poolInfo']}
           maxWidth={POOLS_TABLE_MAX_WIDTH}
           centerArrows

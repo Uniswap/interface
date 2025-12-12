@@ -1,9 +1,10 @@
-import { EM_DASH, Text } from 'ui/src'
+import { TableText } from 'components/Table/styled'
+import { EM_DASH } from 'ui/src'
 
-export function EmptyTableCell(): JSX.Element {
+export function EmptyTableCell() {
   return (
-    <Text variant="body3" color="$neutral2">
+    <TableText variant="body3" color="$neutral2">
       {EM_DASH}
-    </Text>
+    </TableText>
   )
 }

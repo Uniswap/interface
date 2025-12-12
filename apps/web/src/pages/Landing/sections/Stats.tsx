@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { LiveIcon, StatCard } from 'pages/Landing/components/StatCard'
 import { useInView } from 'pages/Landing/sections/useInView'
 import { parseToRgb } from 'polished'
@@ -64,15 +63,12 @@ const LearnMoreButton = styled(Flex, {
 
 function GetStarted() {
   const { t } = useTranslation()
-  const isUnificationCopyEnabled = useFeatureFlag(FeatureFlags.UnificationCopy)
 
   return (
     <LearnMoreButton href="/explore">
       <ExternalLink href="/explore" style={{ stroke: 'unset' }}>
         <Flex row gap="$gap8" alignItems="center">
-          <Text variant="buttonLabel1">
-            {isUnificationCopyEnabled ? t('landing.getStarted') : t('landing.getStarted.old')}
-          </Text>
+          <Text variant="buttonLabel1">{t('landing.getStarted')}</Text>
           <RightArrow size="$icon.24" color="$neutral1" />
         </Flex>
       </ExternalLink>
@@ -85,7 +81,6 @@ export function Stats() {
   const { ref, inView } = useInView()
   const colors = useSporeColors()
   const { red, green, blue } = parseToRgb(colors.neutral2.val)
-  const isUnificationCopyEnabled = useFeatureFlag(FeatureFlags.UnificationCopy)
 
   return (
     <Container>
@@ -97,7 +92,7 @@ export function Stats() {
             </Text>
             <Flex gap="$spacing24">
               <Text variant="heading2" $lg={{ variant: 'heading3' }} $md={{ fontSize: 18, lineHeight: 24 }}>
-                {isUnificationCopyEnabled ? t('landing.protocolDescription') : t('landing.protocolDescription.old')}
+                {t('landing.protocolDescription')}
               </Text>
               <GetStarted />
             </Flex>
@@ -176,7 +171,7 @@ function Cards({ inView }: { inView: boolean }) {
   const { totalVolume } = use24hProtocolVolume()
   const { totalTVL } = useDailyTVLWithChange()
   // Currently hardcoded, BE task [DAT-1435] to make this data available
-  const allTimeVolume = 4.0 * 10 ** 12
+  const allTimeVolume = 3.3 * 10 ** 12
   const allTimeSwappers = 119 * 10 ** 6
 
   return (

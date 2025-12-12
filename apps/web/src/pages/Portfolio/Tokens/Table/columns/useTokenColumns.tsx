@@ -169,13 +169,13 @@ export function useTokenColumns({
       columns.push(
         columnHelper.display({
           id: 'actions',
-          size: 48,
+          size: 40,
           header: () => <HeaderCell />,
           cell: (info) => {
             const tokenData = hasRow<TokenData>(info) ? info.row.original : undefined
             return (
               <Cell loading={showLoadingSkeleton} justifyContent="center">
-                {tokenData && <ContextMenuButton key={tokenData.id} tokenData={tokenData} />}
+                {tokenData && <ContextMenuButton tokenData={tokenData} />}
               </Cell>
             )
           },

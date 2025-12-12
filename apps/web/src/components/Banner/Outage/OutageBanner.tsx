@@ -1,7 +1,7 @@
+import { ChainOutageData } from 'featureFlags/flags/outageBanner'
 import { useState } from 'react'
 import { Globe, X } from 'react-feather'
 import { Trans } from 'react-i18next'
-import { ChainOutageData } from 'state/outage/types'
 import { ExternalLink } from 'theme/components/Links'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { capitalize } from 'tsafe'

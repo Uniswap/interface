@@ -183,7 +183,6 @@ describe('createNotificationService', () => {
       expect(system).toBeDefined()
       expect(typeof system.initialize).toBe('function')
       expect(typeof system.onNotificationClick).toBe('function')
-      expect(typeof system.onNotificationShown).toBe('function')
       expect(typeof system.onRenderFailed).toBe('function')
       expect(typeof system.destroy).toBe('function')
     })
@@ -952,93 +951,6 @@ describe('createNotificationService', () => {
       expect(trackedCalls).toHaveLength(2)
       expect(trackedCalls.filter((c) => c.id === 'notif-A')).toHaveLength(1)
       expect(trackedCalls.filter((c) => c.id === 'notif-B')).toHaveLength(1)
-    })
-
-    it('does not track non-existent downstream notifications referenced by POPUP', async () => {
-      const { dataSource, triggerNotifications } = createMockDataSource()
-      const { tracker, getTrackedCalls } = createMockTracker()
-
-      // Create notification A that references non-existent notification B via POPUP
-      const notificationA = createNotificationWithButton({
-        id: 'notif-A',
-        timestamp: 1000,
-        buttonLabel: 'Show B',
-        buttonActions: [OnClickAction.POPUP, OnClickAction.ACK],
-        buttonLink: 'notif-B-does-not-exist', // This notification doesn't exist
-      })
-
-      const processor: NotificationProcessor = {
-        process: vi.fn(async () => ({
-          primary: [notificationA],
-          chained: new Map(), // notif-B is NOT in chained map
-        })),
-      }
-      const { renderer } = createMockRenderer()
-
-      const system = createNotificationService({
-        dataSources: [dataSource],
-        tracker,
-        processor,
-        renderer,
-      })
-
-      await system.initialize()
-
-      triggerNotifications([notificationA])
-      await sleep(10)
-
-      // Acknowledge A - should only track A, not the non-existent B
-      system.onNotificationClick('notif-A', { type: 'button', index: 0 })
-      await sleep(10)
-
-      const trackedCalls = getTrackedCalls()
-      // Should only track A, not the non-existent notification
-      expect(trackedCalls).toHaveLength(1)
-      expect(trackedCalls[0].id).toBe('notif-A')
-    })
-
-    it('does not track non-existent downstream notifications referenced by background POPUP', async () => {
-      const { dataSource, triggerNotifications } = createMockDataSource()
-      const { tracker, getTrackedCalls } = createMockTracker()
-
-      // Create notification with background that references non-existent notification
-      const notificationA = createNotificationWithBackground({
-        id: 'notif-A',
-        timestamp: 1000,
-        buttonLabel: 'Acknowledge',
-        buttonActions: [OnClickAction.ACK],
-        backgroundActions: [OnClickAction.POPUP],
-        backgroundLink: 'notif-B-does-not-exist', // This notification doesn't exist
-      })
-
-      const processor: NotificationProcessor = {
-        process: vi.fn(async () => ({
-          primary: [notificationA],
-          chained: new Map(), // notif-B is NOT in chained map
-        })),
-      }
-      const { renderer } = createMockRenderer()
-
-      const system = createNotificationService({
-        dataSources: [dataSource],
-        tracker,
-        processor,
-        renderer,
-      })
-
-      await system.initialize()
-
-      triggerNotifications([notificationA])
-      await sleep(10)
-
-      // Acknowledge A via button - should only track A, not the non-existent B
-      system.onNotificationClick('notif-A', { type: 'button', index: 0 })
-      await sleep(10)
-
-      const trackedCalls = getTrackedCalls()
-      // Should only track A, not the non-existent notification
-      expect(trackedCalls).toHaveLength(1)
-      expect(trackedCalls[0].id).toBe('notif-A')
     })
 
     it('does not track downstream notifications when notification is dismissed', async () => {

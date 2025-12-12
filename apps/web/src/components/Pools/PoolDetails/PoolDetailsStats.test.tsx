@@ -6,8 +6,7 @@ import store from 'state'
 import mockMediaSize from 'test-utils/mockMediaSize'
 import { validPoolDataResponse } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
-import { dismissTokenWarning } from 'uniswap/src/features/tokens/warnings/slice/slice'
-import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
+import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 
 vi.mock('tamagui', async () => {
   const actual = await vi.importActual('tamagui')
@@ -38,7 +37,6 @@ describe('PoolDetailsStats', () => {
           name: 'USD Coin',
           decimals: 6,
         },
-        warning: TokenProtectionWarning.NonDefault,
       }),
     )
     store.dispatch(
@@ -50,7 +48,6 @@ describe('PoolDetailsStats', () => {
           name: 'Wrapped Ether',
           decimals: 18,
         },
-        warning: TokenProtectionWarning.NonDefault,
       }),
     )
   })

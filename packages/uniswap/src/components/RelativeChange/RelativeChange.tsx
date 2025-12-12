@@ -13,7 +13,6 @@ interface RelativeChangeProps {
   semanticColor?: boolean // If true, entire % change text will render green or red
   positiveChangeColor?: ColorTokens
   negativeChangeColor?: ColorTokens
-  color?: ColorTokens
   arrowSize?: IconSizeTokens
   loading?: boolean
   alignRight?: boolean
@@ -30,7 +29,6 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
     arrowSize = '$icon.16',
     loading = false,
     alignRight = false,
-    color = '$neutral2',
   } = props
   const { formatNumberOrString, formatPercent } = useLocalizationContext()
   const currency = useAppFiatCurrencyInfo()
@@ -58,7 +56,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
       {change !== undefined && <Caret color={arrowColor} direction={isPositiveChange ? 'n' : 's'} size={arrowSize} />}
       <Flex>
         <Text
-          color={semanticColor ? (isPositiveChange ? '$statusSuccess' : '$statusCritical') : color}
+          color={semanticColor ? (isPositiveChange ? '$statusSuccess' : '$statusCritical') : '$neutral2'}
           loading={loading}
           loadingPlaceholderText="▲ 00.00 (0.00)%"
           testID={TestID.PortfolioRelativeChange}

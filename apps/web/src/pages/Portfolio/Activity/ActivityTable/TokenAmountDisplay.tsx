@@ -1,5 +1,6 @@
+import { TableText } from 'components/Table/styled'
 import { memo } from 'react'
-import { Flex, Text } from 'ui/src'
+import { Flex } from 'ui/src'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 
@@ -18,13 +19,13 @@ function _TokenAmountDisplay({ currencyInfo, formattedAmount, usdValue }: TokenA
     <Flex row alignItems="center" gap="$gap8">
       <CurrencyLogo currencyInfo={currencyInfo} size={32} />
       <Flex gap="$gap2">
-        <Text variant="body3" fontWeight="500">
+        <TableText variant="body3" fontWeight="500">
           {formattedAmount}
-        </Text>
+        </TableText>
         {usdValue && (
-          <Text variant="body3" color="$neutral2">
+          <TableText variant="body3" color="$neutral2">
             {usdValue}
-          </Text>
+          </TableText>
         )}
       </Flex>
     </Flex>

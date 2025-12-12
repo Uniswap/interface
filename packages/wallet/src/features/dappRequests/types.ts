@@ -1,5 +1,4 @@
 import { DappVerificationStatus } from '@universe/api'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { z } from 'zod'
 
 export const CapabilitySchema = z.record(z.string(), z.unknown())
@@ -104,10 +103,6 @@ export enum TransactionRiskLevel {
 export interface TransactionAsset {
   /** Asset type (ERC20, NATIVE, NFT, etc.) */
   type: string
-  /** Contract address */
-  address: string
-  /** Chain ID */
-  chainId: UniverseChainId
   /** Token/NFT symbol or name */
   symbol?: string
   /** Token/NFT name */
@@ -118,8 +113,8 @@ export interface TransactionAsset {
   usdValue?: string
   /** Logo/image URL */
   logoUrl?: string
-  /** Spender address (for approvals) */
-  spenderAddress?: string
+  /** Contract address */
+  address: string
 }
 
 /**

@@ -45,7 +45,7 @@ exports[`ContextMenu renders without error 1`] = `
         "position": "absolute",
         "right": 0,
         "top": 0,
-        "zIndex": 1070,
+        "zIndex": 5001,
       }
     }
   >

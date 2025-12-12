@@ -1,6 +1,5 @@
 import { ColorTokens, Flex, Text, Tooltip } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { zIndexes } from 'ui/src/theme'
 
 interface WarningMessageProps {
   warningMessage: string
@@ -22,7 +21,7 @@ export function WarningMessage({ warningMessage, color, tooltipText }: WarningMe
     return (
       <Tooltip>
         <Tooltip.Trigger>{warningContent}</Tooltip.Trigger>
-        <Tooltip.Content zIndex={zIndexes.overlay}>
+        <Tooltip.Content>
           <Text variant="body4">{tooltipText}</Text>
         </Tooltip.Content>
       </Tooltip>

@@ -24,12 +24,8 @@ import { Trans, useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router'
 import { Text } from 'rebass'
 import { ThemeProvider } from 'theme'
-import { Flex, GeneratedIcon, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, useIsDarkMode, useSporeColors } from 'ui/src'
 import { breakpoints } from 'ui/src/theme'
-import { InlineWarningCard } from 'uniswap/src/components/InlineWarningCard/InlineWarningCard'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
-import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
-import { AZTEC_POOL_ADDRESS } from 'uniswap/src/constants/addresses'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -115,27 +111,6 @@ function getUnwrappedPoolToken({
   return poolData && chainId
     ? [unwrapToken(chainId, poolData.token0), unwrapToken(chainId, poolData.token1)]
     : [undefined, undefined]
-}
-
-function AztecPoolWarningBanner({ poolAddress }: { poolAddress: string }): JSX.Element | null {
-  const { t } = useTranslation()
-  const isAztecDisabled = useFeatureFlag(FeatureFlags.DisableAztecToken)
-  const isAztecPool = poolAddress.toLowerCase() === AZTEC_POOL_ADDRESS.toLowerCase()
-  const showWarning = isAztecPool && isAztecDisabled
-
-  if (!showWarning) {
-    return null
-  }
-
-  return (
-    <Flex mt="$spacing24">
-      <InlineWarningCard
-        severity={WarningSeverity.Low}
-        Icon={WarningIcon as GeneratedIcon}
-        heading={t('web.explore.tokenDetails.data.warning')}
-      />
-    </Flex>
-  )
 }
 
 export default function PoolDetailsPage() {
@@ -272,7 +247,6 @@ export default function PoolDetailsPage() {
                 tokenAColor={isReversed ? color1 : color0}
                 tokenBColor={isReversed ? color0 : color1}
               />
-              <AztecPoolWarningBanner poolAddress={poolAddress} />
             </Column>
             <HR />
             <PoolDetailsTableTab

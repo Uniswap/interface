@@ -141,15 +141,10 @@ interface MouseInteractionResult {
  * @param speedFactor - Speed multiplier for snowfall (1.0 = normal, 0.5 = half speed)
  * @returns Array of active snowflakes, removal function, and optional mouse interaction handlers
  */
-export function useSnowflakeAnimation({
-  mouseInteraction,
+export function useSnowflakeAnimation(
+  mouseInteraction?: MouseInteractionConfig,
   speedFactor = 1.0,
-  delay = 900,
-}: {
-  mouseInteraction?: MouseInteractionConfig
-  speedFactor?: number
-  delay?: number
-}): {
+): {
   snowflakes: SnowflakeProps[]
   removeSnowflake: (id: number) => void
   mouseInteraction?: MouseInteractionResult
@@ -457,7 +452,7 @@ export function useSnowflakeAnimation({
     // Start continuous spawning after initial delay
     const startTimer = setTimeout(() => {
       scheduleNextSpawn()
-    }, delay)
+    }, 900)
 
     // Cleanup: Stop spawning when component unmounts
     return () => {

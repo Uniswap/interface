@@ -51,7 +51,6 @@ export enum WarningLabel {
   NetworkError = 'network_error',
   BlockedToken = 'blocked_token',
   NoQuotesFound = 'no_quotes_found',
-  AztecUnavailable = 'aztec_unavailable',
 }
 
 export interface Warning {

@@ -1,5 +1,5 @@
 import { isNonPollingRequestInFlight } from '@universe/api'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Flex, Loader, styled, Text, View } from 'ui/src'
@@ -8,7 +8,6 @@ import { ExpandoRow } from 'uniswap/src/components/ExpandoRow/ExpandoRow'
 import { useNftListRenderData } from 'uniswap/src/components/nfts/hooks/useNftListRenderData'
 import { NftsListProps } from 'uniswap/src/components/nfts/NftsList'
 import { NftsListEmptyState } from 'uniswap/src/components/nfts/NftsListEmptyState'
-import { NftListHeader } from 'uniswap/src/components/nfts/NftsListHeader'
 import { ShowNFTModal } from 'uniswap/src/components/nfts/ShowNFTModal'
 import { EMPTY_NFT_ITEM, HIDDEN_NFTS_ROW } from 'uniswap/src/features/nfts/constants'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
@@ -61,16 +60,8 @@ export function NftsList({
   searchString,
   onFilteredCountsChange,
   renderExpandoRow,
-  nextFetchPolicy,
-  onRefetchReady,
-  onLoadingStateChange,
-  showHeader = false,
-  SearchInputComponent,
-  pollInterval,
 }: NftsListProps): JSX.Element {
   const { t } = useTranslation()
-
-  const [search, setSearch] = useState('')
 
   const {
     nfts: allNfts,
@@ -86,41 +77,20 @@ export function NftsList({
     refetch,
     shownNfts,
     hiddenNfts,
-  } = useNftListRenderData({ owner, skip, chainsFilter, nextFetchPolicy, pollInterval })
-
-  // Expose refetch function to parent component
-  useEffect(() => {
-    if (onRefetchReady) {
-      onRefetchReady(refetch)
-    }
-  }, [onRefetchReady, refetch])
-
-  // Expose loading state to parent component
-  const isLoadingState = isNonPollingRequestInFlight(networkStatus)
-  useEffect(() => {
-    if (onLoadingStateChange) {
-      onLoadingStateChange(isLoadingState)
-    }
-  }, [onLoadingStateChange, isLoadingState])
+  } = useNftListRenderData({ owner, skip, chainsFilter })
 
   // Filter NFTs based on search string
   const filteredShownNfts = useMemo(() => {
-    if (!search) {
-      return shownNfts
-    }
-    return shownNfts.filter((item) => filterNft(item, search))
-  }, [shownNfts, search])
+    return shownNfts.filter((item) => filterNft(item, searchString))
+  }, [shownNfts, searchString])
 
   const filteredHiddenNfts = useMemo(() => {
-    if (!search) {
-      return hiddenNfts
-    }
-    return hiddenNfts.filter((item) => filterNft(item, search))
-  }, [hiddenNfts, search])
+    return hiddenNfts.filter((item) => filterNft(item, searchString))
+  }, [hiddenNfts, searchString])
 
   // Rebuild the nfts array from filtered arrays using the shared logic
   const nfts = useMemo<Array<NFTItem | string>>(() => {
-    if (!search) {
+    if (!searchString) {
       return allNfts
     }
 
@@ -131,7 +101,7 @@ export function NftsList({
       allPagesFetched: !hasNextPage,
     })
     return result
-  }, [allNfts, filteredShownNfts, filteredHiddenNfts, search, hasNextPage, hiddenNftsExpanded])
+  }, [allNfts, filteredShownNfts, filteredHiddenNfts, searchString, hasNextPage, hiddenNftsExpanded])
 
   // Calculate filtered counts
   const filteredShownCount = filteredShownNfts.length
@@ -139,7 +109,7 @@ export function NftsList({
 
   // Use filtered count if provided, otherwise use internal count
   // If searchString is provided, use filtered count
-  const numHidden = filteredNumHidden ?? (search ? filteredHiddenCount : internalNumHidden)
+  const numHidden = filteredNumHidden ?? (searchString ? filteredHiddenCount : internalNumHidden)
 
   // Notify parent of filtered counts (or unfiltered counts if no search string)
   useEffect(() => {
@@ -255,6 +225,7 @@ export function NftsList({
     [errorStateStyle, onRetry, t],
   )
 
+  const isLoadingState = isNonPollingRequestInFlight(networkStatus)
   const isEmptyState = (nfts.length === 0 && !isLoadingState) || isErrorState
 
   const listContent = useMemo<JSX.Element | JSX.Element[]>(() => {
@@ -295,14 +266,7 @@ export function NftsList({
   ])
 
   return (
-    <Flex gap="$spacing24">
-      {showHeader && (
-        <NftListHeader
-          count={filteredShownCount}
-          SearchInputComponent={SearchInputComponent}
-          onSearchValueChange={setSearch}
-        />
-      )}
+    <>
       <InfiniteScroll
         next={onListEndReached}
         hasMore={hasNextPage}
@@ -316,6 +280,6 @@ export function NftsList({
           {listContent}
         </AssetsContainer>
       </InfiniteScroll>
-    </Flex>
+    </>
   )
 }

@@ -6,18 +6,14 @@ import { call, select, takeEvery } from 'typed-redux-saga'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { selectActiveAccountAddress, selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
-import { removeAccounts, setAccountAsActive } from 'wallet/src/features/wallet/slice'
+import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'
 
 export function* pushNotificationsWatcherSaga() {
   yield* call(syncWithOneSignal)
-  yield* call(syncActiveWalletAddressTag)
 
   yield* takeEvery(initNotifsForNewUser.type, initNewUser)
   yield* takeEvery(updateNotifSettings.type, syncWithOneSignal)
   yield* takeEvery(finalizeTransaction.type, processFinalizedTx)
-  yield* takeEvery(setAccountAsActive.type, syncActiveWalletAddressTag)
-  yield* takeEvery(removeAccounts.type, syncActiveWalletAddressTag)
 }
 
 /**
@@ -53,14 +49,5 @@ function* processFinalizedTx(action: ReturnType<typeof finalizeTransaction>) {
       OneSignalUserTagField.SwapLastCompletedAt,
       Math.floor(Date.now() / ONE_SECOND_MS).toString(),
     )
-  }
-}
-
-function* syncActiveWalletAddressTag() {
-  const activeAddress = yield* select(selectActiveAccountAddress)
-  if (activeAddress) {
-    yield* call(OneSignal.User.addTag, OneSignalUserTagField.ActiveWalletAddress, activeAddress)
-  } else {
-    yield* call(OneSignal.User.removeTag, OneSignalUserTagField.ActiveWalletAddress)
   }
 }

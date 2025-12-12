@@ -1,9 +1,4 @@
 const { mergeObjectValues, mergeArrayValues } = require('./merger')
-const {
-  detectUniversePackages,
-  generateUniversePackageOverrides,
-  getGlobalRestrictedImportPatterns,
-} = require('./universePackages')
 
 /**
  * Processes the entire config, resolving markers in all overrides
@@ -17,22 +12,7 @@ function processConfig(baseConfig, globalRules) {
 
   // Process each override section
   if (Array.isArray(config.overrides)) {
-    const processedOverrides = []
-
-    // First pass: expand markers that generate multiple overrides
-    for (const override of config.overrides) {
-      if (override === '__AUTO_GENERATE_UNIVERSE_OVERRIDES__') {
-        const generatedOverrides = expandUniverseOverridesMarker(config)
-        processedOverrides.push(...generatedOverrides)
-      } else {
-        processedOverrides.push(override)
-      }
-    }
-
-    // Second pass: process each override to resolve __INCLUDE_GLOBAL_VALUES__ markers
-    config.overrides = processedOverrides.map((override) =>
-      override.linter?.rules ? resolveIncludeGlobalValuesMarkers(override, globalRules) : override,
-    )
+    config.overrides = config.overrides.map((override) => processOverride(override, globalRules))
   } else if (config.overrides) {
     throw new Error('`overrides` must be an array')
   }
@@ -41,27 +21,16 @@ function processConfig(baseConfig, globalRules) {
 }
 
 /**
- * Expands __AUTO_GENERATE_UNIVERSE_OVERRIDES__ marker into actual override configurations
- * @param {Object} baseConfig - The base configuration (needed to extract global patterns)
- * @returns {Array<Object>} Array of generated override configurations
- */
-function expandUniverseOverridesMarker(baseConfig) {
-  const universePackages = detectUniversePackages()
-  const globalPatterns = getGlobalRestrictedImportPatterns(baseConfig)
-  const generatedOverrides = generateUniversePackageOverrides(universePackages, globalPatterns)
-
-  console.log(`✓ Auto-generated ${generatedOverrides.length} override(s) for @universe/* packages`)
-
-  return generatedOverrides
-}
-
-/**
- * Resolves __INCLUDE_GLOBAL_VALUES__ markers in an override's rule options
+ * Processes a single override, detecting and resolving __INCLUDE_GLOBAL_VALUES__ markers
  * @param {Object} override - Override configuration section
  * @param {Map<string, any>} globalRules - Map of global rule paths to values
  * @returns {Object} Processed override with markers resolved
  */
-function resolveIncludeGlobalValuesMarkers(override, globalRules) {
+function processOverride(override, globalRules) {
+  if (!override.linter?.rules) {
+    return override
+  }
+
   // Deep clone to avoid mutation
   const processed = structuredClone(override)
 
@@ -118,4 +87,4 @@ function resolveIncludeGlobalValuesMarkers(override, globalRules) {
   return processed
 }
 
-module.exports = { processConfig }
+module.exports = { processConfig, processOverride }

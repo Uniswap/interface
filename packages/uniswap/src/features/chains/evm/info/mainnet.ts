@@ -111,7 +111,6 @@ export const MAINNET_CHAIN_INFO = {
     },
   },
   tradingApiPollingIntervalMs: 500,
-  acrossProtocolAddress: '0x5c7BCd6E7De5423a257D81B442095A1a6ced35C5',
 } as const satisfies UniverseChainInfo
 
 const testnetTokens = buildChainTokens({

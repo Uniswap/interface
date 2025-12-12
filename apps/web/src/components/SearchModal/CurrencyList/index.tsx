@@ -13,7 +13,8 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
+import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
+import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { currencyKey } from 'utils/currencyKey'
@@ -117,6 +118,7 @@ export function CurrencyRow({
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
   const key = currencyListRowKey(currency)
 
+  const { tokenWarningDismissed: customAdded } = useDismissedTokenWarnings(currency)
   const warningSeverity = getTokenWarningSeverity(currencyInfo)
   const isBlockedToken = warningSeverity === WarningSeverity.Blocked
   const blockedTokenOpacity = '0.6'
@@ -134,7 +136,7 @@ export function CurrencyRow({
       logPress
       logKeyPress
       eventOnTrigger={UniswapEventName.TokenSelected}
-      properties={{ ...eventProperties, token_balance_usd: usdValue }}
+      properties={{ is_imported_by_user: customAdded, ...eventProperties, token_balance_usd: usdValue }}
       element={ElementName.TokenSelectorRow}
     >
       <Wrapper

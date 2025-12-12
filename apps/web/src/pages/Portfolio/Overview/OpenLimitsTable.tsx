@@ -11,7 +11,7 @@ import { Cell } from 'components/Table/Cell'
 import { HeaderCell } from 'components/Table/styled'
 import { hasRow } from 'components/Table/utils/hasRow'
 import { TFunction } from 'i18next'
-import { PORTFOLIO_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
+import { LIMITS_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
 import { MAX_LIMITS_LOADING_ROWS } from 'pages/Portfolio/Overview/constants'
 import { TableSectionHeader } from 'pages/Portfolio/Overview/TableSectionHeader'
 import { memo, useCallback, useMemo } from 'react'
@@ -241,8 +241,8 @@ export const OpenLimitsTable = memo(function OpenLimitsTable({ account, maxLimit
         v2={true}
         rowWrapper={rowWrapper}
         loadingRowsCount={MAX_LIMITS_LOADING_ROWS}
-        rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
-        compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
+        rowHeight={LIMITS_TABLE_ROW_HEIGHT}
+        compactRowHeight={LIMITS_TABLE_ROW_HEIGHT}
       />
     </TableSectionHeader>
   )

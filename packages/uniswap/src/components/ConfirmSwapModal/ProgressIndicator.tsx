@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, getTokenValue, Separator, Text, useSporeColors, VerticalDottedLineSeparator } from 'ui/src'
+import { Flex, Separator, Text } from 'ui/src'
 import { zIndexes } from 'ui/src/theme'
 import {
   TokenApprovalTransactionStepRow,
@@ -11,7 +11,6 @@ import {
   Permit2SignatureStepRow,
   Permit2TransactionStepRow,
 } from 'uniswap/src/components/ConfirmSwapModal/steps/Permit'
-import { STEP_ROW_HEIGHT, STEP_ROW_ICON_SIZE } from 'uniswap/src/components/ConfirmSwapModal/steps/StepRowSkeleton'
 import { SwapTransactionStepRow } from 'uniswap/src/components/ConfirmSwapModal/steps/Swap'
 import { SwapSteps, SwapTransactionPlanStepRow } from 'uniswap/src/components/ConfirmSwapModal/steps/SwapTXPlanStepRow'
 import { WrapTransactionStepRow } from 'uniswap/src/components/ConfirmSwapModal/steps/Wrap'
@@ -107,9 +106,7 @@ export function ProgressIndicator({
         {steps.map((step, i) => {
           const stepStatus = getStatus(step)
           const isNotLastStep = i < steps.length - 1
-          const nextStep = steps[i + 1]
-          const nextStepStatus = isNotLastStep && nextStep ? getStatus(nextStep) : null
-          const isActiveAdjacent = stepStatus === StepStatus.Active || nextStepStatus === StepStatus.Active
+
           return (
             <Flex key={`progress-indicator-step-${i}`}>
               <Step
@@ -121,40 +118,26 @@ export function ProgressIndicator({
                 currentStepIndex={i}
                 totalStepsCount={steps.length}
               />
-              {isNotLastStep && <StepRowSeparator isActiveAdjacent={isActiveAdjacent} />}
+              {isNotLastStep && (
+                <Flex
+                  position="absolute"
+                  top="50%"
+                  borderLeftWidth={2}
+                  borderColor="transparent"
+                  borderLeftColor="$neutral3"
+                  transform="translate(0, 100%)"
+                  borderStyle="dotted"
+                  height="33%"
+                  zIndex={zIndexes.negative}
+                  // accounts for the border width's width
+                  mx={19}
+                  width={0}
+                />
+              )}
             </Flex>
           )
         })}
       </Flex>
-    </Flex>
-  )
-}
-
-/**
- * Line shown between step rows. Depending on whether isActiveAdjacent is true, the line will be drawn slightly higher or lower to
- * account for the size difference of the active step.
- */
-function StepRowSeparator({ isActiveAdjacent }: { isActiveAdjacent: boolean }): JSX.Element {
-  const colors = useSporeColors()
-  const rowHeight = getTokenValue(STEP_ROW_HEIGHT)
-  const iconSize = getTokenValue(STEP_ROW_ICON_SIZE)
-
-  const strokeWidth = 1.5
-  const marginLeftForStroke = rowHeight / 2 - strokeWidth / 2
-  const marginTop = (rowHeight + iconSize) / 2
-  const extraMarginTop = marginTop + 2 // extra margin for the active step's bigger size
-  const spaceBetweenRows = (rowHeight + iconSize) / 4
-
-  return (
-    <Flex
-      position="absolute"
-      zIndex={zIndexes.negative}
-      top={isActiveAdjacent ? extraMarginTop : marginTop}
-      left={marginLeftForStroke}
-      height={spaceBetweenRows}
-      width={strokeWidth}
-    >
-      <VerticalDottedLineSeparator strokeWidth={strokeWidth} strokeColor={colors.neutral3.val} />
     </Flex>
   )
 }

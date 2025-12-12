@@ -6,8 +6,7 @@ import { usdcWethPoolAddress, validBEPoolToken0, validBEPoolToken1 } from 'test-
 import { render, screen } from 'test-utils/render'
 import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { dismissTokenWarning } from 'uniswap/src/features/tokens/warnings/slice/slice'
-import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
+import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 
 describe('PoolDetailsHeader', () => {
   beforeEach(() => {
@@ -20,7 +19,6 @@ describe('PoolDetailsHeader', () => {
           name: 'USD Coin',
           decimals: 6,
         },
-        warning: TokenProtectionWarning.NonDefault,
       }),
     )
     store.dispatch(
@@ -32,7 +30,6 @@ describe('PoolDetailsHeader', () => {
           name: 'Wrapped Ether',
           decimals: 18,
         },
-        warning: TokenProtectionWarning.NonDefault,
       }),
     )
   })

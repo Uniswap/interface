@@ -145,15 +145,14 @@ export type TransactionNotification =
 
 export enum CopyNotificationType {
   Address = 'address',
-  BlockExplorerUrl = 'blockExplorerUrl',
-  Calldata = 'calldata',
-  ContractAddress = 'contractAddress',
-  Image = 'image',
-  Message = 'message',
-  NftUrl = 'nftUrl',
-  TokenUrl = 'tokenUrl',
-  TransactionId = 'transactionId',
   Unitag = 'unitag',
+  ContractAddress = 'contractAddress',
+  Calldata = 'calldata',
+  TransactionId = 'transactionId',
+  Image = 'image',
+  TokenUrl = 'tokenUrl',
+  BlockExplorerUrl = 'blockExplorerUrl',
+  NftUrl = 'nftUrl',
 }
 
 export interface CopyNotification extends AppNotificationBase {

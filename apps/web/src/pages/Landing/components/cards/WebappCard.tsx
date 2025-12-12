@@ -1,6 +1,5 @@
 import { getTokenDetailsURL } from 'appGraphql/data/util'
 import { GraphQLApi } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -11,7 +10,7 @@ import { Computer } from 'pages/Landing/components/Icons'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
 import { Flex, Text, useMedia } from 'ui/src'
-import { UNI, USDC_BASE } from 'uniswap/src/constants/tokens'
+import { MATIC_MAINNET, UNI, USDC_BASE } from 'uniswap/src/constants/tokens'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -34,8 +33,8 @@ const tokens: { chainId: UniverseChainId; address: string }[] = [
     address: UNI[UniverseChainId.Mainnet].address,
   },
   {
-    chainId: UniverseChainId.Solana,
-    address: NATIVE_CHAIN_ID,
+    chainId: UniverseChainId.Mainnet,
+    address: MATIC_MAINNET.address,
   },
 ]
 
@@ -199,7 +198,6 @@ function Token({ chainId, address }: { chainId: UniverseChainId; address: string
 export function WebappCard() {
   const { t } = useTranslation()
   const { chains } = useEnabledChains()
-  const isUnificationCopyEnabled = useFeatureFlag(FeatureFlags.UnificationCopy)
 
   return (
     <ValuePropCard
@@ -214,11 +212,7 @@ export function WebappCard() {
       }}
       title={<PillButton color={primary} label={t('common.webApp')} icon={<Computer size="24px" fill={primary} />} />}
       subtitle={t('landing.swapSubtitle')}
-      bodyText={
-        isUnificationCopyEnabled
-          ? t('landing.swapBody', { amount: chains.length })
-          : t('landing.swapBody.old', { amount: chains.length })
-      }
+      bodyText={t('landing.swapBody', { amount: chains.length })}
       button={<PillButton color={primary} label={t('common.exploreTokens')} backgroundColor="$surface1" />}
     >
       <Flex

@@ -63,7 +63,6 @@ export const TestID = {
   Done: 'done',
   DownloadUniswapApp: 'nav-dropdown-download-app',
   DownloadUniswapModal: 'download-uniswap-modal',
-  DynamicFeeTierSpeedbumpContinue: 'dynamic-fee-tier-speedbump-continue',
   Edit: 'edit',
   ExcludedNetworkBanner: 'excluded-network-banner',
   ExploreFilterChainAll: 'explore-filter-chain-all',

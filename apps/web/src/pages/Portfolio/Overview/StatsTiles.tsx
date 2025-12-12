@@ -2,7 +2,7 @@ import { ValueWithFadedDecimals } from 'pages/Portfolio/components/ValueWithFade
 import { useSwapsThisWeek } from 'pages/Portfolio/Overview/hooks/useSwapsThisWeek'
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, styled, Text, useMedia } from 'ui/src'
+import { EM_DASH, Flex, styled, Text, useMedia } from 'ui/src'
 import { ActivityRenderData } from 'uniswap/src/features/activity/hooks/useActivityData'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
@@ -57,7 +57,7 @@ export const OverviewStatsTiles = memo(function OverviewStatsTiles({ activityDat
           </Text>
           <ValueWithFadedDecimals
             textProps={{ variant: 'heading3', color: '$neutral1' }}
-            value={convertFiatAmountFormatted(hasVolumeData ? totalVolumeUSD : 0, NumberType.PortfolioBalance)}
+            value={hasVolumeData ? convertFiatAmountFormatted(totalVolumeUSD, NumberType.PortfolioBalance) : EM_DASH}
           />
         </Flex>
       </StatsGroup1>

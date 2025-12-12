@@ -7,11 +7,6 @@ exports[`OffchainOrderLineItem > should render type EXCHANGE_RATE 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c4 {
-  color: rgba(19, 19, 19, 0.63);
-  letter-spacing: -0.01em;
-}
-
 .c1 {
   cursor: auto;
   color: rgba(19, 19, 19, 0.63);
@@ -64,11 +59,6 @@ exports[`OffchainOrderLineItem > should render type EXCHANGE_RATE 1`] = `
             1 USDC = &lt;0.00001 DAI 
           </div>
            
-          <div
-            class="c4 css-142zc9n"
-          >
-            ($1.00)
-          </div>
         </button>
       </div>
     </div>

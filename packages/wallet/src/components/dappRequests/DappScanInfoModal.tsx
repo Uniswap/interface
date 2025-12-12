@@ -33,7 +33,7 @@ export function DappScanInfoModal({ isOpen, onClose, title, description }: DappS
       backgroundColor={colors.surface1.val}
       isModalOpen={isOpen}
       name={ModalName.DappScanInfo}
-      zIndex={zIndexes.overlay} // This is needed to properly display it above modals in the extension
+      zIndex={zIndexes.popover}
       onClose={onClose}
     >
       <Flex

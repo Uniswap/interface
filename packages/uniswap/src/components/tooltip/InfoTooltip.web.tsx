@@ -1,6 +1,5 @@
 import { PropsWithChildren } from 'react'
 import { Flex, type PopperProps, Text, Tooltip, useMedia } from 'ui/src'
-import { zIndexes } from 'ui/src/theme'
 import { InfoTooltipProps } from 'uniswap/src/components/tooltip/InfoTooltipProps'
 import { isWebPlatform } from 'utilities/src/platform'
 
@@ -42,12 +41,7 @@ export function InfoTooltip({
       >
         <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
         {text && (
-          <Tooltip.Content
-            zIndex={zIndexes.overlay}
-            pointerEvents="auto"
-            maxWidth={maxWidth ?? (isWebPlatform ? 280 : '100%')}
-            mx="$spacing24"
-          >
+          <Tooltip.Content pointerEvents="auto" maxWidth={maxWidth ?? (isWebPlatform ? 280 : '100%')} mx="$spacing24">
             <Flex row alignItems="center" gap="$spacing8">
               {icon && <Flex grow>{icon}</Flex>}
               <Flex shrink gap="$spacing4">

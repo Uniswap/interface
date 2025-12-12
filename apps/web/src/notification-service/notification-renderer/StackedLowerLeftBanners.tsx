@@ -1,17 +1,16 @@
 /* eslint-disable import/no-unused-modules */
 
 import type { InAppNotification } from '@universe/api'
-import { InlineBannerNotification, type NotificationClickTarget } from '@universe/notifications'
+import type { NotificationClickTarget } from '@universe/notifications'
 import { AnimatePresence, motion } from 'framer-motion'
+import { LowerLeftBannerNotification } from 'notification-service/notification-renderer/LowerLeftBannerNotification'
 import { calculateStackingProps, MAX_STACKED_BANNERS } from 'notification-service/notification-renderer/stackingUtils'
-import { memo, useEffect } from 'react'
+import { memo } from 'react'
 import { Portal, useMedia } from 'ui/src'
-import { useEvent } from 'utilities/src/react/hooks'
 
 interface StackedLowerLeftBannersProps {
   notifications: InAppNotification[]
   onNotificationClick?: (notificationId: string, target: NotificationClickTarget) => void
-  onNotificationShown?: (notificationId: string) => void
 }
 
 /**
@@ -30,26 +29,12 @@ interface StackedLowerLeftBannersProps {
 export const StackedLowerLeftBanners = memo(function StackedLowerLeftBanners({
   notifications,
   onNotificationClick,
-  onNotificationShown,
 }: StackedLowerLeftBannersProps) {
   const media = useMedia()
   const leftPosition = media.xl ? 20 : 40
 
   // Reverse the notifications so the first notification renders last (on top)
   const stackedNotifications = notifications.slice(0, MAX_STACKED_BANNERS).reverse()
-
-  // The top notification is the last one in the reversed array (highest index)
-  const topNotificationId = stackedNotifications[stackedNotifications.length - 1]?.id
-
-  const handleNotificationShown = useEvent((id: string) => {
-    onNotificationShown?.(id)
-  })
-
-  useEffect(() => {
-    if (topNotificationId) {
-      handleNotificationShown(topNotificationId)
-    }
-  }, [topNotificationId, handleNotificationShown])
 
   return (
     <Portal>
@@ -79,7 +64,7 @@ export const StackedLowerLeftBanners = memo(function StackedLowerLeftBanners({
                 willChange: 'transform, opacity',
               }}
             >
-              <InlineBannerNotification notification={notification} onNotificationClick={onNotificationClick} />
+              <LowerLeftBannerNotification notification={notification} onNotificationClick={onNotificationClick} />
             </motion.div>
           )
         })}

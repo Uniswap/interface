@@ -2,8 +2,8 @@ import { useMemo } from 'react'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { getTokenProtectionWarning, getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
-import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/warnings/slice/hooks'
+import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
+import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
@@ -23,17 +23,13 @@ export function usePrefilledNeedsTokenProtectionWarning(
   currenciesWithProtectionWarnings: CurrencyInfo[]
 } {
   const inputCurrencyInfo = derivedSwapInfo.currencies.input
-  const inputTokenProtectionWarning = getTokenProtectionWarning(inputCurrencyInfo)
+  const outputCurrencyInfo = derivedSwapInfo.currencies.output
+
   const { tokenWarningDismissed: inputTokenWarningPreviouslyDismissed } = useDismissedTokenWarnings(
     inputCurrencyInfo?.currency,
-    inputTokenProtectionWarning,
   )
-
-  const outputCurrencyInfo = derivedSwapInfo.currencies.output
-  const outputTokenProtectionWarning = getTokenProtectionWarning(outputCurrencyInfo)
   const { tokenWarningDismissed: outputTokenWarningPreviouslyDismissed } = useDismissedTokenWarnings(
     outputCurrencyInfo?.currency,
-    outputTokenProtectionWarning,
   )
 
   const currenciesWithProtectionWarnings: CurrencyInfo[] = useMemo(() => {

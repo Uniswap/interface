@@ -1,12 +1,11 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { ChainedQuoteResponse, TradingApi } from '@universe/api'
+import { ChainedQuoteResponse, TradingApi, UpdatePlanRequestWithPlanId } from '@universe/api'
 import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { TransactionAndPlanStep, transformSteps } from 'uniswap/src/features/transactions/swap/plan/planStepTransformer'
 import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isJupiter } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { RetryConfig, retryWithBackoff } from 'utilities/src/async/retryWithBackoff'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { sleep } from 'utilities/src/time/timing'
@@ -111,10 +110,36 @@ export async function waitForStepCompletion(params: {
   }
 }
 
-type PlanOperationParams = { retryConfig: RetryConfig } & (
+/**
+ * Updates the existing plan with the given proof. If the update fails, it will retry the update.
+ */
+export async function updateExistingPlanWithRetry(
+  params: UpdatePlanRequestWithPlanId,
+  maxRetries = 5,
+): Promise<TradingApi.PlanResponse | undefined> {
+  let attempt = 0
+  while (attempt < maxRetries) {
+    try {
+      return await TradingApiClient.updateExistingPlan(params)
+    } catch (error: unknown) {
+      attempt++
+      if (attempt >= maxRetries) {
+        throw new Error(`Failed to update plan after ${maxRetries} retries`)
+      }
+      logger.warn(
+        'planSaga',
+        'retryUpdateExistingPlan',
+        `🔁 Retry ${attempt}/${maxRetries} after error on updateExistingTrade ` + error,
+      )
+    }
+    await sleep(ONE_SECOND_MS * attempt)
+  }
+  return undefined
+}
+
+type PlanOperationParams =
   | ({ inputPlanId: string } & Maybe<Pick<ChainedQuoteResponse, 'quote' | 'routing'>>)
   | ({ inputPlanId?: never } & Pick<ChainedQuoteResponse, 'quote' | 'routing'>)
-)
 
 /**
  * Helper function to execute a plan API call. If a planId is provided,
@@ -125,28 +150,32 @@ async function executePlanOperation(
   operation: 'get' | 'refresh',
   params: PlanOperationParams,
 ): Promise<TradingApi.PlanResponse> {
-  const { retryConfig, inputPlanId, quote, routing } = params
-  return await retryWithBackoff({
-    fn: async () => {
-      if (inputPlanId !== undefined) {
-        return operation === 'refresh'
-          ? await TradingApiClient.refreshExistingPlan({ planId: inputPlanId })
-          : await TradingApiClient.getExistingPlan({ planId: inputPlanId })
-      } else {
-        // @ts-expect-error - CHAINED is the only supported but doesn't satisfy input param type for some reason
-        return await TradingApiClient.createNewPlan({ quote, routing })
-      }
-    },
-    config: retryConfig,
-  })
+  const { inputPlanId, quote, routing } = params
+
+  try {
+    if (inputPlanId !== undefined) {
+      return operation === 'refresh'
+        ? await TradingApiClient.refreshExistingPlan({ planId: inputPlanId })
+        : await TradingApiClient.getExistingPlan({ planId: inputPlanId })
+    } else {
+      // @ts-expect-error - CHAINED is the only supported but doesn't satisfy input param type for some reason
+      return await TradingApiClient.createNewPlan({ quote, routing })
+    }
+  } catch (error) {
+    throw new Error(`Failed to ${operation} plan: ${error instanceof Error ? error.message : 'Unknown error'}`)
+  }
 }
 
-/** Helper function to create or get a plan if the planId is provided. */
+/**
+ * Helper function to create or get a plan if the planId is provided.
+ */
 export async function createOrGetPlan(params: PlanOperationParams): Promise<TradingApi.PlanResponse> {
   return executePlanOperation('get', params)
 }
 
-/** Helper function to create or update/refresh a plan if the planId is provided. */
+/**
+ * Helper function to create or update/refresh a plan if the planId is provided.
+ */
 export async function createOrRefreshPlan(params: PlanOperationParams): Promise<TradingApi.PlanResponse> {
   return executePlanOperation('refresh', params)
 }

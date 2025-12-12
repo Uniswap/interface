@@ -314,7 +314,7 @@ export function FeeTierSearchModal() {
               gap="$gap8"
               mx="$spacing8"
             >
-              <Search size="$icon.20" color="$neutral2" />
+              <Search size={20} color="$neutral2" />
               <AmountInput
                 width="100%"
                 autoFocus

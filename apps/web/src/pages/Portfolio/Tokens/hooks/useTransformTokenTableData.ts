@@ -17,7 +17,6 @@ export interface TokenData {
   }
   value: number
   allocation: number
-  isHidden: boolean | null | undefined
 }
 
 // Custom hook to format portfolio data
@@ -85,7 +84,6 @@ export function useTransformTokenTableData({ chainIds, limit }: { chainIds?: Uni
         },
         value: balanceUSD,
         allocation: allocationFromTotal ?? 0,
-        isHidden: balance.isHidden,
       }
     }
 

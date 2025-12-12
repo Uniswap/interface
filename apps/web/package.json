@@ -159,6 +159,7 @@
     "@amplitude/analytics-browser": "1.12.1",
     "@apollo/client": "3.11.10",
     "@binance/w3w-wagmi-connector-v2": "1.2.5",
+    "@bufbuild/protobuf": "1.10.0",
     "@cloudflare/vite-plugin": "1.11.1",
     "@datadog/browser-logs": "5.20.0",
     "@datadog/browser-rum": "5.23.3",

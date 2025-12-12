@@ -33,9 +33,20 @@ export function parseChainFromTokenSearchQuery(
   }
 
   if (splitSearch.length === 1) {
-    return {
-      chainFilter: null,
-      searchTerm: splitSearch[0] || null,
+    const singleWordSearch = splitSearch[0]
+    const searchChainMatch = singleWordSearch
+      ? getPossibleChainMatchFromSearchWord(singleWordSearch, enabledChains)
+      : undefined
+    if (searchChainMatch) {
+      return {
+        chainFilter: searchChainMatch,
+        searchTerm: null,
+      }
+    } else {
+      return {
+        chainFilter: null,
+        searchTerm: splitSearch[0] || null,
+      }
     }
   }
 

@@ -10,7 +10,6 @@ import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { ElementName, MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useShouldShowAztecWarning } from 'uniswap/src/hooks/useShouldShowAztecWarning'
 import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
@@ -67,13 +66,10 @@ export function TokenDetailsActionButtons({
 }): JSX.Element {
   const { currencyInfo, isChainEnabled, tokenColor } = useTokenDetailsContext()
   const { value: actionMenuOpen, setFalse: closeActionMenu, toggle: toggleActionMenu } = useBooleanState(false)
-  const showAztecWarning = useShouldShowAztecWarning(
-    currencyInfo?.currency.isToken ? currencyInfo.currency.address : '',
-  )
 
   const isBlocked = currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
-  const disabled = isBlocked || showAztecWarning || !isChainEnabled
+  const disabled = isBlocked || !isChainEnabled
 
   const validTokenColor = validColor(tokenColor)
   const lightTokenColor = validTokenColor ? opacify(12, validTokenColor) : undefined

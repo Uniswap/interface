@@ -1,6 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { Table } from 'components/Table'
-import { PORTFOLIO_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
+import { TOKENS_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
 import { useNavigateToTokenDetails } from 'pages/Portfolio/Tokens/hooks/useNavigateToTokenDetails'
 import { TokenData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
 import { useTokenColumns } from 'pages/Portfolio/Tokens/Table/columns/useTokenColumns'
@@ -72,8 +72,8 @@ export function TokensTableInner({
                 <TouchableArea onPress={() => handleTokenRowClick(row.original)}>{content}</TouchableArea>
               )
         }
-        rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
-        compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
+        rowHeight={TOKENS_TABLE_ROW_HEIGHT}
+        compactRowHeight={TOKENS_TABLE_ROW_HEIGHT}
         defaultPinnedColumns={['currencyInfo']}
         maxWidth={1200}
         maxHeight={700}

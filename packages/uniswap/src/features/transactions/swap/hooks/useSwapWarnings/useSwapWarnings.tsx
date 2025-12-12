@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import type { TFunction } from 'i18next'
 import isEqual from 'lodash/isEqual'
 import { useMemo } from 'react'
@@ -13,7 +12,6 @@ import {
   getNetworkWarning,
   useFormattedWarnings,
 } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
-import { getAztecUnavailableWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getAztecUnavailableWarning'
 import { getBalanceWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getBalanceWarning'
 import { getFormIncompleteWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getFormIncompleteWarning'
 import { getPriceImpactWarning } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getPriceImpactWarning'
@@ -31,13 +29,11 @@ export function getSwapWarnings({
   formatPercent,
   derivedSwapInfo,
   offline,
-  aztecDisabled = false,
 }: {
   t: TFunction
   formatPercent: LocalizationContextState['formatPercent']
   derivedSwapInfo: DerivedSwapInfo
   offline: boolean
-  aztecDisabled?: boolean
 }): Warning[] {
   const warnings: Warning[] = []
 
@@ -46,15 +42,6 @@ export function getSwapWarnings({
   }
 
   const { trade } = derivedSwapInfo
-
-  const aztecUnavailableWarning = getAztecUnavailableWarning({
-    t,
-    currencies: derivedSwapInfo.currencies,
-    isAztecDisabled: aztecDisabled,
-  })
-  if (aztecUnavailableWarning) {
-    warnings.push(aztecUnavailableWarning)
-  }
 
   // token is blocked
   const tokenBlockedWarning = getTokenBlockedWarning(t, derivedSwapInfo.currencies)
@@ -101,9 +88,8 @@ function useSwapWarnings(derivedSwapInfo: DerivedSwapInfo): Warning[] {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
   const offline = useIsOffline()
-  const aztecDisabled = useFeatureFlag(FeatureFlags.DisableAztecToken)
 
-  return useMemoCompare(() => getSwapWarnings({ t, formatPercent, derivedSwapInfo, offline, aztecDisabled }), isEqual)
+  return useMemoCompare(() => getSwapWarnings({ t, formatPercent, derivedSwapInfo, offline }), isEqual)
 }
 
 export function useParsedSwapWarnings(): ParsedWarnings {

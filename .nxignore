@@ -10,7 +10,6 @@ apps/extension/dev
 apps/extension/build
 packages/*/dist
 packages/*/types
-dist/out-tsc
 
 # Ignore Generator Templates
 tools/**/generators/**/files

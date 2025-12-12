@@ -36,15 +36,7 @@ export const SearchModalNoQueryList = memo(function _SearchModalNoQueryList({
 }: SearchModalNoQueryListProps): JSX.Element {
   const { t } = useTranslation()
 
-  const {
-    data: sections,
-    loading,
-    error,
-    refetch,
-  } = useSectionsForNoQuerySearch({
-    chainFilter,
-    activeTab,
-  })
+  const { data: sections, loading, error, refetch } = useSectionsForNoQuerySearch({ chainFilter, activeTab })
 
   // Handle empty pretype cases for assets without default results
   const getEmptyElementComponent = (): JSX.Element | undefined => {

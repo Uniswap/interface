@@ -17,12 +17,9 @@ import { setHasSeenBridgingTooltip } from 'uniswap/src/features/behaviorHistory/
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { getTokenProtectionWarning, getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
-import {
-  useDismissedBridgedAssetWarnings,
-  useDismissedTokenWarnings,
-} from 'uniswap/src/features/tokens/warnings/slice/hooks'
-import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
+import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
+import { useDismissedBridgedAssetWarnings, useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
+import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { DDRumManualTiming } from 'utilities/src/logger/datadog/datadogEvents'
@@ -77,8 +74,7 @@ const TokenOptionItem = memo(function _TokenOptionItem({
   // Token protection modal
   const severity = getTokenWarningSeverity(currencyInfo)
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo)
-  const { tokenWarningDismissed } = useDismissedTokenWarnings(currencyInfo.currency, tokenProtectionWarning)
+  const { tokenWarningDismissed } = useDismissedTokenWarnings(currencyInfo.currency)
   const isBlocked = severity === WarningSeverity.Blocked
   const shouldShowWarningModalOnPress =
     showWarnings && (isBlocked || (severity !== WarningSeverity.None && !tokenWarningDismissed))

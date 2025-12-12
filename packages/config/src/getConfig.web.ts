@@ -1,16 +1,8 @@
 import type { Config } from '@universe/config/src/config-types'
 import { isNonTestDev } from 'utilities/src/environment/constants'
 
-// Module-level cache for config to avoid recomputing on every call
-let cachedConfig: Config | undefined
-
 // eslint-disable-next-line complexity
 export const getConfig = (): Config => {
-  // Return cached config if already computed
-  if (cachedConfig !== undefined) {
-    return cachedConfig
-  }
-
   /**
    * Web-specific config implementation that uses process.env directly
    * instead of react-native-dotenv to avoid Node.js filesystem dependencies
@@ -63,7 +55,5 @@ export const getConfig = (): Config => {
     // biome-ignore lint/suspicious/noConsole: Cannot use logger here, causes error from circular dep
     console.debug('Using app config:', config)
   }
-  // Cache and return frozen config
-  cachedConfig = Object.freeze(config)
-  return cachedConfig
+  return Object.freeze(config)
 }

@@ -1,112 +1,12 @@
 import type { ReactNode } from 'react'
-import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import type { ColorTokens, IconProps } from 'ui/src'
-import { Flex, Popover, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { ExternalLink, InfoCircleFilled } from 'ui/src/components/icons'
-import { borderRadii, iconSizes } from 'ui/src/theme'
+import { Flex, Text } from 'ui/src'
+import { borderRadii } from 'ui/src/theme'
 import type { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
-import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import { logger } from 'utilities/src/logger/logger'
 import { AssetLogo } from 'wallet/src/components/dappRequests/AssetLogo'
-import type { GroupedApprovalAsset } from 'wallet/src/components/dappRequests/TransactionApprovingSection'
 import type { TransactionAsset } from 'wallet/src/features/dappRequests/types'
-
-/**
- * Popover component showing approval details for multiple addresses
- */
-interface ApprovalAddressesPopoverProps {
-  assets: TransactionAsset[]
-  formatAmount: (asset: TransactionAsset) => string
-}
-
-function ApprovalAddressesPopover({ assets, formatAmount }: ApprovalAddressesPopoverProps): JSX.Element {
-  const { t } = useTranslation()
-  const [isOpen, setIsOpen] = useState(false)
-  const colors = useSporeColors()
-
-  const handleOpenExplorer = async (spenderAddress: string, chainId: number): Promise<void> => {
-    const explorerUrl = getExplorerLink({
-      chainId,
-      data: spenderAddress,
-      type: ExplorerDataType.ADDRESS,
-    })
-    await openUri({ uri: explorerUrl }).catch(() => {
-      logger.error(new Error('Failed to open explorer'), {
-        tags: { file: 'TransactionAssetList', function: 'handleOpenExplorer' },
-        extra: { explorerUrl },
-      })
-    })
-  }
-
-  return (
-    <Popover open={isOpen} placement="bottom-start" onOpenChange={setIsOpen}>
-      <Flex row gap="$spacing4" alignItems="center">
-        <Popover.Trigger asChild>
-          <Flex row gap="$spacing4" alignItems="center">
-            <TouchableArea onPress={() => setIsOpen(true)}>
-              <InfoCircleFilled color="$neutral3" size={iconSizes.icon16} />
-            </TouchableArea>
-            <Text color="$neutral2" variant="body4">
-              {t('common.addresses.count', { count: assets.length })}
-            </Text>
-          </Flex>
-        </Popover.Trigger>
-      </Flex>
-
-      <Popover.Content
-        elevate
-        borderRadius="$rounded12"
-        borderWidth={1}
-        borderColor="$surface3"
-        backgroundColor="$surface1"
-        p="$spacing12"
-        gap="$spacing4"
-      >
-        {assets
-          .filter((asset): asset is TransactionAsset & { spenderAddress: string } => Boolean(asset.spenderAddress))
-          .map((asset, index) => {
-            const { spenderAddress } = asset
-
-            return (
-              <Flex
-                key={`${spenderAddress}-${index}`}
-                grow
-                row
-                justifyContent="space-between"
-                alignItems="center"
-                gap="$spacing8"
-              >
-                <Text color="$neutral1" variant="body4" flexGrow={1}>
-                  {formatAmount(asset)}
-                </Text>
-                <Flex row gap="$spacing4" alignItems="center">
-                  <Text color="$neutral2" variant="body4">
-                    {shortenAddress({ address: spenderAddress })}
-                  </Text>
-                  <TouchableArea
-                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                    onPress={() => handleOpenExplorer(spenderAddress, asset.chainId)}
-                  >
-                    <ExternalLink color="$neutral2" size={iconSizes.icon16} />
-                  </TouchableArea>
-                </Flex>
-              </Flex>
-            )
-          })}
-        <Popover.Arrow
-          size="$spacing12"
-          backgroundColor={colors.surface1.val}
-          borderWidth={1}
-          borderColor={colors.surface3.val}
-        />
-      </Popover.Content>
-    </Popover>
-  )
-}
 
 /**
  * Helper function to format asset amount with locale-specific number formatting
@@ -144,7 +44,6 @@ interface TransactionAssetListProps {
   titleText: string
   formatAmount?: (asset: TransactionAsset) => string
   showUsdValue?: boolean
-  groupedAssets?: GroupedApprovalAsset[]
 }
 
 /**
@@ -159,28 +58,21 @@ export function TransactionAssetList({
   titleText,
   formatAmount,
   showUsdValue = false,
-  groupedAssets,
 }: TransactionAssetListProps): JSX.Element | null {
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
-  const renderAssetDetails = (asset: TransactionAsset, groupedAsset?: GroupedApprovalAsset): ReactNode => {
+  const renderAssetDetails = (asset: TransactionAsset): ReactNode => {
     const amountText = formatAmount ? formatAmount(asset) : formatAmountWithLocale(asset, formatNumberOrString)
-    const hasMultipleAddresses = groupedAsset && groupedAsset.allAssets.length > 1
 
     return (
-      <Flex gap="$spacing4">
-        <Flex row gap="$spacing8" alignItems="center">
-          <Text color="$neutral1" variant="subheading1">
-            {amountText}
+      <Flex row gap="$spacing8" alignItems="center">
+        <Text color="$neutral1" variant="subheading1">
+          {amountText}
+        </Text>
+        {showUsdValue && asset.usdValue && (
+          <Text color="$neutral2" variant="body4">
+            ({convertFiatAmountFormatted(asset.usdValue, NumberType.FiatTokenPrice)})
           </Text>
-          {showUsdValue && asset.usdValue && (
-            <Text color="$neutral2" variant="body4">
-              ({convertFiatAmountFormatted(asset.usdValue, NumberType.FiatTokenPrice)})
-            </Text>
-          )}
-        </Flex>
-        {hasMultipleAddresses && formatAmount && (
-          <ApprovalAddressesPopover assets={groupedAsset.allAssets} formatAmount={formatAmount} />
         )}
       </Flex>
     )
@@ -192,7 +84,6 @@ export function TransactionAssetList({
     if (!asset) {
       return null
     }
-    const groupedAsset = groupedAssets?.[0]
     return (
       <Flex gap="$spacing12">
         <Flex row gap="$spacing12" alignItems="center" justifyContent="space-between">
@@ -203,14 +94,9 @@ export function TransactionAssetList({
                 {titleText}
               </Text>
             </Flex>
-            {renderAssetDetails(asset, groupedAsset)}
+            {renderAssetDetails(asset)}
           </Flex>
-          <AssetLogo
-            address={asset.address}
-            chainId={asset.chainId}
-            logoUrl={asset.logoUrl}
-            borderRadius={getBorderRadius(asset.type)}
-          />
+          <AssetLogo logoUrl={asset.logoUrl} borderRadius={getBorderRadius(asset.type)} />
         </Flex>
       </Flex>
     )
@@ -226,19 +112,13 @@ export function TransactionAssetList({
         </Text>
       </Flex>
       <Flex gap="$spacing8">
-        {assets.map((asset, index) => {
-          const groupedAsset = groupedAssets?.[index]
+        {assets.map((asset) => {
           return (
-            <Flex key={`${asset.address}-${index}`} row alignItems="center" justifyContent="space-between">
+            <Flex key={asset.address} row alignItems="center" justifyContent="space-between">
               <Flex row gap="$spacing4" alignItems="center" flex={1}>
-                {renderAssetDetails(asset, groupedAsset)}
+                {renderAssetDetails(asset)}
               </Flex>
-              <AssetLogo
-                address={asset.address}
-                chainId={asset.chainId}
-                logoUrl={asset.logoUrl}
-                borderRadius={getBorderRadius(asset.type)}
-              />
+              <AssetLogo logoUrl={asset.logoUrl} borderRadius={getBorderRadius(asset.type)} />
             </Flex>
           )
         })}

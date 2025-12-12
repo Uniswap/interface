@@ -161,7 +161,7 @@ export function useLiquidityBarData({
 
   useEffect(() => {
     async function formatData() {
-      if (!ticksProcessed || activeTick === undefined || !liquidity) {
+      if (!ticksProcessed || !activeTick || !liquidity) {
         return
       }
 
@@ -183,7 +183,7 @@ export function useLiquidityBarData({
         let price0 = t.sdkPrice
         let price1 = t.sdkPrice.invert()
 
-        if (isActive && currentTick !== undefined) {
+        if (isActive && activeTick && currentTick) {
           activeRangeIndex = index
           activeRangePercentage = 1 - (currentTick - t.tick) / poolTickSpacing
 

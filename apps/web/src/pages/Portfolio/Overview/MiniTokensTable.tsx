@@ -1,6 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { Table } from 'components/Table'
-import { PORTFOLIO_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
+import { TOKENS_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
 import { MAX_TOKENS_ROWS } from 'pages/Portfolio/Overview/constants'
 import { TableSectionHeader } from 'pages/Portfolio/Overview/TableSectionHeader'
 import { ViewAllButton } from 'pages/Portfolio/Overview/ViewAllButton'
@@ -86,8 +86,8 @@ export const MiniTokensTable = memo(function MiniTokensTable({ maxTokens = 8, ch
                   <TouchableArea onPress={() => handleTokenRowClick(row.original)}>{content}</TouchableArea>
                 )
           }
-          rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
-          compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
+          rowHeight={TOKENS_TABLE_ROW_HEIGHT}
+          compactRowHeight={TOKENS_TABLE_ROW_HEIGHT}
           defaultPinnedColumns={['currencyInfo']}
           maxWidth={TOKENS_TABLE_MAX_WIDTH}
           centerArrows

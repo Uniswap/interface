@@ -1,6 +1,5 @@
 import { ExploreStatsResponse, PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { ALL_NETWORKS_ARG, GqlResult } from '@universe/api'
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { usePoolStatsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolStatsToPoolOptions'
 import { SearchModalOption } from 'uniswap/src/components/lists/items/types'
@@ -19,7 +18,7 @@ import {
 } from 'uniswap/src/features/search/SearchModal/constants'
 import { useRecentlySearchedOptions } from 'uniswap/src/features/search/SearchModal/hooks/useRecentlySearchedOptions'
 import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
-import { isMobileApp, isWebApp, isWebPlatform } from 'utilities/src/platform'
+import { isMobileApp, isWebPlatform } from 'utilities/src/platform'
 
 export function useSectionsForNoQuerySearch({
   chainFilter,
@@ -28,9 +27,6 @@ export function useSectionsForNoQuerySearch({
   chainFilter: UniverseChainId | null
   activeTab: SearchTab
 }): GqlResult<OnchainItemSection<SearchModalOption>[]> {
-  const viewExternalWalletsFeatureEnabled = useFeatureFlag(FeatureFlags.ViewExternalWalletsOnWeb)
-  const walletSearchEnabledOnWeb = isWebApp && viewExternalWalletsFeatureEnabled
-
   const recentlySearchedOptions: SearchModalOption[] = useRecentlySearchedOptions({
     chainFilter,
     activeTab,
@@ -87,9 +83,7 @@ export function useSectionsForNoQuerySearch({
     options: trendingPoolOptions,
   })
 
-  const skipFavoriteWallets =
-    activeTab !== SearchTab.Wallets && !(isWebApp && walletSearchEnabledOnWeb && activeTab === SearchTab.All)
-  const favoriteWalletsOptions = useFavoriteWalletOptions({ skip: skipFavoriteWallets })
+  const favoriteWalletsOptions = useFavoriteWalletOptions({ skip: activeTab !== SearchTab.Wallets })
   const favoriteWalletsSection = useOnchainItemListSection({
     sectionKey: OnchainItemSectionName.FavoriteWallets,
     options: favoriteWalletsOptions,
@@ -129,12 +123,7 @@ export function useSectionsForNoQuerySearch({
       default:
       case SearchTab.All:
         if (isWebPlatform) {
-          const webSections = [
-            ...(recentSearchSection ?? []),
-            ...(trendingTokenSection ?? []),
-            ...(trendingPoolSection ?? []),
-          ]
-          sections = walletSearchEnabledOnWeb ? [...webSections, ...(favoriteWalletsSection ?? [])] : webSections
+          sections = [...(recentSearchSection ?? []), ...(trendingTokenSection ?? []), ...(trendingPoolSection ?? [])]
         } else {
           sections = [...(recentSearchSection ?? []), ...(trendingTokenSection ?? [])]
         }
@@ -160,6 +149,5 @@ export function useSectionsForNoQuerySearch({
     tokensError,
     trendingPoolSection,
     trendingTokenSection,
-    walletSearchEnabledOnWeb,
   ])
 }

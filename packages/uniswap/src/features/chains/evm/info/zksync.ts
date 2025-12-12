@@ -71,5 +71,4 @@ export const ZKSYNC_CHAIN_INFO = {
   },
   gasConfig: GENERIC_L2_GAS_CONFIG,
   tradingApiPollingIntervalMs: 250,
-  acrossProtocolAddress: '0xE0B015E54d54fc84a6cB9B666099c46adE9335FF',
 } as const satisfies UniverseChainInfo

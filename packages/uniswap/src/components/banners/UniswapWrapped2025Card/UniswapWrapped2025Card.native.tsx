@@ -15,7 +15,7 @@ const CARD_HEIGHT = 82
 
 export function UniswapWrapped2025Card({ onPress }: UniswapWrapped2025CardProps): JSX.Element {
   const { t } = useTranslation()
-  const { snowflakes, removeSnowflake } = useSnowflakeAnimation({})
+  const { snowflakes, removeSnowflake } = useSnowflakeAnimation()
   const darkColors = useSporeColorsForTheme('dark')
 
   return (

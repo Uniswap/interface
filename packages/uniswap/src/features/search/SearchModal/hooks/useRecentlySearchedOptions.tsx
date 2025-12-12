@@ -1,4 +1,3 @@
-import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { usePoolSearchResultsToPoolOptions } from 'uniswap/src/components/lists/items/pools/usePoolSearchResultsToPoolOptions'
@@ -28,7 +27,7 @@ import { SearchTab } from 'uniswap/src/features/search/SearchModal/types'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId, buildNativeCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
-import { isMobileApp, isWebApp } from 'utilities/src/platform'
+import { isMobileApp } from 'utilities/src/platform'
 
 export function useRecentlySearchedOptions({
   chainFilter,
@@ -39,8 +38,6 @@ export function useRecentlySearchedOptions({
   activeTab: SearchTab
   numberOfRecentSearchResults: number
 }): SearchModalOption[] {
-  const viewExternalWalletsFeatureEnabled = useFeatureFlag(FeatureFlags.ViewExternalWalletsOnWeb)
-  const walletSearchEnabledOnWeb = isWebApp && viewExternalWalletsFeatureEnabled
   const recentHistory = useSelector(selectSearchHistory)
     .filter((searchResult) => {
       switch (activeTab) {
@@ -54,19 +51,11 @@ export function useRecentlySearchedOptions({
           return isNFTCollectionSearchHistoryResult(searchResult)
         default:
         case SearchTab.All:
-          if (isMobileApp) {
-            return (
-              isTokenSearchHistoryResult(searchResult) ||
-              isWalletSearchHistoryResult(searchResult) ||
-              isNFTCollectionSearchHistoryResult(searchResult)
-            )
-          }
-          // Web platform
-          return (
-            isTokenSearchHistoryResult(searchResult) ||
-            isPoolSearchHistoryResult(searchResult) ||
-            (walletSearchEnabledOnWeb && isWalletSearchHistoryResult(searchResult))
-          )
+          return isMobileApp
+            ? isTokenSearchHistoryResult(searchResult) ||
+                isWalletSearchHistoryResult(searchResult) ||
+                isNFTCollectionSearchHistoryResult(searchResult)
+            : isTokenSearchHistoryResult(searchResult) || isPoolSearchHistoryResult(searchResult)
       }
     })
     .filter((searchResult) => {

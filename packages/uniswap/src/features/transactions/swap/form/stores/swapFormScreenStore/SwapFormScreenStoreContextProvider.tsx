@@ -4,7 +4,7 @@ import type { TextInputProps } from 'react-native'
 import type { CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { usePrefetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
-import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/warnings/safetyUtils'
+import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import type { DecimalPadInputRef } from 'uniswap/src/features/transactions/components/DecimalPadInput/DecimalPadInput'
 import {
   TransactionScreen,

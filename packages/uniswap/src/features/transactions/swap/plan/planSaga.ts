@@ -1,6 +1,5 @@
 import { TradingApi } from '@universe/api'
-import { call, delay, retry } from 'typed-redux-saga'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { call, delay } from 'typed-redux-saga'
 import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
 import { TransactionStepType } from 'uniswap/src/features/transactions/steps/types'
 import { TransactionAndPlanStep, transformSteps } from 'uniswap/src/features/transactions/swap/plan/planStepTransformer'
@@ -9,13 +8,11 @@ import {
   createOrRefreshPlan,
   findFirstActionableStep,
   getStepLogArray,
+  updateExistingPlanWithRetry,
   waitForStepCompletion,
 } from 'uniswap/src/features/transactions/swap/plan/utils'
-import { ValidatedChainedSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { isChained, requireRouting } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { createSaga } from 'uniswap/src/utils/saga'
-import { BackoffStrategy } from 'utilities/src/async/retryWithBackoff'
-import { isProdEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
@@ -55,11 +52,10 @@ export function* plan(params: PlanParams) {
 
   const { trade, planId: inputPlanId } = swapTxContext
 
-  const response: TradingApi.PlanResponse = yield* call(createOrRefreshPlan, {
+  const response = yield* call(createOrRefreshPlan, {
     inputPlanId,
     quote: swapTxContext.trade.quote.quote,
     routing: swapTxContext.trade.quote.routing,
-    retryConfig: { maxAttempts: 3, backoffStrategy: BackoffStrategy.None },
   })
   const timeToCreatePlan = Date.now() - startTime
 
@@ -72,6 +68,8 @@ export function* plan(params: PlanParams) {
   if (currentStep) {
     setCurrentStep({ step: currentStep, accepted: false })
   }
+
+  const stepLogArray = getStepLogArray(steps)
 
   try {
     while (currentStepIndex < steps.length) {
@@ -145,7 +143,7 @@ export function* plan(params: PlanParams) {
 
       if (hash || signature) {
         logger.debug('planSaga', 'plan', '🚨 updating existing trade', planId, hash, signature)
-        yield* retry(5, ONE_SECOND_MS, TradingApiClient.updateExistingPlan, {
+        yield* call(updateExistingPlanWithRetry, {
           planId,
           steps: [{ stepIndex: currentStep.stepIndex, proof: { txHash: hash, signature } }],
         })
@@ -157,7 +155,18 @@ export function* plan(params: PlanParams) {
       if (isLastStep) {
         yield* call(onSuccess)
         const timeToCompletePlan = Date.now() - startTime
-        logHelper({ timeToCreatePlan, timeToCompletePlan, response, steps, swapTxContext })
+        logger.info('planSaga', 'plan', 'plan saga completed', {
+          timeToCreatePlan: timeToCreatePlan.toString(),
+          timeToCompletePlan: timeToCompletePlan.toString(),
+          stepsNumber: response.steps.length.toString(),
+          chainIn: swapTxContext.trade.quote.quote.tokenInChainId.toString(),
+          chainOut: swapTxContext.trade.quote.quote.tokenOutChainId.toString(),
+          planId: response.planId,
+          quoteId: swapTxContext.trade.quote.quote.quoteId,
+          quote: JSON.stringify(swapTxContext.trade.quote.quote),
+          initialPlan: JSON.stringify(response),
+          stepLogArray,
+        })
         return
       }
 
@@ -189,52 +198,20 @@ export function* plan(params: PlanParams) {
     }
     const onPressRetry = params.getOnPressRetry?.(displayableError)
     onFailure(displayableError, onPressRetry)
-    logHelper({ timeToCreatePlan, response, steps, swapTxContext, error })
+    logger.warn('planSaga', 'plan', 'plan saga errored', {
+      timeToCreatePlan: timeToCreatePlan.toString(),
+      stepsNumber: response.steps.length.toString(),
+      chainIn: swapTxContext.trade.quote.quote.tokenInChainId.toString(),
+      chainOut: swapTxContext.trade.quote.quote.tokenOutChainId.toString(),
+      planId: response.planId,
+      quoteId: swapTxContext.trade.quote.quote.quoteId,
+      quote: JSON.stringify(swapTxContext.trade.quote.quote),
+      initialPlan: JSON.stringify(response),
+      stepLogArray,
+      error: JSON.stringify(error),
+    })
     return
   }
 }
 
 export const planSaga = createSaga(plan, 'planSaga')
-
-function logHelper(params: {
-  timeToCreatePlan?: number
-  timeToCompletePlan?: number
-  response?: TradingApi.PlanResponse
-  steps?: TransactionAndPlanStep[]
-  swapTxContext: ValidatedChainedSwapTxAndGasInfo
-  error?: Error | unknown
-  args?: Record<string, unknown>
-}) {
-  try {
-    const { timeToCreatePlan = -1, timeToCompletePlan = -1, response, steps, swapTxContext, error, args } = params
-    const stepLogArray = getStepLogArray(steps ?? [])
-    const content: Record<string, unknown> = {
-      timeToCreatePlan: timeToCreatePlan.toString(),
-      timeToCompletePlan: timeToCompletePlan.toString(),
-      stepsNumber: steps?.length.toString() ?? '0',
-      chainIn: swapTxContext.trade.quote.quote.tokenInChainId.toString(),
-      chainOut: swapTxContext.trade.quote.quote.tokenOutChainId.toString(),
-      planId: response?.planId,
-      quoteId: swapTxContext.trade.quote.quote.quoteId,
-      stepLogArray,
-      ...(args ?? {}),
-    }
-    if (!isProdEnv()) {
-      content.quote = JSON.stringify(swapTxContext.trade.quote.quote)
-      content.initialPlan = JSON.stringify(response)
-    }
-    if (error) {
-      content.error = error instanceof Error ? error.message : JSON.stringify(error)
-      logger.warn('planSaga', 'plan', 'plan saga errored', content)
-    } else {
-      logger.info('planSaga', 'plan', 'plan saga completed', content)
-    }
-  } catch (error) {
-    logger.error(
-      new Error('Error when trying to log. Skipping log since its not critical to the plan saga', { cause: error }),
-      {
-        tags: { file: 'planSaga', function: 'logHelper' },
-      },
-    )
-  }
-}

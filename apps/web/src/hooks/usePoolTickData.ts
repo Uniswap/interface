@@ -32,7 +32,7 @@ function getActiveTick({
   feeAmount?: FeeAmount
   tickSpacing?: number
 }): number | undefined {
-  return tickCurrent !== undefined && feeAmount !== undefined && tickSpacing
+  return tickCurrent && feeAmount !== undefined && tickSpacing
     ? Math.floor(tickCurrent / tickSpacing) * tickSpacing
     : undefined
 }

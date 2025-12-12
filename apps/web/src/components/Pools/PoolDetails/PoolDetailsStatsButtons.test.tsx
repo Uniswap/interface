@@ -13,8 +13,7 @@ import { act, render, screen } from 'test-utils/render'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AccountsStore } from 'uniswap/src/features/accounts/store/types/AccountsState'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { dismissTokenWarning } from 'uniswap/src/features/tokens/warnings/slice/slice'
-import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
+import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 import * as useSwapFormStoreModule from 'uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapFormStore'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
@@ -110,7 +109,6 @@ describe('PoolDetailsStatsButton', () => {
           name: 'USD Coin',
           decimals: 6,
         },
-        warning: TokenProtectionWarning.NonDefault,
       }),
     )
     store.dispatch(
@@ -122,7 +120,6 @@ describe('PoolDetailsStatsButton', () => {
           name: 'Wrapped Ether',
           decimals: 18,
         },
-        warning: TokenProtectionWarning.NonDefault,
       }),
     )
   })

@@ -158,5 +158,4 @@ export const MONAD_CHAIN_INFO = {
       default: 150, // .015 ETH equivalent
     },
   },
-  acrossProtocolAddress: '0xd2ecb3afe598b746F8123CaE365a598DA831A449',
 } as const satisfies UniverseChainInfo

@@ -2,7 +2,7 @@ import { type NetworkStatus } from '@apollo/client'
 import { type Contract } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { type Currency } from '@uniswap/sdk-core'
 import { type GraphQLApi, type SpamCode } from '@universe/api'
-import { type FoTPercent } from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
+import { type FoTPercent } from 'uniswap/src/features/tokens/TokenWarningModal'
 import { type CurrencyId } from 'uniswap/src/types/currency'
 
 export type RestContract = Pick<Contract, 'chainId' | 'address'>

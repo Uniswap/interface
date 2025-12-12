@@ -278,8 +278,6 @@ export const v26Schema = { ...v25Schema }
 
 export const v27Schema = { ...v26Schema }
 
-export const v29Schema = { ...v27Schema, visibility: { ...v27Schema.visibility, activity: {} } }
+const v29Schema = { ...v27Schema, visibility: { ...v27Schema.visibility, activity: {} } }
 
-const v30Schema = { ...v29Schema }
-
-export const getSchema = (): typeof v30Schema => v30Schema
+export const getSchema = (): typeof v29Schema => v29Schema

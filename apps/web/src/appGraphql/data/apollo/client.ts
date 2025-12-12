@@ -1,4 +1,3 @@
-import { getRetryLink } from 'appGraphql/data/apollo/retryLink'
 import { ApolloClient, from, HttpLink } from '@apollo/client'
 import { setupSharedApolloCache } from 'uniswap/src/data/cache'
 import { getDatadogApolloLink } from 'utilities/src/logger/datadog/datadogLink'
@@ -10,11 +9,10 @@ if (!API_URL) {
 
 const httpLink = new HttpLink({ uri: API_URL })
 const datadogLink = getDatadogApolloLink()
-const retryLink = getRetryLink()
 
 export const apolloClient = new ApolloClient({
   connectToDevTools: true,
-  link: from([datadogLink, retryLink, httpLink]),
+  link: from([datadogLink, httpLink]),
   headers: {
     'Content-Type': 'application/json',
     Origin: 'https://app.uniswap.org',

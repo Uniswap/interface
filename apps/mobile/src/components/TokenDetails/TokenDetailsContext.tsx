@@ -14,7 +14,6 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
-import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
 type TokenDetailsContextState = {
   currencyId: string
@@ -33,9 +32,6 @@ type TokenDetailsContextState = {
   isContractAddressExplainerModalOpen: boolean
   openContractAddressExplainerModal: () => void
   closeContractAddressExplainerModal: (markViewed: boolean) => void
-  isAztecWarningModalOpen: boolean
-  openAztecWarningModal: () => void
-  closeAztecWarningModal: () => void
   copyAddressToClipboard: (address: string) => Promise<void>
   error: unknown | undefined
   setError: (error: unknown | undefined) => void
@@ -67,12 +63,6 @@ export function TokenDetailsContextProvider({
     },
     [dispatch],
   )
-
-  const {
-    value: isAztecWarningModalOpen,
-    setTrue: openAztecWarningModal,
-    setFalse: closeAztecWarningModal,
-  } = useBooleanState(false)
 
   const copyAddressToClipboard = useCallback(
     async (address: string): Promise<void> => {
@@ -123,9 +113,6 @@ export function TokenDetailsContextProvider({
       isContractAddressExplainerModalOpen,
       openContractAddressExplainerModal,
       closeContractAddressExplainerModal,
-      isAztecWarningModalOpen,
-      openAztecWarningModal,
-      closeAztecWarningModal,
       copyAddressToClipboard,
       error,
       setError,
@@ -134,16 +121,13 @@ export function TokenDetailsContextProvider({
     activeTransactionType,
     closeTokenWarningModal,
     closeContractAddressExplainerModal,
-    closeAztecWarningModal,
     currencyId,
     currencyInfo,
     enabledChains,
     error,
-    isAztecWarningModalOpen,
     isContractAddressExplainerModalOpen,
     isTokenWarningModalOpen,
     navigation,
-    openAztecWarningModal,
     openContractAddressExplainerModal,
     openTokenWarningModal,
     tokenColor,

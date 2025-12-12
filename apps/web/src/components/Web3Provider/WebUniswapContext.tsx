@@ -136,14 +136,8 @@ function WebUniswapProviderInner({ children }: PropsWithChildren) {
   })
   const getCanSignPermits = useGetCanSignPermits()
 
-  const navigateToExternalProfile = useCallback(
-    ({ address }: { address: Address }) => {
-      // TODO: this will need to be updated upstack
-      navigate(`/portfolio?address=${address}`)
-      closeSearchModal()
-    },
-    [navigate, closeSearchModal],
-  )
+  // no-op until we have an external profile screen on web
+  const navigateToExternalProfile = useCallback((_: { address: Address }) => noop(), [])
 
   const navigateToNftCollection = useCallback((args: { collectionAddress: Address; chainId: UniverseChainId }) => {
     window.open(

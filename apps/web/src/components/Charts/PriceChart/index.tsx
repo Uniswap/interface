@@ -35,7 +35,6 @@ interface PriceChartModelParams extends ChartModelParams<PriceChartData> {
   type: PriceChartType
   timePeriod?: GraphQLApi.HistoryDuration
   hideYAxis?: boolean
-  yAxisFormatter?: (price: number) => string
 }
 
 const LOW_PRICE_RANGE_THRESHOLD = 0.2
@@ -159,7 +158,7 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   }
 
   updateOptions(params: PriceChartModelParams) {
-    const { data, colors, type, locale, format, tokenFormatType, hideYAxis, yAxisFormatter } = params
+    const { data, colors, type, locale, format, tokenFormatType, hideYAxis } = params
     const { min, max } = getCandlestickPriceBounds(data)
 
     // Handles changes in time period
@@ -181,21 +180,17 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
       localization: {
         locale,
         priceFormatter: (price: BarPrice) => {
-          // Transform price back to original value if it was scaled
-          const originalPrice = Number(price) / this.lowPriceRangeScaleFactor
-
-          // Use custom y-axis formatter if provided
-          if (yAxisFormatter) {
-            return yAxisFormatter(originalPrice)
-          }
-
           if (tokenFormatType) {
             return format.formatNumberOrString({
-              value: originalPrice,
+              value: Number(price) / this.lowPriceRangeScaleFactor,
               type: tokenFormatType,
             })
           }
-          return format.convertFiatAmountFormatted(originalPrice, NumberType.FiatTokenPrice)
+          return format.convertFiatAmountFormatted(
+            // Transform price back to original value if it was scaled
+            Number(price) / this.lowPriceRangeScaleFactor,
+            NumberType.FiatTokenPrice,
+          )
         },
       },
       rightPriceScale: {
@@ -382,7 +377,6 @@ interface PriceChartProps {
   overrideColor?: string
   headerTotalValueOverride?: number
   hideYAxis?: boolean
-  yAxisFormatter?: (price: number) => string
 }
 
 const CandlestickTooltipRow = styled(Flex, {
@@ -427,7 +421,6 @@ export function PriceChart({
   overrideColor,
   headerTotalValueOverride,
   hideYAxis,
-  yAxisFormatter,
 }: PriceChartProps) {
   const startingPrice = data[0]
   const lastPrice = data[data.length - 1]
@@ -441,10 +434,7 @@ export function PriceChart({
   return (
     <Chart
       Model={PriceChartModel}
-      params={useMemo(
-        () => ({ data, type, stale, timePeriod, hideYAxis, yAxisFormatter }),
-        [data, stale, type, timePeriod, hideYAxis, yAxisFormatter],
-      )}
+      params={useMemo(() => ({ data, type, stale, timePeriod, hideYAxis }), [data, stale, type, timePeriod, hideYAxis])}
       height={height}
       overrideColor={overrideColor}
       TooltipBody={type === PriceChartType.CANDLESTICK ? CandlestickTooltip : undefined}

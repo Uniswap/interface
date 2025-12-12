@@ -255,8 +255,6 @@ export enum ElementName {
   UniswapWalletLandingPageDownloadButton = 'uniswap-wallet-landing-page-download-button',
   UniswapWalletModalDownloadButton = 'uniswap-wallet-modal-download-button',
   UniswapWalletNavbarMenuDownloadButton = 'uniswap-wallet-navbar-menu-download-button',
-  UniswapWrappedBanner = 'uniswap-wrapped-banner',
-  UniswapWrappedNavbarButton = 'uniswap-wrapped-navbar-button',
   Unwrap = 'unwrap',
   ViewNativePrivateKeysOnCopied = 'view-native-private-keys-on-copied',
   WalletCard = 'wallet-card',
