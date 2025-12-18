@@ -1,6 +1,5 @@
-import { TableText } from 'components/Table/styled'
 import { memo, useMemo } from 'react'
-import { Flex, TextProps } from 'ui/src'
+import { Flex, Text, TextProps } from 'ui/src'
 import { useFormattedTimeForActivity } from 'uniswap/src/components/activity/hooks/useFormattedTime'
 import { FORMAT_TIME_SHORT, useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 
@@ -41,15 +40,15 @@ function _TimeCell({ timestamp, showFullDateOnHover = false, textAlign = 'left' 
           justifyContent="center"
           alignItems={textAlign === 'right' ? 'flex-end' : 'flex-start'}
         >
-          <TableText variant="body3" color="$neutral2" textAlign={textAlign} width="100%">
+          <Text variant="body3" color="$neutral2" textAlign={textAlign} width="100%">
             {formattedTime}
-          </TableText>
+          </Text>
         </Flex>
         {showFullDateOnHover && (
           <Flex height={CELL_HEIGHT} justifyContent="center" alignItems="center">
-            <TableText variant="body3" color="$neutral2" textAlign={textAlign} width="100%">
+            <Text variant="body3" color="$neutral2" textAlign={textAlign} width="100%">
               {dateLine} {timeLine}
-            </TableText>
+            </Text>
           </Flex>
         )}
       </Flex>

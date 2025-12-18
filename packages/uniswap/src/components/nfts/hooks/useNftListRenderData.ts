@@ -2,6 +2,8 @@ import { NetworkStatus } from '@apollo/client'
 import { GraphQLApi, isError } from '@universe/api'
 import { useCallback, useState } from 'react'
 import { NUM_FIRST_NFTS } from 'uniswap/src/components/nfts/constants'
+import type { NftsNextFetchPolicy } from 'uniswap/src/components/nfts/types'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
@@ -13,10 +15,14 @@ export function useNftListRenderData({
   owner,
   skip,
   chainsFilter,
+  nextFetchPolicy,
+  pollInterval,
 }: {
   owner: Address
   skip?: boolean
   chainsFilter?: UniverseChainId[]
+  nextFetchPolicy?: NftsNextFetchPolicy
+  pollInterval?: PollingInterval
 }): {
   nfts: (NFTItem | string)[]
   numHidden: number
@@ -48,6 +54,8 @@ export function useNftListRenderData({
     notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
     errorPolicy: 'all', // Suppress non-null image.url fields from backend
     skip,
+    nextFetchPolicy,
+    pollInterval,
   })
 
   const nftDataItems = formatNftItems(data)

@@ -6,7 +6,7 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { Language } from 'uniswap/src/features/language/constants'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
-import { BasicTokenInfo, SerializedTokenMap } from 'uniswap/src/features/tokens/slice/types'
+import { BasicTokenInfo, SerializedTokenMap, TokenDismissInfo } from 'uniswap/src/features/tokens/warnings/slice/types'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
@@ -264,7 +264,7 @@ export function moveDismissedTokenWarnings(state: any): any {
   }
 
   // Translate old warning
-  const newWarnings: SerializedTokenMap = {}
+  const newWarnings: SerializedTokenMap<TokenDismissInfo> = {}
   Object.keys(state.tokens.dismissedWarningTokens).forEach((currencyId: CurrencyId) => {
     const chainId = currencyIdToChain(currencyId)
     const address = currencyIdToAddress(currencyId)

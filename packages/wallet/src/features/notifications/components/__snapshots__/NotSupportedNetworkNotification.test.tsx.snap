@@ -27,7 +27,7 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
     [
       {
         "flexDirection": "column",
-        "zIndex": 100001,
+        "zIndex": 100010,
       },
     ]
   }
@@ -36,7 +36,7 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
     [
       {
         "flexDirection": "column",
-        "zIndex": 100001,
+        "zIndex": 100010,
       },
       {
         "opacity": 0,

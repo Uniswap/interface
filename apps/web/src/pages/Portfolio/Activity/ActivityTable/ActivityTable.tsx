@@ -4,10 +4,10 @@ import { Cell } from 'components/Table/Cell'
 import { HeaderCell } from 'components/Table/styled'
 import { ActivityAddressCell } from 'pages/Portfolio/Activity/ActivityTable/ActivityAddressCell'
 import { useActivityAddressLookup } from 'pages/Portfolio/Activity/ActivityTable/ActivityAddressLookupStore'
-import { ActivityAmountCell } from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell'
+import { ActivityAmountCell } from 'pages/Portfolio/Activity/ActivityTable/ActivityAmountCell/ActivityAmountCell'
 import { TimeCell } from 'pages/Portfolio/Activity/ActivityTable/TimeCell'
 import { TransactionTypeCell } from 'pages/Portfolio/Activity/ActivityTable/TransactionTypeCell'
-import { ACTIVITY_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
+import { PORTFOLIO_TABLE_ROW_HEIGHT } from 'pages/Portfolio/constants'
 import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useIsTouchDevice } from 'ui/src'
@@ -175,8 +175,8 @@ function _ActivityTable({ data, loading = false, error = false, rowWrapper }: Ac
       error={error}
       v2={true}
       rowWrapper={rowWrapper}
-      rowHeight={ACTIVITY_TABLE_ROW_HEIGHT}
-      compactRowHeight={ACTIVITY_TABLE_ROW_HEIGHT}
+      rowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
+      compactRowHeight={PORTFOLIO_TABLE_ROW_HEIGHT}
       defaultPinnedColumns={['addedTime']}
       maxWidth={1200}
     />

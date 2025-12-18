@@ -8,7 +8,7 @@ import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { useSubmitOnEnter } from 'src/app/features/onboarding/utils'
 import { Flex, ScrollView, SpinningLoader, Square, Text, Tooltip, TouchableArea } from 'ui/src'
 import { WalletFilled } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
+import { iconSizes, zIndexes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
@@ -132,7 +132,7 @@ function SmartWalletTooltip(): JSX.Element | undefined {
           <Trans components={{ highlight: triggerComponent }} i18nKey="account.wallet.select.smartWalletDisclaimer" />
         </Text>
       </Flex>
-      <Tooltip.Content animationDirection="top" pointerEvents="auto">
+      <Tooltip.Content animationDirection="top" pointerEvents="auto" zIndex={zIndexes.overlay}>
         <Tooltip.Arrow />
         <Flex>
           <Text variant="body4" color="$neutral2">

@@ -1,7 +1,7 @@
 import { BackgroundType } from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
 import type { InAppNotification } from '@universe/api'
 import type { NotificationClickTarget } from '@universe/notifications'
-import { memo, useMemo } from 'react'
+import { memo, useEffect, useMemo } from 'react'
 import {
   type ModalFeatureItem,
   ModalTemplate,
@@ -12,6 +12,7 @@ import { useEvent } from 'utilities/src/react/hooks'
 interface ModalNotificationProps {
   notification: InAppNotification
   onNotificationClick?: (notificationId: string, target: NotificationClickTarget) => void
+  onNotificationShown?: (notificationId: string) => void
 }
 
 /**
@@ -30,6 +31,7 @@ interface ModalNotificationProps {
 export const ModalNotification = memo(function ModalNotification({
   notification,
   onNotificationClick,
+  onNotificationShown,
 }: ModalNotificationProps) {
   // Content is always defined when this component is rendered (checked in NotificationContainer)
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -80,6 +82,10 @@ export const ModalNotification = memo(function ModalNotification({
       },
     }))
   }, [content.buttons, notification.id, onNotificationClick])
+
+  useEffect(() => {
+    onNotificationShown?.(notification.id)
+  }, [notification.id, onNotificationShown])
 
   return (
     <ModalTemplate

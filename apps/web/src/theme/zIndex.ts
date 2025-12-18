@@ -16,4 +16,5 @@ export enum Z_INDEX {
   popover = 1070,
   tooltip = 1080,
   modalOverTooltip = 1090,
+  overlay = 100010,
 }

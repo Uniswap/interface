@@ -42,7 +42,7 @@ export const WC_PARAMS = {
   qrModalOptions: {
     themeVariables: {
       '--wcm-font-family': '"Inter custom", sans-serif',
-      '--wcm-z-index': Z_INDEX.modal.toString(),
+      '--wcm-z-index': Z_INDEX.overlay.toString(),
     },
   },
 }

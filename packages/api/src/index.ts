@@ -57,7 +57,16 @@ export {
   createJupiterApiClient,
   type JupiterApiClient,
 } from '@universe/api/src/clients/jupiter/createJupiterApiClient'
-export type { JupiterExecuteResponse, JupiterOrderResponse } from '@universe/api/src/clients/jupiter/types'
+export type {
+  JupiterExecuteResponse,
+  JupiterOrderResponse,
+  JupiterExecuteUrlParams,
+  JupiterOrderUrlParams,
+} from '@universe/api/src/clients/jupiter/types'
+export {
+  jupiterExecuteResponseSchema,
+  jupiterOrderResponseSchema,
+} from '@universe/api/src/clients/jupiter/types'
 
 // Blockaid API
 export {

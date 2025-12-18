@@ -723,7 +723,7 @@ export const v92Schema = v92SchemaIntermediate
 
 export const v93Schema = v92Schema
 
-const v95Schema = {
+export const v95Schema = {
   ...v93Schema,
   visibility: {
     ...v93Schema.visibility,
@@ -731,6 +731,8 @@ const v95Schema = {
   },
 }
 
+const v96Schema = v95Schema
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v95Schema => v95Schema
+export const getSchema = (): typeof v96Schema => v96Schema

@@ -1,4 +1,6 @@
 import type {
+  ClaimLPRewardsRequest,
+  ClaimLPRewardsResponse,
   MigrateV2ToV3LPPositionRequest,
   MigrateV2ToV3LPPositionResponse,
   MigrateV3ToV4LPPositionRequest,
@@ -14,11 +16,13 @@ export interface LiquidityServiceClientContext {
 export interface LiquidityServiceClient {
   migrateV2ToV3LpPosition: (params: MigrateV2ToV3LPPositionRequest) => Promise<MigrateV2ToV3LPPositionResponse>
   migrateV3ToV4LpPosition: (params: MigrateV3ToV4LPPositionRequest) => Promise<MigrateV3ToV4LPPositionResponse>
+  claimRewards: (params: ClaimLPRewardsRequest) => Promise<ClaimLPRewardsResponse>
 }
 
 export const LIQUIDITY_PATHS = {
   migrateV2ToV3LPPosition: '/MigrateV2ToV3LPPosition',
   migrateV3ToV4LPPosition: '/MigrateV3ToV4LPPosition',
+  claimRewards: '/ClaimLPRewards',
 }
 
 export function createLiquidityServiceClient(ctx: LiquidityServiceClientContext): LiquidityServiceClient {
@@ -48,8 +52,20 @@ export function createLiquidityServiceClient(ctx: LiquidityServiceClientContext)
     }),
   })
 
+  const claimRewards = createFetcher<ClaimLPRewardsRequest, ClaimLPRewardsResponse>({
+    client,
+    url: LIQUIDITY_PATHS.claimRewards,
+    method: 'post',
+    transformRequest: async ({ params }) => ({
+      params: {
+        ...params,
+      },
+    }),
+  })
+
   return {
     migrateV2ToV3LpPosition,
     migrateV3ToV4LpPosition,
+    claimRewards,
   }
 }

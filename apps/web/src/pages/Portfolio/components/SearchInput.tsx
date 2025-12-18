@@ -1,17 +1,11 @@
 import { useEffect, useState } from 'react'
 import { Flex, Input } from 'ui/src'
 import { Search } from 'ui/src/components/icons/Search'
+import { SearchInputProps } from 'uniswap/src/components/nfts/types'
 import { useDebouncedCallback } from 'utilities/src/react/useDebouncedCallback'
 
 const DEFAULT_SEARCH_INPUT_WIDTH = 280
 const DEBOUNCE_DELAY_MS = 300
-
-interface SearchInputProps {
-  value: string
-  onChangeText: (value: string) => void
-  placeholder?: string
-  width?: number | string
-}
 
 export function SearchInput({
   value,
@@ -72,7 +66,7 @@ export function SearchInput({
         justifyContent="center"
         pointerEvents="none"
       >
-        <Search size={20} color="$neutral1" />
+        <Search size="$icon.20" color="$neutral1" />
       </Flex>
     </Flex>
   )

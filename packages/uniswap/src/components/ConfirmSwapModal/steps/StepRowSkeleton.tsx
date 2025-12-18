@@ -9,18 +9,21 @@ import {
   withRepeat,
   withTiming,
 } from 'react-native-reanimated'
-import { Anchor, Flex, Text, useSporeColors } from 'ui/src'
+import { Anchor, Flex, getTokenValue, Text, useSporeColors } from 'ui/src'
 import { ApproveAlt } from 'ui/src/components/icons'
 import { AvatarPlaceholder } from 'ui/src/components/icons/AvatarPlaceholder'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { PulseRipple } from 'ui/src/loading/PulseRipple'
-import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import { fonts, spacing } from 'ui/src/theme'
 import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+
+export const STEP_ROW_HEIGHT = '$spacing40'
+export const STEP_ROW_ICON_SIZE = '$icon.24'
 
 export interface StepRowProps<TStepType extends TransactionStep> {
   step: TStepType
@@ -60,20 +63,21 @@ export function StepRowSkeleton(props: StepRowSkeletonProps): JSX.Element {
   const activeOrInProgress = status === StepStatus.Active || status === StepStatus.InProgress
   const titleColor = activeOrInProgress ? '$neutral1' : '$neutral2'
   const titleSize = activeOrInProgress ? 'body2' : 'body3'
+  const iconSize = getTokenValue(STEP_ROW_ICON_SIZE)
 
   return (
     <Flex row alignItems="center" justifyContent="space-between">
       <Flex row alignItems="center" gap="$gap8" height="$spacing40" justifyContent="space-between" py={8}>
-        <StepIconWrapper stepStatus={status} iconSize={iconSizes.icon24}>
+        <StepIconWrapper stepStatus={status} iconSize={iconSize}>
           {currency0Info && currency1Info ? (
             <SplitLogo
-              size={iconSizes.icon24}
+              size={iconSize}
               chainId={currency0Info.currency.chainId}
               inputCurrencyInfo={currency0Info}
               outputCurrencyInfo={currency1Info}
             />
           ) : (
-            (icon ?? <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon24} />)
+            (icon ?? <CurrencyLogo currencyInfo={currencyInfo} size={iconSize} />)
           )}
         </StepIconWrapper>
         <Flex>

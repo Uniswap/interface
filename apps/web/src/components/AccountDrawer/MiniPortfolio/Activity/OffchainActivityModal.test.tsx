@@ -1,5 +1,5 @@
 import 'test-utils/tokens/mocks'
-
+import 'test-utils/logger/mocks'
 import { WETH9 } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'

@@ -149,4 +149,10 @@ export interface UniverseChainInfo extends WagmiChain {
     }
   }
   readonly tradingApiPollingIntervalMs: number
+  /**
+   * Address used to bridge tokens across protocols. Do not use this to send a TX
+   * as it's not guaranteed to be the most up to date address.
+   * This is used for being able to detect if a DAPP request is a bridge request.
+   **/
+  readonly acrossProtocolAddress?: string
 }

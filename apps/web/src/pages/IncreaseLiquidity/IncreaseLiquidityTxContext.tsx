@@ -23,6 +23,7 @@ import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useIncreaseLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useIncreaseLpPositionCalldataQuery'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
@@ -69,7 +70,9 @@ export function IncreaseLiquidityTxContextProvider({ children }: PropsWithChildr
   const { exactField } = increaseLiquidityState
 
   const accountAddress = useActiveAddress(Platform.EVM)
-  const canBatchTransactions = useUniswapContextSelector((ctx) => ctx.getCanBatchTransactions?.(positionInfo?.chainId))
+  const canBatchTransactions =
+    useUniswapContextSelector((ctx) => ctx.getCanBatchTransactions?.(positionInfo?.chainId)) &&
+    positionInfo?.chainId !== UniverseChainId.Monad
 
   const increaseLiquidityApprovalParams: TradingApi.CheckApprovalLPRequest | undefined = useMemo(() => {
     if (!positionInfo || !accountAddress || !currencyAmounts?.TOKEN0 || !currencyAmounts.TOKEN1) {

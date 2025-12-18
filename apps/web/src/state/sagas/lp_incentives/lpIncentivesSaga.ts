@@ -10,16 +10,13 @@ import { TransactionType } from 'uniswap/src/features/transactions/types/transac
 import { createSaga } from 'uniswap/src/utils/saga'
 
 function* lpIncentivesClaim(params: LpIncentivesClaimParams) {
-  const { account, claimData, chainId, tokenAddress, selectChain, onSuccess, onFailure, setCurrentStep } = params
+  const { address, claimData, chainId, tokenAddress, selectChain, onSuccess, onFailure, setCurrentStep } = params
 
   try {
-    if (!claimData.claim) {
-      throw new Error('No claim data provided')
-    }
-
     // Check if we need to switch chains
-    if (claimData.claim.chainId !== chainId) {
-      const chainSwitched = yield* call(selectChain, claimData.claim.chainId)
+    if (claimData.chainId !== chainId) {
+      const chainSwitched = yield* call(selectChain, claimData.chainId)
+
       if (!chainSwitched) {
         onFailure(new Error('Failed to switch to Ethereum mainnet'))
         return
@@ -33,11 +30,11 @@ function* lpIncentivesClaim(params: LpIncentivesClaimParams) {
 
     const step: LpIncentivesClaimTransactionStep = {
       type: TransactionStepType.CollectLpIncentiveRewardsTransactionStep,
-      txRequest: claimData.claim,
+      txRequest: claimData,
     }
 
     const hash = yield* call(handleOnChainStep, {
-      address: account.address,
+      address,
       step,
       info,
       setCurrentStep,

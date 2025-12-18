@@ -21,7 +21,7 @@ import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { isEVMAddress } from 'utilities/src/addresses/evm/evm'
-import { isExtensionApp, isWebPlatform } from 'utilities/src/platform'
+import { isExtensionApp, isWebApp, isWebPlatform } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
@@ -43,8 +43,11 @@ export function ReceiveQRCode({ address }: { address: Address }): JSX.Element | 
   const displayName = useWalletDisplayName(address, { includeUnitagSuffix: true })
   const displayHeaderAddress = displayName?.type === DisplayNameType.Address
 
-  const platformAddressLabel =
-    (isEVMAddress(address) ? MAINNET_CHAIN_INFO.name : SOLANA_CHAIN_INFO.name) + ' ' + t('common.address').toLowerCase()
+  const platformAddressLabel = isWebApp
+    ? (isEVMAddress(address) ? MAINNET_CHAIN_INFO.name : SOLANA_CHAIN_INFO.name) +
+      ' ' +
+      t('common.address').toLowerCase()
+    : t('common.walletAddress')
 
   const { value: copied, setTrue: setCopiedTrue, setFalse: setCopiedFalse } = useBooleanState(false)
 

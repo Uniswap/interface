@@ -39,7 +39,15 @@ export function NFTViewer(props: Props): JSX.Element {
   const fallback = useMemo(() => {
     const isPlaceholderAddress = isEVMAddress(placeholderContent)
     return (
-      <Flex centered fill aspectRatio={1} backgroundColor="$surface2" maxHeight={maxHeight ?? '100%'} p="$spacing8">
+      <Flex
+        centered
+        fill
+        aspectRatio={1}
+        backgroundColor="$surface2"
+        maxHeight={maxHeight ?? '100%'}
+        width="100%"
+        p="$spacing8"
+      >
         <Text color="$neutral2" textAlign="center" variant="subheading2">
           {isPlaceholderAddress
             ? shortenAddress({ address: placeholderContent })

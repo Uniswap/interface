@@ -12,13 +12,13 @@ import {
   createApiNotificationTracker,
   createBaseNotificationProcessor,
   createNotificationService,
+  createPollingNotificationDataSource,
   getIsNotificationServiceEnabled,
+  getNotificationQueryOptions,
   type NotificationService,
 } from '@universe/notifications'
 import { createLocalStorageAdapter } from 'notification-service/createLocalStorageAdapter'
 import { createLegacyBannersNotificationDataSource } from 'notification-service/data-sources/createLegacyBannersNotificationDataSource'
-import { createPollingNotificationDataSource } from 'notification-service/data-sources/createPollingNotificationDataSource'
-import { getNotificationQueryOptions } from 'notification-service/data-sources/notificationQueryOptions'
 import { createWebNotificationRenderer } from 'notification-service/notification-renderer/createWebNotificationRenderer'
 import { NotificationContainer } from 'notification-service/notification-renderer/NotificationContainer'
 import { useNotificationStore } from 'notification-service/notification-renderer/notificationStore'
@@ -211,6 +211,7 @@ export function WebNotificationServiceManager(): JSX.Element | null {
   return (
     <NotificationContainer
       onRenderFailed={notificationService.onRenderFailed}
+      onNotificationShown={notificationService.onNotificationShown}
       onNotificationClick={notificationService.onNotificationClick}
     />
   )

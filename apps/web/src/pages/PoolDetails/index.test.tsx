@@ -6,7 +6,8 @@ import store from 'state'
 import { mocked } from 'test-utils/mocked'
 import { validParams, validPoolDataResponse } from 'test-utils/pools/fixtures'
 import { act, render, waitFor } from 'test-utils/render'
-import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
+import { dismissTokenWarning } from 'uniswap/src/features/tokens/warnings/slice/slice'
+import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 
 // eslint-disable-next-line import/no-unused-modules, jest/no-export
 export const mockNavigate = vi.fn()
@@ -57,6 +58,7 @@ describe('PoolDetailsPage', () => {
           name: 'USD Coin',
           decimals: 6,
         },
+        warning: TokenProtectionWarning.NonDefault,
       }),
     )
     store.dispatch(
@@ -68,6 +70,7 @@ describe('PoolDetailsPage', () => {
           name: 'Wrapped Ether',
           decimals: 18,
         },
+        warning: TokenProtectionWarning.NonDefault,
       }),
     )
   })

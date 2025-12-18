@@ -10,6 +10,7 @@ import { Button, ButtonProps, Flex, IconButton, useMedia } from 'ui/src'
 import { ArrowDownCircle } from 'ui/src/components/icons/ArrowDownCircle'
 import { ArrowUpCircle } from 'ui/src/components/icons/ArrowUpCircle'
 import { isEVMChain } from 'uniswap/src/features/platforms/utils/chains'
+import { useShouldShowAztecWarning } from 'uniswap/src/hooks/useShouldShowAztecWarning'
 
 type TabItem = {
   label?: string
@@ -17,11 +18,12 @@ type TabItem = {
   icon: JSX.Element
 }
 
-export function TDPActionTabs() {
+export function TDPActionTabs({ onAztecActionPress }: { onAztecActionPress?: () => void }) {
   const { t } = useTranslation()
-  const { currencyChain, currencyChainId, address, tokenColor } = useTDPContext()
+  const { currencyChain, currencyChainId, currency, address, tokenColor } = useTDPContext()
   const selectChain = useSelectChain()
   const navigate = useNavigate()
+  const showAztecWarning = useShouldShowAztecWarning(currency.isToken ? currency.address : '')
 
   const currentConnectedChainId = useActiveAccount(currencyChainId)?.chainId
   const isConnected = useConnectionStatus(currencyChainId).isConnected
@@ -33,12 +35,16 @@ export function TDPActionTabs() {
 
   const toActionLink = useCallback(
     async (href: string) => {
+      if (showAztecWarning && onAztecActionPress) {
+        onAztecActionPress()
+        return
+      }
       if (currentConnectedChainId && currentConnectedChainId !== currencyChainId && isEVMChain(currencyChainId)) {
         await selectChain(currencyChainId)
       }
       navigate(href)
     },
-    [currentConnectedChainId, currencyChainId, selectChain, navigate],
+    [currentConnectedChainId, currencyChainId, selectChain, navigate, showAztecWarning, onAztecActionPress],
   )
 
   const tabs: TabItem[] = useMemo(
@@ -76,7 +82,12 @@ export function TDPActionTabs() {
 
         return tab.label ? (
           // biome-ignore lint/correctness/useJsxKeyInIterable: key is inside commeontProps
-          <Button {...commonProps} icon={showIcons ? tab.icon : undefined}>
+          <Button
+            isDisabled={showAztecWarning}
+            onDisabledPress={showAztecWarning ? onAztecActionPress : undefined}
+            {...commonProps}
+            icon={showIcons ? tab.icon : undefined}
+          >
             {tab.label}
           </Button>
         ) : (

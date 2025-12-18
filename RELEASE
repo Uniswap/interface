@@ -1,1 +1,23 @@
-Various bug fixes and performance improvements
+IPFS hash of the deployment:
+- CIDv0: `QmdbNNCgD3ow36Qa3mAW52YTN6atgcMsUbLcXcz77tUitQ`
+- CIDv1: `bafybeihcusewph7jkyiprczoiv7ozf4p3moxxjmioojlodxhrfj5uyctse`
+
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
+
+IPFS gateways:
+- https://bafybeihcusewph7jkyiprczoiv7ozf4p3moxxjmioojlodxhrfj5uyctse.ipfs.dweb.link/
+- [ipfs://QmdbNNCgD3ow36Qa3mAW52YTN6atgcMsUbLcXcz77tUitQ/](ipfs://QmdbNNCgD3ow36Qa3mAW52YTN6atgcMsUbLcXcz77tUitQ/)
+
+### 5.121.2 (2025-12-18)
+
+
+### Bug Fixes
+
+* **web:** limit form monad crash (#26600) 41290d0
+
+

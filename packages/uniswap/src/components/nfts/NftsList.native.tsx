@@ -45,6 +45,8 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     onRefresh,
     skip,
     filteredNumHidden,
+    nextFetchPolicy,
+    pollInterval,
     ...rest
   },
   ref,
@@ -62,7 +64,7 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
     hiddenNftsExpanded,
     setHiddenNftsExpanded,
     isErrorState,
-  } = useNftListRenderData({ owner, skip })
+  } = useNftListRenderData({ owner, skip, nextFetchPolicy, pollInterval })
 
   // Use filtered count if provided, otherwise use internal count
   const numHidden = filteredNumHidden ?? internalNumHidden

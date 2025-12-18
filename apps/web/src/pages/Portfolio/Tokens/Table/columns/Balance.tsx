@@ -1,4 +1,4 @@
-import { TableText } from 'components/Table/styled'
+import { EllipsisText } from 'components/Table/styled'
 import { ValueWithFadedDecimals } from 'pages/Portfolio/components/ValueWithFadedDecimals/ValueWithFadedDecimals'
 import { EmptyTableCell } from 'pages/Portfolio/EmptyTableCell'
 import { TokenData } from 'pages/Portfolio/Tokens/hooks/useTransformTokenTableData'
@@ -18,9 +18,9 @@ export const Balance = memo(function Balance({ balance }: { balance: TokenData['
   }
 
   return (
-    <TableText numberOfLines={1}>
+    <EllipsisText textAlign="right" variant="body3">
       <ValueWithFadedDecimals value={formattedBalance} /> {balance.symbol}
-    </TableText>
+    </EllipsisText>
   )
 })
 Balance.displayName = 'Balance'

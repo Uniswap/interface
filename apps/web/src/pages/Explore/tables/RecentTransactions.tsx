@@ -6,7 +6,6 @@ import {
   TransactionType,
   useAllTransactions,
 } from 'appGraphql/data/useAllTransactions'
-import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { GraphQLApi } from '@universe/api'
@@ -22,6 +21,7 @@ import {
   TimestampCell,
   TokenLinkCell,
 } from 'components/Table/styled'
+import { useUpdateManualOutage } from 'hooks/useUpdateManualOutage'
 import { useFilteredTransactions } from 'pages/Explore/tables/useFilterTransaction'
 import { memo, useMemo, useReducer, useRef, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
@@ -74,7 +74,7 @@ const RecentTransactions = memo(function RecentTransactions() {
       : undefined
   const allDataStillLoading = loading && !transactions.length
   const showLoadingSkeleton = allDataStillLoading || !!combinedError
-  useUpdateManualOutage({ chainId: chainInfo.id, errorV3, errorV2 })
+  useUpdateManualOutage({ chainId: chainInfo.id, errorV3, errorV2, trigger: transactions })
   // TODO(WEB-3236): once GQL BE Transaction query is supported add usd, token0 amount, and token1 amount sort support
   const media = useMedia()
   const columns = useMemo(() => {

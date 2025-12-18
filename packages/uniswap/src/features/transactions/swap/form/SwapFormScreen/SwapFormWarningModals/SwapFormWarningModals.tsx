@@ -1,5 +1,5 @@
 import { BridgedAssetModal } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
-import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
+import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
 import { LowNativeBalanceModal } from 'uniswap/src/features/transactions/modals/LowNativeBalanceModal'
 import { ViewOnlyModal } from 'uniswap/src/features/transactions/modals/ViewOnlyModal'
 import { useBridgingModalActions } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useBridgingModalActions'

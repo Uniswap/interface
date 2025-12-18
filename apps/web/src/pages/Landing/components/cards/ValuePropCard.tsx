@@ -61,7 +61,7 @@ export default function ValuePropCard(props: ValuePropCardProps) {
       {...rest}
     >
       <Flex
-        width="100%"
+        width="150%"
         flex={1}
         gap={8}
         p="$spacing48"
@@ -79,18 +79,17 @@ export default function ValuePropCard(props: ValuePropCardProps) {
         {title}
         {subtitle && (
           <Text
+            width="100%"
             mt="$spacing16"
             variant="heading2"
             fontWeight="$true"
             color={color}
-            whiteSpace="nowrap"
             overflow="visible"
             $xl={{
               variant: 'heading3',
             }}
             $lg={{
               variant: 'heading2',
-              whiteSpace: 'normal',
             }}
             $xs={{
               variant: 'heading3',
@@ -101,6 +100,7 @@ export default function ValuePropCard(props: ValuePropCardProps) {
           </Text>
         )}
         <Text
+          width="60%"
           mb="$spacing24"
           variant="heading3"
           color={color}

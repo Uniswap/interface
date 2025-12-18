@@ -1,3 +1,4 @@
+import 'test-utils/logger/mocks'
 import { Price, WETH9 } from '@uniswap/sdk-core'
 import TradePrice from 'components/swap/TradePrice'
 import { fireEvent, render, screen } from 'test-utils/render'

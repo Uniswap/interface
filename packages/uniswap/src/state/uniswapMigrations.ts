@@ -6,7 +6,12 @@ import {
   WalletByAddressSearchHistoryResult,
 } from 'uniswap/src/features/search/SearchHistoryResult'
 import { searchResultId } from 'uniswap/src/features/search/searchHistorySlice'
-import { SerializedTokenMap } from 'uniswap/src/features/tokens/slice/types'
+import {
+  SerializedTokenMap,
+  TokenDismissInfo,
+  TokenWarningDismissal,
+} from 'uniswap/src/features/tokens/warnings/slice/types'
+import { TokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/types'
 import { PreV55SearchResultType } from 'uniswap/src/state/oldTypes'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 
@@ -18,17 +23,22 @@ export function unchecksumDismissedTokenWarningKeys(state: any): any {
     return state
   }
 
-  const newDismissedWarnings: SerializedTokenMap = Object.entries(state.tokens.dismissedTokenWarnings).reduce(
+  const newDismissedWarnings: SerializedTokenMap<TokenDismissInfo> = Object.entries(
+    state.tokens.dismissedTokenWarnings,
+  ).reduce(
     (acc, [chainId, warningsForChain]) => ({
       ...acc,
-      [chainId]: Object.entries(warningsForChain as Record<string, unknown>).reduce((chainAcc, [address, warning]) => {
-        const lowercasedAddress = getValidAddress({
-          address,
-          platform: Platform.EVM,
-          withEVMChecksum: false,
-        })
-        return lowercasedAddress ? { ...chainAcc, [lowercasedAddress]: warning } : chainAcc
-      }, {}),
+      [chainId]: Object.entries(warningsForChain as Record<string, TokenDismissInfo>).reduce(
+        (chainAcc, [address, warning]) => {
+          const lowercasedAddress = getValidAddress({
+            address,
+            platform: Platform.EVM,
+            withEVMChecksum: false,
+          })
+          return lowercasedAddress ? { ...chainAcc, [lowercasedAddress]: warning } : chainAcc
+        },
+        {},
+      ),
     }),
     {},
   )
@@ -175,5 +185,34 @@ export function addActivityVisibility(state: any): any {
   return {
     ...state,
     visibility: { ...state.visibility, activity: {} },
+  }
+}
+
+// Mobile: 96
+// Extension: 30
+// Web: 60
+export function migrateDismissedTokenWarnings(state: any): any {
+  if (!state?.tokens?.dismissedTokenWarnings) {
+    return state
+  }
+
+  const newDismissedWarnings: SerializedTokenMap<TokenWarningDismissal> = Object.entries(
+    state.tokens.dismissedTokenWarnings,
+  ).reduce(
+    (acc, [chainId, warningsForChain]) => ({
+      ...acc,
+      [chainId]: Object.entries(warningsForChain as Record<string, TokenDismissInfo>).reduce(
+        (chainAcc, [address, token]) => {
+          return { ...chainAcc, [address]: { token, warnings: [TokenProtectionWarning.NonDefault] } }
+        },
+        {},
+      ),
+    }),
+    {},
+  )
+
+  return {
+    ...state,
+    tokens: { ...state.tokens, dismissedTokenWarnings: newDismissedWarnings },
   }
 }

@@ -155,7 +155,9 @@ function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.Element
     const tabs: Array<HomeRoute> = [
       { key: SectionName.HomeTokensTab, title: tokensTitle },
       { key: SectionName.HomeNFTsTab, title: nftsTitle },
-      ...(!isBottomTabsEnabled ? [{ key: SectionName.HomeActivityTab, title: activityTitle }] : []),
+      ...(!isBottomTabsEnabled
+        ? [{ key: SectionName.HomeActivityTab, title: activityTitle, enableNotificationBadge: true }]
+        : []),
     ]
 
     return tabs

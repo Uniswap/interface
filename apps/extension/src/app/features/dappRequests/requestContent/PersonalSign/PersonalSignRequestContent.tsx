@@ -8,10 +8,12 @@ import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRe
 import { SignMessageRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { Flex, IconButton, Text, Tooltip } from 'ui/src'
 import { AlertTriangleFilled, Code, StickyNoteTextSquare } from 'ui/src/components/icons'
+import { zIndexes } from 'ui/src/theme'
+import { EthMethod } from 'uniswap/src/features/dappRequests/types'
 import { logger } from 'utilities/src/logger/logger'
 import { containsNonPrintableChars } from 'utilities/src/primitives/string'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
-import { DappSignatureScanningContent } from 'wallet/src/components/dappRequests/DappSignatureScanningContent'
+import { DappPersonalSignContent } from 'wallet/src/components/dappRequests/DappPersonalSignContent'
 import { TransactionRiskLevel } from 'wallet/src/features/dappRequests/types'
 import { shouldDisableConfirm } from 'wallet/src/features/dappRequests/utils/riskUtils'
 
@@ -88,12 +90,12 @@ function PersonalSignRequestContentWithScanning({
       showAddressFooter={false}
       disableConfirm={disableConfirm}
     >
-      <DappSignatureScanningContent
+      <DappPersonalSignContent
         chainId={activeChain}
         account={currentAccount.address}
         message={message}
         isDecoded={isDecoded}
-        method="personal_sign"
+        method={EthMethod.PersonalSign}
         params={[hexMessage, currentAccount.address]}
         dappUrl={dappUrl}
         confirmedRisk={confirmedRisk}
@@ -189,7 +191,7 @@ function PersonalSignRequestContentLegacy({
             />
           </Tooltip.Trigger>
         </Flex>
-        <Tooltip.Content animationDirection="left">
+        <Tooltip.Content animationDirection="left" zIndex={zIndexes.overlay}>
           <Tooltip.Arrow />
           <Text variant="body4">
             {viewEncoding === ViewEncoding.UTF8

@@ -4,23 +4,22 @@ import { usePortfolioRoutes } from 'pages/Portfolio/Header/hooks/usePortfolioRou
 import { usePortfolioAddresses } from 'pages/Portfolio/hooks/usePortfolioAddresses'
 import { NFTCard, setOpenNftPopoverId } from 'pages/Portfolio/NFTs/NFTCard'
 import { NFTCardSkeleton } from 'pages/Portfolio/NFTs/NFTCardSkeleton'
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router'
-import { Flex, Text, useMedia } from 'ui/src'
+import { Flex, useMedia } from 'ui/src'
 import { NftsList } from 'uniswap/src/components/nfts/NftsList'
 import { NftsListEmptyState } from 'uniswap/src/components/nfts/NftsListEmptyState'
+import { PollingInterval } from 'uniswap/src/constants/misc'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { NFTItem } from 'uniswap/src/features/nfts/types'
 import { ElementName, InterfacePageName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useEvent } from 'utilities/src/react/hooks'
 import { assume0xAddress } from 'utils/wagmi'
 
 const LOADING_SKELETON_COUNT = 10
-const DEFAULT_SEARCH_INPUT_WIDTH = 320
 
 // Memoized wrapper component to avoid recreating Flex structure on every render
 const NFTItemWrapper = memo(function NFTItemWrapper({ item, owner }: { item: NFTItem; owner: Address }): JSX.Element {
@@ -44,19 +43,12 @@ export function PortfolioNfts(): JSX.Element {
   const owner = assume0xAddress(evmAddress) ?? ''
   const isSolanaOnlyWallet = Boolean(svmAddress && !evmAddress)
 
-  const [search, setSearch] = useState('')
-  const [filteredShownCount, setFilteredShownCount] = useState<number>(0)
-
   useEffect(() => {
     // Reset popover state when component unmounts
     return () => {
       setOpenNftPopoverId(null)
     }
   }, [])
-
-  const handleFilteredCountsChange = useEvent(({ shown }: { shown: number }) => {
-    setFilteredShownCount(shown)
-  })
 
   // renderNFTItem uses memoized wrapper component to avoid recreating Flex structure
   const renderNFTItem = useCallback(
@@ -120,25 +112,6 @@ export function PortfolioNfts(): JSX.Element {
   return (
     <Trace logImpression page={InterfacePageName.PortfolioNftsPage}>
       <Flex gap="$spacing24" mt="$spacing12">
-        <Flex
-          row
-          alignItems="flex-end"
-          justifyContent="space-between"
-          $md={{ flexDirection: 'column', alignItems: 'flex-start', gap: '$spacing24' }}
-        >
-          <Text variant="body2" color="$neutral2">
-            {filteredShownCount ? `${filteredShownCount}` : ''} {t('portfolio.nfts.title')}
-          </Text>
-          <Trace logFocus section={SectionName.PortfolioNftsTab} element={ElementName.NftsSearch}>
-            <SearchInput
-              value={search}
-              onChangeText={setSearch}
-              placeholder={t('portfolio.nfts.search.placeholder')}
-              width={media.md ? '100%' : DEFAULT_SEARCH_INPUT_WIDTH}
-            />
-          </Trace>
-        </Flex>
-
         <Trace section={SectionName.PortfolioNftsTab} element={ElementName.NftsList}>
           <Flex ref={nftsContainerRef}>
             <NftsList
@@ -148,11 +121,13 @@ export function PortfolioNfts(): JSX.Element {
               loadingSkeletonCount={LOADING_SKELETON_COUNT}
               customLoadingState={customLoadingState}
               chainsFilter={selectedChainId ? [selectedChainId] : undefined}
-              searchString={search}
-              onFilteredCountsChange={handleFilteredCountsChange}
               skip={!owner}
               renderExpandoRow={renderExpandoRow}
               customEmptyState={selectedChainId || isSolanaOnlyWallet ? chainFilterEmptyState : undefined}
+              nextFetchPolicy="cache-first"
+              showHeader
+              SearchInputComponent={SearchInput}
+              pollInterval={PollingInterval.Slow}
             />
           </Flex>
         </Trace>

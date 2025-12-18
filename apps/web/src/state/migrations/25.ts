@@ -1,5 +1,5 @@
 import { PersistState } from 'redux-persist'
-import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
+import { TokensState } from 'uniswap/src/features/tokens/warnings/slice/slice'
 import { removeThaiBahtFromFiatCurrency } from 'uniswap/src/state/uniswapMigrations'
 
 type PersistAppStateV25 = {

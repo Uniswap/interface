@@ -3,9 +3,10 @@ import { useReactNavigationModal } from 'src/components/modals/useReactNavigatio
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
-import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { getTokenProtectionWarning } from 'uniswap/src/features/tokens/warnings/safetyUtils'
+import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/warnings/slice/hooks'
+import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
 import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 
 export function TokenWarningModalWrapper({
@@ -18,11 +19,13 @@ export function TokenWarningModalWrapper({
   const currencyChainId = (currencyId && currencyIdToChain(currencyId)) || defaultChainId
   const currencyAddress = currencyId ? currencyIdToAddress(currencyId) : undefined
   const currencyInfo = useCurrencyInfo(currencyId)
+  const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo)
 
   // Get the token info only if we have a valid non-native currency
   const isNativeCurrency = isNativeCurrencyAddress(currencyChainId, currencyAddress)
   const { tokenWarningDismissed } = useDismissedTokenWarnings(
     isNativeCurrency || !currencyAddress ? undefined : { chainId: currencyChainId, address: currencyAddress },
+    tokenProtectionWarning,
   )
 
   // Return null if modal state is malformed

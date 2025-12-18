@@ -1,10 +1,10 @@
 import { usePoolsFromTokenAddress } from 'appGraphql/data/pools/usePoolsFromTokenAddress'
 import { PoolSortFields } from 'appGraphql/data/pools/useTopPools'
 import { OrderDirection } from 'appGraphql/data/util'
-import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { ApolloError } from '@apollo/client'
 import { type Currency } from '@uniswap/sdk-core'
 import { PoolsTable, sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
+import { useUpdateManualOutage } from 'hooks/useUpdateManualOutage'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { useEffect, useMemo } from 'react'
 import { Flex } from 'ui/src'
@@ -33,7 +33,7 @@ export function TokenDetailsPoolsTable({ referenceCurrency }: { referenceCurrenc
         })
       : undefined
   const allDataStillLoading = loading && !pools.length
-  useUpdateManualOutage({ chainId, errorV3, errorV2 })
+  useUpdateManualOutage({ chainId, errorV3, errorV2, trigger: pools })
 
   const resetSortMethod = useResetAtom(sortMethodAtom)
   const resetSortAscending = useResetAtom(sortAscendingAtom)

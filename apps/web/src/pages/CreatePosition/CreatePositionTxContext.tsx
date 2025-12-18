@@ -27,6 +27,7 @@ import { PositionField } from 'types/position'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { useCheckLpApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckLpApprovalQuery'
 import { useCreateLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useCreateLpPositionCalldataQuery'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { useTransactionGasFee, useUSDCurrencyAmountOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { InterfaceEventName } from 'uniswap/src/features/telemetry/constants'
@@ -389,7 +390,8 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     customSlippageTolerance: s.customSlippageTolerance,
   }))
   const canBatchTransactions =
-    useUniswapContextSelector((ctx) => ctx.getCanBatchTransactions?.(poolOrPair?.chainId)) ?? false
+    (useUniswapContextSelector((ctx) => ctx.getCanBatchTransactions?.(poolOrPair?.chainId)) ?? false) &&
+    poolOrPair?.chainId !== UniverseChainId.Monad
 
   const [transactionError, setTransactionError] = useState<string | boolean>(false)
 

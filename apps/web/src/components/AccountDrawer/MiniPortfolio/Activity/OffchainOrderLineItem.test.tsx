@@ -1,3 +1,4 @@
+import 'test-utils/logger/mocks'
 import { CurrencyAmount, WETH9 } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
 import {

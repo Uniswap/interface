@@ -8,7 +8,7 @@ import ms from 'ms'
 import { useCallback } from 'react'
 import { PositionDetails } from 'types/position'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { SerializedToken } from 'uniswap/src/features/tokens/slice/types'
+import { SerializedToken } from 'uniswap/src/features/tokens/warnings/slice/types'
 import { deserializeToken, serializeToken } from 'uniswap/src/utils/currency'
 import { buildCurrencyKey, currencyKey } from 'utils/currencyKey'
 

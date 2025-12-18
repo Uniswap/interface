@@ -82,4 +82,5 @@ export const SONEIUM_CHAIN_INFO = {
   },
   gasConfig: GENERIC_L2_GAS_CONFIG,
   tradingApiPollingIntervalMs: 250,
+  acrossProtocolAddress: '0x3baD7AD0728f9917d1Bf08af5782dCbD516cDd96',
 } as const satisfies UniverseChainInfo

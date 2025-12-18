@@ -15,7 +15,7 @@ import {
   FINALIZED_SWAP_STATUS,
   SWAP_STATUS_TO_TX_STATUS,
 } from 'wallet/src/features/transactions/watcher/transactionSagaUtils'
-import { detectIfMaybeBridgeTransaction } from 'wallet/src/features/transactions/watcher/utils'
+import { isMaybeBridge } from 'wallet/src/features/transactions/watcher/utils'
 
 /**
  * Smart polling version of waitForReceipt that uses lastCheckedBlockNumber optimization
@@ -166,12 +166,13 @@ export function* waitForTransactionStatus(transaction: TransactionDetails): Saga
     return TransactionStatus.Unknown
   }
 
-  const isMaybeBridgeTransaction = detectIfMaybeBridgeTransaction(
-    'options' in transaction ? transaction.options.request.data?.toString() : undefined,
+  const isMaybeBridgeTransaction = isMaybeBridge(
+    'options' in transaction ? transaction.options.request.to?.toString() : undefined,
+    transaction.chainId,
   )
 
   const tradingApiPollingIntervalMs = isMaybeBridgeTransaction
-    ? ONE_SECOND_MS / 2
+    ? ONE_SECOND_MS
     : getChainInfo(transaction.chainId).tradingApiPollingIntervalMs
 
   let swapStatus: TradingApi.SwapStatus | undefined

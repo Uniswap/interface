@@ -6,7 +6,6 @@ import {
   useTokenTransactions,
 } from 'appGraphql/data/useTokenTransactions'
 import { unwrapToken } from 'appGraphql/data/util'
-import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { Token } from '@uniswap/sdk-core'
@@ -24,6 +23,7 @@ import {
   TimestampCell,
   TokenLinkCell,
 } from 'components/Table/styled'
+import { useUpdateManualOutage } from 'hooks/useUpdateManualOutage'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
 import { Flex, styled, Text, useMedia } from 'ui/src'
@@ -75,7 +75,7 @@ export function TransactionsTable({ chainId, referenceToken }: { chainId: Univer
         })
       : undefined
   const allDataStillLoading = loading && !transactions.length
-  useUpdateManualOutage({ chainId, errorV3, errorV2 })
+  useUpdateManualOutage({ chainId, errorV3, errorV2, trigger: transactions })
   const unwrappedReferenceToken = unwrapToken(chainId, referenceToken)
 
   const data = useMemo(

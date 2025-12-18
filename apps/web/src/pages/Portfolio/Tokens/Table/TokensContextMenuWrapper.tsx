@@ -35,9 +35,16 @@ export function TokensContextMenuWrapper({
       balanceUSD: tokenData.value,
       currencyInfo: tokenData.currencyInfo,
       relativeChange24: tokenData.change1d,
-      isHidden: false,
+      isHidden: tokenData.isHidden ?? false,
     }
-  }, [tokenData.currencyInfo, tokenData.id, tokenData.balance.value, tokenData.change1d, tokenData.value])
+  }, [
+    tokenData.currencyInfo,
+    tokenData.id,
+    tokenData.balance.value,
+    tokenData.change1d,
+    tokenData.value,
+    tokenData.isHidden,
+  ])
 
   const openReportTokenModal = useEvent((currency: Currency) => {
     setModalProps({ source: 'portfolio', currency, isMarkedSpam: portfolioBalance?.currencyInfo.isSpam })

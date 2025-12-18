@@ -11,5 +11,9 @@
       "@universe/notifications/*": ["./*"]
     }
   },
-  "references": []
+  "references": [
+    {
+      "path": "../ui"
+    }
+  ]
 }

@@ -2,6 +2,7 @@ import { ComponentProps, ReactNode } from 'react'
 import { Popover } from 'tamagui'
 // biome-ignore lint/style/noRestrictedImports: needed here
 import { WebBottomSheet } from 'ui/src/components/modal/AdaptiveWebModal'
+import { zIndexes } from 'ui/src/theme'
 
 type AdaptiveWebPopoverContentProps = Omit<ComponentProps<typeof Popover.Content>, 'children'> & {
   children: ReactNode
@@ -23,7 +24,9 @@ export function AdaptiveWebPopoverContent({
 }: AdaptiveWebPopoverContentProps): JSX.Element {
   return (
     <>
-      <Popover.Content {...popoverContentProps}>{children}</Popover.Content>
+      <Popover.Content zIndex={zIndexes.popover} {...popoverContentProps}>
+        {children}
+      </Popover.Content>
       <Popover.Adapt when="sm">
         <WebBottomSheet isOpen={isOpen} {...(webBottomSheetProps || {})}>
           <Popover.Adapt.Contents />

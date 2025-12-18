@@ -14,7 +14,7 @@ import {
   resetDismissedBridgedAssetWarnings,
   resetDismissedCompatibleAddressWarnings,
   resetDismissedWarnings,
-} from 'uniswap/src/features/tokens/slice/slice'
+} from 'uniswap/src/features/tokens/warnings/slice/slice'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { setClipboard } from 'uniswap/src/utils/clipboard'

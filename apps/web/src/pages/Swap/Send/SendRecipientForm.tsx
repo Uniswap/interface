@@ -16,6 +16,7 @@ import { ClickableStyle } from 'theme/components/styles'
 import { capitalize } from 'tsafe'
 import { Flex, Popover, Text, Tooltip, styled as UIStyled } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
+import { zIndexes } from 'ui/src/theme'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
 import { AccountIcon } from 'uniswap/src/features/accounts/AccountIcon'
 import { useENSName } from 'uniswap/src/features/ens/api'
@@ -162,7 +163,7 @@ const AutocompleteRow = ({
                 <Tooltip.Trigger>
                   <Text variant="subheading2">{formattedAddress}</Text>
                 </Tooltip.Trigger>
-                <Tooltip.Content maxWidth="fit-content">
+                <Tooltip.Content zIndex={zIndexes.overlay} maxWidth="fit-content">
                   <Text variant="body4">{address}</Text>
                 </Tooltip.Content>
               </Tooltip>
@@ -178,7 +179,7 @@ const AutocompleteRow = ({
                   {formattedAddress}
                 </Text>
               </Tooltip.Trigger>
-              <Tooltip.Content maxWidth="fit-content">
+              <Tooltip.Content zIndex={zIndexes.overlay} maxWidth="fit-content">
                 <Text variant="body4">{address}</Text>
               </Tooltip.Content>
             </Tooltip>
@@ -380,6 +381,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
           )}
         </Popover.Trigger>
         <Popover.Content
+          zIndex={zIndexes.overlay}
           background="transparent"
           width={(inputNode.current?.clientWidth ?? 0) + 32}
           ref={popoverContentRef}

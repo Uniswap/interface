@@ -2,7 +2,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import {
   getSeverityFromTokenProtectionWarning,
   getTokenProtectionWarning,
-} from 'uniswap/src/features/tokens/safetyUtils'
+} from 'uniswap/src/features/tokens/warnings/safetyUtils'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { TokenWarningProps } from 'uniswap/src/features/transactions/TransactionDetails/types'
 

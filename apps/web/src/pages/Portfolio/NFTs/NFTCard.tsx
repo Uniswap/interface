@@ -216,7 +216,7 @@ function _NFTCard(props: NftCardProps): JSX.Element {
             <Popover.Content
               backgroundColor="transparent"
               animation="quick"
-              zIndex={zIndexes.modal}
+              zIndex={zIndexes.popover}
               {...animationPresets.fadeInDownOutUp}
             >
               <MenuContent

@@ -38,3 +38,36 @@ export interface PlanParams extends SwapExecutionCallbacks {
 }
 
 export type PlanSagaAnalytics = SwapTradeBaseProperties | ExtractedBaseTradeAnalyticsProperties
+
+/**
+ * Plan saga error thrown when the plan saga fails in a way that the
+ * plan should not be retried or reused.
+ */
+export class AbortPlanError extends Error {
+  constructor(message: string, error?: Error | unknown) {
+    super(message, { cause: error })
+    this.name = 'AbortPlanError'
+  }
+}
+
+/**
+ * Plan error thrown that can still be retried. For example,
+ * if the network was down or a TX failed on chain.
+ */
+export class ShouldRetryPlanError extends Error {
+  constructor(message: string, error?: Error | unknown) {
+    super(message, { cause: error })
+    this.name = 'ShouldRetryPlanError'
+  }
+}
+
+/**
+ * Plan error thrown when there is an issue with the plan itself
+ * such as an invalid state or missing steps.
+ */
+export class PlanValidationError extends Error {
+  constructor(message: string, error?: Error | unknown) {
+    super(message, { cause: error })
+    this.name = 'PlanValidationError'
+  }
+}

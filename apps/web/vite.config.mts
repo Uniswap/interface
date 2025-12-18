@@ -102,6 +102,7 @@ export default defineConfig(({ mode }) => {
   console.log(`ENV_LOADED: mode=${mode} REACT_APP_AWS_API_ENDPOINT=${env.REACT_APP_AWS_API_ENDPOINT}`)
 
   const isProduction = mode === 'production'
+  const isStaging = mode === 'staging'
   const isVercelDeploy = DEPLOY_TARGET === 'vercel'
   const root = path.resolve(__dirname)
 
@@ -133,6 +134,8 @@ export default defineConfig(({ mode }) => {
       'process.env.REACT_APP_GIT_COMMIT_HASH': JSON.stringify(commitHash),
       'process.env.REACT_APP_STAGING': JSON.stringify(mode === 'staging'),
       'process.env.REACT_APP_WEB_BUILD_TYPE': JSON.stringify('vite'),
+      // Enable Tamagui's global z-index stacking to fix modal stacking issues
+      'process.env.TAMAGUI_STACK_Z_INDEX_GLOBAL': JSON.stringify('true'),
       ...envDefines,
     },
 
@@ -185,7 +188,7 @@ export default defineConfig(({ mode }) => {
       },
       portWarningPlugin(isProduction),
       reactPlugin(),
-      isProduction
+      isProduction || isStaging
         ? tamaguiPlugin({
             config: '../../packages/ui/src/tamagui.config.ts',
             components: ['ui', 'uniswap', 'utilities'],
@@ -258,7 +261,7 @@ export default defineConfig(({ mode }) => {
         ? undefined
         : bundlesize({
             limits: [
-              { name: 'assets/index-*.js', limit: '2.3 MB', mode: 'gzip' },
+              { name: 'assets/index-*.js', limit: '2.35 MB', mode: 'gzip' },
               { name: '**/*', limit: Infinity, mode: 'uncompressed' },
             ],
           }),

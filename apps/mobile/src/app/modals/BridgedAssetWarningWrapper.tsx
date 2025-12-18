@@ -3,8 +3,8 @@ import { useReactNavigationModal } from 'src/components/modals/useReactNavigatio
 import { BridgedAssetModal } from 'uniswap/src/components/BridgedAsset/BridgedAssetModal'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { useDismissedBridgedAssetWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useDismissedBridgedAssetWarnings } from 'uniswap/src/features/tokens/warnings/slice/hooks'
 import { currencyIdToAddress, currencyIdToChain, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 
 export function BridgedAssetWarningWrapper({

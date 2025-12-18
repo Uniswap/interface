@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next'
 import { CopyHelper } from 'theme/components/CopyHelper'
 import { Flex, styled, Text, Tooltip } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
+import { zIndexes } from 'ui/src/theme'
 import { BIPS_BASE, ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { V2_DEFAULT_FEE_TIER } from 'uniswap/src/constants/pools'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -152,7 +153,7 @@ export function LiquidityPositionInfoBadges({
         return (
           <Tooltip allowFlip stayInFrame placement="top" key={key}>
             <Tooltip.Trigger>{content}</Tooltip.Trigger>
-            <Tooltip.Content maxWidth="fit-content">
+            <Tooltip.Content maxWidth="fit-content" zIndex={zIndexes.overlay}>
               <Tooltip.Arrow />
               <Text variant="body4" color="$neutral2">
                 {tooltipContent}

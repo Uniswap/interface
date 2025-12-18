@@ -29,18 +29,16 @@ export function DappConnectionPermissions({
   // Always show expanded permissions for unverified apps
   const isInitiallyExpanded = verificationStatus !== DappVerificationStatus.Verified
 
-  const { value: isExpanded, toggle: toggleExpanded, setValue: setIsExpanded } = useBooleanState(isInitiallyExpanded)
+  const { value: isExpanded, toggle: toggleExpanded } = useBooleanState(isInitiallyExpanded)
   const { value: isInfoModalOpen, setTrue: openInfoModal, setFalse: closeInfoModal } = useBooleanState(false)
 
   const infoTextSize = 'body3'
 
   const handleConfirmWarning = useCallback(
-    (previousIsConfirmed: boolean) => {
-      onConfirmWarning?.(!previousIsConfirmed)
-      // Open options if previously confirmed, close if previously unconfirmed
-      setIsExpanded(previousIsConfirmed ? true : false)
+    (currentlyChecked: boolean) => {
+      onConfirmWarning?.(!currentlyChecked)
     },
-    [onConfirmWarning, setIsExpanded],
+    [onConfirmWarning],
   )
 
   return (

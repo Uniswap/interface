@@ -1,10 +1,10 @@
 import { Currency, Price } from '@uniswap/sdk-core'
-import { useUSDPrice } from 'hooks/useUSDPrice'
 import { deprecatedStyled } from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useMemo, useState } from 'react'
 import { ThemedText } from 'theme/components'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
 
 interface TradePriceProps {
@@ -33,7 +33,9 @@ export default function TradePrice({ price }: TradePriceProps) {
   const [showInverted, setShowInverted] = useState<boolean>(false)
 
   const { baseCurrency, quoteCurrency } = price
-  const { data: usdPrice } = useUSDPrice(tryParseCurrencyAmount('1', showInverted ? baseCurrency : quoteCurrency))
+  const currencyForUsdPrice = showInverted ? baseCurrency : quoteCurrency
+  const currencyAmount = useMemo(() => tryParseCurrencyAmount('1', currencyForUsdPrice), [currencyForUsdPrice])
+  const usdValue = useUSDCValue(currencyAmount)
 
   const formattedPrice = useMemo(() => {
     try {
@@ -61,9 +63,9 @@ export default function TradePrice({ price }: TradePriceProps) {
       title={text}
     >
       <ThemedText.BodySmall>{text}</ThemedText.BodySmall>{' '}
-      {usdPrice && (
+      {usdValue && (
         <ThemedText.BodySmall color="neutral2">
-          ({convertFiatAmountFormatted(usdPrice, NumberType.FiatTokenPrice)})
+          ({convertFiatAmountFormatted(usdValue.toExact(), NumberType.FiatTokenPrice)})
         </ThemedText.BodySmall>
       )}
     </StyledPriceContainer>

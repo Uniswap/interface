@@ -14,29 +14,32 @@ export function CopiedNotification({
     case CopyNotificationType.Address:
       title = t('notification.copied.address')
       break
+    case CopyNotificationType.BlockExplorerUrl:
+      title = t('common.button.copied')
+      break
     case CopyNotificationType.Calldata:
       title = t('notification.copied.calldata')
       break
     case CopyNotificationType.ContractAddress:
       title = t('notification.copied.contractAddress')
       break
-    case CopyNotificationType.TransactionId:
-      title = t('notification.copied.transactionId')
-      break
     case CopyNotificationType.Image:
       title = t('notification.copied.image')
       break
-    case CopyNotificationType.TokenUrl:
-      title = t('notification.copied.tokenUrl')
+    case CopyNotificationType.Message:
+      title = t('notification.copied.message')
       break
     case CopyNotificationType.NftUrl:
       title = t('notification.copied.nftUrl')
       break
+    case CopyNotificationType.TokenUrl:
+      title = t('notification.copied.tokenUrl')
+      break
+    case CopyNotificationType.TransactionId:
+      title = t('notification.copied.transactionId')
+      break
     case CopyNotificationType.Unitag:
       title = t('notification.copied.unitag')
-      break
-    case CopyNotificationType.BlockExplorerUrl:
-      title = t('common.button.copied')
       break
   }
 

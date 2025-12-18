@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
-import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
+import { TokenWarningCard } from 'uniswap/src/features/tokens/warnings/TokenWarningCard'
+import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
 import {
   FeeOnTransferFeeGroupProps,
   TokenWarningProps,

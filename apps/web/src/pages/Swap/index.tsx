@@ -393,7 +393,7 @@ const DisabledSwapOverlay = () => {
   return (
     <DisabledOverlay cursor="not-allowed">
       <Tooltip placement="left-start">
-        <Tooltip.Content animationDirection="left">
+        <Tooltip.Content animationDirection="left" zIndex={zIndexes.overlay}>
           <Tooltip.Arrow />
           <Text variant="body4">{t('testnet.unsupported')}</Text>
         </Tooltip.Content>

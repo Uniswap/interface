@@ -5,6 +5,7 @@ import { useAccount } from 'hooks/useAccount'
 import {
   useHasPendingApproval,
   useHasPendingRevocation,
+  usePendingTransactions,
   useTransactionAdder,
   useTransactionCanceller,
   useTransactionRemover,
@@ -407,6 +408,119 @@ describe('Transactions hooks', () => {
       expect(cancelledTransaction.id).toBe(transactionId)
       expect(cancelledTransaction.hash).toBe(cancelHash)
       expect(cancelledTransaction.status).toBe(TransactionStatus.Canceled)
+    })
+  })
+
+  describe('usePendingTransactions', () => {
+    it('returns pending transactions within 5 minutes', () => {
+      const { result: adder, store } = renderHookWithProviders(() => useTransactionAdder())
+      const { result } = renderHookWithProviders(() => usePendingTransactions(), { store })
+
+      act(() => {
+        adder.current(mockTransactionResponse, mockTransactionInfo)
+      })
+
+      expect(result.current).toHaveLength(1)
+      expect(result.current[0]?.hash).toBe(transactionHash)
+    })
+
+    it('filters out pending transactions older than 5 minutes', () => {
+      const { store } = renderHookWithProviders(() => useTransactionAdder())
+      const sixMinutesAgo = Date.now() - 6 * 60 * 1000
+
+      act(() => {
+        store.dispatch({
+          type: 'transactions/addTransaction',
+          payload: {
+            chainId: UniverseChainId.Mainnet,
+            id: transactionHash,
+            hash: transactionHash,
+            from: address,
+            typeInfo: mockTransactionInfo,
+            status: TransactionStatus.Pending,
+            addedTime: sixMinutesAgo,
+          },
+        })
+      })
+
+      const { result } = renderHookWithProviders(() => usePendingTransactions(), { store })
+
+      expect(result.current).toHaveLength(0)
+    })
+
+    it('filters out transactions at exactly 5 minutes', () => {
+      const { store } = renderHookWithProviders(() => useTransactionAdder())
+      const exactlyFiveMinutesAgo = Date.now() - 5 * 60 * 1000
+
+      act(() => {
+        store.dispatch({
+          type: 'transactions/addTransaction',
+          payload: {
+            chainId: UniverseChainId.Mainnet,
+            id: transactionHash,
+            hash: transactionHash,
+            from: address,
+            typeInfo: mockTransactionInfo,
+            status: TransactionStatus.Pending,
+            addedTime: exactlyFiveMinutesAgo,
+          },
+        })
+      })
+
+      const { result } = renderHookWithProviders(() => usePendingTransactions(), { store })
+
+      expect(result.current).toHaveLength(0)
+    })
+
+    it('includes transactions at 4 minutes 59 seconds', () => {
+      const { result: adder, store } = renderHookWithProviders(() => useTransactionAdder())
+      const { result } = renderHookWithProviders(() => usePendingTransactions(), { store })
+
+      act(() => {
+        adder.current(mockTransactionResponse, mockTransactionInfo)
+      })
+
+      act(() => {
+        vi.advanceTimersByTime(4 * 60 * 1000 + 59 * 1000)
+      })
+
+      expect(result.current).toHaveLength(1)
+      expect(result.current[0]?.hash).toBe(transactionHash)
+    })
+
+    it('does not include confirmed transactions even if recent', () => {
+      const { result: adder, store } = renderHookWithProviders(() => useTransactionAdder())
+      const { result } = renderHookWithProviders(() => usePendingTransactions(), { store })
+
+      act(() => {
+        adder.current(mockTransactionResponse, mockTransactionInfo)
+      })
+
+      expect(result.current).toHaveLength(1)
+
+      act(() => {
+        store.dispatch({
+          type: 'transactions/finalizeTransaction',
+          payload: {
+            chainId: UniverseChainId.Mainnet,
+            id: transactionId,
+            hash: transactionHash,
+            from: address,
+            status: TransactionStatus.Success,
+            typeInfo: mockTransactionInfo,
+            receipt: {
+              transactionIndex: 0,
+              blockHash: '0x123',
+              blockNumber: 12345,
+              confirmedTime: Date.now(),
+              gasUsed: 21000,
+              effectiveGasPrice: 20000000000,
+            },
+          },
+        })
+      })
+
+      expect(result.current).toHaveLength(0)
     })
   })
 })

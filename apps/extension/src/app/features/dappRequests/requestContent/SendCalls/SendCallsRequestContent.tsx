@@ -13,7 +13,7 @@ import {
   ParsedCall,
   SendCallsRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { TransactionType, TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
@@ -35,30 +35,17 @@ interface SendCallsRequestContentProps {
  */
 function SendCallsRequestContentWithScanning({
   dappRequest,
+  chainId,
   transactionGasFeeResult,
   showSmartWalletActivation,
   onConfirm,
   onCancel,
-}: SendCallsRequestContentProps): JSX.Element {
+}: SendCallsRequestContentProps & { chainId: UniverseChainId }): JSX.Element {
   const { t } = useTranslation()
   const { dappUrl, currentAccount } = useDappRequestQueueContext()
-  const lastChainId = useDappLastChainId(dappUrl)
-  const chainId = toSupportedChainId(dappRequest.chainId) ?? lastChainId
   const { value: confirmedRisk, setValue: setConfirmedRisk } = useBooleanState(false)
   // Initialize with null to indicate scan hasn't completed yet
   const [riskLevel, setRiskLevel] = useState<TransactionRiskLevel | null>(null)
-
-  if (!chainId) {
-    return (
-      <SendCallsRequestContentLegacy
-        dappRequest={dappRequest}
-        transactionGasFeeResult={transactionGasFeeResult}
-        showSmartWalletActivation={showSmartWalletActivation}
-        onConfirm={onConfirm}
-        onCancel={onCancel}
-      />
-    )
-  }
 
   const disableConfirm = shouldDisableConfirm({
     riskLevel,
@@ -165,9 +152,10 @@ export function SendCallsRequestHandler({ request }: { request: DappRequestStore
     await onCancel(request)
   }, [onCancel, request])
 
-  return blockaidTransactionScanning ? (
+  return blockaidTransactionScanning && chainId ? (
     <SendCallsRequestContentWithScanning
       dappRequest={dappRequest}
+      chainId={chainId}
       transactionGasFeeResult={gasFeeResult}
       showSmartWalletActivation={showSmartWalletActivation}
       onCancel={onCancelRequest}
