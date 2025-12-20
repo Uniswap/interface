@@ -1,28 +1,73 @@
+// Begin defining root configuration object
 {
+
+  // Permission settings start here
   "permissions": {
+
+    // Define a list of permission rules to explicitly deny
     "deny": [
+
+      // Deny permission to read any .env file anywhere in the project
       "Read(**/.env)",
+
+      // Deny permission to edit any .env file
       "Edit(**/.env)",
+
+      // Deny permission to read any AWS credential/config files in ~/.aws
       "Read(~/.aws/**)",
+
+      // Deny permission to edit any AWS files
       "Edit(~/.aws/**)",
+
+      // Deny permission to read SSH keys in ~/.ssh
       "Read(~/.ssh/**)",
+
+      // Deny permission to edit SSH keys
       "Edit(~/.ssh/**)",
+
+      // Deny permission to read GPG private/public keys in ~/.gnupg
       "Read(~/.gnupg/**)",
+
+      // Deny permission to edit GPG key files
       "Edit(~/.gnupg/**)",
+
+      // Deny permission to read Git credential storage file
       "Read(~/.git-credentials)",
+
+      // Deny permission to modify Git credential storage file
       "Edit(~/.git-credentials)",
+
+      // Deny permission to read macOS keychain files
       "Read($HOME/Library/Keychains/**)",
+
+      // Deny permission to edit macOS keychain files
       "Edit($HOME/Library/Keychains/**)",
+
+      // Deny permission to read sensitive system config files in /private/etc
       "Read(/private/etc/**)",
+
+      // Deny permission to edit system config files in /private/etc
       "Edit(/private/etc/**)"
     ]
   },
+
+  // Hook configuration starts here
   "hooks": {
+
+    // Define hooks that run when the user submits a prompt
     "UserPromptSubmit": [
+
+      // First hook entry in this array
       {
+        // Nested hook definitions for this event
         "hooks": [
+
+          // This hook specifies a shell command to execute
           {
+            // The hook type is a command
             "type": "command",
+
+            // Shell script to run located in the Claude project hooks directory
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/skill-activation-prompt.sh"
           }
         ]
