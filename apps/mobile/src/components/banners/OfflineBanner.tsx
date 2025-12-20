@@ -17,7 +17,7 @@ export function OfflineBanner(): JSX.Element | null {
   const finishedOnboarding = useSelector(selectFinishedOnboarding)
   const isModalOpen = useSelector(selectSomeModalOpen)
 
-  // Needs to explicity check for false since `netInfo.isConnected` may be null
+  // Needs to explicitly check for false since `netInfo.isConnected` may be null
   const showBanner = netInfo.isConnected === false && finishedOnboarding && !isModalOpen
 
   if (__DEV__) {
