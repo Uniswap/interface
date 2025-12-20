@@ -26,7 +26,7 @@ export function UniswapWrapped2025Banner({
   bannerHeight = 116,
 }: UniswapWrapped2025BannerProps): JSX.Element {
   const { t } = useTranslation()
-  const { snowflakes, removeSnowflake } = useSnowflakeAnimation({})
+  const { snowflakes, removeSnowflake } = useSnowflakeAnimation()
   const darkColors = useSporeColorsForTheme('dark')
 
   return (

@@ -7,10 +7,7 @@ export function useFilteredChainIds(chains?: UniverseChainId[]): UniverseChainId
   const { chains: enabledChainIds } = useEnabledChains({ includeTestnets: true })
   const chainsToFilter = chains ?? enabledChainIds
   const mainnetChainIds = chainsToFilter.filter(isBackendSupportedChainId).filter((c) => !isTestnetChain(c))
-  const testnetChainIds = chainsToFilter
-    .filter(isBackendSupportedChainId)
-    .filter(isTestnetChain)
-    .filter((c) => c !== UniverseChainId.MonadTestnet)
+  const testnetChainIds = chainsToFilter.filter(isBackendSupportedChainId).filter(isTestnetChain)
   const unsupportedMainnetChainIds = chainsToFilter.filter((c) => !isBackendSupportedChainId(c) && !isTestnetChain(c))
   return [...mainnetChainIds, ...(isTestnetModeEnabled ? testnetChainIds : []), ...unsupportedMainnetChainIds]
 }

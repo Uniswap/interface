@@ -19,19 +19,9 @@ export function usePollingIntervalByChain(chainId?: UniverseChainId): number {
     defaultValue: AVERAGE_L2_BLOCK_TIME_MS,
   })
 
-  const monadTestnetPollingIntervalMs = useDynamicConfigValue({
-    config: DynamicConfigs.Swap,
-    key: SwapConfigKey.MonadTestnetPollingIntervalMs,
-    defaultValue: AVERAGE_L2_BLOCK_TIME_MS,
-  })
-
   // TODO(WEB-6132): remove this flag once short term experiment is complete
   const enableTwoSecondInterval = useFeatureFlag(FeatureFlags.TwoSecondSwapQuotePollingInterval)
   const l2PollingInterval = enableTwoSecondInterval ? 2 * ONE_SECOND_MS : averageL2BlockTimeMs
 
-  // Remove this dynamic config once Monad RPC latency issues are resolved
-  if (chainId === UniverseChainId.MonadTestnet) {
-    return monadTestnetPollingIntervalMs
-  }
   return isMainnetChainId(chainId) ? averageL1BlockTimeMs : l2PollingInterval
 }

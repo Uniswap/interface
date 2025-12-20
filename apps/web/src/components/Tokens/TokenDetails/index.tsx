@@ -32,8 +32,7 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
-import { AZTEC_ADDRESS, getNativeAddress } from 'uniswap/src/constants/addresses'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { useUrlContext } from 'uniswap/src/contexts/UrlContext'
 import { isUniverseChainId, toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -41,6 +40,10 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/warnings/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
+import {
+  AZTEC_ADDRESS,
+  AZTEC_URL,
+} from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getAztecUnavailableWarning'
 import { useShouldShowAztecWarning } from 'uniswap/src/hooks/useShouldShowAztecWarning'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { areCurrenciesEqual, currencyId } from 'uniswap/src/utils/currencyId'
@@ -299,7 +302,7 @@ export default function TokenDetails() {
   const isTouchDevice = useIsTouchDevice()
   const { t } = useTranslation()
   const isAztecDisabled = useFeatureFlag(FeatureFlags.DisableAztecToken)
-  const isAztec = address.toLowerCase() === AZTEC_ADDRESS.toLowerCase()
+  const isAztec = address.toLowerCase() === AZTEC_ADDRESS
   const showAztecWarning = isAztec && isAztecDisabled
 
   const {
@@ -348,18 +351,13 @@ export default function TokenDetails() {
           isOpen={isAztecWarningModalOpen}
           modalName={ModalName.SwapWarning}
           severity={WarningSeverity.Blocked}
-          title={t('swap.warning.noRoutesFound.title')}
+          title={t('swap.warning.aztecUnavailable.title')}
           captionComponent={
             <Flex centered gap="$spacing12">
               <Text color="$neutral2" textAlign="center" variant="body3">
                 {t('swap.warning.aztecUnavailable.message')}
               </Text>
-              <LearnMoreLink
-                display="inline"
-                textColor="$neutral1"
-                textVariant="buttonLabel3"
-                url={uniswapUrls.aztecUrl}
-              />
+              <LearnMoreLink display="inline" textColor="$neutral1" textVariant="buttonLabel3" url={AZTEC_URL} />
             </Flex>
           }
           acknowledgeText={t('common.button.close')}

@@ -38,11 +38,9 @@ export function UniswapWrapped2025Card({ onPress }: UniswapWrapped2025CardProps)
   const [cardWidth, setCardWidth] = useState<number>(0)
 
   const { snowflakes, removeSnowflake, mouseInteraction } = useSnowflakeAnimation({
-    mouseInteraction: {
-      enabled: true,
-      containerWidth: cardWidth,
-      bannerHeight: CARD_HEIGHT,
-    },
+    enabled: true,
+    containerWidth: cardWidth,
+    bannerHeight: CARD_HEIGHT,
   })
 
   const handleMouseMove = (event: React.MouseEvent<HTMLDivElement>): void => {

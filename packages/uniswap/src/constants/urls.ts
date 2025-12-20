@@ -190,9 +190,6 @@ export const uniswapUrls = {
   webInterfaceNftCollectionUrl: `${UNISWAP_WEB_URL}/nfts/collection`,
   webInterfaceBuyUrl: `${UNISWAP_WEB_URL}/buy`,
 
-  // Aztec token URL
-  aztecUrl: 'https://sale.aztec.network/auction',
-
   // Feedback Links
   walletFeedbackForm:
     'https://docs.google.com/forms/d/e/1FAIpQLSepzL5aMuSfRhSgw0zDw_gVmc2aeVevfrb1UbOwn6WGJ--46w/viewform',

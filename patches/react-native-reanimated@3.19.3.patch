@@ -39,7 +39,7 @@ index 259e3f8b629da0fe5ae843d1b385311988ab1b98..87ca76f74e8e241e7cb37827474b684d
 +++ b/src/reactUtils.tsx
 @@ -12,16 +12,28 @@ import { isReact19 } from './PlatformChecker';
  const IS_REACT_19 = isReact19();
- 
+
  function getCurrentReactOwner() {
 -  return (
 +  try {
@@ -71,5 +71,22 @@ index 259e3f8b629da0fe5ae843d1b385311988ab1b98..87ca76f74e8e241e7cb37827474b684d
 +    return null as unknown as any;
 +  }
  }
- 
+
  export function isReactRendering() {
+diff --git a/apple/reanimated/apple/LayoutReanimation/REASwizzledUIManager.mm b/apple/reanimated/apple/LayoutReanimation/REASwizzledUIManager.mm
+index 1111111111111111111111111111111111111111..2222222222222222222222222222222222222222 100644
+--- a/apple/reanimated/apple/LayoutReanimation/REASwizzledUIManager.mm
++++ b/apple/reanimated/apple/LayoutReanimation/REASwizzledUIManager.mm
+@@ -133,6 +133,12 @@
+   if (containerIsRootOfViewController) {
+     return;
+   }
++
++  // Guard against nil children when container was already unmounted (race condition during fast scroll)
++  // This prevents crash: "attempt to insert nil object from objects[1]" when creating @[index, nil]
++  if (!permanentlyRemovedChildren || permanentlyRemovedChildren.count != removeAtIndices.count) {
++    return;
++  }
+
+   // we sort the (index, view) pairs to make sure we insert views back in order
+   NSMutableArray<NSArray<id> *> *removedViewsWithIndices = [NSMutableArray new];

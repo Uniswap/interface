@@ -14,7 +14,6 @@ import {
   WebBottomSheet,
 } from 'ui/src'
 import { INTERFACE_NAV_HEIGHT, zIndexes } from 'ui/src/theme'
-import { useEvent } from 'utilities/src/react/hooks'
 
 const DropdownContent = styled(Text, {
   display: 'flex',
@@ -104,16 +103,11 @@ export function AdaptiveDropdown({
 }: AdaptiveDropdownProps) {
   const node = useRef<HTMLDivElement | null>(null)
   const dropdownNode = useRef<HTMLDivElement | null>(null)
+  useOnClickOutside({ node, handler: () => isOpen && toggleOpen(false) })
   const scrollbarStyles = useScrollbarStyles()
   const shadowProps = useShadowPropsMedium()
   const media = useMedia()
   const isSheet = !!adaptToSheet && media.sm
-  const handleClickOutside = useEvent(() => {
-    if (isOpen) {
-      toggleOpen(false)
-    }
-  })
-  useOnClickOutside({ node, handler: isSheet ? undefined : handleClickOutside })
   const [flipVertical, setFlipVertical] = useState(false)
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: +dropdownNode, +node

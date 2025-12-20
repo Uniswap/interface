@@ -186,19 +186,6 @@ describe('parseSwapLink', () => {
       expect(result.exactAmountToken).toBe('1.5')
     })
 
-    it('should parse valid MonadTestnet link', () => {
-      const url = new URL(
-        `https://uniswap.org/mobile-redirect?screen=swap&inputCurrencyId=${UniverseChainId.MonadTestnet}-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee&outputCurrencyId=${UniverseChainId.MonadTestnet}-0x1234567890123456789012345678901234567890&currencyField=output&amount=100`,
-      )
-
-      const result = parseSwapLinkMobileFormatOrThrow(url)
-
-      expect(result.inputAsset?.chainId).toBe(UniverseChainId.MonadTestnet)
-      expect(result.outputAsset?.chainId).toBe(UniverseChainId.MonadTestnet)
-      expect(result.exactCurrencyField).toBe(CurrencyField.OUTPUT)
-      expect(result.exactAmountToken).toBe('100')
-    })
-
     it('should parse valid UnichainSepolia link', () => {
       const url = new URL(
         `https://uniswap.org/mobile-redirect?screen=swap&inputCurrencyId=${UniverseChainId.UnichainSepolia}-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee&outputCurrencyId=${UniverseChainId.UnichainSepolia}-0x31d0220469e10c4E71834a79b1f276d740d3768F&currencyField=input&amount=0.5`,
@@ -325,14 +312,14 @@ describe('parseSwapLink', () => {
       expect(result.outputAsset?.chainId).toBe(UniverseChainId.UnichainSepolia)
     })
 
-    it('should allow swaps between MonadTestnet and Sepolia', () => {
+    it('should allow swaps between UnichainSepolia and Sepolia', () => {
       const url = new URL(
-        `https://uniswap.org/mobile-redirect?screen=swap&inputCurrencyId=${UniverseChainId.MonadTestnet}-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee&outputCurrencyId=${UniverseChainId.Sepolia}-0x1c7d4b196cb0c7b01d743fbc6116a902379c7238&currencyField=output&amount=50`,
+        `https://uniswap.org/mobile-redirect?screen=swap&inputCurrencyId=${UniverseChainId.UnichainSepolia}-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee&outputCurrencyId=${UniverseChainId.Sepolia}-0x1c7d4b196cb0c7b01d743fbc6116a902379c7238&currencyField=output&amount=50`,
       )
 
       const result = parseSwapLinkMobileFormatOrThrow(url)
 
-      expect(result.inputAsset?.chainId).toBe(UniverseChainId.MonadTestnet)
+      expect(result.inputAsset?.chainId).toBe(UniverseChainId.UnichainSepolia)
       expect(result.outputAsset?.chainId).toBe(UniverseChainId.Sepolia)
       expect(result.exactCurrencyField).toBe(CurrencyField.OUTPUT)
     })

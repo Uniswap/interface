@@ -180,8 +180,8 @@ describe('getEnabledChains', () => {
         featureFlaggedChainIds: ALL_CHAIN_IDS,
       }),
     ).toEqual({
-      chains: [UniverseChainId.Sepolia, UniverseChainId.UnichainSepolia, UniverseChainId.MonadTestnet],
-      gqlChains: [GraphQLApi.Chain.EthereumSepolia, GraphQLApi.Chain.AstrochainSepolia, GraphQLApi.Chain.MonadTestnet],
+      chains: [UniverseChainId.Sepolia, UniverseChainId.UnichainSepolia],
+      gqlChains: [GraphQLApi.Chain.EthereumSepolia, GraphQLApi.Chain.AstrochainSepolia],
       defaultChainId: UniverseChainId.Sepolia,
       isTestnetModeEnabled: true,
     })
@@ -198,7 +198,6 @@ describe('getEnabledChains', () => {
           UniverseChainId.Base,
           UniverseChainId.Sepolia,
           UniverseChainId.UnichainSepolia,
-          UniverseChainId.MonadTestnet,
         ],
       }),
     ).toEqual({
@@ -208,7 +207,6 @@ describe('getEnabledChains', () => {
         UniverseChainId.Base,
         UniverseChainId.Sepolia,
         UniverseChainId.UnichainSepolia,
-        UniverseChainId.MonadTestnet,
       ],
       gqlChains: [
         GraphQLApi.Chain.Ethereum,
@@ -216,7 +214,6 @@ describe('getEnabledChains', () => {
         GraphQLApi.Chain.Base,
         GraphQLApi.Chain.EthereumSepolia,
         GraphQLApi.Chain.AstrochainSepolia,
-        GraphQLApi.Chain.MonadTestnet,
       ],
       defaultChainId: UniverseChainId.Mainnet,
       isTestnetModeEnabled: false,

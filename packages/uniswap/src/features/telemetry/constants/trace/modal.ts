@@ -191,8 +191,6 @@ export const ModalName = {
   UnichainInstantBalanceModal: 'unichain-instant-balance-modal',
   UniconsDevModal: 'unicons-dev-modal',
   UniconsV2: 'unicons-v2-intro-modal',
-  UniswapWrapped: 'uniswap-wrapped-modal',
-  UniswapWrappedDisconnected: 'uniswap-wrapped-disconnected-modal',
   UniswapXInfo: 'uniswapx-info-modal',
   UnitagsChange: 'unitags-change-modal',
   UnitagsChangeConfirm: 'unitags-change-confirm-modal',

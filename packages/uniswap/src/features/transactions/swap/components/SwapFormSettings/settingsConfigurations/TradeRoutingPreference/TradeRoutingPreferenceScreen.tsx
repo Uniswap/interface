@@ -18,7 +18,6 @@ import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TransactionSettingsModalId } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/createTransactionSettingsModalStore'
@@ -53,12 +52,11 @@ export function TradeRoutingPreferenceScreen(): JSX.Element {
       isV4HookPoolsEnabled,
     }),
   )
-  const uniswapXEnabledFlag = useFeatureFlag(FeatureFlags.UniswapX)
+  const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
   const allowUniswapXOnly = useFeatureFlag(FeatureFlags.AllowUniswapXOnlyRoutesInSwapSettings)
 
   const chainId = useSwapFormStoreDerivedSwapInfo((s) => s.chainId)
   const isUniswapXSupported = getIsUniswapXSupported?.(chainId)
-  const uniswapXEnabled = uniswapXEnabledFlag && chainId !== UniverseChainId.MonadTestnet
   const v4SwapEnabled = useV4SwapEnabled(chainId)
   const chainName = getChainInfo(chainId).name
   const restrictionDescription = t('swap.settings.protection.subtitle.unavailable', { chainName })
@@ -116,18 +114,15 @@ export function TradeRoutingPreferenceScreen(): JSX.Element {
         onSelect={toggleDefault}
       />
       <HeightAnimator open={!isDefault} animationDisabled={isMobileApp || isMobileWeb}>
-        {uniswapXEnabledFlag && (
+        {uniswapXEnabled && (
           <OptionRow
             active={
-              isUniswapXSupported === false
-                ? false
-                : uniswapXEnabled && selectedProtocols.includes(TradingApi.ProtocolItems.UNISWAPX_V2)
+              isUniswapXSupported === false ? false : selectedProtocols.includes(TradingApi.ProtocolItems.UNISWAPX_V2)
             }
             elementName={ElementName.SwapRoutingPreferenceUniswapX}
             title={getProtocolTitle(TradingApi.ProtocolItems.UNISWAPX_V2)}
             cantDisable={onlyOneProtocolSelected}
-            disabled={isUniswapXSupported === false || !uniswapXEnabled}
-            description={!uniswapXEnabled ? restrictionDescription : undefined}
+            disabled={isUniswapXSupported === false}
             onSelect={() => toggleProtocol(TradingApi.ProtocolItems.UNISWAPX_V2)}
           />
         )}

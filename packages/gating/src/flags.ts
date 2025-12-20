@@ -22,8 +22,6 @@ export enum FeatureFlags {
   ForceDisableWalletGetCapabilities,
   ForcePermitTransactions,
   Monad,
-  MonadTestnet,
-  MonadTestnetDown,
   NoUniswapInterfaceFees,
   PortionFields,
   ServiceBasedSwapTransactionInfo,

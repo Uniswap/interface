@@ -109,17 +109,23 @@ export function setupSharedApolloCache(): InMemoryCache {
   })
 }
 
+type ReferenceOrStoreObject = Reference | StoreObject
+
 // eslint-disable-next-line max-params
 function ignoreIncomingNullValue(
-  existing: Reference | StoreObject,
-  incoming: Reference | StoreObject,
-  { mergeObjects }: FieldFunctionOptions<Record<string, unknown>, Record<string, unknown>>,
-): Reference | StoreObject {
+  existing: ReferenceOrStoreObject | undefined,
+  incoming: ReferenceOrStoreObject | null,
+  { mergeObjects }: FieldFunctionOptions,
+): ReferenceOrStoreObject | null {
+  if (existing === undefined) {
+    return incoming
+  }
   // TODO(API-482): remove this once the backend bug is fixed.
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (incoming === null || incoming === undefined) {
     return existing
   }
+
   return mergeObjects(existing, incoming)
 }
 

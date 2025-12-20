@@ -18,7 +18,6 @@ export const CHAINED_ACTIONS_SUPPORTED_CHAINS: UniverseChainId[] = [
   UniverseChainId.Zksync,
   UniverseChainId.Zora,
   // Testnet EVM chains
-  UniverseChainId.MonadTestnet,
   UniverseChainId.Sepolia,
   UniverseChainId.UnichainSepolia,
 ] as const

@@ -67,9 +67,9 @@ if (isCI && datadogPropertiesAvailable) {
   apply from: "../../../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
 }
 
-def devVersionName = "1.64"
-def betaVersionName = "1.64"
-def prodVersionName = "1.64"
+def devVersionName = "1.64.1"
+def betaVersionName = "1.64.1"
+def prodVersionName = "1.64.1"
 
 android {
     ndkVersion rootProject.ext.ndkVersion

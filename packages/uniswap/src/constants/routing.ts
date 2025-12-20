@@ -37,7 +37,6 @@ import {
   USDT_ARBITRUM_ONE,
   USDT_AVALANCHE,
   USDT_BSC,
-  USDT_MONAD_TESTNET,
   USDT_OPTIMISM,
   USDT_POLYGON,
   WBTC,
@@ -115,12 +114,6 @@ export const COMMON_BASES: ChainCurrencyList = {
     WRAPPED_NATIVE_CURRENCY[UniverseChainId.Monad] as Token,
     USDC_MONAD,
     AUSD_MONAD,
-  ].map(buildPartialCurrencyInfo),
-
-  [UniverseChainId.MonadTestnet]: [
-    nativeOnChain(UniverseChainId.MonadTestnet),
-    WRAPPED_NATIVE_CURRENCY[UniverseChainId.MonadTestnet] as Token,
-    USDT_MONAD_TESTNET,
   ].map(buildPartialCurrencyInfo),
 
   [UniverseChainId.Optimism]: [

@@ -22,7 +22,6 @@ describe('getQuicknodeChainIdPathSuffix', () => {
     [UniverseChainId.Blast, '', 'Blast chain'],
     [UniverseChainId.Bnb, '', 'BNB chain'],
     [UniverseChainId.Celo, '', 'Celo chain'],
-    [UniverseChainId.MonadTestnet, '', 'Monad testnet'],
     [UniverseChainId.Monad, '', 'Monad'],
     [UniverseChainId.Optimism, '', 'Optimism chain'],
     [UniverseChainId.Polygon, '', 'Polygon chain'],
@@ -68,7 +67,6 @@ describe('getQuicknodeEndpointUrl', () => {
       UniverseChainId.Blast,
       UniverseChainId.Bnb,
       UniverseChainId.Celo,
-      UniverseChainId.MonadTestnet,
       UniverseChainId.Monad,
       UniverseChainId.Optimism,
       UniverseChainId.Polygon,
@@ -99,7 +97,6 @@ describe('getQuicknodeChainId', () => {
     expect(getQuicknodeChainId(UniverseChainId.Blast)).toBe('blast-mainnet')
     expect(getQuicknodeChainId(UniverseChainId.Bnb)).toBe('bsc')
     expect(getQuicknodeChainId(UniverseChainId.Celo)).toBe('celo-mainnet')
-    expect(getQuicknodeChainId(UniverseChainId.MonadTestnet)).toBe('monad-testnet')
     expect(getQuicknodeChainId(UniverseChainId.Monad)).toBe('monad-mainnet')
     expect(getQuicknodeChainId(UniverseChainId.Optimism)).toBe('optimism')
     expect(getQuicknodeChainId(UniverseChainId.Polygon)).toBe('matic')

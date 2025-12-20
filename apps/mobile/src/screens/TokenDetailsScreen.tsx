@@ -33,7 +33,6 @@ import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/type
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
 import {
   useTokenBasicInfoPartsFragment,
@@ -52,6 +51,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/warnings/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/warnings/TokenWarningModal'
+import { AZTEC_URL } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings/getAztecUnavailableWarning'
 import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { useShouldShowAztecWarning } from 'uniswap/src/hooks/useShouldShowAztecWarning'
 import type { CurrencyField } from 'uniswap/src/types/currency'
@@ -240,18 +240,13 @@ const TokenDetailsModals = memo(function _TokenDetailsModals(): JSX.Element {
           isOpen={isAztecWarningModalOpen}
           modalName={ModalName.SwapWarning}
           severity={WarningSeverity.Blocked}
-          title={t('swap.warning.noRoutesFound.title')}
+          title={t('swap.warning.aztecUnavailable.title')}
           captionComponent={
             <>
               <Text color="$neutral2" textAlign="center" variant="body3">
                 {t('swap.warning.aztecUnavailable.message')}
               </Text>
-              <LearnMoreLink
-                display="inline"
-                textColor="$neutral1"
-                textVariant="buttonLabel3"
-                url={uniswapUrls.aztecUrl}
-              />
+              <LearnMoreLink display="inline" textColor="$neutral1" textVariant="buttonLabel3" url={AZTEC_URL} />
             </>
           }
           acknowledgeText={t('common.button.close')}

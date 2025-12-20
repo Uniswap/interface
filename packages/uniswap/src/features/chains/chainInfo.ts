@@ -5,7 +5,7 @@ import { BLAST_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/blast'
 import { BNB_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/bnb'
 import { CELO_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/celo'
 import { MAINNET_CHAIN_INFO, SEPOLIA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
-import { MONAD_CHAIN_INFO, MONAD_TESTNET_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/monad'
+import { MONAD_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/monad'
 import { OPTIMISM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/optimism'
 import { POLYGON_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/polygon'
 import { SONEIUM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/soneium'
@@ -41,7 +41,6 @@ export const ORDERED_CHAINS = [
   ZKSYNC_CHAIN_INFO,
   SEPOLIA_CHAIN_INFO,
   UNICHAIN_SEPOLIA_CHAIN_INFO,
-  MONAD_TESTNET_CHAIN_INFO,
 ] as const satisfies UniverseChainInfo[]
 
 type ConstChainInfo<P extends Platform = Platform> = Extract<(typeof ORDERED_CHAINS)[number], { platform: P }>
@@ -87,7 +86,6 @@ export const UNIVERSE_CHAIN_INFO = {
   [UniverseChainId.Monad]: MONAD_CHAIN_INFO,
 
   // TESTNET
-  [UniverseChainId.MonadTestnet]: MONAD_TESTNET_CHAIN_INFO,
   [UniverseChainId.Sepolia]: SEPOLIA_CHAIN_INFO,
   [UniverseChainId.UnichainSepolia]: UNICHAIN_SEPOLIA_CHAIN_INFO,
 

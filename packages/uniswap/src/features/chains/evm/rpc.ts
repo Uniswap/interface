@@ -27,8 +27,6 @@ export function getQuicknodeChainId(chainId: UniverseChainId): string {
       return 'bsc'
     case UniverseChainId.Celo:
       return 'celo-mainnet'
-    case UniverseChainId.MonadTestnet:
-      return 'monad-testnet'
     case UniverseChainId.Monad:
       return 'monad-mainnet'
     case UniverseChainId.Optimism:
