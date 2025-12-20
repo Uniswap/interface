@@ -129,12 +129,10 @@ export function embeddedWallet(_parameters: EmbeddedWalletParameters = {}) {
       }
 
       try {
-        await Promise.all([
-          provider.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId }],
-          }),
-        ])
+        await provider.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId }],
+        })
         return chain
       } catch (err) {
         const error = err as RpcError
