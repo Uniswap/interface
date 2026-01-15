@@ -210,7 +210,7 @@ const TopPoolTable = memo(function TopPoolTable({
   return (
     <TableWrapper data-testid="top-pools-explore-table">
       <PoolsTable
-        pools={topPools?.slice(0, page * pageSize)}
+        pools={topPools}
         loading={isLoading}
         error={isError}
         loadMore={staticSize ? undefined : loadMore}
