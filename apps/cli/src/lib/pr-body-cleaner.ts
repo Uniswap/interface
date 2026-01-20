@@ -87,7 +87,11 @@ function removeHTMLCommentsExceptCursorSummary(text: string): string {
   })
 
   // Remove all other HTML comments
-  textWithProtection = textWithProtection.replace(/<!--[\s\S]*?-->/g, '')
+  let previousTextWithProtection: string
+  do {
+    previousTextWithProtection = textWithProtection
+    textWithProtection = textWithProtection.replace(/<!--[\s\S]*?-->/g, '')
+  } while (textWithProtection !== previousTextWithProtection)
 
   // Restore CURSOR_SUMMARY content (without comment markers and footers)
   summaries.forEach((summary, index) => {
