@@ -1,7 +1,7 @@
 // biome-ignore lint/style/noRestrictedImports: Anvil test fixtures need direct ethers imports
 import { test as base } from '@playwright/test'
 import { MaxUint160, MaxUint256, permit2Address } from '@uniswap/permit2-sdk'
-import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
+import { WETH_ADDRESS } from '@hkdex-tmp/universal_router_sdk'
 import type { AnvilClient as BaseAnvilClient } from 'playwright/anvil/anvil-manager'
 import { getAnvilManager } from 'playwright/anvil/anvil-manager'
 import { setErc20BalanceWithMultipleSlots } from 'playwright/anvil/utils'

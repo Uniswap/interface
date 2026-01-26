@@ -56,7 +56,17 @@ export function createTransactionSignerService(ctx: {
 
   const sendTransaction: TransactionSigner['sendTransaction'] = async (input) => {
     const provider = await ctx.getProvider()
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[Swap] Sending signed transaction to provider:', {
+        hasSignedTx: !!input.signedTx,
+        signedTxLength: input.signedTx?.length,
+        providerType: provider.constructor.name,
+      })
+    }
     const transactionResponse = await provider.sendTransaction(input.signedTx)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[Swap] Transaction sent, received hash:', transactionResponse.hash)
+    }
     return transactionResponse.hash
   }
 

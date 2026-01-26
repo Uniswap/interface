@@ -12,6 +12,10 @@ export const CELO_LOGO = require('./logos/png/celo-logo.png')
 export const WORLD_CHAIN_LOGO = require('./logos/png/world-chain-logo.png')
 export const ZORA_LOGO = require('./logos/png/zora-logo.png')
 export const ZKSYNC_LOGO = require('./logos/png/zksync-logo.png')
+
+export const HASHKEY_LOGO = require('./logos/png/hashkey-logo.png')
+export const HSK_LOGO = require('./logos/png/hsk-logo.png')
+
 export const SOLANA_LOGO = require('./logos/png/solana-logo.png')
 export const SONEIUM_LOGO = require('./logos/png/soneium-logo.png')
 export const UNICHAIN_LOGO = require('./logos/png/unichain-logo.png')

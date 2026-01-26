@@ -77,6 +77,7 @@ export function CreatePositionModal({
     setTransactionError(false)
 
     const isValidTx = isValidLiquidityTxContext(txInfo)
+
     if (
       !account ||
       !isSignerMnemonicAccountDetails(account) ||

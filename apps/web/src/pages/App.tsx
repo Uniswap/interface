@@ -1,16 +1,20 @@
 import { useFeatureFlagUrlOverrides } from 'featureFlags/useFeatureFlagUrlOverrides'
 import ErrorBoundary from 'components/ErrorBoundary'
+import { HashKeyChainOnlyModal } from 'components/HashKeyChainOnlyModal'
+import { useAccount } from 'hooks/useAccount'
 import { Body } from 'pages/App/Body'
 import { AppLayout } from 'pages/App/Layout'
 import { ResetPageScrollEffect } from 'pages/App/utils/ResetPageScroll'
 import { UserPropertyUpdater } from 'pages/App/utils/UserPropertyUpdater'
 import { useDynamicMetatags } from 'pages/metatags'
 import { findRouteByPath } from 'pages/RouteDefinitions'
-import { useEffect, useLayoutEffect } from 'react'
+import { useEffect, useLayoutEffect, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, useLocation } from 'react-router'
 import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
 import { useSporeColors } from 'ui/src'
+import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { initializeScrollWatcher } from 'uniswap/src/components/modals/ScrollLock'
 import { EXTENSION_PASSKEY_AUTH_PATH } from 'uniswap/src/features/passkey/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -20,8 +24,13 @@ import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 
 const OVERRIDE_PAGE_LAYOUT = [EXTENSION_PASSKEY_AUTH_PATH]
 
+// 支持的链 ID：仅 HashKey Chain 主网和测试网
+const ALLOWED_CHAIN_IDS = [UniverseChainId.HashKey, UniverseChainId.HashKeyTestnet]
+
 export default function App() {
   const colors = useSporeColors()
+  const account = useAccount()
+  const [showHashKeyModal, setShowHashKeyModal] = useState(false)
 
   const location = useLocation()
   const { pathname } = location
@@ -32,6 +41,18 @@ export default function App() {
   useEffect(() => {
     initializeScrollWatcher()
   }, [])
+
+  // 检查当前链是否在允许的链列表中
+  useEffect(() => {
+    if (account.chainId !== undefined) {
+      const isAllowedChain = ALLOWED_CHAIN_IDS.includes(account.chainId)
+      setShowHashKeyModal(!isAllowedChain)
+    } else {
+      // 如果链 ID 未定义（钱包未连接），不显示弹窗
+      setShowHashKeyModal(false)
+    }
+  }, [account.chainId])
+
 
   const metaTags = useDynamicMetatags()
   const staticTitle = findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'
@@ -84,6 +105,11 @@ export default function App() {
         <UserPropertyUpdater />
         <ResetPageScrollEffect />
         {shouldOverridePageLayout ? <Body shouldRenderAppChrome={false} /> : <AppLayout />}
+        <HashKeyChainOnlyModal
+          isOpen={showHashKeyModal}
+          onClose={() => setShowHashKeyModal(false)}
+          currentChainId={account.chainId}
+        />
       </Trace>
     </ErrorBoundary>
   )

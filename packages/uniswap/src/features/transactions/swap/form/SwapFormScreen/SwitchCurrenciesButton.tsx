@@ -16,8 +16,8 @@ const SWAP_DIRECTION_BUTTON_SIZE = {
     small: spacing.spacing8,
   },
   borderWidth: {
-    regular: spacing.spacing4,
-    small: spacing.spacing1,
+    regular: 1,
+    small: 1,
   },
 } as const
 

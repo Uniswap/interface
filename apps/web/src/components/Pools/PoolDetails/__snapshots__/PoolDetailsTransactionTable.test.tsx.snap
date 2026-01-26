@@ -8,7 +8,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
 }
 
 .c4 path {
-  stroke: #FF37C7;
+  stroke: #4177e2;
   background: rgba(19, 19, 19, 0.63);
   fill: none;
 }
@@ -26,8 +26,8 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
   text-decoration: none;
   cursor: pointer;
   transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
+  color: #4177e2;
+  stroke: #4177e2;
   font-weight: 500;
 }
 
@@ -301,7 +301,7 @@ exports[`PoolDetailsTransactionsTable > renders data filled state 1`] = `
             <svg
               class="c4 c5"
               fill="none"
-              stroke="#FF37C7"
+              stroke="#4177e2"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >

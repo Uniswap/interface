@@ -1,8 +1,9 @@
-import { BigintIsh, Currency, Token, V3_CORE_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
+import { BigintIsh, Currency, Token } from '@uniswap/sdk-core'
 import { computePoolAddress, FeeAmount, Pool } from '@uniswap/v3-sdk'
 import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
+import { getV3FactoryAddress } from 'uniswap/src/constants/v3Addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { assume0xAddress } from 'utils/wagmi'
 import { useReadContracts } from 'wagmi'
@@ -125,7 +126,7 @@ export function usePools(
   }, [chainId, poolKeys])
 
   const poolAddresses: (string | undefined)[] = useMemo(() => {
-    const v3CoreFactoryAddress = chainId && V3_CORE_FACTORY_ADDRESSES[chainId]
+    const v3CoreFactoryAddress = chainId && getV3FactoryAddress(chainId)
     if (!v3CoreFactoryAddress) {
       return Array(poolTokens.length).fill(undefined)
     }

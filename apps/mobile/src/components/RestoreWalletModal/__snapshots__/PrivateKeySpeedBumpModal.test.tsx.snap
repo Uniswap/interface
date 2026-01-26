@@ -437,7 +437,7 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
           disabled={false}
           focusVisibleStyle={
             {
-              "backgroundColor": "#E500A5",
+              "backgroundColor": "#3d7fff",
             }
           }
           forwardedRef={[Function]}
@@ -462,7 +462,7 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
               {
                 "alignItems": "center",
                 "alignSelf": "stretch",
-                "backgroundColor": "#FF37C7",
+                "backgroundColor": "#4177e2",
                 "borderBottomColor": "transparent",
                 "borderBottomLeftRadius": 16,
                 "borderBottomRightRadius": 16,
@@ -504,7 +504,7 @@ exports[`PrivateKeySpeedBumpModal renders correctly 1`] = `
               {
                 "alignItems": "center",
                 "alignSelf": "stretch",
-                "backgroundColor": "#FF37C7",
+                "backgroundColor": "#4177e2",
                 "borderBottomColor": "transparent",
                 "borderBottomLeftRadius": 16,
                 "borderBottomRightRadius": 16,

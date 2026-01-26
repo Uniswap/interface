@@ -1,5 +1,5 @@
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { Flex, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme/spacing'
 import {
@@ -37,6 +37,7 @@ export function CurrencyInputPanelHeader({
   showDefaultTokenOptions,
 }: CurrencyInputPanelHeaderProps): JSX.Element | null {
   const priceUXEnabled = usePriceUXEnabled()
+  const [isHovering, setIsHovering] = useState(false)
 
   const isOutput = currencyField === CurrencyField.OUTPUT
   const showFlippableRate = priceUXEnabled && isOutput && !!currencyInfo
@@ -61,16 +62,31 @@ export function CurrencyInputPanelHeader({
   }
 
   const showInputPresets =
-    (isWebAppDesktop || isExtensionApp) && currencyField === CurrencyField.INPUT && currencyBalance
+    (isWebAppDesktop || isExtensionApp) && currencyField === CurrencyField.INPUT && currencyInfo
 
   return (
-    <Flex row justifyContent="space-between">
+    <Flex
+      row
+      justifyContent="space-between"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
       {/* IMPORTANT: $micro crashes on mobile */}
       <Text color="$neutral2" variant="subheading2" fontSize={isWebPlatform ? '$micro' : '$small'}>
         {headerLabel}
       </Text>
       {showInputPresets && (
-        <Flex position="absolute" right={0} top={-spacing.spacing2}>
+        <Flex
+          position="absolute"
+          right={0}
+          top={-spacing.spacing2}
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+          opacity={isHovering ? 1 : 0}
+          transform={isHovering ? [{ translateY: 0 }] : [{ translateY: -4 }]}
+          pointerEvents={isHovering ? 'auto' : 'none'}
+          animation="100ms"
+        >
           <AmountInputPresets presets={PRESET_PERCENTAGES} renderPreset={renderPreset} />
         </Flex>
       )}

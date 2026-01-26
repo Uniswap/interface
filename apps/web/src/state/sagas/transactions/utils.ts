@@ -270,9 +270,38 @@ function* submitTransaction(params: HandleOnChainStepParams): SagaGenerator<Vita
   const signer = yield* call(getSigner, address)
 
   try {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[Swap] submitTransaction: Calling signer.sendTransaction:', {
+        to: step.txRequest.to,
+        chainId: step.txRequest.chainId,
+        hasData: !!step.txRequest.data,
+        signerType: signer.constructor.name,
+      })
+    }
     const response = yield* call([signer, 'sendTransaction'], step.txRequest)
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[Swap] submitTransaction: Received response:', {
+        hash: response.hash,
+        hasResponse: !!response,
+      })
+    }
     return transformTransactionResponse(response)
   } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[Swap] submitTransaction: Error occurred:', {
+        error: error instanceof Error ? error.message : String(error),
+        errorType: error instanceof Error ? error.constructor.name : typeof error,
+        stack: error instanceof Error ? error.stack : undefined,
+        hasTransactionHash: error && typeof error === 'object' && 'transactionHash' in error,
+        txRequest: step.txRequest ? {
+          to: step.txRequest.to,
+          chainId: step.txRequest.chainId,
+          value: step.txRequest.value,
+          gasLimit: step.txRequest.gasLimit,
+          dataLength: step.txRequest.data?.length,
+        } : undefined,
+      })
+    }
     if (error && typeof error === 'object' && 'transactionHash' in error && isValidHexString(error.transactionHash)) {
       return yield* recoverTransactionFromHash(error.transactionHash, step)
     }
@@ -351,9 +380,12 @@ export function* handlePermitTransactionStep(params: HandleOnChainPermit2Transac
 export function* handleApprovalTransactionStep(params: HandleApprovalStepParams) {
   const { step, address } = params
   const info = getApprovalTransactionInfo(step)
+  const shouldWaitForConfirmation =
+    step.txRequest.chainId !== UniverseChainId.HashKey && step.txRequest.chainId !== UniverseChainId.HashKeyTestnet
   return yield* call(handleOnChainStep, {
     ...params,
     info,
+    shouldWaitForConfirmation,
     *onModification({ hash, data }: VitalTxFields) {
       const { isInsufficient, approvedAmount } = checkApprovalAmount(data, step)
 

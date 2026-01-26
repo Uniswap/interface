@@ -59,17 +59,24 @@ export function SwapFormCurrencyInputPanel(): JSX.Element {
     onToggleIsFiatMode: s.onToggleIsFiatMode,
   }))
 
-  const focusedStyles = useCurrencyInputFocusedStyle(focusOnCurrencyField === CurrencyField.INPUT)
+  const isFocused = focusOnCurrencyField === CurrencyField.INPUT
+  const focusedStyles = useCurrencyInputFocusedStyle(isFocused)
 
   return (
     <Trace section={SectionName.CurrencyInputPanel}>
       <Flex
         animation="simple"
+        backgroundColor="$surface1"
         borderRadius="$rounded20"
         borderWidth="$spacing1"
         overflow="hidden"
         pb={currencies[CurrencyField.INPUT] ? '$spacing4' : '$none'}
         {...focusedStyles}
+        borderColor={isFocused ? focusedStyles.borderColor : '$surface3'}
+        hoverStyle={{
+          ...focusedStyles.hoverStyle,
+          borderColor: '$surface3Hovered',
+        }}
       >
         <CurrencyInputPanel
           ref={inputRef}

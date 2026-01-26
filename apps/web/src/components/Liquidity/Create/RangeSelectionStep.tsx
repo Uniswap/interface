@@ -18,7 +18,7 @@ import { useCreateLiquidityContext } from 'pages/CreatePosition/CreateLiquidityC
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { useRangeHopCallbacks } from 'state/mint/v3/hooks'
-import { tryParsePrice } from 'state/mint/v3/utils'
+import { isFullRangeModeChain, tryParsePrice } from 'state/mint/v3/utils'
 import { PositionField } from 'types/position'
 import { AnimatePresence, Button, Flex, SegmentedControl, Text, useMedia, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
@@ -316,6 +316,10 @@ export const SelectPriceRangeStep = ({
 
   const controlOptions = useTokenControlOptions([TOKEN0, TOKEN1], 'small')
 
+  // Check if current chain requires full range mode (e.g., HashKey Chain)
+  const isFullRangeOnly =
+    protocolVersion === ProtocolVersion.V3 && isFullRangeModeChain(poolOrPair?.chainId ?? currencies.display.TOKEN0?.chainId)
+
   const handleSelectToken = useCallback(
     (option: string) => {
       const initialMinMaxPrice = {
@@ -384,6 +388,18 @@ export const SelectPriceRangeStep = ({
     },
     [initialPosition?.isOutOfRange, setPriceRangeState],
   )
+
+  // Force full range mode for chains that require it (e.g., HashKey Chain)
+  useEffect(() => {
+    if (isFullRangeOnly && !priceRangeState.fullRange) {
+      setPriceRangeState((prevState) => ({
+        ...prevState,
+        minPrice: '',
+        maxPrice: '',
+        fullRange: true,
+      }))
+    }
+  }, [isFullRangeOnly, priceRangeState.fullRange, setPriceRangeState])
 
   const segmentedControlRangeOptions = [
     {
@@ -476,50 +492,57 @@ export const SelectPriceRangeStep = ({
     <>
       {creatingPoolOrPair && <InitialPriceInput />}
       <Flex gap="$gap20">
-        <Flex row alignItems="center">
-          <Text flex={1} variant="subheading1">
-            <Trans i18nKey="position.setRange" />
-          </Text>
-        </Flex>
-        {!initialPosition?.isOutOfRange && (
-          <SegmentedControl
-            options={segmentedControlRangeOptions}
-            selectedOption={priceRangeState.fullRange ? RangeSelection.FULL : RangeSelection.CUSTOM}
-            onSelectOption={handleSelectRange}
-            fullWidth
-            size="large"
-          />
-        )}
-        {!initialPosition?.isOutOfRange && (
-          <Text variant="body3" color="$neutral2">
-            {creatingPoolOrPair
-              ? t('position.provide.liquidityDescription.creatingPool')
-              : priceRangeState.fullRange
-                ? t('position.provide.liquidityDescription')
-                : t('position.provide.liquidityDescription.custom')}
-          </Text>
+        {/* Hide "Set Range" section for HashKey Chain in full range only mode */}
+        {!isFullRangeOnly && (
+          <>
+            <Flex row alignItems="center">
+              <Text flex={1} variant="subheading1">
+                <Trans i18nKey="position.setRange" />
+              </Text>
+            </Flex>
+            {!initialPosition?.isOutOfRange && (
+              <SegmentedControl
+                options={segmentedControlRangeOptions}
+                selectedOption={priceRangeState.fullRange ? RangeSelection.FULL : RangeSelection.CUSTOM}
+                onSelectOption={handleSelectRange}
+                fullWidth
+                size="large"
+              />
+            )}
+            {!initialPosition?.isOutOfRange && (
+              <Text variant="body3" color="$neutral2">
+                {creatingPoolOrPair
+                  ? t('position.provide.liquidityDescription.creatingPool')
+                  : priceRangeState.fullRange
+                    ? t('position.provide.liquidityDescription')
+                    : t('position.provide.liquidityDescription.custom')}
+              </Text>
+            )}
+          </>
         )}
         <PositionOutOfRangeError positionInfo={positionInfo} />
         <PoolOutOfSyncError />
-        <Flex gap="$gap4" opacity={isDisabled ? 0.6 : 1}>
-          {isDisabled && (
-            <Flex
-              position="absolute"
-              top={0}
-              left={0}
-              right={0}
-              bottom={0}
-              opacity={0}
-              backgroundColor="$surface3"
-              cursor="not-allowed"
-              zIndex={zIndexes.overlay}
-            />
-          )}
-          {baseCurrency &&
-            quoteCurrency &&
-            fee &&
-            (isD3LiquidityRangeChartEnabled ? (
-              <D3LiquidityRangeInput
+        {/* Hide price range chart and inputs for HashKey Chain in full range only mode */}
+        {!isFullRangeOnly && (
+          <Flex gap="$gap4" opacity={isDisabled ? 0.6 : 1}>
+            {isDisabled && (
+              <Flex
+                position="absolute"
+                top={0}
+                left={0}
+                right={0}
+                bottom={0}
+                opacity={0}
+                backgroundColor="$surface3"
+                cursor="not-allowed"
+                zIndex={zIndexes.overlay}
+              />
+            )}
+            {baseCurrency &&
+              quoteCurrency &&
+              fee &&
+              (isD3LiquidityRangeChartEnabled ? (
+                <D3LiquidityRangeInput
                 key={buildRangeInputKeyV2({ protocolVersion, poolId: poolId ?? '', priceRangeState })}
                 baseCurrency={baseCurrency}
                 quoteCurrency={quoteCurrency}
@@ -631,8 +654,9 @@ export const SelectPriceRangeStep = ({
               />
             </Flex>
           )}
-        </Flex>
-        {(invalidPrice || invalidRange) && (
+          </Flex>
+        )}
+        {!isFullRangeOnly && (invalidPrice || invalidRange) && (
           <Flex row alignItems="center" px="$padding16" gap="$gap4">
             <AlertTriangleFilled size="$icon.16" color="$statusCritical" />
             <Text color="$statusCritical" variant="body3">

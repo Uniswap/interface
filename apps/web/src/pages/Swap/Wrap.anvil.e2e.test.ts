@@ -1,4 +1,4 @@
-import { WETH_ADDRESS } from '@uniswap/universal-router-sdk'
+import { WETH_ADDRESS } from '@hkdex-tmp/universal_router_sdk'
 import { createExpectSingleTransaction } from 'playwright/anvil/transactions'
 import { expect, getTest } from 'playwright/fixtures'
 import { stubTradingApiEndpoint } from 'playwright/fixtures/tradingApi'

@@ -307,6 +307,12 @@ export function createTransactionService(ctx: {
       const { request, provider, unsubmittedTransaction, timestampBeforeSign, timestampBeforeSend } = submitParams
 
       // Sign and send the transaction
+      if (process.env.NODE_ENV === 'development') {
+        logger.debug('TransactionService', 'submissionFunction', 'About to send signed transaction:', {
+          hasSignedRequest: !!request.signedRequest,
+          signedRequestLength: request.signedRequest?.length,
+        })
+      }
       const transactionHash = await ctx.transactionSigner.sendTransaction({ signedTx: request.signedRequest })
 
       logger.debug('TransactionService', 'sendTransaction', 'Tx submitted:', transactionHash)
@@ -338,7 +344,8 @@ export function createTransactionService(ctx: {
     // Calculate the transaction hash directly from the signed request
     const transactionHash = utils.keccak256(params.request.signedRequest)
 
-    // Submit the transaction in the background
+    // Submit the transaction and wait for it to complete
+    // This ensures the transaction is actually sent to the wallet before returning
     const submitPromise = params.typeInfo
       ? // Submit and update the local state
         createSubmitTransaction({
@@ -348,14 +355,22 @@ export function createTransactionService(ctx: {
       : // Submit the transaction directly without updating the local state
         ctx.transactionSigner.sendTransaction({ signedTx: params.request.signedRequest })
 
-    submitPromise.catch((error) => {
+    // Wait for the transaction to be submitted before returning
+    // This ensures onSuccess is only called after the transaction is actually sent to the wallet
+    try {
+      await submitPromise
+      if (process.env.NODE_ENV === 'development') {
+        logger.debug('TransactionService', 'submitTransaction', 'Transaction submitted successfully:', transactionHash)
+      }
+    } catch (error) {
       logger.error(error, {
         tags: { file: 'TransactionService', function: 'submitTransaction' },
-        extra: { context: 'Background submission failed' },
+        extra: { context: 'Transaction submission failed' },
       })
-    })
+      throw error
+    }
 
-    // Return the hash immediately
+    // Return the hash after transaction is submitted
     return { transactionHash }
   }
 

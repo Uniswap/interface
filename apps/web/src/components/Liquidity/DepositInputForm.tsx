@@ -3,11 +3,13 @@ import { useTokenBalanceWithBuffer } from 'components/Liquidity/Create/hooks/use
 import { useNativeTokenPercentageBufferExperiment } from 'components/Liquidity/Create/hooks/useNativeTokenPercentageBufferExperiment'
 import { DepositInfo } from 'components/Liquidity/types'
 import { useCurrencyInfo } from 'hooks/Tokens'
-import { ReactNode, useEffect, useRef } from 'react'
+import { ReactNode, useEffect, useMemo, useRef } from 'react'
 import { PositionField } from 'types/position'
 import { Flex, FlexProps } from 'ui/src'
 import { CurrencyInputPanel } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import { CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/types'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 const INPUT_BORDER_RADIUS = '$rounded20'
@@ -78,10 +80,39 @@ export function DepositInputForm({
   const token0BalanceWithBuffer = useTokenBalanceWithBuffer(currencyBalances?.[PositionField.TOKEN0], bufferPercentage)
   const token1BalanceWithBuffer = useTokenBalanceWithBuffer(currencyBalances?.[PositionField.TOKEN1], bufferPercentage)
 
-  // TODO(WEB-4920): when the backend returns the logo info make sure that there is no call being made
-  // to graphql to retrieve it
-  const token0CurrencyInfo = useCurrencyInfo(token0)
-  const token1CurrencyInfo = useCurrencyInfo(token1)
+  // Manually construct CurrencyInfo for tokens that might not be in the backend
+  // This ensures the UI works even for custom/new tokens
+  const token0CurrencyInfo = useMemo((): CurrencyInfo | undefined => {
+    if (!token0) {
+      return undefined
+    }
+    const id = currencyId(token0)
+    if (!id) {
+      return undefined
+    }
+    return {
+      currency: token0,
+      currencyId: id,
+      logoUrl: undefined,
+      isSpam: false,
+    }
+  }, [token0])
+
+  const token1CurrencyInfo = useMemo((): CurrencyInfo | undefined => {
+    if (!token1) {
+      return undefined
+    }
+    const id = currencyId(token1)
+    if (!id) {
+      return undefined
+    }
+    return {
+      currency: token1,
+      currencyId: id,
+      logoUrl: undefined,
+      isSpam: false,
+    }
+  }, [token1])
 
   useEffect(() => {
     if (autofocus) {
@@ -126,6 +157,7 @@ export function DepositInputForm({
             onSetPresetValue={handleOnSetMax(PositionField.TOKEN0)}
             value={formattedAmounts?.[PositionField.TOKEN0]}
             onPressIn={() => token0InputRef.current?.textInputRef.current?.focus()}
+            onShowTokenSelector={undefined}
             isLoading={amount0Loading}
           />
           {token0UnderCardComponent && <UnderCardComponent>{token0UnderCardComponent}</UnderCardComponent>}
@@ -150,6 +182,7 @@ export function DepositInputForm({
             onSetPresetValue={handleOnSetMax(PositionField.TOKEN1)}
             value={formattedAmounts?.[PositionField.TOKEN1]}
             onPressIn={() => token1InputRef.current?.textInputRef.current?.focus()}
+            onShowTokenSelector={undefined}
             isLoading={amount1Loading}
           />
           {token1UnderCardComponent && <UnderCardComponent>{token1UnderCardComponent}</UnderCardComponent>}

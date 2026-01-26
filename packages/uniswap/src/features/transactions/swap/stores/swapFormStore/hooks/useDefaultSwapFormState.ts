@@ -19,7 +19,7 @@ export const getDefaultState = (defaultChainId: UniverseChainId): Readonly<Omit<
   exactCurrencyField: CurrencyField.INPUT,
   focusOnCurrencyField: CurrencyField.INPUT,
   filteredChainIds: {},
-  input: getDefaultInputCurrency(defaultChainId),
+  input: undefined, // No default currency - let user select
   output: undefined,
   isFiatMode: false,
   isMax: false,

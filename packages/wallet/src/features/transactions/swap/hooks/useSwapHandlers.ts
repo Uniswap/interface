@@ -39,6 +39,43 @@ export function useSwapHandlers(): SwapHandlers {
 
   const execute: ExecuteSwapCallback = useCallback(
     async (params: ExecuteSwapParams) => {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[execute] ExecuteSwapCallback called with params:', params)
+        console.log('[execute] ExecuteSwapCallback - Detailed swapTxContext:', {
+          routing: params.swapTxContext?.routing,
+          hasTxRequests: !!params.swapTxContext?.txRequests,
+          txRequestCount: params.swapTxContext?.txRequests?.length || 0,
+          txRequests: params.swapTxContext?.txRequests?.map((tx, idx) => ({
+            index: idx,
+            to: tx.to,
+            data: tx.data?.substring(0, 20) + '...',
+            value: tx.value?.toString(),
+            gasLimit: tx.gasLimit?.toString(),
+            gasPrice: tx.gasPrice?.toString(),
+            chainId: tx.chainId,
+          })),
+          hasTrade: !!params.swapTxContext?.trade,
+          trade: params.swapTxContext?.trade ? {
+            routing: params.swapTxContext.trade.routing,
+            inputAmount: params.swapTxContext.trade.inputAmount?.toExact(),
+            outputAmount: params.swapTxContext.trade.outputAmount?.toExact(),
+            deadline: params.swapTxContext.trade.deadline,
+            deadlineDate: params.swapTxContext.trade.deadline ? new Date(params.swapTxContext.trade.deadline * 1000).toLocaleString('zh-CN') : undefined,
+          } : undefined,
+          includesDelegation: params.swapTxContext?.includesDelegation,
+          hasSwapRequestArgs: 'swapRequestArgs' in (params.swapTxContext || {}),
+          swapRequestArgs: params.swapTxContext?.swapRequestArgs ? {
+            deadline: params.swapTxContext.swapRequestArgs.deadline,
+            deadlineDate: params.swapTxContext.swapRequestArgs.deadline ? new Date(params.swapTxContext.swapRequestArgs.deadline * 1000).toLocaleString('zh-CN') : undefined,
+            hasQuote: !!params.swapTxContext.swapRequestArgs.quote,
+            simulateTransaction: params.swapTxContext.swapRequestArgs.simulateTransaction,
+            allKeys: Object.keys(params.swapTxContext.swapRequestArgs),
+            fullSwapRequestArgs: params.swapTxContext.swapRequestArgs,
+          } : 'swapRequestArgs is undefined',
+          swapTxContextKeys: params.swapTxContext ? Object.keys(params.swapTxContext) : [],
+        })
+      }
+
       // Mark execution as called to prevent future prepareAndSign calls
       signing.markExecutionCalled()
 

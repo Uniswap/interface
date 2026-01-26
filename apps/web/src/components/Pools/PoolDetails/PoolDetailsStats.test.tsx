@@ -22,7 +22,7 @@ describe('PoolDetailsStats', () => {
     poolData: validPoolDataResponse.data,
     isReversed: false,
     chainId: 1,
-    tokenAColor: '#FF37C7',
+    tokenAColor: '#4177e2',
     tokenBColor: '#222222',
   }
 

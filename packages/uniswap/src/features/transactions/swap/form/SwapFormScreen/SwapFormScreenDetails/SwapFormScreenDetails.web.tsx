@@ -1,17 +1,17 @@
 import { Accordion, Flex } from 'ui/src'
 import { SwapFormButton } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/SwapFormButton'
-import { ExpandableRows } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/ExpandableRows'
-import { SwapFormScreenFooter } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/SwapFormScreenFooter'
+// import { ExpandableRows } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/ExpandableRows'
+// import { SwapFormScreenFooter } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormScreenDetails/SwapFormScreenFooter/SwapFormScreenFooter'
 import { SwapFormWarningModals } from 'uniswap/src/features/transactions/swap/form/SwapFormScreen/SwapFormWarningModals/SwapFormWarningModals'
 import { useSwapFormScreenStore } from 'uniswap/src/features/transactions/swap/form/stores/swapFormScreenStore/useSwapFormScreenStore'
 import { SwapFormWarningStoreContextProvider } from 'uniswap/src/features/transactions/swap/form/stores/swapFormWarningStore/SwapFormWarningStoreContextProvider'
-import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
+// import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 
 export function SwapFormScreenDetails(): JSX.Element {
-  const isPriceUXEnabled = usePriceUXEnabled()
-  const { tokenColor, showFooter } = useSwapFormScreenStore((state) => ({
+  // const isPriceUXEnabled = usePriceUXEnabled()
+  const { tokenColor } = useSwapFormScreenStore((state) => ({
     tokenColor: state.tokenColor,
-    showFooter: state.showFooter,
+    // showFooter: state.showFooter,
   }))
 
   return (
@@ -24,15 +24,17 @@ export function SwapFormScreenDetails(): JSX.Element {
               }
             `}</style>
         <Flex>
-          <Flex>
+          <Flex mt="$spacing6">
             <SwapFormWarningStoreContextProvider>
               <SwapFormButton tokenColor={tokenColor} />
               <SwapFormWarningModals />
             </SwapFormWarningStoreContextProvider>
           </Flex>
-          <SwapFormScreenFooter />
+          {/* SwapFormScreenFooter removed - footer content (gas info, warnings) are hidden to prevent space changes */}
+          {/* <SwapFormScreenFooter /> */}
         </Flex>
-        {showFooter && !isPriceUXEnabled ? <ExpandableRows /> : null}
+        {/* ExpandableRows removed - fee, network cost, etc. details are hidden before modal opens */}
+        {/* {showFooter && !isPriceUXEnabled ? <ExpandableRows /> : null} */}
       </Accordion.Item>
     </Accordion>
   )

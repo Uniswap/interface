@@ -40,7 +40,7 @@ export function MoreActionTile({ padding = '$spacing12' }: { padding?: FlexProps
   })
 
   const onPressCreatePool = useEvent(() => {
-    navigate('/positions/create')
+    navigate('/positions/create/v3') // 本期只做 V3 基础添加流动性
     closeDropdown()
   })
 

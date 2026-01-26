@@ -49,30 +49,67 @@ export function createExecuteSwapService(ctx: {
       const swapTxContext = ctx.getSwapTxContext?.()
       const account = ctx.getAccount?.()
 
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[execute] executeSwapService executeSwap called:', {
+          account: account ? {
+            address: account.address,
+            chainId: account.chainId,
+            accountType: account.accountType,
+          } : undefined,
+          swapTxContext: swapTxContext ? {
+            routing: swapTxContext.routing,
+            hasTxRequests: !!swapTxContext.txRequests,
+            txRequestCount: swapTxContext.txRequests?.length || 0,
+            hasTrade: !!swapTxContext.trade,
+            includesDelegation: swapTxContext.includesDelegation,
+            hasSwapRequestArgs: 'swapRequestArgs' in swapTxContext,
+            swapRequestArgs: swapTxContext.swapRequestArgs ? {
+              deadline: swapTxContext.swapRequestArgs.deadline,
+              deadlineDate: swapTxContext.swapRequestArgs.deadline ? new Date(swapTxContext.swapRequestArgs.deadline * 1000).toLocaleString('zh-CN') : undefined,
+              hasQuote: !!swapTxContext.swapRequestArgs.quote,
+              simulateTransaction: swapTxContext.swapRequestArgs.simulateTransaction,
+              allKeys: Object.keys(swapTxContext.swapRequestArgs),
+            } : 'swapRequestArgs is undefined',
+            swapTxContextKeys: Object.keys(swapTxContext),
+          } : undefined,
+          currencyAmounts: currencyAmounts ? {
+            input: currencyAmounts.input?.toExact(),
+            output: currencyAmounts.output?.toExact(),
+          } : undefined,
+          currencyAmountsUSDValue: currencyAmountsUSDValue,
+          txId,
+          wrapType,
+          customSlippageTolerance,
+        })
+      }
+
       if (
         !account ||
         !swapTxContext ||
         !isSignerMnemonicAccountDetails(account) ||
         !isValidSwapTxContext(swapTxContext)
       ) {
-        ctx.onFailure(
-          new Error(
-            !account
+        const errorMessage = !account
               ? 'No account available'
               : !swapTxContext
                 ? 'Missing swap transaction context'
                 : !isSignerMnemonicAccountDetails(account)
                   ? 'Invalid account type - must be signer mnemonic account'
-                  : 'Invalid swap transaction context',
-          ),
-        )
+              : 'Invalid swap transaction context'
+
+        if (process.env.NODE_ENV === 'development') {
+          console.error('[Swap] Error: Validation failed in executeSwapService', {
+            error: errorMessage,
+          })
+        }
+
+        ctx.onFailure(new Error(errorMessage))
         return
       }
 
       const { presetPercentage, preselectAsset } = ctx.getPresetInfo()
 
-      ctx
-        .onExecuteSwap({
+      const executeParams = {
           account,
           swapTxContext,
           currencyInAmountUSD: currencyAmountsUSDValue[CurrencyField.INPUT] ?? undefined,
@@ -89,8 +126,50 @@ export function createExecuteSwapService(ctx: {
           isFiatInputMode: ctx.getIsFiatMode?.(),
           wrapType,
           inputCurrencyAmount: currencyAmounts.input ?? undefined,
+      }
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[execute] executeSwapService calling onExecuteSwap with params:', executeParams)
+        console.log('[execute] executeSwapService - Detailed swapTxContext:', {
+          routing: executeParams.swapTxContext?.routing,
+          hasTxRequests: !!executeParams.swapTxContext?.txRequests,
+          txRequestCount: executeParams.swapTxContext?.txRequests?.length || 0,
+          txRequests: executeParams.swapTxContext?.txRequests?.map((tx, idx) => ({
+            index: idx,
+            to: tx.to,
+            data: tx.data?.substring(0, 20) + '...',
+            value: tx.value?.toString(),
+            gasLimit: tx.gasLimit?.toString(),
+            gasPrice: tx.gasPrice?.toString(),
+            chainId: tx.chainId,
+          })),
+          hasTrade: !!executeParams.swapTxContext?.trade,
+          trade: executeParams.swapTxContext?.trade ? {
+            routing: executeParams.swapTxContext.trade.routing,
+            inputAmount: executeParams.swapTxContext.trade.inputAmount?.toExact(),
+            outputAmount: executeParams.swapTxContext.trade.outputAmount?.toExact(),
+            deadline: executeParams.swapTxContext.trade.deadline,
+            deadlineDate: executeParams.swapTxContext.trade.deadline ? new Date(executeParams.swapTxContext.trade.deadline * 1000).toLocaleString('zh-CN') : undefined,
+          } : undefined,
+          includesDelegation: executeParams.swapTxContext?.includesDelegation,
+          hasSwapRequestArgs: 'swapRequestArgs' in (executeParams.swapTxContext || {}),
+          swapRequestArgs: executeParams.swapTxContext?.swapRequestArgs ? {
+            deadline: executeParams.swapTxContext.swapRequestArgs.deadline,
+            deadlineDate: executeParams.swapTxContext.swapRequestArgs.deadline ? new Date(executeParams.swapTxContext.swapRequestArgs.deadline * 1000).toLocaleString('zh-CN') : undefined,
+            hasQuote: !!executeParams.swapTxContext.swapRequestArgs.quote,
+            simulateTransaction: executeParams.swapTxContext.swapRequestArgs.simulateTransaction,
+            allKeys: Object.keys(executeParams.swapTxContext.swapRequestArgs),
+            fullSwapRequestArgs: executeParams.swapTxContext.swapRequestArgs,
+          } : 'swapRequestArgs is undefined',
+          swapTxContextKeys: executeParams.swapTxContext ? Object.keys(executeParams.swapTxContext) : [],
         })
-        .catch(ctx.onFailure)
+      }
+
+      ctx.onExecuteSwap(executeParams)
+        .catch((error) => {
+          const swapError = error instanceof Error ? error : new Error(String(error))
+          ctx.onFailure(swapError)
+        })
     },
   }
 }

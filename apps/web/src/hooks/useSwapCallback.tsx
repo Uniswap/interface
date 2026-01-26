@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { Percent } from '@uniswap/sdk-core'
 import { TradeType } from '@uniswap/sdk-core'
-import type { FlatFeeOptions } from '@uniswap/universal-router-sdk'
+import type { FlatFeeOptions } from '@hkdex-tmp/universal_router_sdk'
 import type { FeeOptions } from '@uniswap/v3-sdk'
 import { TradingApi } from '@universe/api'
 import { useAccount } from 'hooks/useAccount'

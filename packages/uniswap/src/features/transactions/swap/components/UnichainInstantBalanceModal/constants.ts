@@ -18,6 +18,14 @@ export const CHAIN_TO_UNIVERSAL_ROUTER_ADDRESS: Partial<Record<UniverseChainId, 
     '0x8909Dc15e40173Ff4699343b6eB8132c65e18eC6',
     '0xf70536b3bcc1bd1a972dc186a2cf84cc6da6be5d',
   ],
+  // HashKey chains use V3 SwapRouter02 (no Universal Router deployment yet)
+  [UniverseChainId.HashKeyTestnet]: [
+    '0x46cBccE3c74E95d1761435d52B0b9Abc9e2FEAC0', // V3 SwapRouter02 address for HashKey Testnet (chainId 133)
+  ],
+  // TODO: Replace with actual HashKey Mainnet SwapRouter02 address when available
+  [UniverseChainId.HashKey]: [
+    '0x46cBccE3c74E95d1761435d52B0b9Abc9e2FEAC0', // Temporary: Using testnet address, replace with actual mainnet address
+  ],
 }
 
 export const FLASHBLOCKS_UI_SKIP_ROUTES: TradingApi.Routing[] = [

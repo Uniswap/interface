@@ -57,10 +57,10 @@ export const DEFAULT_FEE_DATA = {
 }
 
 export const DEFAULT_POSITION_STATE: PositionState = {
-  fee: undefined,
+  fee: DEFAULT_FEE_DATA, // Default to 0.3% fee tier for better UX
   hook: undefined,
   userApprovedHook: undefined,
-  protocolVersion: ProtocolVersion.V4,
+  protocolVersion: ProtocolVersion.V3, // Default to V3 for HashKey Chain compatibility
 }
 
 type BaseCreatePositionInfo = {

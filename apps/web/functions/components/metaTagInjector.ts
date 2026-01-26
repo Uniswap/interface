@@ -140,9 +140,9 @@ export async function metaTagInjectionMiddleware(c: Context, next: Next): Promis
 
       data = exploreMeta
     } else {
-      const imageUri = requestURL.origin + '/images/1200x630_Rich_Link_Preview_Image.png'
+      const imageUri = requestURL.origin + '/images/hashkey-logo.png'
       data = {
-        title: 'Uniswap Interface',
+        title: 'HSKSwap',
         image: imageUri,
         url: c.req.url,
         description:

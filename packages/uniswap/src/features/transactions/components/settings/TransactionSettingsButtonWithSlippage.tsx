@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import type { ColorTokens } from 'ui/src'
 import { Text } from 'ui/src'
-import { Settings } from 'ui/src/components/icons/Settings'
+import { SettingsCustom } from 'ui/src/components/icons/SettingsCustom'
 import { SettingsWarning } from 'ui/src/components/icons/SettingsWarning'
 import type { IconSizeTokens } from 'ui/src/theme'
 import { SLIPPAGE_CRITICAL_TOLERANCE } from 'uniswap/src/constants/transactions'
@@ -57,15 +57,18 @@ export function TransactionSettingsButtonWithSlippage({
       autoSlippageTolerance,
       fallbackColorValue: iconColor,
     })
+    // Use SettingsCustom as default, SettingsWarning only for critical slippage
     const SettingsIconComponent =
-      customSlippageTolerance && customSlippageTolerance > SLIPPAGE_CRITICAL_TOLERANCE ? SettingsWarning : Settings
+      customSlippageTolerance && customSlippageTolerance > SLIPPAGE_CRITICAL_TOLERANCE
+        ? SettingsWarning
+        : SettingsCustom
 
     return { backgroundColor: iconBackgroundColor, contentColor: fillColor, IconComponent: SettingsIconComponent }
   }, [customSlippageTolerance, iconColor, autoSlippageTolerance])
 
   return (
     <TransactionSettingsButtonWithTooltip
-      iconSize={iconSize}
+      iconSize={iconSize ?? 32}
       contentColor={contentColor}
       backgroundColor={backgroundColor}
       CustomIconComponent={IconComponent}

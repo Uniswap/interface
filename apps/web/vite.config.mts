@@ -148,7 +148,7 @@ export default defineConfig(({ mode }) => {
         '@uniswap/v3-sdk',
         '@uniswap/v4-sdk',
         '@uniswap/router-sdk',
-        '@uniswap/universal-router-sdk',
+        '@hkdex-tmp/universal_router_sdk',
         '@uniswap/uniswapx-sdk',
         '@uniswap/permit2-sdk',
         '@visx/responsive',
@@ -326,7 +326,7 @@ export default defineConfig(({ mode }) => {
         '@uniswap/v3-sdk',
         '@uniswap/v4-sdk',
         '@uniswap/router-sdk',
-        '@uniswap/universal-router-sdk',
+        '@hkdex-tmp/universal_router_sdk',
         '@uniswap/uniswapx-sdk',
         '@uniswap/permit2-sdk',
         'jsbi',
@@ -347,10 +347,34 @@ export default defineConfig(({ mode }) => {
 
     server: {
       port: DEFAULT_PORT,
+      host: '0.0.0.0',
+      allowedHosts: 'all',
+      hmr: {
+        host: '10.225.81.22',
+        port: 8888,
+        clientPort: 8888,
+        protocol: 'ws',
+      },
+      strictPort: false, // 如果端口被占用，自动尝试下一个可用端口
       proxy: {
         ...(ENABLE_PROXY ? {
           '/entry-gateway': createEntryGatewayProxy({ getLogger })
-        } : {})}
+        } : {}),
+        // HSK Subgraph 代理 - 解决 CORS 问题
+        '/hsk-subgraph': {
+          target: 'https://graphnode-testnet.hashkeychain.net',
+          changeOrigin: true,
+          secure: true,
+          rewrite: (path) => path.replace(/^\/hsk-subgraph/, '/subgraphs/name/uniswap-v3/hsk-test'),
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq, req) => {
+              if (DEBUG_PROXY) {
+                console.log(`[HSK Subgraph Proxy] ${req.method} ${req.url}`)
+              }
+            })
+          },
+        },
+      }
     },
 
     build: {

@@ -13,9 +13,10 @@ function getStoreLocale(): Locale | undefined {
 }
 
 function setupInitialLanguage() {
-  const lngQuery = typeof window !== 'undefined' ? new URL(window.location.href).searchParams.get('lng') : ''
-  const initialLocale = parseLocale(lngQuery) ?? getStoreLocale() ?? navigatorLocale() ?? DEFAULT_LOCALE
-  changeLanguage(initialLocale)
+  // Force English only - ignore query params, store, and navigator locale
+  // const lngQuery = typeof window !== 'undefined' ? new URL(window.location.href).searchParams.get('lng') : ''
+  // const initialLocale = parseLocale(lngQuery) ?? getStoreLocale() ?? navigatorLocale() ?? DEFAULT_LOCALE
+  changeLanguage(DEFAULT_LOCALE) // Always use English
 }
 
 if (!isTestEnv()) {
@@ -24,14 +25,16 @@ if (!isTestEnv()) {
 
 export function LanguageProvider({ children }: { children: ReactNode }): JSX.Element {
   const dispatch = useAppDispatch()
-  const locale = useCurrentLocale()
+  // Force English only - ignore current locale
+  // const locale = useCurrentLocale()
+  const locale = DEFAULT_LOCALE
 
   useEffect(() => {
-    changeLanguage(locale)
-    document.documentElement.setAttribute('lang', locale)
+    changeLanguage(DEFAULT_LOCALE) // Always use English
+    document.documentElement.setAttribute('lang', DEFAULT_LOCALE)
     // stores the selected locale to persist across sessions
-    dispatch(setCurrentLanguage(mapLocaleToLanguage[locale]))
-  }, [locale, dispatch])
+    dispatch(setCurrentLanguage(mapLocaleToLanguage[DEFAULT_LOCALE]))
+  }, [dispatch]) // Remove locale dependency
 
   return <>{children}</>
 }

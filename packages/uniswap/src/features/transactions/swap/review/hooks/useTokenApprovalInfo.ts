@@ -37,6 +37,12 @@ function useApprovalWillBeBatchedWithSwap(chainId: UniverseChainId, routing: Tra
   const swapDelegationInfo = useUniswapContextSelector((ctx) => ctx.getSwapDelegationInfo?.(chainId))
 
   const isBatchableFlow = Boolean(routing && !isUniswapX({ routing }))
+  const isHashKeyChain = chainId === UniverseChainId.HashKey || chainId === UniverseChainId.HashKeyTestnet
+
+  if (isHashKeyChain) {
+    // HashKey swaps use direct router calldata and are not atomic-batched with approvals.
+    return false
+  }
 
   return Boolean((canBatchTransactions || swapDelegationInfo?.delegationAddress) && isBatchableFlow)
 }
@@ -47,6 +53,7 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
   const isWrap = wrapType !== WrapType.NotApplicable
   /** Approval is included elsewhere for Chained Actions so it can be skipped */
   const isChained = routing === TradingApi.Routing.CHAINED
+  const isHashKeyChain = chainId === UniverseChainId.HashKey || chainId === UniverseChainId.HashKeyTestnet
 
   const address = account?.address
   const inputWillBeWrapped = routing && isUniswapX({ routing })
@@ -125,6 +132,17 @@ export function useTokenApprovalInfo(params: TokenApprovalInfoParams): ApprovalT
     }
 
     if (data && !error) {
+      if (process.env.NODE_ENV === 'development' && isHashKeyChain) {
+        console.log('[approval debug][HashKey] checkApproval result', {
+          approvalRequestArgs,
+          data,
+          hasApproval: !!data.approval,
+          hasCancel: !!data.cancel,
+          gasFee: data.gasFee,
+          cancelGasFee: data.cancelGasFee,
+        })
+      }
+
       // API returns null if no approval is required
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

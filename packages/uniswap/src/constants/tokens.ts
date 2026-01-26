@@ -6,6 +6,7 @@ import { BASE_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/base'
 import { BLAST_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/blast'
 import { BNB_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/bnb'
 import { CELO_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/celo'
+import { HASHKEY_CHAIN_INFO, HASHKEY_TESTNET_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/hashkey'
 import { MAINNET_CHAIN_INFO, SEPOLIA_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/mainnet'
 import { MONAD_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/monad'
 import { OPTIMISM_CHAIN_INFO } from 'uniswap/src/features/chains/evm/info/optimism'
@@ -340,6 +341,20 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token | undefined } =
     18,
     'WETH',
     'Wrapped Ether',
+  ),
+  [UniverseChainId.HashKey]: new Token(
+    UniverseChainId.HashKey,
+    '0xCA8aAceEC5Db1e91B9Ed3a344bA026c4a2B3ebF6',
+    18,
+    'WHSK',
+    'Wrapped HashKey',
+  ),
+  [UniverseChainId.HashKeyTestnet]: new Token(
+    UniverseChainId.HashKeyTestnet,
+    '0xCA8aAceEC5Db1e91B9Ed3a344bA026c4a2B3ebF6',
+    18,
+    'WHSK',
+    'Wrapped HashKey',
   ),
   [UniverseChainId.Solana]: new SolanaToken(
     UniverseChainId.Solana,

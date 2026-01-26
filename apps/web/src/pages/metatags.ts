@@ -6,8 +6,11 @@ import i18n from 'uniswap/src/i18n'
 const DEFAULT_METATAGS: MetaTagInjectorInput = {
   title: i18n.t('interface.metatags.title'),
   description: i18n.t('interface.metatags.description'),
-  image: `https://app.uniswap.com/images/1200x630_Rich_Link_Preview_Image.png`,
-  url: 'https://app.uniswap.com',
+  image:
+    typeof window !== 'undefined'
+      ? `${window.location.origin}/images/hashkey-logo.png`
+      : '/images/hashkey-logo.png',
+  url: typeof window !== 'undefined' ? window.location.origin : '',
 }
 
 type MetatagAttributes = { property?: string; name?: string; content: string }

@@ -3,7 +3,6 @@ import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
 import { deprecatedStyled } from 'lib/styled-components'
 import { ChevronRight } from 'react-feather'
 import { Trans, useTranslation } from 'react-i18next'
-import { ThemeSelector } from 'theme/components/ThemeToggle'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguage, useLanguageInfo } from 'uniswap/src/features/language/hooks'
@@ -64,10 +63,10 @@ export function PreferenceSettings({
   const languageInfo = useLanguageInfo(activeLanguage)
 
   const items: SettingItem[] = [
-    {
-      label: showThemeLabel ? t('themeToggle.theme') : undefined,
-      component: <ThemeSelector compact fullWidth={!showThemeLabel} />,
-    },
+    // {
+    //   label: showThemeLabel ? t('themeToggle.theme') : undefined,
+    //   component: <ThemeSelector compact fullWidth={!showThemeLabel} />,
+    // },
     {
       label: t('common.language'),
       component: (

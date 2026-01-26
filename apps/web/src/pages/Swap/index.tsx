@@ -1,12 +1,10 @@
 import { PrefetchBalancesWrapper } from 'appGraphql/data/apollo/AdaptiveTokenBalancesProvider'
 import type { Currency } from '@uniswap/sdk-core'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { SwapBottomCard } from 'components/SwapBottomCard'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { PageWrapper } from 'components/swap/styled'
+import { useAppKit } from 'components/Web3Provider/reownConfig'
 import { useAccount } from 'hooks/useAccount'
-import { useDeferredComponent } from 'hooks/useDeferredComponent'
 import { PageType, useIsPage } from 'hooks/useIsPage'
 import { useModalState } from 'hooks/useModalState'
 import { useResetOverrideOneClickSwapFlag } from 'pages/Swap/settings/OneClickSwap'
@@ -29,7 +27,6 @@ import { zIndexes } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { useIsModeMismatch } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
-import { RampDirection } from 'uniswap/src/features/fiatOnRamp/types'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { WebFORNudgeProvider } from 'uniswap/src/features/providers/webForNudgeProvider'
 import { InterfaceEventName, InterfacePageName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -60,7 +57,7 @@ export default function SwapPage() {
   // (WEB-4737): Remove this line after completing A/A Test on Web
   useFeatureFlag(FeatureFlags.AATestWeb)
 
-  const accountDrawer = useAccountDrawer()
+  const { open } = useAppKit()
 
   const {
     initialInputCurrency,
@@ -74,10 +71,10 @@ export default function SwapPage() {
 
   useEffect(() => {
     if (triggerConnect) {
-      accountDrawer.open()
+      open({ view: 'Connect' })
       navigate(location.pathname, { replace: true })
     }
-  }, [accountDrawer, triggerConnect, navigate, location.pathname])
+  }, [open, triggerConnect, navigate, location.pathname])
 
   return (
     <Trace logImpression page={InterfacePageName.SwapPage}>
@@ -95,7 +92,7 @@ export default function SwapPage() {
           />
         </WebFORNudgeProvider>
       </PageWrapper>
-      {location.pathname === '/swap' && <SwitchLocaleLink />}
+      {/* {location.pathname === '/swap' && <SwitchLocaleLink />} */}
     </Trace>
   )
 }
@@ -214,21 +211,21 @@ export function Swap({
   )
 }
 
-const SWAP_TABS = [SwapTab.Swap, SwapTab.Limit, SwapTab.Buy, SwapTab.Sell]
+const SWAP_TABS: SwapTab[] = [] // SwapTab.Swap, SwapTab.Limit, SwapTab.Buy, SwapTab.Sell
 
 const TAB_TYPE_TO_LABEL = {
-  [SwapTab.Swap]: (t: AppTFunction) => t('swap.form.header'),
-  [SwapTab.Limit]: (t: AppTFunction) => t('swap.limit'),
+  // [SwapTab.Swap]: (t: AppTFunction) => t('swap.form.header'),
+  // [SwapTab.Limit]: (t: AppTFunction) => t('swap.limit'),
   [SwapTab.Send]: (t: AppTFunction) => t('send.title'),
-  [SwapTab.Buy]: (t: AppTFunction) => t('common.buy.label'),
-  [SwapTab.Sell]: (t: AppTFunction) => t('common.sell.label'),
+  // [SwapTab.Buy]: (t: AppTFunction) => t('common.buy.label'),
+  // [SwapTab.Sell]: (t: AppTFunction) => t('common.sell.label'),
 }
 
 const PATHNAME_TO_TAB: { [key: string]: SwapTab } = {
   '/swap': SwapTab.Swap,
-  '/limit': SwapTab.Limit,
-  '/buy': SwapTab.Buy,
-  '/sell': SwapTab.Sell,
+  // '/limit': SwapTab.Limit,
+  // '/buy': SwapTab.Buy,
+  // '/sell': SwapTab.Sell,
 }
 
 function UniversalSwapFlow({
@@ -260,16 +257,16 @@ function UniversalSwapFlow({
   const { t } = useTranslation()
   const swapHandlers = useSwapHandlers()
 
-  const LimitFormWrapper = useDeferredComponent(() =>
-    import('pages/Swap/Limit/LimitForm').then((module) => ({
-      default: module.LimitFormWrapper,
-    })),
-  )
-  const BuyForm = useDeferredComponent(() =>
-    import('pages/Swap/Buy/BuyForm').then((module) => ({
-      default: module.BuyForm,
-    })),
-  )
+  // const LimitFormWrapper = useDeferredComponent(() =>
+  //   import('pages/Swap/Limit/LimitForm').then((module) => ({
+  //     default: module.LimitFormWrapper,
+  //   })),
+  // )
+  // const BuyForm = useDeferredComponent(() =>
+  //   import('pages/Swap/Buy/BuyForm').then((module) => ({
+  //     default: module.BuyForm,
+  //   })),
+  // )
 
   const { openModal: openSendFormModal } = useModalState(ModalName.Send)
 
@@ -302,9 +299,9 @@ function UniversalSwapFlow({
   const isFiatOffRampEnabled = useFeatureFlag(FeatureFlags.FiatOffRamp)
   const SWAP_TAB_OPTIONS: readonly SegmentedControlOption<SwapTab>[] = useMemo(() => {
     return SWAP_TABS.filter((tab) => {
-      if (tab === SwapTab.Sell && !isFiatOffRampEnabled) {
-        return false
-      }
+      // if (tab === SwapTab.Sell && !isFiatOffRampEnabled) {
+      //   return false
+      // }
 
       return true
     }).map((tab) => ({
@@ -316,7 +313,7 @@ function UniversalSwapFlow({
           color={currentTab === tab ? '$neutral1' : '$neutral2'}
           tag="h1"
         >
-          {TAB_TYPE_TO_LABEL[tab](t)}
+          {tab in TAB_TYPE_TO_LABEL ? TAB_TYPE_TO_LABEL[tab as keyof typeof TAB_TYPE_TO_LABEL](t) : tab}
         </Text>
       ),
     }))
@@ -332,14 +329,23 @@ function UniversalSwapFlow({
     <Flex>
       {!hideHeader && (
         <Flex row gap="$spacing16">
-          <SegmentedControl
-            outlined={false}
-            size="large"
-            options={SWAP_TAB_OPTIONS}
-            selectedOption={currentTab}
-            onSelectOption={onTabClick}
-            gap={isMobileWeb ? '$spacing8' : undefined}
-          />
+          {SWAP_TAB_OPTIONS.length >= 2 ? (
+            <SegmentedControl
+              outlined={false}
+              size="large"
+              options={SWAP_TAB_OPTIONS}
+              selectedOption={currentTab}
+              onSelectOption={onTabClick}
+              gap={isMobileWeb ? '$spacing8' : undefined}
+            />
+          ) : // <Text
+          //   variant="buttonLabel3"
+          //   color="$neutral1"
+          //   tag="h1"
+          // >
+          //   {TAB_TYPE_TO_LABEL[SwapTab.Swap](t)}
+          // </Text>
+          null}
         </Flex>
       )}
       {currentTab === SwapTab.Swap && (
@@ -361,21 +367,21 @@ function UniversalSwapFlow({
           <SwapBottomCard />
         </Flex>
       )}
-      {currentTab === SwapTab.Limit && LimitFormWrapper && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
-      {currentTab === SwapTab.Buy && BuyForm && (
+      {/* {currentTab === SwapTab.Limit && LimitFormWrapper && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />} */}
+      {/* {currentTab === SwapTab.Buy && BuyForm && (
         <BuyForm
           rampDirection={RampDirection.ONRAMP}
           disabled={disableTokenInputs}
           initialCurrency={tdpCurrency ?? prefilledState?.output}
         />
-      )}
-      {currentTab === SwapTab.Sell && BuyForm && (
+      )} */}
+      {/* {currentTab === SwapTab.Sell && BuyForm && (
         <BuyForm
           rampDirection={RampDirection.OFFRAMP}
           disabled={disableTokenInputs}
           initialCurrency={tdpCurrency ?? prefilledState?.output}
         />
-      )}
+      )} */}
     </Flex>
   )
 }

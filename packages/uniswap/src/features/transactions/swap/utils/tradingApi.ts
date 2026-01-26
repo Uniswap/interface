@@ -373,7 +373,17 @@ function isTradingApiSupportedChainId(chainId?: number): chainId is TradingApi.C
 }
 
 export function toTradingApiSupportedChainId(chainId: Maybe<number>): TradingApi.ChainId | undefined {
-  if (!chainId || !isTradingApiSupportedChainId(chainId)) {
+  if (!chainId) {
+    return undefined
+  }
+  
+  // HashKey chains are supported by the Trading API (even if not in TradingApi.ChainId enum)
+  // The backend will handle the conversion to internal format ("hsk" or "hsktest")
+  if (chainId === 177 || chainId === 133) {
+    return chainId as TradingApi.ChainId
+  }
+  
+  if (!isTradingApiSupportedChainId(chainId)) {
     return undefined
   }
   return chainId
@@ -482,29 +492,23 @@ export function createGetQuoteRoutingParams(ctx: {
     const { isUSDQuote } = input
     // for USD quotes, we avoid routing through UniswapX
     // hooksOptions should not be sent for USD quotes
+    // HSKSwap only supports V3
     if (isUSDQuote) {
       return {
-        protocols: [TradingApi.ProtocolItems.V2, TradingApi.ProtocolItems.V3, TradingApi.ProtocolItems.V4],
+        protocols: [TradingApi.ProtocolItems.V3],
       }
     }
 
     const protocols = ctx.getProtocols()
 
-    let finalProtocols = [...protocols]
-    let hooksOptions: TradingApi.HooksOptions
+    // HSKSwap only supports V3, filter out V2, V4, and UniswapX
+    const v3OnlyProtocols = protocols.filter((p) => p === TradingApi.ProtocolItems.V3)
 
-    const isV4HookPoolsEnabled = ctx.getIsV4HookPoolsEnabled()
+    // If no V3 in protocols, force V3 (shouldn't happen with DEFAULT_PROTOCOL_OPTIONS, but safety check)
+    const finalProtocols = v3OnlyProtocols.length > 0 ? v3OnlyProtocols : [TradingApi.ProtocolItems.V3]
 
-    if (isV4HookPoolsEnabled) {
-      if (!protocols.includes(TradingApi.ProtocolItems.V4)) {
-        finalProtocols = [...protocols, TradingApi.ProtocolItems.V4] // we need to re-add v4 to protocols if v4 hooks is toggled on
-        hooksOptions = TradingApi.HooksOptions.V4_HOOKS_ONLY
-      } else {
-        hooksOptions = TradingApi.HooksOptions.V4_HOOKS_INCLUSIVE
-      }
-    } else {
-      hooksOptions = TradingApi.HooksOptions.V4_NO_HOOKS
-    }
+    // HSKSwap doesn't support V4 hooks
+    const hooksOptions = TradingApi.HooksOptions.V4_NO_HOOKS
 
     return { protocols: finalProtocols, hooksOptions }
   }

@@ -20,12 +20,14 @@ export function createPrepareSwap(
       const getAction = createGetAction(ctx)
       const handleEventAction = createHandleEventAction(ctx)
 
-      const action = getAction({
+      const skipWarnings = {
         skipBridgingWarning: ctx.warningService.getSkipBridgingWarning(),
         skipMaxTransferWarning: ctx.warningService.getSkipMaxTransferWarning(),
         skipTokenProtectionWarning: ctx.warningService.getSkipTokenProtectionWarning(),
         skipBridgedAssetWarning: ctx.warningService.getSkipBridgedAssetWarning(),
-      })
+      }
+
+      const action = getAction(skipWarnings)
 
       handleEventAction(action)
     } catch (error) {
@@ -35,6 +37,9 @@ export function createPrepareSwap(
           function: 'prepareSwap',
         },
       })
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[prepareSwap] Error:', error)
+      }
     }
     // always reset the warning service after the action is handled
     ctx.warningService.reset()
@@ -154,6 +159,7 @@ interface HandleEventActionContext {
   onConnectWallet?: (platform?: Platform) => void
   updateSwapForm: (newState: Partial<SwapFormState>) => void
   setScreen: (screen: TransactionScreen) => void
+  onExecuteSwapDirectly?: () => void
 }
 
 function createHandleEventAction(ctx: HandleEventActionContext): (action: ReviewAction) => void {
@@ -167,6 +173,7 @@ function createHandleEventAction(ctx: HandleEventActionContext): (action: Review
     onConnectWallet,
     updateSwapForm,
     setScreen,
+    onExecuteSwapDirectly,
   } = ctx
   function handleEventAction(action: ReviewAction): void {
     switch (action.type) {
@@ -193,8 +200,14 @@ function createHandleEventAction(ctx: HandleEventActionContext): (action: Review
         handleShowBridgedAssetModal()
         break
       case ReviewActionType.PROCEED_TO_REVIEW:
-        updateSwapForm({ txId: createTransactionId() })
+        const txId = createTransactionId()
+        updateSwapForm({ txId })
+        // If onExecuteSwapDirectly is provided, execute swap directly instead of showing review screen
+        if (onExecuteSwapDirectly) {
+          onExecuteSwapDirectly()
+        } else {
         setScreen(TransactionScreen.Review)
+        }
         break
     }
   }

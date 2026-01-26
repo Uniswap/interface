@@ -10,6 +10,7 @@ export enum OnchainItemSectionName {
   SuggestedTokens = 'suggestedTokens',
   BridgingTokens = 'bridgingTokens',
   OtherChainsTokens = 'otherNetworksTokens',
+  PoolTokens = 'poolTokens', // Tokens from pools
 
   Tokens = 'tokens',
   Pools = 'pools',

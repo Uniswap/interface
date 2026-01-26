@@ -1,6 +1,7 @@
 import { useTotalBalancesUsdForAnalytics } from 'appGraphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { TradingApi } from '@universe/api'
 import { Experiments } from '@universe/gating'
+import { Interface } from '@ethersproject/abi'
 import { popupRegistry } from 'components/Popups/registry'
 import { PopupType } from 'components/Popups/types'
 import { DEFAULT_TXN_DISMISS_MS, L2_TXN_DISMISS_MS, ZERO_PERCENT } from 'constants/misc'
@@ -40,6 +41,7 @@ import {
   TransactionStep,
   TransactionStepType,
 } from 'uniswap/src/features/transactions/steps/types'
+import { UNCONNECTED_ADDRESS } from 'uniswap/src/features/transactions/swap/services/tradeService/transformations/buildQuoteRequest'
 import {
   ExtractedBaseTradeAnalyticsProperties,
   getBaseTradeAnalyticsProperties,
@@ -75,27 +77,383 @@ import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
+function patchFirstWordAddressIfUnconnected(input: string, recipientAddress: string): string {
+  if (typeof input !== 'string' || !input.startsWith('0x') || input.length < 66) {
+    return input
+  }
+
+  const firstWord = input.slice(2, 66) // 32 bytes
+  const embeddedAddress = `0x${firstWord.slice(24)}`.toLowerCase()
+  if (embeddedAddress !== UNCONNECTED_ADDRESS.toLowerCase()) {
+    return input
+  }
+
+  const addrNo0x = recipientAddress.toLowerCase().replace(/^0x/, '')
+  const padded = addrNo0x.padStart(64, '0')
+  return `0x${padded}${input.slice(66)}`
+}
+
+/**
+ * Extracts total amountIn from all exactInput calls in multicall data
+ * This is used to ensure sufficient token allowance for Universal Router
+ */
+function getTotalAmountInFromMulticall(multicallData: string): bigint | undefined {
+  try {
+    const MULTICALL_ABI = ['function multicall(bytes[] data) payable returns (bytes[] results)']
+    const EXACT_INPUT_ABI = [
+      'function exactInput((bytes path, address recipient, uint256 amountIn, uint256 amountOutMinimum))',
+    ]
+
+    const multicallIface = new Interface(MULTICALL_ABI)
+    const exactInputIface = new Interface(EXACT_INPUT_ABI)
+
+    const decoded = multicallIface.decodeFunctionData('multicall', multicallData)
+    const calls = decoded[0]
+
+    let totalAmountIn = BigInt(0)
+    for (const callData of calls) {
+      try {
+        const decodedCall = exactInputIface.decodeFunctionData('exactInput', callData)
+        const params = decodedCall[0]
+        // amountIn is a BigNumber from ethers, convert to bigint
+        totalAmountIn += BigInt(params.amountIn.toString())
+      } catch {
+        // Skip if not exactInput call
+      }
+    }
+
+    return totalAmountIn > 0 ? totalAmountIn : undefined
+  } catch {
+    return undefined
+  }
+}
+
+/**
+ * Patches recipient address in multicall exactInput calls
+ * Replaces the recipient address in each exactInput call within multicall
+ * 
+ * Why use multicall directly?
+ * 1. Universal Router supports multicall natively (as seen in successful transactions)
+ * 2. Multicall format is simpler and already proven to work
+ * 3. No need for complex conversion to execute format
+ */
+function patchMulticallRecipient(multicallData: string, recipientAddress: string): string {
+  try {
+    const MULTICALL_ABI = ['function multicall(bytes[] data) payable returns (bytes[] results)']
+    const EXACT_INPUT_ABI = [
+      'function exactInput((bytes path, address recipient, uint256 amountIn, uint256 amountOutMinimum))',
+    ]
+
+    const multicallIface = new Interface(MULTICALL_ABI)
+    const exactInputIface = new Interface(EXACT_INPUT_ABI)
+
+    const decoded = multicallIface.decodeFunctionData('multicall', multicallData)
+    const calls = decoded[0]
+
+    // Patch each call's recipient address
+    const patchedCalls = calls.map((callData: string) => {
+      try {
+        const decodedCall = exactInputIface.decodeFunctionData('exactInput', callData)
+        const params = decodedCall[0]
+
+        // Check if recipient needs to be patched
+        // Only patch if recipient is UNCONNECTED_ADDRESS (placeholder from Trading API)
+        // 
+        // Note: Other recipient addresses (like 0xfCb42db392E6641fFA057f143aCe1953759f708f)
+        // should be preserved as they may be special addresses that Universal Router handles correctly.
+        // The key issue was insufficient token allowance, not the recipient address itself.
+        const currentRecipient = params.recipient.toLowerCase()
+        const unconnectedAddress = UNCONNECTED_ADDRESS.toLowerCase()
+
+        // Only patch if recipient is UNCONNECTED_ADDRESS
+        if (currentRecipient === unconnectedAddress) {
+          // Re-encode exactInput with user address as recipient
+          const patchedParams = {
+            ...params,
+            recipient: recipientAddress,
+          }
+          return exactInputIface.encodeFunctionData('exactInput', [patchedParams])
+        }
+
+        return callData
+      } catch (error) {
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('[Swap] Failed to patch multicall call:', error)
+        }
+        return callData
+      }
+    })
+
+    // Re-encode multicall with patched calls
+    return multicallIface.encodeFunctionData('multicall', [patchedCalls])
+  } catch (error) {
+    if (process.env.NODE_ENV === 'development') {
+      console.warn('[Swap] Failed to patch multicall recipient:', error)
+    }
+    return multicallData
+  }
+}
+
+function normalizeHexData(data: string): string {
+  return data.startsWith('0x') ? data : `0x${data}`
+}
+
+/**
+ * Converts multicall (SwapRouter02) calldata to Universal Router execute format.
+ * This handles the case where Trading API returns multicall instead of execute.
+ * 
+ * Note: This is a simplified conversion. For production, consider using Universal Router SDK
+ * to properly rebuild the swap commands from the trade object instead of converting calldata.
+ */
+function convertMulticallToExecute(
+  multicallData: string,
+  deadlineSeconds: number,
+  recipientAddress: string,
+): string | undefined {
+  try {
+    const MULTICALL_ABI = ['function multicall(bytes[] data) payable returns (bytes[] results)']
+    const EXACT_INPUT_ABI = [
+      'function exactInput((bytes path, address recipient, uint256 amountIn, uint256 amountOutMinimum))',
+    ]
+    const EXECUTE_3_ABI = ['function execute(bytes commands, bytes[] inputs, uint256 deadline)']
+
+    const multicallIface = new Interface(MULTICALL_ABI)
+    const exactInputIface = new Interface(EXACT_INPUT_ABI)
+    const executeIface = new Interface(EXECUTE_3_ABI)
+
+    const decoded = multicallIface.decodeFunctionData('multicall', multicallData)
+    const calls = decoded[0]
+
+    // For now, log that we detected multicall but don't convert
+    // The proper solution is to ensure Trading API returns execute format,
+    // or rebuild using Universal Router SDK from the trade object
+    if (process.env.NODE_ENV === 'development') {
+      console.warn(
+        '[Swap] Received multicall calldata - conversion to execute not yet implemented. ' +
+          'Consider using Universal Router SDK to rebuild from trade object.',
+      )
+    }
+
+    // Return undefined to fall back to original data
+    // TODO: Implement proper conversion using Universal Router SDK
+    return undefined
+  } catch {
+    return undefined
+  }
+}
+
+function fixUniversalRouterExecuteData({
+  data,
+  deadlineSeconds,
+  recipientAddress,
+}: {
+  data: string | undefined
+  deadlineSeconds: number | undefined
+  recipientAddress: string | undefined
+}): string | undefined {
+  if (!data || typeof data !== 'string') {
+    return data
+  }
+  if (!deadlineSeconds || !Number.isFinite(deadlineSeconds)) {
+    return data
+  }
+  if (!recipientAddress) {
+    return data
+  }
+
+  try {
+    const normalized = normalizeHexData(data)
+    const selector = normalized.slice(0, 10).toLowerCase()
+
+    // Check if it's multicall (SwapRouter02)
+    // Universal Router supports multicall directly, so we can use it as-is
+    // Just need to patch recipient address if needed
+    // 
+    // Why use multicall instead of converting to execute?
+    // 1. Universal Router natively supports multicall (proven by successful transactions)
+    // 2. Multicall format is simpler and already working
+    // 3. Conversion to execute format has been problematic
+    const MULTICALL_SELECTOR = '0xac9650d8'
+    if (selector === MULTICALL_SELECTOR.toLowerCase()) {
+      // Patch recipient address in multicall instead of converting to execute
+      // This is simpler and matches the successful transaction format
+      //
+      // IMPORTANT: When using multicall, ensure sufficient token allowance for Universal Router.
+      // Multicall may contain multiple swap calls, each with its own amountIn.
+      // The total amount needed = sum of all amountIn values in all exactInput calls.
+      // Universal Router requires direct ERC20 approval (not just Permit2 approval).
+      const totalAmountIn = getTotalAmountInFromMulticall(normalized)
+      if (totalAmountIn && process.env.NODE_ENV === 'development') {
+        console.log(
+          `[Swap] Multicall total amountIn: ${totalAmountIn.toString()} (${totalAmountIn.toString() / BigInt(10 ** 18)} tokens)`,
+        )
+      }
+      const patched = patchMulticallRecipient(normalized, recipientAddress)
+      if (patched !== normalized) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[Swap] Patched recipient address in multicall calldata')
+        }
+        logger.info(
+          'swapSaga',
+          'fixUniversalRouterExecuteData',
+          '[Swap] Patched multicall recipient',
+          {
+            originalRecipient: 'from multicall',
+            newRecipient: recipientAddress,
+            selector: MULTICALL_SELECTOR,
+            approach: 'multicall_direct',
+          },
+        )
+        return patched
+      }
+      // If no patching needed, return original multicall data
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[Swap] Using multicall calldata directly (Universal Router supports it)')
+      }
+      logger.info(
+        'swapSaga',
+        'fixUniversalRouterExecuteData',
+        '[Swap] Using multicall calldata directly',
+        {
+          selector: MULTICALL_SELECTOR,
+          approach: 'multicall_direct',
+          recipient: recipientAddress,
+          totalAmountIn: totalAmountIn?.toString(),
+          note: 'Ensure token allowance >= totalAmountIn for Universal Router',
+        },
+      )
+      return normalized
+    }
+
+    // Handle execute format (2-param or 3-param)
+    const EXECUTE_2_ABI = ['function execute(bytes commands, bytes[] inputs)']
+    const EXECUTE_3_ABI = ['function execute(bytes commands, bytes[] inputs, uint256 deadline)']
+    const iface2 = new Interface(EXECUTE_2_ABI)
+    const iface3 = new Interface(EXECUTE_3_ABI)
+
+    const execute2Selector = iface2.getSighash('execute').toLowerCase()
+    const execute3Selector = iface3.getSighash('execute').toLowerCase()
+
+    let commands: string
+    let inputs: string[]
+
+    if (selector === execute2Selector) {
+      const decoded = iface2.decodeFunctionData('execute', normalized)
+      commands = decoded[0]
+      inputs = decoded[1]
+    } else if (selector === execute3Selector) {
+      const decoded = iface3.decodeFunctionData('execute', normalized)
+      commands = decoded[0]
+      inputs = decoded[1]
+    } else {
+      return data
+    }
+
+    const patchedInputs = inputs.map((input) => patchFirstWordAddressIfUnconnected(input, recipientAddress))
+    return iface3.encodeFunctionData('execute', [commands, patchedInputs, deadlineSeconds])
+  } catch {
+    return data
+  }
+}
+
 function* handleSwapTransactionStep(params: HandleSwapStepParams): SagaGenerator<string> {
   const { trade, step, signature, analytics, onTransactionHash } = params
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Swap] handleSwapTransactionStep: Starting', {
+      stepType: step.type,
+      hasStep: !!step,
+      hasSignature: !!signature,
+    })
+  }
 
   const info = getSwapTransactionInfo({
     trade,
     isFinalStep: analytics.is_final_step,
     swapStartTimestamp: analytics.swap_start_timestamp,
   })
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Swap] handleSwapTransactionStep: Calling getSwapTxRequest')
+  }
   const txRequest = yield* call(getSwapTxRequest, step, signature)
+  const deadlineSeconds = typeof (trade as any).deadline === 'number' ? (trade as any).deadline : undefined
+  const recipientAddress = (params as HandleSwapStepParams & { address?: string }).address
+  const txRequestDataFixed = fixUniversalRouterExecuteData({
+    data: txRequest.data?.toString(),
+    deadlineSeconds,
+    recipientAddress,
+  })
+  const txRequestFixed =
+    txRequestDataFixed && txRequestDataFixed !== txRequest.data?.toString()
+      ? { ...txRequest, data: txRequestDataFixed }
+      : txRequest
+
+  const originalSelector = txRequest.data?.toString()?.slice(0, 10)?.toLowerCase()
+  const finalSelector = txRequestFixed.data?.toString()?.slice(0, 10)?.toLowerCase()
+  const wasModified = txRequestDataFixed && txRequestDataFixed !== txRequest.data?.toString()
+
+  ;(globalThis as any).__SWAP_SAGA_LAST_TX__ = {
+    stage: 'afterGetSwapTxRequest',
+    time: Date.now(),
+    chainId: txRequestFixed.chainId,
+    to: txRequestFixed.to,
+    originalSelector,
+    finalSelector,
+    wasModified,
+    deadlineSeconds,
+    recipientAddress,
+    originalDataLength: txRequest.data?.toString()?.length,
+    finalDataLength: txRequestFixed.data?.toString()?.length,
+  }
+
+  logger.info('swapSaga', 'handleSwapTransactionStep', 'Prepared swap txRequest', {
+    chainId: txRequestFixed.chainId,
+    to: txRequestFixed.to,
+    originalSelector,
+    finalSelector,
+    wasModified,
+    deadlineSeconds,
+    recipientAddress,
+  })
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Swap] Calldata transformation:', {
+      originalSelector,
+      finalSelector,
+      wasModified,
+      deadlineSeconds,
+      recipientAddress,
+    })
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Swap] handleSwapTransactionStep: Got txRequest:', {
+      hasTxRequest: !!txRequestFixed,
+      to: txRequestFixed?.to,
+      chainId: txRequestFixed?.chainId,
+    })
+  }
 
   const onModification = ({ hash, data }: VitalTxFields) => {
     sendAnalyticsEvent(SwapEventName.SwapModifiedInWallet, {
       ...analytics,
       txHash: hash,
-      expected: txRequest.data?.toString() ?? '',
+      expected: txRequestFixed.data?.toString() ?? '',
       actual: data,
     })
   }
 
   // Now that we have the txRequest, we can create a definitive SwapTransactionStep, incase we started with an async step.
-  const onChainStep = { ...step, txRequest }
+  const onChainStep = { ...step, txRequest: txRequestFixed }
+  
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Swap] handleSwapTransactionStep: About to call handleOnChainStep:', {
+      stepType: onChainStep.type,
+      hasTxRequest: !!onChainStep.txRequest,
+    })
+  }
+  
   const hash = yield* call(handleOnChainStep, {
     ...params,
     info,
@@ -103,7 +461,12 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams): SagaGenerator
     ignoreInterrupt: true, // We avoid interruption during the swap step, since it is too late to give user a new trade once the swap is submitted.
     shouldWaitForConfirmation: false,
     onModification,
+    allowDuplicativeTx: true, // Allow duplicate transactions for swap - user may want to submit multiple swaps
   })
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Swap] handleSwapTransactionStep: handleOnChainStep returned hash:', hash)
+  }
 
   handleSwapTransactionAnalytics({ ...params, hash })
 
@@ -223,13 +586,25 @@ function* swap(params: SwapParams) {
   } = params
   const { trade } = swapTxContext
 
+  const swapChainId = swapTxContext.trade.inputAmount.currency.chainId
+  
   const { chainSwitchFailed } = yield* call(handleSwitchChains, {
     selectChain: params.selectChain,
     startChainId: params.startChainId,
     swapTxContext,
   })
+  
   if (chainSwitchFailed) {
-    onFailure()
+    const error = new Error(`Chain switch failed: unable to switch from chain ${params.startChainId} to chain ${swapChainId}`)
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[Swap] Error: Chain switch failed', {
+        error: error.message,
+        startChainId: params.startChainId,
+        swapChainId,
+      })
+    }
+    const onPressRetry = params.getOnPressRetry(error)
+    onFailure(error, onPressRetry)
     return
   }
 
@@ -248,22 +623,43 @@ function* swap(params: SwapParams) {
     }
 
     for (step of steps) {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[Swap] swap saga: Processing step:', {
+          stepType: step.type,
+          stepIndex: steps.indexOf(step),
+        })
+      }
       switch (step.type) {
         case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Swap] swap saga: Handling approval step')
+          }
           yield* call(handleApprovalTransactionStep, { address: account.address, step, setCurrentStep })
           break
         }
         case TransactionStepType.Permit2Signature: {
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Swap] swap saga: Handling permit signature step')
+          }
           signature = yield* call(handleSignatureStep, { address: account.address, step, setCurrentStep })
           break
         }
         case TransactionStepType.Permit2Transaction: {
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Swap] swap saga: Handling permit transaction step')
+          }
           yield* call(handlePermitTransactionStep, { address: account.address, step, setCurrentStep })
           break
         }
         case TransactionStepType.SwapTransaction:
         case TransactionStepType.SwapTransactionAsync: {
+          if (process.env.NODE_ENV === 'development') {
+            console.log('[Swap] swap saga: Handling swap transaction step:', {
+              stepType: step.type,
+              hasTxRequest: 'txRequest' in step && !!step.txRequest,
+            })
+          }
           requireRouting(trade, [TradingApi.Routing.CLASSIC, TradingApi.Routing.BRIDGE])
           yield* call(handleSwapTransactionStep, {
             address: account.address,
@@ -303,11 +699,20 @@ function* swap(params: SwapParams) {
     if (displayableError) {
       logger.error(displayableError, { tags: { file: 'swapSaga', function: 'swap' } })
     }
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[Swap] swap saga: Error occurred:', {
+        error: displayableError?.message || error instanceof Error ? error.message : String(error),
+        stepType: step?.type,
+      })
+    }
     const onPressRetry = params.getOnPressRetry(displayableError)
     onFailure(displayableError, onPressRetry)
     return
   }
 
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Swap] swap saga: All steps completed, calling onSuccess')
+  }
   yield* call(onSuccess)
 }
 
@@ -333,6 +738,18 @@ export function useSwapCallback(): SwapCallback {
 
   return useCallback(
     (args: SwapCallbackParams) => {
+      if (process.env.NODE_ENV === 'development') {
+        const hasTxRequests = 'txRequests' in args.swapTxContext && Array.isArray(args.swapTxContext.txRequests)
+        const txRequestCount =
+          'txRequests' in args.swapTxContext && Array.isArray(args.swapTxContext.txRequests)
+            ? args.swapTxContext.txRequests.length
+            : 0
+        console.log('[Swap] swapCallback called', {
+          routing: args.swapTxContext.routing,
+          hasTxRequests,
+          txRequestCount,
+        })
+      }
       const {
         swapTxContext,
         onSuccess,

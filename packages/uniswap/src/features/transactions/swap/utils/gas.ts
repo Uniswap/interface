@@ -23,14 +23,38 @@ export function sumGasFees(gasFees: (string | undefined)[]): string | undefined 
  *   - displayValue: Sum of all display values (undefined if any result has error or missing value)
  */
 export function mergeGasFeeResults(...gasFeeResults: GasFeeResult[]): GasFeeResult {
-  const error = gasFeeResults.map((g) => g.error).find((e) => !!e) ?? null
+  // Filter out "Approval action unknown" errors - these are informational and shouldn't block swap
+  // Also filter out empty objects and empty Error instances
+  const meaningfulErrors = gasFeeResults
+    .map((g) => g.error)
+    .filter((e) => {
+      if (!e) return false
+      if (e instanceof Error) {
+        // Filter out empty Error objects and "Approval action unknown" errors
+        if (!e.message || e.message.length === 0) return false
+        if (e.message === 'Approval action unknown') return false
+        return true
+      }
+      if (typeof e === 'object' && Object.keys(e).length > 0) return true
+      // Empty object {} should be filtered out
+      return false
+    })
+
+  // Use the first meaningful error, or null if none
+  const error = meaningfulErrors[0] ?? null
+
   const isLoading = gasFeeResults.some((r) => r.isLoading)
 
-  const expectedValueMissing = gasFeeResults.some((r) => r.value === undefined)
+  // Only consider value missing if it's missing AND there's a meaningful error
+  // If value is missing but error is null (or filtered out), we can still proceed if other results have values
+  const resultsWithValues = gasFeeResults.filter((r) => r.value !== undefined)
+  const expectedValueMissing = resultsWithValues.length === 0 && error !== null
+
   if (expectedValueMissing || error) {
     return { value: undefined, displayValue: undefined, error, isLoading }
   }
 
+  // Sum only the values that are defined
   const value = sumGasFees(gasFeeResults.map((r) => r.value))
   const displayValue = sumGasFees(gasFeeResults.map((r) => r.displayValue))
   return { value, displayValue, error, isLoading }

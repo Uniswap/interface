@@ -1,5 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
-import { WETH_ADDRESS as getWethAddress } from '@uniswap/universal-router-sdk'
+import { WETH_ADDRESS as getWethAddress } from '@hkdex-tmp/universal_router_sdk'
 import { BIPS_BASE, ZERO_PERCENT } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { useContract } from 'hooks/useContract'

@@ -39,8 +39,21 @@ export function createTransactionExecutor(transactionService: TransactionService
     try {
       const { params, shouldWait } = step
 
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[Swap] executeStep: Calling submitTransaction:', {
+          stepType: step.type,
+          hasParams: !!params,
+          hasRequest: !!params?.request,
+          hasSignedRequest: !!params?.request?.signedRequest,
+        })
+      }
+
       const result = yield* call(transactionService.submitTransaction, params)
       const hash = result.transactionHash
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[Swap] executeStep: Transaction submitted, hash:', hash)
+      }
 
       // Handle transaction spacing if required
       if (shouldWait) {
@@ -57,6 +70,12 @@ export function createTransactionExecutor(transactionService: TransactionService
         tags: { file: 'transactionExecutor', function: 'executeStep' },
         extra: { stepType: step.type },
       })
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[Swap] Error: executeStep failed:', {
+          error: error instanceof Error ? error.message : String(error),
+          stepType: step.type,
+        })
+      }
       return { error, success: false }
     }
   }

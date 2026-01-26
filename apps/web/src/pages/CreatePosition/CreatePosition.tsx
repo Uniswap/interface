@@ -112,7 +112,8 @@ const Toolbar = () => {
   } = useCreateLiquidityContext()
   const { protocolVersion } = positionState
   const customSlippageTolerance = useTransactionSettingsStore((s) => s.customSlippageTolerance)
-  const [versionDropdownOpen, setVersionDropdownOpen] = useState(false)
+  // 注释掉版本选择器 - 本期只做 V3 基础添加流动性
+  // const [versionDropdownOpen, setVersionDropdownOpen] = useState(false)
 
   const [showResetModal, setShowResetModal] = useState(false)
 
@@ -134,38 +135,39 @@ const Toolbar = () => {
     }
   }, [handleReset, isTestnetModeEnabled, prevIsTestnetModeEnabled])
 
-  const handleVersionChange = useCallback(
-    (version: ProtocolVersion) => {
-      const versionUrl = getProtocolVersionLabel(version)
-      if (versionUrl) {
-        // Ensure useLiquidityUrlState is synced
-        setTimeout(() => navigate(`/positions/create/${versionUrl}`), 1)
-      }
+  // 注释掉版本切换功能 - 本期只做 V3 基础添加流动性
+  // const handleVersionChange = useCallback(
+  //   (version: ProtocolVersion) => {
+  //     const versionUrl = getProtocolVersionLabel(version)
+  //     if (versionUrl) {
+  //       // Ensure useLiquidityUrlState is synced
+  //       setTimeout(() => navigate(`/positions/create/${versionUrl}`), 1)
+  //     }
 
-      setPositionState({
-        ...DEFAULT_POSITION_STATE,
-        protocolVersion: version,
-      })
-      setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
-      setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-      setVersionDropdownOpen(false)
-    },
-    [setPositionState, setPriceRangeState, setStep, navigate],
-  )
+  //     setPositionState({
+  //       ...DEFAULT_POSITION_STATE,
+  //       protocolVersion: version,
+  //     })
+  //     setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
+  //     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
+  //     setVersionDropdownOpen(false)
+  //   },
+  //   [setPositionState, setPriceRangeState, setStep, navigate],
+  // )
 
-  const versionOptions = useMemo(
-    () =>
-      [ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
-        .filter((version) => version !== protocolVersion)
-        .map((version) => (
-          <TouchableArea key={`version-${version}`} onPress={() => handleVersionChange(version)}>
-            <Flex p="$spacing8" borderRadius="$rounded8" hoverStyle={{ backgroundColor: '$surface2' }}>
-              <Text variant="body2">{t('position.new.protocol', { protocol: getProtocolVersionLabel(version) })}</Text>
-            </Flex>
-          </TouchableArea>
-        )),
-    [handleVersionChange, protocolVersion, t],
-  )
+  // const versionOptions = useMemo(
+  //   () =>
+  //     [ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
+  //       .filter((version) => version !== protocolVersion)
+  //       .map((version) => (
+  //         <TouchableArea key={`version-${version}`} onPress={() => handleVersionChange(version)}>
+  //           <Flex p="$spacing8" borderRadius="$rounded8" hoverStyle={{ backgroundColor: '$surface2' }}>
+  //             <Text variant="body2">{t('position.new.protocol', { protocol: getProtocolVersionLabel(version) })}</Text>
+  //           </Flex>
+  //         </TouchableArea>
+  //       )),
+  //   [handleVersionChange, protocolVersion, t],
+  // )
 
   return (
     <Flex>
@@ -177,7 +179,8 @@ const Toolbar = () => {
 
       <ToolbarContainer>
         <ResetButton onClickReset={() => setShowResetModal(true)} isDisabled={isNativeTokenAOnly} />
-        <Dropdown
+        {/* 注释掉协议版本选择器 - 本期只做 V3 基础添加流动性 */}
+        {/* <Dropdown
           containerStyle={{ width: 'auto' }}
           buttonStyle={{ py: '$spacing8', px: '$spacing12' }}
           dropdownStyle={{ width: 200, borderRadius: '$rounded16' }}
@@ -191,7 +194,7 @@ const Toolbar = () => {
           alignRight
         >
           {versionOptions}
-        </Dropdown>
+        </Dropdown> */}
         <Flex
           borderRadius="$rounded12"
           borderWidth={!customSlippageTolerance ? '$spacing1' : '$none'}
@@ -233,12 +236,22 @@ function CreatePositionContent({
   paramsProtocolVersion: ProtocolVersion | undefined
   autoSlippageTolerance: number
 }) {
-  const initialProtocolVersion = paramsProtocolVersion ?? ProtocolVersion.V4
+  // 本期只做 V3 基础添加流动性，固定使用 V3
+  const initialProtocolVersion = paramsProtocolVersion ?? ProtocolVersion.V3
 
+  // Initialize currency inputs, use defaultInitialToken (HSK) if no tokens from URL
   const [currencyInputs, setCurrencyInputs] = useState<{ tokenA: Maybe<Currency>; tokenB: Maybe<Currency> }>({
-    tokenA: initialInputs.tokenA,
+    tokenA: initialInputs.tokenA ?? initialInputs.defaultInitialToken,
     tokenB: initialInputs.tokenB,
   })
+
+  // Update currencyInputs when initialInputs change (e.g., when URL params are auto-initialized)
+  useEffect(() => {
+    setCurrencyInputs({
+      tokenA: initialInputs.tokenA ?? initialInputs.defaultInitialToken,
+      tokenB: initialInputs.tokenB,
+    })
+  }, [initialInputs.tokenA, initialInputs.tokenB, initialInputs.defaultInitialToken])
 
   return (
     <Trace logImpression page={InterfacePageName.CreatePosition}>
@@ -248,7 +261,7 @@ function CreatePositionContent({
             currencyInputs={currencyInputs}
             setCurrencyInputs={setCurrencyInputs}
             initialPositionState={{
-              fee: initialInputs.fee ?? undefined,
+              fee: initialInputs.fee, // fee is already guaranteed to have default value from useLiquidityUrlState
               hook: initialInputs.hook ?? undefined,
               protocolVersion: initialProtocolVersion,
             }}

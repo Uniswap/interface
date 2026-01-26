@@ -86,6 +86,12 @@ export function useCreateSwapReviewCallbacks(ctx: {
 
   const onFailure = useCallback(
     (error?: Error, onPressRetry?: () => void) => {
+      if (process.env.NODE_ENV === 'development') {
+        console.log('[Swap Result] Swap failed:', {
+          error: error?.message || 'Unknown error',
+          errorDetails: error,
+        })
+      }
       resetCurrentStep()
 
       // Create a new txId for the next transaction, as the existing one may be used in state to track the failed submission.
@@ -99,6 +105,13 @@ export function useCreateSwapReviewCallbacks(ctx: {
   )
 
   const onSuccess = useCallback(() => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('[Swap Result] Swap succeeded!', {
+        chainId: derivedSwapInfo.chainId,
+        inputCurrency: derivedSwapInfo.currencies.input?.currency.symbol,
+        outputCurrency: derivedSwapInfo.currencies.output?.currency.symbol,
+      })
+    }
     // For Unichain networks, trigger confirmation and branch to stall+fetch logic (ie handle in component)
     if (isFlashblocksEnabled && shouldShowConfirmedState) {
       resetCurrentStep()

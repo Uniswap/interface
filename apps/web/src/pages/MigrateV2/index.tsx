@@ -6,7 +6,6 @@ import { LightCard } from 'components/Card/cards'
 import { AutoColumn } from 'components/deprecated/Column'
 import MigrateSushiPositionCard from 'components/PositionCard/Sushi'
 import MigrateV2PositionCard from 'components/PositionCard/V2'
-import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { Dots } from 'components/swap/styled'
 import { V2Unsupported } from 'components/V2Unsupported'
 import { useAccount } from 'hooks/useAccount'
@@ -207,7 +206,7 @@ export default function MigrateV2() {
           </AutoColumn>
         </Flex>
       </BodyWrapper>
-      <SwitchLocaleLink />
+      {/* <SwitchLocaleLink /> */}
     </Trace>
   )
 }

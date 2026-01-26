@@ -222,35 +222,36 @@ export function TokenSelectorContent({
   const shouldAutoFocusSearch = isWebPlatform && !media.sm
 
   const tokenSelector = useMemo(() => {
-    if (searchInFocus && !searchFilter && !isTestnetModeEnabled) {
-      return (
-        <TokenSelectorEmptySearchList
-          evmAddress={evmAddress}
-          svmAddress={svmAddress}
-          chainFilter={chainFilter}
-          renderedInModal={renderedInModal}
-          onSelectCurrency={onSelectCurrencyCallback}
-        />
-      )
-    }
+    // Search-related logic commented out - 搜索相关逻辑已注释
+    // if (searchInFocus && !searchFilter && !isTestnetModeEnabled) {
+    //   return (
+    //     <TokenSelectorEmptySearchList
+    //       evmAddress={evmAddress}
+    //       svmAddress={svmAddress}
+    //       chainFilter={chainFilter}
+    //       renderedInModal={renderedInModal}
+    //       onSelectCurrency={onSelectCurrencyCallback}
+    //     />
+    //   )
+    // }
 
-    if (searchFilter) {
-      return (
-        <TokenSelectorSearchResultsList
-          evmAddress={evmAddress}
-          svmAddress={svmAddress}
-          chainFilter={chainFilter}
-          debouncedParsedSearchFilter={debouncedParsedSearchFilter}
-          debouncedSearchFilter={debouncedSearchFilter}
-          isBalancesOnlySearch={variation === TokenSelectorVariation.BalancesOnly}
-          parsedChainFilter={parsedChainFilter}
-          searchFilter={searchFilter}
-          input={input}
-          renderedInModal={renderedInModal}
-          onSelectCurrency={onSelectCurrencyCallback}
-        />
-      )
-    }
+    // if (searchFilter) {
+    //   return (
+    //     <TokenSelectorSearchResultsList
+    //       evmAddress={evmAddress}
+    //       svmAddress={svmAddress}
+    //       chainFilter={chainFilter}
+    //       debouncedParsedSearchFilter={debouncedParsedSearchFilter}
+    //       debouncedSearchFilter={debouncedSearchFilter}
+    //       isBalancesOnlySearch={variation === TokenSelectorVariation.BalancesOnly}
+    //       parsedChainFilter={parsedChainFilter}
+    //       searchFilter={searchFilter}
+    //       input={input}
+    //       renderedInModal={renderedInModal}
+    //       onSelectCurrency={onSelectCurrencyCallback}
+    //     />
+    //   )
+    // }
 
     switch (variation) {
       case TokenSelectorVariation.BalancesOnly:
@@ -321,7 +322,8 @@ export function TokenSelectorContent({
               <ModalCloseIcon onClose={onClose} />
             </Flex>
           )}
-          <SearchTextInput
+          {/* Search box commented out - 搜索框已注释 */}
+          {/* <SearchTextInput
             autoFocus={shouldAutoFocusSearch}
             backgroundColor="$surface2"
             endAdornment={
@@ -348,7 +350,20 @@ export function TokenSelectorContent({
             onCancel={isWebPlatform ? undefined : onCancel}
             onChangeText={onChangeText}
             onFocus={onFocus}
-          />
+          /> */}
+          {/* NetworkFilter commented out - 网络选择器已注释 */}
+          {/* <Flex row justifyContent="flex-end" px="$spacing16" py="$spacing4">
+            <NetworkFilter
+              includeAllNetworks={!isTestnetModeEnabled}
+              chainIds={chainIds || enabledChains}
+              selectedChain={chainFilter}
+              styles={isExtensionApp || isMobileWeb ? { dropdownZIndex: zIndexes.overlay } : undefined}
+              onPressChain={(newChainId) => {
+                onChangeChainFilter(newChainId)
+                onSelectChain?.(newChainId)
+              }}
+            />
+          </Flex> */}
           {isLimits && (
             <Flex
               row

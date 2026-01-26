@@ -39,12 +39,11 @@ import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { Minus } from 'ui/src/components/icons/Minus'
 import { MoreHorizontal } from 'ui/src/components/icons/MoreHorizontal'
 import { Plus } from 'ui/src/components/icons/Plus'
-import { RightArrow } from 'ui/src/components/icons/RightArrow'
+// import { RightArrow } from 'ui/src/components/icons/RightArrow' // 注释掉 - 迁移功能已禁用
 import { zIndexes } from 'ui/src/theme/zIndexes'
 import { MenuContent } from 'uniswap/src/components/menus/ContextMenuContent'
 import { MenuOptionItem } from 'uniswap/src/components/menus/ContextMenuV2'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
@@ -53,7 +52,7 @@ import { setPositionVisibility } from 'uniswap/src/features/visibility/slice'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { getPoolDetailsURL } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
-import { isV4UnsupportedChain } from 'utils/networkSupportsV4'
+// import { isV4UnsupportedChain } from 'utils/networkSupportsV4' // 注释掉 - 迁移功能已禁用
 
 export function LiquidityPositionCardLoader() {
   return (
@@ -102,14 +101,15 @@ function useDropdownOptions({
   const reportPositionHandler = useReportPositionHandler({ position: liquidityPosition, isVisible })
 
   return useMemo(() => {
-    const chainInfo = getChainInfo(liquidityPosition.chainId)
+    // const chainInfo = getChainInfo(liquidityPosition.chainId) // 注释掉 - 迁移功能已禁用
 
     const options: MenuOptionItem[] = []
 
     const isV2Position = liquidityPosition.version === ProtocolVersion.V2
-    const isV3Position = liquidityPosition.version === ProtocolVersion.V3
-    const showMigrateV3Option =
-      isV3Position && isOpenLiquidityPosition && !isV4UnsupportedChain(liquidityPosition.chainId)
+    // 注释掉迁移相关变量 - 本期不做迁移功能
+    // const isV3Position = liquidityPosition.version === ProtocolVersion.V3
+    // const showMigrateV3Option =
+    //   isV3Position && isOpenLiquidityPosition && !isV4UnsupportedChain(liquidityPosition.chainId)
 
     if (!isV2Position && isOpenLiquidityPosition) {
       options.push({
@@ -149,29 +149,29 @@ function useDropdownOptions({
     }
 
     // Add migration options if relevant
+    // 注释掉迁移功能 - 本期只做基础添加流动性
+    // if (isV2Position && isOpenLiquidityPosition) {
+    //   options.push({
+    //     onPress: async () => {
+    //       if (liquidityPosition.chainId !== account.chainId) {
+    //         await selectChain(liquidityPosition.chainId)
+    //       }
+    //       navigate(`/migrate/v2/${liquidityPosition.liquidityToken.address}`)
+    //     },
+    //     label: t('pool.migrateLiquidity'),
+    //     Icon: RightArrow,
+    //   })
+    // }
 
-    if (isV2Position && isOpenLiquidityPosition) {
-      options.push({
-        onPress: async () => {
-          if (liquidityPosition.chainId !== account.chainId) {
-            await selectChain(liquidityPosition.chainId)
-          }
-          navigate(`/migrate/v2/${liquidityPosition.liquidityToken.address}`)
-        },
-        label: t('pool.migrateLiquidity'),
-        Icon: RightArrow,
-      })
-    }
-
-    if (showMigrateV3Option) {
-      options.push({
-        onPress: () => {
-          navigate(`/migrate/v3/${chainInfo.urlParam}/${liquidityPosition.tokenId}`)
-        },
-        label: t('pool.migrateLiquidity'),
-        Icon: RightArrow,
-      })
-    }
+    // if (showMigrateV3Option) {
+    //   options.push({
+    //     onPress: () => {
+    //       navigate(`/migrate/v3/${chainInfo.urlParam}/${liquidityPosition.tokenId}`)
+    //     },
+    //     label: t('pool.migrateLiquidity'),
+    //     Icon: RightArrow,
+    //   })
+    // }
 
     options.push({
       onPress: () => {
@@ -214,7 +214,6 @@ function useDropdownOptions({
 
     return options
   }, [
-    account.chainId,
     dispatch,
     isOpenLiquidityPosition,
     reportPositionHandler,
@@ -222,7 +221,6 @@ function useDropdownOptions({
     liquidityPosition,
     navigate,
     showVisibilityOption,
-    selectChain,
     t,
   ])
 }

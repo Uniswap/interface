@@ -1,5 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { isNativeCurrency } from '@uniswap/universal-router-sdk'
+import { isNativeCurrency } from '@hkdex-tmp/universal_router_sdk'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'

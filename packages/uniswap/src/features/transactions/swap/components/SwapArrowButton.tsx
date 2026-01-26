@@ -26,9 +26,9 @@ export function SwapArrowButton({
   return (
     <TouchableArea
       backgroundColor={backgroundColor}
-      borderColor="$surface1"
+      borderColor="#94A3B8"
       borderRadius={isShortMobileDevice ? '$rounded12' : '$rounded16'}
-      borderWidth={isShortMobileDevice ? '$spacing2' : '$spacing4'}
+      borderWidth={1}
       p={isShortMobileDevice ? '$spacing6' : '$spacing8'}
       scaleTo={PRESS_SCALE}
       hoverStyle={hoverStyle}

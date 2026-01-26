@@ -18,7 +18,6 @@ import { createChallengeSolverService, createSessionInitializationService } from
 import { QueryClientPersistProvider } from 'components/PersistQueryClient'
 import { createWeb3Provider, WalletCapabilitiesEffects } from 'components/Web3Provider/createWeb3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
-import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { AccountsStoreDevTool } from 'features/accounts/store/devtools'
 import { WebAccountsStoreProvider } from 'features/accounts/store/provider'
 import { ConnectWalletMutationProvider } from 'features/wallet/connection/hooks/useConnectWalletMutation'
@@ -127,7 +126,8 @@ function Updaters() {
 }
 
 // Production Web3Provider – always reconnects on mount and runs capability effects.
-const Web3Provider = createWeb3Provider({ wagmiConfig })
+// Use wagmiAdapter.wagmiConfig from reownConfig (matching hsk-staking-launchpad-main)
+const Web3Provider = createWeb3Provider({})
 
 function GraphqlProviders({ children }: { children: React.ReactNode }) {
   return (

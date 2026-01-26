@@ -78,8 +78,16 @@ export function OnchainItemList<T extends OnchainItemListOption>({
   }, [sectionListRef, sections])
 
   const items = useMemo(() => {
+    if (!sections || sections.length === 0) {
+      return []
+    }
+
     let rowIndex = 0
     return sections.reduce((acc: OnchainItemListData<T>[], section) => {
+      if (!section || !section.data) {
+        return acc
+      }
+
       if (section.sectionKey !== OnchainItemSectionName.SuggestedTokens) {
         const sectionInfo: ListSectionRowInfo<T> = {
           section: {

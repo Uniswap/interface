@@ -40,7 +40,8 @@ export const Header = memo(function Header() {
         `}
       </style>
       <Flex position="relative" zIndex={zIndexes.sticky} pointerEvents="auto">
-        {extensionEligible && <MobileAppPromoBanner />}
+        {/* Get App banner is hidden - only English is supported */}
+        {/* {extensionEligible && <MobileAppPromoBanner />} */}
         {renderUkBanner && <UkBanner />}
         {renderUniswapWrapped2025Banner}
       </Flex>

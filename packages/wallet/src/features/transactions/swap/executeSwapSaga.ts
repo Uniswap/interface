@@ -170,10 +170,35 @@ function* executeTransactionStep(params: {
   }
 
   // Execute async (either because sync is not enabled or sync failed)
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Swap] Executing transaction step asynchronously:', {
+      stepType: step.type,
+      chainId,
+    })
+  }
   const asyncResult = yield* executor.executeStep(step)
   if (!asyncResult.success) {
+    const error = asyncResult.error instanceof Error 
+      ? asyncResult.error 
+      : new Error(asyncResult.error ? String(asyncResult.error) : 'Transaction failed')
+    if (process.env.NODE_ENV === 'development') {
+      console.error('[Swap] Error: Transaction step execution failed', {
+        error: error.message,
+        errorDetails: error,
+        stepType: step.type,
+        chainId,
+      })
+    }
     yield* call(onFailure)
-    throw new Error('Transaction failed')
+    throw error
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    console.log('[Swap] Transaction step executed successfully:', {
+      stepType: step.type,
+      hash: asyncResult.hash,
+      chainId,
+    })
   }
 
   return undefined // Async execution doesn't return a sync result
@@ -326,9 +351,8 @@ export function createExecuteSwapSaga(
 
       if (isUniswapXPreSignedSwapTransaction(preSignedTransaction) || swapTxHasDelayedSubmission) {
         yield* call(onPending)
-      } else {
-        yield* call(onSuccess)
       }
+      // Note: onSuccess will be called after transaction is successfully submitted
 
       const gasFeeEstimation = swapTxContext.gasFeeEstimation
 
@@ -437,6 +461,14 @@ export function createExecuteSwapSaga(
           )
         }
 
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[Swap] About to execute swap transaction step:', {
+            stepType: swapStep.type,
+            hasParams: !!swapStep.params,
+            chainId,
+          })
+        }
+
         swapResult = yield* executeTransactionStep({
           executor,
           step: swapStep,
@@ -444,6 +476,14 @@ export function createExecuteSwapSaga(
           logger: dependencies.logger,
           onFailure: params.onFailure,
         })
+
+        if (process.env.NODE_ENV === 'development') {
+          console.log('[Swap] Swap transaction step executed:', {
+            hasResult: !!swapResult,
+            resultType: swapResult ? 'sync' : 'async',
+            chainId,
+          })
+        }
       }
 
       if (swapResult) {
@@ -460,15 +500,22 @@ export function createExecuteSwapSaga(
         }
       }
 
-      // Call onSuccess now if it wasn't called earlier due to transaction spacing
-      if (swapTxHasDelayedSubmission) {
+      // Call onSuccess after transaction is successfully submitted
+      // For delayed submission, onSuccess will be called after all transactions are submitted
         yield* call(onSuccess)
-      }
     } catch (error) {
       dependencies.logger.error(error, {
         tags: { file: 'executeSwapSaga', function: 'executeSwap' },
         extra: { analytics: params.analytics },
       })
+      if (process.env.NODE_ENV === 'development') {
+        console.error('[Swap] Error: executeSwapSaga failed', {
+          error: error instanceof Error ? error.message : String(error),
+        })
+      }
+      // Call onFailure with the error so it can be displayed to the user
+      const swapError = error instanceof Error ? error : new Error(String(error))
+      yield* call(params.onFailure, swapError)
     }
   }
 }

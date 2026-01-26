@@ -19,7 +19,7 @@ const getIsViewOnlyWallet = (activeAccount?: AccountDetails): boolean => {
   return activeAccount?.accountType === AccountType.Readonly
 }
 
-export function usePrepareSwap(ctx: { warningService: WarningService }): () => void {
+export function usePrepareSwap(ctx: { warningService: WarningService; onExecuteSwapDirectly?: () => void }): () => void {
   const {
     handleShowTokenWarningModal,
     handleShowBridgingWarningModal,
@@ -79,6 +79,7 @@ export function usePrepareSwap(ctx: { warningService: WarningService }): () => v
       // ctx
       warningService: ctx.warningService,
       logger,
+      onExecuteSwapDirectly: ctx.onExecuteSwapDirectly,
     }),
   )
 }

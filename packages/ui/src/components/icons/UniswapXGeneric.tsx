@@ -13,5 +13,5 @@ export const [UniswapXGeneric, AnimatedUniswapXGeneric] = createIcon({
       />
     </Svg>
   ),
-  defaultFill: '#FF37C7',
+  defaultFill: '#4177e2',
 })
