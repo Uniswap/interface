@@ -6,6 +6,9 @@ interface ParseQuoteCurrenciesInput {
   tradeType: SdkTradeType
   amountSpecified?: CurrencyAmount<Currency> | null
   otherCurrency?: Currency | null
+  // Explicit sell and buy tokens from UI to ensure consistency
+  sellToken?: Currency
+  buyToken?: Currency
 }
 
 export interface QuoteCurrencyData {
@@ -15,17 +18,31 @@ export interface QuoteCurrencyData {
 }
 
 export function parseQuoteCurrencies(input: ParseQuoteCurrenciesInput): QuoteCurrencyData {
-  const { tradeType, amountSpecified, otherCurrency } = input
+  const { tradeType, amountSpecified, otherCurrency, sellToken, buyToken } = input
 
-  const currencyIn = tradeType === SdkTradeType.EXACT_INPUT ? amountSpecified?.currency : otherCurrency
-  const currencyOut = tradeType === SdkTradeType.EXACT_OUTPUT ? amountSpecified?.currency : otherCurrency
+  // CRITICAL: If explicit sellToken and buyToken are provided, use them directly
+  // This ensures tokenIn/tokenOut always match UI's sell/buy tokens
+  // If either is missing, we should NOT use fallback logic as it may use stale/incorrect values
+  if (sellToken && buyToken) {
+    const requestTradeType =
+      tradeType === SdkTradeType.EXACT_INPUT ? TradingApi.TradeType.EXACT_INPUT : TradingApi.TradeType.EXACT_OUTPUT
 
+    return {
+      currencyIn: sellToken,
+      currencyOut: buyToken,
+      requestTradeType,
+    }
+  }
+
+  // If sellToken or buyToken is missing, return undefined to prevent incorrect quote requests
+  // This ensures we only send requests when we have explicit UI state, not inferred state
+  // The skip flag in useDerivedSwapInfo should prevent this from being called, but this is a safety check
   const requestTradeType =
     tradeType === SdkTradeType.EXACT_INPUT ? TradingApi.TradeType.EXACT_INPUT : TradingApi.TradeType.EXACT_OUTPUT
 
   return {
-    currencyIn: currencyIn ?? undefined,
-    currencyOut: currencyOut ?? undefined,
+    currencyIn: undefined,
+    currencyOut: undefined,
     requestTradeType,
   }
 }

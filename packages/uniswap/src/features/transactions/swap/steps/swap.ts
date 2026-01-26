@@ -1,6 +1,5 @@
 import { TradingApi } from '@universe/api'
 import invariant from 'tiny-invariant'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UnexpectedTransactionStateError } from 'uniswap/src/features/transactions/errors'
 import {
   OnChainTransactionFields,
@@ -28,24 +27,20 @@ export function createSwapTransactionStep(txRequest: ValidatedTransactionRequest
   return { type: TransactionStepType.SwapTransaction, txRequest }
 }
 
+/**
+ * HashKey chains (133, 177) do not use swap API.
+ * Transactions are built directly from quote methodParameters.
+ * This function should never be called for HashKey chains.
+ */
 export function createSwapTransactionAsyncStep(
   swapRequestArgs: TradingApi.CreateSwapRequest | undefined,
 ): SwapTransactionStepAsync {
   return {
     type: TransactionStepType.SwapTransactionAsync,
-    getTxRequest: async (signature: string): Promise<ValidatedTransactionRequest | undefined> => {
-      if (!swapRequestArgs) {
-        return undefined
-      }
-
-      const { swap } = await TradingApiClient.fetchSwap({
-        ...swapRequestArgs,
-        signature,
-        /* simulating transaction provides a more accurate gas limit, and the simulation will succeed because async swap step will only occur after approval has been confirmed. */
-        simulateTransaction: true,
-      })
-
-      return validateTransactionRequest(swap)
+    getTxRequest: async (): Promise<ValidatedTransactionRequest | undefined> => {
+      throw new Error(
+        'Swap API is not used for HashKey chains. Transactions should be built from quote methodParameters using buildTxRequestFromTrade.',
+      )
     },
   }
 }

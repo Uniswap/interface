@@ -14,6 +14,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { PositionField } from 'types/position'
 import { Button, Flex, Text } from 'ui/src'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
@@ -138,12 +139,23 @@ export const DepositStep = () => {
     return null
   }
 
-  const disabled = !!inputError || !txInfo?.txRequest
+  // Check if this is a HashKey chain
+  const chainId = currencyAmounts?.TOKEN0?.currency.chainId
+  const isHashKeyChain = chainId === UniverseChainId.HashKey || chainId === UniverseChainId.HashKeyTestnet
+
+  // For HashKey chains, we use async steps, so txRequest will be undefined
+  // We need to check createPositionRequestArgs instead
+  // For other chains, we need txRequest
+  const hasValidTxInfo = isHashKeyChain
+    ? Boolean(txInfo?.createPositionRequestArgs && txInfo?.action)
+    : Boolean(txInfo?.txRequest)
+
+  const disabled = !!inputError || !hasValidTxInfo
 
   const requestLoading = Boolean(
     !transactionError &&
       !inputError &&
-      !txInfo?.txRequest &&
+      !hasValidTxInfo &&
       currencyAmounts?.TOKEN0 &&
       currencyAmounts.TOKEN1 &&
       !invalidRange,

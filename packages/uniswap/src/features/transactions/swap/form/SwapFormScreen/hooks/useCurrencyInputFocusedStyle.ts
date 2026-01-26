@@ -3,10 +3,10 @@ import type { FlexProps } from 'ui/src'
 function getCurrencyInputFocusedStyle(isFocused: boolean): FlexProps {
   return {
     borderColor: isFocused ? '$surface3' : '$transparent',
-    backgroundColor: isFocused ? '$surface1' : '$surface2',
+    backgroundColor: '$surface1', // Always use surface1 for consistent background
     hoverStyle: {
       borderColor: isFocused ? '$surface3Hovered' : '$transparent',
-      backgroundColor: isFocused ? '$surface1' : '$surface2Hovered',
+      backgroundColor: '$surface1', // Always use surface1 for consistent background
     },
   }
 }

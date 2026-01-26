@@ -17,9 +17,10 @@ export function generateAnalyticsLoggers(fileName: string): ErrorLoggers {
       logger.error(error, { tags: { file: fileName, function: 'init' } })
     },
     sendEvent(eventName: string, eventProperties?: Record<string, unknown>): void {
-      if (isNonTestDev) {
-        logger.info('analytics', 'sendEvent', `[Event: ${eventName}]`, eventProperties ?? {})
-      }
+      // Disabled logging to reduce console noise
+      // if (isNonTestDev) {
+      //   logger.info('analytics', 'sendEvent', `[Event: ${eventName}]`, eventProperties ?? {})
+      // }
     },
     setAllowAnalytics(allow: boolean): void {
       if (isNonTestDev) {
@@ -32,9 +33,10 @@ export function generateAnalyticsLoggers(fileName: string): ErrorLoggers {
       }
     },
     setUserProperty(property: string, value: UserPropertyValue): void {
-      if (isNonTestDev) {
-        logger.info('analytics', 'setUserProperty', `[Property: ${property}]: ${value}`)
-      }
+      // Disabled logging to reduce console noise
+      // if (isNonTestDev) {
+      //   logger.info('analytics', 'setUserProperty', `[Property: ${property}]: ${value}`)
+      // }
     },
   }
 }

@@ -445,6 +445,11 @@ export interface UseTradeArgs {
   amountSpecified: Maybe<CurrencyAmount<Currency>>
   otherCurrency: Maybe<Currency>
   tradeType: TradeType
+  // Explicit sell and buy tokens from UI to ensure consistency
+  // sellToken should always correspond to CurrencyField.INPUT (what user is selling)
+  // buyToken should always correspond to CurrencyField.OUTPUT (what user is buying)
+  sellToken?: Currency
+  buyToken?: Currency
   pollInterval?: PollingInterval
   customSlippageTolerance?: number
   isUSDQuote?: boolean

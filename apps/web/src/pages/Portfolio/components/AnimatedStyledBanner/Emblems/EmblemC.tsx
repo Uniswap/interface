@@ -2,7 +2,7 @@ import { EmblemProps } from 'pages/Portfolio/components/AnimatedStyledBanner/Emb
 import { useId } from 'react'
 import { useSporeColors } from 'ui/src'
 
-export function EmblemC({ fill = '#FF37C7', opacity = 1, ...props }: EmblemProps): JSX.Element {
+export function EmblemC({ fill = '#4177e2', opacity = 1, ...props }: EmblemProps): JSX.Element {
   const colors = useSporeColors()
   const clipPathId = useId()
 

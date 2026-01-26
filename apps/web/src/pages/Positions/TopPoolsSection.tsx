@@ -18,6 +18,10 @@ export function TopPoolsSection({ pools, title, isLoading }: { pools: PoolStat[]
     )
   }
 
+  if (!pools || pools.length === 0) {
+    return null
+  }
+
   return (
     <Flex gap="$gap20">
       <Text variant="subheading1">{title}</Text>

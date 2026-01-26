@@ -17,7 +17,7 @@ export const apolloClient = new ApolloClient({
   link: from([datadogLink, retryLink, httpLink]),
   headers: {
     'Content-Type': 'application/json',
-    Origin: 'https://app.uniswap.org',
+    Origin: typeof window !== 'undefined' ? window.location.origin : '',
   },
   cache: setupSharedApolloCache(),
   defaultOptions: {

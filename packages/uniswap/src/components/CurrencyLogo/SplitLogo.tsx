@@ -33,7 +33,7 @@ export function SplitLogo({
 }: Props): JSX.Element {
   const iconSize = size / 2
   const networkLogo =
-    chainId && chainId !== UniverseChainId.Mainnet ? (
+    chainId && chainId !== UniverseChainId.Mainnet && chainId !== UniverseChainId.HashKey && chainId !== UniverseChainId.HashKeyTestnet ? (
       <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
     ) : undefined
 

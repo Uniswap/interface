@@ -103,6 +103,10 @@ export function fromGraphQLChain(chain: GraphQLApi.Chain | string | undefined): 
       return UniverseChainId.Zksync
     case GraphQLApi.Chain.Zora:
       return UniverseChainId.Zora
+    case GraphQLApi.Chain.HashKey:
+      return UniverseChainId.HashKey
+    case GraphQLApi.Chain.HashKeyTestnet:
+      return UniverseChainId.HashKeyTestnet
   }
 
   return null
@@ -148,6 +152,10 @@ export function fromUniswapWebAppLink(network: string | null): UniverseChainId {
       return UniverseChainId.Zksync
     case GraphQLApi.Chain.Zora.toLowerCase():
       return UniverseChainId.Zora
+    case GraphQLApi.Chain.HashKey.toLowerCase():
+      return UniverseChainId.HashKey
+    case GraphQLApi.Chain.HashKeyTestnet.toLowerCase():
+      return UniverseChainId.HashKeyTestnet
     default:
       throw new Error(`Network "${network}" can not be mapped`)
   }
@@ -189,6 +197,10 @@ export function toUniswapWebAppLink(chainId: UniverseChainId): string | null {
       return GraphQLApi.Chain.Zksync.toLowerCase()
     case UniverseChainId.Zora:
       return GraphQLApi.Chain.Zora.toLowerCase()
+    case UniverseChainId.HashKey:
+      return GraphQLApi.Chain.HashKey.toLowerCase()
+    case UniverseChainId.HashKeyTestnet:
+      return GraphQLApi.Chain.HashKeyTestnet.toLowerCase()
     default:
       throw new Error(`ChainID "${chainId}" can not be mapped`)
   }
@@ -280,7 +292,10 @@ function getDefaultChainId({
     return UniverseChainId.Solana
   }
 
-  return isTestnetModeEnabled ? UniverseChainId.Sepolia : UniverseChainId.Mainnet
+  // 默认使用 HashKey Chain
+  // 开发/测试环境：HashKey Testnet (133)
+  // 生产环境：HashKey Mainnet (177)
+  return isTestnetModeEnabled ? UniverseChainId.HashKeyTestnet : UniverseChainId.HashKey
 }
 
 /** Returns all stablecoins for a given chainId. */

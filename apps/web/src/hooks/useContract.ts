@@ -108,8 +108,27 @@ export function usePairContract(pairAddress?: string, withSignerIfPossible?: boo
 export function useInterfaceMulticall(chainId?: UniverseChainId) {
   const account = useAccount()
   const chain = chainId ?? account.chainId
+  
+  // Use extended MULTICALL addresses for HashKey chains (same as useCurrentBlockTimestamp)
+  let multicallAddress: string | undefined
+  if (chain) {
+    // First check standard MULTICALL_ADDRESSES
+    multicallAddress = MULTICALL_ADDRESSES[chain]
+    
+    // If not found, check extended addresses for HashKey chains
+    if (!multicallAddress && (chain === UniverseChainId.HashKeyTestnet || chain === UniverseChainId.HashKey)) {
+      // Extended MULTICALL_ADDRESSES for HashKey chains (same as in useCurrentBlockTimestamp)
+      const EXTENDED_MULTICALL_ADDRESSES: Partial<Record<UniverseChainId, string>> = {
+        [UniverseChainId.HashKeyTestnet]: '0xcA11bde05977b3631167028862bE2a173976CA11',
+        [UniverseChainId.HashKey]: '0xcA11bde05977b3631167028862bE2a173976CA11',
+      }
+      multicallAddress = EXTENDED_MULTICALL_ADDRESSES[chain]
+    }
+  }
+  
+  
   return useContract<UniswapInterfaceMulticall>({
-    address: chain ? MULTICALL_ADDRESSES[chain] : undefined,
+    address: multicallAddress,
     ABI: MulticallABI,
     withSignerIfPossible: false,
     chainId: chain,

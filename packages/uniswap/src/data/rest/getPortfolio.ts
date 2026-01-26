@@ -95,85 +95,90 @@ export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
   return queryOptions({
     queryKey: [ReactQueryCacheKey.GetPortfolio, accountAddressesByPlatform, inputWithoutModifierAndWalletAccount],
     queryFn: async () => {
-      const log = createLogger('getPortfolio.ts', 'queryFn', '[REST-ITBU]')
+      // HKSWAP: Disabled GetPortfolio API - not needed for hkswap
+      // Return empty GetPortfolioResponse instead of undefined to satisfy React Query requirements
+      return new GetPortfolioResponse({})
+      
+      // const log = createLogger('getPortfolio.ts', 'queryFn', '[REST-ITBU]')
 
-      if (!transformedInput) {
-        return Promise.resolve(undefined)
-      }
+      // if (!transformedInput) {
+      //   return Promise.resolve(undefined)
+      // }
 
-      // Fetch portfolio data from the backend
-      const apiResponse = await portfolioClient.getPortfolio(transformedInput)
+      // // Fetch portfolio data from the backend
+      // const apiResponse = await portfolioClient.getPortfolio(transformedInput)
 
-      try {
-        const reduxStore = getPortfolioQueryReduxStore()
+      // HKSWAP: All portfolio processing logic commented out since API is disabled
+      // try {
+      //   const reduxStore = getPortfolioQueryReduxStore()
 
-        if (!reduxStore) {
-          log.warn('`getPortfolioQuery` called before `initializePortfolioQueryOverrides`')
-          return apiResponse
-        }
+      //   if (!reduxStore) {
+      //     log.warn('`getPortfolioQuery` called before `initializePortfolioQueryOverrides`')
+      //     return apiResponse
+      //   }
 
-        if (!accountAddressesByPlatform || !apiResponse.portfolio) {
-          return apiResponse
-        }
+      //   if (!accountAddressesByPlatform || !apiResponse.portfolio) {
+      //     return apiResponse
+      //   }
 
-        log.debug('Removing potentially expired balance overrides')
-        reduxStore.dispatch(removeExpiredBalanceOverrides())
+      //   log.debug('Removing potentially expired balance overrides')
+      //   reduxStore.dispatch(removeExpiredBalanceOverrides())
 
-        const overrideCurrencyIds = getOverridesForQuery({ accountAddressesByPlatform })
+      //   const overrideCurrencyIds = getOverridesForQuery({ accountAddressesByPlatform })
 
-        if (overrideCurrencyIds.size === 0) {
-          log.debug('No overrides to apply, returning original response')
-          return apiResponse
-        }
+      //   if (overrideCurrencyIds.size === 0) {
+      //     log.debug('No overrides to apply, returning original response')
+      //     return apiResponse
+      //   }
 
-        log.debug('Applying portfolio balance overrides', {
-          overrideCount: overrideCurrencyIds.size,
-          currencyIds: Array.from(overrideCurrencyIds),
-          accountAddresses: accountAddressesByPlatform,
-        })
+      //   log.debug('Applying portfolio balance overrides', {
+      //     overrideCount: overrideCurrencyIds.size,
+      //     currencyIds: Array.from(overrideCurrencyIds),
+      //     accountAddresses: accountAddressesByPlatform,
+      //   })
 
-        let modifiedResponse = apiResponse
-        const addresses = Object.values(accountAddressesByPlatform)
+      //   let modifiedResponse = apiResponse
+      //   const addresses = Object.values(accountAddressesByPlatform)
 
-        for (const address of addresses) {
-          // Get overrides specific to this address only
-          const overridesForCurrentAddress = getOverridesForAddress({ address })
+      //   for (const address of addresses) {
+      //     // Get overrides specific to this address only
+      //     const overridesForCurrentAddress = getOverridesForAddress({ address })
 
-          if (overridesForCurrentAddress.size === 0 || !modifiedResponse.portfolio) {
-            continue
-          }
+      //     if (overridesForCurrentAddress.size === 0 || !modifiedResponse.portfolio) {
+      //       continue
+      //     }
 
-          log.debug(`Processing ${overridesForCurrentAddress.size} overrides for address ${address}`, {
-            currencyIds: Array.from(overridesForCurrentAddress),
-          })
+      //     log.debug(`Processing ${overridesForCurrentAddress.size} overrides for address ${address}`, {
+      //       currencyIds: Array.from(overridesForCurrentAddress),
+      //     })
 
-          const mergedResult = await fetchAndMergeOnchainBalances({
-            cachedPortfolio: modifiedResponse.portfolio,
-            accountAddress: address,
-            currencyIds: overridesForCurrentAddress,
-          })
+      //     const mergedResult = await fetchAndMergeOnchainBalances({
+      //       cachedPortfolio: modifiedResponse.portfolio,
+      //       accountAddress: address,
+      //       currencyIds: overridesForCurrentAddress,
+      //     })
 
-          if (!mergedResult) {
-            log.debug(`No merged result for address ${address}, continuing`)
-            continue
-          }
+      //     if (!mergedResult) {
+      //       log.debug(`No merged result for address ${address}, continuing`)
+      //       continue
+      //     }
 
-          // Check if backend has caught up and clean up overrides if needed
-          cleanupCaughtUpOverrides({ ownerAddress: address, originalData: apiResponse, mergedData: mergedResult })
+      //     // Check if backend has caught up and clean up overrides if needed
+      //     cleanupCaughtUpOverrides({ ownerAddress: address, originalData: apiResponse, mergedData: mergedResult })
 
-          // Update result for next iteration
-          modifiedResponse = mergedResult
+      //     // Update result for next iteration
+      //     modifiedResponse = mergedResult
 
-          log.debug(`Successfully applied overrides for address ${address}`)
-        }
+      //     log.debug(`Successfully applied overrides for address ${address}`)
+      //   }
 
-        log.debug('Successfully applied all overrides in queryFn')
+      //   log.debug('Successfully applied all overrides in queryFn')
 
-        return modifiedResponse
-      } catch (error) {
-        log.error(new Error('Unexpected error when trying to apply portfolio balance overrides', { cause: error }))
-        return apiResponse
-      }
+      //   return modifiedResponse
+      // } catch (error) {
+      //   log.error(new Error('Unexpected error when trying to apply portfolio balance overrides', { cause: error }))
+      //   return apiResponse
+      // }
     },
     placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when hiding/unhiding tokens
     refetchInterval,

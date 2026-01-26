@@ -135,15 +135,14 @@ export function PositionsHeader({
                 gap="$gap8"
                 px="$padding16"
                 backgroundColor="$neutral1"
-                borderTopLeftRadius="$rounded16"
-                borderBottomLeftRadius="$rounded16"
+                borderRadius="$rounded16"
                 alignItems="center"
                 $sm={{ justifyContent: 'center' }}
                 justifyContent="flex-start"
                 flexGrow={1}
                 {...ClickableTamaguiStyle}
                 onPress={() => {
-                  navigate('/positions/create/v4')
+                  navigate('/positions/create/v3') // 默认链已配置为 HashKey Chain
                 }}
               >
                 <Plus size={20} color="$surface1" />
@@ -151,7 +150,8 @@ export function PositionsHeader({
                   {t('common.new')}
                 </Text>
               </Flex>
-              <Dropdown
+              {/* 注释掉协议版本选择下拉菜单 - 本期只做 V3 基础添加流动性 */}
+              {/* <Dropdown
                 containerStyle={{ width: 'auto' }}
                 menuLabel={
                   <Flex
@@ -179,10 +179,11 @@ export function PositionsHeader({
                 alignRight={media.sm}
               >
                 {createOptions}
-              </Dropdown>
+              </Dropdown> */}
             </Flex>
             <Flex row alignItems="center" shrink height="100%" gap="$gap4">
-              <Dropdown
+              {/* 注释掉 Status 和 Protocol 筛选器 - 本期只做 V3 基础添加流动性 */}
+              {/* <Dropdown
                 isOpen={protocolDropdownOpen}
                 toggleOpen={() => {
                   setProtocolDropdownOpen((prev) => !prev)
@@ -202,7 +203,7 @@ export function PositionsHeader({
                 buttonStyle={StyledDropdownButton}
               >
                 {versionFilterOptions}
-              </Dropdown>
+              </Dropdown> */}
               <Flex
                 alignItems="center"
                 justifyContent="center"

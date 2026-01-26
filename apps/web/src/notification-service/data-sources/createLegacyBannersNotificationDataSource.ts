@@ -176,9 +176,9 @@ async function fetchNotifications(isDarkMode: boolean): Promise<InAppNotificatio
     notifications.push(noUniswapInterfaceFeesBanner)
   }
 
-  // Priority 2: SolanaPromoBanner + Modal (chained)
-  const solanaNotifications = await checkSolanaPromo(isDarkMode)
-  notifications.push(...solanaNotifications)
+  // Priority 2: SolanaPromoBanner + Modal (chained) - DISABLED for HSKSwap
+  // const solanaNotifications = await checkSolanaPromo(isDarkMode)
+  // notifications.push(...solanaNotifications)
 
   // Priority 3: BridgingPopularTokensBanner
   const bridgingNotification = await checkBridgingBanner()
@@ -207,16 +207,19 @@ async function checkNoUniswapInterfaceFeesBanner(isDarkMode: boolean): Promise<I
  * Check if SolanaPromo banner should be shown based on feature flag.
  * Returns both banner and modal (modal is chained).
  * The processor will filter based on tracked state.
+ *
+ * DISABLED: Solana promo banner and modal are disabled for HSKSwap.
  */
 async function checkSolanaPromo(isDarkMode: boolean): Promise<InAppNotification[]> {
-  const isEnabled = getFeatureFlag(FeatureFlags.SolanaPromo)
+  // Always return empty array to disable Solana promo
+  return []
 
-  if (!isEnabled) {
-    return []
-  }
-
-  // Processor will identify modal as chained due to POPUP action
-  return [createSolanaPromoBanner(isDarkMode), createSolanaPromoModal()]
+  // Original implementation (disabled):
+  // const isEnabled = getFeatureFlag(FeatureFlags.SolanaPromo)
+  // if (!isEnabled) {
+  //   return []
+  // }
+  // return [createSolanaPromoBanner(isDarkMode), createSolanaPromoModal()]
 }
 
 /**

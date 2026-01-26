@@ -3,7 +3,8 @@ import { PLAYWRIGHT_CONNECT_ADDRESS } from 'components/Web3Provider/constants'
 import { createRejectableMockConnector } from 'components/Web3Provider/rejectableConnector'
 import { WC_PARAMS } from 'components/Web3Provider/walletConnect'
 import { embeddedWallet } from 'connection/EmbeddedWalletConnector'
-import { porto } from 'porto/wagmi'
+// Porto wallet removed - not needed for HSKSwap
+// import { porto } from 'porto/wagmi'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
@@ -70,7 +71,8 @@ function createWagmiConnectors(params: {
   const { includeMockConnector } = params
 
   const baseConnectors = [
-    porto(),
+    // Porto wallet removed - not needed for HSKSwap
+    // porto(),
     // Binance connector - uses injected for extension, QR code for mobile
     getBinanceConnector(),
     // There are no unit tests that expect WalletConnect to be included here,
@@ -78,7 +80,7 @@ function createWagmiConnectors(params: {
     ...(isTestEnv() && !isPlaywrightEnv() ? [] : [walletConnect(WC_PARAMS)]),
     embeddedWallet(),
     coinbaseWallet({
-      appName: 'Uniswap',
+      appName: 'HSKSwap',
       // CB SDK doesn't pass the parent origin context to their passkey site
       // Flagged to CB team and can remove UNISWAP_WEB_URL once fixed
       appLogoUrl: `${UNISWAP_WEB_URL}${UNISWAP_LOGO}`,

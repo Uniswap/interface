@@ -24,15 +24,19 @@ export {
 
 let localOverrideAdapter: LocalOverrideAdapterWrapper | undefined
 
+// HKSWAP: Disabled Statsig - return dummy key to prevent errors
 function getStatsigApiKeyOrThrow(): string {
   // A dummy key is used in test env b/c the wallet/mobile tests use this file instead of the statsig.native file
-  const statsigApiKey = isTestEnv() ? 'dummy-test-key' : getConfig().statsigApiKey
+  // HKSWAP: Always return dummy key since Statsig is disabled
+  return 'dummy-key-for-hkswap'
+  
+  // const statsigApiKey = isTestEnv() ? 'dummy-test-key' : getConfig().statsigApiKey
 
-  if (!statsigApiKey) {
-    throw new Error('STATSIG_API_KEY is not set')
-  }
+  // if (!statsigApiKey) {
+  //   throw new Error('STATSIG_API_KEY is not set')
+  // }
 
-  return statsigApiKey
+  // return statsigApiKey
 }
 
 export function getOverrideAdapter(): LocalOverrideAdapterWrapper {

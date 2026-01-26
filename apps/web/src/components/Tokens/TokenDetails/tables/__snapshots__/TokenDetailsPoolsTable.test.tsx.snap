@@ -8,7 +8,7 @@ exports[`TDPPoolTable > renders data filled state 1`] = `
 }
 
 .c1 path {
-  stroke: #FF37C7;
+  stroke: #4177e2;
   background: rgba(19, 19, 19, 0.63);
   fill: none;
 }
@@ -593,7 +593,7 @@ exports[`TDPPoolTable > renders data filled state 1`] = `
             <svg
               class="c1 c2"
               fill="none"
-              stroke="#FF37C7"
+              stroke="#4177e2"
               viewBox="0 0 24 24"
               xmlns="http://www.w3.org/2000/svg"
             >

@@ -61,9 +61,15 @@ export function createDefaultStore() {
           ? false
           : {
               warnAfter: 128,
-              // meta.arg and meta.baseQueryMeta are defaults. payload.trade is a nonserializable return value, but that's ok
+              // meta.arg and meta.baseQueryMeta are defaults. payload.trade and payload.swapTxContext.trade are nonserializable return values, but that's ok
               // because we are not adding it into any persisted store that requires serialization (e.g. localStorage)
-              ignoredActionPaths: ['meta.arg', 'meta.baseQueryMeta', 'payload.trade'],
+              ignoredActionPaths: [
+                'meta.arg',
+                'meta.baseQueryMeta',
+                'payload.trade',
+                'payload.swapTxContext.trade',
+                'payload.swapTxContext', // Ignore entire swapTxContext as it contains non-serializable trade objects
+              ],
               ignoredPaths: [routingApi.reducerPath],
               ignoredActions: [
                 // ignore the redux-persist actions
@@ -71,6 +77,11 @@ export function createDefaultStore() {
                 'persist/REHYDRATE',
                 'persist/PURGE',
                 'persist/FLUSH',
+                // ignore swapSaga actions as they contain non-serializable trade objects
+                'swapSaga/trigger',
+                'planSaga/trigger',
+                // ignore liquiditySaga actions as they contain non-serializable functions (selectChain, callbacks)
+                'liquiditySaga/trigger',
               ],
             },
       })

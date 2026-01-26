@@ -1,11 +1,12 @@
 /* eslint-disable max-lines */
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
 import { Pool as V3Pool } from '@uniswap/v3-sdk'
-import { Pool as V4Pool } from '@uniswap/v4-sdk'
+import { Interface } from '@ethersproject/abi'
 import { TradingApi } from '@universe/api'
 import { useDepositInfo } from 'components/Liquidity/Create/hooks/useDepositInfo'
+import { useOnChainLpApproval } from 'components/Liquidity/Create/hooks/useOnChainLpApproval'
 import { DYNAMIC_FEE_DATA, PositionState } from 'components/Liquidity/Create/types'
 import { useCreatePositionDependentAmountFallback } from 'components/Liquidity/hooks/useDependentAmountFallback'
 import { getTokenOrZeroAddress, validateCurrencyInput } from 'components/Liquidity/utils/currency'
@@ -44,6 +45,13 @@ import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 /**
+ * Check if a chain ID is a HashKey chain
+ */
+function isHashKeyChain(chainId: number | undefined): boolean {
+  return chainId === UniverseChainId.HashKey || chainId === UniverseChainId.HashKeyTestnet
+}
+
+/**
  * @internal - exported for testing
  */
 export function generateAddLiquidityApprovalParams({
@@ -80,7 +88,7 @@ export function generateAddLiquidityApprovalParams({
     token1: getTokenOrZeroAddress(displayCurrencies.TOKEN1),
     amount0: currencyAmounts.TOKEN0.quotient.toString(),
     amount1: currencyAmounts.TOKEN1.quotient.toString(),
-    generatePermitAsTransaction: protocolVersion === ProtocolVersion.V4 ? canBatchTransactions : undefined,
+    generatePermitAsTransaction: undefined, // HashKey Chain only supports V3, no V4 permit support
   } satisfies TradingApi.CheckApprovalLPRequest
 }
 
@@ -106,7 +114,7 @@ export function generateCreateCalldataQueryParams({
   approvalCalldata?: TradingApi.CheckApprovalLPResponse
   positionState: PositionState
   ticks: [Maybe<number>, Maybe<number>]
-  poolOrPair: V3Pool | V4Pool | Pair | undefined
+  poolOrPair: V3Pool | Pair | undefined
   displayCurrencies: { [field in PositionField]: Maybe<Currency> }
   currencyAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
   independentField: PositionField
@@ -119,7 +127,8 @@ export function generateCreateCalldataQueryParams({
     !apiProtocolItems ||
     !currencyAmounts?.TOKEN0 ||
     !currencyAmounts.TOKEN1 ||
-    !validateCurrencyInput(displayCurrencies)
+    !validateCurrencyInput(displayCurrencies) ||
+    !positionState.fee // Ensure fee is defined
   ) {
     return undefined
   }
@@ -181,7 +190,7 @@ export function generateCreateCalldataQueryParams({
     return undefined
   }
 
-  const pool = poolOrPair as V4Pool | V3Pool | undefined
+  const pool = poolOrPair as V3Pool | undefined
   if (!pool || !displayCurrencies.TOKEN0 || !displayCurrencies.TOKEN1) {
     return undefined
   }
@@ -204,6 +213,19 @@ export function generateCreateCalldataQueryParams({
   const independentAmount = currencyAmounts[independentField]
   const dependentAmount = currencyAmounts[dependentField]
 
+  // Ensure fee is defined
+  if (!positionState.fee?.feeAmount) {
+    return undefined
+  }
+
+  // V3 pool configuration (HashKey Chain only supports V3)
+  const poolConfig: any = {
+    tickSpacing,
+    token0: getTokenOrZeroAddress(displayCurrencies.TOKEN0),
+    token1: getTokenOrZeroAddress(displayCurrencies.TOKEN1),
+    fee: positionState.fee.isDynamic ? DYNAMIC_FEE_DATA.feeAmount : positionState.fee.feeAmount,
+  }
+
   return {
     simulateTransaction: !(
       permitData ||
@@ -224,13 +246,7 @@ export function generateCreateCalldataQueryParams({
     position: {
       tickLower: tickLower ?? undefined,
       tickUpper: tickUpper ?? undefined,
-      pool: {
-        tickSpacing,
-        token0: getTokenOrZeroAddress(displayCurrencies.TOKEN0),
-        token1: getTokenOrZeroAddress(displayCurrencies.TOKEN1),
-        fee: positionState.fee?.isDynamic ? DYNAMIC_FEE_DATA.feeAmount : positionState.fee?.feeAmount,
-        hooks: positionState.hook,
-      },
+      pool: poolConfig,
     },
   } satisfies TradingApi.CreateLPPositionRequest
 }
@@ -252,10 +268,20 @@ export function generateCreatePositionTxRequest({
   createCalldata?: TradingApi.CreateLPPositionResponse
   createCalldataQueryParams?: TradingApi.CreateLPPositionRequest
   currencyAmounts?: { [field in PositionField]?: Maybe<CurrencyAmount<Currency>> }
-  poolOrPair: Pair | undefined
+  poolOrPair: V3Pool | Pair | undefined
   canBatchTransactions: boolean
 }): CreatePositionTxAndGasInfo | undefined {
-  if (!createCalldata || !currencyAmounts?.TOKEN0 || !currencyAmounts.TOKEN1) {
+  if (!currencyAmounts?.TOKEN0 || !currencyAmounts.TOKEN1) {
+    return undefined
+  }
+
+  // For HashKey chains, Trading API doesn't support creating LP positions
+  // So createCalldata will be undefined, and we'll use async step instead
+  const chainId = currencyAmounts.TOKEN0.currency.chainId
+  const isHashKey = isHashKeyChain(chainId)
+  
+  // For non-HashKey chains, createCalldata is required
+  if (!isHashKey && !createCalldata) {
     return undefined
   }
 
@@ -287,16 +313,31 @@ export function generateCreatePositionTxRequest({
   const validatedToken0PermitTransaction = validateTransactionRequest(approvalCalldata?.token0PermitTransaction)
   const validatedToken1PermitTransaction = validateTransactionRequest(approvalCalldata?.token1PermitTransaction)
 
-  const txRequest = validateTransactionRequest(createCalldata.create)
-  if (!txRequest && !(validatedToken0PermitTransaction || validatedToken1PermitTransaction)) {
+  // For HashKey chains, we don't have createCalldata from Trading API
+  // So txRequest will be undefined, and we'll use async step with createPositionRequestArgs
+  const txRequest = createCalldata?.create ? validateTransactionRequest(createCalldata.create) : undefined
+  
+  // For HashKey chains, allow missing txRequest (will use async step)
+  // For other chains, require txRequest unless using permit transactions
+  if (!isHashKey && !txRequest && !(validatedToken0PermitTransaction || validatedToken1PermitTransaction)) {
     // Allow missing txRequest if mismatched (unsigned flow using token0PermitTransaction/2)
     return undefined
   }
 
-  const queryParams: TradingApi.CreateLPPositionRequest | undefined =
-    protocolVersion === ProtocolVersion.V4
-      ? { ...createCalldataQueryParams, batchPermitData: validatedPermitRequest }
-      : createCalldataQueryParams
+  // HashKey Chain only supports V3, so no need for V4-specific batchPermitData handling
+  const queryParams: TradingApi.CreateLPPositionRequest | undefined = createCalldataQueryParams
+
+  // For HashKey chains, get sqrtRatioX96 from poolOrPair if available (V3 pools only)
+  // For other chains, get it from createCalldata
+  let sqrtRatioX96: string | undefined
+  if (isHashKey && poolOrPair && protocolVersion !== ProtocolVersion.V2) {
+    // For V3, poolOrPair is a V3Pool, not a Pair
+    const pool = poolOrPair as V3Pool
+    sqrtRatioX96 = pool.sqrtRatioX96.toString()
+  }
+  if (!sqrtRatioX96) {
+    sqrtRatioX96 = createCalldata?.sqrtRatioX96
+  }
 
   return {
     type: LiquidityTransactionType.Create,
@@ -307,7 +348,9 @@ export function generateCreatePositionTxRequest({
       type: LiquidityTransactionType.Create,
       currency0Amount: currencyAmounts.TOKEN0,
       currency1Amount: currencyAmounts.TOKEN1,
-      liquidityToken: protocolVersion === ProtocolVersion.V2 ? poolOrPair?.liquidityToken : undefined,
+      liquidityToken: protocolVersion === ProtocolVersion.V2 && poolOrPair && 'liquidityToken' in poolOrPair
+        ? (poolOrPair as Pair).liquidityToken
+        : undefined,
     },
     approveToken0Request: validatedApprove0Request,
     approveToken1Request: validatedApprove1Request,
@@ -319,7 +362,7 @@ export function generateCreatePositionTxRequest({
     token0PermitTransaction: validatedToken0PermitTransaction,
     token1PermitTransaction: validatedToken1PermitTransaction,
     positionTokenPermitTransaction: undefined,
-    sqrtRatioX96: createCalldata.sqrtRatioX96,
+    sqrtRatioX96,
   } satisfies CreatePositionTxAndGasInfo
 }
 
@@ -343,37 +386,89 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     protocolVersion,
     currencies,
     ticks,
-    poolOrPair,
+    poolOrPair: rawPoolOrPair,
     depositState,
     creatingPoolOrPair,
     currentTransactionStep,
     positionState,
     setRefetch,
   } = useCreateLiquidityContext()
+  
+  // Filter out V4 pools - HashKey Chain only supports V3
+  const poolOrPair = useMemo(() => {
+    if (!rawPoolOrPair) return undefined
+    // If it's a Pair (V2), return as is
+    if ('liquidityToken' in rawPoolOrPair) {
+      return rawPoolOrPair
+    }
+    // If it's a V3Pool (has 'fee' and 'tickSpacing' properties), return as is
+    if ('fee' in rawPoolOrPair && 'tickSpacing' in rawPoolOrPair && 'token0' in rawPoolOrPair) {
+      const token0 = rawPoolOrPair.token0
+      // V3Pool has Token, V4Pool has Currency - check if token0 is Token
+      if ('address' in token0) {
+        return rawPoolOrPair as V3Pool
+      }
+    }
+    // Otherwise, it's V4Pool, return undefined for HashKey chains
+    return undefined
+  }, [rawPoolOrPair])
+
   const account = useWallet().evmAccount
+
+  if (!currencies?.display) {
+    throw new TypeError('currencies.display is undefined in CreatePositionTxContext')
+  }
+  
   const { TOKEN0, TOKEN1 } = currencies.display
+  
+  if (!depositState) {
+    throw new TypeError('depositState is undefined in CreatePositionTxContext')
+  }
+  
   const { exactField } = depositState
 
-  const invalidRange = protocolVersion !== ProtocolVersion.V2 && isInvalidRange(ticks[0], ticks[1])
-  const depositInfoProps = useMemo(() => {
-    const [tickLower, tickUpper] = ticks
-    const outOfRange = isOutOfRange({
-      poolOrPair,
-      lowerTick: tickLower,
-      upperTick: tickUpper,
-    })
+  let invalidRange: boolean
+  try {
+    invalidRange = protocolVersion !== ProtocolVersion.V2 && isInvalidRange(ticks?.[0], ticks?.[1])
+  } catch (error) {
+    invalidRange = false // Default to false on error
+  }
 
-    return {
-      protocolVersion,
-      poolOrPair,
-      address: account?.address,
-      token0: TOKEN0,
-      token1: TOKEN1,
-      tickLower: protocolVersion !== ProtocolVersion.V2 ? (tickLower ?? undefined) : undefined,
-      tickUpper: protocolVersion !== ProtocolVersion.V2 ? (tickUpper ?? undefined) : undefined,
-      exactField,
-      exactAmounts: depositState.exactAmounts,
-      skipDependentAmount: protocolVersion === ProtocolVersion.V2 ? false : outOfRange || invalidRange,
+  const depositInfoProps = useMemo(() => {
+    try {
+      const [tickLower, tickUpper] = ticks || [undefined, undefined]
+      const outOfRange = isOutOfRange({
+        poolOrPair,
+        lowerTick: tickLower,
+        upperTick: tickUpper,
+      })
+
+      return {
+        protocolVersion,
+        poolOrPair,
+        address: account?.address,
+        token0: TOKEN0,
+        token1: TOKEN1,
+        tickLower: protocolVersion !== ProtocolVersion.V2 ? (tickLower ?? undefined) : undefined,
+        tickUpper: protocolVersion !== ProtocolVersion.V2 ? (tickUpper ?? undefined) : undefined,
+        exactField,
+        exactAmounts: depositState?.exactAmounts,
+        skipDependentAmount: protocolVersion === ProtocolVersion.V2 ? false : outOfRange || invalidRange,
+      }
+    } catch (error) {
+      // Return minimal props on error
+      return {
+        protocolVersion,
+        poolOrPair,
+        address: account?.address,
+        token0: TOKEN0,
+        token1: TOKEN1,
+        tickLower: undefined,
+        tickUpper: undefined,
+        exactField,
+        exactAmounts: depositState?.exactAmounts,
+        skipDependentAmount: true, // Skip dependent amount on error
+      }
     }
   }, [TOKEN0, TOKEN1, exactField, ticks, poolOrPair, depositState, account?.address, protocolVersion, invalidRange])
 
@@ -395,7 +490,113 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
 
   const [transactionError, setTransactionError] = useState<string | boolean>(false)
 
+  // Check if this is a HashKey chain (Trading API doesn't support HashKey chains)
+  const isHashKey = isHashKeyChain(poolOrPair?.chainId)
+
+  // Use on-chain approval check for HashKey chains
+  const token0Amount = useMemo(() => {
+    const amount = currencyAmounts?.TOKEN0
+    if (!amount || !(amount.currency instanceof Token)) return undefined
+    return amount as CurrencyAmount<Token>
+  }, [currencyAmounts?.TOKEN0])
+
+  const token1Amount = useMemo(() => {
+    const amount = currencyAmounts?.TOKEN1
+    if (!amount || !(amount.currency instanceof Token)) return undefined
+    return amount as CurrencyAmount<Token>
+  }, [currencyAmounts?.TOKEN1])
+
+  const onChainApproval = useOnChainLpApproval({
+    token0: TOKEN0 instanceof Token ? TOKEN0 : undefined,
+    token1: TOKEN1 instanceof Token ? TOKEN1 : undefined,
+    amount0: token0Amount,
+    amount1: token1Amount,
+    owner: account?.address,
+    chainId: poolOrPair?.chainId,
+  })
+
+  // Build approval transaction requests for HashKey chains based on on-chain check
+  // Supports both traditional ERC20 approve and Permit2 authorization
+  const hashKeyApprovalCalldata = useMemo(() => {
+    try {
+      if (!isHashKey || !onChainApproval.positionManagerAddress || !poolOrPair?.chainId) {
+        return undefined
+      }
+
+      const positionManagerAddress = onChainApproval.positionManagerAddress
+      const approveInterface = new Interface(['function approve(address spender,uint256 value)'])
+      
+      // Only build approval transactions if needed (considering Permit2 authorization)
+      // If Permit2 authorization is valid, we don't need traditional approve
+      const token0NeedsApproval = onChainApproval.token0NeedsApproval && TOKEN0 instanceof Token && currencyAmounts?.TOKEN0
+      const token1NeedsApproval = onChainApproval.token1NeedsApproval && TOKEN1 instanceof Token && currencyAmounts?.TOKEN1
+
+      const token0ApprovalTx = token0NeedsApproval && TOKEN0 instanceof Token && positionManagerAddress
+        ? {
+            to: TOKEN0.address,
+            data: approveInterface.encodeFunctionData('approve', [
+              positionManagerAddress,
+              MaxUint256.toString(),
+            ]),
+            value: '0x0',
+            chainId: poolOrPair.chainId,
+          }
+        : undefined
+
+      const token1ApprovalTx = token1NeedsApproval && TOKEN1 instanceof Token && positionManagerAddress
+        ? {
+            to: TOKEN1.address,
+            data: approveInterface.encodeFunctionData('approve', [
+              positionManagerAddress,
+              MaxUint256.toString(),
+            ]),
+            value: '0x0',
+            chainId: poolOrPair.chainId,
+          }
+        : undefined
+
+      // Return in Trading API format for compatibility
+      // Only include approvals if they are needed
+      const token0Approval = token0ApprovalTx ? validateTransactionRequest(token0ApprovalTx) : undefined
+      const token1Approval = token1ApprovalTx ? validateTransactionRequest(token1ApprovalTx) : undefined
+
+      // Note: Permit2 permit transactions (token0PermitTransaction/token1PermitTransaction) 
+      // are typically generated by Trading API. For HashKey Chain, we currently only support
+      // traditional approve transactions. If Permit2 authorization exists and is valid,
+      // no approval transactions are needed.
+
+      // Return undefined if no approvals needed (similar to Trading API behavior)
+      if (!token0Approval && !token1Approval) {
+        return undefined
+      }
+
+      return {
+        token0Approval,
+        token1Approval,
+        // TODO: Add Permit2 permit transaction support for HashKey Chain if needed
+        // token0PermitTransaction: ...,
+        // token1PermitTransaction: ...,
+      } as TradingApi.CheckApprovalLPResponse | undefined
+    } catch (error) {
+      return undefined
+    }
+  }, [
+    isHashKey,
+    onChainApproval.positionManagerAddress,
+    onChainApproval.token0NeedsApproval,
+    onChainApproval.token1NeedsApproval,
+    onChainApproval.token0NeedsPermit2Approval,
+    onChainApproval.token1NeedsPermit2Approval,
+    TOKEN0,
+    TOKEN1,
+    currencyAmounts,
+    poolOrPair?.chainId,
+  ])
+
   const addLiquidityApprovalParams = useMemo(() => {
+    if (!currencies?.display) {
+      return undefined
+    }
     return generateAddLiquidityApprovalParams({
       address: account?.address,
       protocolVersion,
@@ -403,10 +604,14 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       currencyAmounts,
       canBatchTransactions,
     })
-  }, [account?.address, protocolVersion, currencies.display, currencyAmounts, canBatchTransactions])
+  }, [account?.address, protocolVersion, currencies?.display, currencyAmounts, canBatchTransactions])
+
+  // For HashKey chains, skip Trading API and use on-chain check
+  const shouldEnableTradingApiApprovalQuery =
+    !!addLiquidityApprovalParams && !inputError && !transactionError && !invalidRange && !isHashKey
 
   const {
-    data: approvalCalldata,
+    data: tradingApiApprovalCalldata,
     error: approvalError,
     isLoading: approvalLoading,
     refetch: approvalRefetch,
@@ -414,10 +619,13 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     params: addLiquidityApprovalParams,
     staleTime: 5 * ONE_SECOND_MS,
     retry: false,
-    enabled: !!addLiquidityApprovalParams && !inputError && !transactionError && !invalidRange,
+    enabled: shouldEnableTradingApiApprovalQuery,
   })
 
-  if (approvalError) {
+  // Use on-chain approval data for HashKey chains, Trading API data for others
+  const approvalCalldata = isHashKey ? hashKeyApprovalCalldata : tradingApiApprovalCalldata
+
+  if (approvalError && !isHashKey) {
     const message = parseErrorMessageTitle(approvalError, { defaultTitle: 'unknown CheckLpApprovalQuery' })
     logger.error(message, {
       tags: { file: 'CreatePositionTxContext', function: 'useEffect' },
@@ -430,6 +638,9 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
   const gasFeeToken1PermitUSD = useUSDCurrencyAmountOfGasFee(poolOrPair?.chainId, approvalCalldata?.gasFeeToken1Permit)
 
   const createCalldataQueryParams = useMemo(() => {
+    if (!currencies?.display || !depositState) {
+      return undefined
+    }
     return generateCreateCalldataQueryParams({
       account,
       approvalCalldata,
@@ -438,7 +649,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       creatingPoolOrPair,
       displayCurrencies: currencies.display,
       ticks,
-      poolOrPair,
+      poolOrPair: poolOrPair as V3Pool | Pair | undefined, // Filter out V4Pool - HashKey Chain only supports V3
       currencyAmounts,
       independentField: depositState.exactField,
       slippageTolerance: customSlippageTolerance,
@@ -451,9 +662,9 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     ticks,
     poolOrPair,
     positionState,
-    depositState.exactField,
+    depositState?.exactField,
     customSlippageTolerance,
-    currencies.display,
+    currencies?.display,
     protocolVersion,
   ])
 
@@ -461,14 +672,21 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     currentTransactionStep?.step.type === TransactionStepType.IncreasePositionTransaction ||
     currentTransactionStep?.step.type === TransactionStepType.IncreasePositionTransactionAsync
 
+  // For HashKey chains, we don't require approvalCalldata from Trading API
+  // For other chains, approvalCalldata is required
+  const requiresApprovalCalldata = !isHashKey
+
+  // For HashKey chains, Trading API doesn't support creating LP positions
+  // So we disable the query entirely for HashKey chains
   const isQueryEnabled =
+    !isHashKey && // Disable Trading API query for HashKey chains
     !isUserCommittedToCreate &&
     !inputError &&
     !transactionError &&
     !approvalLoading &&
     !approvalError &&
     !invalidRange &&
-    Boolean(approvalCalldata) &&
+    (requiresApprovalCalldata ? Boolean(approvalCalldata) : true) &&
     Boolean(createCalldataQueryParams)
 
   const {
@@ -555,7 +773,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
       createCalldata,
       createCalldataQueryParams,
       currencyAmounts,
-      poolOrPair: protocolVersion === ProtocolVersion.V2 ? poolOrPair : undefined,
+      poolOrPair: protocolVersion === ProtocolVersion.V2 && poolOrPair instanceof Pair ? poolOrPair : undefined,
       canBatchTransactions,
     })
   }, [
@@ -567,6 +785,7 @@ export function CreatePositionTxContextProvider({ children }: PropsWithChildren)
     protocolVersion,
     canBatchTransactions,
   ])
+
 
   const value = useMemo(
     (): CreatePositionTxContextType => ({

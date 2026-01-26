@@ -12,10 +12,17 @@ export default function useTransactionDeadline(): BigNumber | undefined {
   const { chainId } = useAccount()
   const ttl = useAppSelector((state) => state.user.userDeadline)
   const blockTimestamp = useCurrentBlockTimestamp()
-  return useMemo(
-    () => timestampToDeadline({ chainId, blockTimestamp: BigNumber.from(blockTimestamp), ttl }),
-    [blockTimestamp, chainId, ttl],
-  )
+  
+  return useMemo(() => {
+    // Handle undefined blockTimestamp
+    if (!blockTimestamp) {
+      return undefined
+    }
+    
+    const deadline = timestampToDeadline({ chainId, blockTimestamp: BigNumber.from(blockTimestamp), ttl })
+    
+    return deadline
+  }, [blockTimestamp, chainId, ttl])
 }
 
 /**
@@ -28,7 +35,8 @@ export function useGetTransactionDeadline(): () => Promise<BigNumber | undefined
   const multicall = useInterfaceMulticall(chainId)
   return useCallback(async () => {
     const blockTimestamp = await multicall.getCurrentBlockTimestamp()
-    return timestampToDeadline({ chainId, blockTimestamp, ttl })
+    const deadline = timestampToDeadline({ chainId, blockTimestamp, ttl })
+    return deadline
   }, [chainId, multicall, ttl])
 }
 
@@ -42,10 +50,13 @@ function timestampToDeadline({
   ttl?: number
 }) {
   if (blockTimestamp && isL2ChainId(chainId)) {
-    return blockTimestamp.add(L2_DEADLINE_FROM_NOW)
+    const deadline = blockTimestamp.add(L2_DEADLINE_FROM_NOW)
+    return deadline
   }
   if (blockTimestamp && ttl) {
-    return blockTimestamp.add(ttl)
+    const deadline = blockTimestamp.add(ttl)
+    return deadline
   }
+  
   return undefined
 }

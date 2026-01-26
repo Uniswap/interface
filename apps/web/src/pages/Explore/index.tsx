@@ -252,7 +252,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
             <Flex row gap="$spacing8" justifyContent="flex-start" $md={{ width: '100%' }}>
               {currentKey === ExploreTab.Pools && (
                 <Flex row>
-                  <Button size="small" icon={<Plus />} onPress={() => navigate('/positions/create')}>
+                  <Button size="small" icon={<Plus />} onPress={() => navigate('/positions/create/v3')}>
                     {media.sm ? t('common.add.label') : t('common.addLiquidity')}
                   </Button>
                 </Flex>

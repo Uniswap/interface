@@ -37,7 +37,8 @@ const CONTEXT_MENU_ACTIONS: Record<TokenContextMenuVariant, TokenContextMenuActi
   [TokenContextMenuVariant.TokenSelector]: [
     TokenContextMenuAction.CopyAddress,
     ...(isWebPlatform ? [] : [TokenContextMenuAction.Favorite]),
-    TokenContextMenuAction.ViewDetails,
+    // HKSWAP: Disabled token details option
+    // TokenContextMenuAction.ViewDetails,
   ],
 }
 

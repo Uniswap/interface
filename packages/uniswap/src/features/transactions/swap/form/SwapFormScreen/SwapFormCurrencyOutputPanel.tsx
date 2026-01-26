@@ -69,11 +69,22 @@ export function SwapFormCurrencyOutputPanel(): JSX.Element {
     showTemporaryExactOutputUnavailableWarning: s.showTemporaryExactOutputUnavailableWarning,
   }))
 
-  const focusedStyles = useCurrencyInputFocusedStyle(focusOnCurrencyField === CurrencyField.OUTPUT)
+  const isFocused = focusOnCurrencyField === CurrencyField.OUTPUT
+  const focusedStyles = useCurrencyInputFocusedStyle(isFocused)
 
   return (
     <Trace section={SectionName.CurrencyOutputPanel}>
-      <Flex borderRadius="$rounded20" borderWidth="$spacing1" {...focusedStyles}>
+      <Flex
+        backgroundColor="$surface1"
+        borderRadius="$rounded20"
+        borderWidth="$spacing1"
+        {...focusedStyles}
+        borderColor={isFocused ? focusedStyles.borderColor : '$surface3'}
+        hoverStyle={{
+          ...focusedStyles.hoverStyle,
+          borderColor: '$surface3Hovered',
+        }}
+      >
         <CurrencyInputPanel
           ref={outputRef}
           headerLabel={isWebPlatform ? t('common.button.buy') : undefined}

@@ -36,11 +36,12 @@ export function useQueryWithImmediateGarbageCollection<
   const defaultQueryClient = useQueryClient()
   const queryClient = customQueryClient ?? defaultQueryClient
 
-  const { queryKey, queryFn } = queryArgs
+  const { queryKey = [], queryFn = skipToken } = queryArgs
+  const safeQueryKey = Array.isArray(queryKey) ? queryKey : [queryKey]
   const skip = queryFn === skipToken
 
   const result = useQuery<TQueryFnData, TError, TData, TQueryKey>(
-    { ...queryArgs, gcTime: immediateGcTime },
+    { ...queryArgs, queryKey: safeQueryKey, gcTime: immediateGcTime },
     queryClient,
   )
   const { dataUpdatedAt } = result
@@ -53,10 +54,12 @@ export function useQueryWithImmediateGarbageCollection<
     const timeSinceLastUpdate = Date.now() - dataUpdatedAt
 
     const timeout = setTimeout(() => {
-      const state = queryClient.getQueryCache().find({ queryKey })?.state
+      const state = queryClient.getQueryCache().find({ queryKey: safeQueryKey })?.state
 
       if (!state) {
-        logger.debug('TradingApiClient.ts', 'useQueryWithImmediateGarbageCollection', 'Cache not found', { queryKey })
+        logger.debug('TradingApiClient.ts', 'useQueryWithImmediateGarbageCollection', 'Cache not found', {
+          queryKey: safeQueryKey,
+        })
         return
       }
 
@@ -72,19 +75,19 @@ export function useQueryWithImmediateGarbageCollection<
 
       if (latestTimeSinceLastUpdate >= immediateGcTime) {
         logger.debug('TradingApiClient.ts', 'useQueryWithImmediateGarbageCollection', 'Clearing stale data', {
-          queryKey,
+          queryKey: safeQueryKey,
           immediateGcTime,
           latestDataUpdatedAt,
           latestTimeSinceLastUpdate,
           state,
         })
 
-        queryClient.removeQueries({ queryKey, exact: true })
+        queryClient.removeQueries({ queryKey: safeQueryKey, exact: true })
       }
     }, immediateGcTime - timeSinceLastUpdate)
 
     return () => clearTimeout(timeout)
-  }, [dataUpdatedAt, immediateGcTime, queryClient, queryKey, skip])
+  }, [dataUpdatedAt, immediateGcTime, queryClient, safeQueryKey, skip])
 
   return result
 }

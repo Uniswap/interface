@@ -6,9 +6,11 @@ export function getIsWebFORNudgeEnabled(): boolean {
     return false
   }
 
-  return getExperimentValue({
+  const result = getExperimentValue({
     experiment: Experiments.WebFORNudges,
     param: WebFORNudgesProperties.NudgeEnabled,
     defaultValue: false,
   })
+
+  return result
 }

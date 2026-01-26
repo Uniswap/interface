@@ -229,14 +229,15 @@ function _TokenOptionItemContextMenu({
       })
     }
 
-    if (actions.includes(TokenContextMenuAction.ViewDetails)) {
-      options.push({
-        onPress: onNavigateToTokenDetails,
-        label: t('token.details'),
-        Icon: InfoCircleFilled,
-        iconColor: '$neutral2',
-      })
-    }
+    // HKSWAP: Disabled token details option
+    // if (actions.includes(TokenContextMenuAction.ViewDetails)) {
+    //   options.push({
+    //     onPress: onNavigateToTokenDetails,
+    //     label: t('token.details'),
+    //     Icon: InfoCircleFilled,
+    //     iconColor: '$neutral2',
+    //   })
+    // }
 
     return options
   }, [

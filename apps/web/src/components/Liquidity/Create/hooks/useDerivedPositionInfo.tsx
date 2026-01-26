@@ -27,6 +27,7 @@ import { PositionField } from 'types/position'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { usePoolInfoQuery } from 'uniswap/src/data/apiClients/tradingApi/usePoolInfoQuery'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 
 function getSortedCurrencies(a: Maybe<Currency>, b: Maybe<Currency>): { [field in PositionField]: Maybe<Currency> } {
   if (!a || !b) {
@@ -274,6 +275,14 @@ export function useDerivedPositionInfo(
 
   const isFeeValid = protocolVersion === ProtocolVersion.V2 ? true : state.fee !== undefined
 
+  // For V3, always use on-chain query (usePool hook) to check if pool exists
+  // This works for all chains including HashKey Chain where backend doesn't support it
+  const v3PoolResultForNewPath = usePool({
+    currencyA: sortedCurrencies.TOKEN0?.wrapped,
+    currencyB: sortedCurrencies.TOKEN1?.wrapped,
+    feeAmount: state.fee?.feeAmount,
+  })
+
   const {
     data: poolData,
     isLoading: poolIsLoading,
@@ -296,7 +305,20 @@ export function useDerivedPositionInfo(
   })
 
   const poolOrPair = poolData?.pools && poolData.pools.length > 0 ? poolData.pools[0] : undefined
-  const creatingPoolOrPair = poolDataIsFetched && !poolOrPair
+  
+  // For V3, use on-chain query result instead of backend API result
+  // This ensures creatingPoolOrPair is correctly calculated even when backend doesn't support the chain
+  const creatingPoolOrPair = useMemo(() => {
+    if (!isPoolInfoEndpointEnabled) {
+      return legacyPoolOrPair.creatingPoolOrPair
+    }
+
+    if (protocolVersion === ProtocolVersion.V3) {
+      return v3PoolResultForNewPath[0] === PoolState.NOT_EXISTS
+    }
+
+    return poolDataIsFetched && !poolOrPair
+  }, [isPoolInfoEndpointEnabled, legacyPoolOrPair.creatingPoolOrPair, protocolVersion, v3PoolResultForNewPath, poolDataIsFetched, poolOrPair])
 
   return useMemo(() => {
     if (!isPoolInfoEndpointEnabled) {
@@ -339,7 +361,9 @@ export function useDerivedPositionInfo(
     }
 
     if (protocolVersion === ProtocolVersion.V3) {
-      const v3Pool = getSDKPoolFromPoolInformation({
+      // For V3, use on-chain query result if available, otherwise fallback to backend API result
+      const v3PoolFromChain = v3PoolResultForNewPath[1] ?? undefined
+      const v3Pool = v3PoolFromChain ?? getSDKPoolFromPoolInformation({
         poolOrPair,
         token0: sortedCurrencies.TOKEN0?.wrapped,
         token1: sortedCurrencies.TOKEN1?.wrapped,
@@ -357,7 +381,7 @@ export function useDerivedPositionInfo(
         protocolVersion,
         pool: v3Pool,
         creatingPoolOrPair,
-        poolOrPairLoading: poolIsLoading,
+        poolOrPairLoading: v3PoolResultForNewPath[0] === PoolState.LOADING ? true : poolIsLoading,
         poolId: poolOrPair?.poolReferenceIdentifier,
         refetchPoolData,
       } satisfies CreateV3PositionInfo
@@ -392,5 +416,6 @@ export function useDerivedPositionInfo(
     sortedCurrencies,
     isPoolInfoEndpointEnabled,
     legacyPoolOrPair,
+    v3PoolResultForNewPath,
   ])
 }

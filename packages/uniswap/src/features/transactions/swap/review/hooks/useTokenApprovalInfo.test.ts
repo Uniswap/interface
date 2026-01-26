@@ -1,12 +1,14 @@
-import { renderHook } from '@testing-library/react'
+import { renderHook, waitFor } from '@testing-library/react'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeType, GasEstimate, TradingApi } from '@universe/api'
+import { Contract } from 'ethers/lib/ethers'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import { useCheckApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckApprovalQuery'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/utils'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import type { TokenApprovalInfoParams } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import { useTokenApprovalInfo } from 'uniswap/src/features/transactions/swap/review/hooks/useTokenApprovalInfo'
 import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -15,12 +17,20 @@ import { SignerMnemonicAccountDetails } from 'uniswap/src/features/wallet/types/
 import { logger } from 'utilities/src/logger/logger'
 
 jest.mock('uniswap/src/data/apiClients/tradingApi/useCheckApprovalQuery')
+jest.mock('uniswap/src/features/providers/createEthersProvider', () => ({
+  createEthersProvider: jest.fn(),
+}))
+jest.mock('ethers/lib/ethers', () => ({
+  Contract: jest.fn(),
+}))
 jest.mock('utilities/src/logger/logger', () => ({
   logger: {
     error: jest.fn(),
   },
 }))
 const mockUseCheckApprovalQuery = useCheckApprovalQuery as jest.Mock
+const mockCreateEthersProvider = createEthersProvider as jest.Mock
+const mockContract = Contract as jest.Mock
 
 describe('useTokenApprovalInfo', () => {
   const mockAccount: SignerMnemonicAccountDetails = {
@@ -178,5 +188,92 @@ describe('useTokenApprovalInfo', () => {
         gasEstimate: undefined,
       },
     })
+  })
+
+  it('uses on-chain allowance for HashKey chains and skips approval when allowance is sufficient', async () => {
+    const hashKeyTokenIn = new Token(
+      UniverseChainId.HashKeyTestnet,
+      DAI.address,
+      DAI.decimals,
+      DAI.symbol,
+      DAI.name,
+    )
+    const hashKeyTokenOut = new Token(
+      UniverseChainId.HashKeyTestnet,
+      USDC.address,
+      USDC.decimals,
+      USDC.symbol,
+      USDC.name,
+    )
+    const hashKeyParams: TokenApprovalInfoParams = {
+      ...mockParams,
+      chainId: UniverseChainId.HashKeyTestnet,
+      currencyInAmount: CurrencyAmount.fromRawAmount(hashKeyTokenIn, mockCurrencyInAmount.quotient),
+      currencyOutAmount: CurrencyAmount.fromRawAmount(hashKeyTokenOut, mockCurrencyOutAmount.quotient),
+    }
+
+    mockUseCheckApprovalQuery.mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      error: null,
+    })
+    mockCreateEthersProvider.mockReturnValue({})
+    mockContract.mockImplementation(() => ({
+      allowance: jest.fn().mockResolvedValue({
+        toString: () => mockCurrencyInAmount.quotient.toString(),
+      }),
+    }))
+
+    const { result } = renderHook(() => useTokenApprovalInfo(hashKeyParams))
+
+    await waitFor(() => {
+      expect(result.current.tokenApprovalInfo.action).toBe(ApprovalAction.None)
+    })
+  })
+
+  it('uses on-chain allowance for HashKey chains and returns approval tx when allowance is insufficient', async () => {
+    const hashKeyTokenIn = new Token(
+      UniverseChainId.HashKeyTestnet,
+      DAI.address,
+      DAI.decimals,
+      DAI.symbol,
+      DAI.name,
+    )
+    const hashKeyParams: TokenApprovalInfoParams = {
+      ...mockParams,
+      chainId: UniverseChainId.HashKeyTestnet,
+      currencyInAmount: CurrencyAmount.fromRawAmount(hashKeyTokenIn, mockCurrencyInAmount.quotient),
+      currencyOutAmount: undefined,
+    }
+
+    mockUseCheckApprovalQuery.mockReturnValue({
+      data: undefined,
+      isLoading: false,
+      error: null,
+    })
+    mockCreateEthersProvider.mockReturnValue({})
+    mockContract.mockImplementation(() => ({
+      allowance: jest.fn().mockResolvedValue({
+        toString: () => '0',
+      }),
+    }))
+
+    const { result } = renderHook(() => useTokenApprovalInfo(hashKeyParams))
+
+    await waitFor(() => {
+      expect(result.current.tokenApprovalInfo.action).toBe(ApprovalAction.Permit2Approve)
+    })
+
+    expect(result.current.tokenApprovalInfo).toMatchObject({
+      action: ApprovalAction.Permit2Approve,
+      txRequest: {
+        to: hashKeyTokenIn.address,
+        chainId: UniverseChainId.HashKeyTestnet,
+        value: '0x0',
+      },
+      cancelTxRequest: null,
+    })
+    const txData = result.current.tokenApprovalInfo.txRequest?.data?.toString() ?? ''
+    expect(txData.startsWith('0x095ea7b3')).toBe(true)
   })
 })

@@ -95,17 +95,28 @@ export function useDerivedSwapInfo({
     return ctx.getCanSignPermits?.(chainId) && !ctx.getSwapDelegationInfo?.(chainId).delegationAddress
   })
 
+  // Only fetch trade if both currencies are loaded to prevent incorrect quote requests
+  // This ensures sellToken and buyToken are always defined and match UI state
+  const areCurrenciesReady = !!currencyIn && !!currencyOut
   const trade = useTrade({
     account,
     amountSpecified,
     otherCurrency,
     tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
+    // Explicitly pass sell and buy tokens to ensure consistency with UI
+    // currencyIn is always the sell token (INPUT field)
+    // currencyOut is always the buy token (OUTPUT field)
+    // Only pass if both are defined to prevent fallback to incorrect logic
+    sellToken: areCurrenciesReady ? currencyIn : undefined,
+    buyToken: areCurrenciesReady ? currencyOut : undefined,
     customSlippageTolerance,
     selectedProtocols,
     sendPortionEnabled,
     isDebouncing,
     generatePermitAsTransaction,
     isV4HookPoolsEnabled,
+    // Skip trade query if currencies are not loaded
+    skip: !areCurrenciesReady,
   })
 
   const displayableTrade = trade.trade ?? trade.indicativeTrade

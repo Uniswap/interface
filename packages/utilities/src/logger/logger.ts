@@ -77,8 +77,9 @@ function logMessage(
   message: string,
   ...args: unknown[] // arbitrary extra data - ideally formatted as key value pairs
 ): void {
-  // Log to console directly for dev builds or interface for debugging
-  if (__DEV__ || isWebApp) {
+  // Disabled info and debug level console logging to reduce console noise
+  // Only log warnings and errors to console
+  if ((__DEV__ || isWebApp) && (level === 'warn' || level === 'error')) {
     if (isMobileApp && ['log', 'debug', 'warn'].includes(level)) {
       // `log`, `debug`, and `warn` are all logged with `console.log` on mobile
       // because `console.debug` and `console.warn` only support one single argument in Reactotron.

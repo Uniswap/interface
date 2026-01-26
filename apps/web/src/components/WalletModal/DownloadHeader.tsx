@@ -15,50 +15,53 @@ interface DownloadHeaderProps {
 }
 
 export function DownloadHeader({ showOnMobile = true, showOnDesktop = true }: DownloadHeaderProps): JSX.Element | null {
-  const wallets = useOrderedWallets({ showSecondaryConnectors: false })
-  const { openModal: openGetTheAppModal } = useModalState(ModalName.GetTheApp)
-  const [, setPage] = useAtom(downloadAppModalPageAtom)
-  const recentConnectorId = useRecentConnectorId()
+  // Get App button is hidden - only English is supported
+  return null
 
-  const shouldShow =
-    !wallets.some((wallet) => wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS) &&
-    recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID
+  // const wallets = useOrderedWallets({ showSecondaryConnectors: false })
+  // const { openModal: openGetTheAppModal } = useModalState(ModalName.GetTheApp)
+  // const [, setPage] = useAtom(downloadAppModalPageAtom)
+  // const recentConnectorId = useRecentConnectorId()
 
-  const handleOpenGetTheAppModal = useEvent(() => {
-    openGetTheAppModal()
-    setPage(Page.GetApp)
-  })
+  // const shouldShow =
+  //   !wallets.some((wallet) => wallet.id === CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS) &&
+  //   recentConnectorId !== CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID
 
-  if (!shouldShow) {
-    return null
-  }
+  // const handleOpenGetTheAppModal = useEvent(() => {
+  //   openGetTheAppModal()
+  //   setPage(Page.GetApp)
+  // })
 
-  return (
-    <>
-      {showOnMobile && (
-        <Flex display="flex" $md={{ display: 'none' }}>
-          <DownloadWalletRow
-            onPress={handleOpenGetTheAppModal}
-            width="100%"
-            borderTopLeftRadius="$rounded16"
-            borderTopRightRadius="$rounded16"
-            iconSize={16}
-            titleTextVariant="buttonLabel4"
-          />
-        </Flex>
-      )}
-      {showOnDesktop && (
-        <Flex display="none" $md={{ display: 'flex' }}>
-          <DownloadWalletRow
-            onPress={handleOpenGetTheAppModal}
-            width="100%"
-            borderTopLeftRadius="$rounded16"
-            borderTopRightRadius="$rounded16"
-            iconSize={20}
-            titleTextVariant="buttonLabel4"
-          />
-        </Flex>
-      )}
-    </>
-  )
+  // if (!shouldShow) {
+  //   return null
+  // }
+
+  // return (
+  //   <>
+  //     {showOnMobile && (
+  //       <Flex display="flex" $md={{ display: 'none' }}>
+  //         <DownloadWalletRow
+  //           onPress={handleOpenGetTheAppModal}
+  //           width="100%"
+  //           borderTopLeftRadius="$rounded16"
+  //           borderTopRightRadius="$rounded16"
+  //           iconSize={16}
+  //           titleTextVariant="buttonLabel4"
+  //         />
+  //       </Flex>
+  //     )}
+  //     {showOnDesktop && (
+  //       <Flex display="none" $md={{ display: 'flex' }}>
+  //         <DownloadWalletRow
+  //           onPress={handleOpenGetTheAppModal}
+  //           width="100%"
+  //           borderTopLeftRadius="$rounded16"
+  //           borderTopRightRadius="$rounded16"
+  //           iconSize={20}
+  //           titleTextVariant="buttonLabel4"
+  //         />
+  //       </Flex>
+  //     )}
+  //   </>
+  // )
 }

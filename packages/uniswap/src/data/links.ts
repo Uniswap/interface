@@ -1,4 +1,4 @@
-import { ApolloLink, createHttpLink } from '@apollo/client'
+import { ApolloLink, createHttpLink, Observable } from '@apollo/client'
 import { onError } from '@apollo/client/link/error'
 import { RestLink } from 'apollo-link-rest'
 import { config } from 'uniswap/src/config'
@@ -43,18 +43,28 @@ export const getCustomGraphqlHttpLink = (endpoint: CustomEndpoint): ApolloLink =
     },
   })
 
+// HKSWAP: Disabled GraphQL API - not needed for hskswap (only supports HashKey chain)
 export const getGraphqlHttpLink = (): ApolloLink =>
-  createHttpLink({
-    uri: uniswapUrls.graphQLUrl,
-    headers: {
-      'Content-Type': 'application/json',
-      'X-API-KEY': config.uniswapApiKey,
-      'x-request-source': REQUEST_SOURCE,
-      'x-app-version': getVersionHeader(),
-      // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
-      Origin: uniswapUrls.apiOrigin,
-    },
+  // Return a link that never sends requests
+  new ApolloLink(() => {
+    // Return empty observable that never emits
+    return new Observable(() => {
+      // No-op: never emit any values
+    })
   })
+  
+  // Original implementation commented out:
+  // createHttpLink({
+  //   uri: uniswapUrls.graphQLUrl,
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     'X-API-KEY': config.uniswapApiKey,
+  //     'x-request-source': REQUEST_SOURCE,
+  //     'x-app-version': getVersionHeader(),
+  //     // TODO: [MOB-3883] remove once API gateway supports mobile origin URL
+  //     Origin: uniswapUrls.apiOrigin,
+  //   },
+  // })
 
 // Samples error reports to reduce load on backend
 // Recurring errors that we must fix should have enough occurrences that we detect them still

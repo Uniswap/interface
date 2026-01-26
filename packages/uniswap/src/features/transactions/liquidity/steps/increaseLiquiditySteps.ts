@@ -40,6 +40,17 @@ export type IncreaseLiquidityFlow =
       token1PermitTransaction: Permit2TransactionStep | undefined
       increasePosition: IncreasePositionTransactionStep
     }
+  | {
+      approvalToken0?: TokenApprovalTransactionStep
+      approvalToken1?: TokenApprovalTransactionStep
+      approvalPositionToken?: TokenApprovalTransactionStep
+      revokeToken0?: TokenRevocationTransactionStep
+      revokeToken1?: TokenRevocationTransactionStep
+      permit: undefined
+      token0PermitTransaction: undefined
+      token1PermitTransaction: undefined
+      increasePosition: IncreasePositionTransactionStepAsync
+    }
 export function orderIncreaseLiquiditySteps(flow: IncreaseLiquidityFlow): IncreaseLiquiditySteps[] {
   const steps: IncreaseLiquiditySteps[] = []
 

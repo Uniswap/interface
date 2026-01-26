@@ -35,6 +35,7 @@ export enum ReactQueryCacheKey {
   OnboardingRedirect = 'OnboardingRedirect',
   OnchainBalances = 'OnchainBalances',
   OnchainENS = 'OnchainENS',
+  OnchainPortfolioTotalValue = 'OnchainPortfolioTotalValue',
   OnRampAuth = 'OnRampAuth',
   PasskeyAuthStatus = 'PasskeyAuthStatus',
   Permit2SignatureWithData = 'Permit2SignatureWithData',

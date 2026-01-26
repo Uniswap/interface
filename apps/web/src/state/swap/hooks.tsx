@@ -228,33 +228,22 @@ export function useInitialCurrencyState(): {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: We do not want to rerender on a change to persistedFilteredChainIds
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
-    // Default to native if no query params or chain is not compatible with testnet or mainnet mode
-    if (!hasCurrencyQueryParams || !isSupportedChainCompatible) {
-      const initialChainId = persistedFilteredChainIds?.input ?? defaultChainId
-      return {
-        initialInputCurrencyAddress: getNativeAddress(initialChainId),
-        initialChainId,
-      }
-    }
-    // Handle query params or disconnected state
+    // Handle query params - only set currency if explicitly provided in URL
     if (parsedCurrencyState.inputCurrencyAddress) {
       return {
         initialInputCurrencyAddress: parsedCurrencyState.inputCurrencyAddress,
         initialChainId: parsedCurrencyState.chainId ? supportedChainId : undefined,
       }
     }
-    // return ETH or parsedCurrencyState
+    // No default currency - return undefined to let user select
     return {
-      initialInputCurrencyAddress: parsedCurrencyState.outputCurrencyAddress ? undefined : 'ETH',
+      initialInputCurrencyAddress: undefined,
       initialChainId: parsedCurrencyState.chainId ? supportedChainId : undefined,
     }
   }, [
-    hasCurrencyQueryParams,
-    isSupportedChainCompatible,
     parsedCurrencyState.inputCurrencyAddress,
-    parsedCurrencyState.outputCurrencyAddress,
+    parsedCurrencyState.chainId,
     supportedChainId,
-    defaultChainId,
   ])
 
   const supportedOutputChainId = useSupportedChainId(parsedCurrencyState.outputChainId)

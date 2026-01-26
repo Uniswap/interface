@@ -49,10 +49,19 @@ export function cspMetaTagPlugin(mode?: string): Plugin {
         }
       }
 
+      // Add Trading API URL override to CSP if present
       const tradingApiUrlOverride = getLocalEnvUrl('REACT_APP_TRADING_API_URL_OVERRIDE')
       if (tradingApiUrlOverride) {
         if (!baseCSP.connectSrc.includes(tradingApiUrlOverride)) {
           baseCSP.connectSrc.push(tradingApiUrlOverride)
+        }
+      }
+
+      // Add UNISWAP_GATEWAY_DNS to CSP if present (used for quote API)
+      const uniswapGatewayDns = getLocalEnvUrl('REACT_APP_UNISWAP_GATEWAY_DNS')
+      if (uniswapGatewayDns) {
+        if (!baseCSP.connectSrc.includes(uniswapGatewayDns)) {
+          baseCSP.connectSrc.push(uniswapGatewayDns)
         }
       }
 
@@ -92,16 +101,25 @@ export function cspMetaTagPlugin(mode?: string): Plugin {
 /**
  * For development builds, gets the target envUrlKey from the local env
  * file and returns the value.
- */
-/**
- * For development builds, gets the target envUrlKey from the local env
- * file and returns the value.
+ * Checks both .env.local and .env files, and also process.env as fallback.
  */
 const getLocalEnvUrl = (envUrlKey: string) => {
   try {
-    if (process.env.NODE_ENV !== 'development') {
-      return null
+    // First check process.env (Vite loads .env files automatically)
+    if (process.env[envUrlKey]) {
+      const value = process.env[envUrlKey].trim()
+      if (value) {
+        try {
+          new URL(value)
+          return value
+        } catch (_e) {
+          // biome-ignore lint/suspicious/noConsole: Required for Vite build debugging
+          console.warn(`Invalid URL found for ${envUrlKey} in process.env: ${value}`)
+        }
+      }
     }
+
+    // Also check .env.local file
     const localEnvPath = path.resolve(process.cwd(), LOCAL_ENV)
     if (fs.existsSync(localEnvPath)) {
       const envContent = fs.readFileSync(localEnvPath, 'utf-8')
@@ -120,13 +138,41 @@ const getLocalEnvUrl = (envUrlKey: string) => {
               return value
             } catch (_e) {
               // biome-ignore lint/suspicious/noConsole: Required for Vite build debugging
-              console.warn(`Invalid URL found for ${envUrlKey}: ${value}`)
+              console.warn(`Invalid URL found for ${envUrlKey} in .env.local: ${value}`)
               return null
             }
           }
         }
       }
     }
+
+    // Also check .env file
+    const envPath = path.resolve(process.cwd(), '.env')
+    if (fs.existsSync(envPath)) {
+      const envContent = fs.readFileSync(envPath, 'utf-8')
+      const lines = envContent.split('\n')
+
+      for (const line of lines) {
+        const trimmedLine = line.trim()
+        if (!trimmedLine || trimmedLine.startsWith('#')) {
+          continue
+        }
+        if (trimmedLine.startsWith(`${envUrlKey}=`)) {
+          const value = trimmedLine.split('=')[1]?.trim() || ''
+          if (value) {
+            try {
+              new URL(value)
+              return value
+            } catch (_e) {
+              // biome-ignore lint/suspicious/noConsole: Required for Vite build debugging
+              console.warn(`Invalid URL found for ${envUrlKey} in .env: ${value}`)
+              return null
+            }
+          }
+        }
+      }
+    }
+
     return null
   } catch (error) {
     // biome-ignore lint/suspicious/noConsole: Required for Vite build debugging

@@ -172,8 +172,14 @@ function* executeTransactionStep(params: {
   // Execute async (either because sync is not enabled or sync failed)
   const asyncResult = yield* executor.executeStep(step)
   if (!asyncResult.success) {
+    const error = asyncResult.error instanceof Error 
+      ? asyncResult.error 
+      : new Error(asyncResult.error ? String(asyncResult.error) : 'Transaction failed')
     yield* call(onFailure)
-    throw new Error('Transaction failed')
+    throw error
+  }
+      chainId,
+    })
   }
 
   return undefined // Async execution doesn't return a sync result
@@ -326,9 +332,8 @@ export function createExecuteSwapSaga(
 
       if (isUniswapXPreSignedSwapTransaction(preSignedTransaction) || swapTxHasDelayedSubmission) {
         yield* call(onPending)
-      } else {
-        yield* call(onSuccess)
       }
+      // Note: onSuccess will be called after transaction is successfully submitted
 
       const gasFeeEstimation = swapTxContext.gasFeeEstimation
 
@@ -460,15 +465,17 @@ export function createExecuteSwapSaga(
         }
       }
 
-      // Call onSuccess now if it wasn't called earlier due to transaction spacing
-      if (swapTxHasDelayedSubmission) {
+      // Call onSuccess after transaction is successfully submitted
+      // For delayed submission, onSuccess will be called after all transactions are submitted
         yield* call(onSuccess)
-      }
     } catch (error) {
       dependencies.logger.error(error, {
         tags: { file: 'executeSwapSaga', function: 'executeSwap' },
         extra: { analytics: params.analytics },
       })
+      // Call onFailure with the error so it can be displayed to the user
+      const swapError = error instanceof Error ? error : new Error(String(error))
+      yield* call(params.onFailure, swapError)
     }
   }
 }

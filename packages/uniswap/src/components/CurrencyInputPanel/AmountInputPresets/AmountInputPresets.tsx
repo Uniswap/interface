@@ -20,7 +20,10 @@ export function AmountInputPresets<T extends Key>({
         ? {
             opacity: 0,
             transform: [{ translateY: -4 }],
-            '$group-hover': { opacity: 1, transform: [{ translateY: 0 }] },
+            '$group-hover': {
+              opacity: 1,
+              transform: [{ translateY: 0 }],
+            },
           }
         : {})}
       animation="100ms"

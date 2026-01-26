@@ -1,10 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { parseQuoteCurrencies } from 'uniswap/src/features/transactions/swap/hooks/useTrade/parseQuoteCurrencies'
-import { useIndicativeTradeQuery } from 'uniswap/src/features/transactions/swap/hooks/useTrade/useIndicativeTradeQuery'
 import { useTradeQuery } from 'uniswap/src/features/transactions/swap/hooks/useTrade/useTradeQuery'
 import type { TradeWithGasEstimates } from 'uniswap/src/features/transactions/swap/services/tradeService/tradeService'
 import { TradeWithStatus, UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
+import type { IndicativeTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 
 // error strings hardcoded in @uniswap/unified-routing-api
 // https://github.com/Uniswap/unified-routing-api/blob/020ea371a00d4cc25ce9f9906479b00a43c65f2c/lib/util/errors.ts#L4
@@ -15,8 +15,16 @@ export const API_RATE_LIMIT_ERROR = 'TOO_MANY_REQUESTS'
 export function useTrade(params: UseTradeArgs): TradeWithStatus {
   const { error, data, isLoading: queryIsLoading, isFetching } = useTradeQuery(params)
   const isLoading = (params.amountSpecified && params.isDebouncing) || queryIsLoading
-  const indicative = useIndicativeTradeQuery(params)
-  const { currencyIn, currencyOut } = parseQuoteCurrencies(params)
+  // Disable indicative quote to ensure single source of quote requests
+  // This prevents duplicate requests and ensures consistency
+  const indicative = { trade: undefined, isLoading: false }
+  const { currencyIn, currencyOut } = parseQuoteCurrencies({
+    tradeType: params.tradeType,
+    amountSpecified: params.amountSpecified,
+    otherCurrency: params.otherCurrency,
+    sellToken: params.sellToken,
+    buyToken: params.buyToken,
+  })
 
   return useMemo(() => {
     return parseTradeResult({
@@ -38,7 +46,7 @@ function parseTradeResult(input: {
   currencyOut?: Currency
   isLoading: boolean
   isFetching: boolean
-  indicative: ReturnType<typeof useIndicativeTradeQuery>
+  indicative: { trade: IndicativeTrade | undefined; isLoading: boolean }
   error: Error | null
   isDebouncing?: boolean
 }): TradeWithStatus {

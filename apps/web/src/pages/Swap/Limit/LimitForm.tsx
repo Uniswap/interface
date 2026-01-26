@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
+import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@hkdex-tmp/universal_router_sdk'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'

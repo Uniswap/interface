@@ -1,6 +1,7 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { TradingApi } from '@universe/api'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { PermitTransaction, PermitTypedData } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
 
@@ -153,6 +154,17 @@ function validateLiquidityTxContext(
   }
 
   const { action, txRequest, permit } = liquidityTxContext
+  
+  // Check if this is a HashKey chain (for create operations)
+  const isHashKeyChain = liquidityTxContext.type === LiquidityTransactionType.Create && liquidityTxContext.createPositionRequestArgs?.chainId
+    ? (liquidityTxContext.createPositionRequestArgs.chainId === UniverseChainId.HashKey || liquidityTxContext.createPositionRequestArgs.chainId === UniverseChainId.HashKeyTestnet)
+    : false
+  
+  // For HashKey chains, allow createPositionRequestArgs without txRequest or permit
+  if (isHashKeyChain && liquidityTxContext.type === LiquidityTransactionType.Create && liquidityTxContext.createPositionRequestArgs) {
+    return { ...liquidityTxContext, action, unsigned: false, txRequest: undefined, permit: undefined }
+  }
+  
   const unsigned =
     (liquidityTxContext.type === 'increase' || liquidityTxContext.type === 'create') && liquidityTxContext.unsigned
   if (unsigned) {

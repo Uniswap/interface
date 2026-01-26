@@ -1,4 +1,4 @@
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useAppKit } from 'components/Web3Provider/reownConfig'
 import { useConnectionStatus } from 'features/accounts/store/hooks'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { useTranslation } from 'react-i18next'
@@ -14,7 +14,7 @@ interface BuyFormButtonProps {
 
 export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
   const isDisconnected = useConnectionStatus('aggregate').isDisconnected
-  const accountDrawer = useAccountDrawer()
+  const { open } = useAppKit()
   const { t } = useTranslation()
   const isShortMobileDevice = useIsShortMobileDevice()
 
@@ -29,7 +29,7 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
 
   if (isDisconnected || isMissingPlatformWallet) {
     return (
-      <Button size={buttonSize} variant="branded" emphasis="secondary" fill onPress={accountDrawer.open}>
+      <Button size={buttonSize} variant="branded" emphasis="secondary" fill onPress={() => open({ view: 'Connect' })}>
         {isMissingPlatformWallet
           ? t('common.connectTo', {
               platform: chainId && isSVMChain(chainId) ? SOLANA_CHAIN_INFO.name : MAINNET_CHAIN_INFO.name,

@@ -1,8 +1,9 @@
 import type { BottomSheetView } from '@gorhom/bottom-sheet'
 import type { ComponentProps } from 'react'
 import type { FlexProps } from 'ui/src'
-import { Flex } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { chainIdToPlatform } from 'uniswap/src/features/platforms/utils/chains'
+import { useSlippageSettings } from 'uniswap/src/features/transactions/components/settings/settingsConfigurations/slippage/useSlippageSettings'
 import type { TransactionSettingConfig } from 'uniswap/src/features/transactions/components/settings/types'
 import { filterSettingsByPlatform } from 'uniswap/src/features/transactions/components/settings/utils'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/components/TransactionModal/TransactionModal'
@@ -64,11 +65,16 @@ export function SwapFormScreen({
   return (
     <TransactionModalInnerContainer fullscreen bottomSheetViewStyles={bottomSheetViewStyles}>
       {!isWebApp && <SwapFormHeader /> /* Interface renders its own header with multiple tabs */}
-      {!hideSettings && <SwapFormSettings settings={filteredSettings} isBridgeTrade={isBridgeTrade} />}
+      {/* Original Swap+Settings button moved to swapblock position below */}
+      {/* {!hideSettings && <SwapFormSettings settings={filteredSettings} isBridgeTrade={isBridgeTrade} />} */}
 
       {!hideContent && (
         <SwapFormScreenStoreContextProvider tokenColor={tokenColor}>
-          <SwapFormContent />
+          <SwapFormContent
+            hideSettings={hideSettings ?? false}
+            filteredSettings={filteredSettings}
+            isBridgeTrade={isBridgeTrade ?? false}
+          />
         </SwapFormScreenStoreContextProvider>
       )}
 
@@ -77,18 +83,48 @@ export function SwapFormScreen({
   )
 }
 
-function SwapFormContent(): JSX.Element {
+function SwapFormContent({
+  hideSettings,
+  filteredSettings,
+  isBridgeTrade,
+}: {
+  hideSettings: boolean
+  filteredSettings: TransactionSettingConfig[]
+  isBridgeTrade: boolean
+}): JSX.Element {
   const { trade, isCrossChain } = useSwapFormScreenStore((state) => ({
     trade: state.trade,
     isCrossChain: state.isCrossChain,
   }))
 
   const priceUXEnabled = usePriceUXEnabled()
+  const { autoSlippageTolerance } = useSlippageSettings()
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
       <Flex gap="$spacing4" animation="quick" exitStyle={EXIT_STYLE} grow={isExtensionApp}>
-        <Flex gap="$spacing2">
+        {/* Original Swap+Settings button moved here to occupy space within the border */}
+        {!hideSettings && (
+          <>
+            <Flex row width="100%" height={50} justifyContent="space-between" alignItems="center">
+              {/* Swap text */}
+              <Text variant="buttonLabel3" color="$neutral1" tag="h1">
+                Swap
+              </Text>
+              {/* Settings button */}
+              <SwapFormSettings
+                settings={filteredSettings}
+                isBridgeTrade={isBridgeTrade}
+                position="static"
+                adjustTopAlignment={false}
+                adjustRightAlignment={false}
+              />
+            </Flex>
+            {/* Border below Swap+Settings with 8px left/right extension */}
+            <Flex width="calc(100% + 48px)" height={1} backgroundColor="$surface3" ml={-24} mr={-24} />
+          </>
+        )}
+        <Flex gap="$spacing4" mt="$spacing6">
           <SwapFormCurrencyInputPanel />
           <SwitchCurrenciesButton />
           <SwapFormCurrencyOutputPanel />

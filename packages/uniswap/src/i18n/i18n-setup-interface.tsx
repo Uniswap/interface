@@ -29,10 +29,12 @@ export function setupi18n(): undefined {
           return enUsLocale
         }
 
-        const fileName = getLocaleTranslationKey(locale)
+        // Only English is supported - return undefined for other languages
+        return undefined
 
-        // eslint-disable-next-line no-unsanitized/method
-        return import(`./locales/translations/${fileName}.json`)
+        // const fileName = getLocaleTranslationKey(locale)
+        // // eslint-disable-next-line no-unsanitized/method
+        // return import(`./locales/translations/${fileName}.json`)
       }),
     )
     // eslint-disable-next-line max-params

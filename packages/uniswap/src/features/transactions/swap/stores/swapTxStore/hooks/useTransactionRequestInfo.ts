@@ -1,18 +1,14 @@
 import { TradingApi } from '@universe/api'
-import { DynamicConfigs, SwapConfigKey, useDynamicConfigValue } from '@universe/gating'
 import { useEffect, useMemo, useRef } from 'react'
 import { useUniswapContextSelector } from 'uniswap/src/contexts/UniswapContext'
-import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
 import { useActiveGasStrategy } from 'uniswap/src/features/gas/hooks'
 import { useAllTransactionSettings } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/useTransactionSettingsStore'
-import { FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/constants'
 import { processUniswapXResponse } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/uniswapx/utils'
 import type { TransactionRequestInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import {
   createLogSwapRequestErrors,
   createPrepareSwapRequestParams,
   createProcessSwapResponse,
-  getShouldSkipSwapRequest,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import { usePermit2SignatureWithData } from 'uniswap/src/features/transactions/swap/stores/swapTxStore/hooks/usePermit2Signature'
 import type { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
@@ -21,7 +17,18 @@ import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/tra
 import { isBridge, isClassic, isUniswapX, isWrap } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { isWebApp } from 'utilities/src/platform'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { useActiveAccount } from 'uniswap/src/features/accounts/store/hooks'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { usePrevious } from 'utilities/src/react/hooks'
+
+// Conditionally import useCurrentBlockTimestamp only on web app
+let useCurrentBlockTimestamp: (() => bigint | undefined) | undefined
+if (isWebApp) {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
+  const useCurrentBlockTimestampModule = require('apps/web/src/hooks/useCurrentBlockTimestamp')
+  useCurrentBlockTimestamp = useCurrentBlockTimestampModule.default || useCurrentBlockTimestampModule
+}
 
 function useSwapTransactionRequestInfo({
   derivedSwapInfo,
@@ -31,25 +38,69 @@ function useSwapTransactionRequestInfo({
   tokenApprovalInfo: TokenApprovalInfo | undefined
 }): TransactionRequestInfo {
   const trace = useTrace()
-  const gasStrategy = useActiveGasStrategy(derivedSwapInfo.chainId, 'general')
   const transactionSettings = useAllTransactionSettings()
 
   const permitData = derivedSwapInfo.trade.trade?.quote.permitData
   // On interface, we do not fetch signature until after swap is clicked, as it requires user interaction.
   const { data: signature } = usePermit2SignatureWithData({ permitData, skip: isWebApp })
 
+  // Keep track of the last successful quote to use if current quote fails
+  const lastSuccessfulQuoteRef = useRef<TradingApi.ClassicQuoteResponse | TradingApi.BridgeQuoteResponse | undefined>(
+    undefined,
+  )
+
   const swapQuoteResponse = useMemo(() => {
     const quote = derivedSwapInfo.trade.trade?.quote
     if (quote && (isClassic(quote) || isBridge(quote) || isWrap(quote))) {
+      // Update the last successful quote
+      lastSuccessfulQuoteRef.current = quote
       return quote
+    }
+    // If current quote is not available, use the last successful quote
+    if (lastSuccessfulQuoteRef.current) {
+      return lastSuccessfulQuoteRef.current
     }
     return undefined
   }, [derivedSwapInfo.trade.trade?.quote])
 
   const swapQuote = swapQuoteResponse?.quote
 
-  const swapDelegationInfo = useUniswapContextSelector((ctx) => ctx.getSwapDelegationInfo?.(derivedSwapInfo.chainId))
+  // Get current chainId from active account if derivedSwapInfo.chainId is not available
+  // We only support HSK chains (HashKey = 177, HashKeyTestnet = 133)
+  const activeAccount = useActiveAccount(Platform.EVM)
+  const currentChainId = (activeAccount as { chainId?: UniverseChainId } | undefined)?.chainId ?? derivedSwapInfo.chainId
+  
+  // Resolve chainId with multiple fallbacks
+  // Priority: 1. currentChainId (from account or derivedSwapInfo), 2. swapQuote tokenInChainId, 3. swapQuote tokenOutChainId, 4. default HashKeyTestnet
+  const resolvedChainId = useMemo(() => {
+    // First try: use currentChainId if available
+    if (currentChainId) {
+      return currentChainId
+    }
+
+    // Second try: get from swapQuote tokenInChainId
+    if (swapQuote && 'tokenInChainId' in swapQuote && swapQuote.tokenInChainId) {
+      return swapQuote.tokenInChainId as UniverseChainId
+    }
+
+    // Third try: get from swapQuote tokenOutChainId
+    if (swapQuote && 'tokenOutChainId' in swapQuote && swapQuote.tokenOutChainId) {
+      return swapQuote.tokenOutChainId as UniverseChainId
+    }
+
+    // Final fallback: use HashKeyTestnet (133) since we only support HSK chains
+    return UniverseChainId.HashKeyTestnet
+  }, [currentChainId, swapQuote])
+  
+  const gasStrategy = useActiveGasStrategy(resolvedChainId, 'general')
+
+  const swapDelegationInfo = useUniswapContextSelector((ctx) => ctx.getSwapDelegationInfo?.(resolvedChainId))
   const overrideSimulation = !!swapDelegationInfo?.delegationAddress
+
+  // Get block timestamp for accurate deadline calculation
+  // Only fetch on web app (where useCurrentBlockTimestamp is available)
+  const blockTimestamp = isWebApp && useCurrentBlockTimestamp ? useCurrentBlockTimestamp() : undefined
+
 
   const prepareSwapRequestParams = useMemo(() => createPrepareSwapRequestParams({ gasStrategy }), [gasStrategy])
 
@@ -60,13 +111,16 @@ function useSwapTransactionRequestInfo({
 
     const alreadyApproved = tokenApprovalInfo?.action === ApprovalAction.None && !swapQuoteResponse.permitTransaction
 
-    return prepareSwapRequestParams({
+    const requestParams = prepareSwapRequestParams({
       swapQuoteResponse,
       signature: signature ?? undefined,
       transactionSettings,
       alreadyApproved,
       overrideSimulation,
+      blockTimestamp,
     })
+
+    return requestParams
   }, [
     swapQuoteResponse,
     tokenApprovalInfo?.action,
@@ -74,60 +128,42 @@ function useSwapTransactionRequestInfo({
     signature,
     transactionSettings,
     overrideSimulation,
+    blockTimestamp,
   ])
 
   const canBatchTransactions = useUniswapContextSelector((ctx) =>
-    ctx.getCanBatchTransactions?.(derivedSwapInfo.chainId),
+    ctx.getCanBatchTransactions?.(resolvedChainId),
   )
 
   const permitsDontNeedSignature = !!canBatchTransactions
-  const shouldSkipSwapRequest = getShouldSkipSwapRequest({
-    derivedSwapInfo,
-    tokenApprovalInfo,
-    signature: signature ?? undefined,
-    permitsDontNeedSignature,
-  })
 
-  const tradingApiSwapRequestMs = useDynamicConfigValue({
-    config: DynamicConfigs.Swap,
-    key: SwapConfigKey.TradingApiSwapRequestMs,
-    defaultValue: FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS,
-  })
-
-  const {
-    data,
-    error,
-    isLoading: isSwapLoading,
-  } = useTradingApiSwapQuery(
-    {
-      params: shouldSkipSwapRequest ? undefined : swapRequestParams,
-      refetchInterval: tradingApiSwapRequestMs,
-      staleTime: tradingApiSwapRequestMs,
-      // We add a small buffer in case connection is too slow
-      immediateGcTime: tradingApiSwapRequestMs + ONE_SECOND_MS * 5,
-    },
-    {
-      canBatchTransactions,
-      swapDelegationAddress: swapDelegationInfo?.delegationAddress,
-      includesDelegation: swapDelegationInfo?.delegationInclusion,
-    },
-  )
+  // Skip swap API call - use quote methodParameters directly instead
+  // Don't call swap API - we'll use quote methodParameters directly
+  const data = undefined
+  const error = null
+  const isSwapLoading = false
 
   const processSwapResponse = useMemo(() => createProcessSwapResponse({ gasStrategy }), [gasStrategy])
 
-  const result = useMemo(
-    () =>
-      processSwapResponse({
+  const result = useMemo(() => {
+    // Ensure resolvedChainId is always defined
+    const chainIdToUse = resolvedChainId ?? UniverseChainId.HashKeyTestnet
+
+    const processResult = processSwapResponse({
         response: data,
         error,
         swapQuote,
+        trade: derivedSwapInfo.trade.trade ?? undefined,
         isSwapLoading,
         permitData,
         swapRequestParams,
         isRevokeNeeded: tokenApprovalInfo?.action === ApprovalAction.RevokeAndPermit2Approve,
         permitsDontNeedSignature,
-      }),
-    [
+      chainId: chainIdToUse,
+    })
+
+    return processResult
+  }, [
       data,
       error,
       isSwapLoading,
@@ -137,8 +173,12 @@ function useSwapTransactionRequestInfo({
       processSwapResponse,
       tokenApprovalInfo?.action,
       permitsDontNeedSignature,
-    ],
-  )
+    resolvedChainId,
+    derivedSwapInfo,
+    swapQuoteResponse,
+    activeAccount,
+    currentChainId,
+  ])
 
   // Only log analytics events once per request
   const previousRequestIdRef = useRef(swapQuoteResponse?.requestId)

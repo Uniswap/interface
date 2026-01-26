@@ -6,11 +6,9 @@ const Clipboard = {
         await navigator.clipboard.writeText(text)
         return { content: text }
       } catch (e) {
-        console.warn('Clipboard write failed:', e)
         return null
       }
     }
-    console.warn('Clipboard API not available')
     return null
   },
 
@@ -20,11 +18,9 @@ const Clipboard = {
         const text = await navigator.clipboard.readText()
         return text
       } catch (e) {
-        console.warn('Clipboard read failed:', e)
         return ''
       }
     }
-    console.warn('Clipboard API not available')
     return ''
   },
 
@@ -40,8 +36,6 @@ const Clipboard = {
 
 // Non-JSX implementation of ClipboardPasteButton
 const createPasteButton = (options = {}) => {
-  console.warn('ClipboardPasteButton is mocked and will not render a real button')
-
   // This returns a function that will create a simple button element when called
   return function ClipboardPasteButton(props) {
     // If this gets called, we'll return a simple object instead of JSX
@@ -56,7 +50,7 @@ const createPasteButton = (options = {}) => {
               props.onPress({ text })
             }
           } catch (e) {
-            console.error('Error in paste button:', e)
+            // Error handling
           }
         },
       },

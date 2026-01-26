@@ -502,7 +502,6 @@ describe('getFeatureFlaggedHeaders', () => {
       mockGetFeatureFlag.mockImplementation((flag) => flag === FeatureFlags.UnirouteEnabled)
       const headers = getFeatureFlaggedHeaders(path)
       switch (path) {
-        case TRADING_API_PATHS.swap7702:
         case TRADING_API_PATHS.quote:
           expect(headers).toHaveProperty(TradingApiHeaders.UnirouteEnabled, 'true')
           break

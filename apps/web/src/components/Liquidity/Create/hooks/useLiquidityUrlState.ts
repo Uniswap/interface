@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useCurrencyValidation } from 'components/Liquidity/Create/hooks/useCurrencyValidation'
-import { PositionFlowStep, PositionState, PriceRangeState } from 'components/Liquidity/Create/types'
+import { DEFAULT_FEE_DATA, PositionFlowStep, PositionState, PriceRangeState } from 'components/Liquidity/Create/types'
 import { applyUrlMigrations } from 'components/Liquidity/parsers/migrations'
 import {
   parseAsChainId,
@@ -24,7 +24,8 @@ import { assume0xAddress } from 'utils/wagmi'
 // Parser for replace parameters (most params)
 const replaceStateParser = {
   // Currency addresses
-  currencyA: parseAsCurrencyAddress.withDefault(''),
+  // Default currencyA to NATIVE (HSK) for HashKey Chain
+  currencyA: parseAsCurrencyAddress.withDefault(NATIVE_CHAIN_ID),
   currencyB: parseAsCurrencyAddress.withDefault(''),
 
   // Chain
@@ -177,7 +178,7 @@ export function useLiquidityUrlState() {
       defaultInitialToken,
       tokenA: currencyALoaded,
       tokenB: currencyBLoaded,
-      fee,
+      fee: fee ?? DEFAULT_FEE_DATA, // Default to 0.3% (MEDIUM) if not specified
       hook,
       loading,
       loadingA,

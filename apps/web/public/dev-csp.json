@@ -1,3 +1,13 @@
 {
-  "connectSrc": ["http://127.0.0.1:8545", "http://127.0.0.1:8546"]
+  "connectSrc": [
+    "http://127.0.0.1:8545",
+    "http://127.0.0.1:8546",
+    "ws://10.225.81.22:8888",
+    "ws://localhost:*",
+    "ws://127.0.0.1:*",
+    "ws://10.225.81.22:*",
+    "https://*.walletconnect.com",
+    "https://*.walletconnect.org",
+    "https://pulse.walletconnect.org"
+  ]
 }

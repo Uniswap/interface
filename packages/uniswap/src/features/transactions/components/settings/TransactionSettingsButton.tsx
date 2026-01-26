@@ -1,7 +1,7 @@
 import { memo } from 'react'
 import type { ColorTokens, GeneratedIcon } from 'ui/src'
 import { Flex, Tooltip as TooltipComponent } from 'ui/src'
-import { Settings } from 'ui/src/components/icons/Settings'
+import { SettingsCustom } from 'ui/src/components/icons/SettingsCustom'
 import type { IconSizeTokens } from 'ui/src/theme'
 import { TransactionSettingsModalId } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/createTransactionSettingsModalStore'
 import { useModalVisibility } from 'uniswap/src/features/transactions/components/settings/stores/TransactionSettingsModalStore/useTransactionSettingsModalStore'
@@ -24,34 +24,47 @@ export const TransactionSettingsButton = memo(
     CustomIconComponent,
     IconLabel,
   }: Omit<TransactionSettingsButtonProps, 'Tooltip'>): JSX.Element => {
-    const IconComponent = CustomIconComponent ?? Settings
+    // Use SettingsCustom as default icon, or CustomIconComponent if provided
+    const IconComponent = CustomIconComponent ?? SettingsCustom
 
-    const iconSize = iconSizeProp ?? (isWebPlatform ? '$icon.20' : '$icon.24')
+    // Check if the icon is SettingsCustom (by checking displayName or comparing function)
+    const isSettingsCustom =
+      !CustomIconComponent ||
+      CustomIconComponent === SettingsCustom ||
+      CustomIconComponent.displayName === 'SettingsCustom'
+
+    // Use 32x32 size for SettingsCustom, otherwise use prop or default
+    const iconSize = isSettingsCustom ? 32 : (iconSizeProp ?? (isWebPlatform ? '$icon.20' : '$icon.24'))
 
     return (
       <Flex
-        centered
         row
+        alignItems="center"
+        justifyContent="center"
         backgroundColor={backgroundColor}
-        borderRadius="$roundedFull"
+        borderRadius="$rounded12"
         gap="$spacing4"
         px={IconLabel ? '$spacing8' : '$spacing4'}
         py="$spacing4"
         height={isWebApp ? '$spacing32' : 'auto'}
+        flexShrink={0}
       >
-        {IconLabel}
+        {IconLabel && (
+          <Flex flexShrink={0} alignItems="center">
+            {IconLabel}
+          </Flex>
+        )}
         <Flex
-          animation="simple"
-          rotate="0deg"
-          hoverStyle={{
-            rotate: '90deg',
-          }}
+          width={32}
+          height={32}
+          alignItems="center"
+          justifyContent="center"
+          flexShrink={0}
           $platform-web={{
             cursor: 'pointer',
-            transition: 'transform 80ms ease-out',
           }}
         >
-          <IconComponent color={contentColor} hoverColor="$neutral2Hovered" size={iconSize} />
+          <IconComponent color={contentColor} hoverColor={contentColor} size={iconSize} />
         </Flex>
       </Flex>
     )

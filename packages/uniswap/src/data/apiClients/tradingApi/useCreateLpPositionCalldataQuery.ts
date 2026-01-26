@@ -13,8 +13,6 @@ export function useCreateLpPositionCalldataQuery({
   deadlineInMinutes?: number
 }): UseQueryResult<TradingApi.CreateLPPositionResponse> {
   const queryKey = [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.createLp, params]
-  const deadline = getTradeSettingsDeadline(deadlineInMinutes)
-  const paramsWithDeadline = { ...params, deadline }
 
   return useQuery<TradingApi.CreateLPPositionResponse>({
     queryKey,
@@ -22,6 +20,8 @@ export function useCreateLpPositionCalldataQuery({
       if (!params) {
         throw { name: 'Params are required' }
       }
+      const deadline = getTradeSettingsDeadline(deadlineInMinutes)
+      const paramsWithDeadline = { ...params, deadline }
       return await TradingApiClient.createLpPosition(paramsWithDeadline)
     },
     ...rest,

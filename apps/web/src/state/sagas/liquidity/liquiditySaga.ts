@@ -94,14 +94,21 @@ function* getLiquidityTxRequest(
     return { txRequest: step.txRequest }
   }
 
-  if (!signature) {
-    throw new Error('Signature required for async increase position transaction step')
+  // For async steps, signature may be required for Permit2 flows
+  // But for HashKey Chain, we build transactions on-chain without Permit2, so signature is optional
+  // Pass undefined if signature is not available, and let the step handle it
+  if (step.type === TransactionStepType.IncreasePositionTransactionAsync) {
+    try {
+      const result = yield* call([step, step.getTxRequest], signature)
+      invariant(result.txRequest !== undefined, 'txRequest must be defined')
+      return { txRequest: result.txRequest, sqrtRatioX96: result.sqrtRatioX96 }
+    } catch (e) {
+      throw e
+    }
   }
 
-  const { txRequest, sqrtRatioX96 } = yield* call(step.getTxRequest, signature)
-  invariant(txRequest !== undefined, 'txRequest must be defined')
-
-  return { txRequest, sqrtRatioX96 }
+  // This should never happen, but TypeScript needs this
+  throw new Error('Unexpected step type for async transaction')
 }
 
 interface HandlePositionStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
@@ -334,7 +341,9 @@ function* liquidity(params: LiquidityParams) {
     return undefined
   }
 
-  if (token0ChainId !== startChainId) {
+  // Only switch chains if startChainId is defined and different from token chain
+  // If startChainId is undefined, assume we're already on the correct chain
+  if (startChainId !== undefined && token0ChainId !== startChainId) {
     const chainSwitched = yield* call(selectChain, token0ChainId)
     if (!chainSwitched) {
       onFailure()

@@ -13,8 +13,7 @@ import { setupWagmiAutoConnect } from 'components/Web3Provider/wagmiAutoConnect'
 import { setupVitePreloadErrorHandler } from 'utils/setupVitePreloadErrorHandler'
 
 if (WalletConnect) {
-  // biome-ignore lint/suspicious/noConsole: Side effects module needs console for initialization logging
-  console.debug('WalletConnect is defined')
+  // WalletConnect is defined
 }
 
 // adding these so webpack won't tree shake this away, sideEffects was giving trouble

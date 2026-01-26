@@ -4,6 +4,7 @@ import { MenuStateVariant, useMenuState } from 'components/AccountDrawer/menuSta
 import { SwitchNetworkAction } from 'components/Popups/types'
 import { ReceiveModalState } from 'components/ReceiveCryptoModal/types'
 import { useOpenReceiveCryptoModal } from 'components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
+import { useAppKit } from 'components/Web3Provider/reownConfig'
 import { useConnectionStatus } from 'features/accounts/store/hooks'
 import { useAccountsStoreContext } from 'features/accounts/store/provider'
 import { useAccount } from 'hooks/useAccount'
@@ -53,6 +54,16 @@ export function WebUniswapProvider({ children }: PropsWithChildren): JSX.Element
 // Abstracts web-specific transaction flow objects for usage in cross-platform flows in the `uniswap` package.
 function WebUniswapProviderInner({ children }: PropsWithChildren) {
   const account = useAccount()
+  const { open } = useAppKit()
+
+  // Set up global connect wallet function for SwapFormButton
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.__uniswapConnectWallet = () => {
+        open({ view: 'Connect' })
+      }
+    }
+  }, [open])
 
   // Check if current wallet can pay gas fees in any token (e.g., Porto wallet)
   const getCanPayGasInAnyToken = useCallback(() => {

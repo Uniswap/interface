@@ -241,7 +241,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
               maxFontSizeMultiplier={1.2}
               style={
                 {
-                  "color": "#FF37C7",
+                  "color": "#4177e2",
                   "fontFamily": "Basel Grotesk",
                   "fontSize": 15,
                   "fontWeight": "500",
@@ -269,7 +269,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
                     "borderWidth": 0,
                   },
                   {
-                    "color": "#FF37C7",
+                    "color": "#4177e2",
                     "height": 16,
                     "width": 16,
                   },
@@ -284,7 +284,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
               vbWidth={16}
             >
               <RNSVGGroup
-                color="#FF37C7"
+                color="#4177e2"
                 fill={
                   {
                     "type": 2,

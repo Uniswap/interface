@@ -97,10 +97,14 @@ export type FlattenedQuoteRequestResult = Omit<QuoteRequestResult, 'routingParam
 
 export function flattenQuoteRequestResult(result: QuoteRequestResult): FlattenedQuoteRequestResult {
   const { routingParams, slippageParams, ...rest } = result
+  // Ensure routingParams and slippageParams are always objects, not undefined
+  // This prevents missing fields in the flattened result
+  const safeRoutingParams = routingParams ?? {}
+  const safeSlippageParams = slippageParams ?? {}
   return {
     ...rest,
-    ...routingParams,
-    ...slippageParams,
+    ...safeRoutingParams,
+    ...safeSlippageParams,
   }
 }
 
@@ -120,15 +124,59 @@ export interface ParsedTradeInput {
 }
 
 export function parseTradeInputForTradingApiQuote(input: UseTradeArgs): ParsedTradeInput {
-  const { currencyIn, currencyOut, requestTradeType } = parseQuoteCurrencies(input)
+  // Use explicit sellToken/buyToken if provided, otherwise fall back to parseQuoteCurrencies
+  const { currencyIn, currencyOut, requestTradeType } = parseQuoteCurrencies({
+    tradeType: input.tradeType,
+    amountSpecified: input.amountSpecified,
+    otherCurrency: input.otherCurrency,
+    sellToken: input.sellToken,
+    buyToken: input.buyToken,
+  })
+  
+  // CRITICAL: If currencyIn or currencyOut is undefined, return early with undefined values
+  // This ensures we never build a quote request with missing or incorrect tokens
+  if (!currencyIn || !currencyOut) {
+    return {
+      currencyIn: undefined,
+      currencyOut: undefined,
+      amount: undefined,
+      requestTradeType,
+      activeAccountAddress: input.account?.address,
+      tokenInChainId: undefined,
+      tokenOutChainId: undefined,
+      tokenInAddress: undefined,
+      tokenOutAddress: undefined,
+      generatePermitAsTransaction: input.generatePermitAsTransaction,
+      isUSDQuote: input.isUSDQuote ?? false,
+    }
+  }
+  
+  const tokenInChainId = toTradingApiSupportedChainId(currencyIn.chainId)
+  const tokenOutChainId = toTradingApiSupportedChainId(currencyOut.chainId)
+  
+  // Validate that amount matches the correct currency based on tradeType
+  // For EXACT_INPUT: amount should be currencyIn's amount
+  // For EXACT_OUTPUT: amount should be currencyOut's amount
+  let amount = input.amountSpecified
+  if (amount) {
+    const isExactInput = requestTradeType === TradingApi.TradeType.EXACT_INPUT
+    const expectedCurrency = isExactInput ? currencyIn : currencyOut
+    
+    // If amount's currency doesn't match expected currency, set amount to undefined
+    // This will cause validation to fail and prevent incorrect quote requests
+    if (!amount.currency.equals(expectedCurrency)) {
+      amount = undefined
+    }
+  }
+  
   return {
     currencyIn,
     currencyOut,
-    amount: input.amountSpecified,
+    amount,
     requestTradeType,
     activeAccountAddress: input.account?.address,
-    tokenInChainId: toTradingApiSupportedChainId(currencyIn?.chainId),
-    tokenOutChainId: toTradingApiSupportedChainId(currencyOut?.chainId),
+    tokenInChainId,
+    tokenOutChainId,
     tokenInAddress: getTokenAddressForApi(currencyIn),
     tokenOutAddress: getTokenAddressForApi(currencyOut),
     generatePermitAsTransaction: input.generatePermitAsTransaction,
@@ -140,15 +188,16 @@ export function parseTradeInputForTradingApiQuote(input: UseTradeArgs): ParsedTr
 // Takes parsed input and returns validated input or undefined
 export function validateParsedInput(input: ParsedTradeInput): ValidatedTradeInput | undefined {
   // Check all conditions that would make the input invalid
+  // Reject zero amount - quote should not be fetched when amount is 0
   if (
     !input.tokenInChainId ||
     !input.tokenOutChainId ||
     !input.tokenInAddress ||
     !input.tokenOutAddress ||
     !input.amount ||
+    isZeroAmount(input.amount) ||
     !input.currencyIn ||
     !input.currencyOut ||
-    isZeroAmount(input.amount) ||
     areCurrenciesEqual(input.currencyIn, input.currencyOut)
   ) {
     return undefined

@@ -13,12 +13,13 @@ import {
   getIsSessionServiceEnabled,
   getIsSessionUpgradeAutoEnabled,
   useIsSessionServiceEnabled,
+  StatsigClient,
+  StatsigProvider as StatsigProviderBase,
 } from '@universe/gating'
 import { createChallengeSolverService, createSessionInitializationService } from '@universe/sessions'
 import { QueryClientPersistProvider } from 'components/PersistQueryClient'
 import { createWeb3Provider, WalletCapabilitiesEffects } from 'components/Web3Provider/createWeb3Provider'
 import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
-import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { AccountsStoreDevTool } from 'features/accounts/store/devtools'
 import { WebAccountsStoreProvider } from 'features/accounts/store/provider'
 import { ConnectWalletMutationProvider } from 'features/wallet/connection/hooks/useConnectWalletMutation'
@@ -45,6 +46,7 @@ import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
+import { initializeScrollWatcher } from 'uniswap/src/components/modals/ScrollLock'
 import i18n from 'uniswap/src/i18n'
 import { initializeDatadog } from 'uniswap/src/utils/datadog'
 import { localDevDatadogEnabled } from 'utilities/src/environment/constants'
@@ -127,7 +129,8 @@ function Updaters() {
 }
 
 // Production Web3Provider – always reconnects on mount and runs capability effects.
-const Web3Provider = createWeb3Provider({ wagmiConfig })
+// Use wagmiAdapter.wagmiConfig from reownConfig (matching hsk-staking-launchpad-main)
+const Web3Provider = createWeb3Provider({})
 
 function GraphqlProviders({ children }: { children: React.ReactNode }) {
   return (
@@ -138,40 +141,56 @@ function GraphqlProviders({ children }: { children: React.ReactNode }) {
     </ApolloProvider>
   )
 }
+// HKSWAP: Disabled Statsig feature flags - not needed for hkswap
 function StatsigProvider({ children }: PropsWithChildren) {
-  const account = useAccount()
+  // const account = useAccount()
 
-  const statsigUser: StatsigUser = useMemo(
-    () => ({
-      userID: getDeviceId(),
-      customIDs: { address: account.address ?? '' },
-    }),
-    [account.address],
-  )
+  // const statsigUser: StatsigUser = useMemo(
+  //   () => ({
+  //     userID: getDeviceId(),
+  //     customIDs: { address: account.address ?? '' },
+  //   }),
+  //   [account.address],
+  // )
 
-  useEffect(() => {
-    datadogRum.setUserProperty('connection', {
-      type: account.connector?.type,
-      name: account.connector?.name,
-      rdns: account.connector?.id,
-      address: account.address,
-      status: account.status,
-    })
-  }, [account])
+  // useEffect(() => {
+  //   datadogRum.setUserProperty('connection', {
+  //     type: account.connector?.type,
+  //     name: account.connector?.name,
+  //     rdns: account.connector?.id,
+  //     address: account.address,
+  //     status: account.status,
+  //   })
+  // }, [account])
 
-  const onStatsigInit = () => {
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (!isDevEnv() || localDevDatadogEnabled) {
-      initializeDatadog('web').catch(() => undefined)
-    }
-  }
+  // const onStatsigInit = () => {
+  //   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  //   if (!isDevEnv() || localDevDatadogEnabled) {
+  //     initializeDatadog('web').catch(() => undefined)
+  //   }
+  // }
 
-  return (
-    <StatsigProviderWrapper user={statsigUser} onInit={onStatsigInit}>
-      {children}
-    </StatsigProviderWrapper>
-  )
+  // return (
+  //   <StatsigProviderWrapper user={statsigUser} onInit={onStatsigInit}>
+  //     {children}
+  //   </StatsigProviderWrapper>
+  // )
+
+  // HKSWAP: Create a mock StatsigClient that returns false for all feature flags
+  // This ensures useFeatureFlag hooks work without actually initializing Statsig
+  const mockClient = useMemo(() => {
+    // Create a minimal mock client that satisfies the StatsigProvider requirements
+    // All feature flags will return false by default
+    return StatsigClient.instance('dummy-key-for-hkswap')
+  }, [])
+
+  // Return StatsigProvider with mock client to satisfy hooks that require StatsigContext
+  return <StatsigProviderBase client={mockClient}>{children}</StatsigProviderBase>
 }
+
+// Initialize scroll watcher once at app startup (before React renders)
+// This ensures it only runs once, even in React StrictMode
+initializeScrollWatcher()
 
 const container = document.getElementById('root') as HTMLElement
 

@@ -35,9 +35,13 @@ export function setupSharedApolloCache(): InMemoryCache {
                 // simply use chain / address pair as id instead for tokens
                 token: {
                   read(_, { args, toReference }): Reference | undefined {
+                    // Don't create reference if chain is undefined (e.g., for unsupported chains like HashKey)
+                    if (!args?.chain) {
+                      return undefined
+                    }
                     return toReference({
                       __typename: 'Token',
-                      chain: args?.chain,
+                      chain: args.chain,
                       address: normalizeTokenAddressForCache(args?.address),
                     })
                   },

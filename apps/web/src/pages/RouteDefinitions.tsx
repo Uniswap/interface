@@ -3,7 +3,6 @@ import { getExploreDescription, getExploreTitle } from 'pages/getExploreTitle'
 import { getPortfolioDescription, getPortfolioTitle } from 'pages/getPortfolioTitle'
 import { getAddLiquidityPageTitle, getPositionPageDescription, getPositionPageTitle } from 'pages/getPositionPageTitle'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
-import Landing from 'pages/Landing'
 import Swap from 'pages/Swap'
 import { lazy, ReactNode, Suspense, useMemo } from 'react'
 import { matchPath, Navigate, Route, Routes, useLocation } from 'react-router'
@@ -127,15 +126,17 @@ export const routes: RouteDefinition[] = [
     getTitle: () => StaticTitlesAndDescriptions.UniswapTitle,
     getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
     getElement: (args) => {
-      return args.browserRouterEnabled && args.hash ? <Navigate to={args.hash.replace('#', '')} replace /> : <Landing />
+      return args.browserRouterEnabled && args.hash ? <Navigate to={args.hash.replace('#', '')} replace /> : <Swap />
     },
   }),
+  // HKSWAP: Disabled explore routes
   createRouteDefinition({
     path: '/explore',
     getTitle: getExploreTitle,
     getDescription: getExploreDescription,
     nestedPaths: [':tab', ':chainName', ':tab/:chainName'],
     getElement: () => <RedirectExplore />,
+    enabled: () => false, // HKSWAP: Disable explore page
   }),
   // Special case: redirect WSOL to SOL TDP, as directly trading WSOL is not supported currently.
   createRouteDefinition({
@@ -143,6 +144,7 @@ export const routes: RouteDefinition[] = [
     getTitle: () => i18n.t('common.buyAndSell'),
     getDescription: () => StaticTitlesAndDescriptions.TDPDescription,
     getElement: () => <Navigate to="/explore/tokens/solana/NATIVE" replace />,
+    enabled: () => false, // HKSWAP: Disable explore routes
   }),
   createRouteDefinition({
     path: '/explore/tokens/:chainName/:tokenAddress',
@@ -153,24 +155,28 @@ export const routes: RouteDefinition[] = [
         <TokenDetails />
       </Suspense>
     ),
+    enabled: () => false, // HKSWAP: Disable explore routes
   }),
   createRouteDefinition({
     path: '/tokens',
     getTitle: getExploreTitle,
     getDescription: getExploreDescription,
     getElement: () => <Navigate to="/explore/tokens" replace />,
+    enabled: () => false, // HKSWAP: Disable tokens routes (redirect to explore)
   }),
   createRouteDefinition({
     path: '/tokens/:chainName',
     getTitle: getExploreTitle,
     getDescription: getExploreDescription,
     getElement: () => <RedirectExplore />,
+    enabled: () => false, // HKSWAP: Disable tokens routes (redirect to explore)
   }),
   createRouteDefinition({
     path: '/tokens/:chainName/:tokenAddress',
     getTitle: () => StaticTitlesAndDescriptions.DetailsPageBaseTitle,
     getDescription: () => StaticTitlesAndDescriptions.TDPDescription,
     getElement: () => <RedirectExplore />,
+    enabled: () => false, // HKSWAP: Disable tokens routes (redirect to explore)
   }),
   createRouteDefinition({
     path: '/explore/pools/:chainName/:poolAddress',
@@ -181,6 +187,7 @@ export const routes: RouteDefinition[] = [
         <PoolDetails />
       </Suspense>
     ),
+    enabled: () => false, // HKSWAP: Disable explore pools routes
   }),
   createRouteDefinition({
     path: '/explore/auctions/:chainName/:id',
@@ -217,40 +224,41 @@ export const routes: RouteDefinition[] = [
     getDescription: () => i18n.t('title.createGovernanceTo'),
     getElement: () => <Navigate to="/vote/create-proposal" replace />,
   }),
-  createRouteDefinition({
-    path: '/buy',
-    getElement: () => <Swap />,
-    getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
-  }),
-  createRouteDefinition({
-    path: '/sell',
-    getElement: () => <Swap />,
-    getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
-  }),
+  // createRouteDefinition({
+  //   path: '/buy',
+  //   getElement: () => <Swap />,
+  //   getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
+  // }),
+  // createRouteDefinition({
+  //   path: '/sell',
+  //   getElement: () => <Swap />,
+  //   getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
+  // }),
   createRouteDefinition({
     path: '/send',
     getElement: () => <Swap />,
     getTitle: () => i18n.t('title.sendTokens'),
   }),
-  createRouteDefinition({
-    path: '/limits',
-    getElement: () => <Navigate to="/limit" replace />,
-    getTitle: () => i18n.t('title.placeLimit'),
-  }),
-  createRouteDefinition({
-    path: '/limit',
-    getElement: () => <Swap />,
-    getTitle: () => i18n.t('title.placeLimit'),
-  }),
-  createRouteDefinition({
-    path: '/buy',
-    getElement: () => <Swap />,
-    getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
-  }),
+  // createRouteDefinition({
+  //   path: '/limits',
+  //   getElement: () => <Navigate to="/limit" replace />,
+  //   getTitle: () => i18n.t('title.placeLimit'),
+  // }),
+  // createRouteDefinition({
+  //   path: '/limit',
+  //   getElement: () => <Swap />,
+  //   getTitle: () => i18n.t('title.placeLimit'),
+  // }),
+  // createRouteDefinition({
+  //   path: '/buy',
+  //   getElement: () => <Swap />,
+  //   getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
+  // }),
   createRouteDefinition({
     path: '/swap',
     getElement: () => <Swap />,
     getTitle: () => StaticTitlesAndDescriptions.SwapTitle,
+    getDescription: () => StaticTitlesAndDescriptions.SwapDescription,
   }),
   // Refreshed pool routes
   createRouteDefinition({
@@ -284,18 +292,19 @@ export const routes: RouteDefinition[] = [
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
-  createRouteDefinition({
-    path: '/migrate/v2/:chainName/:pairAddress',
-    getElement: () => <MigrateV3 />,
-    getTitle: () => StaticTitlesAndDescriptions.MigrateTitle,
-    getDescription: () => StaticTitlesAndDescriptions.MigrateDescription,
-  }),
-  createRouteDefinition({
-    path: '/migrate/v3/:chainName/:tokenId',
-    getElement: () => <MigrateV3 />,
-    getTitle: () => StaticTitlesAndDescriptions.MigrateTitleV3,
-    getDescription: () => StaticTitlesAndDescriptions.MigrateDescriptionV4,
-  }),
+  // 注释掉迁移路由 - 本期不做迁移功能
+  // createRouteDefinition({
+  //   path: '/migrate/v2/:chainName/:pairAddress',
+  //   getElement: () => <MigrateV3 />,
+  //   getTitle: () => StaticTitlesAndDescriptions.MigrateTitle,
+  //   getDescription: () => StaticTitlesAndDescriptions.MigrateDescription,
+  // }),
+  // createRouteDefinition({
+  //   path: '/migrate/v3/:chainName/:tokenId',
+  //   getElement: () => <MigrateV3 />,
+  //   getTitle: () => StaticTitlesAndDescriptions.MigrateTitleV3,
+  //   getDescription: () => StaticTitlesAndDescriptions.MigrateDescriptionV4,
+  // }),
   // Legacy pool routes
   createRouteDefinition({
     path: '/pool',
@@ -303,12 +312,13 @@ export const routes: RouteDefinition[] = [
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
-  createRouteDefinition({
-    path: '/pool/v2/find',
-    getElement: () => <PoolFinderRedirects />,
-    getTitle: getPositionPageDescription,
-    getDescription: getPositionPageDescription,
-  }),
+  // 注释掉 Pool Finder 路由 - 本期只做基础添加流动性
+  // createRouteDefinition({
+  //   path: '/pool/v2/find',
+  //   getElement: () => <PoolFinderRedirects />,
+  //   getTitle: getPositionPageDescription,
+  //   getDescription: getPositionPageDescription,
+  // }),
   createRouteDefinition({
     path: '/pool/v2',
     getElement: () => <LegacyPositionPageRedirects />,
@@ -321,12 +331,13 @@ export const routes: RouteDefinition[] = [
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
-  createRouteDefinition({
-    path: '/pools/v2/find',
-    getElement: () => <PoolFinderRedirects />,
-    getTitle: getPositionPageTitle,
-    getDescription: getPositionPageDescription,
-  }),
+  // 注释掉 Pool Finder 路由 - 本期只做基础添加流动性
+  // createRouteDefinition({
+  //   path: '/pools/v2/find',
+  //   getElement: () => <PoolFinderRedirects />,
+  //   getTitle: getPositionPageTitle,
+  //   getDescription: getPositionPageDescription,
+  // }),
   createRouteDefinition({
     path: '/pools',
     getElement: () => <LegacyPoolRedirects />,
@@ -339,13 +350,14 @@ export const routes: RouteDefinition[] = [
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
-  createRouteDefinition({
-    path: '/add/v2',
-    nestedPaths: [':currencyIdA', ':currencyIdA/:currencyIdB'],
-    getElement: () => <AddLiquidityV2WithTokenRedirects />,
-    getTitle: getAddLiquidityPageTitle,
-    getDescription: () => StaticTitlesAndDescriptions.AddLiquidityDescription,
-  }),
+  // 注释掉 V2 添加流动性路由 - 本期只做 V3 基础添加流动性
+  // createRouteDefinition({
+  //   path: '/add/v2',
+  //   nestedPaths: [':currencyIdA', ':currencyIdA/:currencyIdB'],
+  //   getElement: () => <AddLiquidityV2WithTokenRedirects />,
+  //   getTitle: getAddLiquidityPageTitle,
+  //   getDescription: () => StaticTitlesAndDescriptions.AddLiquidityDescription,
+  // }),
   createRouteDefinition({
     path: '/add',
     nestedPaths: [
@@ -370,18 +382,19 @@ export const routes: RouteDefinition[] = [
     getTitle: () => i18n.t('title.removePoolLiquidity'),
     getDescription: () => i18n.t('title.removev3Liquidity'),
   }),
-  createRouteDefinition({
-    path: '/migrate/v2',
-    getElement: () => <LegacyMigrateV2 />,
-    getTitle: () => StaticTitlesAndDescriptions.MigrateTitle,
-    getDescription: () => StaticTitlesAndDescriptions.MigrateDescription,
-  }),
-  createRouteDefinition({
-    path: '/migrate/v2/:address',
-    getElement: () => <LegacyMigrateV2Pair />,
-    getTitle: () => StaticTitlesAndDescriptions.MigrateTitle,
-    getDescription: () => StaticTitlesAndDescriptions.MigrateDescription,
-  }),
+  // 注释掉 V2 迁移路由 - 本期只做 V3 基础添加流动性
+  // createRouteDefinition({
+  //   path: '/migrate/v2',
+  //   getElement: () => <LegacyMigrateV2 />,
+  //   getTitle: () => StaticTitlesAndDescriptions.MigrateTitle,
+  //   getDescription: () => StaticTitlesAndDescriptions.MigrateDescription,
+  // }),
+  // createRouteDefinition({
+  //   path: '/migrate/v2/:address',
+  //   getElement: () => <LegacyMigrateV2Pair />,
+  //   getTitle: () => StaticTitlesAndDescriptions.MigrateTitle,
+  //   getDescription: () => StaticTitlesAndDescriptions.MigrateDescription,
+  // }),
   createRouteDefinition({
     path: EXTENSION_PASSKEY_AUTH_PATH,
     getElement: () => <ExtensionPasskeyAuthPopUp />,

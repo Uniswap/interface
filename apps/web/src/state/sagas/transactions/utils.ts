@@ -1,11 +1,12 @@
 /* eslint-disable max-lines */
 import { datadogRum } from '@datadog/browser-rum'
 import type { TransactionResponse } from '@ethersproject/abstract-provider'
-import type { JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
+import type { JsonRpcSigner, TransactionReceipt as EthersTransactionReceipt, Web3Provider } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
 import { FetchError, TradingApi } from '@universe/api'
 import { BlockedAsyncSubmissionChainIdsConfigKey, DynamicConfigs, getDynamicConfigValue } from '@universe/gating'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
+import { Contract } from 'ethers/lib/ethers'
 import { clientToProvider } from 'hooks/useEthersProvider'
 import ms from 'ms'
 import type { Action } from 'redux'
@@ -29,6 +30,7 @@ import {
   finalizeTransaction,
   interfaceUpdateTransactionInfo,
 } from 'uniswap/src/features/transactions/slice'
+import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { TokenApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import type { Permit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
 import { TokenRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
@@ -62,6 +64,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { receiptFromEthersReceipt } from 'uniswap/src/features/transactions/utils/receipt'
 import { getInterfaceTransaction, isInterfaceTransaction } from 'uniswap/src/features/transactions/types/utils'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { parseERC20ApproveCalldata } from 'uniswap/src/utils/approvals'
@@ -126,7 +129,59 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   // Avoid sending prompting a transaction if the user already submitted an equivalent tx, e.g. by closing and reopening a transaction flow
   const duplicativeTx = yield* findDuplicativeTx({ info, address, chainId, allowDuplicativeTx })
 
-  const interfaceDuplicativeTx = duplicativeTx ? getInterfaceTransaction(duplicativeTx) : undefined
+  let interfaceDuplicativeTx = duplicativeTx ? getInterfaceTransaction(duplicativeTx) : undefined
+  if (
+    interfaceDuplicativeTx &&
+    interfaceDuplicativeTx.hash &&
+    step.type === TransactionStepType.TokenApprovalTransaction &&
+    (chainId === UniverseChainId.HashKey || chainId === UniverseChainId.HashKeyTestnet)
+  ) {
+    const allowance = yield* call(fetchTokenAllowance, {
+      tokenAddress: step.tokenAddress,
+      owner: address,
+      spender: step.spender,
+    })
+    const requiredAmount = BigInt(step.amount)
+
+    if (allowance !== null && allowance < requiredAmount) {
+      // Allow prompting a fresh approval if on-chain allowance is still insufficient.
+      interfaceDuplicativeTx = undefined
+    } else if (interfaceDuplicativeTx.status === TransactionStatus.Pending) {
+      const receipt = yield* call(fetchTransactionReceipt, interfaceDuplicativeTx.hash)
+      const resolvedStatus =
+        receipt?.status === 1 ? TransactionStatus.Success : receipt ? TransactionStatus.Failed : undefined
+      if (resolvedStatus) {
+        const adaptedReceipt = receiptFromEthersReceipt(receipt)
+        yield* put(
+          finalizeTransaction({
+            ...interfaceDuplicativeTx,
+            status: resolvedStatus,
+            receipt: adaptedReceipt,
+            hash: interfaceDuplicativeTx.hash,
+          }),
+        )
+        interfaceDuplicativeTx = undefined
+      } else if (allowance !== null && allowance >= requiredAmount) {
+        const fallbackReceipt: TransactionReceipt = {
+          transactionIndex: 0,
+          blockHash: interfaceDuplicativeTx.hash,
+          blockNumber: 0,
+          confirmedTime: Date.now(),
+          gasUsed: 0,
+          effectiveGasPrice: 0,
+        }
+        yield* put(
+          finalizeTransaction({
+            ...interfaceDuplicativeTx,
+            status: TransactionStatus.Success,
+            receipt: fallbackReceipt,
+            hash: interfaceDuplicativeTx.hash,
+          }),
+        )
+        interfaceDuplicativeTx = undefined
+      }
+    }
+  }
   if (interfaceDuplicativeTx && interfaceDuplicativeTx.hash) {
     if (interfaceDuplicativeTx.status === TransactionStatus.Success) {
       addTransactionBreadcrumb({
@@ -273,6 +328,15 @@ function* submitTransaction(params: HandleOnChainStepParams): SagaGenerator<Vita
     const response = yield* call([signer, 'sendTransaction'], step.txRequest)
     return transformTransactionResponse(response)
   } catch (error) {
+    addTransactionBreadcrumb({
+      step,
+      data: {
+        error: error instanceof Error ? error.message : String(error),
+        gasLimit: step.txRequest.gasLimit,
+        dataLength: step.txRequest.data?.length,
+      },
+      status: TransactionBreadcrumbStatus.Interrupted,
+    })
     if (error && typeof error === 'object' && 'transactionHash' in error && isValidHexString(error.transactionHash)) {
       return yield* recoverTransactionFromHash(error.transactionHash, step)
     }
@@ -351,9 +415,12 @@ export function* handlePermitTransactionStep(params: HandleOnChainPermit2Transac
 export function* handleApprovalTransactionStep(params: HandleApprovalStepParams) {
   const { step, address } = params
   const info = getApprovalTransactionInfo(step)
+  const shouldWaitForConfirmation =
+    step.txRequest.chainId !== UniverseChainId.HashKey && step.txRequest.chainId !== UniverseChainId.HashKeyTestnet
   return yield* call(handleOnChainStep, {
     ...params,
     info,
+    shouldWaitForConfirmation,
     *onModification({ hash, data }: VitalTxFields) {
       const { isInsufficient, approvedAmount } = checkApprovalAmount(data, step)
 
@@ -405,6 +472,31 @@ function checkApprovalAmount(data: string, step: TokenApprovalTransactionStep | 
   }
 
   return { isInsufficient: submitted.amount < requiredAmount, approvedAmount }
+}
+
+async function fetchTokenAllowance(params: {
+  tokenAddress: Address
+  owner: Address
+  spender: Address
+}): Promise<bigint | null> {
+  const { tokenAddress, owner, spender } = params
+  try {
+    const provider = await getProvider()
+    const contract = new Contract(tokenAddress, ERC20_ABI, provider)
+    const allowance = await contract.allowance(owner, spender)
+    return BigInt(allowance.toString())
+  } catch {
+    return null
+  }
+}
+
+async function fetchTransactionReceipt(hash: HexString): Promise<EthersTransactionReceipt | undefined> {
+  try {
+    const provider = await getProvider()
+    return await provider.getTransactionReceipt(hash)
+  } catch {
+    return undefined
+  }
 }
 
 function isRecentTx(tx: InterfaceTransactionDetails | TransactionDetails) {

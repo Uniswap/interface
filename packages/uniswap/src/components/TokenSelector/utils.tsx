@@ -123,16 +123,13 @@ export function isTokenOptionArray(option: OnchainItemListOption): option is Tok
 export function isSwapListLoading({
   loading,
   portfolioSection,
-  trendingSection,
   isTestnetModeEnabled,
 }: {
   loading: boolean
   portfolioSection: OnchainItemSection<TokenOption>[] | undefined
-  trendingSection: OnchainItemSection<TokenOption>[] | undefined
   isTestnetModeEnabled: boolean
 }): boolean {
-  // the trending section is not shown on testnet
-  return loading && (isTestnetModeEnabled ? !portfolioSection : !portfolioSection || !trendingSection)
+  return loading && !portfolioSection
 }
 
 export function flowToModalName(flow: TokenSelectorFlow): ModalNameType | undefined {

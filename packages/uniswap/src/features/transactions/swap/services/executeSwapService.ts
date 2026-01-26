@@ -55,24 +55,21 @@ export function createExecuteSwapService(ctx: {
         !isSignerMnemonicAccountDetails(account) ||
         !isValidSwapTxContext(swapTxContext)
       ) {
-        ctx.onFailure(
-          new Error(
-            !account
+        const errorMessage = !account
               ? 'No account available'
               : !swapTxContext
                 ? 'Missing swap transaction context'
                 : !isSignerMnemonicAccountDetails(account)
                   ? 'Invalid account type - must be signer mnemonic account'
-                  : 'Invalid swap transaction context',
-          ),
-        )
+              : 'Invalid swap transaction context'
+
+        ctx.onFailure(new Error(errorMessage))
         return
       }
 
       const { presetPercentage, preselectAsset } = ctx.getPresetInfo()
 
-      ctx
-        .onExecuteSwap({
+      const executeParams = {
           account,
           swapTxContext,
           currencyInAmountUSD: currencyAmountsUSDValue[CurrencyField.INPUT] ?? undefined,
@@ -89,8 +86,9 @@ export function createExecuteSwapService(ctx: {
           isFiatInputMode: ctx.getIsFiatMode?.(),
           wrapType,
           inputCurrencyAmount: currencyAmounts.input ?? undefined,
-        })
-        .catch(ctx.onFailure)
+      }
+
+      ctx.onExecuteSwap(executeParams)
     },
   }
 }

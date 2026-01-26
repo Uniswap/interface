@@ -41,5 +41,6 @@ export function parseErrorMessageTitle(
   const requestId = errorWithData.data?.requestId
 
   const title = errorWithData.data?.detail || errorWithData.name || defaultTitle
-  return includeRequestId && title ? `${title}, id: ${requestId}` : title
+  // Only include requestId if it exists, to avoid "id: undefined" in error messages
+  return includeRequestId && title && requestId ? `${title}, id: ${requestId}` : title
 }

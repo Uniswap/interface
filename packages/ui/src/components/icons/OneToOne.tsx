@@ -25,5 +25,5 @@ export const [OneToOne, AnimatedOneToOne] = createIcon({
       />
     </Svg>
   ),
-  defaultFill: '#FF37C7',
+  defaultFill: '#4177e2',
 })

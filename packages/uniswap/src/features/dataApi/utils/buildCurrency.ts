@@ -101,6 +101,8 @@ export function buildCurrency(args: BuildCurrencyParams): Token | NativeCurrency
 }
 
 const CURRENCY_INFO_CACHE = new Map<string, CurrencyInfo>()
+// Global cache for CurrencyInfo by currencyId (for unsupported chains like HashKey)
+const CURRENCY_INFO_BY_ID_CACHE = new Map<string, CurrencyInfo>()
 
 export function buildCurrencyInfo(args: CurrencyInfo): CurrencyInfo {
   const cacheKey = JSON.stringify(sortKeysRecursively(args))
@@ -113,5 +115,15 @@ export function buildCurrencyInfo(args: CurrencyInfo): CurrencyInfo {
   }
 
   CURRENCY_INFO_CACHE.set(cacheKey, args)
+  // Also cache by currencyId for quick lookup
+  CURRENCY_INFO_BY_ID_CACHE.set(args.currencyId, args)
   return args
+}
+
+/**
+ * Get CurrencyInfo from cache by currencyId
+ * Useful for unsupported chains where GraphQL queries don't work
+ */
+export function getCurrencyInfoFromCache(currencyId: string): CurrencyInfo | undefined {
+  return CURRENCY_INFO_BY_ID_CACHE.get(currencyId)
 }

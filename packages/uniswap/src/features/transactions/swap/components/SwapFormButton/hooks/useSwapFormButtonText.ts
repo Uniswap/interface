@@ -42,49 +42,29 @@ export const useSwapFormButtonText = (): string => {
 
   if (swapRedirectCallback) {
     return t('common.getStarted')
-  }
-
-  if (isWebFORNudgeEnabled) {
+  } else if (isWebFORNudgeEnabled) {
     return t('empty.swap.button.text')
-  }
-
-  if (isIndicative) {
+  } else if (isIndicative) {
     return t('swap.finalizingQuote')
-  }
-
-  if (isDisconnected) {
+  } else if (isDisconnected) {
     return isLogIn ? t('nav.logIn.button') : t('common.connectWallet.button')
-  }
-
-  if (isMissingPlatformWallet) {
+  } else if (isMissingPlatformWallet) {
     return t('common.connectTo', { platform: isSVMChain(chainId) ? 'Solana' : 'Ethereum' })
-  }
-
-  if (blockingWarning?.buttonText) {
+  } else if (blockingWarning?.buttonText) {
     return blockingWarning.buttonText
-  }
-
-  if (isTokenSelectionInvalid) {
+  } else if (isTokenSelectionInvalid) {
     return t('common.selectToken.label')
-  }
-
-  if (isAmountSelectionInvalid) {
+  } else if (isAmountSelectionInvalid) {
     return t('common.noAmount.error')
-  }
-
-  if (insufficientBalanceWarning) {
+  } else if (insufficientBalanceWarning) {
     return t('common.insufficientTokenBalance.error.simple', {
       tokenSymbol: currencies[CurrencyField.INPUT]?.currency.symbol ?? '',
     })
-  }
-
-  if (insufficientGasFundsWarning) {
+  } else if (insufficientGasFundsWarning) {
     return t('common.insufficientTokenBalance.error.simple', { tokenSymbol: nativeCurrency.symbol ?? '' })
-  }
-
-  if (isWrap) {
+  } else if (isWrap) {
     return getActionText({ t, wrapType })
   }
 
-  return t('swap.button.review')
+  return t('empty.swap.button.text')
 }

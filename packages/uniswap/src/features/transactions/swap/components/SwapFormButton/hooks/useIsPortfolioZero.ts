@@ -1,14 +1,15 @@
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances/balancesRest'
 import { useWallet } from 'uniswap/src/features/wallet/hooks/useWallet'
+import { useOnChainPortfolioTotalValue } from 'uniswap/src/features/transactions/swap/components/SwapFormButton/hooks/useOnChainPortfolioTotalValue'
 
 export function useIsPortfolioZero(): boolean {
   const wallet = useWallet()
   const { isTestnetModeEnabled } = useEnabledChains()
-  const { data } = usePortfolioTotalValue({
+  // 使用链上查询替代 Uniswap GetPortfolio API
+  const { balanceUSD, loading, error } = useOnChainPortfolioTotalValue({
     evmAddress: wallet.evmAccount?.address,
     svmAddress: wallet.svmAccount?.address,
   })
 
-  return !isTestnetModeEnabled && data?.balanceUSD === 0
+  return !isTestnetModeEnabled && balanceUSD === 0
 }

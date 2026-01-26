@@ -2,9 +2,7 @@ import { FeatureFlags, useFeatureFlag } from '@universe/gating'
 import Row from 'components/deprecated/Row'
 import { CompanyMenu } from 'components/NavBar/CompanyMenu'
 import { NewUserCTAButton } from 'components/NavBar/DownloadApp/NewUserCTAButton'
-import { PreferenceMenu } from 'components/NavBar/PreferencesMenu'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
-import { SearchBar } from 'components/NavBar/SearchBar'
 import { useIsSearchBarVisible } from 'components/NavBar/SearchBar/useIsSearchBarVisible'
 import { Tabs } from 'components/NavBar/Tabs/Tabs'
 import TestnetModeTooltip from 'components/NavBar/TestnetMode/TestnetModeTooltip'
@@ -29,6 +27,8 @@ const Nav = styled(TamaguiNav, {
   height: INTERFACE_NAV_HEIGHT,
   zIndex: zIndexes.sticky,
   justifyContent: 'center',
+  borderBottomWidth: 1,
+  borderColor: '#545C69',
 })
 const NavItems = css`
   gap: 12px;
@@ -43,6 +43,8 @@ const Left = deprecatedStyled(Row)`
   ${NavItems}
 `
 const Right = deprecatedStyled(Row)`
+  display: flex;
+  align-items: center;
   justify-content: flex-end;
   ${NavItems}
 `
@@ -67,15 +69,16 @@ export default function Navbar() {
           {areTabsVisible && <Tabs />}
         </Left>
 
-        {isSearchBarVisible && <SearchBar />}
+        {/* {isSearchBarVisible && <SearchBar />} */}
 
         <Right>
           <UniswapWrappedEntry />
-          {!isSearchBarVisible && <SearchBar />}
-          {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
-          {!isConnected && <PreferenceMenu />}
+          {/* {!isSearchBarVisible && <SearchBar />} */}
+          {/* Get App button is hidden - only English is supported */}
+          {/* {!isEmbeddedWalletEnabled && isLandingPage && !isSmallScreen && <NewUserCTAButton />} */}
+          {/* {!isConnected && <PreferenceMenu />} */}
           {isTestnetModeEnabled && <TestnetModeTooltip />}
-          {isEmbeddedWalletEnabled && !isConnected && <NewUserCTAButton />}
+          {/* {isEmbeddedWalletEnabled && !isConnected && <NewUserCTAButton />} */}
           <Web3Status />
         </Right>
       </UnpositionedFlex>

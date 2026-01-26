@@ -1,20 +1,16 @@
 /* eslint-disable max-lines */
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { FeatureFlags, useFeatureFlag } from '@universe/gating'
-import PROVIDE_LIQUIDITY from 'assets/images/provideLiquidity.png'
 import tokenLogo from 'assets/images/token-logo.png'
-import V4_HOOK from 'assets/images/v4Hooks.png'
 import { ExpandoRow } from 'components/AccountDrawer/MiniPortfolio/ExpandoRow'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { MenuStateVariant, useSetMenu } from 'components/AccountDrawer/menuState'
-import { ExternalArrowLink } from 'components/Liquidity/ExternalArrowLink'
 import { LiquidityPositionCard, LiquidityPositionCardLoader } from 'components/Liquidity/LiquidityPositionCard'
 import { LpIncentiveClaimModal } from 'components/Liquidity/LPIncentives/LpIncentiveClaimModal'
-import LpIncentiveRewardsCard from 'components/Liquidity/LPIncentives/LpIncentiveRewardsCard'
 import { PositionsHeader } from 'components/Liquidity/PositionsHeader'
 import { PositionInfo } from 'components/Liquidity/types'
 import { getPositionUrl } from 'components/Liquidity/utils/getPositionUrl'
 import { parseRestPosition } from 'components/Liquidity/utils/parseFromRest'
+import { useAppKit } from 'components/Web3Provider/reownConfig'
 import { useAccount } from 'hooks/useAccount'
 import { useLpIncentives } from 'hooks/useLpIncentives'
 import { atom, useAtom } from 'jotai'
@@ -27,11 +23,8 @@ import { usePendingLPTransactionsChangeListener } from 'state/transactions/hooks
 import { useRequestPositionsForSavedPairs } from 'state/user/hooks'
 import { ClickableTamaguiStyle } from 'theme/components/styles'
 import { Anchor, Button, Flex, Text, useMedia } from 'ui/src'
-import { CloseIconWithHover } from 'ui/src/components/icons/CloseIconWithHover'
-import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { Pools } from 'ui/src/components/icons/Pools'
 import { Wallet } from 'ui/src/components/icons/Wallet'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useGetPositionsInfiniteQuery } from 'uniswap/src/data/rest/getPositions'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -50,7 +43,7 @@ const PAGE_SIZE = 25
 
 function DisconnectedWalletView() {
   const { t } = useTranslation()
-  const accountDrawer = useAccountDrawer()
+  const { open } = useAppKit()
   const setMenu = useSetMenu()
   const connectedWithoutEVM = useIsMissingPlatformWallet(Platform.EVM)
 
@@ -58,7 +51,7 @@ function DisconnectedWalletView() {
     if (connectedWithoutEVM) {
       setMenu({ variant: MenuStateVariant.CONNECT_PLATFORM, platform: Platform.EVM })
     }
-    accountDrawer.open()
+    open({ view: 'Connect' })
   }
 
   return (
@@ -90,7 +83,7 @@ function DisconnectedWalletView() {
               size="small"
               emphasis="secondary"
               tag="a"
-              href="/positions/create/v4"
+              href="/positions/create/v3"
               $platform-web={{
                 textDecoration: 'none',
               }}
@@ -103,7 +96,8 @@ function DisconnectedWalletView() {
           </Button>
         </Flex>
       </Flex>
-      <Flex gap="$gap20" mb="$spacing24">
+      {/* 未连接钱包时隐藏 "providing liquidity" 和 "hooks on v4" 内容 */}
+      {/* <Flex gap="$gap20" mb="$spacing24">
         <Flex row gap="$gap12" $sm={{ flexDirection: 'column' }}>
           <LearnMoreTile
             width="100%"
@@ -118,7 +112,7 @@ function DisconnectedWalletView() {
             link={uniswapUrls.helpArticleUrls.v4HooksInfo}
           />
         </Flex>
-      </Flex>
+      </Flex> */}
     </Flex>
   )
 }
@@ -163,7 +157,7 @@ function EmptyPositionsView() {
             variant="default"
             size="small"
             tag="a"
-            href="/positions/create/v4"
+            href="/positions/create/v3"
             $platform-web={{
               textDecoration: 'none',
             }}
@@ -214,8 +208,9 @@ function LearnMoreTile({
   )
 }
 
-const chainFilterAtom = atom<UniverseChainId | null>(null)
-const versionFilterAtom = atom<ProtocolVersion[]>([ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2])
+// 本期只做 V3 基础添加流动性 - 默认筛选 HashKey Chain + V3
+const chainFilterAtom = atom<UniverseChainId | null>(UniverseChainId.HashKey)
+const versionFilterAtom = atom<ProtocolVersion[]>([ProtocolVersion.V3])
 const statusFilterAtom = atom<PositionStatus[]>([PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE])
 
 function VirtualizedPositionsList({
@@ -263,7 +258,7 @@ function VirtualizedPositionsList({
                 <LiquidityPositionCard
                   showVisibilityOption
                   liquidityPosition={position}
-                  showMigrateButton
+                  // showMigrateButton // 注释掉迁移按钮 - 本期不做迁移功能
                   isLast={index === positions.length - 1}
                 />
               </Link>
@@ -402,7 +397,7 @@ export default function Pool() {
         $lg={{ px: '$spacing20' }}
       >
         <Flex grow shrink gap="$spacing24" maxWidth={740} $xl={{ maxWidth: '100%' }}>
-          {isLPIncentivesEnabled && (
+          {/* {isLPIncentivesEnabled && (
             <LpIncentiveRewardsCard
               walletAddress={account.address}
               onCollectRewards={() => {
@@ -412,8 +407,8 @@ export default function Pool() {
               setTokenRewards={setTokenRewards}
               initialHasCollectedRewards={hasCollectedRewards}
             />
-          )}
-          <Flex row justifyContent="space-between" alignItems="center" mt={isLPIncentivesEnabled ? '$spacing28' : 0}>
+          )} */}
+          <Flex row justifyContent="space-between" alignItems="center" mt={0}>
             <PositionsHeader
               showFilters={account.isConnected}
               selectedChain={chainFilter}
@@ -469,7 +464,7 @@ export default function Pool() {
               ))}
             </Flex>
           )}
-          {!statusFilter.includes(PositionStatus.CLOSED) && !closedCTADismissed && account.address && (
+          {/* {!statusFilter.includes(PositionStatus.CLOSED) && !closedCTADismissed && account.address && (
             <Flex
               borderWidth="$spacing1"
               borderColor="$surface3"
@@ -493,8 +488,9 @@ export default function Pool() {
               </Flex>
               <CloseIconWithHover onClose={() => setClosedCTADismissed(true)} size="$icon.20" />
             </Flex>
-          )}
-          {isConnected && (
+          )} */}
+          {/* 注释掉 Pool Finder 入口 - 本期只做基础添加流动性 */}
+          {/* {isConnected && (
             <Flex row centered $sm={{ flexDirection: 'column', alignItems: 'flex-start' }} mb="$spacing24" gap="$gap4">
               <Text variant="body3" color="$neutral2">
                 {t('pool.import.link.description')}
@@ -505,11 +501,11 @@ export default function Pool() {
                 </Text>
               </Anchor>
             </Flex>
-          )}
+          )} */}
         </Flex>
         <Flex gap="$gap32">
           <TopPools chainId={chainFilter} />
-          {isConnected && (
+          {/* {isConnected && (
             <Flex gap="$gap20" mb="$spacing24">
               <Text variant="subheading1">{t('liquidity.learnMoreLabel')}</Text>
               <Flex gap="$gap12">
@@ -528,7 +524,7 @@ export default function Pool() {
                 {t('common.button.learn')}
               </ExternalArrowLink>
             </Flex>
-          )}
+          )} */}
         </Flex>
       </Flex>
       {isLPIncentivesEnabled && (

@@ -4,7 +4,7 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useRoutingAPIArguments } from 'lib/hooks/routing/useRoutingAPIArguments'
 import ms from 'ms'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useRef } from 'react'
 import { useGetQuoteQuery, useGetQuoteQueryState } from 'state/routing/slice'
 import {
   ClassicTrade,
@@ -98,12 +98,23 @@ export function useRoutingAPITrade<TTradeType extends TradeType>(
   const isWindowVisible = useIsWindowVisible()
 
   const { isError, data: tradeResult, error, currentData } = useGetQuoteQueryState(queryArgs)
-  useGetQuoteQuery(skipFetch || !isWindowVisible ? skipToken : queryArgs, {
+  const { refetch } = useGetQuoteQuery(skipFetch || !isWindowVisible ? skipToken : queryArgs, {
     // Price-fetching is informational and costly, so it's done less frequently.
-    pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms(`1m`) : AVERAGE_L1_BLOCK_TIME_MS,
+    // HKSWAP: Changed polling interval from 10s to 5s
+    pollingInterval: routerPreference === INTERNAL_ROUTER_PREFERENCE_PRICE ? ms(`1m`) : ms(`3s`),
     // If latest quote from cache was fetched > 2m ago, instantly repoll for another instead of waiting for next poll period
     refetchOnMountOrArgChange: 2 * 60,
   })
+
+  // HKSWAP: Immediately refetch quote when tradeType changes (switching between sell/buy)
+  const prevTradeTypeRef = useRef(tradeType)
+  useEffect(() => {
+    if (prevTradeTypeRef.current !== tradeType && !skipFetch && isWindowVisible && queryArgs !== skipToken) {
+      // Trade type changed (switched between EXACT_INPUT and EXACT_OUTPUT), immediately refetch
+      refetch()
+    }
+    prevTradeTypeRef.current = tradeType
+  }, [tradeType, skipFetch, isWindowVisible, queryArgs, refetch])
 
   const isFetching = currentData !== tradeResult || !currentData
 

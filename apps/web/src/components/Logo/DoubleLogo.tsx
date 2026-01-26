@@ -41,7 +41,7 @@ function LogolessPlaceholder({
   const { foreground, background } = useColorSchemeFromSeed(currency?.name ?? currency?.symbol ?? '')
 
   const chainId = currency?.chainId
-  const showNetworkLogo = includeNetwork && chainId && chainId !== UniverseChainId.Mainnet
+  const showNetworkLogo = includeNetwork && chainId && chainId !== UniverseChainId.Mainnet && chainId !== UniverseChainId.HashKey && chainId !== UniverseChainId.HashKeyTestnet
   const networkLogoSize = Math.round(size * STATUS_RATIO)
   const networkLogoBorderWidth = isMobileApp ? 2 : 1.5
 

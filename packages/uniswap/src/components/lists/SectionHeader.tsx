@@ -74,6 +74,8 @@ function useSectionTitle(section: OnchainItemSectionName): string {
       return t('tokens.selector.section.trending')
     case OnchainItemSectionName.RecentSearches:
       return t('tokens.selector.section.recent')
+    case OnchainItemSectionName.PoolTokens:
+      return t('tokens.selector.section.poolTokens')
     case OnchainItemSectionName.FavoriteTokens:
       return t('tokens.selector.section.favorite')
     case OnchainItemSectionName.SearchResults:
@@ -113,6 +115,8 @@ function getSectionIcon(section: OnchainItemSectionName): JSX.Element | null {
       return <TrendUp color="$neutral2" size="$icon.16" />
     case OnchainItemSectionName.RecentSearches:
       return <Clock color="$neutral2" size="$icon.16" />
+    case OnchainItemSectionName.PoolTokens:
+      return <Pools color="$neutral2" size="$icon.16" />
     case OnchainItemSectionName.SearchResults:
       return <Search color="$neutral2" size="$icon.16" />
     case OnchainItemSectionName.FavoriteTokens:

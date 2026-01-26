@@ -103,6 +103,7 @@ export function createEVMTradeService(ctx: EVMTradeServiceContext): TradeService
         const quoteHash = getIdentifierForQuote(quoteRequestArgs)
 
         // Step 5: Transform quote to trade
+        // Pass customSlippageTolerance to ensure trade uses user configuration instead of API response
         const result = transformQuoteToTrade({
           quote: quoteResponse,
           amountSpecified: validatedInput.amount,
@@ -111,6 +112,7 @@ export function createEVMTradeService(ctx: EVMTradeServiceContext): TradeService
             currencyOut: validatedInput.currencyOut,
             requestTradeType: validatedInput.requestTradeType,
           },
+          customSlippageTolerance: input.customSlippageTolerance,
         })
         // Return trade with gas estimates
         return {

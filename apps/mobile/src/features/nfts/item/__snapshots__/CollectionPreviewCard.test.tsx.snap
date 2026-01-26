@@ -206,7 +206,7 @@ exports[`renders collection preview card 1`] = `
                   "borderWidth": 0,
                 },
                 {
-                  "color": "#FF37C7",
+                  "color": "#4177e2",
                   "height": 16,
                   "width": 16,
                 },
@@ -221,7 +221,7 @@ exports[`renders collection preview card 1`] = `
             vbWidth={16}
           >
             <RNSVGGroup
-              color="#FF37C7"
+              color="#4177e2"
               fill={null}
               propList={
                 [

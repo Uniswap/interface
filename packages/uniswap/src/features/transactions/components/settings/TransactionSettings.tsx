@@ -1,5 +1,5 @@
 import type { ColorTokens, FlexProps, GeneratedIcon } from 'ui/src'
-import { Flex, Popover, TouchableArea } from 'ui/src'
+import { Flex, Popover, styled, Text, TouchableArea } from 'ui/src'
 import { Settings } from 'ui/src/components/icons/Settings'
 import type { IconSizeTokens } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -19,6 +19,35 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard/dismissNativeKeyboard'
 import { isMobileApp, isWebApp } from 'utilities/src/platform'
 import { useEvent } from 'utilities/src/react/hooks'
+
+const SwapTextButton = styled(Flex, {
+  flexDirection: 'column',
+  justifyContent: 'center',
+  alignItems: 'center',
+  py: 0,
+  pb: 2,
+  px: 0,
+  width: 37.25,
+  height: 22,
+  flexGrow: 0,
+})
+
+const SwapText = styled(Text, {
+  width: 37.25,
+  height: 20,
+  fontSize: 14,
+  lineHeight: 20,
+  fontWeight: 500,
+  textAlign: 'center',
+  color: '#FFFFFF',
+  flexGrow: 0,
+  '$platform-web': {
+    fontFamily: "'Aleo', sans-serif",
+    fontStyle: 'normal',
+    display: 'flex',
+    alignItems: 'center',
+  },
+})
 
 export interface TransactionSettingsProps {
   settings: TransactionSettingConfig[]
@@ -99,7 +128,22 @@ export function TransactionSettings({
   return (
     <>
       <ViewOnlyModal isOpen={isViewOnlyModalVisible} onDismiss={handleHideViewOnlyModal} />
-      <Flex row gap="$spacing4" position={position} top={topAlignment} right={rightAlignment} zIndex="$default">
+      <Flex
+        row
+        justifyContent={position === 'absolute' ? 'space-between' : 'flex-end'}
+        alignItems="center"
+        position={position}
+        top={topAlignment}
+        right={rightAlignment}
+        left={rightAlignment}
+        zIndex="$default"
+      >
+        {/* Swap text button - only show when absolutely positioned */}
+        {position === 'absolute' && (
+          <SwapTextButton>
+            <SwapText>Swap</SwapText>
+          </SwapTextButton>
+        )}
         {isViewOnlyWallet ? (
           <ViewOnlyButton onPress={handleShowViewOnlyModal} />
         ) : (
@@ -111,7 +155,12 @@ export function TransactionSettings({
           >
             <Flex>
               <Popover.Trigger>
-                <TouchableArea testID={testID ?? TestID.TransactionSettings} onPress={onPressTransactionSettings}>
+                <TouchableArea
+                  testID={testID ?? TestID.TransactionSettings}
+                  width={IconLabel || CustomSettingsButton ? undefined : 32}
+                  height={32}
+                  onPress={onPressTransactionSettings}
+                >
                   {CustomSettingsButton ?? (
                     <TransactionSettingsButton
                       contentColor={iconColor}

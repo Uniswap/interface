@@ -117,7 +117,8 @@ export function UniswapWalletOptions() {
           </Flex>
         </OptionContainer>
 
-        {isMobileWeb && (
+        {/* Get App button is hidden - only English is supported */}
+        {/* {isMobileWeb && (
           // If on a mobile web browser show the relevant app store download link
           <OptionContainer
             onPress={() => {
@@ -148,7 +149,7 @@ export function UniswapWalletOptions() {
               )}
             </Flex>
           </OptionContainer>
-        )}
+        )} */}
       </Flex>
     </Flex>
   )

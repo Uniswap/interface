@@ -44,7 +44,10 @@ export function createIcon({
   getIcon: (props: SvgPropsWithRef) => JSX.Element
   defaultFill?: string
 }): readonly [GeneratedIcon, GeneratedIcon] {
-  const Icon = forwardRef<Svg, GeneratedIconProps>(({ color, hoverColor: hoverColorProp, ...propsIn }, ref) => {
+  const Icon = forwardRef<Svg, GeneratedIconProps>((iconProps, ref) => {
+    // Extract forwardedRef if present (not in type but may be passed)
+    // biome-ignore lint/suspicious/noExplicitAny: forwardedRef may be passed but not in type
+    const { color, hoverColor: hoverColorProp, forwardedRef, ...propsIn } = iconProps as any
     const [hover, setHover] = useState(false)
     const renderColor = color ?? defaultFill ?? (isWebPlatform ? 'currentColor' : undefined)
     const hoverColor = hoverColorProp ?? renderColor
@@ -67,10 +70,22 @@ export function createIcon({
     // "Failed to set an indexed property [0] on 'CSSStyleDeclaration'"
     const flattenedStyle = isWebPlatform && Array.isArray(style) ? Object.assign({}, ...style) : style
 
-    // @ts-expect-error this type is hard to map but its right
+    // Filter out empty width/height values to prevent SVG attribute errors
+    // biome-ignore lint/suspicious/noExplicitAny: Need to access potentially dynamic props
+    const propsAny = props as any
+    const cleanProps = { ...propsAny }
+    // Remove empty width/height attributes that would cause SVG errors
+    if (cleanProps.width === '' || cleanProps.width === null || cleanProps.width === undefined) {
+      delete cleanProps.width
+    }
+    if (cleanProps.height === '' || cleanProps.height === null || cleanProps.height === undefined) {
+      delete cleanProps.height
+    }
+
+    // biome-ignore lint/suspicious/noExplicitAny: Type is complex and needs any cast
     const svgProps: SvgPropsWithRef = {
       ref,
-      ...props,
+      ...cleanProps,
       style: flattenedStyle,
     }
 
@@ -94,12 +109,24 @@ export function createIcon({
   const IconPlain = forwardRef<Svg, IconProps>((props, ref) => {
     // Flatten style array on web - Animated.createAnimatedComponent may wrap styles in an array
     // which causes React DOM to throw: "Failed to set an indexed property [0] on 'CSSStyleDeclaration'"
-    const { style, ...rest } = props as SvgPropsWithRef
+    const { style, forwardedRef, ...rest } = props as SvgPropsWithRef & { forwardedRef?: unknown }
     const flatStyle = isWebPlatform && Array.isArray(style) ? Object.assign({}, ...style) : style
+
+    // Filter out empty width/height values to prevent SVG attribute errors
+    // biome-ignore lint/suspicious/noExplicitAny: Need to access potentially dynamic props
+    const restAny = rest as any
+    const cleanRest = { ...restAny }
+    // Remove empty width/height attributes that would cause SVG errors
+    if (cleanRest.width === '' || cleanRest.width === null || cleanRest.width === undefined) {
+      delete cleanRest.width
+    }
+    if (cleanRest.height === '' || cleanRest.height === null || cleanRest.height === undefined) {
+      delete cleanRest.height
+    }
 
     return getIcon({
       // biome-ignore lint/suspicious/noExplicitAny: Type casting needed for complex SVG prop types
-      ...(rest as any),
+      ...(cleanRest as any),
       style: flatStyle,
       ref,
     })

@@ -58,7 +58,7 @@
     "@uniswap/router-sdk": "2.0.2",
     "@uniswap/sdk-core": "7.9.0",
     "@uniswap/uniswapx-sdk": "3.0.0-beta.7",
-    "@uniswap/universal-router-sdk": "4.19.5",
+    "@hkdex-tmp/universal_router_sdk": "1.0.3",
     "@uniswap/v2-sdk": "4.15.2",
     "@uniswap/v3-sdk": "3.25.2",
     "@uniswap/v4-sdk": "1.21.2",

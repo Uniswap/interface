@@ -43,55 +43,7 @@ export function TradeInfoRow({ gasInfo, warning }: { gasInfo: GasInfo; warning?:
   const outputChainId = currencies.output?.currency.chainId
   const showCanonicalBridge = isWebApp && warning?.type === WarningLabel.NoQuotesFound && inputChainId !== outputChainId
 
-  return (
-    <Flex centered row>
-      <Flex fill>
-        {debouncedTrade && !warning && (
-          <SwapRateRatio
-            initialInverse={true}
-            styling="secondary"
-            trade={debouncedTrade}
-            derivedSwapInfo={derivedSwapInfo}
-          />
-        )}
-
-        {warning && (
-          <TradeWarning warning={warning}>
-            <Flex row centered gap="$gap8">
-              <AlertTriangleFilled color={warningTextColor} size="$icon.20" />
-              <Text color={warningTextColor} variant="body3">
-                {warning.title}
-              </Text>
-            </Flex>
-          </TradeWarning>
-        )}
-      </Flex>
-
-      {showCanonicalBridge ? (
-        <CanonicalBridgeLinkBanner chainId={outputChainId ?? UniverseChainId.Mainnet} />
-      ) : debouncedTrade ? (
-        <Accordion.Trigger
-          p="$none"
-          style={{ background: '$surface1' }}
-          focusStyle={{ background: '$surface1' }}
-          hoverStyle={{ background: '$surface1' }}
-        >
-          {({ open }: { open: boolean }) => (
-            <Flex row gap="$spacing4" alignItems="center">
-              <GasInfoRow gasInfo={gasInfo} hidden={open} />
-              <RotatableChevron
-                animation="fast"
-                width={iconSizes.icon16}
-                height={iconSizes.icon16}
-                direction={open ? 'up' : 'down'}
-                color="$neutral3"
-              />
-            </Flex>
-          )}
-        </Accordion.Trigger>
-      ) : (
-        <GasInfoRow gasInfo={gasInfo} />
-      )}
-    </Flex>
-  )
+  // TradeInfoRow removed - rate display and accordion trigger are hidden
+  // Only show gas info without rate and accordion
+  return <GasInfoRow gasInfo={gasInfo} />
 }

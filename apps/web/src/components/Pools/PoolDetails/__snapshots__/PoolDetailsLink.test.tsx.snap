@@ -33,8 +33,8 @@ exports[`PoolDetailsHeader > renders link for pool address 1`] = `
   text-decoration: none;
   cursor: pointer;
   transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
+  color: #4177e2;
+  stroke: #4177e2;
   font-weight: 500;
 }
 
@@ -319,8 +319,8 @@ exports[`PoolDetailsHeader > renders link for token address 1`] = `
   text-decoration: none;
   cursor: pointer;
   transition-duration: 125ms;
-  color: #FF37C7;
-  stroke: #FF37C7;
+  color: #4177e2;
+  stroke: #4177e2;
   font-weight: 500;
 }
 

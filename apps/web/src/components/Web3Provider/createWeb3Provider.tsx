@@ -1,18 +1,24 @@
 import { CoinbaseWalletAdapter } from '@solana/wallet-adapter-coinbase'
 import { WalletProvider as SolanaWalletProvider } from '@solana/wallet-adapter-react'
+import { AppKitProvider, wagmiAdapter } from 'components/Web3Provider/reownConfig'
+import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { SolanaSignerUpdater } from 'components/Web3Provider/signSolanaTransaction'
 import React, { type PropsWithChildren, type ReactNode, useMemo } from 'react'
 import { useWalletCapabilitiesStateEffect } from 'state/walletCapabilities/hooks/useWalletCapabilitiesStateEffect'
-import { type Register, WagmiProvider } from 'wagmi'
+import { type Config, WagmiProvider } from 'wagmi'
 
-export function createWeb3Provider(params: { wagmiConfig: Register['config']; reconnectOnMount?: boolean }) {
-  const { wagmiConfig, reconnectOnMount = true } = params
+export function createWeb3Provider(params: { reconnectOnMount?: boolean }) {
+  const { reconnectOnMount = true } = params
 
   const Provider = ({ children }: { children: ReactNode }) => (
     <SolanaProvider>
-      <WagmiProvider config={wagmiConfig} reconnectOnMount={reconnectOnMount}>
-        {children}
-      </WagmiProvider>
+      <AppKitProvider>
+        {/* Use wagmiConfig (not wagmiAdapter.wagmiConfig) to include embeddedWallet connector */}
+        {/* wagmiAdapter.wagmiConfig doesn't include embeddedWallet, which causes errors */}
+        <WagmiProvider config={wagmiConfig as Config} reconnectOnMount={reconnectOnMount}>
+          {children}
+        </WagmiProvider>
+      </AppKitProvider>
     </SolanaProvider>
   )
 

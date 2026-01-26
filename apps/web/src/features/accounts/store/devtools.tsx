@@ -66,34 +66,7 @@ function UniswapAccountsStoreDevToolLogger() {
       numFontWeights += 4
     }
 
-    const fontWeightStrings = []
-    for (let i = 0; i < numFontWeights; i++) {
-      fontWeightStrings.push('font-weight: bold;', '')
-    }
-
-    // biome-ignore lint/suspicious/noConsole: console logging required for devtools functionality
-    console.clear()
-    // biome-ignore lint/suspicious/noConsole: console logging required for devtools functionality
-    console.log(
-      `
-      %cAccountsStore 🦄%c
-      type logAccountsStore again to stop
-
-      %cStatus:%c ${status}
-      %cWallet:%c ${getWalletString(wallet)}
-
-      %cAddresses:%c ${JSON.stringify(addresses)}
-
-      %cEVM Address:%c ${evmAddress}
-      %cEVMConnector:%c ${getConnectorString(evmConnector)}
-
-      %cSVM Address:%c ${svmAddress}
-      %cSVMConnector:%c ${getConnectorString(svmConnector)}
-    `,
-      'color: hotpink; font-weight: bold; font-size: 1.2rem;',
-      '',
-      ...fontWeightStrings,
-    )
+    // Devtools logging removed
   }, [wallet, evmConnector, svmConnector, addresses, evmAddress, status, svmAddress])
   return null
 }

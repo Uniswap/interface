@@ -148,7 +148,7 @@ export default defineConfig(({ mode }) => {
         '@uniswap/v3-sdk',
         '@uniswap/v4-sdk',
         '@uniswap/router-sdk',
-        '@uniswap/universal-router-sdk',
+        '@hkdex-tmp/universal_router_sdk',
         '@uniswap/uniswapx-sdk',
         '@uniswap/permit2-sdk',
         '@visx/responsive',
@@ -326,7 +326,7 @@ export default defineConfig(({ mode }) => {
         '@uniswap/v3-sdk',
         '@uniswap/v4-sdk',
         '@uniswap/router-sdk',
-        '@uniswap/universal-router-sdk',
+        '@hkdex-tmp/universal_router_sdk',
         '@uniswap/uniswapx-sdk',
         '@uniswap/permit2-sdk',
         'jsbi',
@@ -347,10 +347,38 @@ export default defineConfig(({ mode }) => {
 
     server: {
       port: DEFAULT_PORT,
+      host: '0.0.0.0',
+      allowedHosts: 'all',
+      // HMR configuration - use default if custom host is not accessible
+      // Only use custom HMR config if VITE_HMR_HOST is set
+      hmr: process.env.VITE_HMR_HOST
+        ? {
+            host: process.env.VITE_HMR_HOST,
+            port: Number.parseInt(process.env.VITE_HMR_PORT || '8888', 10),
+            clientPort: Number.parseInt(process.env.VITE_HMR_CLIENT_PORT || process.env.VITE_HMR_PORT || '8888', 10),
+            protocol: 'ws',
+          }
+        : undefined, // Use default HMR config
+      strictPort: false, // 如果端口被占用，自动尝试下一个可用端口
       proxy: {
         ...(ENABLE_PROXY ? {
           '/entry-gateway': createEntryGatewayProxy({ getLogger })
-        } : {})}
+        } : {}),
+        // HSK Subgraph 代理 - 解决 CORS 问题
+        '/hsk-subgraph': {
+          target: 'https://graphnode-testnet.hashkeychain.net',
+          changeOrigin: true,
+          secure: true,
+          rewrite: (path) => path.replace(/^\/hsk-subgraph/, '/subgraphs/name/uniswap-v3/hsk-test'),
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq, req) => {
+              if (DEBUG_PROXY) {
+                console.log(`[HSK Subgraph Proxy] ${req.method} ${req.url}`)
+              }
+            })
+          },
+        },
+      }
     },
 
     build: {

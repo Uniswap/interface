@@ -102,7 +102,8 @@ export function createDatadogReduxEnhancer({
         }
 
         /* Log action to Datadog */
-        if (isAction) {
+        // Skip logging redux-persist actions to reduce console noise
+        if (isAction && !action.type.startsWith('persist/')) {
           datadogRum.addAction(`Redux Action: ${action.type}`, action)
         }
 

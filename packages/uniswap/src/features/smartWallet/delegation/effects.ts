@@ -62,7 +62,6 @@ export function getHandleOnSetActiveChainId(ctx: {
   function handleOnSetActiveChainId(input: { action: PayloadAction<{ chainId?: number }> }): void {
     const { action } = input
     if (action.payload.chainId) {
-      logger?.info('effects.ts', 'handleOnSetActiveChainId', `Setting active chain id to ${action.payload.chainId}`)
       const chainId = action.payload.chainId.toString()
       const state = getState()
       const delegationAddress = state.delegation.delegations[chainId]

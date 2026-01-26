@@ -83,9 +83,15 @@ const swappableTokensQueryKey = (params?: SwappableTokensParams): QueryKey => {
   return [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.swappableTokens, params]
 }
 
+// HKSWAP: Disabled swappable_tokens API - not needed for single-chain swap
 const swappableTokensQueryFn = (
   params: SwappableTokensParams,
 ): QueryFunction<TradingApi.GetSwappableTokensResponse, QueryKey, never> | undefined => {
-  return async (): ReturnType<typeof TradingApiClient.fetchSwappableTokens> =>
-    await TradingApiClient.fetchSwappableTokens(params)
+  // return async (): ReturnType<typeof TradingApiClient.fetchSwappableTokens> =>
+  //   await TradingApiClient.fetchSwappableTokens(params)
+  
+  // HKSWAP: Return empty response instead of calling API
+  return async (): Promise<TradingApi.GetSwappableTokensResponse> => {
+    return { tokens: [] }
+  }
 }

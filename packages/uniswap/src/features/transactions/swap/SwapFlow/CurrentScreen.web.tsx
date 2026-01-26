@@ -36,8 +36,10 @@ export function CurrentScreen({
       {/*
           We want to render the `Modal` from the start to allow the tamagui animation to happen once we switch the `isModalOpen` prop to `true`.
           We only render `SwapReviewScreen` once the user is truly on that step though.
+          
+          COMMENTED OUT: Second modal is disabled - using only the first SwapConfirmationModal
         */}
-      <Modal
+      {/* <Modal
         height="auto"
         alignment={isWebApp ? 'center' : 'top'}
         isModalOpen={screen === TransactionScreen.Review}
@@ -49,7 +51,7 @@ export function CurrentScreen({
         <Trace logImpression section={SectionName.SwapReview}>
           <SwapReviewScreen hideContent={false} onSubmitSwap={onSubmitSwap} />
         </Trace>
-      </Modal>
+      </Modal> */}
 
       {isFlashblocksEnabled && <UnichainInstantBalanceModal />}
     </>

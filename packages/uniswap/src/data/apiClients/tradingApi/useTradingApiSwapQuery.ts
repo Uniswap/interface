@@ -5,65 +5,29 @@ import {
   useQueryWithImmediateGarbageCollection,
 } from '@universe/api'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { TradingApiClient } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import {
-  convertSwap5792ResponseToSwapData,
-  convertSwap7702ResponseToSwapData,
-  convertSwapResponseToSwapData,
-  type SwapData,
-} from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
+import type { SwapData } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapRepository'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 
+/**
+ * HashKey chains (133, 177) do not use swap API.
+ * This hook should never be called for HashKey chains.
+ * Transactions are built directly from quote methodParameters.
+ */
 export function useTradingApiSwapQuery(
   { params, ...rest }: UseQueryWithImmediateGarbageCollectionApiHelperHookArgs<TradingApi.CreateSwapRequest, SwapData>,
   config?: { canBatchTransactions?: boolean; swapDelegationAddress?: string; includesDelegation?: boolean },
 ): UseQueryResult<SwapData> {
   const queryKey = [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.swap, params]
-  const fetch = getFetchFn(config)
 
   return useQueryWithImmediateGarbageCollection<SwapData>({
     queryKey,
-    queryFn: params ? (): Promise<SwapData> => fetch(params) : skipToken,
+    queryFn: params
+      ? (): Promise<SwapData> => {
+          throw new Error(
+            'Swap API is not used for HashKey chains. Transactions should be built from quote methodParameters.',
+          )
+        }
+      : skipToken,
     ...rest,
   })
-}
-
-function getFetchFn(config?: {
-  canBatchTransactions?: boolean
-  swapDelegationAddress?: string
-  includesDelegation?: boolean
-}): (params: TradingApi.CreateSwapRequest) => Promise<SwapData> {
-  const { canBatchTransactions, swapDelegationAddress, includesDelegation } = config ?? {}
-  if (swapDelegationAddress) {
-    return (params) => fetch7702({ swapDelegationAddress, params, includesDelegation })
-  }
-
-  if (canBatchTransactions) {
-    return fetch5792
-  }
-
-  return fetchLegacy
-}
-
-async function fetch7702({
-  swapDelegationAddress,
-  params,
-  includesDelegation,
-}: {
-  swapDelegationAddress: string
-  params: TradingApi.CreateSwapRequest
-  includesDelegation?: boolean
-}): Promise<SwapData> {
-  return convertSwap7702ResponseToSwapData(
-    await TradingApiClient.fetchSwap7702({ ...params, smartContractDelegationAddress: swapDelegationAddress }),
-    includesDelegation,
-  )
-}
-
-async function fetchLegacy(params: TradingApi.CreateSwapRequest): Promise<SwapData> {
-  return convertSwapResponseToSwapData(await TradingApiClient.fetchSwap(params))
-}
-
-async function fetch5792(params: TradingApi.CreateSwapRequest): Promise<SwapData> {
-  return convertSwap5792ResponseToSwapData(await TradingApiClient.fetchSwap5792(params))
 }

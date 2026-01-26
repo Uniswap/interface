@@ -10,7 +10,8 @@ import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledCh
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
-import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
+// Web Vitals imports disabled - removed to reduce log noise
+// import { getCLS, getFCP, getFID, getLCP, Metric } from 'web-vitals'
 
 /**
  * Query options for fetching the Uniswap identifier
@@ -71,14 +72,15 @@ export function UserPropertyUpdater() {
 
     const pageLoadProperties = { service_worker: serviceWorkerProperty, cache }
     sendAnalyticsEvent(SharedEventName.APP_LOADED, pageLoadProperties)
-    const sendWebVital =
-      (metric: string) =>
-      ({ delta }: Metric) =>
-        sendAnalyticsEvent(SharedEventName.WEB_VITALS, { ...pageLoadProperties, [metric]: delta })
-    getCLS(sendWebVital('cumulative_layout_shift'))
-    getFCP(sendWebVital('first_contentful_paint_ms'))
-    getFID(sendWebVital('first_input_delay_ms'))
-    getLCP(sendWebVital('largest_contentful_paint_ms'))
+    // Web Vitals tracking disabled - removed to reduce log noise
+    // const sendWebVital =
+    //   (metric: string) =>
+    //   ({ delta }: Metric) =>
+    //     sendAnalyticsEvent(SharedEventName.WEB_VITALS, { ...pageLoadProperties, [metric]: delta })
+    // getCLS(sendWebVital('cumulative_layout_shift'))
+    // getFCP(sendWebVital('first_contentful_paint_ms'))
+    // getFID(sendWebVital('first_input_delay_ms'))
+    // getLCP(sendWebVital('largest_contentful_paint_ms'))
   }, [])
 
   useEffect(() => {

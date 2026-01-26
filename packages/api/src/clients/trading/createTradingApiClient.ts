@@ -18,12 +18,6 @@ import type {
   ClaimLPRewardsResponse,
   CreateLPPositionRequest,
   CreateLPPositionResponse,
-  CreateSwap5792Request,
-  CreateSwap5792Response,
-  CreateSwap7702Request,
-  CreateSwap7702Response,
-  CreateSwapRequest,
-  CreateSwapResponse,
   DecreaseLPPositionRequest,
   DecreaseLPPositionResponse,
   Encode7702ResponseBody,
@@ -91,9 +85,6 @@ export interface TradingClientContext {
 export interface TradingApiClient {
   fetchQuote: (params: QuoteRequest & { isUSDQuote?: boolean }) => Promise<DiscriminatedQuoteResponse>
   fetchIndicativeQuote: (params: IndicativeQuoteRequest) => Promise<DiscriminatedQuoteResponse>
-  fetchSwap: (params: CreateSwapRequest) => Promise<CreateSwapResponse>
-  fetchSwap5792: (params: CreateSwap5792Request) => Promise<CreateSwap5792Response>
-  fetchSwap7702: (params: CreateSwap7702Request) => Promise<CreateSwap7702Response>
   fetchSwaps: (params: { txHashes: TransactionHash[]; chainId: ChainId }) => Promise<GetSwapsResponse>
   fetchCheckApproval: (params: ApprovalRequest) => Promise<ApprovalResponse>
   submitOrder: (params: OrderRequest) => Promise<OrderResponse>
@@ -161,33 +152,6 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     })
   }
 
-  const fetchSwap = createFetcher<CreateSwapRequest, CreateSwapResponse>({
-    client,
-    url: getApiPath(TRADING_API_PATHS.swap),
-    method: 'post',
-    transformRequest: async () => ({
-      headers: getFeatureFlagHeaders(TRADING_API_PATHS.swap),
-    }),
-  })
-
-  const fetchSwap5792 = createFetcher<CreateSwap5792Request, CreateSwap5792Response>({
-    client,
-    url: getApiPath(TRADING_API_PATHS.swap5792),
-    method: 'post',
-    transformRequest: async () => ({
-      headers: getFeatureFlagHeaders(TRADING_API_PATHS.swap5792),
-    }),
-  })
-
-  const fetchSwap7702 = createFetcher<CreateSwap7702Request, CreateSwap7702Response>({
-    client,
-    url: getApiPath(TRADING_API_PATHS.swap7702),
-    method: 'post',
-    transformRequest: async () => ({
-      headers: getFeatureFlagHeaders(TRADING_API_PATHS.swap7702),
-    }),
-  })
-
   const fetchCheckApproval = createFetcher<ApprovalRequest, ApprovalResponse>({
     client,
     url: getApiPath(TRADING_API_PATHS.approval),
@@ -239,14 +203,20 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
     }),
   })
 
-  const fetchSwappableTokens = createFetcher<SwappableTokensParams, GetSwappableTokensResponse>({
-    client,
-    url: getApiPath(TRADING_API_PATHS.swappableTokens),
-    method: 'get',
-    transformRequest: async () => ({
-      headers: getFeatureFlagHeaders(TRADING_API_PATHS.swappableTokens),
-    }),
-  })
+  // HKSWAP: Disabled swappable_tokens API - not needed for single-chain swap
+  // const fetchSwappableTokens = createFetcher<SwappableTokensParams, GetSwappableTokensResponse>({
+  //   client,
+  //   url: getApiPath(TRADING_API_PATHS.swappableTokens),
+  //   method: 'get',
+  //   transformRequest: async () => ({
+  //     headers: getFeatureFlagHeaders(TRADING_API_PATHS.swappableTokens),
+  //   }),
+  // })
+  
+  // HKSWAP: Return empty response instead of calling API
+  const fetchSwappableTokens = async (_params: SwappableTokensParams): Promise<GetSwappableTokensResponse> => {
+    return { tokens: [] }
+  }
 
   const getLPPriceDiscrepancy = createFetcher<GetLPPriceDiscrepancyRequest, GetLPPriceDiscrepancyResponse>({
     client,
@@ -436,9 +406,6 @@ export function createTradingApiClient(ctx: TradingClientContext): TradingApiCli
   return {
     fetchQuote,
     fetchIndicativeQuote,
-    fetchSwap,
-    fetchSwap5792,
-    fetchSwap7702,
     fetchSwaps,
     fetchCheckApproval,
     submitOrder,

@@ -22,6 +22,7 @@ export function transformQuoteToTrade(input: {
   quote: DiscriminatedQuoteResponse | null
   amountSpecified: Maybe<CurrencyAmount<Currency>>
   quoteCurrencyData: QuoteCurrencyData
+  customSlippageTolerance?: number
 }): QuoteWithTradeAndGasEstimate {
   if (!input.quote) {
     return null
@@ -35,6 +36,18 @@ export function transformQuoteToTrade(input: {
     requestTradeType === TradingApi.TradeType.EXACT_INPUT ? SdkTradeType.EXACT_INPUT : SdkTradeType.EXACT_OUTPUT
   const gasEstimate = getGasEstimate(input.quote)
 
+  // Override quote.slippage with customSlippageTolerance if provided
+  // This ensures trade.slippageTolerance uses user configuration instead of API response
+  const quoteWithCustomSlippage = input.customSlippageTolerance !== undefined && input.quote.routing === TradingApi.Routing.CLASSIC
+    ? {
+        ...input.quote,
+        quote: {
+          ...input.quote.quote,
+          slippage: input.customSlippageTolerance,
+        },
+      }
+    : input.quote
+
   const formattedTrade =
     currencyIn && currencyOut
       ? transformTradingApiResponseToTrade({
@@ -42,7 +55,7 @@ export function transformQuoteToTrade(input: {
           currencyOut,
           tradeType,
           deadline: inXMinutesUnix(DEFAULT_SWAP_VALIDITY_TIME_MINS), // TODO(MOB-3050): set deadline as `quoteRequestArgs.deadline`
-          data: input.quote,
+          data: quoteWithCustomSlippage,
         })
       : null
 
@@ -57,7 +70,7 @@ export function transformQuoteToTrade(input: {
     : null
 
   return {
-    ...input.quote,
+    ...quoteWithCustomSlippage,
     gasEstimate,
     trade,
   }

@@ -1,5 +1,5 @@
 import type { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { Flex, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme/spacing'
 import {
@@ -12,6 +12,7 @@ import { PRESET_PERCENTAGES } from 'uniswap/src/components/CurrencyInputPanel/Am
 import { DefaultTokenOptions } from 'uniswap/src/components/CurrencyInputPanel/DefaultTokenOptions/DefaultTokenOptions'
 import { TokenRate } from 'uniswap/src/components/CurrencyInputPanel/TokenRate'
 import type { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { useActiveAddresses } from 'uniswap/src/features/accounts/store/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { usePriceUXEnabled } from 'uniswap/src/features/transactions/swap/hooks/usePriceUXEnabled'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -37,6 +38,9 @@ export function CurrencyInputPanelHeader({
   showDefaultTokenOptions,
 }: CurrencyInputPanelHeaderProps): JSX.Element | null {
   const priceUXEnabled = usePriceUXEnabled()
+  const [isHovering, setIsHovering] = useState(false)
+  const { evmAddress, svmAddress } = useActiveAddresses()
+  const isWalletConnected = Boolean(evmAddress || svmAddress)
 
   const isOutput = currencyField === CurrencyField.OUTPUT
   const showFlippableRate = priceUXEnabled && isOutput && !!currencyInfo
@@ -60,25 +64,42 @@ export function CurrencyInputPanelHeader({
     return null
   }
 
+  // HKSWAP: Only show input presets (25%, 50%, 75%, 100%) when wallet is connected
   const showInputPresets =
-    (isWebAppDesktop || isExtensionApp) && currencyField === CurrencyField.INPUT && currencyBalance
+    (isWebAppDesktop || isExtensionApp) && currencyField === CurrencyField.INPUT && currencyInfo && isWalletConnected
 
   return (
-    <Flex row justifyContent="space-between">
+    <Flex
+      row
+      justifyContent="space-between"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+    >
       {/* IMPORTANT: $micro crashes on mobile */}
       <Text color="$neutral2" variant="subheading2" fontSize={isWebPlatform ? '$micro' : '$small'}>
         {headerLabel}
       </Text>
       {showInputPresets && (
-        <Flex position="absolute" right={0} top={-spacing.spacing2}>
+        <Flex
+          position="absolute"
+          right={0}
+          top={-spacing.spacing2}
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+          opacity={isHovering ? 1 : 0}
+          transform={isHovering ? [{ translateY: 0 }] : [{ translateY: -4 }]}
+          pointerEvents={isHovering ? 'auto' : 'none'}
+          animation="100ms"
+        >
           <AmountInputPresets presets={PRESET_PERCENTAGES} renderPreset={renderPreset} />
         </Flex>
       )}
-      {showDefaultTokenOptions && isWebAppDesktop && (
+      {/* HKSWAP: Disabled default token options (hover to show ETH, USDC, USDT icons) */}
+      {/* {showDefaultTokenOptions && isWebAppDesktop && (
         <Flex position="absolute" right={0} top={-spacing.spacing6}>
           <DefaultTokenOptions currencyField={CurrencyField.OUTPUT} />
         </Flex>
-      )}
+      )} */}
       {showFlippableRate && isWebAppDesktop && <TokenRate />}
     </Flex>
   )

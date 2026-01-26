@@ -1,5 +1,6 @@
 import { Z_INDEX } from 'theme/zIndex'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
+import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { createConnector } from 'wagmi'
 import { walletConnect } from 'wagmi/connectors'
 
@@ -7,6 +8,27 @@ if (process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID === undefined) {
   throw new Error('REACT_APP_WALLET_CONNECT_PROJECT_ID must be a defined environment variable')
 }
 const WALLET_CONNECT_PROJECT_ID = <string>process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID
+
+// Helper function to get a safe icon URL that avoids CORS issues
+// When accessed from HTTPS sites, we should not use HTTP localhost URLs
+function getSafeIconUrl(): string {
+  if (typeof window === 'undefined') {
+    return `${UNISWAP_WEB_URL}/icons/hskswap-icon.svg`
+  }
+  
+  const origin = window.location.origin
+  
+  // Check if we're in an iframe (e.g., embedded in third-party sites)
+  const isInIframe = window.self !== window.top || (window.location.ancestorOrigins && window.location.ancestorOrigins.length > 0)
+  
+  // If in iframe or origin is not our domain, use production URL to avoid CORS issues
+  if (isInIframe || (!origin.includes('localhost') && !origin.includes('127.0.0.1') && !origin.includes('uniswap.org'))) {
+    return `${UNISWAP_WEB_URL}/icons/hskswap-icon.svg`
+  }
+  
+  // For local development (not in iframe), use current origin
+  return `${origin}/icons/hskswap-icon.svg`
+}
 
 export function walletTypeToAmplitudeWalletType(connectionType?: string): string {
   switch (connectionType) {
@@ -34,10 +56,10 @@ export function walletTypeToAmplitudeWalletType(connectionType?: string): string
 export const WC_PARAMS = {
   projectId: WALLET_CONNECT_PROJECT_ID,
   metadata: {
-    name: 'Uniswap',
-    description: 'Uniswap Interface',
-    url: 'https://app.uniswap.org',
-    icons: ['https://app.uniswap.org/favicon.png'],
+    name: 'HSKSwap',
+    description: 'HSKSwap Interface',
+    url: typeof window !== 'undefined' ? window.location.origin : UNISWAP_WEB_URL,
+    icons: [getSafeIconUrl()],
   },
   qrModalOptions: {
     themeVariables: {
@@ -75,8 +97,8 @@ export function uniswapWalletConnect() {
       ...wc,
       id: 'uniswapWalletConnect',
       type: 'uniswapWalletConnect',
-      name: 'Uniswap Wallet',
-      icon: 'https://app.uniswap.org/favicon.png',
+      name: 'HSKSwap Wallet',
+      icon: getSafeIconUrl(),
     }
   })
 }

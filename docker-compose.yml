@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  hskswap:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+        BUILD_NUM: 0
+        CLOUDFLARE_ENV: production
+    image: hskswap:latest
+    container_name: hskswap
+    ports:
+      - "3000:80"
+    environment:
+      - NODE_ENV=production
+    env_file:
+      - .env.production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    networks:
+      - hskswap-network
+
+networks:
+  hskswap-network:
+    driver: bridge

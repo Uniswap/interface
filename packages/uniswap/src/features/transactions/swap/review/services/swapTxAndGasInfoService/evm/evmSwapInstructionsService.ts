@@ -24,7 +24,7 @@ import { ApprovalAction } from 'uniswap/src/features/transactions/swap/types/tra
 import { tradingApiToUniverseChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
 type SwapInstructions =
-  | { response: SwapData; unsignedPermit: null; swapRequestParams: null }
+  | { response: SwapData; unsignedPermit: null; swapRequestParams: TradingApi.CreateSwapRequest | null }
   | { response: null; unsignedPermit: TradingApi.Permit; swapRequestParams: TradingApi.CreateSwapRequest }
 
 /** A service utility capable of fetching swap instructions or returning unsigned permit data when instructions cannot yet be fetched. */
@@ -74,7 +74,8 @@ function createLegacyEVMSwapInstructionsService(
       }
 
       const response = await swapRepository.fetchSwapData(swapRequestParams)
-      return { response, unsignedPermit: null, swapRequestParams: null }
+      // Keep swapRequestParams even when we have a response, so deadline is preserved in swapTxContext
+      return { response, unsignedPermit: null, swapRequestParams }
     },
   }
 
@@ -100,8 +101,10 @@ function createBatchedEVMSwapInstructionsService(
         overrideSimulation: true, // always simulate for batched transactions
       })
 
+
       const response = await swapRepository.fetchSwapData(swapRequestParams)
-      return { response, unsignedPermit: null, swapRequestParams: null }
+      // Keep swapRequestParams even when we have a response, so deadline is preserved in swapTxContext
+      return { response, unsignedPermit: null, swapRequestParams }
     },
   }
 

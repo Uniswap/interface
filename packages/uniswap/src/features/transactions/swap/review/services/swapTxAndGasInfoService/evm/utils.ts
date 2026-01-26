@@ -4,6 +4,7 @@ import type { ApprovalTxInfo } from 'uniswap/src/features/transactions/swap/revi
 import type { EVMSwapInstructionsService } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/evm/evmSwapInstructionsService'
 import type { TransactionRequestInfo } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
 import {
+  createPrepareSwapRequestParams,
   createProcessSwapResponse,
   getSwapInputExceedsBalance,
 } from 'uniswap/src/features/transactions/swap/review/services/swapTxAndGasInfoService/utils'
@@ -31,6 +32,7 @@ export function createGetEVMSwapTransactionRequestInfo(ctx: {
   const { gasStrategy, transactionSettings, instructionService } = ctx
 
   const processSwapResponse = createProcessSwapResponse({ gasStrategy })
+  const prepareSwapRequestParams = createPrepareSwapRequestParams({ gasStrategy })
 
   const getEVMSwapTransactionRequestInfo: GetEVMSwapTransactionRequestInfoFn = async ({
     trade,
@@ -46,6 +48,16 @@ export function createGetEVMSwapTransactionRequestInfo(ctx: {
     const approvalUnknown = approvalAction === ApprovalAction.Unknown
 
     const skip = getSwapInputExceedsBalance({ derivedSwapInfo }) || approvalUnknown
+
+    // Always prepare swapRequestParams, even if skip is true, so deadline is preserved
+    const alreadyApproved = approvalAction === ApprovalAction.None && !swapQuoteResponse.permitTransaction
+    const swapRequestParams = prepareSwapRequestParams({
+      swapQuoteResponse,
+      signature: undefined,
+      transactionSettings,
+      alreadyApproved,
+    })
+
     const { data, error } = await tryCatch(
       skip
         ? Promise.resolve(undefined)
@@ -53,14 +65,19 @@ export function createGetEVMSwapTransactionRequestInfo(ctx: {
     )
 
     const isRevokeNeeded = tokenApprovalInfo.action === ApprovalAction.RevokeAndPermit2Approve
+
+    // Use swapRequestParams from data if available, otherwise use the one we prepared
+    const finalSwapRequestParams = data?.swapRequestParams ?? swapRequestParams
+
     const swapTxInfo = processSwapResponse({
       response: data?.response ?? undefined,
       error,
       permitData: data?.unsignedPermit,
       swapQuote,
+      trade,
       isSwapLoading: false,
       isRevokeNeeded,
-      swapRequestParams: data?.swapRequestParams ?? undefined,
+      swapRequestParams: finalSwapRequestParams,
     })
 
     return swapTxInfo

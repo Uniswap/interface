@@ -15,7 +15,9 @@ export function useCheckApprovalQuery({
   TradingApi.ApprovalRequest,
   TradingApi.ApprovalResponse
 >): UseQueryResult<TradingApi.ApprovalResponse> {
-  const queryKey = [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.approval, params]
+  const queryKey = params
+    ? [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.approval, params]
+    : [ReactQueryCacheKey.TradingApi, uniswapUrls.tradingApiPaths.approval, 'skip']
 
   return useQueryWithImmediateGarbageCollection<TradingApi.ApprovalResponse>({
     queryKey,

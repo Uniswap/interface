@@ -1,8 +1,10 @@
+import { Interface } from '@ethersproject/abi'
 import { createApprovalTransactionStep } from 'uniswap/src/features/transactions/steps/approve'
 import { createPermit2SignatureStep } from 'uniswap/src/features/transactions/steps/permit2Signature'
 import { createPermit2TransactionStep } from 'uniswap/src/features/transactions/steps/permit2Transaction'
 import { createRevocationTransactionStep } from 'uniswap/src/features/transactions/steps/revoke'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { orderClassicSwapSteps } from 'uniswap/src/features/transactions/swap/steps/classicSteps'
 import { createSignUniswapXOrderStep } from 'uniswap/src/features/transactions/swap/steps/signOrder'
 import {
@@ -12,7 +14,37 @@ import {
 } from 'uniswap/src/features/transactions/swap/steps/swap'
 import { orderUniswapXSteps } from 'uniswap/src/features/transactions/swap/steps/uniswapxSteps'
 import { isValidSwapTxContext, SwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import type { BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import type { ValidatedTransactionRequest } from 'uniswap/src/features/transactions/types/transactionRequests'
+
+function buildHashKeyApprovalTxRequest({
+  trade,
+  swapTxRequest,
+}: {
+  trade: ClassicTrade | BridgeTrade
+  swapTxRequest: ValidatedTransactionRequest | undefined
+}): ValidatedTransactionRequest | undefined {
+  const chainId = trade.inputAmount.currency.chainId
+  const isHashKeyChain = chainId === UniverseChainId.HashKey || chainId === UniverseChainId.HashKeyTestnet
+  if (!isHashKeyChain) {
+    return undefined
+  }
+
+  const spender = swapTxRequest?.to?.toString()
+  if (!spender) {
+    return undefined
+  }
+
+  const approveInterface = new Interface(['function approve(address spender,uint256 value)'])
+
+  return {
+    to: trade.inputAmount.currency.wrapped.address,
+    data: approveInterface.encodeFunctionData('approve', [spender, trade.inputAmount.quotient.toString()]),
+    value: '0x0',
+    chainId,
+  }
+}
 
 export function generateSwapTransactionSteps(txContext: SwapTxAndGasInfo): TransactionStep[] {
   const isValidSwap = isValidSwapTxContext(txContext)
@@ -30,7 +62,7 @@ export function generateSwapTransactionSteps(txContext: SwapTxAndGasInfo): Trans
     })
     const approval = createApprovalTransactionStep({
       ...requestFields,
-      txRequest: approveTxRequest,
+      txRequest: approveTxRequest ?? buildHashKeyApprovalTxRequest({ trade, swapTxRequest: txContext.txRequests?.[0] }),
       amount: trade.inputAmount.quotient.toString(),
     })
 
@@ -77,13 +109,14 @@ export function generateSwapTransactionSteps(txContext: SwapTxAndGasInfo): Trans
           permit: undefined,
           swap: createSwapTransactionStepBatched(txContext.txRequests),
         })
+      } else {
+        return orderClassicSwapSteps({
+          revocation,
+          approval,
+          permit: undefined,
+          swap: createSwapTransactionStep(txContext.txRequests[0]),
+        })
       }
-      return orderClassicSwapSteps({
-        revocation,
-        approval,
-        permit: undefined,
-        swap: createSwapTransactionStep(txContext.txRequests[0]),
-      })
     }
   }
 

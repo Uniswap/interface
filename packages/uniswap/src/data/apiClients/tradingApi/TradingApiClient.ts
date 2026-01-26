@@ -5,7 +5,11 @@ import { config } from 'uniswap/src/config'
 import { tradingApiVersionPrefix, uniswapUrls } from 'uniswap/src/constants/urls'
 import { createUniswapFetchClient } from 'uniswap/src/data/apiClients/createUniswapFetchClient'
 import { filterChainIdsByPlatform } from 'uniswap/src/features/chains/utils'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+
+// Use UNISWAP_GATEWAY_DNS for quote API only, keep other endpoints using default Trading API
+const quoteApiBaseUrl = process.env.REACT_APP_UNISWAP_GATEWAY_DNS || uniswapUrls.tradingApiUrl
 
 const TradingFetchClient = createUniswapFetchClient({
   baseUrl: uniswapUrls.tradingApiUrl,
@@ -13,6 +17,19 @@ const TradingFetchClient = createUniswapFetchClient({
     'x-api-key': config.tradingApiKey,
   },
 })
+
+// Separate fetch client for quote API only
+// Only add x-api-key header if tradingApiKey is provided (for local services, this may be empty)
+const quoteApiHeaders: Record<string, string> = {}
+if (config.tradingApiKey) {
+  quoteApiHeaders['x-api-key'] = config.tradingApiKey
+}
+
+const QuoteFetchClient = createUniswapFetchClient({
+  baseUrl: quoteApiBaseUrl,
+  additionalHeaders: quoteApiHeaders,
+})
+
 
 /**
  * Helper to add a header only if enabled.
@@ -48,8 +65,15 @@ export const getFeatureFlaggedHeaders = (
   }
   const uniquoteEnabled = getFeatureFlag(FeatureFlags.UniquoteEnabled)
   const viemProviderEnabled = getFeatureFlag(FeatureFlags.ViemProviderEnabled)
-  addHeaderIfEnabled({ headers, key: TradingApiHeaders.UniquoteEnabled, enabled: uniquoteEnabled })
-  addHeaderIfEnabled({ headers, key: TradingApiHeaders.ViemProviderEnabled, enabled: viemProviderEnabled })
+  // Avoid custom headers on /quote until API Gateway CORS allowlist is updated.
+  // TODO: Re-enable /quote headers once CORS allowlist includes them.
+  if (tradingApiPath !== TRADING_API_PATHS.quote) {
+    addHeaderIfEnabled({ headers, key: TradingApiHeaders.UniquoteEnabled, enabled: uniquoteEnabled })
+    addHeaderIfEnabled({ headers, key: TradingApiHeaders.ViemProviderEnabled, enabled: viemProviderEnabled })
+  } else {
+    // addHeaderIfEnabled({ headers, key: TradingApiHeaders.UniquoteEnabled, enabled: uniquoteEnabled })
+    // addHeaderIfEnabled({ headers, key: TradingApiHeaders.ViemProviderEnabled, enabled: viemProviderEnabled })
+  }
 
   const chainedActionsEnabled = getFeatureFlag(FeatureFlags.ChainedActions)
   const unirouteEnabled = getFeatureFlag(FeatureFlags.UnirouteEnabled)
@@ -57,23 +81,23 @@ export const getFeatureFlaggedHeaders = (
   const disableUniswapInterfaceFees = getFeatureFlag(FeatureFlags.NoUniswapInterfaceFees)
   switch (tradingApiPath) {
     case TRADING_API_PATHS.quote:
-      addHeaderIfEnabled({ headers, key: TradingApiHeaders.UnirouteEnabled, enabled: unirouteEnabled })
-      addHeaderIfEnabled({ headers, key: TradingApiHeaders.Erc20EthEnabled, enabled: ethAsErc20UniswapXEnabled })
-      addHeaderIfEnabled({ headers, key: TradingApiHeaders.ChainedActionsEnabled, enabled: chainedActionsEnabled })
-      addHeaderIfEnabled({
-        headers,
-        key: TradingApiHeaders.DisableUniswapInterfaceFees,
-        enabled: disableUniswapInterfaceFees,
-      })
+      // Temporarily skip headers blocked by API Gateway CORS allowlist.
+      // TODO: Re-enable /quote headers once CORS allowlist includes them.
+      // Server should add: x-uniquote-enabled, x-disable-uniswap-interface-fees.
+      // addHeaderIfEnabled({ headers, key: TradingApiHeaders.UnirouteEnabled, enabled: unirouteEnabled })
+      // addHeaderIfEnabled({ headers, key: TradingApiHeaders.Erc20EthEnabled, enabled: ethAsErc20UniswapXEnabled })
+      // addHeaderIfEnabled({ headers, key: TradingApiHeaders.ChainedActionsEnabled, enabled: chainedActionsEnabled })
+      // addHeaderIfEnabled({
+      //   headers,
+      //   key: TradingApiHeaders.DisableUniswapInterfaceFees,
+      //   enabled: disableUniswapInterfaceFees,
+      // })
       break
     case TRADING_API_PATHS.plan:
       addHeaderIfEnabled({ headers, key: TradingApiHeaders.ChainedActionsEnabled, enabled: chainedActionsEnabled })
       break
     case TRADING_API_PATHS.order:
       addHeaderIfEnabled({ headers, key: TradingApiHeaders.Erc20EthEnabled, enabled: ethAsErc20UniswapXEnabled })
-      break
-    case TRADING_API_PATHS.swap7702:
-      addHeaderIfEnabled({ headers, key: TradingApiHeaders.UnirouteEnabled, enabled: unirouteEnabled })
       break
   }
   return headers
@@ -90,11 +114,101 @@ export const getQuoteHeaders = (): Record<string, string> => {
   return headers
 }
 
-export const TradingApiClient = createTradingApiClient({
+// Create default TradingApiClient with standard Trading API URL
+const DefaultTradingApiClient = createTradingApiClient({
   fetchClient: TradingFetchClient,
   getFeatureFlagHeaders: getFeatureFlaggedHeaders,
   getApiPathPrefix: () => tradingApiVersionPrefix,
 })
+
+// Create a custom fetchQuote that uses the quote-specific base URL
+import { createFetcher } from '@universe/api/src/clients/base/utils'
+import type { QuoteRequest } from '@universe/api/src/clients/trading/__generated__'
+import { RoutingPreference } from '@universe/api/src/clients/trading/__generated__'
+import type { DiscriminatedQuoteResponse } from '@universe/api/src/clients/trading/tradeTypes'
+
+// IndicativeQuoteRequest is a subset of QuoteRequest
+type IndicativeQuoteRequest = Pick<
+  QuoteRequest,
+  'type' | 'amount' | 'tokenInChainId' | 'tokenOutChainId' | 'tokenIn' | 'tokenOut' | 'swapper'
+>
+
+// Build the quote URL path.
+// If the override base already includes a version segment (e.g. /prod/v2), do not append /v1.
+const shouldUseVersionPrefix = (() => {
+  if (!quoteApiBaseUrl) {
+    return true
+  }
+  try {
+    const url = new URL(quoteApiBaseUrl)
+    const path = url.pathname.replace(/\/+$/, '')
+    return !path.endsWith('/v2')
+  } catch {
+    // If it's not a valid URL, fall back to previous behavior.
+    return true
+  }
+})()
+
+const quoteUrlPath = shouldUseVersionPrefix
+  ? `${tradingApiVersionPrefix}/${TRADING_API_PATHS.quote}`
+  : `/${TRADING_API_PATHS.quote}`
+
+// Transform request for internal quote API
+// Keep all fields unchanged - API expects numeric chain IDs
+const transformQuoteRequest = async (request: {
+  url: string
+  headers?: HeadersInit
+  params: QuoteRequest & { isUSDQuote?: boolean }
+}) => {
+  const { params } = request
+
+  // Ensure chain IDs are numbers (not strings)
+  // API expects numeric chain IDs for HashKey chains (177 and 133)
+  const transformedParams = {
+    ...params,
+    tokenInChainId: typeof params.tokenInChainId === 'string' ? parseInt(params.tokenInChainId, 10) : params.tokenInChainId,
+    tokenOutChainId: typeof params.tokenOutChainId === 'string' ? parseInt(params.tokenOutChainId, 10) : params.tokenOutChainId,
+  }
+
+  return {
+    headers: getFeatureFlaggedHeaders(TRADING_API_PATHS.quote),
+    params: transformedParams,
+  }
+}
+
+const customFetchQuote = createFetcher<QuoteRequest & { isUSDQuote?: boolean }, DiscriminatedQuoteResponse>({
+  client: QuoteFetchClient,
+  url: quoteUrlPath,
+  method: 'post',
+  transformRequest: transformQuoteRequest,
+  on404: (params: QuoteRequest & { isUSDQuote?: boolean }) => {
+    // 404 handler - no logging needed
+  },
+})
+
+// Add error handling wrapper to log errors
+const customFetchQuoteWithErrorHandling = async (
+  params: QuoteRequest & { isUSDQuote?: boolean },
+): Promise<DiscriminatedQuoteResponse> => {
+  try {
+    return await customFetchQuote(params)
+  } catch (error) {
+    throw error
+  }
+}
+
+// Override fetchQuote to use the custom quote client
+export const TradingApiClient = {
+  ...DefaultTradingApiClient,
+  fetchQuote: customFetchQuoteWithErrorHandling,
+  // fetchIndicativeQuote also uses fetchQuote, so it will automatically use the custom one
+  fetchIndicativeQuote: (params: IndicativeQuoteRequest): Promise<DiscriminatedQuoteResponse> => {
+    return customFetchQuoteWithErrorHandling({
+      ...params,
+      routingPreference: RoutingPreference.FASTEST,
+    })
+  },
+}
 
 // Default maximum amount of combinations wallet<>chainId per check delegation request
 const DEFAULT_CHECK_VALIDATIONS_BATCH_THRESHOLD = 140
@@ -162,11 +276,36 @@ export async function checkWalletDelegation(
 ): Promise<TradingApi.WalletCheckDelegationResponseBody> {
   const { walletAddresses, chainIds } = params
 
+  // HKSWAP: check_delegation API doesn't support HashKey chains (177, 133)
+  // Since HSKSwap only supports HashKey chains, always return empty response
+  const HASHKEY_CHAIN_IDS = [177, 133] // UniverseChainId.HashKey and UniverseChainId.HashKeyTestnet
+  
+  // If no wallet addresses provided, return empty response
+  if (!walletAddresses || walletAddresses.length === 0) {
+    return {
+      requestId: '',
+      delegationDetails: {},
+    }
+  }
+
+  // HKSWAP: If any HashKey chain is in the list, return empty response
+  // This is because HSKSwap only supports HashKey chains, and the API doesn't support them
+  const hasHashKeyChain = chainIds.some((chainId) => HASHKEY_CHAIN_IDS.includes(chainId as number))
+  if (hasHashKeyChain) {
+    return {
+      requestId: '',
+      delegationDetails: {},
+    }
+  }
+
   // Filter out SVM chains - check_delegation only supports EVM chains
   const evmChainIds = filterChainIdsByPlatform(chainIds, Platform.EVM)
 
-  // If no wallet addresses provided or if no EVM chains after filtering, return empty response
-  if (!walletAddresses || walletAddresses.length === 0 || evmChainIds.length === 0) {
+  // Filter out HashKey chains (177, 133) - check_delegation API doesn't support them
+  const supportedChainIds = evmChainIds.filter((chainId) => !HASHKEY_CHAIN_IDS.includes(chainId as number))
+
+  // If no supported chains after filtering (e.g., only HashKey chains), return empty response
+  if (supportedChainIds.length === 0) {
     return {
       requestId: '',
       delegationDetails: {},
@@ -174,22 +313,22 @@ export async function checkWalletDelegation(
   }
 
   // Ensure batchThreshold is at least the number of chain IDs
-  const effectiveBatchThreshold = Math.max(batchThreshold, evmChainIds.length)
+  const effectiveBatchThreshold = Math.max(batchThreshold, supportedChainIds.length)
 
-  const totalCombinations = walletAddresses.length * evmChainIds.length
+  const totalCombinations = walletAddresses.length * supportedChainIds.length
 
   // If under threshold, make a single request
   if (totalCombinations <= effectiveBatchThreshold) {
     return await TradingApiClient.checkWalletDelegationWithoutBatching({
       walletAddresses,
-      chainIds: evmChainIds,
+      chainIds: supportedChainIds,
     })
   }
 
   // Split into batches
   const walletChunks = chunkWalletAddresses({
     walletAddresses,
-    chainIds: evmChainIds,
+    chainIds: supportedChainIds,
     batchThreshold: effectiveBatchThreshold,
   })
 
@@ -197,7 +336,7 @@ export async function checkWalletDelegation(
   const batchPromises = walletChunks.map((chunk) =>
     TradingApiClient.checkWalletDelegationWithoutBatching({
       walletAddresses: chunk,
-      chainIds: evmChainIds,
+      chainIds: supportedChainIds,
     }),
   )
 

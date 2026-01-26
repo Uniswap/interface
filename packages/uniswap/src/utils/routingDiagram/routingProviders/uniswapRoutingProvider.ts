@@ -49,7 +49,7 @@ function getProtocolLabel(route: { protocol: Protocol; pools: UniswapPool[] }): 
 }
 
 export const uniswapRoutingProvider: RoutingProvider = {
-  name: 'Uniswap API',
+  name: 'Hskswap API', // HKSWAP: Changed from 'Uniswap API' to 'Hskswap API'
   icon: undefined,
   iconColor: '$neutral1',
 
@@ -109,7 +109,7 @@ export const uniswapRoutingProvider: RoutingProvider = {
 }
 
 export const uniswapChainedRoutingProvider: RoutingProvider = {
-  name: 'Uniswap API',
+  name: 'Hskswap API', // HKSWAP: Changed from 'Uniswap API' to 'Hskswap API'
   icon: undefined,
   iconColor: '$neutral1',
 
