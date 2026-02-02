@@ -39,7 +39,7 @@
     "syncpack": "8.5.14",
     "tslib": "2.3.0",
     "typescript": "5.3.3",
-    "wrangler": "4.28.0"
+    "wrangler": "4.59.1"
   },
   "engines": {
     "node": "=22.13.1",

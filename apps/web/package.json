@@ -149,7 +149,7 @@
     "vitest-fetch-mock": "0.4.5",
     "wait-on": "8.0.2",
     "webpack": "5.94.0",
-    "wrangler": "4.28.0"
+    "wrangler": "4.59.1"
   },
   "dependencies": {
     "@amplitude/analytics-browser": "1.12.1",
