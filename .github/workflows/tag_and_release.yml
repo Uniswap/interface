@@ -4,6 +4,9 @@ on:
     branches:
       - 'main'
 
+permissions:
+  contents: read
+
 jobs:
   deploy-to-prod:
     runs-on: ubuntu-latest
@@ -23,6 +26,8 @@ jobs:
           # Default: audit
           egress-policy: audit
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          persist-credentials: false
 
       - name: 🧷️ Get version
         uses: juliangruber/read-file-action@02bbba9876a8f870efd4ad64e3b9088d3fb94d4b
