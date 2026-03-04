@@ -170,8 +170,11 @@ export function* plan(params: PlanParams) {
 
       const swapChainId = currentStep?.tokenInChainId
       if (swapChainId) {
-        yield* call(selectChain, swapChainId)
-        // Workaround to allow the chain to switch on a external wallet
+        const chainSwitched = yield* call(selectChain, swapChainId)
+        if (!chainSwitched) {
+          throw new HandledTransactionInterrupt('Chain switch failed')
+        }
+        // Workaround to allow the chain to switch on an external wallet
         yield* call(delay, ONE_SECOND_MS / 5)
       }
 
