@@ -1,5 +1,5 @@
 const RANGE_INDICATOR_WIDTH = 16
-const LIQUIDITY_CHART_HEIGHT = 200
+const LIQUIDITY_CHART_HEIGHT = 300
 const LIQUIDITY_CHART_PADDING = 14
 
 // Chart Dimension Constants
@@ -27,8 +27,8 @@ export const CHART_DIMENSIONS = {
 // Chart behavior constants
 export const CHART_BEHAVIOR = {
   // zoom
-  ZOOM_MIN: 0.01, // fallback, overridden by calculateDynamicZoomMin
-  ZOOM_MAX: 3,
+  ZOOM_MIN: 1,
+  MAX_BAR_HEIGHT: 20,
   ZOOM_FACTOR: 1.3,
 
   // pinch
@@ -38,4 +38,7 @@ export const CHART_BEHAVIOR = {
 
   // animation
   ANIMATION_DURATION: 400,
+
+  // bucketing
+  DESIRED_BUCKETS: 20,
 } as const

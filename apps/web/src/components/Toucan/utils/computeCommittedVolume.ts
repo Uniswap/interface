@@ -15,12 +15,12 @@ export interface CommittedVolumeTableValue {
 export function computeCommittedVolumeTableValue({
   auction,
   bidTokenCurrencyInfo,
-  bidTokenUsdPrice,
+  bidTokenMarketPriceUsd,
   isStablecoin = false,
 }: {
   auction: AuctionWithCurrencyInfo
   bidTokenCurrencyInfo: Maybe<CurrencyInfo>
-  bidTokenUsdPrice: number | undefined
+  bidTokenMarketPriceUsd: number | undefined
   isStablecoin?: boolean
 }): CommittedVolumeTableValue {
   const fallback: CommittedVolumeTableValue = {
@@ -30,15 +30,19 @@ export function computeCommittedVolumeTableValue({
   }
 
   try {
-    if (!auction.totalBidVolume || !bidTokenCurrencyInfo) {
+    const totalBidVolume = auction.auction?.totalBidVolume ?? auction.totalBidVolume
+
+    if (!totalBidVolume || !bidTokenCurrencyInfo) {
       return fallback
     }
 
-    const raw = BigInt(auction.totalBidVolume)
+    const raw = BigInt(totalBidVolume)
     const decimals = bidTokenCurrencyInfo.currency.decimals
 
     // Convert to USD
-    const usd = bidTokenUsdPrice ? approximateNumberFromRaw({ raw, decimals }) * bidTokenUsdPrice : undefined
+    const usd = bidTokenMarketPriceUsd
+      ? approximateNumberFromRaw({ raw, decimals }) * bidTokenMarketPriceUsd
+      : undefined
 
     const formattedBidToken = formatTokenAmountWithSymbol({
       raw,

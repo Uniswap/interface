@@ -136,6 +136,28 @@ export function* initializePlan(params: FetchAndTransformPlanParams): SagaGenera
   }
 }
 
+const MAX_ERROR_CAUSES_DEPTH = 10
+
+/** Recursively collects all error.cause values into an array (Error message or JSON string). */
+function getErrorCauses(error: unknown): string[] {
+  const causes: string[] = []
+  let current: unknown = error instanceof Error ? error.cause : undefined
+  while (current !== undefined && current !== null && causes.length < MAX_ERROR_CAUSES_DEPTH) {
+    if (current instanceof Error) {
+      causes.push(current.message)
+      current = current.cause
+    } else {
+      try {
+        causes.push(JSON.stringify(current))
+      } catch {
+        causes.push(String(current))
+      }
+      break
+    }
+  }
+  return causes
+}
+
 export function logHelper(params: {
   timeToCreatePlan?: number
   timeToCompletePlan?: number
@@ -182,6 +204,7 @@ export function logHelper(params: {
     }
     if (error) {
       content['error'] = error instanceof Error ? error.message : JSON.stringify(error)
+      content['errorCauses'] = getErrorCauses(error)
       logger.warn('planSaga', 'plan', 'plan errored', content)
     } else {
       logger.info('planSaga', 'plan', 'plan completed', content)

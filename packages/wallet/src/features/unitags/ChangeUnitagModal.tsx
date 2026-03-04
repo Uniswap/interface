@@ -123,8 +123,8 @@ export function ChangeUnitagModal({
             title: t('unitags.notification.username.title'),
           }),
         )
-        onSuccess?.()
         onClose()
+        onSuccess?.()
       }
     } catch (e) {
       // If some other error occurs, log it and display a generic error message

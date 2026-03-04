@@ -3,7 +3,10 @@ import { Flex, styled } from 'ui/src'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import useSimplePagination from '~/hooks/useSimplePagination'
 import { TokenTable } from '~/pages/Explore/tables/Tokens/TokensTable'
-import { TokenTableSortStoreContextProvider } from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
+import {
+  TokenTableSortStoreContextProvider,
+  useTokenTableSortStore,
+} from '~/pages/Explore/tables/Tokens/tokenTableSortStore'
 import { TABLE_PAGE_SIZE } from '~/state/explore'
 import { useTopTokens } from '~/state/explore/topTokens/useTopTokens'
 import { useChainIdFromUrlParam } from '~/utils/chainParams'
@@ -15,8 +18,11 @@ const TableWrapper = styled(Flex, {
 
 function TopTokensTableContent(): JSX.Element {
   const chainId = useChainIdFromUrlParam()
-
-  const { topTokens, tokenSortRank, isLoading, sparklines, isError, loadMore } = useTopTokens(chainId)
+  const sortOptions = useTokenTableSortStore((s) => ({
+    sortMethod: s.sortMethod,
+    sortAscending: s.sortAscending,
+  }))
+  const { topTokens, tokenSortRank, isLoading, sparklines, isError, loadMore } = useTopTokens(chainId, sortOptions)
 
   const { page, loadMore: clientLoadMore } = useSimplePagination()
   const effectiveLoadMore = loadMore ?? clientLoadMore

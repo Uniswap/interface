@@ -150,6 +150,7 @@ export const HeaderRow = styled(TableRow, {
   width: 'unset',
   scrollbarWidth: 'none',
   className: 'scrollbar-hidden',
+  transition: 'unset',
 
   '$platform-web': {
     overscrollBehavior: 'none',

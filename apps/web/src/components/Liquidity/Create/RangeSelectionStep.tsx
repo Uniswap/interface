@@ -302,7 +302,6 @@ export const SelectPriceRangeStep = ({
     poolOrPair,
     price,
     ticks,
-    pricesAtTicks,
     priceRangeState,
     setPriceRangeState,
   } = useCreateLiquidityContext()
@@ -314,14 +313,20 @@ export const SelectPriceRangeStep = ({
 
   const handleSelectToken = useCallback(
     (option: string) => {
-      const initialMinMaxPrice = {
-        minPrice: undefined,
-        maxPrice: undefined,
-      }
       if (option === TOKEN0?.symbol) {
-        setPriceRangeState((prevState) => ({ ...prevState, ...initialMinMaxPrice, priceInverted: false }))
+        setPriceRangeState((prevState) => ({
+          ...prevState,
+          priceInverted: false,
+          minTick: undefined,
+          maxTick: undefined,
+        }))
       } else {
-        setPriceRangeState((prevState) => ({ ...prevState, ...initialMinMaxPrice, priceInverted: true }))
+        setPriceRangeState((prevState) => ({
+          ...prevState,
+          priceInverted: true,
+          minTick: undefined,
+          maxTick: undefined,
+        }))
       }
     },
     [TOKEN0?.symbol, setPriceRangeState],
@@ -336,8 +341,6 @@ export const SelectPriceRangeStep = ({
       if (option === RangeSelection.FULL) {
         setPriceRangeState((prevState) => ({
           ...prevState,
-          minPrice: '',
-          maxPrice: '',
           minTick: undefined,
           maxTick: undefined,
           fullRange: true,
@@ -345,8 +348,6 @@ export const SelectPriceRangeStep = ({
       } else {
         setPriceRangeState((prevState) => ({
           ...prevState,
-          minPrice: undefined,
-          maxPrice: undefined,
           fullRange: false,
         }))
       }
@@ -366,31 +367,17 @@ export const SelectPriceRangeStep = ({
   ]
 
   const handleChartRangeInput = useCallback(
-    ({ input, value, tick }: { input: RangeSelectionInput; value: string | undefined; tick?: number }) => {
+    ({ input, tick }: { input: RangeSelectionInput; tick?: number }) => {
       if (priceRangeState.fullRange || initialPosition?.isOutOfRange) {
         return
       } else if (input === RangeSelectionInput.MIN) {
-        setPriceRangeState((prev) => ({ ...prev, minPrice: value, minTick: tick, fullRange: false }))
+        setPriceRangeState((prev) => ({ ...prev, minTick: tick, fullRange: false }))
       } else {
-        setPriceRangeState((prev) => ({ ...prev, maxPrice: value, maxTick: tick, fullRange: false }))
+        setPriceRangeState((prev) => ({ ...prev, maxTick: tick, fullRange: false }))
       }
     },
     [priceRangeState.fullRange, initialPosition?.isOutOfRange, setPriceRangeState],
   )
-
-  const { rangeInputMinPrice, rangeInputMaxPrice } = useMemo(() => {
-    if (priceRangeState.fullRange && !initialPosition?.isOutOfRange) {
-      return {
-        rangeInputMinPrice: undefined,
-        rangeInputMaxPrice: undefined,
-      }
-    }
-
-    return {
-      rangeInputMinPrice: pricesAtTicks[0] ? parseFloat(pricesAtTicks[0].toSignificant(8)) : undefined,
-      rangeInputMaxPrice: pricesAtTicks[1] ? parseFloat(pricesAtTicks[1].toSignificant(8)) : undefined,
-    }
-  }, [priceRangeState.fullRange, pricesAtTicks, initialPosition])
 
   const invalidPrice = isInvalidPrice(price)
   const invalidRange = isInvalidRange(ticks[0], ticks[1])
@@ -407,8 +394,8 @@ export const SelectPriceRangeStep = ({
       return
     }
 
-    handleChartRangeInput({ input: RangeSelectionInput.MIN, value: '' })
-    handleChartRangeInput({ input: RangeSelectionInput.MAX, value: '' })
+    handleChartRangeInput({ input: RangeSelectionInput.MIN, tick: undefined })
+    handleChartRangeInput({ input: RangeSelectionInput.MAX, tick: undefined })
   }, [handleChartRangeInput, initialPosition?.isOutOfRange])
 
   // If no pool is found for custom range, set min/max price to defaults
@@ -416,12 +403,12 @@ export const SelectPriceRangeStep = ({
     if (
       !priceRangeState.fullRange &&
       !poolId &&
-      priceRangeState.minPrice === undefined &&
-      priceRangeState.maxPrice === undefined
+      priceRangeState.minTick === undefined &&
+      priceRangeState.maxTick === undefined
     ) {
       setFallbackRangePrices()
     }
-  }, [priceRangeState.fullRange, priceRangeState.minPrice, priceRangeState.maxPrice, poolId, setFallbackRangePrices])
+  }, [priceRangeState.fullRange, priceRangeState.minTick, priceRangeState.maxTick, poolId, setFallbackRangePrices])
 
   if (protocolVersion === ProtocolVersion.V2) {
     return <InitialPriceInput />
@@ -473,7 +460,7 @@ export const SelectPriceRangeStep = ({
               zIndex={zIndexes.overlay}
             />
           )}
-          {baseCurrency && quoteCurrency && fee && (
+          {baseCurrency && quoteCurrency && fee && poolOrPair?.tickCurrent !== undefined && poolOrPair.tickSpacing && (
             <D3LiquidityRangeInput
               key={buildRangeInputKey({ protocolVersion, poolId: poolId ?? '', priceRangeState })}
               baseCurrency={baseCurrency}
@@ -484,7 +471,8 @@ export const SelectPriceRangeStep = ({
               priceInverted={priceRangeState.priceInverted}
               feeTier={fee.feeAmount}
               hook={hook}
-              tickSpacing={poolOrPair?.tickSpacing}
+              tickSpacing={poolOrPair.tickSpacing}
+              currentTick={poolOrPair.tickCurrent}
               protocolVersion={protocolVersion}
               poolId={poolId}
               poolOrPairLoading={poolOrPairLoading}
@@ -492,15 +480,15 @@ export const SelectPriceRangeStep = ({
               currentPrice={Number(price?.toSignificant())}
               inputMode={priceRangeState.inputMode}
               initialPosition={initialPosition}
-              minPrice={rangeInputMinPrice}
-              maxPrice={rangeInputMaxPrice}
+              minTick={priceRangeState.minTick}
+              maxTick={priceRangeState.maxTick}
               isFullRange={priceRangeState.fullRange}
               handleSelectToken={handleSelectToken}
-              setMinPrice={(price, tick) => {
-                handleChartRangeInput({ input: RangeSelectionInput.MIN, value: price?.toString(), tick })
+              setMinTick={(tick) => {
+                setPriceRangeState((prev) => ({ ...prev, minTick: tick }))
               }}
-              setMaxPrice={(price, tick) => {
-                handleChartRangeInput({ input: RangeSelectionInput.MAX, value: price?.toString(), tick })
+              setMaxTick={(tick) => {
+                setPriceRangeState((prev) => ({ ...prev, maxTick: tick }))
               }}
               setIsFullRange={(isFullRange: boolean) => {
                 handleSelectRange(isFullRange ? RangeSelection.FULL : RangeSelection.CUSTOM)

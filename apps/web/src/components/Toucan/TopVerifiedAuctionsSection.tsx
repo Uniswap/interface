@@ -1,13 +1,13 @@
-import { GraphQLApi } from '@universe/api'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { Anchor, Flex, Text } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { Tooltip } from 'ui/src/components/tooltip/Tooltip'
 import { zIndexes } from 'ui/src/theme'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
-import { isStablecoinAddress, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { isStablecoinAddress } from 'uniswap/src/features/chains/utils'
 import { AuctionChip } from '~/components/Toucan/AuctionChip'
+import { buildTokenMarketPriceKey } from '~/components/Toucan/hooks/useTokenMarketPrices'
 import {
   CommittedVolumeTableValue,
   computeCommittedVolumeTableValue,
@@ -15,12 +15,13 @@ import {
 import { computeProjectedFdvTableValue, ProjectedFdvTableValue } from '~/components/Toucan/utils/computeProjectedFdv'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import { useMultiChainBlockNumbers } from '~/hooks/useMultiChainBlockNumbers'
+import { isAuctionCompleted } from '~/state/explore/topAuctions/isAuctionCompleted'
+import { useAuctionTokenPrices } from '~/state/explore/topAuctions/useAuctionTokenPrices'
 import { useBidTokenInfos } from '~/state/explore/topAuctions/useBidTokenInfos'
 import { useBidTokenPrices } from '~/state/explore/topAuctions/useBidTokenPrices'
 import type { AuctionWithCurrencyInfo } from '~/state/explore/topAuctions/useTopAuctions'
 import { useTopAuctions } from '~/state/explore/topAuctions/useTopAuctions'
 import { getAverageBlockTimeMs } from '~/utils/averageBlockTimeMs'
-import { currencyKeyFromGraphQL } from '~/utils/currencyKey'
 
 interface AuctionWithComputedValues {
   auction: AuctionWithCurrencyInfo
@@ -30,12 +31,14 @@ interface AuctionWithComputedValues {
 
 const TWENTY_FOUR_HOURS_MS = 86400000
 const MAX_CHIPS = 8
+const FALLBACK_CHIPS = 4
 
 export function TopVerifiedAuctionsSection() {
   const { t } = useTranslation()
   const { auctions: allAuctions, isLoading } = useTopAuctions()
   const bidTokenInfos = useBidTokenInfos(allAuctions)
-  const { priceMap: bidTokenPriceMap } = useBidTokenPrices(allAuctions)
+  const { priceMap: bidTokenPriceMap, loading: bidTokenPricesLoading } = useBidTokenPrices(allAuctions)
+  const { priceMap: auctionTokenPriceMap, loading: auctionTokenPricesLoading } = useAuctionTokenPrices(allAuctions)
 
   // Extract unique chain IDs for block number fetching
   const auctionChainIds = useMemo(
@@ -49,11 +52,10 @@ export function TopVerifiedAuctionsSection() {
   const topVerifiedAuctions = useMemo<AuctionWithComputedValues[]>(() => {
     const currentTime = Date.now()
 
-    // Filter for verified auctions only
+    // Step 1: Filter for verified auctions only
     const verifiedAuctions = allAuctions.filter((auctionWithCurrencyInfo) => auctionWithCurrencyInfo.verified)
 
-    // Filter by time window: not started, ongoing, OR completed within 24 hours
-    // Uses the same timestamp estimation approach as computeTimeRemaining for consistency
+    // Step 2: Filter for priority auctions (ongoing OR completed within 24h)
     const filteredByTime = verifiedAuctions.filter((auctionWithCurrencyInfo) => {
       const auction = auctionWithCurrencyInfo.auction
       if (!auction || !auction.startBlock || !auction.endBlock || !auction.chainId) {
@@ -73,14 +75,19 @@ export function TopVerifiedAuctionsSection() {
         return true
       }
 
+      const isCompleted = isAuctionCompleted({
+        endBlock: auction.endBlock,
+        blockNumber: currentBlock,
+      })
+
       // Include auctions that are ongoing
-      if (currentBlock >= startBlock && currentBlock < endBlock) {
+      if (currentBlock >= startBlock && !isCompleted) {
         return true
       }
 
       // For completed auctions, check if completed within 24 hours
       // Use creation timestamp to estimate end time (same as computeTimeRemaining)
-      if (currentBlock >= endBlock) {
+      if (isCompleted) {
         if (!auction.creationBlock || !auction.createdAt) {
           return false
         }
@@ -108,8 +115,26 @@ export function TopVerifiedAuctionsSection() {
       return false
     })
 
-    // Compute values for each auction
-    const auctionsWithValues = filteredByTime
+    // Step 3: Determine which set to use
+    const filteredAuctions =
+      filteredByTime.length > 0
+        ? filteredByTime
+        : verifiedAuctions.filter((auctionWithCurrencyInfo) => {
+            // Fallback: Show all completed auctions (any time)
+            const auction = auctionWithCurrencyInfo.auction
+            if (!auction || !auction.startBlock || !auction.endBlock || !auction.chainId) {
+              return false
+            }
+            const currentBlock = blocksByChain.get(auction.chainId)
+            if (currentBlock === undefined) {
+              return false
+            }
+            const endBlock = BigInt(auction.endBlock)
+            return currentBlock >= endBlock
+          })
+
+    // Step 4: Compute values for each auction
+    const auctionsWithValues = filteredAuctions
       .map((auctionWithCurrencyInfo) => {
         const auction = auctionWithCurrencyInfo.auction
         if (!auction?.currency || !auction.chainId) {
@@ -118,21 +143,24 @@ export function TopVerifiedAuctionsSection() {
 
         const bidTokenCurrencyInfo = bidTokenInfos.get(auction.currency)
 
-        // Get USD price for the bid token using currencyKeyFromGraphQL
-        const chain = toGraphQLChain(auction.chainId)
-        const bidTokenUsdPrice =
-          bidTokenPriceMap[
-            currencyKeyFromGraphQL({
-              address: auction.currency,
-              chain,
-              standard: auction.currency === ZERO_ADDRESS ? GraphQLApi.TokenStandard.Native : undefined,
-            })
-          ]
+        const bidTokenMarketPriceUsd =
+          bidTokenPriceMap[buildTokenMarketPriceKey({ chainId: auction.chainId, address: auction.currency })]
+
+        const isCompleted = isAuctionCompleted({
+          endBlock: auction.endBlock,
+          blockNumber: blocksByChain.get(auction.chainId),
+        })
+
+        const auctionTokenUsdPrice = auction.tokenAddress
+          ? auctionTokenPriceMap[buildTokenMarketPriceKey({ chainId: auction.chainId, address: auction.tokenAddress })]
+          : undefined
 
         const projectedFdv = computeProjectedFdvTableValue({
           auction: auctionWithCurrencyInfo,
           bidTokenCurrencyInfo,
-          bidTokenUsdPrice,
+          bidTokenUsdPrice: bidTokenMarketPriceUsd,
+          auctionTokenUsdPrice,
+          isCompleted,
         })
 
         // Check if the bid token is a stablecoin
@@ -141,7 +169,7 @@ export function TopVerifiedAuctionsSection() {
         const committedVolume = computeCommittedVolumeTableValue({
           auction: auctionWithCurrencyInfo,
           bidTokenCurrencyInfo,
-          bidTokenUsdPrice,
+          bidTokenMarketPriceUsd,
           isStablecoin,
         })
 
@@ -153,27 +181,28 @@ export function TopVerifiedAuctionsSection() {
       })
       .filter((item): item is AuctionWithComputedValues => item !== undefined)
 
-    // Sort by committed volume (USD descending, fallback to raw)
+    // Step 5: Sort by committed volume (USD descending, fallback to raw)
     const sorted = auctionsWithValues.sort((a, b) => {
-      if (a.committedVolume.usd && b.committedVolume.usd) {
+      if (a.committedVolume.usd !== undefined && b.committedVolume.usd !== undefined) {
         return b.committedVolume.usd - a.committedVolume.usd
       }
-      if (a.committedVolume.usd) {
+      if (a.committedVolume.usd !== undefined) {
         return -1
       }
-      if (b.committedVolume.usd) {
+      if (b.committedVolume.usd !== undefined) {
         return 1
       }
       // Both missing USD, compare raw values
       return Number(b.committedVolume.raw - a.committedVolume.raw)
     })
 
-    // Take top 8
-    return sorted.slice(0, MAX_CHIPS)
-  }, [allAuctions, bidTokenInfos, bidTokenPriceMap, blocksByChain])
+    // Step 6: Apply conditional limit
+    const limit = filteredByTime.length > 0 ? MAX_CHIPS : FALLBACK_CHIPS
+    return sorted.slice(0, limit)
+  }, [allAuctions, bidTokenInfos, bidTokenPriceMap, auctionTokenPriceMap, blocksByChain])
 
   // Hide section if no verified auctions match criteria or still loading
-  if (isLoading || topVerifiedAuctions.length === 0) {
+  if (isLoading || bidTokenPricesLoading || auctionTokenPricesLoading || topVerifiedAuctions.length === 0) {
     return null
   }
 
@@ -185,7 +214,15 @@ export function TopVerifiedAuctionsSection() {
         </Text>
         <Tooltip placement="top" delay={0}>
           <Tooltip.Trigger>
-            <InfoCircleFilled size="$icon.16" color="$neutral2" />
+            <Anchor
+              href={uniswapUrls.helpArticleUrls.toucanVerifiedAuctionsHelp}
+              target="_blank"
+              onPress={(e) => e.stopPropagation()}
+              display="flex"
+              alignItems="center"
+            >
+              <InfoCircleFilled size="$icon.16" color="$neutral2" />
+            </Anchor>
           </Tooltip.Trigger>
           <Tooltip.Content zIndex={zIndexes.overlay}>
             <Text variant="body4" color="$neutral1">

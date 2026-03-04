@@ -190,6 +190,7 @@ export function useSwapFormScreenCallbacks({
       exactAmountToken: amount,
       exactCurrencyField: CurrencyField.INPUT,
       focusOnCurrencyField: undefined,
+      isFiatMode: false,
       isMax: isMaxPercentage(percentage),
       presetPercentage: percentage,
     })

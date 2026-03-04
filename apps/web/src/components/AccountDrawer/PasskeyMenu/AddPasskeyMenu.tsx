@@ -7,7 +7,8 @@ import { Mobile } from 'ui/src/components/icons/Mobile'
 import { Passkey } from 'ui/src/components/icons/Passkey'
 import { colors } from 'ui/src/theme'
 import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
-import { AuthenticatorAttachment, registerNewAuthenticator } from 'uniswap/src/features/passkey/embeddedWallet'
+import type { AuthenticatorAttachment } from 'uniswap/src/features/passkey/embeddedWallet'
+import { getPrivyEnums, registerNewAuthenticator } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { GenericPasskeyMenuModal, PasskeyMenuModalState } from '~/components/AccountDrawer/PasskeyMenu/PasskeyMenuModal'
@@ -74,7 +75,10 @@ export function AddPasskeyMenu({
         </Flex>
         <Trace logPress element={ElementName.AddPasskeyPlatform}>
           <TouchableArea
-            onPress={() => registerAuthenticator(AuthenticatorAttachment.PLATFORM)}
+            onPress={async () => {
+              const { AuthenticatorAttachment } = await getPrivyEnums()
+              registerAuthenticator(AuthenticatorAttachment.PLATFORM)
+            }}
             width="100%"
             disabled={unitagLoading}
           >
@@ -105,7 +109,10 @@ export function AddPasskeyMenu({
         </Trace>
         <Trace logPress element={ElementName.AddPasskeyCrossPlatform}>
           <TouchableArea
-            onPress={() => registerAuthenticator(AuthenticatorAttachment.CROSS_PLATFORM)}
+            onPress={async () => {
+              const { AuthenticatorAttachment } = await getPrivyEnums()
+              registerAuthenticator(AuthenticatorAttachment.CROSS_PLATFORM)
+            }}
             width="100%"
             disabled={unitagLoading}
           >

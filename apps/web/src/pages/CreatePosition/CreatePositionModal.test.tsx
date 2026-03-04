@@ -134,6 +134,7 @@ describe('CreatePositionModal', () => {
     ticksAtLimit: [false, false],
     pricesAtTicks: [undefined, undefined],
     priceRangeState: { priceInverted: false },
+    currencies: { sdk: { TOKEN0: DAI, TOKEN1: USDC_MAINNET } },
     refetch: mockRefetch,
   }
 

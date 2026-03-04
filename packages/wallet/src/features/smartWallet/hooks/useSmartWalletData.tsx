@@ -1,11 +1,16 @@
 import { useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { isUniverseChainId } from 'uniswap/src/features/chains/utils'
-import { WalletData, WalletStatus } from 'wallet/src/features/smartWallet/types'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { AddressStringFormat, normalizeAddress } from 'uniswap/src/utils/addresses'
+import { type WalletData, WalletStatus } from 'wallet/src/features/smartWallet/types'
 import { useWalletDelegationContext } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
 import { useSignerMnemonicAccountsSorted } from 'wallet/src/features/wallet/hooks'
 import { selectHasSmartWalletConsent } from 'wallet/src/features/wallet/selectors'
-import { WalletState } from 'wallet/src/state/walletReducer'
+import { type WalletState } from 'wallet/src/state/walletReducer'
+
+// Time window to treat a confirmed RemoveDelegation tx as still "pending" while delegation data refreshes
+const RECENT_TX_THRESHOLD_MS = 60_000
 
 export function useSmartWalletData(): WalletData[] {
   const accounts = useSignerMnemonicAccountsSorted()
@@ -64,6 +69,26 @@ export function useSmartWalletData(): WalletData[] {
     })
   }, [accounts, delegationDataQuery.data])
 
+  // Build a set of wallet addresses that have recent RemoveDelegation transactions (any status).
+  // This covers the gap between tx submission and delegation API refresh. We check addedTime
+  // rather than status or receipt.confirmedTime because the tx may pass through intermediate
+  // statuses (Failed via Trading API before receipt corrects to Success) that would cause flicker.
+  const addressesWithRemoveDelegation = useSelector((state: WalletState) => {
+    const now = Date.now()
+    const addresses = new Set<string>()
+    for (const [address, chainTxs] of Object.entries(state.transactions)) {
+      const hasRemoveDelegation = Object.values(chainTxs ?? {}).some((txsForChain) =>
+        Object.values(txsForChain).some(
+          (tx) => tx.typeInfo.type === TransactionType.RemoveDelegation && now - tx.addedTime < RECENT_TX_THRESHOLD_MS,
+        ),
+      )
+      if (hasRemoveDelegation) {
+        addresses.add(normalizeAddress(address, AddressStringFormat.Lowercase))
+      }
+    }
+    return addresses
+  })
+
   // Now use useSelector to get consent status for each wallet and update status
   const derivedWallets = useSelector((state: WalletState) =>
     wallets.map((wallet) => {
@@ -82,6 +107,14 @@ export function useSmartWalletData(): WalletData[] {
         Object.keys(wallet.activeDelegationNetworkToAddress).length > 0
       ) {
         derivedStatus = WalletStatus.ActionRequired
+      }
+
+      // Override ActionRequired with Pending when RemoveDelegation transactions exist
+      if (
+        derivedStatus === WalletStatus.ActionRequired &&
+        addressesWithRemoveDelegation.has(normalizeAddress(wallet.walletAddress, AddressStringFormat.Lowercase))
+      ) {
+        derivedStatus = WalletStatus.Pending
       }
 
       if (wallet.status !== derivedStatus) {

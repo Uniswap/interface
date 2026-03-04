@@ -454,6 +454,13 @@
     // Auto-generate overrides for @universe/* packages
     // This marker is replaced by the generator script with actual override configurations
     "__AUTO_GENERATE_UNIVERSE_OVERRIDES__",
+    // packages/prices
+    {
+      "includes": ["packages/prices/src/index.ts"],
+      "linter": {
+        "rules": {}
+      }
+    },
     // GLOBAL: Test files
     {
       "includes": ["**/*.test.ts", "**/*.test.tsx", "**/test/**", "**/tests/**", "**/*.spec.ts", "**/*.spec.tsx"],

@@ -314,6 +314,7 @@ export enum TransactionType {
   // All asset types
   Send = 'send',
   Receive = 'receive',
+  Withdraw = 'withdraw',
 
   // Fiat onramp
   FiatPurchaseDeprecated = 'fiat-purchase', // Deprecated, still here for use in migrations.
@@ -505,6 +506,14 @@ export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {
   tokenAddress: string
   tokenId?: string // optional. NFT token id
   nftSummaryInfo?: NFTSummaryInfo
+  dappInfo?: DappInfoTransactionDetails
+}
+
+export interface WithdrawTransactionInfo extends BaseTransactionInfo {
+  type: TransactionType.Withdraw
+  assetType: AssetType.Currency
+  tokenAddress: string
+  currencyAmountRaw?: string
   dappInfo?: DappInfoTransactionDetails
 }
 
@@ -747,6 +756,7 @@ export type TransactionTypeInfo =
   | WrapTransactionInfo
   | SendTokenTransactionInfo
   | ReceiveTokenTransactionInfo
+  | WithdrawTransactionInfo
   | NFTTradeTransactionInfo
   | NFTApproveTransactionInfo
   | NFTMintTransactionInfo

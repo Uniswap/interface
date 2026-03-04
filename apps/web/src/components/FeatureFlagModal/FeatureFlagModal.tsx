@@ -298,7 +298,9 @@ export default function FeatureFlagModal(): JSX.Element {
             <FeatureFlagOption flag={FeatureFlags.BridgedAssetsBannerV2} label="Enable V2 Bridged Assets Banner" />
             <FeatureFlagOption flag={FeatureFlags.UniswapWrapped2025} label="Enable Uniswap Wrapped 2025" />
             <FeatureFlagOption flag={FeatureFlags.UnificationCopy} label="Enable Unification Copy" />
-            <FeatureFlagOption flag={FeatureFlags.DisableAztecToken} label="Disable Aztec Token" />
+          </FeatureFlagGroup>
+          <FeatureFlagGroup name="Prices">
+            <FeatureFlagOption flag={FeatureFlags.CentralizedPrices} label="Enable Centralized Prices" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Experiments"></FeatureFlagGroup>
           <FeatureFlagGroup name="Layers">

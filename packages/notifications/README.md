@@ -99,7 +99,7 @@ import { createPollingNotificationDataSource, getNotificationQueryOptions } from
 
 const pollingDataSource = createPollingNotificationDataSource({
   queryClient,
-  queryOptions: getNotificationQueryOptions({ address, appId }),
+  queryOptions: getNotificationQueryOptions({ address, platformType, appId }),
 })
 ```
 

@@ -89,7 +89,7 @@ function usePaginatedTickQuery({
 }
 
 // Fetches all ticks for a given pool
-function useAllPoolTicks({
+export function useAllPoolTicks({
   sdkCurrencies,
   feeAmount,
   chainId,

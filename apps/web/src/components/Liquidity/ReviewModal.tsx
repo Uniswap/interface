@@ -1,5 +1,5 @@
 import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Price, Token } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Separator, Text } from 'ui/src'
@@ -11,10 +11,11 @@ import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { GetHelpHeader } from 'uniswap/src/components/dialog/GetHelpHeader'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useGetPasskeyAuthStatus } from 'uniswap/src/features/passkey/hooks/useGetPasskeyAuthStatus'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
@@ -26,6 +27,8 @@ import { ErrorCallout } from '~/components/ErrorCallout'
 import { BaseQuoteFiatAmount } from '~/components/Liquidity/BaseQuoteFiatAmount'
 import { PoolOutOfSyncError } from '~/components/Liquidity/Create/PoolOutOfSyncError'
 import { LiquidityPositionInfoBadges } from '~/components/Liquidity/LiquidityPositionInfoBadges'
+import { getBaseAndQuoteCurrencies } from '~/components/Liquidity/utils/currency'
+import { getTicksAtLimit } from '~/components/Liquidity/utils/priceRangeInfo'
 import { DoubleCurrencyLogo } from '~/components/Logo/DoubleLogo'
 import { DetailLineItem } from '~/components/swap/DetailLineItem'
 import { MouseoverTooltip } from '~/components/Tooltip'
@@ -33,6 +36,7 @@ import { useCurrencyInfo } from '~/hooks/Tokens'
 import { useAccount } from '~/hooks/useAccount'
 import { useCreateLiquidityContext } from '~/pages/CreatePosition/CreateLiquidityContextProvider'
 import { PositionField } from '~/types/position'
+import { getTickToPrice, getV4TickToPrice } from '~/utils/getTickToPrice'
 
 export interface ReviewModalProps {
   modalName: ModalNameType
@@ -113,6 +117,7 @@ export function ReviewModal({
 }: ReviewModalProps) {
   const { t } = useTranslation()
   const {
+    currencies,
     protocolVersion,
     creatingPoolOrPair,
     positionState: { fee, hook },
@@ -120,9 +125,7 @@ export function ReviewModal({
     price,
     poolOrPair,
     ticks,
-    ticksAtLimit,
-    pricesAtTicks,
-    priceRangeState: { priceInverted },
+    priceRangeState: { priceInverted, fullRange, minTick, maxTick },
     refetch,
   } = useCreateLiquidityContext()
 
@@ -134,25 +137,51 @@ export function ReviewModal({
 
   const { formatNumberOrString, formatCurrencyAmount } = useLocalizationContext()
 
-  const baseCurrency = price?.baseCurrency
-  const quoteCurrency = price?.quoteCurrency
+  const { baseCurrency, quoteCurrency } = getBaseAndQuoteCurrencies(currencies.sdk, priceInverted)
+
+  const ticksAtLimit = useMemo(() => {
+    return getTicksAtLimit({
+      tickSpacing: fee?.tickSpacing ?? DEFAULT_TICK_SPACING,
+      lowerTick: minTick,
+      upperTick: maxTick,
+      fullRange,
+    })
+  }, [fee?.tickSpacing, minTick, maxTick, fullRange])
+
+  const pricesAtTicks: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>] = useMemo(() => {
+    let pricesAtTicks: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>] = [undefined, undefined]
+    if (protocolVersion === ProtocolVersion.V4) {
+      pricesAtTicks = [
+        getV4TickToPrice({ baseCurrency, quoteCurrency, tick: ticks[0] }),
+        getV4TickToPrice({ baseCurrency, quoteCurrency, tick: ticks[1] }),
+      ]
+    }
+
+    if (protocolVersion === ProtocolVersion.V3) {
+      pricesAtTicks = [
+        getTickToPrice({ baseToken: baseCurrency as Token, quoteToken: quoteCurrency as Token, tick: ticks[0] }),
+        getTickToPrice({ baseToken: baseCurrency as Token, quoteToken: quoteCurrency as Token, tick: ticks[1] }),
+      ]
+    }
+
+    return priceInverted ? [pricesAtTicks[1], pricesAtTicks[0]] : pricesAtTicks
+  }, [ticks, baseCurrency, quoteCurrency, protocolVersion, priceInverted])
 
   const formattedPrices = useMemo(() => {
-    if (protocolVersion === ProtocolVersion.V2) {
-      return ['', '']
-    }
+    const minPrice = pricesAtTicks[0]
+    const maxPrice = pricesAtTicks[1]
 
     const lowerPriceFormatted = ticksAtLimit[0]
       ? '0'
-      : formatNumberOrString({ value: pricesAtTicks[0]?.toSignificant(), type: NumberType.TokenTx })
+      : formatNumberOrString({ value: minPrice?.toSignificant(), type: NumberType.TokenTx })
 
     const upperPriceFormatted = ticksAtLimit[1]
       ? '∞'
-      : formatNumberOrString({ value: pricesAtTicks[1]?.toSignificant(), type: NumberType.TokenTx })
+      : formatNumberOrString({ value: maxPrice?.toSignificant(), type: NumberType.TokenTx })
 
     const postfix = `${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`
     return [`${lowerPriceFormatted} ${postfix}`, `${upperPriceFormatted} ${postfix}`]
-  }, [formatNumberOrString, pricesAtTicks, ticksAtLimit, protocolVersion, baseCurrency, quoteCurrency])
+  }, [formatNumberOrString, pricesAtTicks, ticksAtLimit, baseCurrency, quoteCurrency])
 
   const connectedAccount = useAccount()
   const { isSignedInWithPasskey, isSessionAuthenticated, needsPasskeySignin } = useGetPasskeyAuthStatus(

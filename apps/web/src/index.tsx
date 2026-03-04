@@ -41,6 +41,7 @@ import { ReactRouterUrlProvider } from 'uniswap/src/contexts/UrlContext'
 import { initializePortfolioQueryOverrides } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProviderWrapper'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
+import { TokenPriceProvider } from 'uniswap/src/features/prices/TokenPriceContext'
 import i18n from 'uniswap/src/i18n'
 import { initializeDatadog } from 'uniswap/src/utils/datadog'
 import { localDevDatadogEnabled } from 'utilities/src/environment/constants'
@@ -66,6 +67,7 @@ import { WebNotificationServiceManager } from '~/notification-service/WebNotific
 import App from '~/pages/App'
 import { onHashcashSolveCompleted, onTurnstileSolveCompleted, sessionInitAnalytics } from '~/sessions/analytics'
 import store from '~/state'
+import { LivePricesProvider } from '~/state/livePrices/LivePricesProvider'
 import { ThemedGlobalStyle, ThemeProvider } from '~/theme'
 import { TamaguiProvider } from '~/theme/tamaguiProvider'
 import { isBrowserRouterEnabled } from '~/utils/env'
@@ -248,22 +250,26 @@ const RootApp = (): JSX.Element => {
                             <ConnectWalletMutationProvider>
                               <WebAccountsStoreProvider>
                                 <WebUniswapProvider>
-                                  <GraphqlProviders>
-                                    <LocalizationContextProvider>
-                                      <BlockNumberProvider>
-                                        <Updaters />
-                                        <ThemeProvider>
-                                          <TamaguiProvider>
-                                            <PortalProvider>
-                                              <WebNotificationServiceManager />
-                                              <ThemedGlobalStyle />
-                                              <App />
-                                            </PortalProvider>
-                                          </TamaguiProvider>
-                                        </ThemeProvider>
-                                      </BlockNumberProvider>
-                                    </LocalizationContextProvider>
-                                  </GraphqlProviders>
+                                  <TokenPriceProvider>
+                                    <GraphqlProviders>
+                                      <LivePricesProvider>
+                                        <LocalizationContextProvider>
+                                          <BlockNumberProvider>
+                                            <Updaters />
+                                            <ThemeProvider>
+                                              <TamaguiProvider>
+                                                <PortalProvider>
+                                                  <WebNotificationServiceManager />
+                                                  <ThemedGlobalStyle />
+                                                  <App />
+                                                </PortalProvider>
+                                              </TamaguiProvider>
+                                            </ThemeProvider>
+                                          </BlockNumberProvider>
+                                        </LocalizationContextProvider>
+                                      </LivePricesProvider>
+                                    </GraphqlProviders>
+                                  </TokenPriceProvider>
                                 </WebUniswapProvider>
                               </WebAccountsStoreProvider>
                             </ConnectWalletMutationProvider>

@@ -2,22 +2,24 @@ import { Signer } from '@ethersproject/abstract-signer'
 import { BigNumber } from '@ethersproject/bignumber'
 import { id } from '@ethersproject/hash'
 import { resolveProperties } from '@ethersproject/properties'
-import { BlockTag, JsonRpcProvider, Networkish } from '@ethersproject/providers'
+import { BlockTag, Networkish } from '@ethersproject/providers'
 import { ConnectionInfo, fetchJson } from '@ethersproject/web'
 import {
   buildFlashbotsUrl,
   FLASHBOTS_SIGNATURE_HEADER,
   SignerInfo,
 } from 'uniswap/src/features/providers/FlashbotsCommon'
+import { InstrumentedJsonRpcProvider } from 'uniswap/src/features/providers/observability/InstrumentedJsonRpcProvider'
+import { getRpcObserver } from 'uniswap/src/features/providers/observability/rpcObserver'
 
 /**
  * A provider that uses a signer to authenticate requests.
  */
-class AuthenticatedJsonRpcProvider extends JsonRpcProvider {
+class AuthenticatedJsonRpcProvider extends InstrumentedJsonRpcProvider {
   protected readonly signer?: Signer
 
   constructor(config: { url: string; signer?: Signer; network?: Networkish }) {
-    super(config.url, config.network)
+    super({ url: config.url, chainIdOrNetwork: config.network ?? 1, observer: getRpcObserver() })
     this.signer = config.signer
   }
 }

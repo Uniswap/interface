@@ -3,8 +3,10 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Direction, OnChainTransaction, OnChainTransactionLabel } from '@uniswap/client-data-api/dist/data/v1/types_pb'
 import { GraphQLApi } from '@universe/api'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { extractDappInfo } from 'uniswap/src/features/activity/utils/extractDappInfo'
 import {
+  AssetCase,
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
 } from 'uniswap/src/features/activity/utils/remote'
@@ -16,6 +18,7 @@ import {
   TransactionDetailsType,
   TransactionListQueryResponse,
   TransactionType,
+  WithdrawTransactionInfo,
   WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
@@ -373,8 +376,31 @@ export function parseRestWrapTransaction(transaction: OnChainTransaction): WrapT
 
   return {
     type: TransactionType.Wrap,
-    unwrapped: label === OnChainTransactionLabel.WITHDRAW || label === OnChainTransactionLabel.UNWRAP,
+    unwrapped: label === OnChainTransactionLabel.UNWRAP,
     currencyAmountRaw: firstTransfer?.amount?.raw ?? '',
+    dappInfo: extractDappInfo(transaction),
+  }
+}
+
+/**
+ * Parse a Withdraw transaction from the REST API (e.g., unstaking, lending withdrawals).
+ * Uses the actual token data from transfers rather than assuming native/wrapped-native tokens.
+ */
+export function parseRestWithdrawTransaction(transaction: OnChainTransaction): WithdrawTransactionInfo | undefined {
+  const receiveTransfer = transaction.transfers.find(
+    (t) => t.direction === Direction.RECEIVE && t.asset.case === AssetCase.Token,
+  )
+
+  const tokenAddress = receiveTransfer?.asset.value?.address
+  if (!tokenAddress) {
+    return undefined
+  }
+
+  return {
+    type: TransactionType.Withdraw,
+    assetType: AssetType.Currency,
+    tokenAddress,
+    currencyAmountRaw: receiveTransfer.amount?.raw,
     dappInfo: extractDappInfo(transaction),
   }
 }

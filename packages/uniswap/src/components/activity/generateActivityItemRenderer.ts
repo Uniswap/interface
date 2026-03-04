@@ -13,6 +13,7 @@ import { SendSummaryItem } from 'uniswap/src/components/activity/summaries/SendS
 import { SwapSummaryItem } from 'uniswap/src/components/activity/summaries/SwapSummaryItem'
 import { UnknownSummaryItem } from 'uniswap/src/components/activity/summaries/UnknownSummaryItem'
 import { WCSummaryItem } from 'uniswap/src/components/activity/summaries/WCSummaryItem'
+import { WithdrawSummaryItem } from 'uniswap/src/components/activity/summaries/WithdrawSummaryItem'
 import { WrapSummaryItem } from 'uniswap/src/components/activity/summaries/WrapSummaryItem'
 import { SummaryItemProps, SwapSummaryCallbacks } from 'uniswap/src/components/activity/types'
 import { isLoadingItem, isSectionHeader, LoadingItem, SectionHeader } from 'uniswap/src/components/activity/utils'
@@ -86,6 +87,9 @@ export function generateActivityItemRenderer({
         break
       case TransactionType.Wrap:
         SummaryItem = WrapSummaryItem
+        break
+      case TransactionType.Withdraw:
+        SummaryItem = WithdrawSummaryItem
         break
       case TransactionType.LPIncentivesClaimRewards:
       case TransactionType.CollectFees:

@@ -176,15 +176,21 @@ export {
 } from '@universe/api/src/clients/unitags/types'
 export { createUnitagsApiClient } from '@universe/api/src/clients/unitags/createUnitagsApiClient'
 
-// Data API Service (ConnectRPC - listTopTokens, listTopPools, etc.)
+// Data API Service (ConnectRPC - listTopTokens, listTopPools, getPortfolio, etc.)
 export {
   createDataApiServiceClient,
   type DataApiServiceClient,
   type DataApiServiceClientContext,
 } from '@universe/api/src/clients/dataApi/createDataApiServiceClient'
 export {
+  getGetPortfolioQueryOptions,
+  type GetPortfolioQueryParams,
+} from '@universe/api/src/clients/dataApi/getGetPortfolioQueryOptions'
+export {
   TopPoolsOrderBy,
   TopTokensOrderBy,
+  type GetPortfolioRequest,
+  type GetPortfolioResponse,
   type ListTopPoolsResponse,
   type ListTopTokensResponse,
 } from '@uniswap/client-data-api/dist/data/v1/api_pb'
@@ -306,5 +312,7 @@ export {
 export { getTransport } from '@universe/api/src/transport'
 
 export { getEntryGatewayUrl, getMigratedForApiUrl } from '@universe/api/src/getEntryGatewayUrl'
+
+export { getWebSocketUrl } from '@universe/api/src/getWebSocketUrl'
 
 export { provideUniswapIdentifierService } from '@universe/api/src/provideUniswapIdentifierService'

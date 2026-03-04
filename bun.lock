@@ -114,6 +114,7 @@
         "better-auth": "1.4.18",
         "class-variance-authority": "0.7.1",
         "clsx": "2.1.1",
+        "fast-redact": "3.5.0",
         "fumadocs-core": "16.5.0",
         "fumadocs-mdx": "14.2.6",
         "fumadocs-ui": "16.5.0",
@@ -173,7 +174,7 @@
         "@tanstack/react-query": "5.90.20",
         "@types/uuid": "9.0.1",
         "@uniswap/analytics-events": "2.43.0",
-        "@uniswap/client-notification-service": "0.0.9",
+        "@uniswap/client-notification-service": "0.0.11",
         "@uniswap/sdk-core": "7.10.1",
         "@uniswap/universal-router-sdk": "4.29.2",
         "@uniswap/v3-sdk": "3.27.0",
@@ -263,8 +264,8 @@
         "webpack-dev-server": "4.15.1",
       },
     },
-    "apps/internal-tools": {
-      "name": "@universe/internal-tools",
+    "apps/mission-control": {
+      "name": "@universe/mission-control",
       "dependencies": {
         "@datadog/browser-logs": "5.20.0",
         "@datadog/browser-rum": "5.23.3",
@@ -280,7 +281,7 @@
         "@react-router/node": "7.6.3",
         "@react-router/serve": "7.6.3",
         "@tanstack/react-query": "5.90.20",
-        "@uniswap/client-notification-service": "0.0.9",
+        "@uniswap/client-notification-service": "0.0.11",
         "@universe/mycelium": "workspace:*",
         "@vercel/react-router": "1.2.4",
         "class-variance-authority": "0.7.1",
@@ -291,6 +292,7 @@
         "react-dom": "19.0.3",
         "react-hook-form": "7.66.1",
         "react-router": "7.6.3",
+        "react-router-hono-server": "2.22.0",
         "shiki": "3.15.0",
         "sonner": "1.7.2",
         "tailwindcss-animate": "1.0.7",
@@ -364,7 +366,7 @@
         "@uniswap/analytics": "1.7.2",
         "@uniswap/analytics-events": "2.43.0",
         "@uniswap/client-explore": "0.0.17",
-        "@uniswap/client-notification-service": "0.0.9",
+        "@uniswap/client-notification-service": "0.0.11",
         "@uniswap/ethers-rs-mobile": "0.0.5",
         "@uniswap/sdk-core": "7.10.1",
         "@universe/api": "workspace:^",
@@ -548,10 +550,10 @@
         "@types/react-scroll-sync": "0.9.0",
         "@uniswap/analytics": "1.7.2",
         "@uniswap/analytics-events": "2.43.0",
-        "@uniswap/client-data-api": "0.0.46",
+        "@uniswap/client-data-api": "0.0.51",
         "@uniswap/client-explore": "0.0.17",
         "@uniswap/client-liquidity": "0.0.23",
-        "@uniswap/client-notification-service": "0.0.9",
+        "@uniswap/client-notification-service": "0.0.11",
         "@uniswap/client-search": "0.0.10",
         "@uniswap/merkle-distributor": "1.0.1",
         "@uniswap/permit2-sdk": "1.3.0",
@@ -568,7 +570,9 @@
         "@universe/api": "workspace:^",
         "@universe/gating": "workspace:^",
         "@universe/notifications": "workspace:^",
+        "@universe/prices": "workspace:^",
         "@universe/sessions": "workspace:^",
+        "@universe/websocket": "workspace:^",
         "@visx/group": "2.17.0",
         "@visx/responsive": "3.12.0",
         "@visx/shape": "2.18.0",
@@ -801,13 +805,12 @@
         "@connectrpc/connect-web": "1.5.0",
         "@ethersproject/providers": "5.7.2",
         "@tanstack/react-query": "5.90.20",
-        "@uniswap/client-data-api": "0.0.46",
+        "@uniswap/client-data-api": "0.0.51",
         "@uniswap/client-embeddedwallet": "0.0.16",
         "@uniswap/client-explore": "0.0.17",
         "@uniswap/client-for": "0.1.5",
         "@uniswap/client-liquidity": "0.0.23",
-        "@uniswap/client-notification-service": "0.0.9",
-        "@uniswap/client-privy-embedded-wallet": "0.0.2",
+        "@uniswap/client-notification-service": "0.0.11",
         "@universe/config": "workspace:^",
         "@universe/sessions": "workspace:^",
         "expo-secure-store": "14.0.1",
@@ -837,6 +840,9 @@
         "viem": "2.30.5",
         "vitest": "3.2.1",
         "zod": "4.3.6",
+      },
+      "optionalDependencies": {
+        "@uniswap/client-privy-embedded-wallet": "0.0.2",
       },
     },
     "packages/biome-config": {
@@ -987,7 +993,7 @@
       "dependencies": {
         "@bufbuild/protobuf": "1.10.0",
         "@tanstack/react-query": "5.90.20",
-        "@uniswap/client-notification-service": "0.0.9",
+        "@uniswap/client-notification-service": "0.0.11",
         "ms": "2.1.3",
         "react": "19.0.3",
         "react-i18next": "14.1.0",
@@ -1004,6 +1010,32 @@
         "vitest": "3.2.1",
       },
     },
+    "packages/prices": {
+      "name": "@universe/prices",
+      "version": "0.0.0",
+      "dependencies": {
+        "@tanstack/react-query": "5.90.20",
+        "@uniswap/sdk-core": "7.10.1",
+        "@universe/api": "workspace:^",
+        "@universe/websocket": "workspace:^",
+        "utilities": "workspace:^",
+      },
+      "devDependencies": {
+        "@testing-library/react": "16.3.0",
+        "@types/node": "22.13.1",
+        "@typescript/native-preview": "7.0.0-dev.20260108.1",
+        "@uniswap/eslint-config": "workspace:^",
+        "@vitest/coverage-v8": "3.2.1",
+        "depcheck": "1.4.7",
+        "eslint": "8.57.1",
+        "react": "19.0.3",
+        "typescript": "5.8.3",
+        "vitest": "3.2.1",
+      },
+      "peerDependencies": {
+        "react": "19.0.3",
+      },
+    },
     "packages/sessions": {
       "name": "@universe/sessions",
       "version": "0.0.0",
@@ -1013,7 +1045,7 @@
         "@noble/hashes": "2.0.1",
         "@scure/base": "2.0.0",
         "@tanstack/react-query": "5.90.20",
-        "@uniswap/client-platform-service": "0.0.13",
+        "@uniswap/client-platform-service": "0.0.14",
         "bidc": "0.0.3",
         "utilities": "workspace:^",
         "zod": "4.3.6",
@@ -1153,11 +1185,10 @@
         "@typechain/ethers-v5": "7.2.0",
         "@types/poisson-disk-sampling": "2.2.4",
         "@uniswap/analytics-events": "2.43.0",
-        "@uniswap/client-data-api": "0.0.46",
+        "@uniswap/client-data-api": "0.0.51",
         "@uniswap/client-embeddedwallet": "0.0.16",
         "@uniswap/client-explore": "0.0.17",
         "@uniswap/client-liquidity": "0.0.23",
-        "@uniswap/client-privy-embedded-wallet": "0.0.2",
         "@uniswap/client-search": "0.0.10",
         "@uniswap/permit2-sdk": "1.3.0",
         "@uniswap/router-sdk": "2.3.2",
@@ -1171,6 +1202,7 @@
         "@universe/config": "workspace:^",
         "@universe/gating": "workspace:^",
         "@universe/notifications": "workspace:^",
+        "@universe/prices": "workspace:^",
         "apollo-link-rest": "0.9.0",
         "date-fns": "2.30.0",
         "dayjs": "1.11.7",
@@ -1241,7 +1273,7 @@
         "@types/react-window": "1.8.2",
         "@typescript-eslint/utils": "6.20.0",
         "@typescript/native-preview": "7.0.0-dev.20260108.1",
-        "@uniswap/client-notification-service": "0.0.9",
+        "@uniswap/client-notification-service": "0.0.11",
         "@uniswap/eslint-config": "workspace:^",
         "@vitejs/plugin-react": "4.7.0",
         "@walletconnect/types": "2.23.0",
@@ -1259,6 +1291,9 @@
         "typescript": "5.8.3",
         "vitest": "3.2.1",
         "vitest-presets": "workspace:^",
+      },
+      "optionalDependencies": {
+        "@uniswap/client-privy-embedded-wallet": "0.0.2",
       },
     },
     "packages/utilities": {
@@ -1334,7 +1369,7 @@
         "@shopify/react-native-skia": "2.2.20",
         "@tanstack/react-query": "5.90.20",
         "@uniswap/analytics-events": "2.43.0",
-        "@uniswap/client-data-api": "0.0.46",
+        "@uniswap/client-data-api": "0.0.51",
         "@uniswap/permit2-sdk": "1.3.0",
         "@uniswap/router-sdk": "2.3.2",
         "@uniswap/sdk-core": "7.10.1",
@@ -4559,7 +4594,7 @@
 
     "@uniswap/biome-config": ["@uniswap/biome-config@workspace:packages/biome-config"],
 
-    "@uniswap/client-data-api": ["@uniswap/client-data-api@0.0.46", "", {}, "sha512-kp1BykhLl5/Ttc6AAMqSiXttRB0NbzV7vYSzAjOzPiGXell9Z6oHP1H9EmPA0HCzedOlPLBSdfJPPAOKWyNObA=="],
+    "@uniswap/client-data-api": ["@uniswap/client-data-api@0.0.51", "", {}, "sha512-R4LFHTxtVTTTUcXXCs4QNpq1m9gyRtzjYLvSPq6tncPtcGNTjAZT0TcP8mhYFK1LZgsFk7kHf3ifWLi3nnKg2w=="],
 
     "@uniswap/client-embeddedwallet": ["@uniswap/client-embeddedwallet@0.0.16", "", {}, "sha512-zxlx3E2X0kKAw10FKOGlbFpX4yq3KJv9SEipBJxZae5OZH8Ki8UO+FBX/Ke9JPQmU1WUoiJ7NOknjIIDOjVmpw=="],
 
@@ -4569,9 +4604,9 @@
 
     "@uniswap/client-liquidity": ["@uniswap/client-liquidity@0.0.23", "", {}, "sha512-JjMiUn4FsCd9VXJqol6VpLTRT/nnwivu9dYLLtCtf/IGXv5rHs8k5cTJ+52kmxNGK96Hzmi7nTuaQZQrUFVsUA=="],
 
-    "@uniswap/client-notification-service": ["@uniswap/client-notification-service@0.0.9", "", {}, "sha512-l/dVz24oP2AKqrOG682nXL/p7l2twj5P0TPYHB/ZKPxX+HkGU3/X3+iF6syT96lYxrh6Vf6sf0VITULX4hNPAg=="],
+    "@uniswap/client-notification-service": ["@uniswap/client-notification-service@0.0.11", "", {}, "sha512-5XF6an0PZs50UK7u20ogpqP+EoGP+MjK4+r9VwZ7t85GA5E6UmY0xZQnbHfZrJwuqWiUvWLJYE+S9vaA28iscQ=="],
 
-    "@uniswap/client-platform-service": ["@uniswap/client-platform-service@0.0.13", "", {}, "sha512-bl55OIfKSMprqycXAX+iEwsp5WG6uFh0IMhm2TY3LAyHQmJQXOLEjfo1qKpe8gsslJ4y6la1tJ/FYXyaq8598g=="],
+    "@uniswap/client-platform-service": ["@uniswap/client-platform-service@0.0.14", "", {}, "sha512-dhAR+dpQNTHvDMofmSPTf72a1/5MDVjnVCJPTVEl8JkWEeGQ2BVUE9JiPtdsPP2GWSSF94mLQAyAYWxOi2CzVw=="],
 
     "@uniswap/client-privy-embedded-wallet": ["@uniswap/client-privy-embedded-wallet@0.0.2", "", {}, "sha512-O/WesHX5nM6ip/uZKnUhAgdkWooCBUCkAmEviufveTO4BSHnCQityR3LEHVq7hRfgbbZCRg++QhY/efvtwtVdw=="],
 
@@ -4635,11 +4670,13 @@
 
     "@universe/hashcash-native": ["@universe/hashcash-native@workspace:packages/hashcash-native"],
 
-    "@universe/internal-tools": ["@universe/internal-tools@workspace:apps/internal-tools"],
+    "@universe/mission-control": ["@universe/mission-control@workspace:apps/mission-control"],
 
     "@universe/mycelium": ["@universe/mycelium@workspace:packages/mycelium"],
 
     "@universe/notifications": ["@universe/notifications@workspace:packages/notifications"],
+
+    "@universe/prices": ["@universe/prices@workspace:packages/prices"],
 
     "@universe/sandbox": ["@universe/sandbox@workspace:labs/sandbox"],
 

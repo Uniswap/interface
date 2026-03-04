@@ -8,13 +8,11 @@ import { type UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getChainLabel } from 'uniswap/src/features/chains/utils'
 import { findLocalGasStrategy, getGasPrice } from 'uniswap/src/features/gas/utils'
 import { setNotificationStatus } from 'uniswap/src/features/notifications/slice/slice'
-import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { refetchQueries } from 'uniswap/src/features/portfolio/portfolioUpdates/refetchQueriesSaga'
 import {
   DEFAULT_FLASHBOTS_ENABLED,
   FLASHBOTS_DEFAULT_REFUND_PERCENT,
 } from 'uniswap/src/features/providers/FlashbotsCommon'
-import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { MobileAppsFlyerEvents, SwapEventName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapTransactionsCount } from 'uniswap/src/features/transactions/selectors'
@@ -35,12 +33,9 @@ import {
 import { isFinalizedPlanTXDetails } from 'uniswap/src/features/transactions/types/utils'
 import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { createDelegationQueryOptions } from 'wallet/src/features/smartWallet/WalletDelegationProvider'
+import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
 import { getDiff, getOptionalTransactionProperty, getPercentageError } from 'wallet/src/features/transactions/utils'
-import {
-  selectActiveAccountAddress,
-  selectAllSignerMnemonicAccountAddresses,
-} from 'wallet/src/features/wallet/selectors'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export function* finalizeTransaction({
   apolloClient,
@@ -71,16 +66,13 @@ export function* finalizeTransaction({
     activeAddress,
   })
 
-  const { chains } = yield* call(getEnabledChainIdsSaga, Platform.EVM)
-  const accountAddresses = yield* select(selectAllSignerMnemonicAccountAddresses)
-
   try {
     logger.debug(
       'transactionFinalizationSaga',
       'finalizeTransaction',
       'invalidating + refetching wallet delegation queries',
     )
-    yield* call(invalidateAndRefetchWalletDelegationQueries, { accountAddresses, chainIds: chains })
+    yield* call(invalidateAndRefetchWalletDelegationQueries)
   } catch (error) {
     logger.debug('transactionFinalizationSaga', 'finalizeTransaction', 'error refetching wallet delegation queries', {
       error,
@@ -100,13 +92,9 @@ export function* finalizeTransaction({
   }
 }
 
-export async function invalidateAndRefetchWalletDelegationQueries(input: {
-  accountAddresses: Address[]
-  chainIds: UniverseChainId[]
-}): Promise<void> {
-  const queryOptions = createDelegationQueryOptions(input)
-  await SharedQueryClient.invalidateQueries(queryOptions)
-  await SharedQueryClient.fetchQuery({ ...queryOptions, gcTime: 0 })
+export async function invalidateAndRefetchWalletDelegationQueries(): Promise<void> {
+  const queryKey = [ReactQueryCacheKey.WalletDelegation]
+  await SharedQueryClient.invalidateQueries({ queryKey })
 }
 
 /**

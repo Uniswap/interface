@@ -1,12 +1,24 @@
-import { VerifyFailure_Reason } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
+import {
+  ChallengeFailure_Reason,
+  VerifyFailure_Reason,
+} from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
 import type { SessionServiceClient } from '@universe/sessions/src/session-repository/createSessionClient'
+import { ChallengeRejectedError } from '@universe/sessions/src/session-repository/errors'
 import type { SessionRepository, TypedChallengeData } from '@universe/sessions/src/session-repository/types'
-import { VerifyFailureReason } from '@universe/sessions/src/session-repository/types'
+import { ChallengeFailureReason, VerifyFailureReason } from '@universe/sessions/src/session-repository/types'
 import type { Logger } from 'utilities/src/logger/logger'
 
 /**
  * Creates a session repository that handles communication with the session service.
  * This is the layer that makes actual API calls to the backend.
+ *
+ * TODO(proto): `VerifyResponse` in `@uniswap/client-platform-service` still has a proto3
+ * issue where an empty `VerifySuccess` message gets silently dropped, leaving
+ * `outcome.case === undefined`. The `verifySession()` method works around this by using
+ * the `retry` flag as a discriminator.
+ *
+ * The `ChallengeResponse` failure case was fixed in v0.0.14 — the proto now includes a
+ * proper `failure?: ChallengeFailure` field with typed `ChallengeFailure_Reason`.
  */
 function createSessionRepository(ctx: { client: SessionServiceClient; getLogger?: () => Logger }): SessionRepository {
   const initSession: SessionRepository['initSession'] = async () => {
@@ -39,16 +51,23 @@ function createSessionRepository(ctx: { client: SessionServiceClient; getLogger?
         challengeType: response.challengeType,
         extraKeys: Object.keys(response.extra),
         extra: response.extra,
-        challengeDataCase: response.challengeData.case,
-        challengeDataValue: response.challengeData.value,
+        challengeDataCase: (response as unknown as { challengeData?: TypedChallengeData }).challengeData?.case,
+        challengeDataValue: (response as unknown as { challengeData?: TypedChallengeData }).challengeData?.value,
       })
+
+      // Check for explicit challenge failure from the backend (e.g., bot detection required)
+      if (response.failure) {
+        const reasonEnum = response.failure.reason
+        const reason = `REASON_${ChallengeFailure_Reason[reasonEnum]}` as ChallengeFailureReason
+        throw new ChallengeRejectedError(reason, { failure: response.failure, extra: response.extra })
+      }
 
       // Map proto oneof challengeData to our typed interface
       let challengeData: TypedChallengeData = { case: undefined }
       let authorizeUrl: string | undefined
-      const protoChallengeData = response.challengeData
+      const protoChallengeData = (response as unknown as { challengeData?: TypedChallengeData }).challengeData
 
-      if (protoChallengeData.case === 'turnstile') {
+      if (protoChallengeData && protoChallengeData.case === 'turnstile') {
         challengeData = {
           case: 'turnstile',
           value: {
@@ -56,7 +75,7 @@ function createSessionRepository(ctx: { client: SessionServiceClient; getLogger?
             action: protoChallengeData.value.action,
           },
         }
-      } else if (protoChallengeData.case === 'hashcash') {
+      } else if (protoChallengeData && protoChallengeData.case === 'hashcash') {
         challengeData = {
           case: 'hashcash',
           value: {
@@ -68,7 +87,7 @@ function createSessionRepository(ctx: { client: SessionServiceClient; getLogger?
             verifier: protoChallengeData.value.verifier,
           },
         }
-      } else if (protoChallengeData.case === 'github') {
+      } else if (protoChallengeData && protoChallengeData.case === 'github') {
         challengeData = {
           case: 'github',
           value: {
@@ -110,6 +129,10 @@ function createSessionRepository(ctx: { client: SessionServiceClient; getLogger?
         authorizeUrl,
       }
     } catch (error) {
+      // Don't wrap typed session errors — they carry structured data for callers
+      if (error instanceof ChallengeRejectedError) {
+        throw error
+      }
       const errorMessage = error instanceof Error ? error.message : String(error)
       throw new Error(`Failed to get challenge: ${errorMessage}`, { cause: error })
     }
@@ -132,6 +155,25 @@ function createSessionRepository(ctx: { client: SessionServiceClient; getLogger?
         newSessionId: response.newSessionId,
         responseKeys: Object.keys(response),
       })
+
+      // Proto3 validation: When outcome.case is undefined, proto3 silently dropped the oneof.
+      // This happens for BOTH success and failure outcomes with empty/default values.
+      // Use `retry` as the discriminator: `retry: false` means the backend accepted the
+      // solution (proto3 dropped an empty VerifySuccess); `retry: true` means try again.
+      if (response.outcome.case === undefined) {
+        if (response.retry) {
+          // Backend wants a retry — outcome was likely a dropped failure. This is fine,
+          // the caller handles retries via the `retry` flag.
+          logger?.debug('createSessionRepository', 'verifySession', 'Empty outcome with retry=true, treating as retry')
+        } else {
+          // Backend accepted the solution — proto3 dropped the empty VerifySuccess message.
+          logger?.debug(
+            'createSessionRepository',
+            'verifySession',
+            'Empty outcome with retry=false, treating as success (proto3 likely dropped empty VerifySuccess)',
+          )
+        }
+      }
 
       // Extract userInfo from success outcome, waitSeconds from failure outcome
       const userInfo =

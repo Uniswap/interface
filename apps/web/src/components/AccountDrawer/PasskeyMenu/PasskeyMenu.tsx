@@ -10,10 +10,10 @@ import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import {
-  Action,
   Authenticator,
   AuthenticatorNameType,
   authenticateWithPasskey,
+  getPrivyEnums,
   listAuthenticators,
 } from 'uniswap/src/features/passkey/embeddedWallet'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -216,6 +216,7 @@ export default function PasskeyMenu({ onClose }: { onClose: () => void }) {
 
   const { mutate: verifyPasskey } = usePasskeyAuthWithHelpModal(
     async () => {
+      const { Action } = await getPrivyEnums()
       return await authenticateWithPasskey(
         actionAfterVerify === PasskeyMenuModalState.ADD_PASSKEY
           ? Action.REGISTER_NEW_AUTHENTICATION_TYPES

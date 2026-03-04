@@ -175,7 +175,7 @@ export function PortfolioChart({
   }, [locale, appFiatCurrencyInfo.code])
 
   return (
-    <Flex gap="$spacing16" grow shrink data-testid={TestID.MiniPortfolioTotalBalance}>
+    <Flex gap="$spacing16" grow shrink testID={TestID.PortfolioTotalBalance}>
       {error ? (
         <ChartContainer centered grow shrink>
           <ChartSkeleton

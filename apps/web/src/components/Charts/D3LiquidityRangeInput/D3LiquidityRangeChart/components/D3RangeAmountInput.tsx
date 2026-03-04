@@ -61,7 +61,6 @@ export function D3RangeAmountInput({
 
   const {
     currencies,
-    creatingPoolOrPair,
     priceRangeState: { priceInverted },
   } = useCreateLiquidityContext()
 
@@ -74,8 +73,8 @@ export function D3RangeAmountInput({
       flexBasis={0}
       position="relative"
       backgroundColor="$surface2"
-      borderTopLeftRadius={creatingPoolOrPair && input === RangeSelectionInput.MIN ? '$rounded20' : '$none'}
-      borderTopRightRadius={creatingPoolOrPair && input === RangeSelectionInput.MAX ? '$rounded20' : '$none'}
+      borderTopLeftRadius="$none"
+      borderTopRightRadius="$none"
       borderBottomRightRadius={input === RangeSelectionInput.MIN ? '$none' : '$rounded20'}
       borderBottomLeftRadius={input === RangeSelectionInput.MIN ? '$rounded20' : '$none'}
       $lg={{

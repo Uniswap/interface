@@ -48,10 +48,7 @@
     "npm": "please-use-bun"
   },
   "manypkg": {
-    "ignoredRules": [
-      "INTERNAL_MISMATCH",
-      "ROOT_HAS_DEV_DEPENDENCIES"
-    ]
+    "ignoredRules": ["INTERNAL_MISMATCH", "ROOT_HAS_DEV_DEPENDENCIES"]
   },
   "private": true,
   "patchedDependenciesComments": {
@@ -176,7 +173,7 @@
     "g:test": "./scripts/check-deps-sync.sh; nx run-many -t test",
     "g:test:coverage": "nx run-many -t test -- --collectCoverage=true",
     "g:test:coverage:rest": "nx run-many -t test --projects @uniswap/eslint-config -- --collectCoverage=true",
-    "g:test:coverage:vitest": "nx run-many -t test:coverage --projects @universe/api,@universe/notifications,@universe/sessions,@universe/websocket,utilities,ui,uniswap,internal-tools",
+    "g:test:coverage:vitest": "nx run-many -t test:coverage --projects @universe/api,@universe/notifications,@universe/sessions,@universe/websocket,@universe/prices,utilities,ui,uniswap,mission-control",
     "g:test:coverage:web": "nx test @universe/web -- --coverage",
     "g:test:coverage:web:set1": "nx test:set1 @universe/web -- --coverage",
     "g:test:coverage:web:set2": "nx test:set2 @universe/web -- --coverage",
@@ -205,19 +202,14 @@
     "notifications": "bun run --cwd packages/notifications",
     "cli": "bun run --cwd apps/cli",
     "dev-portal": "bun run --cwd apps/dev-portal",
-    "internal-tools": "bun run --cwd apps/internal-tools",
+    "mission-control": "bun run --cwd apps/mission-control",
     "transactional": "bun run --cwd packages/transactional",
     "mycelium": "bun run --cwd packages/mycelium",
     "sandbox": "bun run --cwd labs/sandbox",
-    "websocket": "bun run --cwd packages/websocket"
+    "websocket": "bun run --cwd packages/websocket",
+    "prices": "bun run --cwd packages/prices"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*",
-    "config/*",
-    "tools/uniswap-nx",
-    "labs/*"
-  ],
+  "workspaces": ["apps/*", "packages/*", "config/*", "tools/uniswap-nx", "labs/*"],
   "patchedDependencies": {
     "multiformats@9.9.0": "patches/multiformats@9.9.0.patch",
     "react-native-context-menu-view@1.15.0": "patches/react-native-context-menu-view@1.15.0.patch",

@@ -39,6 +39,7 @@ import {
   TransactionType,
   UnknownTransactionInfo,
   WCConfirmInfo,
+  WithdrawTransactionInfo,
   WrapTransactionInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -118,6 +119,7 @@ export function TransactionDetailsHeaderLogo({ transactionDetails }: HeaderLogoP
     case TransactionType.LocalOffRamp:
       return null
     // TODO WALL-7056: Implement Remove Delegation Header Logo
+    case TransactionType.Withdraw:
     case TransactionType.SendCalls:
     case TransactionType.RemoveDelegation:
     case TransactionType.ClaimUni:
@@ -281,6 +283,7 @@ function UnknownHeaderLogo({
   typeInfo,
 }: SpecificHeaderLogoProps<
   | UnknownTransactionInfo
+  | WithdrawTransactionInfo
   | SendCallsTransactionInfo
   | Permit2ApproveTransactionInfo
   | RemoveDelegationTransactionInfo

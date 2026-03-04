@@ -11,7 +11,7 @@ import { HorizontalLine } from '~/components/Charts/ActiveLiquidityChart/Horizon
 import { TickTooltip } from '~/components/Charts/ActiveLiquidityChart/TickTooltip'
 import { ChartEntry } from '~/components/Charts/LiquidityRangeInput/types'
 
-const xAccessor = (d: ChartEntry) => d.activeLiquidity
+const xAccessor = (d: ChartEntry) => d.liquidityActive
 const yAccessor = (d: ChartEntry) => d.price0
 
 const priceDataCache = new Map<string, ChartEntry>()

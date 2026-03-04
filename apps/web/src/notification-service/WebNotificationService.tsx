@@ -1,4 +1,5 @@
 import { queryOptions, useQuery } from '@tanstack/react-query'
+import { PlatformType } from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
 import {
   createFetchClient,
   createNotificationsApiClient,
@@ -84,6 +85,7 @@ function provideWebNotificationService(ctx: {
 
   const queryOpts = getNotificationQueryOptions({
     apiClient,
+    getPlatformType: () => PlatformType.WEB,
     pollIntervalMs: 120000, // Poll every 2 minutes
     getIsSessionInitialized: () => {
       const sessionData = SharedQueryClient.getQueryData(SESSION_INIT_QUERY_KEY)

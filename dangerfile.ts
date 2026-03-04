@@ -253,8 +253,8 @@ async function processAddChanges() {
       )
     }
 
-    // Check for direct string cache key usage with react query (skip internal-tools app)
-    if (concatenatedAddedLines.includes(`queryKey: ['`) && !filePath?.startsWith('apps/internal-tools/')) {
+    // Check for direct string cache key usage with react query (skip mission-control app)
+    if (concatenatedAddedLines.includes(`queryKey: ['`) && !filePath?.startsWith('apps/mission-control/')) {
       fail(
         `It appears you're using a direct string cache key with react query. Please use the ReactQueryCacheKey enum instead!`,
       )

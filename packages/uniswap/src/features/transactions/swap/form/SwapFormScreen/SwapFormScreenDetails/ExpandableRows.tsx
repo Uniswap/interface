@@ -69,7 +69,6 @@ export function ExpandableRows(): JSX.Element | null {
           outputCurrency={trade.trade.outputAmount.currency}
           transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
           uniswapXGasBreakdown={gasFeeBreakdown}
-          RoutingInfo={<RoutingInfo trade={trade.trade} gasFee={gasFee} chainId={chainId} />}
           RateInfo={
             showPriceImpactWarning ? (
               <Flex row alignItems="center" justifyContent="space-between">
@@ -91,6 +90,9 @@ export function ExpandableRows(): JSX.Element | null {
               autoSlippageTolerance={autoSlippageTolerance}
               customSlippageTolerance={customSlippageTolerance}
             />
+          )}
+          {trade.trade.routing !== TradingApi.Routing.BRIDGE && (
+            <RoutingInfo trade={trade.trade} gasFee={gasFee} chainId={chainId} />
           )}
         </TransactionDetails>
       </Accordion.Content>

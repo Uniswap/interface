@@ -69,3 +69,35 @@ export type PortfolioBalance = {
   relativeChange24: Maybe<number>
   isHidden: Maybe<boolean>
 }
+
+/**
+ * One chain-specific balance in a multichain token's `tokens` array.
+ * currencyInfo is prebuilt so consumers (UI, selectors) can use it directly
+ * without calling buildCurrency/buildCurrencyInfo.
+ */
+export type PortfolioChainBalance = {
+  chainId: number
+  address: string
+  decimals: number
+  quantity: number
+  valueUsd: Maybe<number>
+  currencyInfo: CurrencyInfo
+}
+
+/**
+ * Multichain balance: one logical token that can exist on multiple chains.
+ * Same shape for legacy (tokens.length === 1) and true multichain (tokens.length >= 1).
+ */
+export type PortfolioMultichainBalance = {
+  id: string
+  cacheId: string
+  name: string
+  symbol: string
+  logoUrl: Maybe<string>
+  totalAmount: number
+  priceUsd: Maybe<number>
+  pricePercentChange1d: Maybe<number>
+  totalValueUsd: Maybe<number>
+  isHidden: Maybe<boolean>
+  tokens: PortfolioChainBalance[]
+}

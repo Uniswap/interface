@@ -50,7 +50,7 @@ describe('TokenLogo', () => {
       expect(fallbackText).toBeTruthy()
     })
 
-    it('renders image with an invalid url', () => {
+    it('renders image with a bare path url (treated as local uri)', () => {
       const { queryByTestId } = render(
         <TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="invalid-url" />,
       )
@@ -59,7 +59,7 @@ describe('TokenLogo', () => {
       const tokenImage = queryByTestId('img-token-image')
 
       expect(tokenRemoteSvg).toBeFalsy()
-      expect(tokenImage).toBeFalsy()
+      expect(tokenImage).toBeTruthy()
     })
 
     it('renders image for an absolute path (local file)', () => {

@@ -7,37 +7,55 @@ import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
+// Buffer added on top of actual gas estimates to account for estimation variance
+const ACTUAL_GAS_FEE_BUFFER_PERCENT = 10
+
 /**
  * Given some token amount, return the max that can be spent of it
  * @param currencyAmount to return max of
  * @param transactionType to determine cost of transaction
  * @param isExtraTx adds a gas buffer to cover one additional transaction
+ * @param actualGasFee optional gas fee in wei from backend simulation, used instead of static reservation
  */
 export function useMaxAmountSpend({
   currencyAmount,
   txType,
   isExtraTx = false,
+  actualGasFee,
 }: {
   currencyAmount: Maybe<CurrencyAmount<Currency>>
   txType?: TransactionType
   isExtraTx?: boolean
+  actualGasFee?: string
 }): Maybe<CurrencyAmount<Currency>> {
   const minAmountPerTx = useMinGasAmount(currencyAmount?.currency.chainId, txType)
   const multiplierAsPercent = useLowBalanceWarningGasPercentage()
 
-  if (!currencyAmount || !minAmountPerTx) {
+  if (!currencyAmount) {
     return undefined
   }
 
-  // if isExtraTx: minAmountPerTx * multiplierAsPercent / 100%
-  // else: minAmountPerTx
-  const minAmount = JSBI.divide(
-    JSBI.multiply(minAmountPerTx, JSBI.BigInt(isExtraTx ? multiplierAsPercent : 100)),
-    JSBI.BigInt(100),
-  )
-
   if (!currencyAmount.currency.isNative) {
     return currencyAmount
+  }
+
+  let minAmount: JSBI
+
+  if (actualGasFee) {
+    // Use actual gas estimate with a small buffer
+    const gasFeeBI = JSBI.BigInt(actualGasFee)
+    const buffer = JSBI.divide(JSBI.multiply(gasFeeBI, JSBI.BigInt(ACTUAL_GAS_FEE_BUFFER_PERCENT)), JSBI.BigInt(100))
+    minAmount = JSBI.add(gasFeeBI, buffer)
+  } else if (minAmountPerTx) {
+    // Fall back to static reservation
+    // if isExtraTx: minAmountPerTx * multiplierAsPercent / 100%
+    // else: minAmountPerTx
+    minAmount = JSBI.divide(
+      JSBI.multiply(minAmountPerTx, JSBI.BigInt(isExtraTx ? multiplierAsPercent : 100)),
+      JSBI.BigInt(100),
+    )
+  } else {
+    return undefined
   }
 
   // If amount is negative then set it to 0

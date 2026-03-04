@@ -47,7 +47,7 @@ export function MultichainOptionRow({
       px="$spacing8"
       py="$spacing8"
       width="100%"
-      $md={{ gap: '$spacing12', px: 0 }}
+      $md={{ gap: '$spacing12', px: 0, height: '$spacing48' }}
     >
       <NetworkLogo borderRadius={logoBorderRadius} chainId={chainId} size={logoSize} />
       <Text color="$neutral1" flex={1} numberOfLines={1} variant={isMobileLayout ? 'body1' : 'body2'}>

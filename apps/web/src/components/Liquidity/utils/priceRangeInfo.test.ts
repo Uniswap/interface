@@ -165,9 +165,7 @@ describe('getV3PriceRangeInfo', () => {
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: tickSpaceLimits,
-          ticksAtLimit: [true, true],
           price: pool.priceOf(WETH),
-          pricesAtTicks: pricesAtLimit,
         })
       })
 
@@ -176,20 +174,14 @@ describe('getV3PriceRangeInfo', () => {
           priceInverted: false,
           fullRange: false,
           initialPrice: '',
-          minPrice: '2734',
-          maxPrice: '2920',
+          minTick: -197160,
+          maxTick: -196500,
         }
 
-        const pricesAtTicks = [
-          getTickToPrice({ baseToken: WETH, quoteToken: USDT, tick: -197160 }),
-          getTickToPrice({ baseToken: WETH, quoteToken: USDT, tick: -196500 }),
-        ]
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: [-197160, -196500],
-          ticksAtLimit: [false, false],
           price: pool.priceOf(WETH),
-          pricesAtTicks,
         })
       })
 
@@ -198,20 +190,14 @@ describe('getV3PriceRangeInfo', () => {
           priceInverted: false,
           fullRange: false,
           initialPrice: '',
-          minPrice: '2445',
-          maxPrice: '2535',
+          minTick: -198300,
+          maxTick: -197940,
         }
 
-        const pricesAtTicks = [
-          getTickToPrice({ baseToken: WETH, quoteToken: USDT, tick: -198300 }),
-          getTickToPrice({ baseToken: WETH, quoteToken: USDT, tick: -197940 }),
-        ]
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: [-198300, -197940],
-          ticksAtLimit: [false, false],
           price: pool.priceOf(WETH),
-          pricesAtTicks,
         })
       })
     })
@@ -227,9 +213,7 @@ describe('getV3PriceRangeInfo', () => {
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: tickSpaceLimits,
-          ticksAtLimit: [true, true],
           price: pool.priceOf(USDT),
-          pricesAtTicks: [pricesAtLimit[1]?.invert(), pricesAtLimit[0]?.invert()],
         })
       })
 
@@ -238,20 +222,14 @@ describe('getV3PriceRangeInfo', () => {
           priceInverted: true,
           fullRange: false,
           initialPrice: '',
-          minPrice: '0.000332258',
-          maxPrice: '0.000365734',
+          minTick: 196200,
+          maxTick: 197160,
         }
 
-        const pricesAtTicks = [
-          getTickToPrice({ baseToken: WETH, quoteToken: USDT, tick: -197160 }),
-          getTickToPrice({ baseToken: WETH, quoteToken: USDT, tick: -196200 }),
-        ]
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: [-197160, -196200],
-          ticksAtLimit: [false, false],
           price: pool.priceOf(USDT),
-          pricesAtTicks: [pricesAtTicks[1]?.invert(), pricesAtTicks[0]?.invert()],
         })
       })
 
@@ -260,20 +238,14 @@ describe('getV3PriceRangeInfo', () => {
           priceInverted: true,
           fullRange: false,
           initialPrice: '',
-          minPrice: '0.00039209341',
-          maxPrice: '0.00041884328',
+          minTick: 197880,
+          maxTick: 198540,
         }
 
-        const pricesAtTicks = [
-          getTickToPrice({ baseToken: WETH, quoteToken: USDT, tick: -198540 }),
-          getTickToPrice({ baseToken: WETH, quoteToken: USDT, tick: -197880 }),
-        ]
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: [-198540, -197880],
-          ticksAtLimit: [false, false],
           price: pool.priceOf(USDT),
-          pricesAtTicks: [pricesAtTicks[1]?.invert(), pricesAtTicks[0]?.invert()],
         })
       })
     })
@@ -333,9 +305,7 @@ describe('getV3PriceRangeInfo', () => {
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: tickSpaceLimits,
-          ticksAtLimit: [true, true],
           price: initialPrice,
-          pricesAtTicks: pricesAtLimit,
           mockPool,
         })
       })
@@ -345,20 +315,14 @@ describe('getV3PriceRangeInfo', () => {
           priceInverted: false,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '3332',
-          maxPrice: '3517',
+          minTick: -195180,
+          maxTick: -194640,
         }
 
-        const pricesAtTicks = [
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: -195180 }),
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: -194640 }),
-        ]
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: [-195180, -194640],
-          ticksAtLimit: [false, false],
           price: initialPrice,
-          pricesAtTicks,
           mockPool,
         })
       })
@@ -368,21 +332,14 @@ describe('getV3PriceRangeInfo', () => {
           priceInverted: false,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '2734',
-          maxPrice: '2920',
+          minTick: -197160,
+          maxTick: -196500,
         }
-
-        const pricesAtTicks = [
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: -197160 }),
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: -196500 }),
-        ]
 
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: [-197160, -196500],
-          ticksAtLimit: [false, false],
           price: initialPrice,
-          pricesAtTicks,
           mockPool,
         })
       })
@@ -392,21 +349,14 @@ describe('getV3PriceRangeInfo', () => {
           priceInverted: false,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '0',
-          maxPrice: '3600',
+          minTick: tickSpaceLimits[0],
+          maxTick: -194460,
         }
-
-        const pricesAtTicks = [
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: tickSpaceLimits[0] }),
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: -194460 }),
-        ]
 
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: [tickSpaceLimits[0], -194460],
-          ticksAtLimit: [true, false],
           price: initialPrice,
-          pricesAtTicks,
           mockPool,
         })
       })
@@ -416,21 +366,14 @@ describe('getV3PriceRangeInfo', () => {
           priceInverted: false,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '2734',
-          maxPrice: '',
+          minTick: -197160,
+          maxTick: tickSpaceLimits[1],
         }
-
-        const pricesAtTicks = [
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: -197160 }),
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: tickSpaceLimits[1] }),
-        ]
 
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: [-197160, tickSpaceLimits[1]],
-          ticksAtLimit: [false, true],
           price: initialPrice,
-          pricesAtTicks,
           mockPool,
         })
       })
@@ -446,7 +389,6 @@ describe('getV3PriceRangeInfo', () => {
         -196256,
         [],
       )
-
       const initialPriceInput = '.0003333'
       const initialPrice = getInitialPrice(USDT, ETH_MAINNET.wrapped, initialPriceInput)?.invert()
 
@@ -460,9 +402,7 @@ describe('getV3PriceRangeInfo', () => {
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: tickSpaceLimits,
-          ticksAtLimit: [true, true],
           price: initialPrice,
-          pricesAtTicks: [pricesAtLimit[1]?.invert(), pricesAtLimit[0]?.invert()],
           mockPool,
         })
       })
@@ -472,21 +412,14 @@ describe('getV3PriceRangeInfo', () => {
           priceInverted: true,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '0.000232258',
-          maxPrice: '0.000265734',
+          minTick: 192660,
+          maxTick: 193980,
         }
-
-        const pricesAtTicks = [
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: -193980 }),
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: -192660 }),
-        ]
 
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: [-193980, -192660],
-          ticksAtLimit: [false, false],
           price: initialPrice,
-          pricesAtTicks: [pricesAtTicks[1]?.invert(), pricesAtTicks[0]?.invert()],
           mockPool,
         })
       })
@@ -496,21 +429,14 @@ describe('getV3PriceRangeInfo', () => {
           priceInverted: true,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '0.000389748',
-          maxPrice: '0.000401617',
+          minTick: 197820,
+          maxTick: 198120,
         }
-
-        const pricesAtTicks = [
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: -198120 }),
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: -197820 }),
-        ]
 
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: [-198120, -197820],
-          ticksAtLimit: [false, false],
           price: initialPrice,
-          pricesAtTicks: [pricesAtTicks[1]?.invert(), pricesAtTicks[0]?.invert()],
           mockPool,
         })
       })
@@ -520,21 +446,14 @@ describe('getV3PriceRangeInfo', () => {
           priceInverted: true,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '',
-          maxPrice: '0.000389748',
+          minTick: tickSpaceLimits[0],
+          maxTick: 197820,
         }
-
-        const pricesAtTicks = [
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: -197820 }),
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: tickSpaceLimits[1] }),
-        ]
 
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: [-197820, tickSpaceLimits[1]],
-          ticksAtLimit: [true, false],
           price: initialPrice,
-          pricesAtTicks: [pricesAtTicks[1]?.invert(), pricesAtTicks[0]?.invert()],
           mockPool,
         })
       })
@@ -544,21 +463,14 @@ describe('getV3PriceRangeInfo', () => {
           priceInverted: true,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '0.000232258',
-          maxPrice: '',
+          minTick: 192660,
+          maxTick: tickSpaceLimits[1],
         }
-
-        const pricesAtTicks = [
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: tickSpaceLimits[0] }),
-          getTickToPrice({ baseToken: ETH_MAINNET.wrapped, quoteToken: USDT, tick: -192660 }),
-        ]
 
         expect(getV3PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V3,
           ticks: [tickSpaceLimits[0], -192660],
-          ticksAtLimit: [false, true],
           price: initialPrice,
-          pricesAtTicks: [pricesAtTicks[1]?.invert(), pricesAtTicks[0]?.invert()],
           mockPool,
         })
       })
@@ -605,10 +517,6 @@ describe('getV4PriceRangeInfo', () => {
       refetchPoolData: () => undefined,
     }
 
-    const pricesAtLimit = [
-      getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: tickSpaceLimits[0] }),
-      getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: tickSpaceLimits[1] }),
-    ]
     describe('not manually inverted', () => {
       it('returns correct info for full range', () => {
         const state: PriceRangeState = {
@@ -620,9 +528,7 @@ describe('getV4PriceRangeInfo', () => {
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: tickSpaceLimits,
-          ticksAtLimit: [true, true],
           price: pool.priceOf(ETH_MAINNET),
-          pricesAtTicks: pricesAtLimit,
         })
       })
 
@@ -631,20 +537,14 @@ describe('getV4PriceRangeInfo', () => {
           priceInverted: false,
           fullRange: false,
           initialPrice: '',
-          minPrice: '2734',
-          maxPrice: '2920',
+          minTick: -197160,
+          maxTick: -196500,
         }
 
-        const pricesAtTicks = [
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -197160 }),
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -196500 }),
-        ]
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: [-197160, -196500],
-          ticksAtLimit: [false, false],
           price: pool.priceOf(ETH_MAINNET),
-          pricesAtTicks,
         })
       })
 
@@ -653,20 +553,14 @@ describe('getV4PriceRangeInfo', () => {
           priceInverted: false,
           fullRange: false,
           initialPrice: '',
-          minPrice: '2445',
-          maxPrice: '2535',
+          minTick: -198300,
+          maxTick: -197940,
         }
 
-        const pricesAtTicks = [
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -198300 }),
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -197940 }),
-        ]
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: [-198300, -197940],
-          ticksAtLimit: [false, false],
           price: pool.priceOf(ETH_MAINNET),
-          pricesAtTicks,
         })
       })
     })
@@ -682,9 +576,7 @@ describe('getV4PriceRangeInfo', () => {
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: tickSpaceLimits,
-          ticksAtLimit: [true, true],
           price: pool.priceOf(USDT),
-          pricesAtTicks: [pricesAtLimit[1]?.invert(), pricesAtLimit[0]?.invert()],
         })
       })
 
@@ -693,20 +585,14 @@ describe('getV4PriceRangeInfo', () => {
           priceInverted: true,
           fullRange: false,
           initialPrice: '',
-          minPrice: '0.000332258',
-          maxPrice: '0.000365734',
+          minTick: -197160,
+          maxTick: -196200,
         }
 
-        const pricesAtTicks = [
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -197160 }),
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -196200 }),
-        ]
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
-          ticks: [-197160, -196200],
-          ticksAtLimit: [false, false],
+          ticks: [196200, 197160],
           price: pool.priceOf(USDT),
-          pricesAtTicks: [pricesAtTicks[1]?.invert(), pricesAtTicks[0]?.invert()],
         })
       })
 
@@ -715,20 +601,14 @@ describe('getV4PriceRangeInfo', () => {
           priceInverted: true,
           fullRange: false,
           initialPrice: '',
-          minPrice: '0.00039209341',
-          maxPrice: '0.00041884328',
+          minTick: 197880,
+          maxTick: 198540,
         }
 
-        const pricesAtTicks = [
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -198540 }),
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -197880 }),
-        ]
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: [-198540, -197880],
-          ticksAtLimit: [false, false],
           price: pool.priceOf(USDT),
-          pricesAtTicks: [pricesAtTicks[1]?.invert(), pricesAtTicks[0]?.invert()],
         })
       })
     })
@@ -790,9 +670,7 @@ describe('getV4PriceRangeInfo', () => {
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: tickSpaceLimits,
-          ticksAtLimit: [true, true],
           price: initialPrice,
-          pricesAtTicks: pricesAtLimit,
           mockPool,
         })
       })
@@ -802,20 +680,14 @@ describe('getV4PriceRangeInfo', () => {
           priceInverted: false,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '3332',
-          maxPrice: '3517',
+          minTick: -195180,
+          maxTick: -194640,
         }
 
-        const pricesAtTicks = [
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -195180 }),
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -194640 }),
-        ]
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: [-195180, -194640],
-          ticksAtLimit: [false, false],
           price: initialPrice,
-          pricesAtTicks,
           mockPool,
         })
       })
@@ -825,21 +697,14 @@ describe('getV4PriceRangeInfo', () => {
           priceInverted: false,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '2734',
-          maxPrice: '2920',
+          minTick: -197160,
+          maxTick: -196500,
         }
-
-        const pricesAtTicks = [
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -197160 }),
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -196500 }),
-        ]
 
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: [-197160, -196500],
-          ticksAtLimit: [false, false],
           price: initialPrice,
-          pricesAtTicks,
           mockPool,
         })
       })
@@ -849,21 +714,14 @@ describe('getV4PriceRangeInfo', () => {
           priceInverted: false,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '0',
-          maxPrice: '3600',
+          minTick: tickSpaceLimits[0],
+          maxTick: -194460,
         }
-
-        const pricesAtTicks = [
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: tickSpaceLimits[0] }),
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -194460 }),
-        ]
 
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: [tickSpaceLimits[0], -194460],
-          ticksAtLimit: [true, false],
           price: initialPrice,
-          pricesAtTicks,
           mockPool,
         })
       })
@@ -873,21 +731,14 @@ describe('getV4PriceRangeInfo', () => {
           priceInverted: false,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '2734',
-          maxPrice: '',
+          minTick: -197160,
+          maxTick: tickSpaceLimits[1],
         }
-
-        const pricesAtTicks = [
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -197160 }),
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: tickSpaceLimits[1] }),
-        ]
 
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: [-197160, tickSpaceLimits[1]],
-          ticksAtLimit: [false, true],
           price: initialPrice,
-          pricesAtTicks,
           mockPool,
         })
       })
@@ -918,9 +769,7 @@ describe('getV4PriceRangeInfo', () => {
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: tickSpaceLimits,
-          ticksAtLimit: [true, true],
           price: initialPrice,
-          pricesAtTicks: [pricesAtLimit[1]?.invert(), pricesAtLimit[0]?.invert()],
           mockPool,
         })
       })
@@ -930,21 +779,14 @@ describe('getV4PriceRangeInfo', () => {
           priceInverted: true,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '0.000232258',
-          maxPrice: '0.000265734',
+          minTick: 192660,
+          maxTick: 193980,
         }
-
-        const pricesAtTicks = [
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -193980 }),
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -192660 }),
-        ]
 
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: [-193980, -192660],
-          ticksAtLimit: [false, false],
           price: initialPrice,
-          pricesAtTicks: [pricesAtTicks[1]?.invert(), pricesAtTicks[0]?.invert()],
           mockPool,
         })
       })
@@ -954,21 +796,14 @@ describe('getV4PriceRangeInfo', () => {
           priceInverted: true,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '0.000389748',
-          maxPrice: '0.000401617',
+          minTick: 197820,
+          maxTick: 198120,
         }
-
-        const pricesAtTicks = [
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -198120 }),
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -197820 }),
-        ]
 
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: [-198120, -197820],
-          ticksAtLimit: [false, false],
           price: initialPrice,
-          pricesAtTicks: [pricesAtTicks[1]?.invert(), pricesAtTicks[0]?.invert()],
           mockPool,
         })
       })
@@ -978,21 +813,14 @@ describe('getV4PriceRangeInfo', () => {
           priceInverted: true,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '',
-          maxPrice: '0.000389748',
+          minTick: tickSpaceLimits[0],
+          maxTick: 197820,
         }
-
-        const pricesAtTicks = [
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -197820 }),
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: tickSpaceLimits[1] }),
-        ]
 
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: [-197820, tickSpaceLimits[1]],
-          ticksAtLimit: [true, false],
           price: initialPrice,
-          pricesAtTicks: [pricesAtTicks[1]?.invert(), pricesAtTicks[0]?.invert()],
           mockPool,
         })
       })
@@ -1002,21 +830,14 @@ describe('getV4PriceRangeInfo', () => {
           priceInverted: true,
           fullRange: false,
           initialPrice: initialPriceInput,
-          minPrice: '0.000232258',
-          maxPrice: '',
+          minTick: 192660,
+          maxTick: tickSpaceLimits[1],
         }
-
-        const pricesAtTicks = [
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: tickSpaceLimits[0] }),
-          getV4TickToPrice({ baseCurrency: ETH_MAINNET, quoteCurrency: USDT, tick: -192660 }),
-        ]
 
         expect(getV4PriceRangeInfo({ state, positionState, derivedPositionInfo })).toMatchObject({
           protocolVersion: ProtocolVersion.V4,
           ticks: [tickSpaceLimits[0], -192660],
-          ticksAtLimit: [false, true],
           price: initialPrice,
-          pricesAtTicks: [pricesAtTicks[1]?.invert(), pricesAtTicks[0]?.invert()],
           mockPool,
         })
       })

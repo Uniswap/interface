@@ -62,7 +62,7 @@ export function SwapFee({
         </SwapFeeWarning>
         <Flex row alignItems="center" gap="$spacing8">
           <Flex row alignItems="center" justifyContent="space-between">
-            <Text color="$accent1" variant="body3">
+            <Text color="$neutral1" variant="body3">
               {t('common.free')}
             </Text>
           </Flex>

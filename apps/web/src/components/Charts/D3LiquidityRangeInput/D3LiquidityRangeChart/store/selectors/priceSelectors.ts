@@ -21,6 +21,8 @@ export const useChartPriceState = () => {
       isFullRange: s.isFullRange,
       maxPrice: s.maxPrice,
       minPrice: s.minPrice,
+      minTick: s.minTick,
+      maxTick: s.maxTick,
       selectedHistoryDuration: s.selectedHistoryDuration,
       selectedPriceStrategy: s.selectedPriceStrategy,
       inputMode: s.inputMode,

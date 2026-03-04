@@ -108,7 +108,11 @@ export const RecentTransactionsTable = memo(function RecentTransactions() {
         size: media.lg ? 180 : 320,
         header: () => (
           <HeaderCell justifyContent="flex-start">
-            <FilterHeaderRow clickable={filterModalIsOpen} onPress={() => toggleFilterModal()} ref={filterAnchorRef}>
+            <FilterHeaderRow
+              clickable={filterModalIsOpen}
+              onPress={() => !filterModalIsOpen && toggleFilterModal()}
+              ref={filterAnchorRef}
+            >
               <Filter
                 allFilters={Object.values(TransactionType).map((type) => ({
                   value: type,
@@ -119,6 +123,7 @@ export const RecentTransactionsTable = memo(function RecentTransactions() {
                 isOpen={filterModalIsOpen}
                 toggleFilterModal={toggleFilterModal}
                 anchorRef={filterAnchorRef}
+                minSelected={1}
               />
               <Text variant="body3" color="$neutral2">
                 {t('common.type.label')}

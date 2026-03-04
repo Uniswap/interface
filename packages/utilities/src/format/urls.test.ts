@@ -42,6 +42,18 @@ describe(uriToHttpUrls, () => {
   it('returns empty array for invalid scheme', () => {
     expect(uriToHttpUrls('blah:test')).toEqual([])
   })
+  it('returns empty array for bare path without allowLocalUri', () => {
+    expect(uriToHttpUrls('eth-logo.png')).toEqual([])
+  })
+  it('returns bare path when allowLocalUri is true', () => {
+    expect(uriToHttpUrls('eth-logo.png', { allowLocalUri: true })).toEqual(['eth-logo.png'])
+  })
+  it('returns file:// URI when allowLocalUri is true', () => {
+    expect(uriToHttpUrls('file:///path/to/file.png', { allowLocalUri: true })).toEqual(['file:///path/to/file.png'])
+  })
+  it('returns empty array for file:// URI without allowLocalUri', () => {
+    expect(uriToHttpUrls('file:///path/to/file.png')).toEqual([])
+  })
 })
 
 describe(isSVGUri, () => {

@@ -1,4 +1,3 @@
-import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { createContext, useContext, useState } from 'react'
 import { isDevEnv } from 'utilities/src/environment/env'
 import type { StoreApi, UseBoundStore } from 'zustand'
@@ -9,14 +8,12 @@ import { PoolSortFields } from '~/appGraphql/data/pools/useTopPools'
 
 interface PoolTableActions {
   setSort: (category: PoolSortFields) => void
-  setSelectedProtocol: (protocol: ProtocolVersion) => void
   resetSort: () => void
 }
 
 interface PoolTableState {
   sortMethod: PoolSortFields
   sortAscending: boolean
-  selectedProtocol: ProtocolVersion
   actions: PoolTableActions
 }
 
@@ -24,7 +21,6 @@ type PoolTableStore = UseBoundStore<StoreApi<PoolTableState>>
 
 const INITIAL_SORT_METHOD = PoolSortFields.TVL
 const INITIAL_SORT_ASCENDING = false
-const INITIAL_PROTOCOL = ProtocolVersion.UNSPECIFIED
 
 export function createPoolTableStore(): PoolTableStore {
   return create<PoolTableState>()(
@@ -32,7 +28,6 @@ export function createPoolTableStore(): PoolTableStore {
       (set) => ({
         sortMethod: INITIAL_SORT_METHOD,
         sortAscending: INITIAL_SORT_ASCENDING,
-        selectedProtocol: INITIAL_PROTOCOL,
         actions: {
           setSort: (category) =>
             set((state) => {
@@ -41,7 +36,6 @@ export function createPoolTableStore(): PoolTableStore {
               }
               return { sortMethod: category, sortAscending: false }
             }),
-          setSelectedProtocol: (protocol) => set({ selectedProtocol: protocol }),
           resetSort: () =>
             set({
               sortMethod: INITIAL_SORT_METHOD,

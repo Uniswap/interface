@@ -130,7 +130,7 @@ export function LiquidityPositionInfo({
                 isMigrateToV4ButtonVisible
                   ? {
                       label: t('pool.migrateToV4'),
-                      iconAfter: <ArrowRight />,
+                      iconAfter: <ArrowRight color="current" />,
                       onPress: () => navigate(`/migrate/v3/${chainInfo.urlParam}/${positionInfo.tokenId}`),
                     }
                   : undefined

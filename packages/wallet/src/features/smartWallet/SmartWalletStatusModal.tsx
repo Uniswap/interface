@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Separator, Text, TouchableArea } from 'ui/src'
-import { GlobeFilled, InfoCircle, RotatableChevron } from 'ui/src/components/icons'
+import { GlobeFilled, InfoCircle, RotatableChevron, X } from 'ui/src/components/icons'
 import { iconSizes, spacing, zIndexes } from 'ui/src/theme'
 import { DisplayNameText } from 'uniswap/src/components/accounts/DisplayNameText'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -16,22 +16,24 @@ import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { ActiveNetworkExpando } from 'wallet/src/features/smartWallet/ActiveNetworkExpando/ActiveNetworkExpando'
 import { useEnabledActiveNetworkDelegations } from 'wallet/src/features/smartWallet/hooks/useEnabledActiveNetworkDelegations'
 import { useTranslateSmartWalletStatus } from 'wallet/src/features/smartWallet/hooks/useTranslateSmartWalletStatus'
-import { WalletData } from 'wallet/src/features/smartWallet/types'
+import { type WalletData, WalletStatus } from 'wallet/src/features/smartWallet/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
-interface SmartWalletDisableModalProps {
+interface SmartWalletStatusModalProps {
   wallet: WalletData
   onClose: () => void
-  onConfirm: () => void
+  onDisable: () => void
+  onEnable: () => void
   isOpen?: boolean
 }
 
-export function SmartWalletDisableModal({
+export function SmartWalletStatusModal({
   wallet,
   onClose,
-  onConfirm,
+  onDisable,
+  onEnable,
   isOpen,
-}: SmartWalletDisableModalProps): JSX.Element | null {
+}: SmartWalletStatusModalProps): JSX.Element | null {
   const { t } = useTranslation()
   const getTranslatedStatus = useTranslateSmartWalletStatus()
 
@@ -47,6 +49,9 @@ export function SmartWalletDisableModal({
   }, [collapseActiveNetworks, wallet])
 
   const activeDelegations = useEnabledActiveNetworkDelegations(wallet.activeDelegationNetworkToAddress)
+  const hasActiveDelegations = activeDelegations.length > 0
+
+  const isActive = wallet.status === WalletStatus.Active || wallet.status === WalletStatus.ActionRequired
 
   const { walletAddress } = wallet
   const displayName = useDisplayName(walletAddress)
@@ -56,10 +61,11 @@ export function SmartWalletDisableModal({
       isModalOpen={isOpen}
       maxHeight={isMobileApp ? '100%' : undefined}
       alignment="top"
-      name={ModalName.SmartWalletDisableModal}
+      name={ModalName.SmartWalletStatusModal}
       onClose={onClose}
     >
       <Flex
+        position="relative"
         backgroundColor="$surface1"
         borderRadius="$rounded16"
         overflow="hidden"
@@ -70,12 +76,23 @@ export function SmartWalletDisableModal({
         maxHeight="100%"
         {...(isWebPlatform && { flex: 1, overflowY: 'hidden' })}
       >
+        <TouchableArea
+          position="absolute"
+          top="$spacing2"
+          right="$spacing2"
+          zIndex={zIndexes.default}
+          onPress={onClose}
+        >
+          <X size="$icon.16" color="$neutral2" />
+        </TouchableArea>
         <Flex row alignItems="center" gap="$spacing12">
           <AccountIcon address={walletAddress} size={iconSizes.icon40} />
           <Flex>
-            <Text variant="body2">{t('settings.setting.smartWallet.action.smartWallet')}</Text>
-            <Text variant="body3" color="$accent1">
+            <Text variant="body2" color="$neutral1">
               {getTranslatedStatus(wallet.status)}
+            </Text>
+            <Text variant="body3" color="$neutral2">
+              {t('settings.setting.smartWallet.status.label')}
             </Text>
           </Flex>
         </Flex>
@@ -113,7 +130,7 @@ export function SmartWalletDisableModal({
             </WarningInfo>
           </Flex>
 
-          {activeDelegations.length > 0 ? (
+          {hasActiveDelegations ? (
             <TouchableArea
               justifyContent="center"
               flexDirection="row"
@@ -154,9 +171,15 @@ export function SmartWalletDisableModal({
           </Flex>
         </Flex>
         <Flex row>
-          <Button fill size="medium" emphasis="secondary" onPress={onConfirm}>
-            {t('common.button.disable')}
-          </Button>
+          {isActive ? (
+            <Button fill size="medium" emphasis="secondary" onPress={onDisable}>
+              {t('common.button.disable')}
+            </Button>
+          ) : (
+            <Button fill size="medium" emphasis="primary" onPress={onEnable}>
+              {t('common.button.enable')}
+            </Button>
+          )}
         </Flex>
       </Flex>
     </Modal>

@@ -50,22 +50,28 @@
       "path": "../../packages/utilities"
     },
     {
-      "path": "../../packages/uniswap"
+      "path": "../../packages/websocket"
     },
     {
-      "path": "../../packages/ui"
+      "path": "../../packages/prices"
     },
     {
       "path": "../../packages/sessions"
     },
     {
-      "path": "../../packages/gating"
-    },
-    {
       "path": "../../packages/notifications"
     },
     {
+      "path": "../../packages/gating"
+    },
+    {
+      "path": "../../packages/ui"
+    },
+    {
       "path": "../../packages/api"
+    },
+    {
+      "path": "../../packages/uniswap"
     }
   ]
 }

@@ -35,12 +35,9 @@ async function goToPortfolioActivity({
   const base = externalAddress ? `/portfolio/${externalAddress}/activity` : '/portfolio/activity'
   const params = externalAddress ? 'eagerlyConnect=false' : `eagerlyConnectAddress=${HAYDEN_ADDRESS}`
   const query = chain ? `${params}&chain=${chain}` : params
-  await page.goto(`${base}?${query}`)
 
-  await Promise.all([
-    graphql.waitForResponse('PortfolioBalances'),
-    page.waitForResponse((res) => res.url().includes('ListTransactions')),
-  ])
+  await page.goto(`${base}?${query}`)
+  await page.waitForResponse((res) => res.url().includes('ListTransactions'))
 }
 
 test.describe(

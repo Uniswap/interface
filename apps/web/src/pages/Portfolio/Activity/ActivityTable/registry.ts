@@ -155,7 +155,6 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
         },
         protocolInfo: toProtocolInfo(typeInfo.routingDappInfo),
       }
-
     case TransactionType.Send: {
       const currencyId = buildCurrencyId(chainId, typeInfo.tokenAddress)
 
@@ -173,7 +172,6 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
         protocolInfo: toProtocolInfo(typeInfo.dappInfo),
       }
     }
-
     case TransactionType.Receive: {
       // Handle NFT receives
       if (typeInfo.assetType === AssetType.ERC721 || typeInfo.assetType === AssetType.ERC1155) {
@@ -211,7 +209,6 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
         protocolInfo: toProtocolInfo(typeInfo.dappInfo),
       }
     }
-
     case TransactionType.Approve: {
       const currencyId = buildCurrencyId(chainId, typeInfo.tokenAddress)
 
@@ -229,7 +226,6 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
         protocolInfo: toProtocolInfo(typeInfo.dappInfo),
       }
     }
-
     case TransactionType.Wrap:
       return {
         amount: {
@@ -244,7 +240,24 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
         },
         protocolInfo: toProtocolInfo(typeInfo.dappInfo),
       }
-
+    case TransactionType.Withdraw: {
+      const currencyId = buildCurrencyId(chainId, typeInfo.tokenAddress)
+      return {
+        amount: {
+          kind: 'single',
+          currencyId,
+          amountRaw: typeInfo.currencyAmountRaw,
+        },
+        counterparty: typeInfo.dappInfo?.address
+          ? getValidAddress({ address: typeInfo.dappInfo.address, chainId })
+          : null,
+        typeLabel: {
+          baseGroup: ActivityFilterType.Receives,
+          overrideLabelKey: 'transaction.status.withdraw.success',
+        },
+        protocolInfo: toProtocolInfo(typeInfo.dappInfo),
+      }
+    }
     case TransactionType.CreatePool:
     case TransactionType.CreatePair:
       return {
@@ -264,7 +277,6 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
         },
         protocolInfo: toProtocolInfo(typeInfo.dappInfo),
       }
-
     case TransactionType.LiquidityIncrease:
       return {
         amount: {
@@ -283,7 +295,6 @@ function buildActivityRowFragmentsInternal(details: TransactionDetails): Activit
         },
         protocolInfo: toProtocolInfo(typeInfo.dappInfo),
       }
-
     case TransactionType.LiquidityDecrease:
       return {
         amount: {

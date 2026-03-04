@@ -13,19 +13,49 @@ export interface ProjectedFdvTableValue {
 }
 
 /**
+ * Computes completed-auction FDV in USD using market token price.
+ * Returns undefined if required inputs are unavailable.
+ */
+export function computeCompletedAuctionMarketFdvUsd({
+  totalSupplyRaw,
+  auctionTokenDecimals,
+  auctionTokenUsdPrice,
+}: {
+  totalSupplyRaw: string
+  auctionTokenDecimals: number | undefined
+  auctionTokenUsdPrice: number | undefined
+}): number | undefined {
+  if (auctionTokenUsdPrice === undefined || auctionTokenDecimals === undefined) {
+    return undefined
+  }
+
+  const totalSupplyDecimal = approximateNumberFromRaw({ raw: BigInt(totalSupplyRaw), decimals: auctionTokenDecimals })
+  return totalSupplyDecimal * auctionTokenUsdPrice
+}
+
+/**
  * Computes all projected FDV values for table display:
  * - Raw bigint for precise calculations
  * - USD value for sorting and primary display
  * - Formatted strings for both USD and bid token
+ *
+ * For completed auctions, uses the actual auction token market price when available,
+ * falling back to clearing price if not.
  */
 export function computeProjectedFdvTableValue({
   auction,
   bidTokenCurrencyInfo,
   bidTokenUsdPrice,
+  auctionTokenUsdPrice,
+  isCompleted,
 }: {
   auction: AuctionWithCurrencyInfo
   bidTokenCurrencyInfo: Maybe<CurrencyInfo>
   bidTokenUsdPrice: number | undefined
+  /** USD price of the auction token from market data */
+  auctionTokenUsdPrice?: number
+  /** Whether this auction has ended */
+  isCompleted?: boolean
 }): ProjectedFdvTableValue {
   const fallback: ProjectedFdvTableValue = {
     raw: 0n,
@@ -34,14 +64,42 @@ export function computeProjectedFdvTableValue({
   }
 
   try {
-    if (!auction.auction || !bidTokenCurrencyInfo) {
+    if (!auction.auction) {
+      return fallback
+    }
+
+    const totalSupply = auction.auction.tokenTotalSupply ?? auction.auction.totalSupply
+
+    if (!totalSupply) {
+      return fallback
+    }
+
+    // For completed auctions, prefer the actual market price over clearing price
+    if (isCompleted && auctionTokenUsdPrice !== undefined) {
+      const usd = computeCompletedAuctionMarketFdvUsd({
+        totalSupplyRaw: totalSupply,
+        auctionTokenDecimals: auction.currencyInfo?.currency.decimals,
+        auctionTokenUsdPrice,
+      })
+      if (usd === undefined) {
+        return fallback
+      }
+
+      return {
+        raw: 0n, // Not meaningful when using direct USD calculation
+        usd,
+        formattedBidToken: '—', // USD display will be used instead
+      }
+    }
+
+    // For active auctions (or completed without market price), use clearing price
+    if (!bidTokenCurrencyInfo) {
       return fallback
     }
 
     const priceQ96 = auction.auction.clearingPrice !== '0' ? auction.auction.clearingPrice : auction.auction.floorPrice
-    const totalSupply = auction.auction.tokenTotalSupply ?? auction.auction.totalSupply
 
-    if (priceQ96 === '0' || !totalSupply) {
+    if (priceQ96 === '0') {
       return fallback
     }
 
@@ -54,9 +112,10 @@ export function computeProjectedFdvTableValue({
     })
 
     // Convert to USD
-    const usd = bidTokenUsdPrice
-      ? approximateNumberFromRaw({ raw, decimals: bidTokenCurrencyInfo.currency.decimals }) * bidTokenUsdPrice
-      : undefined
+    const usd =
+      bidTokenUsdPrice !== undefined
+        ? approximateNumberFromRaw({ raw, decimals: bidTokenCurrencyInfo.currency.decimals }) * bidTokenUsdPrice
+        : undefined
 
     // Format bid token value
     const formattedAmount = formatCompactFromRaw({

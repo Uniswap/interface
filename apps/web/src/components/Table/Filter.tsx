@@ -46,6 +46,7 @@ interface FilterProps<T extends string> {
   setFilters: (filter: T[]) => void
   isOpen: boolean
   toggleFilterModal: () => void
+  minSelected?: number
   anchorRef: RefObject<HTMLElement | null>
 }
 
@@ -55,6 +56,7 @@ export function Filter<T extends string>({
   setFilters,
   isOpen,
   toggleFilterModal,
+  minSelected,
   anchorRef,
 }: FilterProps<T>) {
   const media = useMedia()
@@ -64,13 +66,21 @@ export function Filter<T extends string>({
 
   const handleFilterOptionClick = useCallback(
     (filter: T) => {
-      if (activeFilter.includes(filter)) {
+      const isSelected = activeFilter.includes(filter)
+      const isBelowMinSelected = minSelected && activeFilter.length <= minSelected
+
+      // If the filter is already selected and unselecting it would result in fewer than the minimum selected filters, do nothing
+      if (isBelowMinSelected && isSelected) {
+        return
+      }
+
+      if (isSelected) {
         setFilters(activeFilter.filter((f) => f !== filter))
       } else {
         setFilters([...activeFilter, filter])
       }
     },
-    [activeFilter, setFilters],
+    [activeFilter, minSelected, setFilters],
   )
 
   return (

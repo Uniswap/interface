@@ -16,10 +16,13 @@ export function SendActionTile({
   onPress,
   padding,
   recipient,
+  dataTestId = TestID.Send,
 }: {
   onPress?: () => void
   padding?: FlexProps['p']
   recipient?: Address
+  /** Override for e2e when tile is in portfolio overview (avoids collision with drawer). */
+  dataTestId?: string
 }): JSX.Element {
   const { t } = useTranslation()
   const { navigateToSendFlow } = useUniswapContext()
@@ -39,7 +42,7 @@ export function SendActionTile({
     <Trace logPress element={ElementName.PortfolioActionSend}>
       <SendButtonTooltip isSolanaOnlyWallet={isSolanaOnlyWallet}>
         <ActionTileWithIconAnimation
-          dataTestId={TestID.Send}
+          dataTestId={dataTestId}
           Icon={SendAction}
           name={t('common.send.button')}
           onClick={onPressSend}

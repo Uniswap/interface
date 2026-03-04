@@ -2,7 +2,6 @@ import { PlainMessage } from '@bufbuild/protobuf'
 import { useQuery } from '@tanstack/react-query'
 import { AuctionWithStats, ListTopAuctionsRequest } from '@uniswap/client-data-api/dist/data/v1/auction_pb'
 import { DynamicConfigs, useDynamicConfigValue, VerifiedAuctionsConfigKey } from '@universe/gating'
-import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { normalizeTokenAddressForCache } from 'uniswap/src/data/cache'
@@ -13,17 +12,16 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { selectIsTestnetModeEnabled } from 'uniswap/src/features/settings/selectors'
 import { useCurrencyInfos } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import {
-  AuctionStatusFilter,
-  AuctionVerificationFilter,
-  auctionStatusFilterAtom,
-  auctionVerificationFilterAtom,
-} from '~/components/Explore/state'
 import { DEFAULT_VERIFIED_AUCTION_IDS } from '~/components/Toucan/Config/config'
 import useDebounce from '~/hooks/useDebounce'
 import { useMultiChainBlockNumbers } from '~/hooks/useMultiChainBlockNumbers'
-import { useExploreTablesFilterStore } from '~/pages/Explore/exploreTablesFilterStore'
+import {
+  AuctionStatusFilter,
+  AuctionVerificationFilter,
+  useExploreTablesFilterStore,
+} from '~/pages/Explore/exploreTablesFilterStore'
 import { EXPLORE_API_PAGE_SIZE } from '~/state/explore/constants'
+import { isAuctionCompleted } from '~/state/explore/topAuctions/isAuctionCompleted'
 import { useChainIdFromUrlParam } from '~/utils/chainParams'
 
 export type AuctionWithCurrencyInfo = PlainMessage<AuctionWithStats> & {
@@ -60,21 +58,6 @@ function filterAuctionsBySearchString(
 }
 
 /**
- * Helper function to check if an auction is completed
- */
-function isAuctionCompleted(options: {
-  auction: { endBlock?: string; chainId?: number }
-  blockNumber: bigint | undefined
-}): boolean {
-  const { auction, blockNumber } = options
-  if (!auction.chainId || !auction.endBlock || blockNumber === undefined) {
-    return false
-  }
-  const endBlockNum = BigInt(auction.endBlock)
-  return blockNumber >= endBlockNum
-}
-
-/**
  * Filters auctions by verification and status
  */
 function filterAuctionsByVerificationAndStatus(
@@ -94,7 +77,7 @@ function filterAuctionsByVerificationAndStatus(
 
     const isVerified = options.verifiedAuctionIds.has(auction.auctionId)
     const isCompleted = isAuctionCompleted({
-      auction,
+      endBlock: auction.endBlock,
       blockNumber: options.blocksByChain.get(auction.chainId),
     })
 
@@ -133,8 +116,8 @@ export function useTopAuctions(): {
   const chainId = useChainIdFromUrlParam()
   const filterString = useExploreTablesFilterStore((s) => s.filterString)
   const debouncedFilterString = useDebounce(filterString, 300)
-  const verificationFilter = useAtomValue(auctionVerificationFilterAtom)
-  const statusFilter = useAtomValue(auctionStatusFilterAtom)
+  const verificationFilter = useExploreTablesFilterStore((s) => s.verificationFilter)
+  const statusFilter = useExploreTablesFilterStore((s) => s.statusFilter)
   const isTestnetModeEnabled = useSelector(selectIsTestnetModeEnabled)
 
   const verifiedAuctionIds: string[] = useDynamicConfigValue({

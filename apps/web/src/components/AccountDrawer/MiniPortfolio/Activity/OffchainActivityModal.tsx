@@ -16,7 +16,7 @@ import {
 } from 'uniswap/src/features/language/localizedDayjs'
 import { InterfaceEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { hasTradeType } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { TransactionStatus, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isLimitCancellable } from 'uniswap/src/features/transactions/utils/uniswapX.utils'

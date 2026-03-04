@@ -6,7 +6,7 @@ import {
   flushPromises,
 } from '@universe/websocket/src/client/__tests__/testUtils'
 import type { ConnectionStatus } from '@universe/websocket/src/types'
-import { describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 describe('createWebSocketClient integration', () => {
   describe('lazy connection lifecycle', () => {
@@ -719,6 +719,113 @@ describe('createWebSocketClient integration', () => {
       // onRawMessage called for: connection message (from connectViaSubscribe) + the data message
       expect(onRawMessage).toHaveBeenCalledWith({ type: 'connected', connectionId: 'conn-123' })
       expect(onRawMessage).toHaveBeenCalledWith({ channel: 'prices', key: 'prices:ETH', data: { data: 'test' } })
+    })
+  })
+
+  describe('session refresh timer', () => {
+    beforeEach(() => {
+      vi.useFakeTimers()
+    })
+
+    afterEach(() => {
+      vi.useRealTimers()
+    })
+
+    it('starts timer on connect and calls refreshSession at interval', async () => {
+      const { client, mockSocket, handler } = createTestClient({
+        sessionRefreshIntervalMs: 5000,
+      })
+
+      connectViaSubscribe({ client, mockSocket })
+      await vi.advanceTimersByTimeAsync(0)
+
+      expect(handler.refreshSession).not.toHaveBeenCalled()
+
+      await vi.advanceTimersByTimeAsync(5000)
+
+      expect(handler.refreshSession).toHaveBeenCalledTimes(1)
+
+      await vi.advanceTimersByTimeAsync(5000)
+
+      expect(handler.refreshSession).toHaveBeenCalledTimes(2)
+    })
+
+    it('stops timer on disconnect (last unsubscribe)', async () => {
+      const { client, mockSocket, handler } = createTestClient({
+        sessionRefreshIntervalMs: 5000,
+      })
+
+      const unsub = connectViaSubscribe({ client, mockSocket })
+      await vi.advanceTimersByTimeAsync(0)
+
+      unsub()
+
+      await vi.advanceTimersByTimeAsync(10000)
+
+      expect(handler.refreshSession).not.toHaveBeenCalled()
+    })
+
+    it('stops timer on socket close', async () => {
+      const { client, mockSocket, handler } = createTestClient({
+        sessionRefreshIntervalMs: 5000,
+      })
+
+      connectViaSubscribe({ client, mockSocket })
+      await vi.advanceTimersByTimeAsync(0)
+
+      mockSocket.simulateClose()
+
+      await vi.advanceTimersByTimeAsync(10000)
+
+      expect(handler.refreshSession).not.toHaveBeenCalled()
+    })
+
+    it('restarts timer on reconnect', async () => {
+      const { client, mockSocket, handler } = createTestClient({
+        sessionRefreshIntervalMs: 5000,
+      })
+
+      connectViaSubscribe({ client, mockSocket })
+      await vi.advanceTimersByTimeAsync(0)
+
+      // Simulate reconnect
+      mockSocket.simulateClose()
+      mockSocket.simulateOpen()
+      mockSocket.simulateMessage({ type: 'connected', connectionId: 'conn-456' })
+      await vi.advanceTimersByTimeAsync(0)
+
+      handler.refreshSession.mockClear()
+
+      await vi.advanceTimersByTimeAsync(5000)
+
+      expect(handler.refreshSession).toHaveBeenCalledTimes(1)
+    })
+
+    it('does not start timer without sessionRefreshIntervalMs option', async () => {
+      const { client, mockSocket, handler } = createTestClient()
+
+      connectViaSubscribe({ client, mockSocket })
+      await vi.advanceTimersByTimeAsync(0)
+
+      await vi.advanceTimersByTimeAsync(60000)
+
+      expect(handler.refreshSession).not.toHaveBeenCalled()
+    })
+
+    it('does not start timer without handler refreshSession method', async () => {
+      const { client, mockSocket } = createTestClient({
+        sessionRefreshIntervalMs: 5000,
+        subscriptionHandler: {
+          subscribe: vi.fn().mockResolvedValue(undefined),
+          unsubscribe: vi.fn().mockResolvedValue(undefined),
+        },
+      })
+
+      connectViaSubscribe({ client, mockSocket })
+      await vi.advanceTimersByTimeAsync(0)
+
+      // No error thrown, timer simply doesn't start
+      await vi.advanceTimersByTimeAsync(10000)
     })
   })
 })

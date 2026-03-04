@@ -17,6 +17,7 @@ import {
   KRW_ICON,
   MXN_ICON,
   NGN_ICON,
+  NZD_ICON,
   PKR_ICON,
   RUB_ICON,
   SGD_ICON,
@@ -116,6 +117,12 @@ export function getLocalCurrencyIcon(localCurrency: FiatCurrency, size = 20): Re
       return (
         <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
           <NGN_ICON width={size} height={size} />
+        </Suspense>
+      )
+    case FiatCurrency.NewZealandDollar:
+      return (
+        <Suspense fallback={<Loader.Box borderRadius="$roundedFull" width={size} height={size} />}>
+          <NZD_ICON width={size} height={size} />
         </Suspense>
       )
     case FiatCurrency.AustralianDollar:

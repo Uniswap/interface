@@ -96,6 +96,7 @@ export function SearchBar({ tab }: { tab?: string }) {
           onBlur={handleBlur}
           $platform-web={{
             transitionDuration: transitions.duration.fast,
+            transitionProperty: 'width',
           }}
           focusStyle={{
             backgroundColor: '$surface1',

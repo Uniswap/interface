@@ -22,7 +22,7 @@ export function PriceImpactRow({
 
   const trade = derivedSwapInfo.trade.trade
 
-  if (hide || !trade || isBridge(trade)) {
+  if (hide || !trade || isBridge(trade) || !formattedPriceImpact) {
     return null
   }
 
@@ -37,7 +37,7 @@ export function PriceImpactRow({
       </MarketPriceImpactWarningModal>
       <Flex row shrink justifyContent="flex-end">
         <Text adjustsFontSizeToFit color={priceImpactWarningColor} variant="body3">
-          {formattedPriceImpact ?? 'N/A'}
+          {formattedPriceImpact}
         </Text>
       </Flex>
     </Flex>

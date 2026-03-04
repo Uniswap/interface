@@ -154,10 +154,10 @@ export const NotificationContainer = memo(function NotificationContainer({
         forceUpgrades.push(notification)
       } else if (notification.content?.style === ContentStyle.SYSTEM_BANNER) {
         systemBanners.push(notification)
-      } else if (isLocalTriggerNotification(notification.id)) {
-        localTriggers.push(notification)
       } else if (shouldRenderAsIntroCard(notification)) {
         introCards.push(notification)
+      } else if (isLocalTriggerNotification(notification.id)) {
+        localTriggers.push(notification)
       } else {
         others.push(notification)
       }

@@ -13,6 +13,12 @@ import {
   formatCompactFromRaw,
   formatTokenAmountWithSymbol,
 } from '~/components/Toucan/Auction/utils/fixedPointFdv'
+import {
+  buildContractInputForAddress,
+  buildTokenMarketPriceKey,
+  useTokenMarketPrices,
+} from '~/components/Toucan/hooks/useTokenMarketPrices'
+import { computeCompletedAuctionMarketFdvUsd } from '~/components/Toucan/utils/computeProjectedFdv'
 
 interface StatsBannerData {
   // Current clearing price
@@ -131,6 +137,65 @@ export function useStatsBannerData(): StatsBannerData {
     bidTokenAddress: auctionDetails?.currency,
     chainId: auctionDetails?.chainId,
   })
+  const auctionChainId = auctionDetails?.chainId
+  const bidTokenAddress = auctionDetails?.currency
+  const auctionTokenAddress = auctionDetails?.tokenAddress
+
+  const bidTokenContracts = useMemo(() => {
+    if (!auctionChainId || !bidTokenAddress) {
+      return []
+    }
+
+    return [
+      buildContractInputForAddress({
+        chainId: auctionChainId,
+        address: bidTokenAddress,
+        resolveNativeAddress: true,
+      }),
+    ]
+  }, [auctionChainId, bidTokenAddress])
+
+  const { priceMap: bidTokenMarketPriceMap } = useTokenMarketPrices(bidTokenContracts)
+
+  const auctionTokenContracts = useMemo(() => {
+    if (!auctionChainId || !auctionTokenAddress) {
+      return []
+    }
+
+    return [
+      buildContractInputForAddress({
+        chainId: auctionChainId,
+        address: auctionTokenAddress,
+      }),
+    ]
+  }, [auctionChainId, auctionTokenAddress])
+
+  const { priceMap: auctionTokenMarketPriceMap } = useTokenMarketPrices(auctionTokenContracts)
+
+  // Use the same market price source as top auctions table/chips for committed volume consistency.
+  const bidTokenMarketPriceUsd = useMemo(() => {
+    if (!auctionChainId || !bidTokenAddress) {
+      return undefined
+    }
+
+    const key = buildTokenMarketPriceKey({
+      chainId: auctionChainId,
+      address: bidTokenAddress,
+    })
+    return bidTokenMarketPriceMap[key]
+  }, [auctionChainId, bidTokenAddress, bidTokenMarketPriceMap])
+
+  const auctionTokenMarketPriceUsd = useMemo(() => {
+    if (!auctionChainId || !auctionTokenAddress) {
+      return undefined
+    }
+
+    const key = buildTokenMarketPriceKey({
+      chainId: auctionChainId,
+      address: auctionTokenAddress,
+    })
+    return auctionTokenMarketPriceMap[key]
+  }, [auctionChainId, auctionTokenAddress, auctionTokenMarketPriceMap])
 
   // Extract auction parameters
   // Use on-chain clearing price during active auction for display consistency with isInRange
@@ -215,11 +280,34 @@ export function useStatsBannerData(): StatsBannerData {
   }, [auctionTokenDecimals, bidTokenInfo, clearingPrice, totalSupply])
 
   // Format current valuation in user's selected fiat currency (no "USD" suffix)
-  // Returns "--" when priceFiat is unavailable
+  // For completed auctions, match top-auctions FDV by using auction token market price.
+  // Returns "--" when required price data is unavailable.
   const currentValuationFiatFormatted = useMemo(() => {
-    if (!bidTokenInfo || !totalSupply || totalSupply === '0' || bidTokenInfo.priceFiat === 0) {
+    if (!totalSupply || totalSupply === '0') {
       return '--'
     }
+
+    const isCompleted = auctionProgressState === AuctionProgressState.ENDED
+    if (isCompleted && auctionTokenMarketPriceUsd !== undefined) {
+      const valuationFiat = computeCompletedAuctionMarketFdvUsd({
+        totalSupplyRaw: totalSupply,
+        auctionTokenDecimals,
+        auctionTokenUsdPrice: auctionTokenMarketPriceUsd,
+      })
+
+      if (valuationFiat === undefined) {
+        return '--'
+      }
+
+      return convertFiatAmountFormatted(valuationFiat, NumberType.FiatTokenStats)
+    }
+
+    const bidTokenPriceUsd =
+      bidTokenMarketPriceUsd ?? (bidTokenInfo?.priceFiat === 0 ? undefined : bidTokenInfo?.priceFiat)
+    if (!bidTokenInfo || bidTokenPriceUsd === undefined) {
+      return '--'
+    }
+
     const valuationRaw = computeFdvBidTokenRaw({
       priceQ96: clearingPrice,
       bidTokenDecimals: bidTokenInfo.decimals,
@@ -232,9 +320,18 @@ export function useStatsBannerData(): StatsBannerData {
       decimals: bidTokenInfo.decimals,
       significantDigits: 15,
     })
-    const valuationFiat = valuationBidTokenApprox * bidTokenInfo.priceFiat
+    const valuationFiat = valuationBidTokenApprox * bidTokenPriceUsd
     return convertFiatAmountFormatted(valuationFiat, NumberType.FiatTokenStats)
-  }, [auctionTokenDecimals, bidTokenInfo, clearingPrice, convertFiatAmountFormatted, totalSupply])
+  }, [
+    auctionTokenDecimals,
+    auctionProgressState,
+    auctionTokenMarketPriceUsd,
+    bidTokenInfo,
+    bidTokenMarketPriceUsd,
+    clearingPrice,
+    convertFiatAmountFormatted,
+    totalSupply,
+  ])
 
   // Format concentration band values
   // Returns null for fiat range when priceFiat is unavailable
@@ -303,8 +400,8 @@ export function useStatsBannerData(): StatsBannerData {
       isStablecoin: bidTokenInfo.isStablecoin,
     })
 
-    // Convert to fiat value only if priceFiat available
-    if (bidTokenInfo.priceFiat === 0) {
+    // Convert to fiat value only if market price is available
+    if (!bidTokenMarketPriceUsd) {
       return { formatted: formattedWithSymbol, fiatFormatted: null }
     }
 
@@ -313,11 +410,11 @@ export function useStatsBannerData(): StatsBannerData {
       decimals: bidTokenInfo.decimals,
       significantDigits: 15,
     })
-    const fiatValue = totalBidVolumeApprox * bidTokenInfo.priceFiat
+    const fiatValue = totalBidVolumeApprox * bidTokenMarketPriceUsd
     const fiatFormatted = convertFiatAmountFormatted(fiatValue, NumberType.FiatTokenStats)
 
     return { formatted: formattedWithSymbol, fiatFormatted }
-  }, [auctionDetails?.totalBidVolume, bidTokenInfo, convertFiatAmountFormatted])
+  }, [auctionDetails?.totalBidVolume, bidTokenInfo, bidTokenMarketPriceUsd, convertFiatAmountFormatted])
 
   // Format currency raised at clearing price from checkpoint data
   const currencyRaisedFormatted = useCurrencyRaisedFormatted({

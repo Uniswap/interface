@@ -143,7 +143,7 @@ export function AuctionChip({ auction, projectedFdv, committedVolume }: AuctionC
             {t('toucan.auction.projectedFdv')}
           </Text>
           <Text variant="body3" color="$neutral1" numberOfLines={1}>
-            {projectedFdv.usd
+            {projectedFdv.usd !== undefined
               ? convertFiatAmountFormatted(projectedFdv.usd, NumberType.FiatTokenStats)
               : projectedFdv.formattedBidToken}
           </Text>
@@ -156,7 +156,7 @@ export function AuctionChip({ auction, projectedFdv, committedVolume }: AuctionC
             {t('toucan.auction.committedVolume')}
           </Text>
           <Text variant="body3" color="$neutral1" numberOfLines={1}>
-            {committedVolume.usd
+            {committedVolume.usd !== undefined
               ? convertFiatAmountFormatted(committedVolume.usd, NumberType.FiatTokenStats)
               : committedVolume.formattedBidToken}
           </Text>

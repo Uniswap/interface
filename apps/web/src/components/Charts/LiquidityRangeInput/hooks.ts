@@ -36,7 +36,7 @@ export function useDensityChartData({
   hooks?: string
   skip?: boolean
 }) {
-  const { isLoading, error, data, activeTick, liquidity } = usePoolActiveLiquidity({
+  const { isLoading, error, data, activeTick, liquidity, sqrtPriceX96 } = usePoolActiveLiquidity({
     sdkCurrencies,
     version,
     poolId,
@@ -68,12 +68,14 @@ export function useDensityChartData({
         token1: sdkCurrencies.TOKEN1,
         tickSpacing,
         currentTick: activeTick,
+        nextTick: data[i + 1]?.tick,
         amount: JSBI.BigInt(t.liquidityActive.toString()),
         tick: t,
+        sqrtPriceX96,
       })
 
       const chartEntry = {
-        activeLiquidity: parseFloat(t.liquidityActive.toString()),
+        liquidityActive: parseFloat(t.liquidityActive.toString()),
         liquidityNet: parseFloat(t.liquidityNet.toString()),
         price0: parseFloat(price0),
         tick: t.tick,
@@ -81,9 +83,7 @@ export function useDensityChartData({
         amount1Locked: priceInverted ? amount1Locked : amount0Locked,
       }
 
-      if (chartEntry.activeLiquidity > 0) {
-        newData.push(chartEntry)
-      }
+      newData.push(chartEntry)
     }
 
     return newData

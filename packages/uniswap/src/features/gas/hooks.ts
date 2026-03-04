@@ -21,7 +21,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/hooks/usePollingIntervalByChain'
-import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { type DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import { type DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { type UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
@@ -147,6 +147,8 @@ export function useFormattedUniswapXGasFeeInfo(
       return undefined
     }
     const { approvalCost, inputTokenSymbol } = uniswapXGasBreakdown
+    const approvalCostAmount = Number(approvalCost)
+    const hasApprovalCost = Number.isFinite(approvalCostAmount) && approvalCostAmount > 0
     // If this swap was done via classic routing, the total gas fee would have been approval gas fee + classic swap gas fee.
     const preSavingsGasCostUsd =
       Number(approvalCostUsd ?? 0) + Number(uniswapXGasBreakdown.classicGasUseEstimateUSD ?? 0)
@@ -156,7 +158,7 @@ export function useFormattedUniswapXGasFeeInfo(
     const swapFeeFormatted = convertFiatAmountFormatted(0, NumberType.FiatGasPrice)
 
     return {
-      approvalFeeFormatted: approvalCost
+      approvalFeeFormatted: hasApprovalCost
         ? convertFiatAmountFormatted(approvalCostUsd, NumberType.FiatGasPrice)
         : undefined,
       preSavingsGasFeeFormatted,

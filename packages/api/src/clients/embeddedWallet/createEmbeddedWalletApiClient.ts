@@ -1,5 +1,4 @@
 import { type PromiseClient } from '@connectrpc/connect'
-// OLD package (for 5 missing methods)
 import { EmbeddedWalletService as OldEmbeddedWalletService } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_connect'
 import {
   type DeleteAuthenticatorResponse,
@@ -10,8 +9,6 @@ import {
   type RegisterNewAuthenticatorResponse,
   type SecuredChallengeResponse,
 } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
-// NEW package (for 7 core methods)
-import { EmbeddedWalletService as NewEmbeddedWalletService } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_connect'
 import {
   type ChallengeResponse,
   type CreateWalletResponse,
@@ -19,10 +16,12 @@ import {
   type Action as NewAction,
   type AuthenticationTypes as NewAuthenticationTypes,
   type RegistrationOptions,
+  type SignMessageResponse,
+  type SignTransactionResponse,
+  type SignTypedDataResponse,
   type WalletSignInResponse,
 } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'
 
-// Re-export old package types for missing methods
 export type {
   DeleteAuthenticatorResponse,
   ExportSeedPhraseResponse,
@@ -30,7 +29,6 @@ export type {
   RegisterNewAuthenticatorResponse,
   SecuredChallengeResponse,
 } from '@uniswap/client-embeddedwallet/dist/uniswap/embeddedwallet/v1/service_pb'
-// Re-export new package types as primary
 export type {
   Action,
   AuthenticationTypes,
@@ -45,12 +43,19 @@ export type {
 } from '@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb'
 
 export interface EmbeddedWalletClientContext {
-  rpcClient: PromiseClient<typeof NewEmbeddedWalletService>
+  rpcClient: {
+    challenge: (req: Record<string, unknown>) => Promise<ChallengeResponse>
+    createWallet: (req: Record<string, unknown>) => Promise<CreateWalletResponse>
+    walletSignIn: (req: Record<string, unknown>) => Promise<WalletSignInResponse>
+    signMessage: (req: Record<string, unknown>) => Promise<SignMessageResponse>
+    signTransaction: (req: Record<string, unknown>) => Promise<SignTransactionResponse>
+    signTypedData: (req: Record<string, unknown>) => Promise<SignTypedDataResponse>
+    disconnect: (req: Record<string, unknown>) => Promise<DisconnectResponse>
+  }
   legacyRpcClient?: PromiseClient<typeof OldEmbeddedWalletService>
 }
 
 export interface EmbeddedWalletApiClient {
-  // Use NEW package
   fetchChallengeRequest: (params: {
     type: NewAuthenticationTypes
     action: NewAction
@@ -83,7 +88,6 @@ export interface EmbeddedWalletApiClient {
 
   fetchDisconnectRequest: () => Promise<DisconnectResponse>
 
-  // Use OLD package for missing methods
   fetchSecuredChallengeRequest: (params: {
     type: OldAuthenticationTypes
     action: OldAction
@@ -116,8 +120,6 @@ export function createEmbeddedWalletApiClient({
   rpcClient,
   legacyRpcClient,
 }: EmbeddedWalletClientContext): EmbeddedWalletApiClient {
-  // ===== NEW PACKAGE METHODS (7 core operations) =====
-
   async function fetchChallengeRequest({
     type,
     action,
@@ -154,7 +156,6 @@ export function createEmbeddedWalletApiClient({
     return await rpcClient.walletSignIn({ credential })
   }
 
-  // ADAPTER: Batch operations → Single operations
   async function fetchSignMessagesRequest({
     messages,
     credential,
@@ -218,8 +219,6 @@ export function createEmbeddedWalletApiClient({
   async function fetchDisconnectRequest(): Promise<DisconnectResponse> {
     return await rpcClient.disconnect({})
   }
-
-  // ===== OLD PACKAGE METHODS (5 missing operations) =====
 
   async function fetchSecuredChallengeRequest({
     type,

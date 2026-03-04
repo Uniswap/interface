@@ -22,8 +22,8 @@ import { PositionField } from '~/types/position'
 export const DEFAULT_PRICE_RANGE_STATE: PriceRangeState = {
   priceInverted: false,
   fullRange: false,
-  minPrice: '',
-  maxPrice: '',
+  minTick: undefined,
+  maxTick: undefined,
   initialPrice: '',
   inputMode: RangeAmountInputPriceMode.PRICE,
 }
@@ -49,8 +49,6 @@ interface BaseCreateLiquidityState {
   poolOrPair: V4Pool | V3Pool | Pair | undefined
   price: Price<Currency, Currency> | undefined
   ticks: [Maybe<number>, Maybe<number>]
-  pricesAtTicks: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>]
-  ticksAtLimit: [boolean, boolean]
 
   // From CreatePositionContext
   isNativeTokenAOnly: boolean
@@ -284,14 +282,6 @@ export function CreateLiquidityContextProvider({
       derivedPriceRangeInfo?.protocolVersion === ProtocolVersion.V2 || !derivedPriceRangeInfo
         ? [undefined, undefined]
         : derivedPriceRangeInfo.ticks,
-    ticksAtLimit:
-      derivedPriceRangeInfo?.protocolVersion === ProtocolVersion.V2 || !derivedPriceRangeInfo
-        ? [false, false]
-        : derivedPriceRangeInfo.ticksAtLimit,
-    pricesAtTicks:
-      derivedPriceRangeInfo?.protocolVersion === ProtocolVersion.V2 || !derivedPriceRangeInfo
-        ? [undefined, undefined]
-        : derivedPriceRangeInfo.pricesAtTicks,
     isNativeTokenAOnly,
     positionState,
     step,

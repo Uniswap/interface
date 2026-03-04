@@ -20,6 +20,7 @@ interface TestHandler {
   unsubscribe: ReturnType<typeof vi.fn>
   subscribeBatch: ReturnType<typeof vi.fn>
   unsubscribeBatch: ReturnType<typeof vi.fn>
+  refreshSession: ReturnType<typeof vi.fn>
 }
 
 interface TestClientResult {
@@ -44,6 +45,7 @@ export function createTestClient(
     unsubscribe: vi.fn().mockResolvedValue(undefined),
     subscribeBatch: vi.fn().mockResolvedValue(undefined),
     unsubscribeBatch: vi.fn().mockResolvedValue(undefined),
+    refreshSession: vi.fn().mockResolvedValue(undefined),
   }
 
   const client = createWebSocketClient<TestParams, TestMessage>({

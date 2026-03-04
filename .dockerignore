@@ -1,5 +1,5 @@
 # =============================================================================
-# .dockerignore for api-self-serve
+# .dockerignore for Docker builds (api-self-serve, mission-control)
 # =============================================================================
 
 # Dependencies (reinstalled in container)

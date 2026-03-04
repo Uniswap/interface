@@ -1,4 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
+import { PlatformType } from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
 import {
   createFetchClient,
   createNotificationsApiClient,
@@ -70,6 +71,7 @@ function provideMobileNotificationService(ctx: { getIsApiDataSourceEnabled: () =
 
   const notificationQueryOptions = getNotificationQueryOptions({
     apiClient,
+    getPlatformType: () => PlatformType.MOBILE,
     pollIntervalMs: 2 * ONE_MINUTE_MS,
   })
 

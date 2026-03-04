@@ -203,8 +203,8 @@ export function useLiquidityBarData({
           tickSpacing: poolTickSpacing,
           currentTick: currentTick ?? 0,
           amount: JSBI.BigInt(t.liquidityActive.toString()),
-          tick: t,
           nextTick,
+          tick: t,
         })
 
         barData.push({

@@ -8,10 +8,15 @@ import {
 } from '~/pages/IncreaseLiquidity/IncreaseLiquidityContext'
 import { PositionField } from '~/types/position'
 
-export function useDerivedIncreaseLiquidityInfo(
-  state: IncreaseLiquidityState,
-  unwrapNativeCurrency: boolean,
-): IncreaseLiquidityDerivedInfo {
+export function useDerivedIncreaseLiquidityInfo({
+  state,
+  unwrapNativeCurrency,
+  actualGasFee,
+}: {
+  state: IncreaseLiquidityState
+  unwrapNativeCurrency: boolean
+  actualGasFee?: string
+}): IncreaseLiquidityDerivedInfo {
   const account = useAccount()
   const { position: positionInfo, exactAmount, exactField } = state
 
@@ -42,6 +47,7 @@ export function useDerivedIncreaseLiquidityInfo(
     exactAmounts: {
       [exactField]: exactAmount,
     },
+    actualGasFee,
   })
 
   return {

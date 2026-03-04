@@ -90,6 +90,37 @@
         "priceUsd": 0.9999,
         "pricePercentChange1d": -0.01,
         "valueUsd": 999.9
+      },
+      {
+        "token": {
+          "chainId": 137,
+          "address": "0x2791Bca1f2de4661ED88A30C99A7a9449Aa84174",
+          "symbol": "USDC.e",
+          "decimals": 6,
+          "name": "Bridged USDC",
+          "type": "TOKEN_TYPE_ERC20",
+          "metadata": {
+            "projectName": "Bridged USDC",
+            "logoUrl": "https://coin-images.coingecko.com/coins/images/33000/large/usdc.png?1700119918",
+            "protectionInfo": {
+              "result": "PROTECTION_RESULT_BENIGN"
+            },
+            "feeData": {
+              "blockaid": {},
+              "feeDetector": {}
+            },
+            "safetyLevel": "SAFETY_LEVEL_VERIFIED",
+            "spamCode": "SPAM_CODE_NOT_SPAM"
+          }
+        },
+        "amount": {
+          "raw": "1000000",
+          "amount": 1
+        },
+        "priceUsd": 0.999,
+        "pricePercentChange1d": -0.13,
+        "valueUsd": 0.999,
+        "isHidden": true
       }
     ],
     "totalValueUsd": 38676499.9,

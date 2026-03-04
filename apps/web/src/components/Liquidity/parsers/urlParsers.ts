@@ -21,8 +21,6 @@ const priceRangeStateSchema: z.ZodSchema<Partial<PriceRangeState>> = z
   .object({
     priceInverted: z.boolean(),
     fullRange: z.boolean(),
-    minPrice: z.string(),
-    maxPrice: z.string(),
     minTick: z.number().int(),
     maxTick: z.number().int(),
     initialPrice: z.string(),

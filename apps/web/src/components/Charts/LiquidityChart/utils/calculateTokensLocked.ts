@@ -12,6 +12,7 @@ export function calculateTokensLocked({
   nextTick,
   amount,
   tick,
+  sqrtPriceX96,
 }: {
   token0: Currency
   token1: Currency
@@ -20,11 +21,12 @@ export function calculateTokensLocked({
   nextTick?: number
   amount: JSBI
   tick: { tick: number; liquidityNet: JSBI }
+  sqrtPriceX96?: JSBI
 }): { amount0Locked: number; amount1Locked: number } {
   try {
     const tickLower = tick.tick
     const tickUpper = Math.min(TickMath.MAX_TICK, nextTick ?? TickMath.MAX_TICK)
-    const currSqrtPriceX96 = TickMath.getSqrtRatioAtTick(currentTick)
+    const currSqrtPriceX96 = sqrtPriceX96 ?? TickMath.getSqrtRatioAtTick(currentTick)
 
     const amount0BigInt = getAmount0({
       tickLower,

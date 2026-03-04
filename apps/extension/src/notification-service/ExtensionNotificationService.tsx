@@ -1,4 +1,5 @@
 import { queryOptions } from '@tanstack/react-query'
+import { PlatformType } from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
 import {
   createFetchClient,
   createNotificationsApiClient,
@@ -84,6 +85,7 @@ function provideExtensionNotificationService(ctx: {
 
   const notifQueryOptions = getNotificationQueryOptions({
     apiClient,
+    getPlatformType: () => PlatformType.EXTENSION,
     pollIntervalMs: 120000, // Poll every 2 minutes
     getIsSessionInitialized, // Check session state before making API calls
   })

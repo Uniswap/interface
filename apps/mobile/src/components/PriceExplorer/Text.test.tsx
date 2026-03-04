@@ -100,6 +100,7 @@ describe(DatetimeText, () => {
     })
     const tree = render(<DatetimeText loading={false} />)
 
+    expect(tree.toJSON()).toHaveStyle({ opacity: 1 })
     expect(tree).toMatchSnapshot()
   })
 
@@ -110,6 +111,6 @@ describe(DatetimeText, () => {
     })
     const tree = render(<DatetimeText loading={true} />)
 
-    expect(tree).toMatchSnapshot()
+    expect(tree.toJSON()).toHaveStyle({ opacity: 0 })
   })
 })

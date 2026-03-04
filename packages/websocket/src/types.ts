@@ -75,6 +75,12 @@ export interface CreateWebSocketClientOptions<TParams, TMessage> {
   onError?: (error: unknown) => void
   onRawMessage?: (message: unknown) => void
   /**
+   * Interval (ms) for automatically refreshing the server session.
+   * When set, the client starts a timer on connect and stops it on disconnect.
+   * Requires the subscriptionHandler to implement refreshSession.
+   */
+  sessionRefreshIntervalMs?: number
+  /**
    * Optional factory for creating WebSocket instances.
    * Defaults to PartySocket. Primarily used for testing with mock WebSockets.
    */

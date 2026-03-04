@@ -56,6 +56,7 @@ export function createWebSocketClient<TParams, TMessage>(
     createSubscriptionKey,
     onError,
     onRawMessage,
+    sessionRefreshIntervalMs,
     socketFactory = defaultSocketFactory,
   } = options
 
@@ -71,6 +72,23 @@ export function createWebSocketClient<TParams, TMessage>(
   let socket: WebSocketLike | null = null
   const connectionCallbacks = new Set<(connectionId: string) => void>()
   let wasConnected = false
+  let sessionRefreshTimer: ReturnType<typeof setInterval> | null = null
+
+  function startSessionRefreshTimer(): void {
+    stopSessionRefreshTimer()
+    if (sessionRefreshIntervalMs && subscriptionHandler.refreshSession) {
+      sessionRefreshTimer = setInterval(() => {
+        subscriptionManager.refreshSession().catch((error) => onError?.(error))
+      }, sessionRefreshIntervalMs)
+    }
+  }
+
+  function stopSessionRefreshTimer(): void {
+    if (sessionRefreshTimer !== null) {
+      clearInterval(sessionRefreshTimer)
+      sessionRefreshTimer = null
+    }
+  }
 
   // Subscription manager handles all subscription logic
   const subscriptionManager = new SubscriptionManager<TParams, TMessage>({
@@ -116,13 +134,27 @@ export function createWebSocketClient<TParams, TMessage>(
       debug,
     })
 
+    // Capture a reference to this socket so event handlers can detect
+    // stale events from a previous socket (e.g. during React Strict Mode
+    // cleanup/remount cycles where disconnect + reconnect race).
+    const thisSocket = socket
+
     socket.addEventListener('open', () => {
+      if (socket !== thisSocket) {
+        return
+      }
       wasConnected = true
+      startSessionRefreshTimer()
       notifyStatusChange('connected')
     })
 
     socket.addEventListener('close', () => {
+      if (socket !== thisSocket) {
+        return
+      }
+      stopSessionRefreshTimer()
       // Ignore close events after intentional disconnect (socket already nulled)
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       if (!socket) {
         return
       }
@@ -134,11 +166,17 @@ export function createWebSocketClient<TParams, TMessage>(
     })
 
     socket.addEventListener('error', () => {
+      if (socket !== thisSocket) {
+        return
+      }
       onError?.(new Error('WebSocket error - check Network tab for details'))
       connectionStore.setError(new Error('WebSocket error'))
     })
 
     socket.addEventListener('message', (event) => {
+      if (socket !== thisSocket) {
+        return
+      }
       try {
         const message: unknown = JSON.parse((event as { data: string }).data)
         onRawMessage?.(message)
@@ -171,6 +209,7 @@ export function createWebSocketClient<TParams, TMessage>(
 
   function disconnect(): void {
     if (socket) {
+      stopSessionRefreshTimer()
       const s = socket
       wasConnected = false
       socket = null

@@ -51,7 +51,16 @@
       "wallet/*": ["./packages/wallet/*"],
       "@universe/transactional/*": ["./packages/transactional/*"],
       "@universe/mycelium/*": ["./packages/mycelium/*"],
-      "@universe/websocket/*": ["./packages/websocket/*"]
+      "@universe/websocket/*": ["./packages/websocket/*"],
+      "@universe/prices/*": ["./packages/prices/*"],
+      "@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb": [
+        "./node_modules/@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_pb",
+        "./packages/api/stubs/privy-service-pb"
+      ],
+      "@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_connect": [
+        "./node_modules/@uniswap/client-privy-embedded-wallet/dist/uniswap/privy-embedded-wallet/v1/service_connect",
+        "./packages/api/stubs/privy-service-connect"
+      ]
     }
   }
 }

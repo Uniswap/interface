@@ -1,4 +1,3 @@
-import { useAtom } from 'jotai'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip, useMedia } from 'ui/src'
@@ -10,13 +9,15 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
 import {
   AuctionVerificationFilter as AuctionVerificationFilterEnum,
-  auctionVerificationFilterAtom,
-} from '~/components/Explore/state'
+  useExploreTablesFilterStore,
+  useExploreTablesFilterStoreActions,
+} from '~/pages/Explore/exploreTablesFilterStore'
 
 export function AuctionVerificationFilter() {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
-  const [selectedFilter, setSelectedFilter] = useAtom(auctionVerificationFilterAtom)
+  const selectedFilter = useExploreTablesFilterStore((s) => s.verificationFilter)
+  const { setVerificationFilter: setSelectedFilter } = useExploreTablesFilterStoreActions()
   const media = useMedia()
 
   const onFilterChange = useCallback(

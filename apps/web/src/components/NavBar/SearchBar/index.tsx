@@ -12,6 +12,7 @@ import { SearchModal } from '~/components/NavBar/SearchBar/SearchModal'
 import { useIsSearchBarVisible } from '~/components/NavBar/SearchBar/useIsSearchBarVisible'
 import { useModalState } from '~/hooks/useModalState'
 import { deprecatedStyled } from '~/lib/deprecated-styled'
+import { EllipsisTamaguiStyle } from '~/theme/components/styles'
 
 const NAV_SEARCH_MIN_WIDTH = '340px'
 
@@ -88,7 +89,7 @@ export const SearchBar = () => {
               backgroundColor: '$surface1Hovered',
             }}
           >
-            <Flex row gap="$spacing12">
+            <Flex shrink row gap="$spacing12">
               <SearchIcon data-testid={TestID.NavSearchIcon}>
                 <Search size="$icon.20" color="$neutral2" />
               </SearchIcon>
@@ -98,7 +99,7 @@ export const SearchBar = () => {
                 element={ElementName.NavbarSearchInput}
                 properties={{ ...trace }}
               >
-                <Text fontWeight="$book" color="$neutral2" textAlign="left">
+                <Text fontWeight="$book" color="$neutral2" textAlign="left" {...EllipsisTamaguiStyle}>
                   {placeholderText}
                 </Text>
               </Trace>

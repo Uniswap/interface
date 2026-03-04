@@ -194,6 +194,11 @@ const getTransactionTitleTable = (): {
     [TransactionStatus.Success]: i18n.t('transaction.status.withdrawBid.success'),
     [TransactionStatus.Failed]: i18n.t('transaction.status.withdrawBid.failed'),
   },
+  [TransactionType.Withdraw]: {
+    [TransactionStatus.Pending]: i18n.t('transaction.status.withdraw.pending'),
+    [TransactionStatus.Success]: i18n.t('transaction.status.withdraw.success'),
+    [TransactionStatus.Failed]: i18n.t('transaction.status.withdraw.failed'),
+  },
 })
 
 export const getOrderTextTable = (): {
@@ -273,6 +278,7 @@ export const getCancelledTransactionTitleTable = (): { [key in TransactionType]:
   [TransactionType.AuctionBid]: i18n.t('transaction.status.submitBid.canceled'),
   [TransactionType.AuctionClaimed]: i18n.t('transaction.status.claim.canceled'),
   [TransactionType.AuctionExited]: i18n.t('transaction.status.withdrawBid.canceled'),
+  [TransactionType.Withdraw]: i18n.t('transaction.status.withdraw.canceled'),
 })
 
 const getAlternateTransactionTitleTable = (): {

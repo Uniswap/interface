@@ -21,6 +21,14 @@ import {createEntryGatewayProxy} from './vite/entry-gateway-proxy'
 // Get current file directory (ESM equivalent of __dirname)
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+// When the private embedded wallet package is not installed,
+// externalize it so Rollup doesn't fail to resolve dynamic imports at build time.
+// At runtime, the dynamic import will fail and the try/catch in loadPrivyPbModule() provides
+// a clear error message: "Embedded Wallet requires @uniswap/client-privy-embedded-wallet".
+const privyPackageInstalled = fs.existsSync(
+  path.resolve(__dirname, '../../node_modules/@uniswap/client-privy-embedded-wallet'),
+)
 const ENABLE_REACT_COMPILER = process.env.ENABLE_REACT_COMPILER === 'true'
 const ReactCompilerConfig = {
   target: '18', // '17' | '18' | '19'
@@ -447,9 +455,7 @@ export default defineConfig(({ mode }) => {
           secure: true,
           rewrite: (path) => path.replace(/^\/config/, '/v1/statsig-proxy'),
         },
-        ...(ENABLE_PROXY ? {
-          '/entry-gateway': createEntryGatewayProxy({ getLogger })
-        } : {}),
+        ...(ENABLE_PROXY ? { '/entry-gateway': createEntryGatewayProxy({ getLogger }) } : {}),
       },
     },
 
@@ -458,7 +464,14 @@ export default defineConfig(({ mode }) => {
       sourcemap: VITE_DISABLE_SOURCEMAP ? false : (isProduction && !isVercelDeploy ? 'hidden' : true),
       minify: isProduction && !isVercelDeploy ? 'esbuild' : undefined,
       rollupOptions: {
-        external: [/\.stories\.[tj]sx?$/, /\.mdx$/, /expo-clipboard\/build\/ClipboardPasteButton\.js/],
+        external: [
+          /\.stories\.[tj]sx?$/,
+          /\.mdx$/,
+          /expo-clipboard\/build\/ClipboardPasteButton\.js/,
+          // When the private package is not installed, externalize it so Rollup doesn't error.
+          // Dynamic imports of this module will fail at runtime (caught by loadPrivyPbModule's try/catch).
+          ...(!privyPackageInstalled ? [/^@uniswap\/client-privy-embedded-wallet/] : []),
+        ],
         output: {
           // Ensure consistent file naming for better caching
           entryFileNames: 'assets/[name]-[hash].js',
@@ -482,15 +495,6 @@ export default defineConfig(({ mode }) => {
   }
 })
 
-function getLogger(): {
-  log: typeof console.log
-} {
-  if(!DEBUG_PROXY) {
-    return {
-      log: () => {}
-    }
-  }
-  return {
-    log: console.log
-  }
+function getLogger(): { log: typeof console.log } {
+  return { log: DEBUG_PROXY ? console.log : () => {} }
 }

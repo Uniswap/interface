@@ -18,7 +18,6 @@ export const useChartViewState = () => {
     store,
     useShallow((s) => ({
       dimensions: s.dimensions,
-      dynamicZoomMin: s.dynamicZoomMin,
       initialViewSet: s.initialViewSet,
       inputMode: s.inputMode,
       panY: s.panY,

@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useReactNavigationModal } from 'src/components/modals/useReactNavigationModal'
+import { useOpenReceiveModal } from 'src/features/modals/hooks/useOpenReceiveModal'
 import { Button, Flex, Image, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { CEX_TRANSFER_MODAL_BG_DARK, CEX_TRANSFER_MODAL_BG_LIGHT } from 'ui/src/assets'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -15,6 +16,12 @@ export function KoreaCexTransferInfoModal(): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
   const { onClose } = useReactNavigationModal()
+  const openReceiveModal = useOpenReceiveModal()
+
+  const onPressReceive = useCallback(() => {
+    onClose()
+    openReceiveModal()
+  }, [onClose, openReceiveModal])
 
   return (
     <Modal backgroundColor={color.surface1.val} name={ModalName.KoreaCexTransferInfoModal} onClose={onClose}>
@@ -33,13 +40,17 @@ export function KoreaCexTransferInfoModal(): JSX.Element {
             {t('fiatOnRamp.cexTransferModal.description')}
           </Text>
         </Flex>
-        <Flex row width="100%" mt="$spacing8">
+        <Flex row gap="$spacing12" width="100%" mt="$spacing8">
           <Button
+            flex={1}
             size="large"
             emphasis="secondary"
             onPress={() => openUri({ uri: uniswapUrls.helpArticleUrls.cexTransferKorea })}
           >
             {t('common.button.learn')}
+          </Button>
+          <Button flex={1} size="large" onPress={onPressReceive}>
+            {t('common.button.receive')}
           </Button>
         </Flex>
       </Flex>

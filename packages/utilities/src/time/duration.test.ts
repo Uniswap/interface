@@ -16,19 +16,22 @@ describe('getDurationRemainingString', () => {
       expect(getDurationRemainingString(Date.now() + ONE_SECOND_MS * 30)).not.toContain('m')
     })
 
-    // Test exact boundary conditions
+    // Test exact boundary conditions — use fixed `now` to avoid timing races
     it('should format exactly 1 minute as "1m 0s"', () => {
-      const result = getDurationRemainingString(Date.now() + ONE_MINUTE_MS)
+      const now = Date.now()
+      const result = getDurationRemainingString(now + ONE_MINUTE_MS, now)
       expect(result).toBe('1m 0s')
     })
 
     it('should format exactly 1 hour as "1h 0m 0s"', () => {
-      const result = getDurationRemainingString(Date.now() + ONE_HOUR_MS)
+      const now = Date.now()
+      const result = getDurationRemainingString(now + ONE_HOUR_MS, now)
       expect(result).toBe('1h 0m 0s')
     })
 
     it('should format exactly 1 day as "1d 0h 0m"', () => {
-      const result = getDurationRemainingString(Date.now() + ONE_DAY_MS)
+      const now = Date.now()
+      const result = getDurationRemainingString(now + ONE_DAY_MS, now)
       expect(result).toBe('1d 0h 0m')
     })
   })
@@ -61,19 +64,22 @@ describe('getDurationRemainingString', () => {
       expect(result).not.toContain('m')
     })
 
-    // Test exact boundary conditions for past timestamps
+    // Test exact boundary conditions for past timestamps — use fixed `now` to avoid timing races
     it('should format exactly 1 minute ago as "1m 0s ago"', () => {
-      const result = getDurationRemainingString(Date.now() - ONE_MINUTE_MS)
+      const now = Date.now()
+      const result = getDurationRemainingString(now - ONE_MINUTE_MS, now)
       expect(result).toBe('1m 0s ago')
     })
 
     it('should format exactly 1 hour ago as "1h 0m 0s ago"', () => {
-      const result = getDurationRemainingString(Date.now() - ONE_HOUR_MS)
+      const now = Date.now()
+      const result = getDurationRemainingString(now - ONE_HOUR_MS, now)
       expect(result).toBe('1h 0m 0s ago')
     })
 
     it('should format exactly 1 day ago as "1d 0h 0m ago"', () => {
-      const result = getDurationRemainingString(Date.now() - ONE_DAY_MS)
+      const now = Date.now()
+      const result = getDurationRemainingString(now - ONE_DAY_MS, now)
       expect(result).toBe('1d 0h 0m ago')
     })
   })

@@ -23,6 +23,7 @@ type SupportedServerCurrency = Extract<
   | GraphQLApi.Currency.Krw
   | GraphQLApi.Currency.Mxn
   | GraphQLApi.Currency.Ngn
+  | GraphQLApi.Currency.Nzd
   | GraphQLApi.Currency.Pkr
   | GraphQLApi.Currency.Rub
   | GraphQLApi.Currency.Sgd
@@ -56,7 +57,7 @@ const mapServerCurrencyToFiatCurrency: Record<GraphQLApi.Currency, FiatCurrency 
   [GraphQLApi.Currency.Vnd]: FiatCurrency.VietnameseDong,
   [GraphQLApi.Currency.Eth]: undefined,
   [GraphQLApi.Currency.Matic]: undefined,
-  [GraphQLApi.Currency.Nzd]: undefined,
+  [GraphQLApi.Currency.Nzd]: FiatCurrency.NewZealandDollar,
   [GraphQLApi.Currency.Thb]: undefined,
 }
 export const mapFiatCurrencyToServerCurrency: Record<FiatCurrency, SupportedServerCurrency> = {
@@ -73,6 +74,7 @@ export const mapFiatCurrencyToServerCurrency: Record<FiatCurrency, SupportedServ
   [FiatCurrency.IndianRupee]: GraphQLApi.Currency.Inr,
   [FiatCurrency.JapaneseYen]: GraphQLApi.Currency.Jpy,
   [FiatCurrency.MexicanPeso]: GraphQLApi.Currency.Mxn,
+  [FiatCurrency.NewZealandDollar]: GraphQLApi.Currency.Nzd,
   [FiatCurrency.SouthKoreanWon]: GraphQLApi.Currency.Krw,
   [FiatCurrency.NigerianNaira]: GraphQLApi.Currency.Ngn,
   [FiatCurrency.PakistaniRupee]: GraphQLApi.Currency.Pkr,

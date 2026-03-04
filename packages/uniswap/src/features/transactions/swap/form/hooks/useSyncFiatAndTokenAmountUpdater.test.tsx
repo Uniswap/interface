@@ -23,7 +23,7 @@ vi.mock('uniswap/src/utils/currencyId', () => ({
   currencyIdToChain: vi.fn(),
 }))
 
-vi.mock('uniswap/src/features/transactions/hooks/useUSDCPrice', () => ({
+vi.mock('uniswap/src/features/transactions/hooks/useUSDCPriceWrapper', () => ({
   useUSDCPrice: vi.fn(),
   STABLECOIN_AMOUNT_OUT: {
     1: { currency: {} as Currency },
@@ -39,7 +39,7 @@ vi.mock('uniswap/src/features/transactions/swap/stores/swapFormStore/useSwapForm
 // Import the mocked functions - these are the mocks, not actual implementations
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCPrice } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
 
 // Cast mocked functions to Mock type

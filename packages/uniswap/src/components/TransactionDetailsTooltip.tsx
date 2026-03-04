@@ -41,7 +41,7 @@ const Header = ({
   logo?: ReactNode
 }): JSX.Element => {
   return (
-    <Flex row alignItems="center" gap="$spacing4">
+    <Flex row alignItems="center" gap="$spacing6">
       {logo}
       {Icon && <Icon size="$icon.16" color={iconColor} />}
       {title.uniswapX ? (

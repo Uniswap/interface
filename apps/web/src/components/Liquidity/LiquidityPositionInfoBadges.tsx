@@ -121,6 +121,7 @@ export function LiquidityPositionInfoBadges({
         const key = label + index
         const content = (
           <PositionInfoBadge
+            gap="$spacing4"
             cursor={copyable || badge.onPress ? 'pointer' : 'unset'}
             color={badge.onPress ? '$neutral1' : '$neutral2'}
             placement={getPlacement(index, badges.length)}

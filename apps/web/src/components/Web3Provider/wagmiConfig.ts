@@ -6,6 +6,8 @@ import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import type { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { ORDERED_EVM_CHAINS } from 'uniswap/src/features/chains/chainInfo'
 import { isTestnetChain } from 'uniswap/src/features/chains/utils'
+import { createObservableTransport } from 'uniswap/src/features/providers/observability/createObservableTransport'
+import { getRpcObserver } from 'uniswap/src/features/providers/observability/rpcObserver'
 import { isPlaywrightEnv, isTestEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { getNonEmptyArrayOrThrow } from 'utilities/src/primitives/array'
@@ -116,7 +118,13 @@ function createWagmiConfig(params: {
         pollingInterval: 12_000,
         transport: fallback(
           orderedTransportUrls(chain).map((url) =>
-            http(url, { onFetchResponse: (response) => onFetchResponse(response, chain, url) }),
+            createObservableTransport({
+              baseTransportFactory: http(url, {
+                onFetchResponse: (response) => onFetchResponse(response, chain, url),
+              }),
+              observer: getRpcObserver(),
+              meta: { chainId: chain.id, url },
+            }),
           ),
         ),
       })

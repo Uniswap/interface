@@ -4,13 +4,15 @@ import { type Query, queryOptions, type UseQueryResult, useQuery } from '@tansta
 import { DataApiService } from '@uniswap/client-data-api/dist/data/v1/api_connect'
 import { type GetPortfolioRequest, type GetPortfolioResponse } from '@uniswap/client-data-api/dist/data/v1/api_pb'
 import { type Balance } from '@uniswap/client-data-api/dist/data/v1/types_pb'
-import { SharedQueryClient, transformInput, type WithoutWalletAccount } from '@universe/api'
-import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
 import {
-  type AccountAddressesByPlatform,
-  buildAccountAddressesByPlatform,
-  isAccountAddressesByPlatform,
-} from 'uniswap/src/data/rest/buildAccountAddressesByPlatform'
+  createDataApiServiceClient,
+  getGetPortfolioQueryOptions,
+  SharedQueryClient,
+  transformInput,
+  type WithoutWalletAccount,
+} from '@universe/api'
+import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
+import { buildAccountAddressesByPlatform } from 'uniswap/src/data/rest/buildAccountAddressesByPlatform'
 import {
   cleanupCaughtUpOverrides,
   getOverridesForAddress,
@@ -19,7 +21,7 @@ import {
 } from 'uniswap/src/data/rest/portfolioBalanceOverrides'
 import { useEnabledChains } from 'uniswap/src/features/chains/hooks/useEnabledChains'
 import { useRestPortfolioValueModifier } from 'uniswap/src/features/dataApi/balances/balancesRest'
-import { type Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { fetchAndMergeOnchainBalances } from 'uniswap/src/features/portfolio/portfolioUpdates/rest/refetchRestQueriesViaOnchainOverrideVariantSaga'
 import { removeExpiredBalanceOverrides } from 'uniswap/src/features/portfolio/slice/slice'
 import { type CurrencyId } from 'uniswap/src/types/currency'
@@ -35,7 +37,10 @@ export type GetPortfolioInput<TSelectData = GetPortfolioResponse> = {
     evmAddress?: string
     svmAddress?: string
   }
-} & Pick<GetPortfolioQuery<TSelectData>, 'enabled' | 'refetchInterval' | 'select'>
+  enabled?: boolean
+  refetchInterval?: number | false
+  select?: (data: GetPortfolioResponse | undefined) => TSelectData
+}
 
 export interface TokenBalanceQuantityParts {
   quantity: number
@@ -52,7 +57,9 @@ export interface TokenBalanceMainParts {
   }
 }
 
-const portfolioClient = createPromiseClient(DataApiService, uniswapGetTransport)
+const dataApiClient = createDataApiServiceClient({
+  rpcClient: createPromiseClient(DataApiService, uniswapGetTransport),
+})
 
 /**
  * Wrapper around query for DataApiService/GetPortfolio
@@ -64,15 +71,17 @@ export function useGetPortfolioQuery<TSelectData = GetPortfolioResponse>(
   return useQuery(getPortfolioQuery(params))
 }
 
+type GetPortfolioQueryKey = readonly [
+  ReactQueryCacheKey.GetPortfolio,
+  { evmAddress?: string; svmAddress?: string },
+  Record<string, unknown>,
+]
+
 type GetPortfolioQuery<TSelectData = GetPortfolioResponse> = QueryOptionsResult<
   GetPortfolioResponse | undefined,
   Error,
   TSelectData,
-  readonly [
-    ReactQueryCacheKey.GetPortfolio,
-    AccountAddressesByPlatform | undefined,
-    PartialMessage<GetPortfolioRequest> | undefined,
-  ]
+  GetPortfolioQueryKey
 >
 
 export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
@@ -81,34 +90,21 @@ export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
   refetchInterval,
   select,
 }: GetPortfolioInput<TSelectData>): GetPortfolioQuery<TSelectData> => {
-  const accountAddressesByPlatform = buildAccountAddressesByPlatform(input)
-  const transformedInput = transformInput(input)
-
-  const {
-    // Changes in the `modifier` should not cause a refetch, so it's excluded from the `queryKey`.
-    modifier: _modifier,
-    // The information in `walletAccount` is already included and normalized in `accountAddressesByPlatform`, so we exclude it here.
-    walletAccount: _walletAccount,
-    ...queryCacheInputs
-  } = transformedInput ?? {}
-
-  const queryCacheInputsSorted = { ...queryCacheInputs }
-  if ('chainIds' in queryCacheInputs && queryCacheInputs.chainIds) {
-    // This prevents cache misses when chainIds array has same values but different order
-    queryCacheInputsSorted.chainIds = [...queryCacheInputs.chainIds].sort()
-  }
+  const baseOptions = getGetPortfolioQueryOptions(dataApiClient, { input })
 
   return queryOptions({
-    queryKey: [ReactQueryCacheKey.GetPortfolio, accountAddressesByPlatform, queryCacheInputsSorted],
+    ...baseOptions,
+    enabled,
+    refetchInterval,
+    subscribed: !!enabled,
+    select,
     queryFn: async () => {
       const log = createLogger('getPortfolio.ts', 'queryFn', '[REST-ITBU]')
-
+      const transformedInput = transformInput(input)
       if (!transformedInput) {
-        return Promise.resolve(undefined)
+        return undefined
       }
-
-      // Fetch portfolio data from the backend
-      const apiResponse = await portfolioClient.getPortfolio(transformedInput)
+      const apiResponse = await dataApiClient.getPortfolio(transformedInput)
 
       try {
         const reduxStore = getPortfolioQueryReduxStore()
@@ -118,6 +114,7 @@ export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
           return apiResponse
         }
 
+        const accountAddressesByPlatform = buildAccountAddressesByPlatform(input)
         if (!accountAddressesByPlatform || !apiResponse.portfolio) {
           return apiResponse
         }
@@ -181,11 +178,6 @@ export const getPortfolioQuery = <TSelectData = GetPortfolioResponse>({
         return apiResponse
       }
     },
-    placeholderData: (prev) => prev, // this prevents the loading skeleton from appearing when hiding/unhiding tokens
-    refetchInterval,
-    enabled,
-    subscribed: !!enabled,
-    select,
   })
 }
 
@@ -292,6 +284,7 @@ function _findBalanceFromCurrencyId(
 /**
  * Checks if a `GetPortfolio` query key matches the given address and platform.
  * Used to find active queries that need to be updated after a transaction.
+ * Query key format (from api package): [GetPortfolio, { evmAddress?, svmAddress? }, queryCacheInputs]
  */
 export function doesGetPortfolioQueryMatchAddress({
   queryKey,
@@ -302,22 +295,22 @@ export function doesGetPortfolioQueryMatchAddress({
   address: string
   platform: Platform
 }): boolean {
-  const [key, accountAddressesByPlatform] = queryKey
+  const [key, addressKey] = queryKey
 
-  if (
-    key !== ReactQueryCacheKey.GetPortfolio ||
-    !accountAddressesByPlatform ||
-    !isAccountAddressesByPlatform(accountAddressesByPlatform)
-  ) {
+  if (key !== ReactQueryCacheKey.GetPortfolio || typeof addressKey !== 'object' || addressKey === null) {
     return false
   }
 
-  // Check each platform-address pair in the query
-  return Object.entries(accountAddressesByPlatform).some(([queryPlatform, queryAddress]) => {
-    return areAddressesEqual({
-      addressInput1: { address, platform },
-      addressInput2: { address: queryAddress, platform: queryPlatform as Platform },
-    })
+  const keyWithAddresses = addressKey as { evmAddress?: string; svmAddress?: string }
+  const queryAddress = platform === Platform.EVM ? keyWithAddresses.evmAddress : keyWithAddresses.svmAddress
+
+  if (!queryAddress) {
+    return false
+  }
+
+  return areAddressesEqual({
+    addressInput1: { address, platform },
+    addressInput2: { address: queryAddress, platform },
   })
 }
 

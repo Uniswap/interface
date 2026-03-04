@@ -1,7 +1,7 @@
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trans } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { AutoColumn } from '~/components/deprecated/Column'
 import { SwapModalHeaderAmount } from '~/components/swap/SwapModalHeaderAmount'

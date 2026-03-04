@@ -20,6 +20,7 @@ export enum InterfaceEventName {
   LimitedWalletSupportToastDismissed = 'Limited Wallet Support Toast Dismissed',
   LimitedWalletSupportToastLearnMoreButtonClicked = 'Limited Wallet Support Learn More Button Clicked',
   LimitedWalletSupportToastShown = 'Limited Wallet Support Toast Shown',
+  LiquidityGasEstimation = 'Liquidity Gas Estimation',
   LimitExpirySelected = 'Limit Expiry Selected',
   LimitPresetRateSelected = 'Limit Preset Rate Selected',
   LimitPriceReversed = 'Limit Price Reversed',

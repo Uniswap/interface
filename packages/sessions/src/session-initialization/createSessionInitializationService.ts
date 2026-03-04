@@ -26,15 +26,25 @@ export interface SessionInitAnalytics {
   onVerifyCompleted?: (data: { success: boolean; attemptNumber: number; totalDurationMs: number }) => void
 }
 
+interface SessionInitOptions {
+  /**
+   * If provided, skips the initSession() RPC call and uses this value directly.
+   * Useful when the caller already knows the answer (e.g. from a prior init call).
+   */
+  needChallenge?: boolean
+}
+
 interface SessionInitializationService {
   /**
    * Orchestrates the complete session initialization flow:
    * 1. Calls initSession (backend decides whether to create new or reuse existing)
    * 2. Handles challenge solving if required
    *
+   * Pass `options.needChallenge` to skip step 1 when the answer is already known.
+   *
    * @throws Error if initialization fails
    */
-  initialize(): Promise<SessionInitResult>
+  initialize(options?: SessionInitOptions): Promise<SessionInitResult>
 }
 
 function createSessionInitializationService(ctx: {
@@ -136,33 +146,43 @@ function createSessionInitializationService(ctx: {
     await handleChallengeFlow(attemptCount + 1, startTime) // Recursive call with incremented count
   }
 
-  async function initialize(): Promise<SessionInitResult> {
+  async function initialize(options?: SessionInitOptions): Promise<SessionInitResult> {
     const initStartTime = ctx.performanceTracker.now()
 
-    // Report init started
-    ctx.analytics?.onInitStarted?.()
+    let needChallenge: boolean
+    let sessionId: string | undefined
 
-    // Always call initSession - backend decides whether to create new or reuse existing
-    // On web: existing session sent via cookie
-    // On mobile/extension: existing session sent via X-Session-ID header
-    const initResponse = await ctx.getSessionService().initSession()
+    if (options?.needChallenge !== undefined) {
+      // Caller already knows — skip the initSession() RPC
+      needChallenge = options.needChallenge
+      sessionId = undefined
 
-    // Report init completed
-    ctx.analytics?.onInitCompleted?.({
-      needChallenge: initResponse.needChallenge,
-      durationMs: ctx.performanceTracker.now() - initStartTime,
-    })
+      ctx.analytics?.onInitCompleted?.({
+        needChallenge,
+        durationMs: 0,
+      })
+    } else {
+      // Discover from backend
+      ctx.analytics?.onInitStarted?.()
 
-    // Step 3: Handle challenge if required and enabled
-    // Default behavior: disabled (opt-in) if callback is not provided
-    if (initResponse.needChallenge && ctx.getIsSessionUpgradeAutoEnabled?.()) {
+      const initResponse = await ctx.getSessionService().initSession()
+      needChallenge = initResponse.needChallenge
+      sessionId = initResponse.sessionId
+
+      ctx.analytics?.onInitCompleted?.({
+        needChallenge,
+        durationMs: ctx.performanceTracker.now() - initStartTime,
+      })
+    }
+
+    // Handle challenge if required and enabled
+    if (needChallenge && ctx.getIsSessionUpgradeAutoEnabled?.()) {
       await handleChallengeFlow()
     }
 
-    // Return the result
     // sessionId is null for web (stored in cookie), real ID for non-web platforms
     return {
-      sessionId: initResponse.sessionId ?? null,
+      sessionId: sessionId ?? null,
     }
   }
 
@@ -170,4 +190,4 @@ function createSessionInitializationService(ctx: {
 }
 
 export { createSessionInitializationService }
-export type { SessionInitializationService, SessionInitResult }
+export type { SessionInitializationService, SessionInitOptions, SessionInitResult }

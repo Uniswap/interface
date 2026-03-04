@@ -111,6 +111,16 @@ function getTransactionTypeVerbs(
           canceled: t('transaction.status.wrap.canceled'),
         }
       }
+    case TransactionType.Withdraw:
+      return {
+        success: externalDappName
+          ? t('transaction.status.withdraw.successDapp', { externalDappName })
+          : t('transaction.status.withdraw.success'),
+        pending: t('transaction.status.withdraw.pending'),
+        failed: t('transaction.status.withdraw.failed'),
+        canceling: t('transaction.status.withdraw.canceling'),
+        canceled: t('transaction.status.withdraw.canceled'),
+      }
     case TransactionType.Approve:
       if (typeInfo.approvalAmount === REVOKE_APPROVAL_AMOUNT) {
         return {

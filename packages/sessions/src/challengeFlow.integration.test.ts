@@ -6,6 +6,7 @@ import {
   InitSessionResponse,
   SignoutResponse,
   VerifyResponse,
+  VerifySuccess,
 } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
 import { createChallengeSolverService } from '@universe/sessions/src/challenge-solvers/createChallengeSolverService'
 import type { ChallengeSolver } from '@universe/sessions/src/challenge-solvers/types'
@@ -26,6 +27,13 @@ import {
   type MockEndpoints,
 } from '@universe/sessions/src/test-utils'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+
+// Helper: create a VerifyResponse with a success outcome (proto3 validation requires outcome.case)
+function createSuccessVerifyResponse(): VerifyResponse {
+  const response = new VerifyResponse({ retry: false })
+  response.outcome = { case: 'success', value: new VerifySuccess({}) }
+  return response
+}
 
 // Mock performance tracker for testing
 function createMockPerformanceTracker(): PerformanceTracker {
@@ -74,9 +82,7 @@ describe('Challenge Flow Integration Tests', () => {
         })
       },
       '/uniswap.platformservice.v1.SessionService/Verify': async (): Promise<VerifyResponse> => {
-        return new VerifyResponse({
-          retry: false,
-        })
+        return createSuccessVerifyResponse()
       },
       '/uniswap.platformservice.v1.SessionService/DeleteSession': async (): Promise<DeleteSessionResponse> => {
         return new DeleteSessionResponse({})
@@ -289,7 +295,7 @@ describe('Challenge Flow Integration Tests', () => {
       if (verifyAttempts === 1) {
         return new VerifyResponse({ retry: true })
       }
-      return new VerifyResponse({ retry: false })
+      return createSuccessVerifyResponse()
     }
 
     // Track challenge calls
@@ -426,7 +432,7 @@ describe('Challenge Flow Integration Tests', () => {
     const verifyCalls: Array<{ request: any }> = []
     mockEndpoints['/uniswap.platformservice.v1.SessionService/Verify'] = async (request): Promise<VerifyResponse> => {
       verifyCalls.push({ request })
-      return new VerifyResponse({ retry: false })
+      return createSuccessVerifyResponse()
     }
 
     const challengeSolverService = createChallengeSolverService()
@@ -494,7 +500,7 @@ describe('Challenge Flow Integration Tests', () => {
       if (verifyCount === 1) {
         return new VerifyResponse({ retry: true })
       }
-      return new VerifyResponse({ retry: false })
+      return createSuccessVerifyResponse()
     }
 
     // Turnstile solver throws (domain mismatch), Hashcash solver succeeds
@@ -577,7 +583,7 @@ describe('Challenge Flow Integration Tests', () => {
       if (verifyCount === 1) {
         return new VerifyResponse({ retry: true })
       }
-      return new VerifyResponse({ retry: false })
+      return createSuccessVerifyResponse()
     }
 
     // Mock Turnstile returns a fake token (doesn't throw), Hashcash succeeds

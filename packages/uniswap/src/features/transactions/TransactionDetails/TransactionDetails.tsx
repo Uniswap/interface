@@ -144,7 +144,7 @@ export function TransactionDetails({
               </Flex>
             </AnimatePresence>
           ) : null}
-          {RateInfo}
+          {showChildren ? RateInfo : null}
           {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
           <EstimatedSwapTime showIfLongerThanCutoff={true} timeMs={estimatedSwapTime} />
           {isSwap && outputCurrency && (

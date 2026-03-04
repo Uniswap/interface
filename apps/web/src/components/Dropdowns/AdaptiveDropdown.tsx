@@ -16,6 +16,9 @@ import { useEvent } from 'utilities/src/react/hooks'
 import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { useOnClickOutside } from '~/hooks/useOnClickOutside'
 
+// Gap between the trigger element and the dropdown content
+const DROPDOWN_OFFSET = 10
+
 const DropdownContent = styled(Text, {
   display: 'flex',
   flexDirection: 'column',
@@ -44,13 +47,13 @@ const DropdownContent = styled(Text, {
     positionTop: {
       true: {
         top: 'unset',
-        bottom: 'calc(100% + 10px)',
+        bottom: `calc(100% + ${DROPDOWN_OFFSET}px)`,
         enterStyle: { opacity: 0, y: 20 },
         exitStyle: { opacity: 0, y: 20 },
       },
       false: {
         bottom: 'unset',
-        top: 'calc(100% + 10px)',
+        top: `calc(100% + ${DROPDOWN_OFFSET}px)`,
         enterStyle: { opacity: 0, y: -20 },
         exitStyle: { opacity: 0, y: -20 },
       },
@@ -121,16 +124,23 @@ export function AdaptiveDropdown({
   })
   useOnClickOutside({ node, handler: isSheet ? undefined : handleClickOutside, ignoredNodes, ignoreDialogClicks })
   const [flipVertical, setFlipVertical] = useState(false)
+  const [dropdownMaxHeight, setDropdownMaxHeight] = useState<number | undefined>(undefined)
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: +dropdownNode, +node
   useEffect(() => {
-    if (isOpen && allowFlip && !isSheet) {
-      if (dropdownNode.current && node.current) {
-        const rect = node.current.getBoundingClientRect()
-        const verticalPageOffset = rect.height + rect.top + 15
-        const dropdownContainerHeight = positionFixed ? window.innerHeight : document.body.offsetHeight
-        const shouldFlip = dropdownNode.current.offsetHeight + verticalPageOffset > dropdownContainerHeight
-        setFlipVertical(forceFlipUp || shouldFlip)
+    if (isOpen && !isSheet && node.current) {
+      const rect = node.current.getBoundingClientRect()
+      const viewportHeight = window.innerHeight
+      const spaceBelow = viewportHeight - rect.bottom - DROPDOWN_OFFSET
+      const spaceAbove = rect.top - DROPDOWN_OFFSET
+
+      if (allowFlip && dropdownNode.current) {
+        const dropdownHeight = dropdownNode.current.offsetHeight
+        const shouldFlip = forceFlipUp || (dropdownHeight > spaceBelow && spaceAbove > spaceBelow)
+        setFlipVertical(shouldFlip)
+        setDropdownMaxHeight(shouldFlip ? spaceAbove : spaceBelow)
+      } else {
+        setDropdownMaxHeight(spaceBelow)
       }
     }
   }, [isOpen, allowFlip, dropdownNode, node, positionFixed, isSheet, forceFlipUp])
@@ -180,6 +190,9 @@ export function AdaptiveDropdown({
                 positionRight={alignRight}
                 positionTop={flipVertical}
                 position={trigger ? 'absolute' : 'relative'}
+                {...(!dropdownStyle?.maxHeight && dropdownMaxHeight !== undefined
+                  ? { maxHeight: dropdownMaxHeight }
+                  : {})}
               >
                 {children}
               </DropdownContent>

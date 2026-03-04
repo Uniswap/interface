@@ -1,3 +1,4 @@
+import { Page } from '@playwright/test'
 import { listTransactions } from '@uniswap/client-data-api/dist/data/v1/api-DataApiService_connectquery'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { expect, getTest } from '~/playwright/fixtures'
@@ -11,6 +12,55 @@ const test = getTest()
 // Token row ID from portfolio mock (chainId-address, lowercase) for Tether USD
 const USDT_TOKEN_ID = '1-0xdac17f958d2ee523a2206206994597c13d831ec7'
 
+type GraphqlFixture = {
+  intercept: (op: string, path: string) => Promise<void>
+  waitForResponse: (op: string) => Promise<void>
+}
+type DataApiFixture = {
+  intercept: (method: { service: { typeName: string }; name: string }, mockPath: string) => Promise<void>
+}
+
+async function goToPortfolioOverview({
+  page,
+  graphql,
+  dataApi,
+  portfolioBalancesMock = Mocks.PortfolioBalances.hayden,
+  getPortfolioMock = Mocks.DataApiService.get_portfolio,
+  externalAddress,
+  waitForGetPortfolio = true,
+  waitForListTransactions = true,
+}: {
+  page: Page
+  graphql: GraphqlFixture
+  dataApi?: DataApiFixture
+  portfolioBalancesMock?: string
+  getPortfolioMock?: string | null
+  externalAddress?: string
+  waitForGetPortfolio?: boolean
+  waitForListTransactions?: boolean
+}): Promise<void> {
+  await graphql.intercept('PortfolioBalances', portfolioBalancesMock)
+  if (dataApi) {
+    await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions)
+  }
+  if (getPortfolioMock) {
+    await mockGetPortfolioResponse({ page, mockPath: getPortfolioMock })
+  }
+
+  const waits: Promise<unknown>[] = [graphql.waitForResponse('PortfolioBalances')]
+  if (waitForGetPortfolio) {
+    waits.push(page.waitForResponse((res) => res.request().url().includes('GetPortfolio')))
+  }
+  if (waitForListTransactions) {
+    waits.push(page.waitForResponse((res) => res.url().includes('ListTransactions')))
+  }
+
+  const path = externalAddress ? `/portfolio/${externalAddress}` : '/portfolio'
+  const query = externalAddress ? 'eagerlyConnect=false' : `eagerlyConnectAddress=${HAYDEN_ADDRESS}`
+  await page.goto(`${path}?${query}`)
+  await Promise.all(waits)
+}
+
 test.describe(
   'Portfolio Overview Tab',
   {
@@ -23,14 +73,12 @@ test.describe(
   () => {
     test.describe('Portfolio Chart', () => {
       test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.hayden)
-        await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions)
-        await page.goto(`/portfolio?eagerlyConnectAddress=${HAYDEN_ADDRESS}`)
+        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
       })
 
       test('should display portfolio value', async ({ page }) => {
         // Portfolio should show a dollar value (the hayden mock has ~$430)
-        await expect(page.getByTestId(TestID.MiniPortfolioTotalBalance)).toBeVisible()
+        await expect(page.getByTestId(TestID.PortfolioTotalBalance)).toBeVisible()
       })
 
       test('should display time period selector', async ({ page }) => {
@@ -52,41 +100,43 @@ test.describe(
 
     test.describe('Action Tiles - Connected Wallet', () => {
       test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.hayden)
-        await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions)
-        await page.goto(`/portfolio?eagerlyConnectAddress=${HAYDEN_ADDRESS}`)
+        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
       })
 
       test('should display all action tiles for connected wallet', async ({ page }) => {
-        // Connected wallet should see: Send, Receive, Buy, More
-        await expect(page.getByTestId(TestID.Send)).toBeVisible()
-        await expect(page.getByTestId(TestID.WalletReceiveCrypto)).toBeVisible()
-        await expect(page.getByTestId(TestID.PortfolioActionTileBuy)).toBeVisible()
-        await expect(page.getByTestId(TestID.PortfolioActionTileMore)).toBeVisible()
+        const actionTiles = page.getByTestId(TestID.PortfolioActionTiles)
+        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileSend)).toBeVisible()
+        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileReceive)).toBeVisible()
+        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileBuy)).toBeVisible()
+        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileMore)).toBeVisible()
       })
 
       test('should navigate to buy page when clicking Buy tile', async ({ page }) => {
-        await page.getByTestId(TestID.PortfolioActionTileBuy).click()
+        await page.getByTestId(TestID.PortfolioActionTiles).getByTestId(TestID.PortfolioActionTileBuy).click()
         await expect(page).toHaveURL(/\/buy/)
       })
     })
 
     test.describe('Action Tiles - External Wallet', () => {
       test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.hayden)
-        await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions)
-        await page.goto(`/portfolio/${HAYDEN_ADDRESS}?eagerlyConnect=false`)
+        await goToPortfolioOverview({
+          page,
+          graphql,
+          dataApi,
+          externalAddress: HAYDEN_ADDRESS,
+          waitForListTransactions: false,
+        })
       })
 
       test('should display external wallet action tiles', async ({ page }) => {
-        // External wallet view should show: Send (to address), Copy address
-        await expect(page.getByTestId(TestID.Send)).toBeVisible()
-        await expect(page.getByTestId(TestID.PortfolioActionTileCopyAddress)).toBeVisible()
+        const actionTiles = page.getByTestId(TestID.PortfolioActionTiles)
+        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileSend)).toBeVisible()
+        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileCopyAddress)).toBeVisible()
       })
 
       test('should not show Swap, Buy, or More tiles for external wallet', async ({ page }) => {
-        // Wait for the page to load first
-        await expect(page.getByTestId(TestID.Send)).toBeVisible()
+        const actionTiles = page.getByTestId(TestID.PortfolioActionTiles)
+        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileSend)).toBeVisible()
 
         // These should NOT be visible for external wallet
         await expect(page.getByTestId(TestID.PortfolioActionTileSwap)).not.toBeVisible()
@@ -96,9 +146,8 @@ test.describe(
 
     test.describe('Stats Tiles', () => {
       test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.hayden)
-        await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions)
-        await page.goto(`/portfolio?eagerlyConnectAddress=${HAYDEN_ADDRESS}`)
+        // Stats content comes from ListTransactions (useSwapsThisWeek); section visibility needs GetPortfolio.
+        await goToPortfolioOverview({ page, graphql, dataApi })
       })
 
       test('should display swaps this week stat', async ({ page }) => {
@@ -112,15 +161,8 @@ test.describe(
 
     test.describe('Mini Tokens Table', () => {
       test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.hayden)
-        await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions)
-        await mockGetPortfolioResponse({ page, mockPath: Mocks.DataApiService.get_portfolio })
-        await page.goto(`/portfolio?eagerlyConnectAddress=${HAYDEN_ADDRESS}`)
-
-        await Promise.all([
-          graphql.waitForResponse('PortfolioBalances'),
-          page.waitForResponse((res) => res.request().url().includes('GetPortfolio')),
-        ])
+        // Token rows come from GetPortfolio only.
+        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
       })
 
       test('should display tokens section header', async ({ page }) => {
@@ -149,9 +191,13 @@ test.describe(
 
     test.describe('Mini Activity Table', () => {
       test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.hayden)
-        await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions)
-        await page.goto(`/portfolio?eagerlyConnectAddress=${HAYDEN_ADDRESS}`)
+        await goToPortfolioOverview({
+          page,
+          graphql,
+          dataApi,
+          getPortfolioMock: null,
+          waitForGetPortfolio: false,
+        })
       })
 
       test('should display activity section', async ({ page }) => {
@@ -170,13 +216,14 @@ test.describe(
 
     test.describe('Empty Portfolio State', () => {
       test.beforeEach(async ({ page, graphql }) => {
-        await graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.empty)
-        await mockGetPortfolioResponse({ page, mockPath: Mocks.DataApiService.get_portfolio_empty })
-        await page.goto(`/portfolio?eagerlyConnectAddress=${HAYDEN_ADDRESS}`)
-        await Promise.all([
-          graphql.waitForResponse('PortfolioBalances'),
-          page.waitForResponse((res) => res.request().url().includes('GetPortfolio')),
-        ])
+        // No dataApi: useActivityData is skipped when isPortfolioZero, so ListTransactions is never called.
+        await goToPortfolioOverview({
+          page,
+          graphql,
+          portfolioBalancesMock: Mocks.PortfolioBalances.empty,
+          getPortfolioMock: Mocks.DataApiService.get_portfolio_empty,
+          waitForListTransactions: false,
+        })
       })
 
       test('should show zero balance for empty portfolio', async ({ page }) => {
@@ -197,26 +244,27 @@ test.describe(
 
       test('should display action tiles in demo view', async ({ page }) => {
         await page.goto('/portfolio?eagerlyConnect=false')
-        await expect(page.getByTestId(TestID.PortfolioActionTileBuy)).toBeVisible()
-        await expect(page.getByTestId(TestID.WalletReceiveCrypto)).toBeVisible()
+        const actionTiles = page.getByTestId(TestID.PortfolioActionTiles)
+        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileBuy)).toBeVisible()
+        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileReceive)).toBeVisible()
       })
 
       test('should display demo portfolio data', async ({ page }) => {
         await page.goto('/portfolio?eagerlyConnect=false')
-        await expect(page.getByTestId(TestID.MiniPortfolioTotalBalance)).toBeVisible()
+        await expect(page.getByTestId(TestID.PortfolioTotalBalance)).toBeVisible()
       })
     })
 
     test.describe('External Wallet View', () => {
       test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.hayden)
-        await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions)
-        await mockGetPortfolioResponse({ page, mockPath: Mocks.DataApiService.get_portfolio })
-        await page.goto(`/portfolio/${HAYDEN_ADDRESS}?eagerlyConnect=false`)
-        await Promise.all([
-          graphql.waitForResponse('PortfolioBalances'),
-          page.waitForResponse((res) => res.request().url().includes('GetPortfolio')),
-        ])
+        // Token row and share UI need GetPortfolio only.
+        await goToPortfolioOverview({
+          page,
+          graphql,
+          dataApi,
+          externalAddress: HAYDEN_ADDRESS,
+          waitForListTransactions: false,
+        })
       })
 
       test('should display external wallet portfolio', async ({ page }) => {
@@ -235,26 +283,35 @@ test.describe(
 
     test.describe('Network Filter Integration', () => {
       test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.hayden)
-        await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions)
-        await mockGetPortfolioResponse({ page, mockPath: Mocks.DataApiService.get_portfolio })
-        await page.goto(`/portfolio?eagerlyConnectAddress=${HAYDEN_ADDRESS}`)
+        // Filter and View all tokens link need GetPortfolio only.
+        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
       })
 
       test('should filter overview data by network', async ({ page }) => {
         await page.getByTestId(TestID.TokensNetworkFilterTrigger).click()
-        await getVisibleDropdownElementByTestId(page, `${TestID.TokensNetworkFilterOptionPrefix}ethereum`).click()
-        await expect(page).toHaveURL(/chain=ethereum/)
+        const ethereumOption = getVisibleDropdownElementByTestId(
+          page,
+          `${TestID.TokensNetworkFilterOptionPrefix}ethereum`,
+        )
+        await ethereumOption.waitFor({ state: 'visible' })
+        await ethereumOption.click()
+        await page.waitForURL(/chain=ethereum/)
       })
 
       test('should preserve chain filter when navigating to tokens tab', async ({ page }) => {
         await page.getByTestId(TestID.TokensNetworkFilterTrigger).click()
-        await getVisibleDropdownElementByTestId(page, `${TestID.TokensNetworkFilterOptionPrefix}ethereum`).click()
-        await expect(page).toHaveURL(/chain=ethereum/)
+        const ethereumOption = getVisibleDropdownElementByTestId(
+          page,
+          `${TestID.TokensNetworkFilterOptionPrefix}ethereum`,
+        )
+        await ethereumOption.waitFor({ state: 'visible' })
+        await ethereumOption.click()
+        await page.waitForURL(/chain=ethereum/)
 
-        // Wait for View all tokens link to re-render with chain param (usePortfolioRoutes reads searchParams; avoid clicking stale link)
-        await expect(page.getByTestId(TestID.PortfolioOverviewViewAllTokens)).toHaveAttribute('href', /chain=ethereum/)
-        await page.getByTestId(TestID.PortfolioOverviewViewAllTokens).click()
+        // Wait for View all tokens link to re-render with chain param (href is on the <a>, test id is on the child Button)
+        const viewAllTokensLink = page.locator(`a:has([data-testid="${TestID.PortfolioOverviewViewAllTokens}"])`)
+        await expect(viewAllTokensLink).toHaveAttribute('href', /chain=ethereum/)
+        await viewAllTokensLink.click()
         await expect(page).toHaveURL(/chain=ethereum/)
         await expect(page).toHaveURL(/\/portfolio\/tokens/)
       })
@@ -264,15 +321,9 @@ test.describe(
       const MOBILE_VIEWPORT = { width: 375, height: 667 }
 
       test.beforeEach(async ({ page, graphql, dataApi }) => {
-        await graphql.intercept('PortfolioBalances', Mocks.PortfolioBalances.hayden)
-        await dataApi.intercept(listTransactions, Mocks.DataApiService.list_transactions)
-        await mockGetPortfolioResponse({ page, mockPath: Mocks.DataApiService.get_portfolio })
         await page.setViewportSize(MOBILE_VIEWPORT)
-        await page.goto(`/portfolio?eagerlyConnectAddress=${HAYDEN_ADDRESS}`)
-        await Promise.all([
-          graphql.waitForResponse('PortfolioBalances'),
-          page.waitForResponse((res) => res.request().url().includes('GetPortfolio')),
-        ])
+        // Chart, tiles, token row need GetPortfolio only.
+        await goToPortfolioOverview({ page, graphql, dataApi, waitForListTransactions: false })
       })
 
       test('should display overview chart on mobile', async ({ page }) => {
@@ -280,8 +331,8 @@ test.describe(
       })
 
       test('should display action tiles on mobile', async ({ page }) => {
-        // await expect(page.getByTestId(TestID.Send)).toBeVisible()
-        await expect(page.getByTestId(TestID.PortfolioActionTileBuy)).toBeVisible()
+        const actionTiles = page.getByTestId(TestID.PortfolioActionTiles)
+        await expect(actionTiles.getByTestId(TestID.PortfolioActionTileBuy)).toBeVisible()
       })
 
       test('should display tokens table on mobile', async ({ page }) => {

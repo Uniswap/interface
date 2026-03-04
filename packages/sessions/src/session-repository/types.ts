@@ -258,7 +258,20 @@ interface SessionRepository {
   getChallengeTypes(): Promise<ChallengeTypeConfig[]>
 }
 
-export { VerifyFailureReason }
+/**
+ * Typed failure reasons from the SessionService/Challenge proto.
+ * Values match the wire format: `REASON_${ChallengeFailure_Reason[enum]}`.
+ */
+const ChallengeFailureReason = {
+  /** Default/unknown failure */
+  UNSPECIFIED: 'REASON_UNSPECIFIED',
+  /** Session must pass bot detection first (score < 60) */
+  BOT_DETECTION_REQUIRED: 'REASON_BOT_DETECTION_REQUIRED',
+} as const
+
+type ChallengeFailureReason = (typeof ChallengeFailureReason)[keyof typeof ChallengeFailureReason]
+
+export { ChallengeFailureReason, VerifyFailureReason }
 
 export type {
   SessionRepository,

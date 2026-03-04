@@ -70,7 +70,10 @@ export function IncreaseLiquidityContextProvider({ children }: PropsWithChildren
     { step: TransactionStep; accepted: boolean } | undefined
   >()
 
-  const derivedIncreaseLiquidityInfo = useDerivedIncreaseLiquidityInfo(increaseLiquidityState, unwrapNativeCurrency)
+  const derivedIncreaseLiquidityInfo = useDerivedIncreaseLiquidityInfo({
+    state: increaseLiquidityState,
+    unwrapNativeCurrency,
+  })
 
   const value = useMemo(
     () => ({

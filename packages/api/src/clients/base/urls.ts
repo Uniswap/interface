@@ -78,3 +78,8 @@ export function createHelpArticleUrl(resourceId: string, path: string = 'article
 export const DEV_ENTRY_GATEWAY_API_BASE_URL: string = 'https://entry-gateway.backend-dev.api.uniswap.org'
 export const STAGING_ENTRY_GATEWAY_API_BASE_URL: string = 'https://entry-gateway.backend-staging.api.uniswap.org'
 export const PROD_ENTRY_GATEWAY_API_BASE_URL: string = 'https://entry-gateway.backend-prod.api.uniswap.org'
+
+// WebSocket URLs
+export const DEV_WEBSOCKET_BASE_URL: string = 'wss://websockets.backend-prod.api.uniswap.org'
+export const STAGING_WEBSOCKET_BASE_URL: string = 'wss://websockets.backend-prod.api.uniswap.org'
+export const PROD_WEBSOCKET_BASE_URL: string = 'wss://websockets.backend-prod.api.uniswap.org'

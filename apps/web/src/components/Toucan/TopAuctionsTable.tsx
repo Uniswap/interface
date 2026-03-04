@@ -1,14 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-condition, max-lines */
 import { createColumnHelper } from '@tanstack/react-table'
-import { GraphQLApi } from '@universe/api'
 import { useAtom } from 'jotai'
 import { atomWithReset } from 'jotai/utils'
 import { memo, ReactElement, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, styled, Text, useMedia } from 'ui/src'
-import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
-import { isStablecoinAddress, toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { EVMUniverseChainId } from 'uniswap/src/features/chains/types'
+import { isStablecoinAddress } from 'uniswap/src/features/chains/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
@@ -17,6 +16,7 @@ import { OrderDirection } from '~/appGraphql/data/util'
 import { Table } from '~/components/Table'
 import { Cell } from '~/components/Table/Cell'
 import { HeaderCell, TableText } from '~/components/Table/styled'
+import { buildTokenMarketPriceKey } from '~/components/Toucan/hooks/useTokenMarketPrices'
 import { TimeRemainingCell } from '~/components/Toucan/TimeRemainingCell'
 import { AuctionSortField, AuctionTableHeader, TokenNameCell } from '~/components/Toucan/TopAuctionsTableCells'
 import {
@@ -26,13 +26,15 @@ import {
 import { computeProjectedFdvTableValue, ProjectedFdvTableValue } from '~/components/Toucan/utils/computeProjectedFdv'
 import { computeTimeRemaining } from '~/components/Toucan/utils/computeTimeRemaining'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
+import { useMultiChainBlockNumbers } from '~/hooks/useMultiChainBlockNumbers'
 import useSimplePagination from '~/hooks/useSimplePagination'
 import { TABLE_PAGE_SIZE } from '~/state/explore'
+import { isAuctionCompleted } from '~/state/explore/topAuctions/isAuctionCompleted'
+import { useAuctionTokenPrices } from '~/state/explore/topAuctions/useAuctionTokenPrices'
 import { useBidTokenInfos } from '~/state/explore/topAuctions/useBidTokenInfos'
 import { useBidTokenPrices } from '~/state/explore/topAuctions/useBidTokenPrices'
 import type { AuctionWithCurrencyInfo } from '~/state/explore/topAuctions/useTopAuctions'
 import { useTopAuctions } from '~/state/explore/topAuctions/useTopAuctions'
-import { currencyKeyFromGraphQL } from '~/utils/currencyKey'
 
 /**
  * Comparator functions for client-side auction sorting.
@@ -41,12 +43,12 @@ import { currencyKeyFromGraphQL } from '~/utils/currencyKey'
  * Treats 0n as "no data" and sorts it to the end.
  */
 const AuctionSortMethods: Record<AuctionSortField, (a: TopAuctionsTableValue, b: TopAuctionsTableValue) => number> = {
-  [AuctionSortField.PROJECTED_FDV]: (a, b) => {
+  [AuctionSortField.FDV]: (a, b) => {
     // Use USD values for cross-currency comparison (follows portfolio balances pattern)
-    if (!a.projectedFdv.usd) {
+    if (a.projectedFdv.usd === undefined) {
       return 1 // Missing price sorts to end
     }
-    if (!b.projectedFdv.usd) {
+    if (b.projectedFdv.usd === undefined) {
       return -1
     }
 
@@ -56,10 +58,10 @@ const AuctionSortMethods: Record<AuctionSortField, (a: TopAuctionsTableValue, b:
 
   [AuctionSortField.COMMITTED_VOLUME]: (a, b) => {
     // Use USD values for cross-currency comparison (follows portfolio balances pattern)
-    if (!a.committedVolume.usd) {
+    if (a.committedVolume.usd === undefined) {
       return 1 // Missing price sorts to end
     }
-    if (!b.committedVolume.usd) {
+    if (b.committedVolume.usd === undefined) {
       return -1
     }
 
@@ -157,6 +159,21 @@ function ToucanTableComponent({
   const { t } = useTranslation()
   const bidTokenInfos = useBidTokenInfos(auctions ?? [])
   const { priceMap: bidTokenPriceMap, loading: pricesLoading } = useBidTokenPrices(auctions ?? [])
+  const { priceMap: auctionTokenPriceMap, loading: auctionTokenPricesLoading } = useAuctionTokenPrices(auctions ?? [])
+
+  // Fetch block numbers to determine which auctions are completed
+  const auctionChainIds = useMemo(
+    () =>
+      new Set(
+        (auctions ?? []).map((a) => a.auction?.chainId).filter((id): id is EVMUniverseChainId => id !== undefined),
+      ),
+    [auctions],
+  )
+  const blocksByChain = useMultiChainBlockNumbers(auctionChainIds)
+  const areBlocksLoaded = useMemo(
+    () => [...auctionChainIds].every((chainId) => blocksByChain.has(chainId)),
+    [auctionChainIds, blocksByChain],
+  )
 
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
@@ -193,31 +210,40 @@ function ToucanTableComponent({
           const bidTokenCurrencyInfo = bidTokenInfos.get(auction.currency)
 
           // Get USD price for the bid token
-          const chain = toGraphQLChain(auction.chainId)
-          const bidTokenUsdPrice = auction.currency
-            ? bidTokenPriceMap[
-                currencyKeyFromGraphQL({
-                  address: auction.currency,
-                  chain,
-                  standard: auction.currency === ZERO_ADDRESS ? GraphQLApi.TokenStandard.Native : undefined,
-                })
-              ]
+          const bidTokenMarketPriceUsd = auction.currency
+            ? bidTokenPriceMap[buildTokenMarketPriceKey({ chainId: auction.chainId, address: auction.currency })]
             : undefined
 
           // Check if the bid token is a stablecoin
           const isStablecoin = auction.currency ? isStablecoinAddress(auction.chainId, auction.currency) : false
 
+          // Determine if auction is completed
+          const currentBlock = blocksByChain.get(auction.chainId)
+          const isCompleted = isAuctionCompleted({
+            endBlock: auction.endBlock,
+            blockNumber: currentBlock,
+          })
+
+          // Get auction token's market price for completed auctions
+          const auctionTokenUsdPrice = auction.tokenAddress
+            ? auctionTokenPriceMap[
+                buildTokenMarketPriceKey({ chainId: auction.chainId, address: auction.tokenAddress })
+              ]
+            : undefined
+
           // Use new utilities to compute all values
           const projectedFdv = computeProjectedFdvTableValue({
             auction: auctionWithCurrencyInfo,
             bidTokenCurrencyInfo,
-            bidTokenUsdPrice,
+            bidTokenUsdPrice: bidTokenMarketPriceUsd,
+            auctionTokenUsdPrice,
+            isCompleted,
           })
 
           const committedVolume = computeCommittedVolumeTableValue({
             auction: auctionWithCurrencyInfo,
             bidTokenCurrencyInfo,
-            bidTokenUsdPrice,
+            bidTokenMarketPriceUsd,
             isStablecoin,
           })
 
@@ -265,7 +291,7 @@ function ToucanTableComponent({
     })
 
     return sortedByDefault
-  }, [auctions, bidTokenInfos, bidTokenPriceMap])
+  }, [auctions, bidTokenInfos, bidTokenPriceMap, auctionTokenPriceMap, blocksByChain])
 
   // Apply sorting
   const sortedAuctionTableValues = useMemo(
@@ -279,7 +305,7 @@ function ToucanTableComponent({
   )
 
   // Show skeleton while auctions OR prices are loading
-  const showLoadingSkeleton = loading || pricesLoading || !!error
+  const showLoadingSkeleton = loading || pricesLoading || auctionTokenPricesLoading || !areBlocksLoaded || !!error
 
   const media = useMedia()
   const columns = useMemo(() => {
@@ -325,10 +351,10 @@ function ToucanTableComponent({
         header: () => (
           <HeaderCell justifyContent="flex-end">
             <AuctionTableHeader
-              category={AuctionSortField.PROJECTED_FDV}
-              isCurrentSortMethod={sortMethod === AuctionSortField.PROJECTED_FDV}
+              category={AuctionSortField.FDV}
+              isCurrentSortMethod={sortMethod === AuctionSortField.FDV}
               direction={orderDirection}
-              onSort={createSortHandler(AuctionSortField.PROJECTED_FDV)}
+              onSort={createSortHandler(AuctionSortField.FDV)}
             />
           </HeaderCell>
         ),
@@ -338,7 +364,7 @@ function ToucanTableComponent({
             <Cell justifyContent="flex-end" loading={showLoadingSkeleton}>
               <Flex flexDirection="column" alignItems="flex-end" gap="$spacing4">
                 <TableText>
-                  {projectedFdv?.usd
+                  {projectedFdv?.usd !== undefined
                     ? convertFiatAmountFormatted(projectedFdv.usd, NumberType.FiatTokenStats)
                     : projectedFdv?.formattedBidToken}
                 </TableText>
@@ -366,7 +392,7 @@ function ToucanTableComponent({
             <Cell justifyContent="flex-end" loading={showLoadingSkeleton}>
               <Flex flexDirection="column" alignItems="flex-end" gap="$spacing4">
                 <TableText>
-                  {commitedVolume?.usd
+                  {commitedVolume?.usd !== undefined
                     ? convertFiatAmountFormatted(commitedVolume.usd, NumberType.FiatTokenStats)
                     : commitedVolume?.formattedBidToken}
                 </TableText>

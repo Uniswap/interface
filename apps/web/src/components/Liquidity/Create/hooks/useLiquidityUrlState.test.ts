@@ -310,8 +310,8 @@ describe('useLiquidityUrlState', () => {
         fee: DEFAULT_FEE_DATA,
         hook: null,
         priceRangeState: {
-          minPrice: '1.5',
-          maxPrice: '2.5',
+          minTick: 0,
+          maxTick: 1,
           initialPrice: '2.0',
           fullRange: true,
           priceInverted: false,
@@ -321,8 +321,8 @@ describe('useLiquidityUrlState', () => {
       vi.fn(),
     ])
     const { result } = renderHook(() => useLiquidityUrlState())
-    expect(result.current.priceRangeState.minPrice).toBe('1.5')
-    expect(result.current.priceRangeState.maxPrice).toBe('2.5')
+    expect(result.current.priceRangeState.minTick).toBe(0)
+    expect(result.current.priceRangeState.maxTick).toBe(1)
     expect(result.current.priceRangeState.initialPrice).toBe('2.0')
     expect(result.current.priceRangeState.fullRange).toBe(true)
     expect(result.current.priceRangeState.priceInverted).toBe(false)
@@ -337,7 +337,8 @@ describe('useLiquidityUrlState', () => {
         fee: DEFAULT_FEE_DATA,
         hook: null,
         priceRangeState: {
-          minPrice: '1.0',
+          minTick: 0,
+          maxTick: 1,
           fullRange: false,
         },
         depositState: {},
@@ -345,8 +346,8 @@ describe('useLiquidityUrlState', () => {
       vi.fn(),
     ])
     const { result } = renderHook(() => useLiquidityUrlState())
-    expect(result.current.priceRangeState.minPrice).toBe('1.0')
-    expect(result.current.priceRangeState.maxPrice).toBeUndefined()
+    expect(result.current.priceRangeState.minTick).toBe(0)
+    expect(result.current.priceRangeState.maxTick).toBe(1)
     expect(result.current.priceRangeState.initialPrice).toBeUndefined()
     expect(result.current.priceRangeState.fullRange).toBe(false)
     expect(result.current.priceRangeState.priceInverted).toBeUndefined()
@@ -460,11 +461,11 @@ describe('useLiquidityUrlState', () => {
         fee: { feeAmount: 3000, tickSpacing: 60, isDynamic: false },
         hook: '0x0000000000000000000000000000000000000001',
         priceRangeState: {
-          minPrice: '1.0',
-          maxPrice: '2.0',
+          minTick: 0,
+          maxTick: 1,
           initialPrice: '1.5',
           fullRange: false,
-          priceInverted: false,
+          priceInverted: true,
         },
         depositState: {
           exactAmounts: {
@@ -495,7 +496,11 @@ describe('useLiquidityUrlState', () => {
     expect(result.current.tokenA).toEqual(USDC)
     expect(result.current.fee?.feeAmount).toBe(3000)
     expect(result.current.hook).toBe('0x0000000000000000000000000000000000000001')
-    expect(result.current.priceRangeState.minPrice).toBe('1.0')
+    expect(result.current.priceRangeState.minTick).toBe(0)
+    expect(result.current.priceRangeState.maxTick).toBe(1)
+    expect(result.current.priceRangeState.initialPrice).toBe('1.5')
+    expect(result.current.priceRangeState.fullRange).toBe(false)
+    expect(result.current.priceRangeState.priceInverted).toBe(true)
     expect(result.current.depositState.exactAmounts?.[PositionField.TOKEN0]).toBe('100')
     expect(result.current.flowStep).toBe(PositionFlowStep.PRICE_RANGE)
     expect(result.current.chainId).toBe(UniverseChainId.Mainnet)

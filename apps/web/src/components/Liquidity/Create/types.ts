@@ -120,8 +120,6 @@ export interface PriceRangeState {
   initialPrice: string
   isInitialPriceDirty?: boolean
   // When these are undefined, LiquidityChartRangeInput will calculate and set reasonable default values.
-  minPrice?: string
-  maxPrice?: string
   minTick?: number
   maxTick?: number
   inputMode?: RangeAmountInputPriceMode
@@ -134,8 +132,6 @@ type BasePriceRangeInfo = {
 
 type BasePoolPriceRangeInfo = {
   ticks: [Maybe<number>, Maybe<number>]
-  pricesAtTicks: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>]
-  ticksAtLimit: [boolean, boolean]
 }
 
 export type V4PriceRangeInfo = BasePriceRangeInfo &

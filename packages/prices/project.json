@@ -1,0 +1,26 @@
+{
+  "name": "@universe/prices",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/prices/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "test": {
+      "command": "vitest run --passWithNoTests",
+      "options": { "cwd": "{projectRoot}" }
+    },
+    "test:coverage": {
+      "command": "vitest run --coverage --passWithNoTests",
+      "options": { "cwd": "{projectRoot}" }
+    },
+    "typecheck": {},
+    "typecheck:tsgo": {},
+    "lint:biome": {},
+    "lint:biome:fix": {},
+    "lint:eslint": {},
+    "lint:eslint:fix": {},
+    "lint": {},
+    "lint:fix": {},
+    "check:deps:usage": {}
+  }
+}

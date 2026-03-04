@@ -1,9 +1,11 @@
-import { JsonRpcProvider, TransactionReceipt } from '@ethersproject/providers'
+import { TransactionReceipt } from '@ethersproject/providers'
 import { useCallback, useMemo } from 'react'
 import { useActiveAddress } from 'uniswap/src/features/accounts/store/hooks'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
 import { RPCType } from 'uniswap/src/features/chains/types'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { InstrumentedJsonRpcProvider } from 'uniswap/src/features/providers/observability/InstrumentedJsonRpcProvider'
+import { getRpcObserver } from 'uniswap/src/features/providers/observability/rpcObserver'
 import { FLASHBLOCKS_INSTANT_BALANCE_TIMEOUT } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/constants'
 import { useReceiptFailureHandler } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/hooks/receiptFetching/useReceiptFailureHandler'
 import { useReceiptSuccessHandler } from 'uniswap/src/features/transactions/swap/components/UnichainInstantBalanceModal/hooks/receiptFetching/useReceiptSuccessHandler'
@@ -23,7 +25,7 @@ export function useFetchReceipt(): (
     if (!rpcUrl) {
       return undefined
     }
-    return new JsonRpcProvider(rpcUrl)
+    return new InstrumentedJsonRpcProvider({ url: rpcUrl, chainIdOrNetwork: chainId, observer: getRpcObserver() })
   }, [chainId])
 
   const handleFailure = useReceiptFailureHandler()

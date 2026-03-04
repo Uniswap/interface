@@ -64,8 +64,8 @@ export function MaxSlippageRow({
             priceUxEnabled ? (
               <AutoSlippageBadge />
             ) : (
-              <Flex centered backgroundColor="$surface3" borderRadius="$roundedFull" px="$spacing4" py="$spacing2">
-                <Text color="$neutral2" variant="buttonLabel3">
+              <Flex centered backgroundColor="$surface3" borderRadius="$rounded6" px="$spacing8" py="$spacing2">
+                <Text color="$neutral1" variant="buttonLabel4">
                   {t('swap.settings.slippage.control.auto')}
                 </Text>
               </Flex>

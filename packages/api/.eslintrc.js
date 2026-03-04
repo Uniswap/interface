@@ -2,7 +2,7 @@ const { reactNative: reactNativeImports } = require('@uniswap/eslint-config/rest
 
 module.exports = {
   extends: ['@uniswap/eslint-config/lib'],
-  ignorePatterns: ['graphql.config.ts'],
+  ignorePatterns: ['graphql.config.ts', 'stubs/**'],
   parserOptions: {
     tsconfigRootDir: __dirname,
   },

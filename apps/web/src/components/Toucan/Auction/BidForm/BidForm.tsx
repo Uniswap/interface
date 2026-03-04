@@ -135,6 +135,14 @@ export function BidForm({ onInputChange, setMobileScreenConfig }: BidFormProps):
     ? submitState.isDisabled || !isAuctionInProgress || shouldDisableBidForm || kycStatus.kycButtonDisabled
     : false
 
+  const shouldShowSwapBanner =
+    isWalletConnected &&
+    isAuctionInProgress &&
+    !hasBidToken &&
+    bidCurrencyAddress &&
+    chainId &&
+    !shouldShowWarningBanner
+
   const handleReviewBidClick = useEvent(() => {
     if (
       chainId &&
@@ -233,7 +241,7 @@ export function BidForm({ onInputChange, setMobileScreenConfig }: BidFormProps):
         </Flex>
         <Flex flexDirection="column" gap="$spacing8">
           <BidFormWarningBanner isVisible={shouldShowWarningBanner} />
-          {isWalletConnected && isAuctionInProgress && !hasBidToken && bidCurrencyAddress && chainId && (
+          {shouldShowSwapBanner && (
             <NoBidTokenBanner
               chainId={chainId}
               bidCurrencyAddress={bidCurrencyAddress}

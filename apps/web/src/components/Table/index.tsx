@@ -1,5 +1,14 @@
 import { ApolloError } from '@apollo/client'
-import { ColumnDef, flexRender, getCoreRowModel, Row, RowData, useReactTable } from '@tanstack/react-table'
+import {
+  ColumnDef,
+  ExpandedState,
+  flexRender,
+  getCoreRowModel,
+  getExpandedRowModel,
+  Row,
+  RowData,
+  useReactTable,
+} from '@tanstack/react-table'
 import { useParentSize } from '@visx/responsive'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Trans } from 'react-i18next'
@@ -76,6 +85,7 @@ export function Table<T extends RowData>({
   compactRowHeight,
   centerArrows = false,
   headerTestId,
+  getSubRows,
 }: {
   columns: ColumnDef<T, any>[]
   data: T[]
@@ -97,6 +107,7 @@ export function Table<T extends RowData>({
   compactRowHeight?: number
   centerArrows?: boolean
   headerTestId?: string
+  getSubRows?: (row: T) => T[] | undefined
 }) {
   const [loadingMore, setLoadingMore] = useState(false)
   const [showScrollRightButton, setShowScrollRightButton] = useState(false)
@@ -104,6 +115,7 @@ export function Table<T extends RowData>({
   const [showRightFadeOverlay, setShowRightFadeOverlay] = useState(false)
   const colors = useSporeColors()
   const [pinnedColumns, setPinnedColumns] = useState<string[]>([])
+  const [expanded, setExpanded] = useState<ExpandedState>({})
 
   const [scrollPosition, setScrollPosition] = useState<{
     distanceFromTop: number
@@ -116,6 +128,10 @@ export function Table<T extends RowData>({
   const tableBodyRef = useRef<HTMLDivElement>(null)
   const lastLoadedLengthRef = useRef(0)
   const canLoadMore = useRef(true)
+  // Tracks the intended scroll destination during smooth-scroll animations so
+  // rapid arrow-button taps advance column-by-column instead of re-targeting
+  // the same position while the previous animation is still in flight.
+  const targetScrollLeftRef = useRef<number | null>(null)
   const isSticky = useMemo(() => !maxHeight, [maxHeight])
 
   const { parentRef, width, height, top, left } = useParentSize()
@@ -193,9 +209,17 @@ export function Table<T extends RowData>({
   const table = useReactTable({
     columns,
     data,
-    state: { columnPinning: { left: pinnedColumns } },
+    state: {
+      columnPinning: { left: pinnedColumns },
+      ...(getSubRows && { expanded }),
+    },
     getCoreRowModel: getCoreRowModel(),
     getRowId,
+    ...(getSubRows && {
+      getSubRows,
+      getExpandedRowModel: getExpandedRowModel(),
+      onExpandedChange: setExpanded,
+    }),
   })
   // biome-ignore lint/correctness/useExhaustiveDependencies: we want to run it also when table is changed
   useEffect(() => {
@@ -217,6 +241,8 @@ export function Table<T extends RowData>({
     }
   }, [maxWidth, defaultPinnedColumns, forcePinning, table])
 
+  const SCROLL_EDGE_TOLERANCE_PX = 1
+
   useEffect(() => {
     const container = tableBodyRef.current?.parentElement
     if (!container || loading) {
@@ -225,8 +251,17 @@ export function Table<T extends RowData>({
 
     const updateScrollButtonVisibility = () => {
       const maxScrollLeft = container.scrollWidth - container.clientWidth
-      setShowScrollRightButton(container.scrollLeft < maxScrollLeft)
-      setShowScrollLeftButton(container.scrollLeft > 0)
+      // Tolerance accounts for sub-pixel rounding from smooth scroll animations
+      setShowScrollRightButton(container.scrollLeft < maxScrollLeft - SCROLL_EDGE_TOLERANCE_PX)
+      setShowScrollLeftButton(container.scrollLeft > SCROLL_EDGE_TOLERANCE_PX)
+
+      // Clear the optimistic scroll target once the animation reaches its destination
+      if (
+        targetScrollLeftRef.current !== null &&
+        Math.abs(container.scrollLeft - targetScrollLeftRef.current) < SCROLL_EDGE_TOLERANCE_PX
+      ) {
+        targetScrollLeftRef.current = null
+      }
 
       // Hide overlay when table is full width or scrolled all the way to the right
       const isFullWidth = maxScrollLeft <= 0
@@ -277,17 +312,42 @@ export function Table<T extends RowData>({
         [0] as number[],
       )
 
+      // Use the optimistic target (if mid-animation) so rapid taps advance
+      // to successive column boundaries instead of re-targeting the same one
+      const currentPosition = targetScrollLeftRef.current ?? container.scrollLeft
+
       if (direction === 'left') {
         cumulativeWidths.reverse()
       }
 
+      // Find the next column boundary beyond the current (or optimistic) position
       const nextScrollLeft = cumulativeWidths.find((width) => {
         if (direction === 'left') {
-          return width < container.scrollLeft
+          return width < currentPosition
         }
-        return width > container.scrollLeft
+        return width > currentPosition
       })
 
+      // No column boundary found — this happens when column.getSize() totals
+      // don't match actual rendered widths (e.g. flexGrow expands cells).
+      // Fall back to scrolling to the absolute edge if we're not there yet.
+      if (nextScrollLeft === undefined) {
+        const maxScrollLeft = container.scrollWidth - container.clientWidth
+        if (direction === 'right' && container.scrollLeft < maxScrollLeft - SCROLL_EDGE_TOLERANCE_PX) {
+          targetScrollLeftRef.current = maxScrollLeft
+          container.scrollTo({ left: maxScrollLeft, behavior: 'smooth' })
+        } else if (direction === 'left' && container.scrollLeft > SCROLL_EDGE_TOLERANCE_PX) {
+          targetScrollLeftRef.current = 0
+          container.scrollTo({ left: 0, behavior: 'smooth' })
+        }
+        return
+      }
+
+      // Clamp to valid scroll range so the ref matches the actual scroll
+      // endpoint (the browser clamps scrollTo internally, but the ref must agree
+      // for the scroll-event handler to clear it)
+      const maxScrollLeft = container.scrollWidth - container.clientWidth
+      targetScrollLeftRef.current = Math.min(Math.max(nextScrollLeft, 0), maxScrollLeft)
       container.scrollTo({ left: nextScrollLeft, behavior: 'smooth' })
     },
     [table],

@@ -1,8 +1,10 @@
 import { CellContext, flexRender, RowData } from '@tanstack/react-table'
 import { forwardRef, useMemo } from 'react'
-import { Trans } from 'react-i18next'
-import { Flex } from 'ui/src'
+import { Trans, useTranslation } from 'react-i18next'
+import { Flex, Text } from 'ui/src'
+import { WifiError } from 'ui/src/components/icons/WifiError'
 import { breakpoints } from 'ui/src/theme'
+import { useIsOffline } from 'utilities/src/connection/useIsOffline'
 import { ROW_HEIGHT_DESKTOP, ROW_HEIGHT_MOBILE_WEB } from '~/components/Table/constants'
 import { ErrorModal } from '~/components/Table/ErrorBox'
 import { CellContainer, DataRow, NoDataFoundTableRow } from '~/components/Table/styled'
@@ -28,6 +30,8 @@ function TableBodyInner<T extends RowData>(
 ) {
   const rows = table.getRowModel().rows
   const { width: tableWidth } = useTableSize()
+  const isOffline = useIsOffline()
+  const { t } = useTranslation()
   const skeletonRowHeight = useMemo(
     () =>
       tableWidth <= breakpoints.lg
@@ -35,6 +39,19 @@ function TableBodyInner<T extends RowData>(
         : (propRowHeight ?? ROW_HEIGHT_DESKTOP),
     [tableWidth, propRowHeight, propCompactRowHeight],
   )
+
+  if (isOffline) {
+    return (
+      <NoDataFoundTableRow py="$spacing20">
+        <Flex row centered justifyContent="center" gap="$gap8" py="$spacing4">
+          <WifiError color="$neutral2" size="$icon.20" />
+          <Text color="$neutral2" variant="subheading1">
+            {t('explore.networkError')}
+          </Text>
+        </Flex>
+      </NoDataFoundTableRow>
+    )
+  }
 
   if (loading || error) {
     return (

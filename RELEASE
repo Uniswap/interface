@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmPmdNUVNBpYCTEwd3ZGuBsstNv3UFksebFx4yDE5Dpaqi`
-- CIDv1: `bafybeiavigyzqlyual3cj6htkjjnjpdgiour4f2frt57nf4dbn5huu66qu`
+- CIDv0: `QmNUF7AEq4As66eZBa6w94XBeg4fXSFQtnLgRw4PVrF4wH`
+- CIDv1: `bafybeiab6h2ydorvjkntldeks6g5wi7yncj7xei2bmgtttwow257xqpspa`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,14 +10,57 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeiavigyzqlyual3cj6htkjjnjpdgiour4f2frt57nf4dbn5huu66qu.ipfs.dweb.link/
-- [ipfs://QmPmdNUVNBpYCTEwd3ZGuBsstNv3UFksebFx4yDE5Dpaqi/](ipfs://QmPmdNUVNBpYCTEwd3ZGuBsstNv3UFksebFx4yDE5Dpaqi/)
+- https://bafybeiab6h2ydorvjkntldeks6g5wi7yncj7xei2bmgtttwow257xqpspa.ipfs.dweb.link/
+- [ipfs://QmNUF7AEq4As66eZBa6w94XBeg4fXSFQtnLgRw4PVrF4wH/](ipfs://QmNUF7AEq4As66eZBa6w94XBeg4fXSFQtnLgRw4PVrF4wH/)
 
-### 5.135.1 (2026-02-25)
+## 5.136.0 (2026-03-04)
+
+
+### Features
+
+* **web:** integrate live prices via BFF WebSocket proxy (#29030) 8557385
+* **web:** Remove Send button from TDP bottom bar (#28825) d4bf1c0
+* **web:** tick lod - v2 (#27089) d13695a
+* **websocket:** add session refresh timer and stale socket guards (#28976) 4653f75
 
 
 ### Bug Fixes
 
-* **web:** hotfix #29070 (#5.134.3) (#29073) 78ee400
+* **web:** Add dedicated Withdraw transaction type for activity parsing (#29034) c5a3072
+* **web:** add FilterStoreContextProvider to pools table in TDP (#28986) 55425c7
+* **web:** add hover background to pinned v2 table columns (#29021) e962c18
+* **web:** Add information about offline mode in explore tables (#28985) 57ae4c6
+* **web:** add max height logic on dropdown to prevent page overflow (#28923) bc2535d
+* **web:** Apply column direction for chart header on mobile web (#28984) 6019240
+* **web:** cherry-pick #29113 (#5.135.1) (#29116) 636cb12
+* **web:** cherry-pick #29128 (#5.135.1) (#29136) eb75f12
+* **web:** Don't re-render avatars on scroll in Portfolio's activity (… (#29269) da332d4
+* **web:** fix nav searchbar text overflow b4b3e86
+* **web:** fix nav searchbar text overflow (#29294) abaa337
+* **web:** Fixes AccountDrawer max-height issue (#29100) 46de4cc
+* **web:** improve text color after clicking privacy and terms links (#28991) ae902c0
+* **web:** LP-647 align token banner fdv (#28631) c2fe0e9
+* **web:** prevent named window hijacking in download links (#28999) 2cd2ead
+* **web:** resolve scroll arrow buttons becoming unresponsive on mWeb (#28907) 54459cc
+* **web:** show active pools tab visually (#28987) ae8530e
+* **web:** use actual token price for FDV in completed auctions (#28630) 0d34a69
+* **web:** use key when rendering OffchainActivityModal to keep react state per-order (#28971) e29c215
+
+
+### Continuous Integration
+
+* **web:** update sitemaps 35a16aa
+
+
+### Code Refactoring
+
+* **web:** centralize price fetching (#29023) d2596ab
+* **web:** extract shared token pricing utilities (#28629) f8108bc
+* **web:** fix some egw proxy edge cases (#29112) 5f6e6d1
+
+
+### Tests
+
+* **web:** fix portfolio e2e tests (#28847) c3f15f0
 
 

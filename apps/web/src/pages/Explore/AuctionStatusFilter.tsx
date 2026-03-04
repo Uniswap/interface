@@ -1,4 +1,3 @@
-import { useAtom } from 'jotai'
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, useMedia } from 'ui/src'
@@ -7,12 +6,17 @@ import { ModalName, UniswapEventName } from 'uniswap/src/features/telemetry/cons
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
-import { AuctionStatusFilter as AuctionStatusFilterEnum, auctionStatusFilterAtom } from '~/components/Explore/state'
+import {
+  AuctionStatusFilter as AuctionStatusFilterEnum,
+  useExploreTablesFilterStore,
+  useExploreTablesFilterStoreActions,
+} from '~/pages/Explore/exploreTablesFilterStore'
 
 export function AuctionStatusFilter() {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
-  const [selectedFilter, setSelectedFilter] = useAtom(auctionStatusFilterAtom)
+  const selectedFilter = useExploreTablesFilterStore((s) => s.statusFilter)
+  const { setStatusFilter: setSelectedFilter } = useExploreTablesFilterStoreActions()
   const media = useMedia()
 
   const onFilterChange = useCallback(

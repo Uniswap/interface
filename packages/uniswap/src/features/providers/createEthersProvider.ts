@@ -2,6 +2,8 @@ import { providers as ethersProviders } from 'ethers/lib/ethers'
 import { RPCType, UniverseChainId } from 'uniswap/src/features/chains/types'
 import { SignerInfo } from 'uniswap/src/features/providers/FlashbotsCommon'
 import { FlashbotsRpcProvider } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
+import { InstrumentedJsonRpcProvider } from 'uniswap/src/features/providers/observability/InstrumentedJsonRpcProvider'
+import { getRpcObserver } from 'uniswap/src/features/providers/observability/rpcObserver'
 import { selectRpcUrl } from 'uniswap/src/features/providers/rpcUrlSelector'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -28,8 +30,12 @@ export function createEthersProvider({
       return new FlashbotsRpcProvider({ signerInfo, refundPercent, network: chainId })
     }
 
-    // Otherwise, create a standard JsonRpcProvider, passing the chainId to lower the number of needed RPC calls
-    return new ethersProviders.JsonRpcProvider(rpcConfig.rpcUrl, chainId)
+    // Otherwise, create an instrumented JsonRpcProvider, passing the chainId to lower the number of needed RPC calls
+    return new InstrumentedJsonRpcProvider({
+      url: rpcConfig.rpcUrl,
+      chainIdOrNetwork: chainId,
+      observer: getRpcObserver(),
+    })
   } catch (error) {
     logger.error(error, {
       tags: { file: 'createEthersProvider', function: 'createProvider' },

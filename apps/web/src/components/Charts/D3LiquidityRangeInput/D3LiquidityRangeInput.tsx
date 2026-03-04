@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, SegmentedControlOption, Shine, Text } from 'ui/src'
 import { ZERO_ADDRESS } from 'uniswap/src/constants/misc'
 import { getChainInfo } from 'uniswap/src/features/chains/chainInfo'
+import { UniverseChainId } from 'uniswap/src/features/chains/types'
 import { D3LiquidityChartHeader } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/D3LiquidityChartHeader'
 import { D3LiquidityMinMaxInput } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/D3LiquidityMinMaxInput'
 import { DefaultPriceStrategies } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/DefaultPriceStrategies'
@@ -20,9 +21,12 @@ import { ChartSkeleton } from '~/components/Charts/LoadingState'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import { ChartType } from '~/components/Charts/utils'
 import { InitialPosition, RangeAmountInputPriceMode } from '~/components/Liquidity/Create/types'
+import { getBaseAndQuoteCurrencies } from '~/components/Liquidity/utils/currency'
 import { usePoolPriceChartData } from '~/hooks/usePoolPriceChartData'
+import { useAllPoolTicks } from '~/hooks/usePoolTickData'
+import { useMultichainContext } from '~/state/multichain/useMultichainContext'
 
-const MIN_DATA_POINTS = 5
+const MIN_DATA_POINTS = 1
 
 /**
  * Chart input for selecting the min/max prices for a liquidity position.
@@ -44,12 +48,13 @@ export function D3LiquidityRangeInput({
   currentPrice,
   initialPosition,
   isFullRange,
-  minPrice,
-  maxPrice,
+  currentTick,
+  minTick,
+  maxTick,
   inputMode,
   setInputMode,
-  setMinPrice,
-  setMaxPrice,
+  setMinTick,
+  setMaxTick,
   setIsFullRange,
   handleSelectToken,
 }: {
@@ -62,7 +67,7 @@ export function D3LiquidityRangeInput({
   currencyControlOptions: SegmentedControlOption<string>[]
   priceInverted: boolean
   feeTier: number | string
-  tickSpacing?: number
+  tickSpacing: number
   protocolVersion: ProtocolVersion
   hook?: string
   poolId?: string
@@ -71,18 +76,21 @@ export function D3LiquidityRangeInput({
   price?: Price<Currency, Currency>
   currentPrice?: number
   isFullRange?: boolean
-  minPrice?: number
-  maxPrice?: number
+  currentTick: number
+  minTick?: number
+  maxTick?: number
   inputMode?: RangeAmountInputPriceMode
   initialPosition?: InitialPosition
   setInputMode: (inputMode: RangeAmountInputPriceMode) => void
-  setMinPrice: (price?: number | null, tick?: number) => void
-  setMaxPrice: (price?: number | null, tick?: number) => void
+  setMinTick: (tick?: number) => void
+  setMaxTick: (tick?: number) => void
   setIsFullRange: (isFullRange: boolean) => void
   handleSelectToken: (option: string) => void
 }) {
   const { t } = useTranslation()
   const chainInfo = getChainInfo(quoteCurrency.chainId)
+  const [internalChartError, setInternalChartError] = useState<string | undefined>(undefined)
+  const { chainId: multichainContextChainId } = useMultichainContext()
 
   // TODO: consider moving this to the store - requires rearranging loading and error states
   const [selectedHistoryDuration, setSelectedHistoryDuration] = useState<GraphQLApi.HistoryDuration>(
@@ -137,66 +145,132 @@ export function D3LiquidityRangeInput({
     hooks: hook ?? ZERO_ADDRESS,
   })
 
+  // Fetch raw tick data when feature flag is enabled
+  // This bypasses the processing in useDensityChartData that loses some tick boundaries
+  const { ticks: rawTicks, isLoading: rawTicksLoading } = useAllPoolTicks({
+    sdkCurrencies,
+    feeAmount: Number(feeTier),
+    chainId: (multichainContextChainId ?? quoteCurrency.chainId) as UniverseChainId,
+    version: protocolVersion,
+    tickSpacing,
+    hooks: hook ?? ZERO_ADDRESS,
+    precalculatedPoolId: poolId,
+  })
+
   const sortedLiquidityData = useMemo(() => {
     if (!liquidityData) {
       return undefined
     }
+    const activeTick = Math.floor(currentTick / tickSpacing) * tickSpacing
     const uniqueTicksMap = new Map<number | undefined, ChartEntry>()
+    let prevAmounts: Pick<ChartEntry, 'amount0Locked' | 'amount1Locked'> | undefined
     liquidityData.forEach((entry) => {
-      uniqueTicksMap.set(entry.tick, entry)
+      // Negate ticks when priceInverted to match the visual tick scale
+      const visualTick = priceInverted ? -entry.tick : entry.tick
+      // When inverted, tick negation shifts locked amounts off by one position.
+      // Use the previous canonical entry's amounts to realign with the visual tick range.
+      // Skip the shift for the active tick so its partial amounts (both tokens) are preserved.
+      uniqueTicksMap.set(visualTick, {
+        ...entry,
+        tick: visualTick,
+        ...(priceInverted &&
+          entry.tick !== activeTick && {
+            amount0Locked: prevAmounts?.amount0Locked ?? 0,
+            amount1Locked: prevAmounts?.amount1Locked ?? 0,
+          }),
+      })
+      prevAmounts = entry
     })
 
-    // Convert Map values back to array and sort
     return Array.from(uniqueTicksMap.values()).sort((a, b) => a.price0 - b.price0)
-  }, [liquidityData])
+  }, [liquidityData, priceInverted, currentTick, tickSpacing])
 
   // Error handling
   const showChartErrorView =
+    !!internalChartError ||
     (!poolOrPairLoading && !finalPriceData.loading && finalPriceData.entries.length < MIN_DATA_POINTS) ||
     (!liquidityDataLoading && !sortedLiquidityData) ||
     (!liquidityDataLoading && sortedLiquidityData && sortedLiquidityData.length < MIN_DATA_POINTS)
 
-  const isLoading = poolOrPairLoading || finalPriceData.loading || liquidityDataLoading
+  const isLoading = poolOrPairLoading || finalPriceData.loading || liquidityDataLoading || rawTicksLoading
+
+  const { baseCurrency: sdkBaseCurrency, quoteCurrency: sdkQuoteCurrency } = getBaseAndQuoteCurrencies(
+    sdkCurrencies,
+    priceInverted,
+  )
+
+  const finalTickData = useMemo(() => {
+    if (!priceInverted) {
+      return rawTicks
+    }
+    // Negate ticks and liquidityNet, then reverse to restore ascending order.
+    return rawTicks
+      ?.map((t) =>
+        t
+          ? {
+              ...t,
+              tick: t.tick !== undefined ? -t.tick : undefined,
+              liquidityNet: t.liquidityNet ? String(-BigInt(t.liquidityNet)) : t.liquidityNet,
+            }
+          : t,
+      )
+      .reverse()
+  }, [rawTicks, priceInverted])
 
   return (
     <Flex id="d3-liquidity-range-input" gap="$gap4">
       <LiquidityChartStoreProvider
+        tickSpacing={tickSpacing}
+        baseCurrency={sdkBaseCurrency}
+        quoteCurrency={sdkQuoteCurrency}
+        priceInverted={priceInverted}
+        protocolVersion={protocolVersion}
         selectedHistoryDuration={selectedHistoryDuration}
-        minPrice={minPrice}
-        maxPrice={maxPrice}
+        minTick={minTick}
+        maxTick={maxTick}
         isFullRange={isFullRange}
         inputMode={inputMode}
+        onChartError={setInternalChartError}
         onInputModeChange={setInputMode}
-        onMinPriceChange={setMinPrice}
-        onMaxPriceChange={setMaxPrice}
+        onMinTickChange={setMinTick}
+        onMaxTickChange={setMaxTick}
         onTimePeriodChange={setSelectedHistoryDuration}
         setIsFullRange={setIsFullRange}
       >
         <Flex
           backgroundColor="$surface2"
           gap="$gap16"
-          borderRadius={poolId ? '$none' : '$rounded20'}
-          borderTopLeftRadius={poolId ? '$rounded20' : '$none'}
-          borderTopRightRadius={poolId ? '$rounded20' : '$none'}
+          borderTopLeftRadius="$rounded20"
+          borderTopRightRadius="$rounded20"
           $sm={{
             gap: '$gap8',
           }}
         >
-          <D3LiquidityChartHeader
-            price={price}
-            isLoading={poolOrPairLoading}
-            creatingPoolOrPair={creatingPoolOrPair}
-            currencyControlOptions={currencyControlOptions}
-            baseCurrency={baseCurrency}
-            handleSelectToken={handleSelectToken}
-          />
-          {sortedLiquidityData && finalPriceData.entries.length > 0 && !showChartErrorView && !isLoading ? (
-            <D3LiquidityRangeChart
-              quoteCurrency={quoteCurrency}
+          {!creatingPoolOrPair && (
+            <D3LiquidityChartHeader
+              price={price}
+              isLoading={poolOrPairLoading}
+              creatingPoolOrPair={creatingPoolOrPair}
+              currencyControlOptions={currencyControlOptions}
               baseCurrency={baseCurrency}
+              handleSelectToken={handleSelectToken}
+            />
+          )}
+          {sortedLiquidityData &&
+          finalPriceData.entries.length > 0 &&
+          finalTickData &&
+          !showChartErrorView &&
+          !isLoading ? (
+            <D3LiquidityRangeChart
+              quoteCurrency={sdkQuoteCurrency}
+              baseCurrency={sdkBaseCurrency}
               priceData={finalPriceData}
               liquidityData={sortedLiquidityData}
               initialPosition={initialPosition}
+              tickSpacing={tickSpacing}
+              currentTick={priceInverted ? -currentTick : currentTick}
+              rawTicks={finalTickData}
+              protocolVersion={protocolVersion}
             />
           ) : (
             <Shine disabled={showChartErrorView} p="$spacing16">
@@ -204,7 +278,7 @@ export function D3LiquidityRangeInput({
                 errorText={
                   showChartErrorView && (
                     <Text variant="body3" color="$neutral2">
-                      {t('position.setRange.inputsBelow')}
+                      {internalChartError || t('position.setRange.inputsBelow')}
                     </Text>
                   )
                 }
@@ -215,7 +289,7 @@ export function D3LiquidityRangeInput({
               />
             </Shine>
           )}
-          <LiquidityRangeActionButtons />
+          {!showChartErrorView && <LiquidityRangeActionButtons />}
         </Flex>
         <DefaultPriceStrategies isLoading={isLoading} />
         <D3LiquidityMinMaxInput />

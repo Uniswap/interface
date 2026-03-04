@@ -109,7 +109,7 @@
     "@uniswap/analytics": "1.7.2",
     "@uniswap/analytics-events": "2.43.0",
     "@uniswap/client-explore": "0.0.17",
-    "@uniswap/client-notification-service": "0.0.9",
+    "@uniswap/client-notification-service": "0.0.11",
     "@uniswap/ethers-rs-mobile": "0.0.5",
     "@uniswap/sdk-core": "7.10.1",
     "@universe/api": "workspace:^",

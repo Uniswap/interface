@@ -58,6 +58,7 @@ export enum ReactQueryCacheKey {
   TradeService = 'TradeService',
   SolanaTradeService = 'SolanaTradeService',
   SwapTxAndGasInfo = 'SwapTxAndGasInfo',
+  TokenPrice = 'TokenPrice',
   TransactionToActivity = 'TransactionToActivity',
   UniqueId = 'UniqueId',
   UniswapApi = 'UniswapApi',
@@ -81,6 +82,7 @@ export const DISABLE_CACHE_PERSISTENCE_TO_DISK: ReactQueryCacheKey[] = [
   // This query returns a non-serializable react component (the biometric icon).
   ReactQueryCacheKey.ExtensionBuiltInBiometricCapabilities,
   // This ensures when a user switches mobile devices that the unique id will be reset
+  ReactQueryCacheKey.TokenPrice,
   ReactQueryCacheKey.UniqueId,
   ReactQueryCacheKey.Session,
 ] as const

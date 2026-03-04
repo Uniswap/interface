@@ -5,18 +5,13 @@ import { GraphQLApi } from '@universe/api'
 import { DEFAULT_TICK_SPACING } from 'uniswap/src/constants/pools'
 import { ExploreTablesFilterStoreContextProvider } from '~/pages/Explore/exploreTablesFilterStore'
 import { ExploreTopPoolTable } from '~/pages/Explore/tables/Pools/PoolTable'
-import { PoolTableStoreContextProvider } from '~/pages/Explore/tables/Pools/poolTableStore'
 import { useTopPools } from '~/state/explore/topPools/useTopPools'
 import { mocked } from '~/test-utils/mocked'
 import { validRestPoolToken0, validRestPoolToken1 } from '~/test-utils/pools/fixtures'
 import { render, screen } from '~/test-utils/render'
 
 function renderWithProvider(ui: React.ReactElement) {
-  return render(
-    <ExploreTablesFilterStoreContextProvider>
-      <PoolTableStoreContextProvider>{ui}</PoolTableStoreContextProvider>
-    </ExploreTablesFilterStoreContextProvider>,
-  )
+  return render(<ExploreTablesFilterStoreContextProvider>{ui}</ExploreTablesFilterStoreContextProvider>)
 }
 
 vi.mock('~/state/explore/topPools/useTopPools')

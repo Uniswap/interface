@@ -3,20 +3,41 @@ import { Currency } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import * as d3 from 'd3'
 import { UseSporeColorsReturn } from 'ui/src/hooks/useSporeColors'
+import { TickData } from '~/appGraphql/data/AllV3TicksQuery'
+import { BucketChartEntry } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/liquidityBucketing/liquidityBucketing'
 import { TickAlignment } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/priceToY'
 import { ChartEntry } from '~/components/Charts/LiquidityRangeInput/types'
 import { PriceChartData } from '~/components/Charts/PriceChart'
 import { RangeAmountInputPriceMode } from '~/components/Liquidity/Create/types'
 
+/**
+ * Linear tick scale that maps ticks to Y positions.
+ * Unlike scaleBand, this supports any tick value (not just those in the data).
+ */
+export type LinearTickScale = {
+  /** Convert a tick to Y position */
+  tickToY: (tick: number) => number
+  /** Convert Y position to tick */
+  yToTick: (y: number) => number
+  /** Min tick in the data range */
+  minTick: number
+  /** Max tick in the data range */
+  maxTick: number
+  /** Y range [top, bottom] */
+  range: [number, number]
+}
+
 export type TickNavigationParams = {
   tickSpacing: number
+  feeAmount?: number
   baseCurrency: Maybe<Currency>
   quoteCurrency: Maybe<Currency>
-  priceInverted: boolean
   protocolVersion: ProtocolVersion
 }
 
 export type ChartState = {
+  baseCurrency: Maybe<Currency>
+  quoteCurrency: Maybe<Currency>
   dimensions: {
     width: number
     height: number
@@ -27,9 +48,10 @@ export type ChartState = {
   dragCurrentY?: number
   dragStartTick?: ChartEntry
   dragStartY: number | null
-  dynamicZoomMin: number
   hoveredTick?: ChartEntry
   hoveredY?: number
+  /** The hovered segment's tick range - used for highlighting all buckets in the same segment */
+  hoveredSegment?: { startTick: number; endTick: number }
   initialViewSet: boolean
   inputMode: RangeAmountInputPriceMode
   isChartHovered?: boolean
@@ -39,16 +61,20 @@ export type ChartState = {
   minPrice?: number
   minTick?: number
   panY: number
+  priceInverted: boolean
+  protocolVersion: ProtocolVersion
+  renderedBuckets?: BucketChartEntry[]
   selectedHistoryDuration: GraphQLApi.HistoryDuration
   selectedPriceStrategy?: DefaultPriceStrategy
+  tickSpacing: number
   zoomLevel: number
 }
 
 export type AnimationParams = {
   targetZoom: number
   targetPan: number
-  targetMinPrice?: number
-  targetMaxPrice?: number
+  targetMinTick?: number
+  targetMaxTick?: number
   duration?: number
 }
 
@@ -60,13 +86,16 @@ export type RenderingContext = {
   }
   priceData: PriceChartData[]
   liquidityData: ChartEntry[]
-  tickScale: ((tick: string) => number) & {
-    domain: () => string[]
-    bandwidth: () => number
-    range: () => [number, number]
-  }
+  rawTicks: TickData[]
+  /** Linear tick scale for continuous tick-to-Y mapping */
+  tickScale: LinearTickScale
+  /** Pool tick spacing */
+  tickSpacing: number
+  /** Current tick derived from current price: Math.round(Math.log(currentPrice) / Math.log(1.0001)) */
+  currentTick: number
   priceToY: ({ price, tickAlignment }: { price: number; tickAlignment?: TickAlignment }) => number
-  yToPrice: (y: number) => number
+  tickToY: ({ tick, tickAlignment }: { tick: number; tickAlignment?: TickAlignment }) => number
+  yToTick: (y: number) => number
 }
 
 export enum DefaultPriceStrategy {
@@ -95,13 +124,14 @@ type Renderers = {
 }
 
 export type ChartActions = {
-  setChartState: (state: Partial<ChartState>) => void
+  setChartError: (error: string) => void
+  setChartState: (state: Omit<Partial<ChartState>, 'minPrice' | 'maxPrice'>) => void
   setPriceStrategy: ({ priceStrategy, animate }: { priceStrategy: DefaultPriceStrategy; animate: boolean }) => void
   setTimePeriod: (timePeriod: GraphQLApi.HistoryDuration) => void
   syncIsFullRangeFromParent: (isFullRange: boolean) => void
   updateDimensions: (dimensions: { width: number; height: number }) => void
-  handlePriceChange: ({ changeType, price, tick }: { changeType: 'min' | 'max'; price?: number; tick?: number }) => void
-  initializeView: (params?: { minPrice: number | null; maxPrice: number | null }) => void
+  handleTickChange: ({ changeType, tick }: { changeType: 'min' | 'max'; tick?: number }) => void
+  initializeView: () => void
   initializeRenderers: ({
     g,
     timescaleG,
@@ -117,7 +147,7 @@ export type ChartActions = {
   zoom: (targetZoom: number) => void
   zoomIn: () => void
   zoomOut: () => void
-  reset: (params?: { animate?: boolean; minPrice?: number; maxPrice?: number }) => void
+  reset: (params?: { animate?: boolean; minTick?: number; maxTick?: number }) => void
   drawAll: () => void
   animateToState: (params: AnimationParams) => void
   incrementMax: (params: TickNavigationParams) => void
@@ -128,8 +158,9 @@ export type ChartActions = {
 }
 
 export type ChartStoreState = ChartState & {
+  priceInverted: boolean
+  protocolVersion: ProtocolVersion
   renderers: Renderers
   renderingContext: RenderingContext | null
-  dynamicZoomMin: number
   actions: ChartActions
 }

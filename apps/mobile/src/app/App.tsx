@@ -91,6 +91,7 @@ import { StatsigProviderWrapper } from 'uniswap/src/features/gating/StatsigProvi
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import { clearNotificationQueue } from 'uniswap/src/features/notifications/slice/slice'
+import { TokenPriceProvider } from 'uniswap/src/features/prices/TokenPriceContext'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -331,18 +332,20 @@ function AppOuter(): JSX.Element | null {
                   <NavigationContainer>
                     <MobileWalletNavigationProvider>
                       <NativeWalletProvider>
-                        <WalletUniswapProvider>
-                          <AccountsStoreContextProvider>
-                            <DataUpdaters />
-                            <BottomSheetModalProvider>
-                              <AppModals />
-                              <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                <AppInner />
-                              </PerformanceProfiler>
-                            </BottomSheetModalProvider>
-                            <NotificationToastWrapper />
-                          </AccountsStoreContextProvider>
-                        </WalletUniswapProvider>
+                        <TokenPriceProvider>
+                          <WalletUniswapProvider>
+                            <AccountsStoreContextProvider>
+                              <DataUpdaters />
+                              <BottomSheetModalProvider>
+                                <AppModals />
+                                <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                                  <AppInner />
+                                </PerformanceProfiler>
+                              </BottomSheetModalProvider>
+                              <NotificationToastWrapper />
+                            </AccountsStoreContextProvider>
+                          </WalletUniswapProvider>
+                        </TokenPriceProvider>
                       </NativeWalletProvider>
                     </MobileWalletNavigationProvider>
                   </NavigationContainer>

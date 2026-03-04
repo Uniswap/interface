@@ -19,6 +19,7 @@ import { parseRestReceiveTransaction } from 'uniswap/src/features/activity/parse
 import { parseRestSendTransaction } from 'uniswap/src/features/activity/parse/parseSendTransaction'
 import {
   parseRestSwapTransaction,
+  parseRestWithdrawTransaction,
   parseRestWrapTransaction,
 } from 'uniswap/src/features/activity/parse/parseTradeTransaction'
 import { UniverseChainId } from 'uniswap/src/features/chains/types'
@@ -669,6 +670,109 @@ describe(parseRestWrapTransaction, () => {
       currencyAmountRaw: '1000000000000000000',
     })
   })
+  it('Wrap: parse unwrap', () => {
+    const MOCK_NATIVE_UNWRAP: OnChainTransaction = {
+      ...TRANSACTION_BASE,
+      label: OnChainTransactionLabel.UNWRAP,
+      transfers: MOCK_NATIVE_WRAP.transfers,
+    } as OnChainTransaction
+    expect(parseRestWrapTransaction(MOCK_NATIVE_UNWRAP)).toEqual({
+      type: TransactionType.Wrap,
+      unwrapped: true,
+      currencyAmountRaw: '1000000000000000000',
+    })
+  })
+})
+
+/** Withdraw Transactions */
+
+const MOCK_ERC20_WITHDRAW: OnChainTransaction = {
+  ...TRANSACTION_BASE,
+  label: OnChainTransactionLabel.WITHDRAW,
+  transfers: [
+    {
+      direction: Direction.RECEIVE,
+      asset: {
+        case: 'token',
+        value: ERC20_TOKEN_MOCK,
+      },
+      amount: {
+        amount: 1,
+        raw: '1000000000000000000',
+      },
+      to: FROM_ADDRESS,
+      from: TO_ADDRESS,
+    },
+    {
+      direction: Direction.SEND,
+      asset: {
+        case: 'token',
+        value: WRAPPED_TOKEN_MOCK,
+      },
+      amount: {
+        amount: 1,
+        raw: '1000000000000000000',
+      },
+      from: FROM_ADDRESS,
+      to: TO_ADDRESS,
+    },
+  ],
+  protocol: {
+    name: 'Superfluid',
+    logoUrl: 'https://superfluid.logo',
+  },
+} as OnChainTransaction
+
+describe(parseRestWithdrawTransaction, () => {
+  it('Withdraw: handle empty transfers', () => {
+    expect(parseRestWithdrawTransaction(TRANSACTION_BASE)).toBeUndefined()
+  })
+  it('Withdraw: parse ERC20 withdraw', () => {
+    expect(parseRestWithdrawTransaction(MOCK_ERC20_WITHDRAW)).toEqual({
+      type: TransactionType.Withdraw,
+      assetType: 'currency',
+      tokenAddress: ERC20_ASSET_ADDRESS,
+      currencyAmountRaw: '1000000000000000000',
+      dappInfo: {
+        name: 'Superfluid',
+        icon: 'https://superfluid.logo',
+      },
+    })
+  })
+  it('Withdraw: does not produce TransactionType.Wrap', () => {
+    const result = parseRestWithdrawTransaction(MOCK_ERC20_WITHDRAW)
+    expect(result?.type).not.toEqual(TransactionType.Wrap)
+  })
+  it('Withdraw: picks RECEIVE transfer even when SEND comes first', () => {
+    const reorderedWithdraw: OnChainTransaction = {
+      ...TRANSACTION_BASE,
+      label: OnChainTransactionLabel.WITHDRAW,
+      transfers: [
+        {
+          direction: Direction.SEND,
+          asset: { case: 'token', value: WRAPPED_TOKEN_MOCK },
+          amount: { amount: 1, raw: '1000000000000000000' },
+          from: FROM_ADDRESS,
+          to: TO_ADDRESS,
+        },
+        {
+          direction: Direction.RECEIVE,
+          asset: { case: 'token', value: ERC20_TOKEN_MOCK },
+          amount: { amount: 1, raw: '2000000000000000000' },
+          to: FROM_ADDRESS,
+          from: TO_ADDRESS,
+        },
+      ],
+    } as OnChainTransaction
+    const result = parseRestWithdrawTransaction(reorderedWithdraw)
+    expect(result).toEqual({
+      type: TransactionType.Withdraw,
+      assetType: 'currency',
+      tokenAddress: ERC20_ASSET_ADDRESS,
+      currencyAmountRaw: '2000000000000000000',
+      dappInfo: undefined,
+    })
+  })
 })
 
 /** Bridge Transactions */
@@ -1161,6 +1265,16 @@ describe(extractRestOnChainTransactionDetails, () => {
     const txns = extractRestOnChainTransactionDetails(MOCK_BRIDGE)
     expect(txns).toHaveLength(1)
     expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Bridge)
+  })
+  it('Withdraw', () => {
+    const txns = extractRestOnChainTransactionDetails(MOCK_ERC20_WITHDRAW)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).toEqual(TransactionType.Withdraw)
+  })
+  it('Withdraw does not produce Wrap type', () => {
+    const txns = extractRestOnChainTransactionDetails(MOCK_ERC20_WITHDRAW)
+    expect(txns).toHaveLength(1)
+    expect(txns[0]?.typeInfo.type).not.toEqual(TransactionType.Wrap)
   })
   it('Unknown', () => {
     const txns = extractRestOnChainTransactionDetails({

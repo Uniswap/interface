@@ -136,14 +136,16 @@ export function SwapDetails({
         txSimulationErrors={txSimulationErrors}
         amountUserWillReceive={derivedSwapInfo.outputAmountUserWillReceive ?? undefined}
         includesDelegation={includesDelegation}
+        RateInfo={
+          <Flex row alignItems="center" justifyContent="space-between">
+            <Text color="$neutral2" variant="body3">
+              {t('swap.details.rate')}
+            </Text>
+            <SwapRateRatio trade={trade} derivedSwapInfo={acceptedDerivedSwapInfo} justifyContent="flex-end" />
+          </Flex>
+        }
         onShowWarning={onShowWarning}
       >
-        <Flex row alignItems="center" justifyContent="space-between">
-          <Text color="$neutral2" variant="body3">
-            {t('swap.details.rate')}
-          </Text>
-          <SwapRateRatio trade={trade} derivedSwapInfo={acceptedDerivedSwapInfo} justifyContent="flex-end" />
-        </Flex>
         <EstimatedSwapTime showIfLongerThanCutoff={false} timeMs={estimatedSwapTime} />
         {isBridgeTrade === false && (
           <MaxSlippageRow

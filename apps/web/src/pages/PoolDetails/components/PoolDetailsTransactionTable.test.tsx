@@ -8,7 +8,13 @@ import { usdcWethPoolAddress, validParams } from '~/test-utils/pools/fixtures'
 import { render, screen } from '~/test-utils/render'
 
 vi.mock('~/appGraphql/data/pools/usePoolTransactions')
-vi.mock('~/components/Table/utils')
+vi.mock('~/components/Table/utils', async () => {
+  const actual = await vi.importActual('~/components/Table/utils')
+  return {
+    ...actual,
+    useAbbreviatedTimeString: vi.fn(),
+  }
+})
 vi.mock('react-router', async () => {
   const actual = await vi.importActual('react-router')
   return {

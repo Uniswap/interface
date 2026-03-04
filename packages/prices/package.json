@@ -1,0 +1,45 @@
+{
+  "name": "@universe/prices",
+  "version": "0.0.0",
+  "dependencies": {
+    "@tanstack/react-query": "5.90.20",
+    "@uniswap/sdk-core": "7.10.1",
+    "@universe/api": "workspace:^",
+    "@universe/websocket": "workspace:^",
+    "utilities": "workspace:^"
+  },
+  "peerDependencies": {
+    "react": "19.0.3"
+  },
+  "devDependencies": {
+    "@testing-library/react": "16.3.0",
+    "@types/node": "22.13.1",
+    "@typescript/native-preview": "7.0.0-dev.20260108.1",
+    "@uniswap/eslint-config": "workspace:^",
+    "@vitest/coverage-v8": "3.2.1",
+    "depcheck": "1.4.7",
+    "eslint": "8.57.1",
+    "react": "19.0.3",
+    "typescript": "5.8.3",
+    "vitest": "3.2.1"
+  },
+  "scripts": {
+    "test": "nx test prices",
+    "test:coverage": "nx test:coverage prices",
+    "typecheck": "nx typecheck prices",
+    "typecheck:tsgo": "nx typecheck:tsgo prices",
+    "lint": "nx lint prices",
+    "lint:fix": "nx lint:fix prices",
+    "lint:biome": "nx lint:biome prices",
+    "lint:biome:fix": "nx lint:biome:fix prices",
+    "lint:eslint": "nx lint:eslint prices",
+    "lint:eslint:fix": "nx lint:eslint:fix prices",
+    "check:deps:usage": "nx check:deps:usage prices"
+  },
+  "nx": {
+    "includedScripts": []
+  },
+  "main": "src/index.ts",
+  "private": true,
+  "sideEffects": false
+}

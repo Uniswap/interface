@@ -1,3 +1,5 @@
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
+import { Currency } from '@uniswap/sdk-core'
 import { GraphQLApi } from '@universe/api'
 import { PropsWithChildren, ReactNode, useContext, useEffect, useState } from 'react'
 import { createLiquidityChartStore } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/createLiquidityChartStore'
@@ -6,39 +8,45 @@ import { useLiquidityChartStoreActions } from '~/components/Charts/D3LiquidityRa
 import { RangeAmountInputPriceMode } from '~/components/Liquidity/Create/types'
 
 interface LiquidityChartStoreProviderProps {
+  tickSpacing: number
   inputMode?: RangeAmountInputPriceMode
   children: ReactNode
-  minPrice?: number
-  maxPrice?: number
+  minTick?: number
+  maxTick?: number
   isFullRange?: boolean
+  baseCurrency: Maybe<Currency>
+  quoteCurrency: Maybe<Currency>
+  priceInverted: boolean
+  protocolVersion: ProtocolVersion
   selectedHistoryDuration: GraphQLApi.HistoryDuration
+  onChartError: (error: string) => void
   onInputModeChange: (inputMode: RangeAmountInputPriceMode) => void
-  onMinPriceChange: (price?: number, tick?: number) => void
-  onMaxPriceChange: (price?: number, tick?: number) => void
+  onMinTickChange: (tick?: number) => void
+  onMaxTickChange: (tick?: number) => void
   onTimePeriodChange?: (timePeriod: GraphQLApi.HistoryDuration) => void
   setIsFullRange: (isFullRange: boolean) => void
 }
 
 function LiquidityChartStoreProviderInner({
   children,
-  minPrice,
-  maxPrice,
+  minTick,
+  maxTick,
   isFullRange,
-}: PropsWithChildren<Pick<LiquidityChartStoreProviderProps, 'minPrice' | 'maxPrice' | 'isFullRange'>>) {
+}: PropsWithChildren<Pick<LiquidityChartStoreProviderProps, 'minTick' | 'maxTick' | 'isFullRange'>>) {
   const store = useContext(LiquidityChartStoreContext)
   const { syncIsFullRangeFromParent } = useLiquidityChartStoreActions()
 
-  // Sync minPrice and maxPrice
+  // Sync minTick and maxTick
   useEffect(() => {
-    if (isFullRange || minPrice === undefined || maxPrice === undefined || !store) {
+    if (isFullRange || !store) {
       return
     }
 
     store.setState({
-      minPrice,
-      maxPrice,
+      minTick,
+      maxTick,
     })
-  }, [minPrice, maxPrice, isFullRange, store])
+  }, [minTick, maxTick, isFullRange, store])
 
   // Sync isFullRange
   useEffect(() => {
@@ -51,26 +59,38 @@ function LiquidityChartStoreProviderInner({
 export function LiquidityChartStoreProvider({
   children,
   inputMode,
-  minPrice,
-  maxPrice,
+  minTick,
+  maxTick,
+  tickSpacing,
+  baseCurrency,
+  quoteCurrency,
+  priceInverted,
+  protocolVersion,
   isFullRange,
   selectedHistoryDuration,
-  onMinPriceChange,
-  onMaxPriceChange,
-  onTimePeriodChange,
+  onChartError,
   onInputModeChange,
+  onMinTickChange,
+  onMaxTickChange,
+  onTimePeriodChange,
   setIsFullRange,
 }: LiquidityChartStoreProviderProps) {
   const [store] = useState(() =>
     createLiquidityChartStore({
       inputMode,
-      minPrice,
-      maxPrice,
+      minTick,
+      maxTick,
+      tickSpacing,
+      baseCurrency,
+      quoteCurrency,
+      priceInverted,
+      protocolVersion,
       isFullRange,
       selectedHistoryDuration,
+      onChartError,
       onInputModeChange,
-      onMinPriceChange,
-      onMaxPriceChange,
+      onMinTickChange,
+      onMaxTickChange,
       onTimePeriodChange,
       setIsFullRange,
     }),
@@ -78,7 +98,7 @@ export function LiquidityChartStoreProvider({
 
   return (
     <LiquidityChartStoreContext.Provider value={store}>
-      <LiquidityChartStoreProviderInner minPrice={minPrice} maxPrice={maxPrice} isFullRange={isFullRange}>
+      <LiquidityChartStoreProviderInner minTick={minTick} maxTick={maxTick} isFullRange={isFullRange}>
         {children}
       </LiquidityChartStoreProviderInner>
     </LiquidityChartStoreContext.Provider>

@@ -7,7 +7,6 @@ import { InterfacePageName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { useBooleanState } from 'utilities/src/react/useBooleanState'
 import { DetailsHeaderContainer } from '~/components/Explore/stickyHeader/DetailsHeaderContainer'
 import { MobileBottomBar, TDPActionTabs } from '~/components/NavBar/MobileBottomBar'
 import { ScrollDirection, useScroll } from '~/hooks/useScroll'
@@ -22,7 +21,6 @@ import { TokenDescription } from '~/pages/TokenDetails/components/info/TokenDesc
 import { LeftPanel, RightPanel, TokenDetailsLayout } from '~/pages/TokenDetails/components/skeleton/Skeleton'
 import { TDPSwapComponent } from '~/pages/TokenDetails/components/swap/TDPSwapComponent'
 import { TokenCarousel } from '~/pages/TokenDetails/components/TokenCarousel/TokenCarousel'
-import { AztecWarningBanner, AztecWarningModal } from '~/pages/TokenDetails/components/warnings/AztecWarning'
 import { useTDPContext } from '~/pages/TokenDetails/context/TDPContext'
 
 export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
@@ -35,12 +33,6 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
   const pageChainBalance = multiChainMap[currencyChain]?.balance
 
   const { direction: scrollDirection } = useScroll()
-
-  const {
-    value: isAztecWarningModalOpen,
-    setTrue: openAztecWarningModal,
-    setFalse: closeAztecWarningModal,
-  } = useBooleanState(false)
 
   const chainId = fromGraphQLChain(currencyChain) ?? UniverseChainId.Mainnet
   const currencyInfo = useCurrencyInfo(
@@ -72,8 +64,6 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
       <TokenDetailsLayout>
         <LeftPanel gap="$spacing40" $lg={{ gap: '$gap32' }}>
           <ChartSection />
-
-          <AztecWarningBanner />
 
           {!showBalanceInfo && (
             <Flex gap="$gap24">
@@ -118,12 +108,10 @@ export function TokenDetailsContent({ isCompact }: { isCompact: boolean }) {
 
         <MobileBottomBar hide={isTouchDevice && scrollDirection === ScrollDirection.DOWN}>
           <Flex data-testid="tdp-mobile-bottom-bar">
-            <TDPActionTabs onAztecActionPress={openAztecWarningModal} />
+            <TDPActionTabs />
           </Flex>
         </MobileBottomBar>
       </TokenDetailsLayout>
-
-      <AztecWarningModal isOpen={isAztecWarningModalOpen} onClose={closeAztecWarningModal} />
     </Trace>
   )
 }

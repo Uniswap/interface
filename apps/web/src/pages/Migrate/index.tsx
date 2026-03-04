@@ -14,7 +14,7 @@ import { Platform } from 'uniswap/src/features/platforms/types/Platform'
 import { InterfacePageName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { LPTransactionSettingsStoreContextProvider } from 'uniswap/src/features/transactions/components/settings/stores/transactionSettingsStore/LPTransactionSettingsStoreContextProvider'
-import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPrice'
+import { useUSDCValue } from 'uniswap/src/features/transactions/hooks/useUSDCPriceWrapper'
 import { isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { getErrorMessageToDisplay } from 'uniswap/src/features/transactions/liquidity/utils'
 import type { TransactionStep } from 'uniswap/src/features/transactions/steps/types'
@@ -279,8 +279,8 @@ function Toolbar({
     const isRangeUnchanged = initialPosition?.isOutOfRange
       ? true
       : priceRangeState.fullRange === DEFAULT_PRICE_RANGE_STATE.fullRange &&
-        priceRangeState.maxPrice === DEFAULT_PRICE_RANGE_STATE.maxPrice &&
-        priceRangeState.minPrice === DEFAULT_PRICE_RANGE_STATE.minPrice
+        priceRangeState.maxTick === DEFAULT_PRICE_RANGE_STATE.maxTick &&
+        priceRangeState.minTick === DEFAULT_PRICE_RANGE_STATE.minTick
 
     return (
       fee &&

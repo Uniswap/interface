@@ -13,7 +13,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { logger } from 'utilities/src/logger/logger'
 import { WalletSwapFlow } from 'wallet/src/features/transactions/swap/WalletSwapFlow'
 import { invalidateAndRefetchWalletDelegationQueries } from 'wallet/src/features/transactions/watcher/transactionFinalizationSaga'
-import { useActiveAccountWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function SwapFlowScreen(): JSX.Element {
   const dispatch = useDispatch()
@@ -32,16 +32,12 @@ export function SwapFlowScreen(): JSX.Element {
     filteredChainIdsOverride: ignorePersistedFilteredChainIds ? undefined : persistedFilteredChainIds,
   })
 
-  const signerMnemonicAccounts = useSignerAccounts()
-  const chains = useEnabledChains()
-  const accountAddresses = signerMnemonicAccounts.map((account) => account.address)
-
   // Update flow start timestamp every time modal is opened for logging
   useEffect(() => {
-    invalidateAndRefetchWalletDelegationQueries({ accountAddresses, chainIds: chains.chains }).catch((error) =>
+    invalidateAndRefetchWalletDelegationQueries().catch((error) =>
       logger.debug('SwapFlowScreen', 'useEffect', 'Failed to invalidate and refetch wallet delegation queries', error),
     )
-  }, [accountAddresses, chains.chains])
+  }, [])
 
   const preservedTransactionStateRef = useRef<TransactionState | null>(null)
   const initialTransactionState = useMemo(() => {

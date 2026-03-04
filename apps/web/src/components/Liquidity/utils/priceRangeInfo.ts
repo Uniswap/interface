@@ -28,31 +28,27 @@ import {
 } from '~/components/Liquidity/Create/types'
 import { getBaseAndQuoteCurrencies } from '~/components/Liquidity/utils/currency'
 import tryParseCurrencyAmount from '~/lib/utils/tryParseCurrencyAmount'
-import { tryParsePrice, tryParseTick } from '~/state/mint/v3/utils'
+import { tryParsePrice } from '~/state/mint/v3/utils'
 import { PositionField } from '~/types/position'
 
-import { getTickToPrice, getV4TickToPrice } from '~/utils/getTickToPrice'
-
-function getTicksAtLimit({
+export function getTicksAtLimit({
   lowerTick,
   upperTick,
-  tickSpaceLimits,
-  priceInverted,
+  tickSpacing,
   fullRange,
 }: {
   lowerTick?: Maybe<number>
   upperTick?: Maybe<number>
-  tickSpaceLimits: [Maybe<number>, Maybe<number>]
-  priceInverted: boolean
+  tickSpacing: number
   fullRange: boolean
 }): [boolean, boolean] {
   if (fullRange) {
     return [true, true]
   }
 
-  return priceInverted
-    ? [upperTick === tickSpaceLimits[1], lowerTick === tickSpaceLimits[0]]
-    : [lowerTick === tickSpaceLimits[0], upperTick === tickSpaceLimits[1]]
+  const minTick = nearestUsableTick(TickMath.MIN_TICK, tickSpacing)
+  const maxTick = nearestUsableTick(TickMath.MAX_TICK, tickSpacing)
+  return [lowerTick === minTick, upperTick === maxTick]
 }
 
 /**
@@ -314,79 +310,32 @@ export function getV3PriceRangeInfo({
   ]
 
   const [baseRangeInput, quoteRangeInput] = state.priceInverted
-    ? [state.maxPrice, state.minPrice]
-    : [state.minPrice, state.maxPrice]
+    ? [state.maxTick, state.minTick]
+    : [state.minTick, state.maxTick]
 
   const lowerTick =
-    baseRangeInput === '' || state.fullRange
+    baseRangeInput === undefined || state.fullRange
       ? tickSpaceLimits[0]
       : state.priceInverted
-        ? tryParseTick({
-            baseToken: sdkCurrencies.TOKEN1,
-            quoteToken: sdkCurrencies.TOKEN0,
-            feeAmount: fee.feeAmount,
-            value: state.maxPrice,
-          })
-        : tryParseTick({
-            baseToken: sdkCurrencies.TOKEN0,
-            quoteToken: sdkCurrencies.TOKEN1,
-            feeAmount: fee.feeAmount,
-            value: state.minPrice,
-          })
+        ? -baseRangeInput
+        : baseRangeInput
   const upperTick =
-    quoteRangeInput === '' || state.fullRange
+    quoteRangeInput === undefined || state.fullRange
       ? tickSpaceLimits[1]
       : state.priceInverted
-        ? tryParseTick({
-            baseToken: sdkCurrencies.TOKEN1,
-            quoteToken: sdkCurrencies.TOKEN0,
-            feeAmount: fee.feeAmount,
-            value: state.minPrice,
-          })
-        : tryParseTick({
-            baseToken: sdkCurrencies.TOKEN0,
-            quoteToken: sdkCurrencies.TOKEN1,
-            feeAmount: fee.feeAmount,
-            value: state.maxPrice,
-          })
+        ? -quoteRangeInput
+        : quoteRangeInput
   const ticks: [Maybe<number>, Maybe<number>] = [lowerTick, upperTick]
-
-  const ticksAtLimit: [boolean, boolean] = getTicksAtLimit({
-    lowerTick,
-    upperTick,
-    tickSpaceLimits,
-    fullRange: state.fullRange,
-    priceInverted: state.priceInverted,
-  })
-
-  let pricesAtTicks: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>] = [
-    getTickToPrice({
-      baseToken: sdkCurrencies.TOKEN0,
-      quoteToken: sdkCurrencies.TOKEN1,
-      tick: ticks[0],
-    }),
-    getTickToPrice({
-      baseToken: sdkCurrencies.TOKEN0,
-      quoteToken: sdkCurrencies.TOKEN1,
-      tick: ticks[1],
-    }),
-  ]
-
-  pricesAtTicks = state.priceInverted
-    ? [pricesAtTicks[1]?.invert(), pricesAtTicks[0]?.invert()]
-    : [pricesAtTicks[0], pricesAtTicks[1]]
 
   return {
     protocolVersion,
     ticks,
-    ticksAtLimit,
     price,
-    pricesAtTicks,
     mockPool,
   } satisfies V3PriceRangeInfo
 }
 
-function tryParseV4Tick({
+export function tryParseV4Tick({
   baseToken,
   quoteToken,
   value,
@@ -417,8 +366,7 @@ function tryParseV4Tick({
   } else if (JSBI.lessThanOrEqual(sqrtRatioX96, TickMath.MIN_SQRT_RATIO)) {
     tick = TickMath.MIN_TICK
   } else {
-    // this function is agnostic to the base, will always return the correct tick
-    tick = priceToClosestV4Tick(price)
+    tick = TickMath.getTickAtSqrtRatio(sqrtRatioX96)
   }
 
   return nearestUsableTick(tick, tickSpacing)
@@ -480,74 +428,27 @@ export function getV4PriceRangeInfo({
         ]
 
   const [baseRangeInput, quoteRangeInput] = state.priceInverted
-    ? [state.maxPrice, state.minPrice]
-    : [state.minPrice, state.maxPrice]
+    ? [state.maxTick, state.minTick]
+    : [state.minTick, state.maxTick]
 
   const lowerTick =
-    baseRangeInput === '' || initialPosition?.isOutOfRange || state.fullRange
+    baseRangeInput === undefined || initialPosition?.isOutOfRange || state.fullRange
       ? tickSpaceLimits[0]
       : state.priceInverted
-        ? tryParseV4Tick({
-            baseToken: sortedCurrencies.TOKEN1,
-            quoteToken: sortedCurrencies.TOKEN0,
-            value: state.maxPrice,
-            tickSpacing: poolForPosition?.tickSpacing,
-          })
-        : tryParseV4Tick({
-            baseToken: sortedCurrencies.TOKEN0,
-            quoteToken: sortedCurrencies.TOKEN1,
-            value: state.minPrice,
-            tickSpacing: poolForPosition?.tickSpacing,
-          })
+        ? -baseRangeInput
+        : baseRangeInput
   const upperTick =
-    quoteRangeInput === '' || initialPosition?.isOutOfRange || state.fullRange
+    quoteRangeInput === undefined || initialPosition?.isOutOfRange || state.fullRange
       ? tickSpaceLimits[1]
       : state.priceInverted
-        ? tryParseV4Tick({
-            baseToken: sortedCurrencies.TOKEN1,
-            quoteToken: sortedCurrencies.TOKEN0,
-            value: state.minPrice,
-            tickSpacing: poolForPosition?.tickSpacing,
-          })
-        : tryParseV4Tick({
-            baseToken: sortedCurrencies.TOKEN0,
-            quoteToken: sortedCurrencies.TOKEN1,
-            value: state.maxPrice,
-            tickSpacing: poolForPosition?.tickSpacing,
-          })
+        ? -quoteRangeInput
+        : quoteRangeInput
   const ticks: [Maybe<number>, Maybe<number>] = [lowerTick, upperTick]
-
-  const ticksAtLimit: [boolean, boolean] = getTicksAtLimit({
-    lowerTick,
-    upperTick,
-    tickSpaceLimits,
-    fullRange: state.fullRange,
-    priceInverted: state.priceInverted,
-  })
-
-  let pricesAtTicks: [Maybe<Price<Currency, Currency>>, Maybe<Price<Currency, Currency>>] = [
-    getV4TickToPrice({
-      baseCurrency: sortedCurrencies.TOKEN0,
-      quoteCurrency: sortedCurrencies.TOKEN1,
-      tick: ticks[0],
-    }),
-    getV4TickToPrice({
-      baseCurrency: sortedCurrencies.TOKEN0,
-      quoteCurrency: sortedCurrencies.TOKEN1,
-      tick: ticks[1],
-    }),
-  ]
-
-  pricesAtTicks = state.priceInverted
-    ? [pricesAtTicks[1]?.invert(), pricesAtTicks[0]?.invert()]
-    : [pricesAtTicks[0], pricesAtTicks[1]]
 
   return {
     protocolVersion,
     ticks,
-    ticksAtLimit,
     price,
-    pricesAtTicks,
     mockPool,
   } satisfies V4PriceRangeInfo
 }

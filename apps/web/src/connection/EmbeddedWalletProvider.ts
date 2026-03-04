@@ -6,6 +6,8 @@ import {
   signTypedDataWithPasskey,
 } from 'uniswap/src/features/passkey/embeddedWallet'
 import { Platform } from 'uniswap/src/features/platforms/types/Platform'
+import { createObservableTransport } from 'uniswap/src/features/providers/observability/createObservableTransport'
+import { getRpcObserver } from 'uniswap/src/features/providers/observability/rpcObserver'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { HexString, isValidHexString } from 'utilities/src/addresses/hex'
 import { logger } from 'utilities/src/logger/logger'
@@ -53,12 +55,19 @@ export class EmbeddedWalletProvider {
     if (!this.publicClient || this.publicClient.chain !== getChainInfo(chainId)) {
       const chainInfo = getChainInfo(this.chainId)
       const rpcUrls = chainInfo.rpcUrls
-      const fallbackTransports = rpcUrls.fallback?.http.map((url) => http(url)) ?? []
+      const observer = getRpcObserver()
+      const wrapHttp = (url: string | undefined) =>
+        createObservableTransport({
+          baseTransportFactory: http(url),
+          observer,
+          meta: { chainId: this.chainId, url: url ?? '' },
+        })
+      const fallbackTransports = rpcUrls.fallback?.http.map((url) => wrapHttp(url)) ?? []
       this.publicClient = createPublicClient({
         chain: chainInfo,
         transport: fallback([
-          http(rpcUrls.public?.http[0]), // generally quicknode
-          http(rpcUrls.default.http[0]), // options here and below are usually public endpoints
+          wrapHttp(rpcUrls.public?.http[0]), // generally quicknode
+          wrapHttp(rpcUrls.default.http[0]), // options here and below are usually public endpoints
           ...fallbackTransports,
         ]),
       })

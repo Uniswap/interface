@@ -111,7 +111,7 @@ import { SettingsSmartWalletScreen } from 'src/screens/SettingsSmartWalletScreen
 import { SettingsStorageScreen } from 'src/screens/SettingsStorageScreen'
 import { SettingsViewSeedPhraseScreen } from 'src/screens/SettingsViewSeedPhraseScreen'
 import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManageConnection'
-import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
+import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen/TokenDetailsScreen'
 import { ViewPrivateKeysScreen } from 'src/screens/ViewPrivateKeys/ViewPrivateKeysScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
 import { useSporeColors } from 'ui/src'

@@ -8,6 +8,8 @@ import { Mocks, PortfolioBalancesMocks } from '~/playwright/mocks/mocks'
 // Token row IDs from GetPortfolio mock (chainId-address, lowercase)
 const USDT_TOKEN_ID = '1-0xdac17f958d2ee523a2206206994597c13d831ec7' // Tether USD / USDT
 const USDC_TOKEN_ID = '1-0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48' // USD Coin / USDC
+// Hidden token row ID from GetPortfolio mock (get_portfolio.json) - Bridged USDC on Polygon
+const HIDDEN_TOKEN_ID = '137-0x2791bca1f2de4661ed88a30c99a7a9449aa84174'
 
 const test = getTest()
 
@@ -17,7 +19,6 @@ async function goToPortfolioTokens({
   mock = Mocks.PortfolioBalances.hayden,
   getPortfolioMock,
   externalAddress,
-  eagerlyConnect = true,
   chain,
 }: {
   page: Page
@@ -25,7 +26,6 @@ async function goToPortfolioTokens({
   mock?: string
   getPortfolioMock?: string
   externalAddress?: string
-  eagerlyConnect?: boolean
   chain?: string
 }): Promise<void> {
   const portfolioMock =
@@ -40,12 +40,8 @@ async function goToPortfolioTokens({
   const base = externalAddress ? `/portfolio/${externalAddress}/tokens` : '/portfolio/tokens'
   const params = externalAddress ? 'eagerlyConnect=false' : `eagerlyConnectAddress=${HAYDEN_ADDRESS}`
   const query = chain ? `${params}&chain=${chain}` : params
-  await page.goto(`${base}?${query}`)
 
-  await Promise.all([
-    graphql.waitForResponse('PortfolioBalances'),
-    page.waitForResponse((res) => res.request().url().includes('GetPortfolio')),
-  ])
+  await page.goto(`${base}?${query}`)
 }
 
 test.describe(
@@ -96,7 +92,7 @@ test.describe(
       })
 
       test('should display hidden tokens expando row', async ({ page }) => {
-        // The hayden mock has 5 hidden tokens
+        // GetPortfolio mock has 1 hidden token (Bridged USDC)
         await expect(page.getByTestId(TestID.ShowHiddenTokens)).toBeVisible()
       })
 
@@ -104,21 +100,20 @@ test.describe(
         // Click the expando row to show hidden tokens
         await page.getByTestId(TestID.ShowHiddenTokens).click()
 
-        // Hidden tokens should now be visible - check for a known hidden token from mock
-        // USDC.e on Polygon is hidden in the mock
-        await expect(page.getByText('Bridged USDC')).toBeVisible()
+        // Hidden tokens should now be visible - check for the hidden token row from GetPortfolio mock
+        await expect(page.getByTestId(`${TestID.TokenTableRowPrefix}${HIDDEN_TOKEN_ID}`)).toBeVisible()
       })
 
       test('should collapse hidden tokens when clicking expando row again', async ({ page }) => {
         // First expand
         await page.getByTestId(TestID.ShowHiddenTokens).click()
-        await expect(page.getByText('Bridged USDC')).toBeVisible()
+        await expect(page.getByTestId(`${TestID.TokenTableRowPrefix}${HIDDEN_TOKEN_ID}`)).toBeVisible()
 
         // Then collapse
         await page.getByTestId(TestID.ShowHiddenTokens).click()
 
-        // Hidden token should no longer be visible
-        await expect(page.getByText('Bridged USDC')).not.toBeVisible()
+        // Hidden token row should no longer be visible
+        await expect(page.getByTestId(`${TestID.TokenTableRowPrefix}${HIDDEN_TOKEN_ID}`)).not.toBeVisible()
       })
 
       test('should display hidden tokens info banner when expanded', async ({ page }) => {

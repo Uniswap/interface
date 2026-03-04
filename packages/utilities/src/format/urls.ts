@@ -37,6 +37,11 @@ export function uriToHttpUrls(uri: string, options?: { allowLocalUri?: boolean }
       return [`https://arweave.net/${tx}`]
     }
     default:
+      // If protocol equals the full uri, there's no ':' separator — it's a bare path (e.g. "eth-logo.png").
+      // Treat it like a local file URI.
+      if (protocol === uri) {
+        return options?.allowLocalUri ? [uri] : []
+      }
       return []
   }
 }

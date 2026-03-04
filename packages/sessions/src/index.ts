@@ -17,7 +17,8 @@ export { uniswapIdentifierQuery } from '@universe/sessions/src/uniswap-identifie
 export type { UniswapIdentifierService } from '@universe/sessions/src/uniswap-identifier/types'
 // Session Repository
 export { createSessionRepository } from '@universe/sessions/src/session-repository/createSessionRepository'
-export { VerifyFailureReason } from '@universe/sessions/src/session-repository/types'
+export { ChallengeRejectedError } from '@universe/sessions/src/session-repository/errors'
+export { ChallengeFailureReason, VerifyFailureReason } from '@universe/sessions/src/session-repository/types'
 export type {
   SessionRepository,
   ChallengeTypeConfig,
@@ -56,6 +57,7 @@ export {
 } from '@universe/sessions/src/session-initialization/sessionErrors'
 export type {
   SessionInitializationService,
+  SessionInitOptions,
   SessionInitResult,
   SessionInitAnalytics,
 } from '@universe/sessions/src/session-initialization/createSessionInitializationService'

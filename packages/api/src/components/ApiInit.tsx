@@ -24,7 +24,8 @@ function createInitServiceQuery(ctx: {
   return queryOptions<SessionInitResult>({
     queryKey: SESSION_INIT_QUERY_KEY,
     queryFn: async (): Promise<SessionInitResult> => {
-      return await ctx.getSessionInitService().initialize()
+      const service = ctx.getSessionInitService()
+      return service.initialize()
     },
     retry: (failureCount, error) => {
       const logger = ctx.getLogger?.()

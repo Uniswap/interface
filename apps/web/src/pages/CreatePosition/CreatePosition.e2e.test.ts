@@ -132,7 +132,7 @@ test.describe(
               chain: 'unichain',
               hook: '0x09DEA99D714A3a19378e3D80D1ad22Ca46085080',
               priceRangeState:
-                '{"priceInverted":true,"fullRange":false,"minPrice":"0.00019382924070396673","maxPrice":"0.000350504530738769","initialPrice":"0.000025"}',
+                '{"priceInverted":true,"fullRange":false,"minTick":-85500,"maxTick":-79560,"initialPrice":"0.000025"}',
               fee: JSON.stringify({ ...DEFAULT_FEE_DATA, isDynamic: true }),
             },
           }),
@@ -155,8 +155,8 @@ test.describe(
         const priceRange = JSON.parse(url.searchParams.get('priceRangeState')!)
         expect(priceRange.priceInverted, 'priceInverted').toBe(true)
         expect(priceRange.fullRange, 'fullRange').toBe(false)
-        expect(priceRange.minPrice, 'minPrice').toBe('0.00019382924070396673')
-        expect(priceRange.maxPrice, 'maxPrice').toBe('0.000350504530738769')
+        expect(priceRange.minTick, 'minTick').toBe(-85500)
+        expect(priceRange.maxTick, 'maxTick').toBe(-79560)
         expect(priceRange.initialPrice, 'initialPrice').toBe('0.000025')
         const minPriceInput = page.getByTestId(TestID.RangeInput + '-0').first()
         const maxPriceInput = page.getByTestId(TestID.RangeInput + '-1').first()

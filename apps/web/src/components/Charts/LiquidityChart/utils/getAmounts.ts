@@ -40,7 +40,7 @@ export function getAmount0({ tickLower, tickUpper, currentTick, liquidity, currS
   let amount0 = JSBI.BigInt(0)
   const roundUp = JSBI.greaterThan(liquidity, JSBI.BigInt(0))
 
-  if (currentTick <= tickLower) {
+  if (currentTick < tickLower) {
     amount0 = SqrtPriceMath.getAmount0Delta(sqrtRatioAX96, sqrtRatioBX96, liquidity, roundUp)
   } else if (currentTick < tickUpper) {
     amount0 = SqrtPriceMath.getAmount0Delta(currSqrtPriceX96, sqrtRatioBX96, liquidity, roundUp)
@@ -80,8 +80,6 @@ export function getAmount1({ tickLower, tickUpper, currentTick, liquidity, currS
 
   if (currentTick < tickLower) {
     amount1 = JSBI.BigInt(0)
-  } else if (currentTick === tickLower) {
-    amount1 = SqrtPriceMath.getAmount1Delta(sqrtRatioAX96, sqrtRatioBX96, liquidity, roundUp)
   } else if (currentTick < tickUpper) {
     amount1 = SqrtPriceMath.getAmount1Delta(sqrtRatioAX96, currSqrtPriceX96, liquidity, roundUp)
   } else {

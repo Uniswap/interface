@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useTokenDetailsContext } from 'src/components/TokenDetails/TokenDetailsContext'
-import { Button, Flex, GeneratedIcon, getContrastPassingTextColor } from 'ui/src'
+import { Button, ColorTokens, Flex, GeneratedIcon, getContrastPassingTextColor } from 'ui/src'
 import { IconButton } from 'ui/src/components/buttons/IconButton/IconButton'
 import { GridView, X } from 'ui/src/components/icons'
 import { opacify, validColor } from 'ui/src/theme'
@@ -10,7 +11,6 @@ import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { ElementName, MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { useShouldShowAztecWarning } from 'uniswap/src/hooks/useShouldShowAztecWarning'
 import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { useBooleanState } from 'utilities/src/react/useBooleanState'
 
@@ -29,7 +29,7 @@ function CTAButton({
   onPress: () => void
   onPressDisabled?: () => void
   testID?: TestIDType
-  tokenColor?: Maybe<string>
+  tokenColor?: string | null
   disabled?: boolean
   icon?: GeneratedIcon
 }): JSX.Element {
@@ -50,7 +50,50 @@ function CTAButton({
   )
 }
 
-export function TokenDetailsActionButtons({
+interface ActionButtonState {
+  tokenColor: string | null
+  disabled: boolean
+  validTokenColor: ColorTokens | undefined
+  lightTokenColor: ColorTokens | undefined
+  actionsWithIcons: MenuOptionItem[]
+  actionMenuOpen: boolean
+  closeActionMenu: () => void
+  toggleActionMenu: () => void
+}
+
+function useActionButtonState(actionMenuOptions: MenuOptionItem[]): ActionButtonState {
+  const { currencyInfo, isChainEnabled, tokenColor } = useTokenDetailsContext()
+  const { value: actionMenuOpen, setFalse: closeActionMenu, toggle: toggleActionMenu } = useBooleanState(false)
+
+  const isBlocked = currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
+  const disabled = isBlocked || !isChainEnabled
+
+  const validTokenColor = validColor(tokenColor)
+  const lightTokenColor = validTokenColor ? opacify(12, validTokenColor) : undefined
+
+  const actionsWithIcons = useMemo(() => {
+    return actionMenuOptions.map(
+      (action): MenuOptionItem => ({
+        ...action,
+        iconColor: tokenColor,
+      }),
+    )
+  }, [actionMenuOptions, tokenColor])
+
+  return {
+    tokenColor,
+    disabled,
+    validTokenColor,
+    lightTokenColor,
+    actionsWithIcons,
+    actionMenuOpen,
+    closeActionMenu,
+    toggleActionMenu,
+  }
+}
+
+/** Single contextual CTA (Swap/Buy/Get) with an overflow action menu */
+export function TokenDetailsSwapButtons({
   ctaButton,
   userHasBalance,
   actionMenuOptions,
@@ -61,31 +104,20 @@ export function TokenDetailsActionButtons({
     icon?: GeneratedIcon
     onPress: () => void
   }
-  onPressDisabled?: () => void
   userHasBalance: boolean
   actionMenuOptions: MenuOptionItem[]
+  onPressDisabled?: () => void
 }): JSX.Element {
-  const { currencyInfo, isChainEnabled, tokenColor } = useTokenDetailsContext()
-  const { value: actionMenuOpen, setFalse: closeActionMenu, toggle: toggleActionMenu } = useBooleanState(false)
-  const showAztecWarning = useShouldShowAztecWarning(
-    currencyInfo?.currency.isToken ? currencyInfo.currency.address : '',
-  )
-
-  const isBlocked = currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
-
-  const disabled = isBlocked || showAztecWarning || !isChainEnabled
-
-  const validTokenColor = validColor(tokenColor)
-  const lightTokenColor = validTokenColor ? opacify(12, validTokenColor) : undefined
-
-  const actionsWithIcons = useMemo(() => {
-    return actionMenuOptions.map((action): MenuOptionItem => {
-      return {
-        ...action,
-        iconColor: tokenColor,
-      }
-    })
-  }, [actionMenuOptions, tokenColor])
+  const {
+    tokenColor,
+    disabled,
+    validTokenColor,
+    lightTokenColor,
+    actionsWithIcons,
+    actionMenuOpen,
+    closeActionMenu,
+    toggleActionMenu,
+  } = useActionButtonState(actionMenuOptions)
 
   return (
     <Flex
@@ -94,29 +126,28 @@ export function TokenDetailsActionButtons({
       borderTopColor="$surface3"
       borderTopWidth={1}
       gap="$spacing8"
-      pb="$spacing16"
+      p="$spacing16"
       pt="$spacing12"
-      px="$spacing16"
     >
       <Flex fill row gap="$spacing12">
         <CTAButton
           disabled={disabled}
           element={ElementName.Swap}
+          icon={ctaButton.icon}
           testID={TestID.TokenDetailsSwapButton}
           title={ctaButton.title}
           tokenColor={tokenColor}
-          icon={ctaButton.icon}
           onPress={ctaButton.onPress}
           onPressDisabled={onPressDisabled}
         />
         {userHasBalance && !disabled && (
           <ContextMenu
             isPlacementAbove
-            offsetY={20}
-            menuItems={actionsWithIcons}
-            isOpen={actionMenuOpen}
-            triggerMode={ContextMenuTriggerMode.Primary}
             closeMenu={closeActionMenu}
+            isOpen={actionMenuOpen}
+            menuItems={actionsWithIcons}
+            offsetY={20}
+            triggerMode={ContextMenuTriggerMode.Primary}
             onPressAny={(e) => {
               sendAnalyticsEvent(MobileEventName.TokenDetailsContextMenuAction, {
                 action: e.name,
@@ -127,9 +158,103 @@ export function TokenDetailsActionButtons({
               <IconButton
                 emphasis="primary"
                 variant="branded"
-                icon={actionMenuOpen ? <X color={validTokenColor} /> : <GridView color={validTokenColor} />}
                 backgroundColor={lightTokenColor}
                 borderColor="$transparent"
+                icon={actionMenuOpen ? <X color={validTokenColor} /> : <GridView color={validTokenColor} />}
+                size="large"
+                testID={TestID.TokenDetailsActionButton}
+                onPress={toggleActionMenu}
+              />
+            </Trace>
+          </ContextMenu>
+        )}
+      </Flex>
+    </Flex>
+  )
+}
+
+/** Dedicated Buy and Sell CTAs with a secondary action menu */
+export function TokenDetailsBuySellButtons({
+  userHasBalance,
+  actionMenuOptions,
+  onPressDisabled,
+  onPressBuy,
+  onPressSell,
+}: {
+  userHasBalance: boolean
+  actionMenuOptions: MenuOptionItem[]
+  onPressDisabled?: () => void
+  onPressBuy: () => void
+  onPressSell: () => void
+}): JSX.Element {
+  const { t } = useTranslation()
+  const {
+    tokenColor,
+    disabled,
+    validTokenColor,
+    lightTokenColor,
+    actionsWithIcons,
+    actionMenuOpen,
+    closeActionMenu,
+    toggleActionMenu,
+  } = useActionButtonState(actionMenuOptions)
+
+  return (
+    <Flex
+      row
+      backgroundColor="$surface1"
+      borderTopColor="$surface3"
+      borderTopWidth={1}
+      gap="$spacing8"
+      p="$spacing16"
+      pt="$spacing12"
+    >
+      <Flex fill row gap="$spacing12">
+        <Flex flex={1}>
+          <CTAButton
+            disabled={disabled}
+            element={ElementName.Buy}
+            testID={TestID.TokenDetailsBuyButton}
+            title={t('common.button.buy')}
+            tokenColor={tokenColor}
+            onPress={onPressBuy}
+            onPressDisabled={onPressDisabled}
+          />
+        </Flex>
+        {userHasBalance && (
+          <Flex flex={1}>
+            <CTAButton
+              disabled={disabled}
+              element={ElementName.Sell}
+              testID={TestID.TokenDetailsSellButton}
+              title={t('common.button.sell')}
+              tokenColor={tokenColor}
+              onPress={onPressSell}
+              onPressDisabled={onPressDisabled}
+            />
+          </Flex>
+        )}
+        {!disabled && (
+          <ContextMenu
+            isPlacementAbove
+            closeMenu={closeActionMenu}
+            isOpen={actionMenuOpen}
+            menuItems={actionsWithIcons}
+            offsetY={20}
+            triggerMode={ContextMenuTriggerMode.Primary}
+            onPressAny={(e) => {
+              sendAnalyticsEvent(MobileEventName.TokenDetailsContextMenuAction, {
+                action: e.name,
+              })
+            }}
+          >
+            <Trace logPress element={ElementName.TDPActionMenuButton} section={SectionName.TokenDetails}>
+              <IconButton
+                emphasis="primary"
+                variant="branded"
+                backgroundColor={lightTokenColor}
+                borderColor="$transparent"
+                icon={actionMenuOpen ? <X color={validTokenColor} /> : <GridView color={validTokenColor} />}
                 size="large"
                 testID={TestID.TokenDetailsActionButton}
                 onPress={toggleActionMenu}

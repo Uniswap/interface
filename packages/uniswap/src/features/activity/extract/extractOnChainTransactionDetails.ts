@@ -18,6 +18,7 @@ import { parseRestReceiveTransaction } from 'uniswap/src/features/activity/parse
 import { parseRestSendTransaction } from 'uniswap/src/features/activity/parse/parseSendTransaction'
 import {
   parseRestSwapTransaction,
+  parseRestWithdrawTransaction,
   parseRestWrapTransaction,
 } from 'uniswap/src/features/activity/parse/parseTradeTransaction'
 import { parseRestUnknownTransaction } from 'uniswap/src/features/activity/parse/parseUnknownTransaction'
@@ -78,9 +79,11 @@ export default function extractRestOnChainTransactionDetails(transaction: OnChai
       break
     case OnChainTransactionLabel.WRAP:
     case OnChainTransactionLabel.UNWRAP:
-    case OnChainTransactionLabel.WITHDRAW:
     case OnChainTransactionLabel.LEND:
       typeInfo = parseRestWrapTransaction(transaction)
+      break
+    case OnChainTransactionLabel.WITHDRAW:
+      typeInfo = parseRestWithdrawTransaction(transaction)
       break
     case OnChainTransactionLabel.APPROVE:
       typeInfo = parseRestApproveTransaction(transaction)

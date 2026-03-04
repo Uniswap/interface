@@ -7,15 +7,18 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Dropdown, InternalMenuItem } from '~/components/Dropdowns/Dropdown'
 import { getProtocolVersionLabel } from '~/components/Liquidity/utils/protocolVersion'
-import { usePoolTableStore, usePoolTableStoreActions } from '~/pages/Explore/tables/Pools/poolTableStore'
+import {
+  useExploreTablesFilterStore,
+  useExploreTablesFilterStoreActions,
+} from '~/pages/Explore/exploreTablesFilterStore'
 
 const PROTOCOL_VERSIONS = [ProtocolVersion.UNSPECIFIED, ProtocolVersion.V4, ProtocolVersion.V3, ProtocolVersion.V2]
 
 export function ProtocolFilter() {
   const { t } = useTranslation()
   const [open, setOpen] = useState(false)
-  const selectedProtocol = usePoolTableStore((s) => s.selectedProtocol)
-  const { setSelectedProtocol } = usePoolTableStoreActions()
+  const selectedProtocol = useExploreTablesFilterStore((s) => s.selectedProtocol)
+  const { setSelectedProtocol } = useExploreTablesFilterStoreActions()
   const media = useMedia()
 
   const onVersionChange = useCallback(

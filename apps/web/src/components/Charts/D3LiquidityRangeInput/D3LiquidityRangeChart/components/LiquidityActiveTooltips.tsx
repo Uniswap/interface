@@ -1,39 +1,40 @@
+import { ProtocolVersion } from '@uniswap/client-data-api/dist/data/v1/poolTypes_pb'
 import { Currency } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
 import { TickTooltip } from '~/components/Charts/ActiveLiquidityChart/TickTooltip'
 import { PriceDifferenceTooltips } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/components/PriceDifferenceTooltips'
 import { CHART_DIMENSIONS } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/constants'
 import { useChartDragState } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/dragSelectors'
 import { useChartHoverState } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/store/selectors/hoverSelectors'
-import { findClosestTick } from '~/components/Charts/D3LiquidityRangeInput/D3LiquidityRangeChart/utils/tickUtils'
-import { ChartEntry } from '~/components/Charts/LiquidityRangeInput/types'
-import { PriceChartData } from '~/components/Charts/PriceChart'
+import { getDisplayPriceFromTick } from '~/utils/getTickToPrice'
 
 export function LiquidityActiveTooltips({
   quoteCurrency,
   baseCurrency,
-  priceData,
-  liquidityData,
+  currentTick,
+  tickSpacing,
+  priceInverted,
+  protocolVersion,
 }: {
-  quoteCurrency: Currency
-  baseCurrency: Currency
-  priceData: PriceChartData[]
-  liquidityData: ChartEntry[]
+  quoteCurrency: Maybe<Currency>
+  baseCurrency: Maybe<Currency>
+  currentTick: number
+  tickSpacing: number
+  priceInverted: boolean
+  protocolVersion: ProtocolVersion
 }) {
   const { dragStartY, dragCurrentY, dragStartTick, dragCurrentTick } = useChartDragState()
   const { hoveredY, hoveredTick } = useChartHoverState()
 
-  // Calculate current tick and price for TickTooltip
-  const currentPrice = useMemo(() => {
-    if (priceData.length === 0) {
-      return 0
-    }
-    return priceData[priceData.length - 1].value
-  }, [priceData])
-
-  const { tick: currentTick } = useMemo(() => {
-    return findClosestTick(liquidityData, currentPrice)
-  }, [currentPrice, liquidityData])
+  // Calculate current price for TickTooltip
+  const currentPrice = Number(
+    getDisplayPriceFromTick({
+      tick: currentTick,
+      baseCurrency,
+      quoteCurrency,
+      priceInverted,
+      protocolVersion,
+    }),
+  )
 
   // Calculate content width and axis label pane width
   const contentWidth = CHART_DIMENSIONS.LIQUIDITY_CHART_WIDTH - CHART_DIMENSIONS.LIQUIDITY_SECTION_OFFSET
@@ -50,12 +51,13 @@ export function LiquidityActiveTooltips({
           containerHeight={CHART_DIMENSIONS.LIQUIDITY_CHART_HEIGHT}
           hoverY={hoveredY}
           hoveredTick={hoveredTick}
-          currentTick={currentTick.tick}
+          currentTick={currentTick}
           currentPrice={currentPrice}
           contentWidth={contentWidth}
           axisLabelPaneWidth={axisLabelPaneWidth}
           quoteCurrency={quoteCurrency}
           baseCurrency={baseCurrency}
+          tickSpacing={tickSpacing}
         />
       ) : null}
 
@@ -65,12 +67,13 @@ export function LiquidityActiveTooltips({
           containerHeight={CHART_DIMENSIONS.LIQUIDITY_CHART_HEIGHT}
           hoverY={dragStartY}
           hoveredTick={dragStartTick}
-          currentTick={currentTick.tick}
+          currentTick={currentTick}
           currentPrice={currentPrice}
           contentWidth={contentWidth}
           axisLabelPaneWidth={axisLabelPaneWidth}
           quoteCurrency={quoteCurrency}
           baseCurrency={baseCurrency}
+          tickSpacing={tickSpacing}
         />
       ) : null}
 
@@ -80,12 +83,13 @@ export function LiquidityActiveTooltips({
           containerHeight={CHART_DIMENSIONS.LIQUIDITY_CHART_HEIGHT}
           hoverY={dragCurrentY}
           hoveredTick={dragCurrentTick}
-          currentTick={currentTick.tick}
+          currentTick={currentTick}
           currentPrice={currentPrice}
           contentWidth={contentWidth}
           axisLabelPaneWidth={axisLabelPaneWidth}
           quoteCurrency={quoteCurrency}
           baseCurrency={baseCurrency}
+          tickSpacing={tickSpacing}
         />
       ) : null}
     </>

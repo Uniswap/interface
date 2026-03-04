@@ -16,7 +16,7 @@
     "@tanstack/react-query": "5.90.20",
     "@types/uuid": "9.0.1",
     "@uniswap/analytics-events": "2.43.0",
-    "@uniswap/client-notification-service": "0.0.9",
+    "@uniswap/client-notification-service": "0.0.11",
     "@uniswap/sdk-core": "7.10.1",
     "@uniswap/universal-router-sdk": "4.29.2",
     "@uniswap/v3-sdk": "3.27.0",

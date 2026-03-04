@@ -1,12 +1,15 @@
 import type { PromiseClient } from '@connectrpc/connect'
 import type { SessionService } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_connect'
 import {
+  ChallengeFailure,
+  ChallengeFailure_Reason,
   ChallengeResponse,
   GetChallengeTypesResponse,
   InitSessionResponse,
   SignoutResponse,
 } from '@uniswap/client-platform-service/dist/uniswap/platformservice/v1/sessionService_pb'
 import { createSessionRepository } from '@universe/sessions/src/session-repository/createSessionRepository'
+import { ChallengeRejectedError } from '@universe/sessions/src/session-repository/errors'
 import { ChallengeType } from '@universe/sessions/src/session-service/types'
 import { describe, expect, it, type MockedFunction, vi } from 'vitest'
 
@@ -101,21 +104,64 @@ describe('createSessionRepository', () => {
       })
     })
 
-    it('handles empty challenge response gracefully', async () => {
+    it('throws ChallengeRejectedError when response has failure field', async () => {
       const mockClient = createMockClient()
-      mockClient.challenge.mockResolvedValue(new ChallengeResponse({ challengeId: undefined }))
+      mockClient.challenge.mockResolvedValue(
+        new ChallengeResponse({
+          failure: new ChallengeFailure({ reason: ChallengeFailure_Reason.UNSPECIFIED }),
+        }),
+      )
+
+      const repository = createSessionRepository({ client: mockClient })
+
+      await expect(repository.challenge({})).rejects.toThrow(ChallengeRejectedError)
+      await expect(repository.challenge({})).rejects.toThrow('REASON_UNSPECIFIED')
+    })
+
+    it('throws ChallengeRejectedError with BOT_DETECTION_REQUIRED reason', async () => {
+      const mockClient = createMockClient()
+      mockClient.challenge.mockResolvedValue(
+        new ChallengeResponse({
+          failure: new ChallengeFailure({ reason: ChallengeFailure_Reason.BOT_DETECTION_REQUIRED }),
+        }),
+      )
+
+      const repository = createSessionRepository({ client: mockClient })
+
+      await expect(repository.challenge({})).rejects.toThrow(ChallengeRejectedError)
+      await expect(repository.challenge({})).rejects.toThrow('REASON_BOT_DETECTION_REQUIRED')
+    })
+
+    it('does NOT throw ChallengeRejectedError when no failure field is present', async () => {
+      const mockClient = createMockClient()
+      mockClient.challenge.mockResolvedValue(new ChallengeResponse({ challengeId: 'some-id', challengeType: 0 }))
 
       const repository = createSessionRepository({ client: mockClient })
       const result = await repository.challenge({})
 
-      // Should return defaults when no challenge data
-      expect(result).toEqual({
-        challengeId: '',
-        challengeType: 0,
-        extra: {},
-        challengeData: { case: undefined },
-        authorizeUrl: undefined,
-      })
+      expect(result.challengeId).toBe('some-id')
+    })
+
+    it('ChallengeRejectedError has typed reason and rawFailure fields', async () => {
+      const mockClient = createMockClient()
+      mockClient.challenge.mockResolvedValue(
+        new ChallengeResponse({
+          failure: new ChallengeFailure({ reason: ChallengeFailure_Reason.BOT_DETECTION_REQUIRED }),
+        }),
+      )
+
+      const repository = createSessionRepository({ client: mockClient })
+
+      try {
+        await repository.challenge({})
+        expect.fail('Should have thrown')
+      } catch (error) {
+        expect(error).toBeInstanceOf(ChallengeRejectedError)
+        const rejected = error as ChallengeRejectedError
+        expect(rejected.reason).toBe('REASON_BOT_DETECTION_REQUIRED')
+        expect(rejected.rawFailure).toBeDefined()
+        expect(rejected.name).toBe('ChallengeRejectedError')
+      }
     })
 
     it('provides meaningful error when challenge request fails', async () => {
@@ -162,6 +208,71 @@ describe('createSessionRepository', () => {
 
       // Should succeed with required params
       expect(result).toEqual({ retry: false })
+    })
+
+    it('treats undefined outcome with retry=false as success (proto3 dropped empty VerifySuccess)', async () => {
+      const mockClient = createMockClient()
+      mockClient.verify.mockResolvedValue({
+        retry: false,
+        outcome: { case: undefined, value: undefined },
+      })
+
+      const repository = createSessionRepository({ client: mockClient })
+
+      const result = await repository.verifySession({
+        solution: 'solution-token',
+        challengeId: 'challenge-123',
+        challengeType: ChallengeType.TURNSTILE,
+      })
+
+      // Proto3 drops empty VerifySuccess — retry: false signals success
+      expect(result.retry).toBe(false)
+    })
+
+    it('allows undefined outcome when retry is true (valid retry-only response)', async () => {
+      const mockClient = createMockClient()
+      mockClient.verify.mockResolvedValue({
+        retry: true,
+        outcome: { case: undefined, value: undefined },
+      })
+
+      const repository = createSessionRepository({ client: mockClient })
+
+      const result = await repository.verifySession({
+        solution: 'solution-token',
+        challengeId: 'challenge-123',
+        challengeType: ChallengeType.TURNSTILE,
+      })
+
+      expect(result.retry).toBe(true)
+    })
+
+    it('returns failure info from verify failure outcome', async () => {
+      const mockClient = createMockClient()
+      mockClient.verify.mockResolvedValue({
+        retry: true,
+        outcome: {
+          case: 'failure' as const,
+          value: {
+            reason: 1, // INVALID_SOLUTION
+            message: 'Bad code',
+            waitSeconds: 30,
+          },
+        },
+      })
+
+      const repository = createSessionRepository({ client: mockClient })
+
+      const result = await repository.verifySession({
+        solution: 'bad-code',
+        challengeId: 'challenge-123',
+        challengeType: ChallengeType.TURNSTILE,
+      })
+
+      expect(result.retry).toBe(true)
+      expect(result.failureReason).toBe('REASON_INVALID_SOLUTION')
+      expect(result.failureMessage).toBe('Bad code')
+      expect(result.waitSeconds).toBe(30)
     })
 
     it('provides meaningful error when verify fails', async () => {

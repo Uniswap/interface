@@ -12,7 +12,7 @@ import type { AuctionWithCurrencyInfo } from '~/state/explore/topAuctions/useTop
  * Sort fields for auction table
  */
 export enum AuctionSortField {
-  PROJECTED_FDV = 'Projected FDV',
+  FDV = 'FDV',
   COMMITTED_VOLUME = 'Committed Volume',
   TIME_REMAINING = 'Time Remaining',
 }
@@ -32,7 +32,7 @@ export function AuctionTableHeader({
   const handleSortCategory = useEvent(onSort)
 
   const HEADER_TEXT = {
-    [AuctionSortField.PROJECTED_FDV]: t('toucan.auction.currentFdv'),
+    [AuctionSortField.FDV]: t('stats.fdv'),
     [AuctionSortField.COMMITTED_VOLUME]: t('toucan.auction.committedVolume'),
     [AuctionSortField.TIME_REMAINING]: t('toucan.auction.timeRemaining'),
   }

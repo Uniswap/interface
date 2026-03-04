@@ -44,7 +44,11 @@ import { MouseoverTooltip, TooltipSize } from '~/components/Tooltip'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from '~/constants/breakpoints'
 import useSimplePagination from '~/hooks/useSimplePagination'
 import { useExploreTablesFilterStore } from '~/pages/Explore/exploreTablesFilterStore'
-import { usePoolTableStore, usePoolTableStoreActions } from '~/pages/Explore/tables/Pools/poolTableStore'
+import {
+  PoolTableStoreContextProvider,
+  usePoolTableStore,
+  usePoolTableStoreActions,
+} from '~/pages/Explore/tables/Pools/poolTableStore'
 import { TABLE_PAGE_SIZE } from '~/state/explore'
 import { useTopPools } from '~/state/explore/topPools/useTopPools'
 import { PoolStat } from '~/state/explore/types'
@@ -152,14 +156,14 @@ interface TopPoolTableProps {
   isError: boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
 }
-export const ExploreTopPoolTable = memo(function ExploreTopPoolTable() {
+function ExploreTopPoolTableContent(): JSX.Element {
   const chainId = useChainIdFromUrlParam()
-  const { sortMethod, sortAscending, selectedProtocol } = usePoolTableStore((s) => ({
+  const { sortMethod, sortAscending } = usePoolTableStore((s) => ({
     sortMethod: s.sortMethod,
     sortAscending: s.sortAscending,
-    selectedProtocol: s.selectedProtocol,
   }))
   const { resetSort } = usePoolTableStoreActions()
+  const selectedProtocol = useExploreTablesFilterStore((s) => s.selectedProtocol)
 
   useEffect(() => {
     resetSort()
@@ -175,6 +179,14 @@ export const ExploreTopPoolTable = memo(function ExploreTopPoolTable() {
   })
 
   return <TopPoolTable topPoolData={{ topPools, isLoading, isError, loadMore }} />
+}
+
+export const ExploreTopPoolTable = memo(function ExploreTopPoolTable() {
+  return (
+    <PoolTableStoreContextProvider>
+      <ExploreTopPoolTableContent />
+    </PoolTableStoreContextProvider>
+  )
 })
 
 const TopPoolTable = memo(function TopPoolTable({

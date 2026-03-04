@@ -8,7 +8,14 @@ import { ActionTileWithIconAnimation } from '~/components/ActionTiles/ActionTile
 import { ReceiveModalState } from '~/components/ReceiveCryptoModal/types'
 import { useOpenReceiveCryptoModal } from '~/components/ReceiveCryptoModal/useOpenReceiveCryptoModal'
 
-export function ReceiveActionTile({ padding = '$spacing12' }: { padding?: FlexProps['p'] }) {
+export function ReceiveActionTile({
+  padding = '$spacing12',
+  dataTestId = TestID.WalletReceiveCrypto,
+}: {
+  padding?: FlexProps['p']
+  /** Override for e2e when tile is in portfolio overview (avoids collision with drawer). */
+  dataTestId?: string
+}) {
   const { t } = useTranslation()
 
   const openReceiveCryptoModal = useOpenReceiveCryptoModal({
@@ -18,7 +25,7 @@ export function ReceiveActionTile({ padding = '$spacing12' }: { padding?: FlexPr
   return (
     <Trace logPress element={ElementName.PortfolioActionReceive}>
       <ActionTileWithIconAnimation
-        dataTestId={TestID.WalletReceiveCrypto}
+        dataTestId={dataTestId}
         Icon={ArrowDownCircleFilled}
         name={t('common.receive')}
         onClick={openReceiveCryptoModal}

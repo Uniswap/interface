@@ -1,5 +1,6 @@
 import { toPlainMessage } from '@bufbuild/protobuf'
 import { queryOptions } from '@tanstack/react-query'
+import { PlatformType } from '@uniswap/client-notification-service/dist/uniswap/notificationservice/v1/api_pb'
 import type { InAppNotification, NotificationsApiClient } from '@universe/api'
 import { getLogger } from 'utilities/src/logger/logger'
 import { ReactQueryCacheKey } from 'utilities/src/reactQuery/cache'
@@ -10,6 +11,7 @@ const DEFAULT_POLL_INTERVAL_MS = 2 * ONE_MINUTE_MS
 
 interface GetNotificationQueryOptionsContext {
   apiClient: NotificationsApiClient
+  getPlatformType: () => PlatformType
   pollIntervalMs?: number
   getIsSessionInitialized?: () => boolean
 }
@@ -37,7 +39,7 @@ interface GetNotificationQueryOptionsContext {
 export function getNotificationQueryOptions(
   ctx: GetNotificationQueryOptionsContext,
 ): QueryOptionsResult<InAppNotification[], Error, InAppNotification[], [ReactQueryCacheKey.Notifications]> {
-  const { apiClient, pollIntervalMs = DEFAULT_POLL_INTERVAL_MS, getIsSessionInitialized } = ctx
+  const { apiClient, getPlatformType, pollIntervalMs = DEFAULT_POLL_INTERVAL_MS, getIsSessionInitialized } = ctx
 
   return queryOptions({
     queryKey: [ReactQueryCacheKey.Notifications],
@@ -49,7 +51,8 @@ export function getNotificationQueryOptions(
       }
 
       try {
-        const response = await apiClient.getNotifications()
+        const platformType = getPlatformType()
+        const response = await apiClient.getNotifications({ platform_type: platformType })
         // Convert protobuf Messages to plain objects for React Query caching
         // toPlainMessage strips the Message prototype chain and preserves numeric enum values
         // It's schema-aware and automatically handles nested messages, making it resilient to schema changes

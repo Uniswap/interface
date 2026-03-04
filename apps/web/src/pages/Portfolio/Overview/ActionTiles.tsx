@@ -1,5 +1,6 @@
 import { memo } from 'react'
 import { Flex, styled, useMedia } from 'ui/src'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { BuyActionTile } from '~/components/ActionTiles/BuyActionTile'
 import { CopyAddressActionTile } from '~/components/ActionTiles/CopyAddressActionTile'
 import { MoreActionTile } from '~/components/ActionTiles/MoreActionTile'
@@ -47,9 +48,13 @@ export const OverviewActionTiles = memo(function OverviewActionTiles() {
 
   if (isExternalWallet && externalAddress) {
     return (
-      <ActionTilesContainer singleRow={isSingleRow}>
+      <ActionTilesContainer singleRow={isSingleRow} testID={TestID.PortfolioActionTiles}>
         <ActionTileWrapper singleRow={isSingleRow}>
-          <SendActionTile padding="$spacing16" recipient={externalAddress.address} />
+          <SendActionTile
+            padding="$spacing16"
+            recipient={externalAddress.address}
+            dataTestId={TestID.PortfolioActionTileSend}
+          />
         </ActionTileWrapper>
         <ActionTileWrapper singleRow={isSingleRow}>
           <CopyAddressActionTile address={externalAddress.address} padding="$spacing16" />
@@ -59,12 +64,12 @@ export const OverviewActionTiles = memo(function OverviewActionTiles() {
   }
 
   return (
-    <ActionTilesContainer singleRow={isSingleRow}>
+    <ActionTilesContainer singleRow={isSingleRow} testID={TestID.PortfolioActionTiles}>
       <ActionTileWrapper singleRow={isSingleRow}>
-        <SendActionTile padding="$spacing16" />
+        <SendActionTile padding="$spacing16" dataTestId={TestID.PortfolioActionTileSend} />
       </ActionTileWrapper>
       <ActionTileWrapper singleRow={isSingleRow}>
-        <ReceiveActionTile padding="$spacing16" />
+        <ReceiveActionTile padding="$spacing16" dataTestId={TestID.PortfolioActionTileReceive} />
       </ActionTileWrapper>
       <ActionTileWrapper singleRow={isSingleRow}>
         <BuyActionTile padding="$spacing16" />
